@@ -46,7 +46,8 @@ support for xml. Also the default Json encoder class is to modified:
             json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
 
 Note the service for the RSS encoder needs to be defined in a custom bundle:
-<service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
+
+    <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
 
 FrameworkBundle support
 -----------------------
