@@ -56,7 +56,7 @@ Make sure to disable rest annotations in the FrameworkBundle config, enable
 or disable any of the other features depending on your needs:
 
     sensio_framework_extra:
-        rest:    { annotations: false }
+        view:    { annotations: false }
         router:  { annotations: true }
 
 Finally enable the FrameworkBundle listener in the RestBundle:
