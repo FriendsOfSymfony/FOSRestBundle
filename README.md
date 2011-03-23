@@ -6,29 +6,29 @@ This Bundle provides various tools to rapidly develop RESTful API's with Symfony
 Installation
 ============
 
-1. Add this bundle to your project as Git submodules:
+    1. Add this bundle to your project as Git submodules:
 
-    $ git submodule add git://github.com/fos/RestBundle.git vendor/bundles/FOS/RestBundle
+        $ git submodule add git://github.com/fos/RestBundle.git vendor/bundles/FOS/RestBundle
 
-2. Add the FOS namespace to your autoloader:
+    2. Add the FOS namespace to your autoloader:
 
-    // app/autoload.php
-    $loader->registerNamespaces(array(
-        'FOS' => __DIR__.'/../vendor/bundles',
-        // your other namespaces
-    ));
+        // app/autoload.php
+        $loader->registerNamespaces(array(
+            'FOS' => __DIR__.'/../vendor/bundles',
+            // your other namespaces
+        ));
 
-3. Add this bundle to your application's kernel:
+    3. Add this bundle to your application's kernel:
 
-    // application/ApplicationKernel.php
-    public function registerBundles()
-    {
-      return array(
-          // ...
-          new FOS\RestBundle\FOSRestBundle(),
-          // ...
-      );
-    }
+        // application/ApplicationKernel.php
+        public function registerBundles()
+        {
+          return array(
+              // ...
+              new FOS\RestBundle\FOSRestBundle(),
+              // ...
+          );
+        }
 
 Configuration
 -------------
