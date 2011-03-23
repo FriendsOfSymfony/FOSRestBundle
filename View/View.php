@@ -11,16 +11,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
 
 /**
- * RestView is a default view implementation
- *
- * Use it in controllers to build up a response in a format agnostic way
- * The View class takes care of encoding your data in json, xml, or renders a template for html
- * via the Serializer component.
+ * View may be used in controllers to build up a response in a format agnostic way
+ * The View class takes care of encoding your data in json, xml, or renders a
+ * template for html via the Serializer component.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class RestView
+class View
 {
     protected $container;
     protected $serializer;

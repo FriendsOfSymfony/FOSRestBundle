@@ -30,7 +30,7 @@ class Configuration
                 ->arrayNode('class')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('view')->defaultValue('FOS\RestBundle\View\RestView')->end()
+                        ->scalarNode('view')->defaultValue('FOS\RestBundle\View\View')->end()
                         ->scalarNode('serializer')->defaultValue('Symfony\Component\Serializer\Serializer')->end()
                         ->scalarNode('json')->defaultValue('Symfony\Component\Serializer\Encoder\JsonEncoder')->end()
                         ->scalarNode('xml')->defaultValue('Symfony\Component\Serializer\Encoder\XmlEncoder')->end()

@@ -23,7 +23,7 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
     public function onCoreView(GetResponseForControllerResultEvent $event)
     {
         $view = $event->getControllerResult();
-        if (!($view instanceOf RestView)) {
+        if (!($view instanceOf View)) {
             return parent::onCoreView($event);
         }
 
@@ -46,29 +46,10 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
 
         $template = $request->attributes->get('_template');
         if ($template) {
+            unset($template['engine'], $template['format']);
             $view->setTemplate($template);
         }
 
         $event->setResponse($view->handle());
-    }
-
-    /**
-     * Guesses and returns the template name to render based on the controller 
-     * and action names.
-     *
-     * @param array $controller An array storing the controller object and action method
-     * @param Request $request A Request instance
-     * @throws \InvalidArgumentException
-     */
-    protected function guessTemplateName($controller, Request $request)
-    {
-        if (!preg_match('/Controller\\\(.*)Controller$/', get_class($controller[0]), $match)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it does not end with Controller)', get_class($controller[0])));
-        }
-
-        $bundle = $this->getBundleForClass(get_class($controller[0]));
-        $name = substr($controller[1], 0, -6);
-
-        return array('bundle' => $bundle->getName(), 'controller' => $match[1], 'name' => $name);
     }
 }
