@@ -1,0 +1,104 @@
+get_users:
+  method:     GET
+  pattern:    /users
+  controller: ::getUsersAction
+
+get_user:
+  method:     GET
+  pattern:    /users/{slug}
+  controller: ::getUserAction
+
+post_users:
+  method:     POST
+  pattern:    /users
+  controller: ::postUsersAction
+
+put_user:
+  method:     PUT
+  pattern:    /users/{slug}
+  controller: ::putUserAction
+
+lock_user:
+  method:     PUT
+  pattern:    /users/{slug}/lock
+  controller: ::lockUserAction
+
+get_user_comments:
+  method:     GET
+  pattern:    /users/{slug}/comments
+  controller: ::getUserCommentsAction
+
+get_user_comment:
+  method:     GET
+  pattern:    /users/{slug}/comments/{id}
+  controller: ::getUserCommentAction
+
+delete_user_comment:
+  method:     DELETE
+  pattern:    /users/{slug}/comments/{id}
+  controller: ::deleteUserCommentAction
+
+new_users:
+  method:     GET
+  pattern:    /users/new
+  controller: ::newUsersAction
+
+new_user_comments:
+  method:     GET
+  pattern:    /users/{slug}/comments/new
+  controller: ::newUserCommentsAction
+
+ban_user:
+  method:     PUT
+  pattern:    /users/{slug}/ban
+  controller: ::banUserAction
+
+vote_user_comment:
+  method:     PUT
+  pattern:    /users/{slug}/comments/{id}/vote
+  controller: ::voteUserCommentAction
+
+get_user_topics:
+  method:     GET
+  pattern:    /users/{slug}/topics
+  controller: ::getTopics
+
+new_user_topics:
+  method:     GET
+  pattern:    /users/{slug}/topics/new
+  controller: ::newTopics
+
+get_user_topic:
+  method:     GET
+  pattern:    /users/{slug}/topics/{title}
+  controller: ::getTopic
+
+put_user_topic:
+  method:     PUT
+  pattern:    /users/{slug}/topics/{title}
+  controller: ::putTopic
+
+hide_user_topic:
+  method:     PUT
+  pattern:    /users/{slug}/topics/{title}/hide
+  controller: ::hideTopic
+
+get_user_topic_comments:
+  method:     GET
+  pattern:    /users/{slug}/topics/{title}/comments
+  controller: ::getComments
+
+new_user_topic_comments:
+  method:     GET
+  pattern:    /users/{slug}/topics/{title}/comments/new
+  controller: ::newComments
+
+put_user_topic_comment:
+  method:     PUT
+  pattern:    /users/{slug}/topics/{title}/comments/{id}
+  controller: ::putComment
+
+ban_user_topic_comment:
+  method:     PUT
+  pattern:    /users/{slug}/topics/{title}/comments/{id}/ban
+  controller: ::banComment
