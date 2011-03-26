@@ -10,6 +10,17 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
 
+/*
+ * This file is part of the FOS/RestBundle
+ *
+ * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * (c) Bulat Shakirzyanov <mallluhuct@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * View may be used in controllers to build up a response in a format agnostic way
  * The View class takes care of encoding your data in json, xml, or renders a

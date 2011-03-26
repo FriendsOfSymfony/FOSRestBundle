@@ -5,6 +5,17 @@ namespace FOS\RestBundle\Serializer\Encoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Templating\EngineInterface;
 
+/*
+ * This file is part of the FOS/RestBundle
+ *
+ * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * (c) Bulat Shakirzyanov <mallluhuct@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * Encodes HTML data
  *
