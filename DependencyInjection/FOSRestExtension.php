@@ -30,9 +30,9 @@ class FOSRestExtension extends Extension
         // TODO move this to the Configuration class as soon as it supports setting such a default
         array_unshift($configs, array(
             'formats' => array(
-                'json' => 'fos_rest.encoder.json',
-                'xml' => 'fos_rest.encoder.xml',
-                'html' => 'fos_rest.encoder.html',
+                'json'  => 'fos_rest.encoder.json',
+                'xml'   => 'fos_rest.encoder.xml',
+                'html'  => 'fos_rest.encoder.html',
             )
         ));
 
@@ -42,6 +42,7 @@ class FOSRestExtension extends Extension
 
         $loader = $this->getFileLoader($container);
         $loader->load('view.xml');
+        $loader->load('routing.xml');
 
         foreach ($config['class'] as $key => $value) {
             $container->setParameter($this->getAlias().'.'.$key.'.class', $value);
