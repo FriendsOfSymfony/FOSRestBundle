@@ -71,11 +71,11 @@ Routing
 
     # app/confg/routing.yml
     users:
-      type:     restful
+      type:     rest
       resource: Application\HelloBundle\Controller\UsersController
 
 this will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
-Notice `type:     restful` option. It's required to RestfulControllers to find which routes are supported.
+Notice `type:     rest` option. It's required to RestfulControllers to find which routes are supported.
 
 ### Define resource actions
 
@@ -126,15 +126,15 @@ Sometimes it's better to place subresource actions in it's own controller. Espec
 
 ### Resource collection
 
-In this case, you must first specify resource relations in special restful YML or XML collection:
+In this case, you must first specify resource relations in special rest YML or XML collection:
 
     # HelloBundle/Resources/config/users_routes.yml
     users:
-      type:     restful
+      type:     rest
       resource: Application\HelloBundle\Controller\UsersController
     
     comments:
-      type:     restful
+      type:     rest
       parent:   users
       resource: Application\HelloBundle\Controller\CommentsController
 
@@ -180,7 +180,7 @@ Last step is mapping of your collection routes into application `routing.yml`:
 
     # app/confg/routing.yml
     users:
-      type:     restful
+      type:     rest
       resource: HelloBundle/Resources/config/users_routes.yml
 
 That's all.
@@ -203,7 +203,7 @@ Sometimes, routes autonaming will lead to the route names collisions, so Restful
 
     # HelloBundle/Resources/config/users_routes.yml
     comments:
-      type:         restful
+      type:         rest
       resource:     Application\HelloBundle\Controller\CommentsController
       name_prefix:  api_
 
