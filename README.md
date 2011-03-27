@@ -1,12 +1,20 @@
 RestBundle
 ==========
 
-This Bundle provides various tools to rapidly develop RESTful API's with Symfony2
+This Bundle provides various tools to rapidly develop RESTful API's with Symfony2.
+
+Its currently under development so key pieces that are planned are still missing.
+
+For now the Bundle provides a view layer to enable output format agnostic Controllers.
+
+Furthermore a custom route loader can be used to when following a method
+naming convention to automatically provide routes for multiple actions by simply
+configuring the name of a controller.
 
 Installation
 ============
 
-    1. Add this bundle to your project as Git submodules:
+    1. Add this bundle to your project as a Git submodule:
 
         $ git submodule add git://github.com/fos/RestBundle.git vendor/bundles/FOS/RestBundle
 
@@ -33,9 +41,9 @@ Installation
 Configuration
 -------------
 
-Registering a custom encoder requires modifying several configuration options.
-Following an example adding support for a custom RSS encoder while removing
-support for xml. Also the default Json encoder class is to modified:
+Registering a custom encoder requires modifying your configuration options.
+Following is an example adding support for a custom RSS encoder while removing
+support for xml. Also the default Json encoder class is modified:
 
     # app/config.yml
     fos_rest:
@@ -52,7 +60,7 @@ Note the service for the RSS encoder needs to be defined in a custom bundle:
 FrameworkBundle support
 -----------------------
 
-Make sure to disable rest annotations in the FrameworkBundle config, enable
+Make sure to disable view annotations in the FrameworkBundle config, enable
 or disable any of the other features depending on your needs:
 
     sensio_framework_extra:
@@ -74,8 +82,8 @@ Routing
       type:     rest
       resource: Application\HelloBundle\Controller\UsersController
 
-this will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
-Notice `type:     rest` option. It's required to RestfulControllers to find which routes are supported.
+This will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
+Notice `type:     rest` option. It's required so that the RestBundle can find which routes are supported.
 
 ### Define resource actions
 
@@ -122,7 +130,8 @@ That's all. All your resource (`UsersController`) actions will get mapped to pro
 
 ## Relational RESTful controllers routes
 
-Sometimes it's better to place subresource actions in it's own controller. Especially when you have more than 2 subresource actions.
+Sometimes it's better to place subresource actions in it's own controller. Especially when
+you have more than 2 subresource actions.
 
 ### Resource collection
 
@@ -138,7 +147,9 @@ In this case, you must first specify resource relations in special rest YML or X
       parent:   users
       resource: Application\HelloBundle\Controller\CommentsController
 
-Notice `parent:   users` option in second case. This option specifies that comments resource is child of users resource. In this case, your `UsersController` MUST always have single resource `get...` action:
+Notice `parent:   users` option in second case. This option specifies that comments resource is
+child of users resource. In this case, your `UsersController` MUST always have single resource
+`get...` action:
 
     class UsersController extends Controller
     {
@@ -148,7 +159,8 @@ Notice `parent:   users` option in second case. This option specifies that comme
         ...
     }
 
-It's used to determine parent collection name. Controller name itself not used in routes autogeneration process & can be any name you like.
+It's used to determine parent collection name. Controller name itself not used in routes
+auto-generation process & can be any name you like.
 
 ### Define child resource controller
 
@@ -172,7 +184,9 @@ It's used to determine parent collection name. Controller name itself not used i
         {} // `new_user_comments`   [GET] /users/{slug}/comments/new
     }
 
-Notice, that we get rid of `User` part in action names. It's because RestfulControllers routing already knows, that `CommentsController::...` is child resources of `UsersController::getUser()` resource.
+Notice, that we get rid of `User` part in action names. It's because RestBundle routing
+already knows, that `CommentsController::...` is child resources of `UsersController::getUser()`
+resource.
 
 ### Include resource collections in application routing
 
@@ -187,7 +201,7 @@ That's all.
 
 ### Routes naming
 
-RestfulControllersBundle uses REST path to generate route name. It means, that URL:
+RestBundle uses REST path to generate route name. It means, that URL:
 
     [PUT] /users/{slug}/comments/{id}/vote
 
@@ -199,7 +213,8 @@ For further examples, see comments of controllers code above.
 
 #### Naming collisions
 
-Sometimes, routes autonaming will lead to the route names collisions, so RestfulControllers route collections has `name_prefix` (`name-prefix` for xml) parameter:
+Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
+collections provides a `name_prefix` (`name-prefix` for xml) parameter:
 
     # HelloBundle/Resources/config/users_routes.yml
     comments:
