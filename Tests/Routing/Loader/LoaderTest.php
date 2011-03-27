@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 use Symfony\Component\Yaml\Yaml;
 
-use FOS\RestBundle\Routing\Loader\RestfulControllerLoader;
+use FOS\RestBundle\Routing\Loader\RestRouteLoader;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -45,6 +45,6 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 
     protected function getControllerLoader()
     {
-        return new RestfulControllerLoader($this->getAnnotationReader());
+        return new RestRouteLoader($this->getAnnotationReader());
     }
 }

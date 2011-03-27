@@ -20,7 +20,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class RestfulRouteCollection extends RouteCollection
+class RestRouteCollection extends RouteCollection
 {
     private $singularName;
 

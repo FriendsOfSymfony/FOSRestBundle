@@ -48,15 +48,15 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $controllerLoaderDefinitionName = 'fos_rest.routing.loader.controller';
         $controllerLoaderClassParameter = 'fos_rest.routing.loader.controller.class';
-        $controllerLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestfulControllerLoader';
+        $controllerLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestRouteLoader';
 
         $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
         $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
-        $yamlCollectionLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestfulYamlCollectionLoader';
+        $yamlCollectionLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader';
 
         $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
         $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
-        $xmlCollectionLoaderClass           = 'FOS\RestBundle\Routing\Loader\RestfulXmlCollectionLoader';
+        $xmlCollectionLoaderClass           = 'FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader';
 
         $controllerAnnotationsNS          = 'FOS\RestBundle\Controller\Annotations\\';
         $controllerAnnotationsNSParameter = 'fos_rest.routing.loader.controller.annotations_namespace';
@@ -65,21 +65,21 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($controllerLoaderClass, $this->container->getParameter($controllerLoaderClassParameter));
         $this->assertTrue($this->container->hasDefinition($controllerLoaderDefinitionName));
-        $this->assertValidRestfulControllerLoader(
+        $this->assertValidRestRouteLoader(
             $this->container->getDefinition($controllerLoaderDefinitionName),
             $controllerLoaderClassParameter
         );
 
         $this->assertEquals($yamlCollectionLoaderClass, $this->container->getParameter($yamlCollectionLoaderClassParameter));
         $this->assertTrue($this->container->hasDefinition($yamlCollectionLoaderDefinitionName));
-        $this->assertValidRestfulFileLoader(
+        $this->assertValidRestFileLoader(
             $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
             $yamlCollectionLoaderClassParameter
         );
 
         $this->assertEquals($xmlCollectionLoaderClass, $this->container->getParameter($xmlCollectionLoaderClassParameter));
         $this->assertTrue($this->container->hasDefinition($xmlCollectionLoaderDefinitionName));
-        $this->assertValidRestfulFileLoader(
+        $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
             $xmlCollectionLoaderClassParameter
         );
@@ -93,7 +93,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      * @param   Definition  $loader                 loader definition
      * @param   string      $loaderClassParameter   loader class parameter name
      */
-    private function assertValidRestfulControllerLoader(Definition $loader, $loaderClassParameter)
+    private function assertValidRestRouteLoader(Definition $loader, $loaderClassParameter)
     {
         $arguments = $loader->getArguments();
 
@@ -109,7 +109,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      * @param   Definition  $loader                 loader definition
      * @param   string      $loaderClassParameter   loader class parameter name
      */
-    private function assertValidRestfulFileLoader(Definition $loader, $loaderClassParameter)
+    private function assertValidRestFileLoader(Definition $loader, $loaderClassParameter)
     {
         $locatorRef = new Reference('routing.file_locator');
         $arguments  = $loader->getArguments();

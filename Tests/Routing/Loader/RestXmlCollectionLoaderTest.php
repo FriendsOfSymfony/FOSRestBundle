@@ -5,8 +5,8 @@ namespace FOS\RestBundle\Tests\Routing\Loader;
 use Symfony\Component\Config\Loader\LoaderResolver,
     Symfony\Component\Config\FileLocator;
 
-use FOS\RestBundle\Routing\Loader\RestfulControllerLoader,
-    FOS\RestBundle\Routing\Loader\RestfulXmlCollectionLoader;
+use FOS\RestBundle\Routing\Loader\RestRouteLoader,
+    FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -20,11 +20,11 @@ use FOS\RestBundle\Routing\Loader\RestfulControllerLoader,
  */
 
 /**
- * RestfulXmlCollectionLoader test.
+ * RestXmlCollectionLoader test.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class RestfulXmlCollectionLoaderTest extends LoaderTest
+class RestXmlCollectionLoaderTest extends LoaderTest
 {
     /**
      * Test that XML collection gets parsed correctly.
@@ -69,7 +69,7 @@ class RestfulXmlCollectionLoaderTest extends LoaderTest
      */
     protected function loadFromYamlCollectionFixture($fixtureName)
     {
-        $collectionLoader = new RestfulXmlCollectionLoader(new FileLocator(
+        $collectionLoader = new RestXmlCollectionLoader(new FileLocator(
             array(__DIR__ . '/../../Fixtures/Routes')
         ));
         $controllerLoader = $this->getControllerLoader();
