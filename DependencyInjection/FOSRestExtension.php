@@ -2,11 +2,11 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Definition\Processor,
+    Symfony\Component\HttpKernel\DependencyInjection\Extension,
+    Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
+    Symfony\Component\DependencyInjection\ContainerBuilder,
+    Symfony\Component\Config\FileLocator;
 
 /*
  * This file is part of the FOS/RestBundle

@@ -2,8 +2,8 @@
 
 namespace FOS\RestBundle\Serializer\Encoder;
 
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Serializer\Encoder\XmlEncoder,
+    Symfony\Component\Templating\EngineInterface;
 
 /*
  * This file is part of the FOS/RestBundle

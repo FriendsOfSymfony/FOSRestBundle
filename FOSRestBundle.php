@@ -2,9 +2,9 @@
 
 namespace FOS\RestBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\Bundle\Bundle,
+    Symfony\Component\DependencyInjection\ContainerInterface,
+    Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /*
  * This file is part of the FOS/RestBundle

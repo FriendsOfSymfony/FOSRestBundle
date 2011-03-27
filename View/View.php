@@ -2,12 +2,13 @@
 
 namespace FOS\RestBundle\View;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\DependencyInjection\ContainerInterface,
+    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+    Symfony\Component\HttpFoundation\RedirectResponse;
+
 use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
 
 /*
