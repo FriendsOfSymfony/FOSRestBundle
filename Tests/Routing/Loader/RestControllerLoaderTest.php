@@ -2,8 +2,8 @@
 
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
-use FOS\RestBundle\Routing\Loader\RestfulControllerLoader,
-    FOS\RestBundle\Routing\RestfulRouteCollection;
+use FOS\RestBundle\Routing\Loader\RestRouteLoader,
+    FOS\RestBundle\Routing\RestRouteCollection;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -17,11 +17,11 @@ use FOS\RestBundle\Routing\Loader\RestfulControllerLoader,
  */
 
 /**
- * RestfulControllerLoader test.
+ * RestRouteLoader test.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class RestfulControllerLoaderTest extends LoaderTest
+class RestRouteLoaderTest extends LoaderTest
 {
     /**
      * Test that UsersController RESTful class gets parsed correctly.
@@ -31,7 +31,7 @@ class RestfulControllerLoaderTest extends LoaderTest
         $collection     = $this->loadFromControllerFixture('UsersController');
         $etalonRoutes   = $this->loadEtalonRoutesInfo('users_controller.yml');
 
-        $this->assertTrue($collection instanceof RestfulRouteCollection);
+        $this->assertTrue($collection instanceof RestRouteCollection);
         $this->assertEquals(13, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
@@ -52,7 +52,7 @@ class RestfulControllerLoaderTest extends LoaderTest
         $collection     = $this->loadFromControllerFixture('AnnotatedUsersController');
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
-        $this->assertTrue($collection instanceof RestfulRouteCollection);
+        $this->assertTrue($collection instanceof RestRouteCollection);
         $this->assertEquals(10, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {

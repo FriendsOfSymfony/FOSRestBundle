@@ -8,7 +8,7 @@ use Symfony\Component\Config\Resource\FileResource,
     Symfony\Component\Routing\RouteCollection,
     Symfony\Component\Routing\Route;
 
-use FOS\RestBundle\Routing\RestfulRouteCollection;
+use FOS\RestBundle\Routing\RestRouteCollection;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -22,9 +22,9 @@ use FOS\RestBundle\Routing\RestfulRouteCollection;
  */
 
 /**
- * RestfulYamlCollectionLoader YAML file collections loader.
+ * RestYamlCollectionLoader YAML file collections loader.
  */
-class RestfulYamlCollectionLoader extends YamlFileLoader
+class RestYamlCollectionLoader extends YamlFileLoader
 {
     protected $collectionParents = array();
 
@@ -68,7 +68,7 @@ class RestfulYamlCollectionLoader extends YamlFileLoader
 
                 $imported = $this->importResource($resource, $parents, $prefix, $namePrefix, $type);
 
-                if ($imported instanceof RestfulRouteCollection) {
+                if ($imported instanceof RestRouteCollection) {
                     $parents[]  = ($prefix ? $prefix . '/' : '') . $imported->getSingularName();
                     $prefix     = null;
 
@@ -119,7 +119,7 @@ class RestfulYamlCollectionLoader extends YamlFileLoader
 
         if ($loader instanceof FileLoader && null !== $this->currentDir) {
             $resource = $this->getAbsolutePath($resource, $this->currentDir);
-        } elseif ($loader instanceof RestfulControllerLoader) {
+        } elseif ($loader instanceof RestRouteLoader) {
             $loader->setParents($parents);
             $loader->setPrefix($prefix);
             $loader->setRouteNamesPrefix($namePrefix);

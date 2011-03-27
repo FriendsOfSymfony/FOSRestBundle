@@ -11,7 +11,7 @@ use Symfony\Component\Config\Loader\LoaderInterface,
     Symfony\Component\Routing\Route,
     Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 
-use FOS\RestBundle\Routing\RestfulRouteCollection,
+use FOS\RestBundle\Routing\RestRouteCollection,
     FOS\RestBundle\Pluralization\Pluralization;
 
 /*
@@ -26,12 +26,12 @@ use FOS\RestBundle\Routing\RestfulRouteCollection,
  */
 
 /**
- * RestfulControllerLoader REST-enabled controller router loader.
+ * RestRouteLoader REST-enabled controller router loader.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  * @author Bulat Shakirzyanov <mallluhuct@gmail.com>
  */
-class RestfulControllerLoader implements LoaderInterface
+class RestRouteLoader implements LoaderInterface
 {
     protected $availableHTTPMethods;
     protected $annotationClasses;
@@ -123,7 +123,7 @@ class RestfulControllerLoader implements LoaderInterface
         }
 
         $class      = new \ReflectionClass($class);
-        $collection = new RestfulRouteCollection();
+        $collection = new RestRouteCollection();
         $collection->addResource(new FileResource($class->getFileName()));
 
         foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
