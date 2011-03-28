@@ -5,11 +5,16 @@ This Bundle provides various tools to rapidly develop RESTful API's with Symfony
 
 Its currently under development so key pieces that are planned are still missing.
 
-For now the Bundle provides a view layer to enable output format agnostic Controllers.
+For now the Bundle provides a view layer to enable output format agnostic Controllers,
+which includes the ability to handle redirects differently.
 
 Furthermore a custom route loader can be used to when following a method
 naming convention to automatically provide routes for multiple actions by simply
 configuring the name of a controller.
+
+Eventually the goal is to also support RESTful decoding of request headers and body,
+serializing of form's into different formats and assisting in returning correct
+HTTP status codes. Generation of REST API end user documentation is also a goal.
 
 Installation
 ============
