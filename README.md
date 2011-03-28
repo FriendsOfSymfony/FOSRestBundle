@@ -200,7 +200,7 @@ Last step is mapping of your collection routes into application `routing.yml`:
     # app/confg/routing.yml
     users:
       type:     rest
-      resource: @Acme/Hello/Resources/config/users_routes.yml
+      resource: "@AcmeHello/Resources/config/users_routes.yml"
 
 That's all.
 
