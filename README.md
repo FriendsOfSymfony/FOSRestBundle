@@ -142,15 +142,15 @@ you have more than 2 subresource actions.
 
 In this case, you must first specify resource relations in special rest YML or XML collection:
 
-    # HelloBundle/Resources/config/users_routes.yml
+    # src/Acme/HelloBundle/Resources/config/users_routes.yml
     users:
       type:     rest
-      resource: Application\HelloBundle\Controller\UsersController
+      resource: "@AcmeHello\Controller\UsersController"
     
     comments:
       type:     rest
       parent:   users
-      resource: Application\HelloBundle\Controller\CommentsController
+      resource: "@AcmeHello\Controller\CommentsController"
 
 Notice `parent:   users` option in second case. This option specifies that comments resource is
 child of users resource. In this case, your `UsersController` MUST always have single resource
@@ -200,7 +200,7 @@ Last step is mapping of your collection routes into application `routing.yml`:
     # app/confg/routing.yml
     users:
       type:     rest
-      resource: HelloBundle/Resources/config/users_routes.yml
+      resource: @Acme/Hello/Resources/config/users_routes.yml
 
 That's all.
 
@@ -221,10 +221,10 @@ For further examples, see comments of controllers code above.
 Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
 collections provides a `name_prefix` (`name-prefix` for xml) parameter:
 
-    # HelloBundle/Resources/config/users_routes.yml
+    # src/Acme/HelloBundle/Resources/config/users_routes.yml
     comments:
       type:         rest
-      resource:     Application\HelloBundle\Controller\CommentsController
+      resource:     "@AcmeHello\Controller\CommentsController"
       name_prefix:  api_
 
 With this configuration, route name would become:
