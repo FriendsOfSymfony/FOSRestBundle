@@ -30,13 +30,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\ExceptionController as BaseExcepti
 class ExceptionController extends BaseExceptionController
 {
     /**
-     * Name of the view service
-     * 
-     * @param string
-     */
-    protected $viewId = 'fos_rest';
-
-    /**
      * Converts an Exception to a Response.
      *
      * @param FlattenException     $exception A FlattenException instance
@@ -55,14 +48,14 @@ class ExceptionController extends BaseExceptionController
         }
         // @codeCoverageIgnoreEnd
 
+        $format = $this->getFormat($format);
         $parameters = $this->getParameters($currentContent, $exception, $logger, $format, $code, $message);
         $code = $this->getStatusCode($exception, $code);
 
         try {
-            $this->container->get('request')->setRequestFormat($this->getFormat($format));
+            $view = $this->container->get('fos_rest');
 
-            $view = $this->container->get($this->viewId);
-
+            $view->setFormat($format);
             $view->setTemplate($this->getTemplate($format));
             $view->setParameters($parameters);
             $view->setStatusCode($code);
