@@ -5,7 +5,6 @@ namespace FOS\RestBundle\View;
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -318,7 +317,7 @@ class View
             $response = call_user_func($callback, $this, $request, $response);
         } else {
             if (!$this->supports($format)) {
-                throw new NotFoundHttpException("Format '$format' not supported, handler must be implemented");
+                throw new Response("Format '$format' not supported, handler must be implemented", 415);
             }
             $response = $this->transform($request, $response, $format, $this->getTemplate());
         }
