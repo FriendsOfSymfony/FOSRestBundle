@@ -27,7 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\View\AnnotationTemplateListener as BaseAn
 class AnnotationTemplateListener extends BaseAnnotationTemplateListener
 {
     /**
-     * Renders the template and initializes a new response object with the 
+     * Renders the template and initializes a new response object with the
      * rendered template content.
      *
      * @param GetResponseForControllerResultEvent $event A GetResponseForControllerResultEvent instance
@@ -39,9 +39,9 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
             return parent::onCoreView($event);
         }
 
+        $request = $event->getRequest();
         $parameters = $view->getParameters();
         if (!$parameters) {
-            $request = $event->getRequest();
 
             $vars = $request->attributes->get('_template_vars');
             if (!$vars) {
