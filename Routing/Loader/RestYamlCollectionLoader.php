@@ -28,6 +28,8 @@ class RestYamlCollectionLoader extends YamlFileLoader
 {
     protected $collectionParents = array();
 
+    private $currentDir;
+
     /**
      * Loads a Yaml collection file.
      *
