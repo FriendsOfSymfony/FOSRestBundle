@@ -23,8 +23,9 @@ class Route extends BaseRoute
     public function __construct(array $data)
     {
         parent::__construct($data);
-
-        $this->requirements['_method'] = $this->getMethod();
+        $requirements = $this->getRequirements();
+        $requirements['_method'] = $this->getMethod();
+        $this->setRequirements($requirements);
     }
 
     public function getMethod()
