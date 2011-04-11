@@ -2,8 +2,8 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\NodeBuilder,
-    Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder,
+    Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -24,14 +24,14 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class Configuration
+class Configuration implements ConfigurationInterface
 {
     /**
      * Generates the configuration tree.
      *
-     * @return \Symfony\Component\DependencyInjection\Configuration\NodeInterface
+     * @return TreeBuilder
      */
-    public function getConfigTree()
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('fos_rest', 'array');
@@ -53,13 +53,13 @@ class Configuration
             ->children()
                 ->arrayNode('formats')
                     ->useAttributeAsKey('format')
-                    ->prototype('scalar')
+                    ->prototype('scalar')->end()
                 ->end()
+                ->booleanNode('frameworkextra')->defaultFalse()
             ->end()
-            ->booleanNode('frameworkextra')->defaultFalse()->end()
         ->end();
 
-        return $treeBuilder->buildTree();
+        return $treeBuilder;
     }
 
 }
