@@ -24,12 +24,12 @@
         </service>
 
         <service id="fos_rest.routing.loader.yaml_collection" class="%fos_rest.routing.loader.yaml_collection.class%">
-            <argument type="service" id="routing.file_locator" />
+            <argument type="service" id="file_locator" />
             <tag name="routing.loader" />
         </service>
 
         <service id="fos_rest.routing.loader.xml_collection" class="%fos_rest.routing.loader.xml_collection.class%">
-            <argument type="service" id="routing.file_locator" />
+            <argument type="service" id="file_locator" />
             <tag name="routing.loader" />
         </service>
 
