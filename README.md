@@ -80,9 +80,11 @@ Finally enable the FrameworkBundle listener in the RestBundle:
 Routing
 =======
 
+Note: This requires ext/mbstring
+
 ## Single RESTful controller routes
 
-    # app/confg/routing.yml
+    # app/config/routing.yml
     users:
       type:     rest
       resource: Application\HelloBundle\Controller\UsersController
@@ -197,7 +199,7 @@ resource.
 
 Last step is mapping of your collection routes into application `routing.yml`:
 
-    # app/confg/routing.yml
+    # app/config/routing.yml
     users:
       type:     rest
       resource: "@AcmeHello/Resources/config/users_routes.yml"
