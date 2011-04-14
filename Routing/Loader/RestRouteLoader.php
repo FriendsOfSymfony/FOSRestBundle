@@ -125,7 +125,15 @@ class RestRouteLoader implements LoaderInterface
         $class      = new \ReflectionClass($class);
         $collection = new RestRouteCollection();
         $collection->addResource(new FileResource($class->getFileName()));
+        $routeAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Route';
 
+        $patternStartRoute = $this->reader->getClassAnnotation($class, $routeAnnotationClass);
+        $patternStart = null;
+        if($patternStartRoute)
+        {
+            $patternStart = trim($patternStartRoute->getPattern(),"/");
+        }
+        
         foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             $matches = array();
 
@@ -168,10 +176,18 @@ class RestRouteLoader implements LoaderInterface
 
                     // If we have argument for current resource, then it's object. Otherwise - it's collection
                     if (isset($arguments[$i])) {
-                        $urlParts[] = 
-                            Pluralization::pluralize($resource) . '/{' . $arguments[$i]->getName() . '}';
+                        if($patternStart) {
+                            $urlParts[] = $patternStart . '/{' . $arguments[$i]->getName() . '}';
+                        } else {
+                            $urlParts[] =
+                                Pluralization::pluralize($resource) . '/{' . $arguments[$i]->getName() . '}';
+                        }
                     } else {
-                        $urlParts[] = $resource;
+                        if($patternStart) {
+                            $urlParts[] = $patternStart;
+                        } else {
+                            $urlParts[] = $resource;
+                        }
                     }
                 }
 
@@ -184,12 +200,12 @@ class RestRouteLoader implements LoaderInterface
                         $httpMethod = 'get';
                     }
                 }
-
+                
                 $pattern        = mb_strtolower(implode('/', $urlParts));
                 $defaults       = array('_controller' => $class->getName() . '::' . $method->getName(), '_format' => "html");
                 $requirements   = array('_method'     => mb_strtoupper($httpMethod));
                 $options        = array();
-
+                
                 // Read annotations
                 foreach ($this->annotationClasses as $annotationClass) {
                     $routeAnnnotation = $this->reader->getMethodAnnotation($method, $annotationClass);
