@@ -117,14 +117,27 @@ class RestRouteLoader implements LoaderInterface
             }
         }
 
+        $class      = new \ReflectionClass($class);
+        $collection = new RestRouteCollection();
+        $collection->addResource(new FileResource($class->getFileName()));
+
+        $prefixAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Prefix';
+        $prefix = $this->reader->getClassAnnotation($class, $prefixAnnotationClass);
+        if ($prefix) {
+            $this->prefix = $prefix->value;
+        }
+
+        $namePrefixAnnotationClass = 'FOS\RestBundle\Controller\Annotations\NamePrefix';
+        $namePrefix = $this->reader->getClassAnnotation($class, $namePrefixAnnotationClass);
+        if ($namePrefix) {
+            $this->namePrefix = $namePrefix->value;
+        }
+
         // Trim "/" at the start
         if (null !== $this->prefix && isset($this->prefix[0]) && '/' === $this->prefix[0]) {
             $this->prefix = mb_substr($this->prefix, 1);
         }
 
-        $class      = new \ReflectionClass($class);
-        $collection = new RestRouteCollection();
-        $collection->addResource(new FileResource($class->getFileName()));
         $routeAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Route';
 
         $patternStartRoute = $this->reader->getClassAnnotation($class, $routeAnnotationClass);
@@ -200,7 +213,7 @@ class RestRouteLoader implements LoaderInterface
                         $httpMethod = 'get';
                     }
                 }
-                
+
                 $pattern        = mb_strtolower(implode('/', $urlParts));
                 $defaults       = array('_controller' => $class->getName() . '::' . $method->getName(), '_format' => "html");
                 $requirements   = array('_method'     => mb_strtoupper($httpMethod));
@@ -227,7 +240,7 @@ class RestRouteLoader implements LoaderInterface
                 }
                 //Adding in the optional _format param for serialization
                 $pattern .= ".{_format}";
-                
+
                 // Create route with gathered parameters
                 $route = new Route($pattern, $defaults, $requirements, $options);
 

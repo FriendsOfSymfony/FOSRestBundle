@@ -4,6 +4,8 @@ namespace FOS\RestBundle\Controller\Annotations;
 
 use Symfony\Component\Routing\Annotation\Route as BaseRoute;
 
+use Doctrine\Common\Annotations\Annotation;
+
 /*
  * This file is part of the FOS/RestBundle
  *
@@ -94,4 +96,12 @@ class Head extends Route
     {
         return 'HEAD';
     }
+}
+
+class Prefix extends Annotation
+{
+}
+
+class NamePrefix extends Annotation
+{
 }
