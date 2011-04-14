@@ -1,104 +1,104 @@
 get_users:
   method:     GET
-  pattern:    /resources/all/users
+  pattern:    /resources/all/users.{_format}
   controller: ::getUsersAction
 
 get_user:
   method:     GET
-  pattern:    /resources/all/users/{slug}
+  pattern:    /resources/all/users/{slug}.{_format}
   controller: ::getUserAction
 
 post_users:
   method:     POST
-  pattern:    /resources/all/users
+  pattern:    /resources/all/users.{_format}
   controller: ::postUsersAction
 
 put_user:
   method:     PUT
-  pattern:    /resources/all/users/{slug}
+  pattern:    /resources/all/users/{slug}.{_format}
   controller: ::putUserAction
 
 lock_user:
   method:     PUT
-  pattern:    /resources/all/users/{slug}/lock
+  pattern:    /resources/all/users/{slug}/lock.{_format}
   controller: ::lockUserAction
 
 get_user_comments:
   method:     GET
-  pattern:    /resources/all/users/{slug}/comments
+  pattern:    /resources/all/users/{slug}/comments.{_format}
   controller: ::getUserCommentsAction
 
 get_user_comment:
   method:     GET
-  pattern:    /resources/all/users/{slug}/comments/{id}
+  pattern:    /resources/all/users/{slug}/comments/{id}.{_format}
   controller: ::getUserCommentAction
 
 delete_user_comment:
   method:     DELETE
-  pattern:    /resources/all/users/{slug}/comments/{id}
+  pattern:    /resources/all/users/{slug}/comments/{id}.{_format}
   controller: ::deleteUserCommentAction
 
 new_users:
   method:     GET
-  pattern:    /resources/all/users/new
+  pattern:    /resources/all/users/new.{_format}
   controller: ::newUsersAction
 
 new_user_comments:
   method:     GET
-  pattern:    /resources/all/users/{slug}/comments/new
+  pattern:    /resources/all/users/{slug}/comments/new.{_format}
   controller: ::newUserCommentsAction
 
 ban_user:
   method:     PUT
-  pattern:    /resources/all/users/{slug}/ban
+  pattern:    /resources/all/users/{slug}/ban.{_format}
   controller: ::banUserAction
 
 vote_user_comment:
   method:     PUT
-  pattern:    /resources/all/users/{slug}/comments/{id}/vote
+  pattern:    /resources/all/users/{slug}/comments/{id}/vote.{_format}
   controller: ::voteUserCommentAction
 
 get_user_topics:
   method:     GET
-  pattern:    /resources/all/users/{slug}/topics
+  pattern:    /resources/all/users/{slug}/topics.{_format}
   controller: ::getTopics
 
 new_user_topics:
   method:     GET
-  pattern:    /resources/all/users/{slug}/topics/new
+  pattern:    /resources/all/users/{slug}/topics/new.{_format}
   controller: ::newTopics
 
 get_user_topic:
   method:     GET
-  pattern:    /resources/all/users/{slug}/topics/{title}
+  pattern:    /resources/all/users/{slug}/topics/{title}.{_format}
   controller: ::getTopic
 
 put_user_topic:
   method:     PUT
-  pattern:    /resources/all/users/{slug}/topics/{title}
+  pattern:    /resources/all/users/{slug}/topics/{title}.{_format}
   controller: ::putTopic
 
 hide_user_topic:
   method:     PUT
-  pattern:    /resources/all/users/{slug}/topics/{title}/hide
+  pattern:    /resources/all/users/{slug}/topics/{title}/hide.{_format}
   controller: ::hideTopic
 
 test_get_user_topic_comments:
   method:     GET
-  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments
+  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments.{_format}
   controller: ::getComments
 
 test_new_user_topic_comments:
   method:     GET
-  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments/new
+  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments/new.{_format}
   controller: ::newComments
 
 test_put_user_topic_comment:
   method:     PUT
-  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments/{id}
+  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments/{id}.{_format}
   controller: ::putComment
 
 test_ban_user_topic_comment:
   method:     PUT
-  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments/{id}/ban
+  pattern:    /resources/all/users/{slug}/topics/{title}/additional/comments/{id}/ban.{_format}
   controller: ::banComment

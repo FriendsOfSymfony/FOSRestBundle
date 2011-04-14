@@ -1,49 +1,49 @@
 get_users:
-  pattern:      /users
+  pattern:      /users.{_format}
   controller:   ::getUsersAction
   requirements: {_method: GET}
 
 get_user:
-  pattern:      /users/{slug}
+  pattern:      /users/{slug}.{_format}
   controller:   ::getUserAction
   requirements: {_method: GET, slug: '[a-z]+'}
 
 get_user_comment:
-  pattern:      /users/{slug}/comments/{id}
+  pattern:      /users/{slug}/comments/{id}.{_format}
   controller:   ::getUserCommentAction
   requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
 
 rate_user:
-  pattern:      /users/{slug}/rate
+  pattern:      /users/{slug}/rate.{_format}
   controller:   ::rateUserAction
   requirements: {_method: POST, slug: '[a-z]+'}
 
 rate_user_comment:
-  pattern:      /users/{slug}/rate_comment/{id}
+  pattern:      /users/{slug}/rate_comment/{id}.{_format}
   controller:   ::rateUserCommentAction
   requirements: {_method: PUT, slug: '[a-z]+', id: '\d+'}
 
 cget_user:
-  pattern:      /users/{slug}/cget
+  pattern:      /users/{slug}/cget.{_format}
   controller:   ::cgetUserAction
   requirements: {_method: GET}
 
 cpost_user:
-  pattern:      /users/{slug}/cpost
+  pattern:      /users/{slug}/cpost.{_format}
   controller:   ::cpostUserAction
   requirements: {_method: POST}
 
 cput_user:
-  pattern:      /users/{slug}/cput
+  pattern:      /users/{slug}/cput.{_format}
   controller:   ::cputUserAction
   requirements: {_method: PUT}
 
 cdel_user:
-  pattern:      /users/{slug}/cdel
+  pattern:      /users/{slug}/cdel.{_format}
   controller:   ::cdelUserAction
   requirements: {_method: DELETE}
 
 chead_user:
-  pattern:      /users/{slug}/chead
+  pattern:      /users/{slug}/chead.{_format}
   controller:   ::cheadUserAction
   requirements: {_method: HEAD}
