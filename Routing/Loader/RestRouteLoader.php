@@ -5,11 +5,12 @@ namespace FOS\RestBundle\Routing\Loader;
 use Doctrine\Common\Annotations\AnnotationReader;
 require_once __DIR__.'/../../Controller/Annotations.php';
 
-use Symfony\Component\Config\Loader\LoaderInterface,
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
+    Symfony\Component\DependencyInjection\ContainerInterface,
+    Symfony\Component\Config\Loader\LoaderInterface,
     Symfony\Component\Config\Loader\LoaderResolver,
     Symfony\Component\Config\Resource\FileResource,
-    Symfony\Component\Routing\Route,
-    Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+    Symfony\Component\Routing\Route;
 
 use FOS\RestBundle\Routing\RestRouteCollection,
     FOS\RestBundle\Pluralization\Pluralization;
@@ -33,6 +34,8 @@ use FOS\RestBundle\Routing\RestRouteCollection,
  */
 class RestRouteLoader implements LoaderInterface
 {
+    protected $container;
+    protected $parser;
     protected $availableHTTPMethods;
     protected $annotationClasses;
     protected $parents = array();
@@ -49,10 +52,14 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Initialize REST Controller routes loader.
      *
+     * @param   ContainerInterface      $container  service container
+     * @param   ControllerNameParser    $parser     controller name parser
      * @param   AnnotationReader        $reader     annotations reader
      */
-    public function __construct(AnnotationReader $reader)
+    public function __construct(ContainerInterface $container, ControllerNameParser $parser, AnnotationReader $reader)
     {
+        $this->container            = $container;
+        $this->parser               = $parser;
         $this->reader               = $reader;
         $this->availableHTTPMethods = array('get', 'post', 'put', 'delete', 'head');
         $this->annotationClasses    = array(
@@ -105,8 +112,24 @@ class RestRouteLoader implements LoaderInterface
      */
     public function load($class, $type = null)
     {
-        // Check that class exists
-        if (!class_exists($class)) {
+        if (class_exists($class)) {
+            // full class name
+            $class            = $class;
+            $controllerPrefix = $class . '::';
+        } elseif (false !== strpos($class, ':')) {
+            // bundle:controller notation
+            try {
+                $notation             = $this->parser->parse($class . ':method');
+                list($class, $method) = explode('::', $notation);
+                $controllerPrefix     = $class . '::';
+            } catch (\Exception $e) {
+                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $class));
+            }
+        } elseif ($this->container->has($class)) {
+            // service_id
+            $controllerPrefix = $class . '::';
+            $class            = get_class($this->container->get($class));
+        } else {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
@@ -215,7 +238,7 @@ class RestRouteLoader implements LoaderInterface
                 }
 
                 $pattern        = mb_strtolower(implode('/', $urlParts));
-                $defaults       = array('_controller' => $class->getName() . '::' . $method->getName(), '_format' => "html");
+                $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => 'html');
                 $requirements   = array('_method'     => mb_strtoupper($httpMethod));
                 $options        = array();
                 
@@ -261,9 +284,9 @@ class RestRouteLoader implements LoaderInterface
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) &&
-            preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource) &&
-            'rest' === $type;
+        return is_string($resource)
+            && 'rest' === $type
+            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), array('xml', 'yml'));
     }
 
     /**

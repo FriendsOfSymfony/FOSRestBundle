@@ -45,6 +45,13 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 
     protected function getControllerLoader()
     {
-        return new RestRouteLoader($this->getAnnotationReader());
+        $c = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->
+            disableOriginalConstructor()->
+            getMock();
+        $p = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser')->
+            disableOriginalConstructor()->
+            getMock();
+
+        return new RestRouteLoader($c, $p, $this->getAnnotationReader());
     }
 }

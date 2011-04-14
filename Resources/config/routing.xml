@@ -12,6 +12,8 @@
     <services>
 
         <service id="fos_rest.routing.loader.controller" class="%fos_rest.routing.loader.controller.class%">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="controller_name_converter" />
             <argument type="service">
                 <service class="Doctrine\Common\Annotations\AnnotationReader">
                     <call method="setAnnotationNamespaceAlias">
