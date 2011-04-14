@@ -131,9 +131,10 @@ class RestRouteLoader implements LoaderInterface
         $patternStart = null;
         if($patternStartRoute)
         {
-            $patternStart = trim($patternStartRoute->getPattern(),"/");
+        if ($patternStartRoute) {
+            $patternStart = trim($patternStartRoute->getPattern(), "/");
         }
-        
+
         foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             $matches = array();
 
@@ -176,14 +177,14 @@ class RestRouteLoader implements LoaderInterface
 
                     // If we have argument for current resource, then it's object. Otherwise - it's collection
                     if (isset($arguments[$i])) {
-                        if($patternStart) {
+                        if ($patternStart) {
                             $urlParts[] = $patternStart . '/{' . $arguments[$i]->getName() . '}';
                         } else {
                             $urlParts[] =
                                 Pluralization::pluralize($resource) . '/{' . $arguments[$i]->getName() . '}';
                         }
                     } else {
-                        if($patternStart) {
+                        if ($patternStart) {
                             $urlParts[] = $patternStart;
                         } else {
                             $urlParts[] = $resource;
@@ -258,12 +259,16 @@ class RestRouteLoader implements LoaderInterface
      *
      * @return LoaderResolver A LoaderResolver instance
      */
-    public function getResolver() {}
+    public function getResolver()
+    {
+    }
 
     /**
      * Sets the loader resolver.
      *
      * @param LoaderResolver $resolver A LoaderResolver instance
      */
-    public function setResolver(LoaderResolver $resolver) {}
+    public function setResolver(LoaderResolver $resolver)
+    {
+    }
 }
