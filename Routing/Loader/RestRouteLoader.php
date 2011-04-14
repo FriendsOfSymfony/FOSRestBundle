@@ -129,8 +129,7 @@ class RestRouteLoader implements LoaderInterface
 
         $patternStartRoute = $this->reader->getClassAnnotation($class, $routeAnnotationClass);
         $patternStart = null;
-        if($patternStartRoute)
-        {
+
         if ($patternStartRoute) {
             $patternStart = trim($patternStartRoute->getPattern(), "/");
         }
