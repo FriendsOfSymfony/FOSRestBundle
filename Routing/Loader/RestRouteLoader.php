@@ -186,7 +186,7 @@ class RestRouteLoader implements LoaderInterface
                 }
 
                 $pattern        = mb_strtolower(implode('/', $urlParts));
-                $defaults       = array('_controller' => $class->getName() . '::' . $method->getName());
+                $defaults       = array('_controller' => $class->getName() . '::' . $method->getName(), '_format' => "html");
                 $requirements   = array('_method'     => mb_strtoupper($httpMethod));
                 $options        = array();
 
@@ -209,7 +209,9 @@ class RestRouteLoader implements LoaderInterface
                         break;
                     }
                 }
-
+                //Adding in the optional _format param for serialization
+                $pattern .= ".{_format}";
+                
                 // Create route with gathered parameters
                 $route = new Route($pattern, $defaults, $requirements, $options);
 
