@@ -306,11 +306,11 @@ class View
             $response = new Response();
         }
 
-        if (null === $this->format) {
-            $this->setFormat($request->getRequestFormat());
-        }
-
         $format = $this->getFormat();
+        if (null === $format) {
+            $this->setFormat($request->getRequestFormat());
+            $format = $this->getFormat();
+        }
 
         if (isset($this->customHandlers[$format])) {
             $callback = $this->customHandlers[$format];
