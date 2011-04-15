@@ -55,8 +55,9 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('format')
                     ->prototype('scalar')->end()
                 ->end()
-                ->booleanNode('frameworkextra')->defaultFalse()
-            ->end()
+            ->booleanNode('frameworkextra')->defaultFalse()->end()
+            ->booleanNode('useAcceptHeaders')->defaultTrue()->end()
+            ->scalarNode('defaultFormat')->defaultValue('html')->end()
         ->end();
 
         return $treeBuilder;
