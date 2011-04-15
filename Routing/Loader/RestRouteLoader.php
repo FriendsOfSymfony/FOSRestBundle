@@ -238,7 +238,7 @@ class RestRouteLoader implements LoaderInterface
                 }
 
                 $pattern        = mb_strtolower(implode('/', $urlParts));
-                $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => 'html');
+                $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => null);
                 $requirements   = array('_method'     => mb_strtoupper($httpMethod));
                 $options        = array();
                 
