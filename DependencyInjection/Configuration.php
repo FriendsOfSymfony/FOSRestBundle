@@ -46,7 +46,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('json')->defaultValue('Symfony\Component\Serializer\Encoder\JsonEncoder')->end()
                         ->scalarNode('xml')->defaultValue('Symfony\Component\Serializer\Encoder\XmlEncoder')->end()
                         ->scalarNode('html')->defaultValue('FOS\RestBundle\Serializer\Encoder\HtmlEncoder')->end()
-                        ->scalarNode('request_format_listener')->defaultValue('FOS\RestBundle\View\RequestListener')->end()
+                        ->scalarNode('request_format_listener')->defaultValue('FOS\RestBundle\Request\RequestListener')->end()
                     ->end()
                 ->end()
             ->end()

@@ -1,6 +1,6 @@
 <?php
 
-namespace FOS\RestBundle\View;
+namespace FOS\RestBundle\Request;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
