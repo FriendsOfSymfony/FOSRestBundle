@@ -52,7 +52,7 @@ class RequestListener
     protected function decodeBody($request)
     {
         if (in_array($request->getMethod(), array('POST', 'PUT'))) {
-            switch ($request->headers->get('Content-Type')) {
+            switch ($request->getFormat($request->headers->get('Content-Type'))) {
                 case 'json':
                     $post = json_decode($request->getContent());
                     break;
