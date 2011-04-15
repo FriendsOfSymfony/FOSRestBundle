@@ -56,9 +56,16 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('format')
                     ->prototype('scalar')->end()
                 ->end()
-            ->booleanNode('frameworkextra')->defaultFalse()->end()
-            ->booleanNode('format_listener')->defaultFalse()->end()
-            ->scalarNode('default_format')->defaultValue('html')->end()
+                ->arrayNode('format_listener')
+                    ->treatTrueLike(array('detect_format' => true, 'decode_body' => true, 'default_format' => 'html'))
+                    ->canBeUnset()
+                    ->children()
+                        ->scalarNode('detect_format')->defaultFalse()->end()
+                        ->scalarNode('decode_body')->defaultFalse()->end()
+                        ->scalarNode('default_format')->defaultValue('html')->end()
+                    ->end()
+                ->end()
+                ->booleanNode('frameworkextra')->defaultFalse()->end()
         ->end();
 
         return $treeBuilder;
