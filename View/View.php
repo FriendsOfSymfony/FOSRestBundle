@@ -317,7 +317,7 @@ class View
             $response = call_user_func($callback, $this, $request, $response);
         } else {
             if (!$this->supports($format)) {
-                throw new Response("Format '$format' not supported, handler must be implemented", 415);
+                return new Response("Format '$format' not supported, handler must be implemented", 415);
             }
             $response = $this->transform($request, $response, $format, $this->getTemplate());
         }
