@@ -4,9 +4,10 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    Symfony\Component\HttpFoundation\RedirectResponse;
+    Symfony\Component\DependencyInjection\ContainerAwareInterface,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
 
@@ -29,13 +30,15 @@ use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class View
+class View implements ContainerAwareInterface
 {
     protected $container;
     protected $serializer;
 
     protected $customHandlers = array();
     protected $formats;
+    protected $useAcceptHeaders;
+    protected $defaultFormat;
 
     protected $redirect;
     protected $template;
@@ -46,14 +49,12 @@ class View
     /**
      * Constructor
      *
-     * @param ContainerInterface $container The service_container service.
      * @param array $formats The supported formats
      */
-    public function __construct(ContainerInterface $container, array $formats = null)
+    public function __construct(array $formats = null)
     {
         $this->reset();
         $this->formats = (array)$formats;
-        $this->container = $container;
     }
 
     /**
@@ -74,6 +75,16 @@ class View
     public function resetSerializer()
     {
         $this->serializer = null;
+    }
+
+    /**
+     * Sets the Container associated with this Controller.
+     *
+     * @param ContainerInterface $container A ContainerInterface instance
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**
