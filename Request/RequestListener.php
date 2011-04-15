@@ -4,12 +4,35 @@ namespace FOS\RestBundle\Request;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
+/*
+ * This file is part of the FOS/RestBundle
+ *
+ * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * (c) Bulat Shakirzyanov <avalanche123>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ * RequestListener object.
+ *
+ * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ */
 class RequestListener
 {
     protected $detectFormat;
     protected $decodeBody;
     protected $defaultFormat;
 
+    /**
+     * Initialize RequestListener.
+     *
+     * @param   boolean    $detectFormat    if to try and detect the format
+     * @param   boolean    $decodeBody      if to decode the body for parameters
+     * @param   string     $defaultFormat   default fallback format
+     */
     public function __construct($detectFormat, $decodeBody, $defaultFormat)
     {
         $this->detectFormat = $detectFormat;
@@ -17,6 +40,11 @@ class RequestListener
         $this->defaultFormat = $defaultFormat;
     }
 
+    /**
+     * Core request handler
+     *
+     * @param   GetResponseEvent   $event    The event
+     */
     public function onCoreRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
@@ -30,6 +58,14 @@ class RequestListener
         }
     }
 
+    /**
+     * Detect the request format in the following order
+     * - Request
+     * - Accept Header
+     * - Default
+     *
+     * @param   Request   $request    The request
+     */
     protected function detectFormat($request)
     {
         // TODO enable once https://github.com/symfony/symfony/pull/565 is merged
@@ -49,6 +85,11 @@ class RequestListener
         $request->setRequestFormat($format);
     }
 
+    /**
+     * Decode the request body depending on the request content type
+     *
+     * @param   Request   $request    The request
+     */
     protected function decodeBody($request)
     {
         // TODO: this is totally incomplete and untested code
