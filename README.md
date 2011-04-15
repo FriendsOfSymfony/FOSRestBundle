@@ -48,7 +48,9 @@ Configuration
 
 Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
-support for xml. Also the default Json encoder class is modified:
+support for xml. Also the default Json encoder class is modified. Finally
+the request format listener (implements a fallback to Accept header parsing to
+determine the request format) is enabled and the default format is set to json:
 
     # app/config.yml
     fos_rest:
@@ -57,10 +59,19 @@ support for xml. Also the default Json encoder class is modified:
             xml: false
         class:
             json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
+        format_listener: true
+        default_format: json
 
 Note the service for the RSS encoder needs to be defined in a custom bundle:
 
     <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
+
+Note in case more complex Accept header negotiations are required, the user should
+either set a custom RequestListener class or register their own "onCoreRequest" event.
+
+    fos_rest:
+        class:
+            request_format_listener: MyProject\MyBundle\View\RequestListener
 
 FrameworkBundle support
 -----------------------

@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('json')->defaultValue('Symfony\Component\Serializer\Encoder\JsonEncoder')->end()
                         ->scalarNode('xml')->defaultValue('Symfony\Component\Serializer\Encoder\XmlEncoder')->end()
                         ->scalarNode('html')->defaultValue('FOS\RestBundle\Serializer\Encoder\HtmlEncoder')->end()
+                        ->scalarNode('request_format_listener')->defaultValue('FOS\RestBundle\View\RequestListener')->end()
                     ->end()
                 ->end()
             ->end()
@@ -56,8 +57,8 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                 ->end()
             ->booleanNode('frameworkextra')->defaultFalse()->end()
-            ->booleanNode('useAcceptHeaders')->defaultTrue()->end()
-            ->scalarNode('defaultFormat')->defaultValue('html')->end()
+            ->booleanNode('format_listener')->defaultFalse()->end()
+            ->scalarNode('default_format')->defaultValue('html')->end()
         ->end();
 
         return $treeBuilder;

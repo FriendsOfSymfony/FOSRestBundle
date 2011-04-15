@@ -20,8 +20,6 @@
 
         <service id="fos_rest.view" class="%fos_rest.view.class%">
             <argument>%fos_rest.formats%</argument>
-            <argument>%fos_rest.useAcceptHeaders%</argument>
-            <argument>%fos_rest.defaultFormat%</argument>
         </service>
 
     </services>

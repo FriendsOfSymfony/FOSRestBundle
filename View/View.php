@@ -37,8 +37,6 @@ class View implements ContainerAwareInterface
 
     protected $customHandlers = array();
     protected $formats;
-    protected $useAcceptHeaders;
-    protected $defaultFormat;
 
     protected $redirect;
     protected $template;
@@ -50,15 +48,11 @@ class View implements ContainerAwareInterface
      * Constructor
      *
      * @param array $formats The supported formats
-     * @param boolean $useAcceptHeaders If Accept headers should be read
-     * @param string $defaultFormat The default format
      */
-    public function __construct(array $formats = null, $useAcceptHeaders = null, $defaultFormat = null)
+    public function __construct(array $formats = null)
     {
         $this->reset();
         $this->formats = (array)$formats;
-        $this->useAcceptHeaders = $useAcceptHeaders;
-        $this->defaultFormat = $defaultFormat;
     }
 
     /**
@@ -272,70 +266,6 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Detect encoding format
-     *
-     * @param Request $request The request
-     *
-     * @return string format to be used in the encoding
-     */
-    protected function detectFormat($request)
-    {
-        // TODO: add ability to define a format negotiation service and/or closure
-        $format = $request->getRequestFormat(null);
-        if (null === $format) {
-            if ($this->useAcceptHeaders) {
-                $formats = $this->splitHttpAcceptHeader($request->headers->get('Accept'));
-                if (!empty($formats)) {
-                    $format = $request->getFormat(key($formats));
-                }
-
-                if (null === $format) {
-                    $format = $this->defaultFormat;
-                }
-            } else {
-                $format = $this->defaultFormat;
-            }
-        }
-
-        $this->setFormat($format);
-
-        return $format;
-    }
-
-    /**
-     * Splits an Accept-* HTTP header.
-     * TODO remove once https://github.com/symfony/symfony/pull/565 is merged
-     *
-     * @param string $header  Header to split
-     */
-    public function splitHttpAcceptHeader($header)
-    {
-        if (!$header) {
-            return array();
-        }
-
-        $values = array();
-        foreach (array_filter(explode(',', $header)) as $value) {
-            // Cut off any q-value that might come after a semi-colon
-            if ($pos = strpos($value, ';')) {
-                $q     = (float) trim(substr($value, strpos($value, '=') + 1));
-                $value = trim(substr($value, 0, $pos));
-            } else {
-                $q = 1;
-            }
-
-            if (0 < $q) {
-                $values[trim($value)] = $q;
-            }
-        }
-
-        arsort($values);
-        reset($values);
-
-        return $values;
-    }
-
-    /**
      * Set the serializer service
      *
      * @param Symfony\Component\Serializer\SerializerInterface $serializer a serializer instance
@@ -387,7 +317,8 @@ class View implements ContainerAwareInterface
 
         $format = $this->getFormat();
         if (null === $format) {
-            $format = $this->detectFormat($request);
+            $format = $request->getRequestFormat();
+            $this->setFormat($format);
         }
 
         if (isset($this->customHandlers[$format])) {

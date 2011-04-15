@@ -52,9 +52,11 @@ class FOSRestExtension extends Extension
 
         $container->setParameter($this->getAlias().'.formats', $config['formats']);
 
-        $container->setParameter($this->getAlias().'.useAcceptHeaders', $config['useAcceptHeaders']);
+        $container->setParameter($this->getAlias().'.default_format', $config['default_format']);
 
-        $container->setParameter($this->getAlias().'.defaultFormat', $config['defaultFormat']);
+        if (!empty($config['format_listener'])) {
+            $loader->load('request_format_listener.xml');
+        }
 
         if (!empty($config['frameworkextra'])) {
             $loader->load('frameworkextra.xml');
