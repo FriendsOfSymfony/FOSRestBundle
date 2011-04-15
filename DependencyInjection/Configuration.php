@@ -37,19 +37,6 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('fos_rest', 'array');
 
         $rootNode
-            ->children()
-                ->arrayNode('class')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('view')->defaultValue('FOS\RestBundle\View\View')->end()
-                        ->scalarNode('serializer')->defaultValue('Symfony\Component\Serializer\Serializer')->end()
-                        ->scalarNode('json')->defaultValue('Symfony\Component\Serializer\Encoder\JsonEncoder')->end()
-                        ->scalarNode('xml')->defaultValue('Symfony\Component\Serializer\Encoder\XmlEncoder')->end()
-                        ->scalarNode('html')->defaultValue('FOS\RestBundle\Serializer\Encoder\HtmlEncoder')->end()
-                        ->scalarNode('request_format_listener')->defaultValue('FOS\RestBundle\Request\RequestListener')->end()
-                    ->end()
-                ->end()
-            ->end()
             ->fixXmlConfig('format', 'formats')
             ->children()
                 ->arrayNode('formats')
@@ -66,6 +53,18 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->booleanNode('frameworkextra')->defaultFalse()->end()
+                ->arrayNode('class')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('view')->defaultValue('FOS\RestBundle\View\View')->end()
+                        ->scalarNode('serializer')->defaultValue('Symfony\Component\Serializer\Serializer')->end()
+                        ->scalarNode('json')->defaultValue('Symfony\Component\Serializer\Encoder\JsonEncoder')->end()
+                        ->scalarNode('xml')->defaultValue('Symfony\Component\Serializer\Encoder\XmlEncoder')->end()
+                        ->scalarNode('html')->defaultValue('FOS\RestBundle\Serializer\Encoder\HtmlEncoder')->end()
+                        ->scalarNode('request_format_listener')->defaultValue('FOS\RestBundle\Request\RequestListener')->end()
+                    ->end()
+                ->end()
+            ->end()
         ->end();
 
         return $treeBuilder;
