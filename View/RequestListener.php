@@ -73,7 +73,7 @@ class RequestListener
      *
      * @param string $header  Header to split
      */
-    protected function splitHttpAcceptHeader($header)
+    private function splitHttpAcceptHeader($header)
     {
         if (!$header) {
             return array();
