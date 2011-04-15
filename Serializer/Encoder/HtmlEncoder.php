@@ -3,7 +3,7 @@
 namespace FOS\RestBundle\Serializer\Encoder;
 
 use Symfony\Component\Serializer\Encoder\XmlEncoder,
-    Symfony\Component\Templating\EngineInterface;
+    Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -63,10 +63,11 @@ class HtmlEncoder extends XmlEncoder implements TemplatingAwareEncoderInterface
      */
     public function encode($data, $format)
     {
-        if (null === $this->template) {
+        $template = $this->getTemplate();
+        if (null === $template) {
             throw new \UnexpectedValueException('A template must be provided to encode to HTML');
         }
 
-        return $this->templating->render($this->template, (array)$data);
+        return $this->templating->render($template, (array)$data);
     }
 }
