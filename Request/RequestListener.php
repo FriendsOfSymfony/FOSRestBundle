@@ -58,6 +58,10 @@ class RequestListener
 
         if ($this->detectFormat) {
             $this->detectFormat($request);
+        // TODO enable once https://github.com/symfony/symfony/pull/565 is merged
+        //} elseif (null === $request->getRequestFormat(null)) {
+        } elseif (null === $request->get('_format')) {
+            $request->setRequestFormat($this->defaultFormat);
         }
 
         if ($this->decodeBody) {
