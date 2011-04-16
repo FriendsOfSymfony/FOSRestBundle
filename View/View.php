@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
+    Symfony\Component\Serializer\SerializerInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
@@ -268,9 +269,9 @@ class View implements ContainerAwareInterface
     /**
      * Set the serializer service
      *
-     * @param Symfony\Component\Serializer\SerializerInterface $serializer a serializer instance
+     * @param SerializerInterface $serializer a serializer instance
      */
-    public function setSerializer($serializer)
+    public function setSerializer(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
@@ -280,7 +281,7 @@ class View implements ContainerAwareInterface
      *
      * @param string $format
      *
-     * @return Symfony\Component\Serializer\SerializerInterface
+     * @return SerializerInterface
      */
     public function getSerializer($format = null)
     {
@@ -288,7 +289,11 @@ class View implements ContainerAwareInterface
             $this->serializer = $this->container->get('fos_rest.serializer');
         }
 
-        if (null !== $format && !$this->serializer->hasEncoder($format)) {
+        // TODO this kind of lazy loading of encoders should be provided by the Serializer component
+        if (null !== $format
+            && !$this->serializer->hasEncoder($format)
+            && isset($this->formats[$format])
+        ) {
             $this->serializer->setEncoder($format, $this->container->get($this->formats[$format]));
         }
 
