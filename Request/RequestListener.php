@@ -32,11 +32,11 @@ class RequestListener
     /**
      * Initialize RequestListener.
      *
-     * @param   SerializerInterface $serializer a serializer instance
-     * @param   boolean    $detectFormat    if to try and detect the format
-     * @param   string     $defaultFormat   default fallback format
-     * @param   boolean    $decodeBody      if to decode the body for parameters
-     * @param   array      $formats The supported formats
+     * @param   SerializerInterface $serializer The serializer instance
+     * @param   boolean    $detectFormat        If to try and detect the format
+     * @param   string     $defaultFormat       Default fallback format
+     * @param   boolean    $decodeBody          If to decode the body for parameters
+     * @param   array      $formats             The supported formats
      */
     public function __construct(SerializerInterface $serializer, $detectFormat, $defaultFormat, $decodeBody, array $formats = null)
     {
@@ -70,7 +70,8 @@ class RequestListener
     }
 
     /**
-     * Detect the request format in the following order
+     * Detect the request format in the following order:
+     * 
      * - Request
      * - Accept Header
      * - Default
@@ -112,9 +113,10 @@ class RequestListener
                 return;
             }
 
-            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
             if (!$this->serializer->hasEncoder($format)) {
+                // TODO this kind of lazy loading of encoders should be provided by the Serializer component
                 $encoder = $this->container->get($this->formats[$format]);
+                // Technically not needed, but this way we have the instance for encoding later on
                 $this->serializer->setEncoder($format, $encoder);
             } else {
                 $encoder = $this->serializer->getEncoder($format);
