@@ -132,7 +132,8 @@ class View implements ContainerAwareInterface
     public function setRouteRedirect($route, array $parameters = array(), $code = 302)
     {
         $this->redirect = array(
-            'location' => $this->container->get('router')->generate($route, $parameters),
+            'route' => $route,
+            'parameters' => $parameters,
             'status_code' => $code,
         );
     }
@@ -289,11 +290,11 @@ class View implements ContainerAwareInterface
             $this->serializer = $this->container->get('fos_rest.serializer');
         }
 
-        // TODO this kind of lazy loading of encoders should be provided by the Serializer component
         if (null !== $format
             && !$this->serializer->hasEncoder($format)
             && isset($this->formats[$format])
         ) {
+            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
             $this->serializer->setEncoder($format, $this->container->get($this->formats[$format]));
         }
 
@@ -356,6 +357,11 @@ class View implements ContainerAwareInterface
     protected function transform(Request $request, Response $response, $format, $template)
     {
         if ($this->redirect) {
+            // TODO add support to optionally return the target url
+            if (empty($this->redirect['location'])) {
+                // TODO add support to optionally forward to the route
+                $this->redirect['location'] = $this->container->get('router')->generate($this->redirect['route'], $this->redirect['parameters']);
+            }
             $redirect = new RedirectResponse($this->redirect['location'], $this->redirect['status_code']);
             $response->setContent($redirect->getContent());
             $response->setStatusCode($this->redirect['status_code']);
