@@ -108,14 +108,12 @@ class RequestListener
             && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
         ) {
             $format = $request->getFormat($request->headers->get('Content-Type'));
-            if (null == $format) {
+            if (null === $format || empty($this->formats[$format])) {
                 return;
             }
 
             // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-            if (!$this->serializer->hasEncoder($format)
-                && isset($this->formats[$format])
-            ) {
+            if (!$this->serializer->hasEncoder($format)) {
                 $encoder = $this->container->get($this->formats[$format]);
                 $this->serializer->setEncoder($format, $encoder);
             } else {
