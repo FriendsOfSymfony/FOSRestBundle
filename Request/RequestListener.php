@@ -2,8 +2,9 @@
 
 namespace FOS\RestBundle\Request;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent,
-    Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -65,7 +66,7 @@ class RequestListener
         }
 
         if ($this->decodeBody) {
-            $this->detectFormat($request);
+            $this->decodeBody($request);
         }
     }
 
@@ -105,7 +106,7 @@ class RequestListener
     protected function decodeBody($request)
     {
         // TODO: this is totally incomplete and untested code
-        if (empty($request->request)
+        if (0 == count($request->request->all())
             && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
         ) {
             $format = $request->getFormat($request->headers->get('Content-Type'));
@@ -115,7 +116,7 @@ class RequestListener
 
             if (!$this->serializer->hasEncoder($format)) {
                 // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-                $encoder = $this->container->get($this->formats[$format]);
+                $encoder = $this->formats[$format];
                 // Technically not needed, but this way we have the instance for encoding later on
                 $this->serializer->setEncoder($format, $encoder);
             } else {
@@ -123,7 +124,7 @@ class RequestListener
             }
 
             // TODO Serializer component should provide an interface to check if the Encoder supports decoding
-            $post = $encoder->decode($request->getContent());
+            $post = $encoder->decode($request->getContent(), $format);
 
             $request->request = new ParameterBag((array)$post);
         }
