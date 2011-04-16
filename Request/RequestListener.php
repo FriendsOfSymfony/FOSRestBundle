@@ -2,7 +2,8 @@
 
 namespace FOS\RestBundle\Request;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent,
+    Symfony\Component\Serializer\SerializerInterface;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -22,22 +23,28 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  */
 class RequestListener
 {
+    protected $serializer;
+    protected $formats;
     protected $detectFormat;
-    protected $decodeBody;
     protected $defaultFormat;
+    protected $decodeBody;
 
     /**
      * Initialize RequestListener.
      *
+     * @param   SerializerInterface $serializer a serializer instance
      * @param   boolean    $detectFormat    if to try and detect the format
-     * @param   boolean    $decodeBody      if to decode the body for parameters
      * @param   string     $defaultFormat   default fallback format
+     * @param   boolean    $decodeBody      if to decode the body for parameters
+     * @param   array      $formats The supported formats
      */
-    public function __construct($detectFormat, $decodeBody, $defaultFormat)
+    public function __construct(SerializerInterface $serializer, $detectFormat, $defaultFormat, $decodeBody, array $formats = null)
     {
+        $this->serializer = $serializer;
         $this->detectFormat = $detectFormat;
-        $this->decodeBody = $decodeBody;
         $this->defaultFormat = $defaultFormat;
+        $this->decodeBody = $decodeBody;
+        $this->formats = (array)$formats;
     }
 
     /**
@@ -93,17 +100,26 @@ class RequestListener
     protected function decodeBody($request)
     {
         // TODO: this is totally incomplete and untested code
-        if (in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))) {
-            switch ($request->getFormat($request->headers->get('Content-Type'))) {
-                case 'json':
-                    $post = json_decode($request->getContent());
-                    break;
-                case 'xml':
-                    $post = simplexml_load_string($request->getContent());
-                    break;
-                default:
-                    return;
+        if (empty($request->request)
+            && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
+        ) {
+            $format = $request->getFormat($request->headers->get('Content-Type'));
+            if (null == $format) {
+                return;
             }
+
+            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
+            if (!$this->serializer->hasEncoder($format)
+                && isset($this->formats[$format])
+            ) {
+                $encoder = $this->container->get($this->formats[$format]);
+                $this->serializer->setEncoder($format, $encoder);
+            } else {
+                $encoder = $this->serializer->getEncoder($format);
+            }
+
+            // TODO Serializer component should provide an interface to check if the Encoder supports decoding
+            $post = $encoder->decode($request->getContent());
 
             $request->request = new ParameterBag((array)$post);
         }

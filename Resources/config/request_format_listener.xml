@@ -8,9 +8,11 @@
 
         <service id="fos_rest.request_format_listener" class="%fos_rest.request_format_listener.class%">
             <tag name="kernel.listener" event="onCoreRequest" />
+            <argument type="service" id="fos_rest.serializer"/>
             <argument>%fos_rest.detect_format%</argument>
-            <argument>%fos_rest.decode_body%</argument>
             <argument>%fos_rest.default_format%</argument>
+            <argument>%fos_rest.decode_body%</argument>
+            <argument>%fos_rest.formats%</argument>
         </service>
 
     </services>
