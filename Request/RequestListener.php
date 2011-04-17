@@ -108,6 +108,27 @@ class RequestListener implements ContainerAwareInterface
     }
 
     /**
+     * Get an encoder instance for the given format
+     *
+     * @param    string $format     The format string
+     * @return   EncoderInterface   The encoder
+     */
+    protected function getEncoder($format)
+    {
+        $serializer = $this->container->get('fos_rest.serializer');
+        if (!$serializer->hasEncoder($format)) {
+            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
+            $encoder = $this->container->get($this->formats[$format]);
+            // Technically not needed, but this way we have the instance for encoding later on
+            $serializer->setEncoder($format, $encoder);
+        } else {
+            $encoder = $serializer->getEncoder($format);
+        }
+
+        return $encoder;
+    }
+
+    /**
      * Decode the request body depending on the request content type
      *
      * @param   Request   $request    The request
@@ -122,15 +143,7 @@ class RequestListener implements ContainerAwareInterface
                 return;
             }
 
-            $serializer = $this->container->get('fos_rest.serializer');
-            if (!$serializer->hasEncoder($format)) {
-                // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-                $encoder = $this->container->get($this->formats[$format]);
-                // Technically not needed, but this way we have the instance for encoding later on
-                $serializer->setEncoder($format, $encoder);
-            } else {
-                $encoder = $serializer->getEncoder($format);
-            }
+            $encoder = $this->getEncoder($format);
 
             // TODO Serializer component should provide an interface to check if the Encoder supports decoding
             $post = $encoder->decode($request->getContent(), $format);
