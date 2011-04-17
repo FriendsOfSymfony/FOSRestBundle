@@ -5,7 +5,8 @@ namespace FOS\RestBundle\Request;
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\DependencyInjection\ContainerAwareInterface;
+    Symfony\Component\DependencyInjection\ContainerAwareInterface,
+    Symfony\Component\DependencyInjection\ContainerInterface;
 
 /*
  * This file is part of the FOS/RestBundle
