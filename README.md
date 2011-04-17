@@ -48,16 +48,18 @@ Configuration
 
 Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
-support for xml. Also the default Json encoder class is modified. Finally
-the request format listener:
+support for xml. Also the default Json encoder class is modified and a custom
+serializer service is configured. Finally the request format listener is enabled:
 
     # app/config.yml
     fos_rest:
-        fos_rest.formats:
+        formats:
             rss: my.encoder.rss
             xml: false
         class:
             json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
+        service:
+            serializer: my.serializer
         format_listener: true
 
 Note the service for the RSS encoder needs to be defined in a custom bundle:

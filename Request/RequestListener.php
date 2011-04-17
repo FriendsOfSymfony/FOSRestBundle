@@ -148,7 +148,6 @@ class RequestListener implements ContainerAwareInterface
             $encoder = $this->getEncoder($format);
 
             if ($encoder && $encoder instanceof DecoderInterface) {
-                // TODO Serializer component should provide an interface to check if the Encoder supports decoding
                 $post = $encoder->decode($request->getContent(), $format);
 
                 $request->request = new ParameterBag((array)$post);
