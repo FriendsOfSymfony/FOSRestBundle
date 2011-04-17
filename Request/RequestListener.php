@@ -102,16 +102,16 @@ class RequestListener implements ContainerAwareInterface
             if (null === $format) {
                 $format = $this->defaultFormat;
             }
-        }
 
-        $request->setRequestFormat($format);
+            $request->setRequestFormat($format);
+        }
     }
 
     /**
      * Get an encoder instance for the given format
      *
-     * @param    string $format     The format string
-     * @return   EncoderInterface   The encoder
+     * @param    string     $format     The format string
+     * @return   EncoderInterface       The encoder
      */
     protected function getEncoder($format)
     {
