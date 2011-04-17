@@ -70,14 +70,4 @@ class HtmlEncoder extends AbstractEncoder implements TemplatingAwareEncoderInter
 
         return $this->templating->render($template, (array)$data);
     }
-
-    /**
-     * {@inheritdoc}
-     * 
-     * Remove when https://github.com/symfony/symfony/pull/576 is merged
-     */
-    public function decode($data, $format)
-    {
-        throw new \Exception('Decode is not implemented');
-    }
 }
