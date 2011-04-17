@@ -113,10 +113,14 @@ class RequestListener implements ContainerAwareInterface
      * Get an encoder instance for the given format
      *
      * @param    string     $format     The format string
-     * @return   EncoderInterface       The encoder
+     * @return   void|EncoderInterface  The encoder if one can be determined
      */
     protected function getEncoder($format)
     {
+        if (null === $format || empty($this->formats[$format])) {
+            return;
+        }
+
         $serializer = $this->container->get('fos_rest.serializer');
         if (!$serializer->hasEncoder($format)) {
             // TODO this kind of lazy loading of encoders should be provided by the Serializer component
@@ -141,19 +145,17 @@ class RequestListener implements ContainerAwareInterface
             && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
         ) {
             $format = $request->getFormat($request->headers->get('Content-Type'));
-            if (null === $format || empty($this->formats[$format])) {
-                return;
-            }
-
             $encoder = $this->getEncoder($format);
 
+            if ($encoder
             // Enable when https://github.com/symfony/symfony/pull/576 is merged
-//            if ($encoder instanceof DecoderInterface) {
+//                && $encoder instanceof DecoderInterface
+            ) {
                 // TODO Serializer component should provide an interface to check if the Encoder supports decoding
                 $post = $encoder->decode($request->getContent(), $format);
 
                 $request->request = new ParameterBag((array)$post);
-//            }
+            }
         }
     }
 
