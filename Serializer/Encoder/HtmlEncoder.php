@@ -2,8 +2,8 @@
 
 namespace FOS\RestBundle\Serializer\Encoder;
 
-use Symfony\Component\Serializer\Encoder\XmlEncoder,
-    Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface,
+    Symfony\Component\Serializer\Encoder\AbstractEncoder;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder,
  *
  * @author Lukas Smith <smith@pooteeweet.org>
  */
-class HtmlEncoder extends XmlEncoder implements TemplatingAwareEncoderInterface
+class HtmlEncoder extends AbstractEncoder implements TemplatingAwareEncoderInterface
 {
     protected $templating;
     protected $template;
@@ -69,5 +69,15 @@ class HtmlEncoder extends XmlEncoder implements TemplatingAwareEncoderInterface
         }
 
         return $this->templating->render($template, (array)$data);
+    }
+
+    /**
+     * {@inheritdoc}
+     * 
+     * Remove when https://github.com/symfony/symfony/pull/576 is merged
+     */
+    public function decode($data, $format)
+    {
+        throw new \Exception('Decode is not implemented');
     }
 }

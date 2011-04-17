@@ -5,6 +5,8 @@ namespace FOS\RestBundle\Request;
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
     Symfony\Component\Serializer\SerializerInterface,
+// Enable when https://github.com/symfony/symfony/pull/576 is merged
+//    Symfony\Component\Serializer\Encoder\DecoderInterface,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -145,10 +147,13 @@ class RequestListener implements ContainerAwareInterface
 
             $encoder = $this->getEncoder($format);
 
-            // TODO Serializer component should provide an interface to check if the Encoder supports decoding
-            $post = $encoder->decode($request->getContent(), $format);
+            // Enable when https://github.com/symfony/symfony/pull/576 is merged
+//            if ($encoder instanceof DecoderInterface) {
+                // TODO Serializer component should provide an interface to check if the Encoder supports decoding
+                $post = $encoder->decode($request->getContent(), $format);
 
-            $request->request = new ParameterBag((array)$post);
+                $request->request = new ParameterBag((array)$post);
+//            }
         }
     }
 
