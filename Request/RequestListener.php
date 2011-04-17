@@ -68,7 +68,7 @@ class RequestListener implements ContainerAwareInterface
 
         if ($this->detectFormat) {
             $this->detectFormat($request);
-        // TODO enable once https://github.com/symfony/symfony/pull/565 is merged
+        // TODO enable once https://github.com/symfony/symfony/pull/575 is merged
         //} elseif (null === $request->getRequestFormat(null)) {
         } elseif (null === $request->get('_format')) {
             $request->setRequestFormat($this->defaultFormat);
@@ -90,7 +90,7 @@ class RequestListener implements ContainerAwareInterface
      */
     protected function detectFormat($request)
     {
-        // TODO enable once https://github.com/symfony/symfony/pull/565 is merged
+        // TODO enable once https://github.com/symfony/symfony/pull/575 is merged
 //        $format = $request->getRequestFormat(null);
         $format = $request->get('_format');
         if (null === $format) {
@@ -114,7 +114,6 @@ class RequestListener implements ContainerAwareInterface
      */
     protected function decodeBody($request)
     {
-        // TODO: this is totally incomplete and untested code
         if (0 == count($request->request->all())
             && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
         ) {
@@ -142,7 +141,7 @@ class RequestListener implements ContainerAwareInterface
 
     /**
      * Splits an Accept-* HTTP header.
-     * TODO remove once https://github.com/symfony/symfony/pull/565 is merged
+     * TODO remove once https://github.com/symfony/symfony/pull/575 is merged
      *
      * @param string $header  Header to split
      */
