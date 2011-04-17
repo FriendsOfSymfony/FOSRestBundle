@@ -32,6 +32,7 @@ class RequestListener implements ContainerAwareInterface
     protected $detectFormat;
     protected $defaultFormat;
     protected $decodeBody;
+    protected $container;
 
     /**
      * Initialize RequestListener.
