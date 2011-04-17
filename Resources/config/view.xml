@@ -6,11 +6,11 @@
 
     <services>
 
-        <service id="fos_rest.encoder.json" class="%fos_rest.json.class%" />
+        <service id="fos_rest.json" class="%fos_rest.json.class%" />
 
-        <service id="fos_rest.encoder.xml" class="%fos_rest.xml.class%" />
+        <service id="fos_rest.xml" class="%fos_rest.xml.class%" />
 
-        <service id="fos_rest.encoder.html" class="%fos_rest.html.class%">
+        <service id="fos_rest.html" class="%fos_rest.html.class%">
             <call method="setTemplating">
                 <argument type="service" id="templating" />
             </call>

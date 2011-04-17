@@ -32,9 +32,9 @@ class FOSRestExtension extends Extension
         // TODO move this to the Configuration class as soon as it supports setting such a default
         array_unshift($configs, array(
             'formats' => array(
-                'json'  => 'fos_rest.encoder.json',
-                'xml'   => 'fos_rest.encoder.xml',
-                'html'  => 'fos_rest.encoder.html',
+                'json'  => 'fos_rest.json',
+                'xml'   => 'fos_rest.xml',
+                'html'  => 'fos_rest.html',
             )
         ));
 
@@ -61,6 +61,12 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['frameworkextra'])) {
             $loader->load('frameworkextra.xml');
+        }
+
+        foreach ($config['service'] as $key => $value) {
+            if (isset($value)) {
+                $container->setAlias($this->getAlias().'.'.$key, $value);
+            }
         }
     }
 

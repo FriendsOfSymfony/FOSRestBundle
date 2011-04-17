@@ -64,6 +64,17 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('request_format_listener')->defaultValue('FOS\RestBundle\Request\RequestListener')->end()
                     ->end()
                 ->end()
+                ->arrayNode('service')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('view')->defaultNull()->end()
+                        ->scalarNode('serializer')->defaultNull()->end()
+                        ->scalarNode('json')->defaultNull()->end()
+                        ->scalarNode('xml')->defaultNull()->end()
+                        ->scalarNode('html')->defaultNull()->end()
+                        ->scalarNode('request_format_listener')->defaultNull()->end()
+                    ->end()
+                ->end()
             ->end()
         ->end();
 
