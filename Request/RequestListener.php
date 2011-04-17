@@ -2,9 +2,10 @@
 
 namespace FOS\RestBundle\Request;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag,
+    Symfony\Component\HttpKernel\Event\GetResponseEvent,
+    Symfony\Component\Serializer\SerializerInterface,
+    Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -22,9 +23,8 @@ use Symfony\Component\Serializer\SerializerInterface;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class RequestListener
+class RequestListener implements ContainerAwareInterface
 {
-    protected $serializer;
     protected $formats;
     protected $detectFormat;
     protected $defaultFormat;
@@ -33,19 +33,27 @@ class RequestListener
     /**
      * Initialize RequestListener.
      *
-     * @param   SerializerInterface $serializer The serializer instance
      * @param   boolean    $detectFormat        If to try and detect the format
      * @param   string     $defaultFormat       Default fallback format
      * @param   boolean    $decodeBody          If to decode the body for parameters
-     * @param   array      $formats             The supported formats
+     * @param   array      $formats             The supported formats as keys, encoder service id's as values
      */
-    public function __construct(SerializerInterface $serializer, $detectFormat, $defaultFormat, $decodeBody, array $formats = null)
+    public function __construct($detectFormat, $defaultFormat, $decodeBody, array $formats = null)
     {
-        $this->serializer = $serializer;
         $this->detectFormat = $detectFormat;
         $this->defaultFormat = $defaultFormat;
         $this->decodeBody = $decodeBody;
         $this->formats = (array)$formats;
+    }
+
+    /**
+     * Sets the Container associated with this Controller.
+     *
+     * @param ContainerInterface $container A ContainerInterface instance
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**
@@ -114,13 +122,14 @@ class RequestListener
                 return;
             }
 
-            if (!$this->serializer->hasEncoder($format)) {
+            $serializer = $this->container->get('fos_rest.serializer');
+            if (!$serializer->hasEncoder($format)) {
                 // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-                $encoder = $this->formats[$format];
+                $encoder = $this->container->get($this->formats[$format]);
                 // Technically not needed, but this way we have the instance for encoding later on
-                $this->serializer->setEncoder($format, $encoder);
+                $serializer->setEncoder($format, $encoder);
             } else {
-                $encoder = $this->serializer->getEncoder($format);
+                $encoder = $serializer->getEncoder($format);
             }
 
             // TODO Serializer component should provide an interface to check if the Encoder supports decoding
