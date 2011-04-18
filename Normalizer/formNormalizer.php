@@ -1,5 +1,5 @@
 <?php
-namespace WhiteOctober\FormBuilderBundle\Normalizer;
+namespace FOS\RestBundle\Normalizer;
 
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Form\FormView;
