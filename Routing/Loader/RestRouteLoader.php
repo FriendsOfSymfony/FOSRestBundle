@@ -105,32 +105,34 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Loads a Routes collection by parsing Controller method names.
      *
-     * @param   string  $class      A controller class
+     * @param   string  $controller Some identifier for the controller
      * @param   string  $type       The resource type
      *
      * @return  RouteCollection     A RouteCollection instance
      */
-    public function load($class, $type = null)
+    public function load($controller, $type = null)
     {
-        if (class_exists($class)) {
+        if (class_exists($controller)) {
             // full class name
-            $class            = $class;
+            $class            = $controller;
             $controllerPrefix = $class . '::';
-        } elseif (false !== strpos($class, ':')) {
+        } elseif (false !== strpos($controller, ':')) {
             // bundle:controller notation
             try {
-                $notation             = $this->parser->parse($class . ':method');
+                $notation             = $this->parser->parse($controller . ':method');
                 list($class, $method) = explode('::', $notation);
                 $controllerPrefix     = $class . '::';
             } catch (\Exception $e) {
                 throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $class));
             }
-        } elseif ($this->container->has($class)) {
+        } elseif ($this->container->has($controller)) {
             // service_id
-            $controllerPrefix = $class . '::';
-            $class            = get_class($this->container->get($class));
-        } else {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+            $controllerPrefix = $controller . ':';
+            $class            = get_class($this->container->get($controller));
+        }
+
+        if (empty($class)) {
+            throw new \InvalidArgumentException(sprintf('Class could not be determined for Controller identified by "%s".', $controller));
         }
 
         // Check that every passed parent has non-empty singular name
