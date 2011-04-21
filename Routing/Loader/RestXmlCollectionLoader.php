@@ -27,6 +27,8 @@ class RestXmlCollectionLoader extends XmlFileLoader
 {
     protected $collectionParents = array();
 
+    private $currentDir;
+
     /**
      * Loads a Xml collection file.
      *
