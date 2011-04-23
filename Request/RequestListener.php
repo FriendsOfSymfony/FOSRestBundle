@@ -70,9 +70,7 @@ class RequestListener implements ContainerAwareInterface
 
         if ($this->detectFormat) {
             $this->detectFormat($request);
-        // TODO enable once https://github.com/symfony/symfony/pull/575 is merged
-        //} elseif (null === $request->getRequestFormat(null)) {
-        } elseif (null === $request->get('_format')) {
+        } elseif (null === $request->getRequestFormat(null)) {
             $request->setRequestFormat($this->defaultFormat);
         }
 
@@ -92,11 +90,9 @@ class RequestListener implements ContainerAwareInterface
      */
     protected function detectFormat($request)
     {
-        // TODO enable once https://github.com/symfony/symfony/pull/575 is merged
-//        $format = $request->getRequestFormat(null);
-        $format = $request->get('_format');
+        $format = $request->getRequestFormat(null);
         if (null === $format) {
-            $formats = $this->splitHttpAcceptHeader($request->headers->get('Accept'));
+            $formats = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
             if (!empty($formats)) {
                 $format = $request->getFormat(key($formats));
             }
@@ -118,7 +114,7 @@ class RequestListener implements ContainerAwareInterface
     protected function getEncoder($format)
     {
         if (null === $format || empty($this->formats[$format])) {
-            return;
+            return null;
         }
 
         $serializer = $this->container->get('fos_rest.serializer');
@@ -154,38 +150,4 @@ class RequestListener implements ContainerAwareInterface
             }
         }
     }
-
-    /**
-     * Splits an Accept-* HTTP header.
-     * TODO remove once https://github.com/symfony/symfony/pull/575 is merged
-     *
-     * @param string $header  Header to split
-     */
-    private function splitHttpAcceptHeader($header)
-    {
-        if (!$header) {
-            return array();
-        }
-
-        $values = array();
-        foreach (array_filter(explode(',', $header)) as $value) {
-            // Cut off any q-value that might come after a semi-colon
-            if ($pos = strpos($value, ';')) {
-                $q     = (float) trim(substr($value, strpos($value, '=') + 1));
-                $value = trim(substr($value, 0, $pos));
-            } else {
-                $q = 1;
-            }
-
-            if (0 < $q) {
-                $values[trim($value)] = $q;
-            }
-        }
-
-        arsort($values);
-        reset($values);
-
-        return $values;
-    }
-
 }
