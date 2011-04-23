@@ -123,7 +123,7 @@ class RestRouteLoader implements LoaderInterface
                 list($class, $method) = explode('::', $notation);
                 $controllerPrefix     = $class . '::';
             } catch (\Exception $e) {
-                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $class));
+                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $controller));
             }
         } elseif ($this->container->has($controller)) {
             // service_id
