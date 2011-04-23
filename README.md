@@ -154,7 +154,9 @@ Note in case there is no match the value for the key ``*`` will be used as the d
 Routing
 =======
 
-Note: The following requires the ext/mbstring PHP extension
+The RestBundle provides custom route loaders to help in defining REST friendly routes.
+
+Note that the following requires the ext/mbstring PHP extension.
 
 Single RESTful controller routes
 --------------------------------
@@ -162,7 +164,7 @@ Single RESTful controller routes
     # app/config/routing.yml
     users:
       type:     rest
-      resource: Application\HelloBundle\Controller\UsersController
+      resource: Acme\HelloBundle\Controller\UsersController
 
 This will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
 Notice `type:     rest` option. It's required so that the RestBundle can find which routes are supported.
