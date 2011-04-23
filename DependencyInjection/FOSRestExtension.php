@@ -52,6 +52,16 @@ class FOSRestExtension extends Extension
 
         $container->setParameter($this->getAlias().'.formats', $config['formats']);
 
+        foreach ($config['exception_map'] as $key => $value) {
+            if (is_string($value)) {
+                $config['exception_map'][$key] = constant("\FOS\RestBundle\Response\Codes::$value");
+            }
+        }
+        if (!array_key_exists('*', $config['exception_map'])) {
+            $config['exception_map']['*'] = 500;
+        }
+        $container->setParameter($this->getAlias().'.exception_map', $config['exception_map']);
+
         if (!empty($config['format_listener'])) {
             $loader->load('request_format_listener.xml');
             $container->setParameter($this->getAlias().'.detect_format', $config['format_listener']['detect_format']);

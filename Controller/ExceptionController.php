@@ -19,13 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\ExceptionController as BaseExcepti
  */
 
 /**
- * ExceptionController.
- *
- * Set in the app config.yml:
- *
- * framework:
- *   exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
- * 
+ * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
  */
 class ExceptionController extends BaseExceptionController
 {
@@ -39,7 +33,7 @@ class ExceptionController extends BaseExceptionController
      * @param string               $message   An HTTP response status message
      * @param array                $headers   HTTP response headers
      */
-    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html', $code = 500, $message = null, array $headers = array())
+    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html', $code = null, $message = null, array $headers = array())
     {
         $currentContent = '';
         // @codeCoverageIgnoreStart
@@ -49,8 +43,8 @@ class ExceptionController extends BaseExceptionController
         // @codeCoverageIgnoreEnd
 
         $format = $this->getFormat($format);
-        $parameters = $this->getParameters($currentContent, $exception, $logger, $format, $code, $message);
         $code = $this->getStatusCode($exception, $code);
+        $parameters = $this->getParameters($currentContent, $exception, $logger, $format, $code, $message);
 
         try {
             $view = $this->container->get('fos_rest');
@@ -77,6 +71,7 @@ class ExceptionController extends BaseExceptionController
      */
     protected function getExceptionMessage($exception)
     {
+        // TODO: add a map of exception classes for which it is safe to return the message?
         return '';
     }
 
@@ -90,7 +85,13 @@ class ExceptionController extends BaseExceptionController
      */
     protected function getStatusCode($exception, $code)
     {
-        return $code;
+        if (isset($code)) {
+            return $code;
+        }
+
+        $exceptionClass = $exception->getClass();
+        $exceptionMap = $this->container->getParameter('fos_rest.exception_map');
+        return isset($exceptionMap[$exceptionClass]) ? $exceptionMap[$exceptionClass] : $exceptionMap['*'];
     }
 
     /**
@@ -133,13 +134,13 @@ class ExceptionController extends BaseExceptionController
      * @param integer              $code      An HTTP response code
      * @param string               $message   An HTTP response status message
      */
-    protected function getParameters($currentContent, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html', $code = 500, $message = null)
+    protected function getParameters($currentContent, FlattenException $exception, DebugLoggerInterface $logger, $format, $code, $message)
     {
         return array(
             'status' => 'error',
             'message' => $this->getExceptionMessage($exception),
             'status_code' => $code,
-            'status_text' => $message ?: Response::$statusTexts[$code],
+            'status_text' => $message && isset(Response::$statusTexts[$code]) ?: Response::$statusTexts[$code],
             'currentContent' => $currentContent,
         );
     }

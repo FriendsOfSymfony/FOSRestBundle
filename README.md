@@ -98,6 +98,23 @@ Finally enable the FrameworkBundle listener in the RestBundle:
     fos_rest:
         frameworkextra: true
 
+ExceptionController support
+---------------------------
+
+The RestBundle view layer aware ExceptionController is enabled as follows:
+
+    framework:
+        exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
+
+To map Exception classes to HTTP response status codes an ``exception_map`` may be configured,
+where the keys match a fully qualified class name and the values are either an integer HTTP response
+status code or a string matching a class constant of the ``FOS\RestBundle\Response\Codes`` class:
+
+    fos_rest:
+        exception_map:
+            'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
+            'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+
 Routing
 =======
 
