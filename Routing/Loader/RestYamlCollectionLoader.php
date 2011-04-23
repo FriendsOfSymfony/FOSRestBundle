@@ -5,6 +5,7 @@ namespace FOS\RestBundle\Routing\Loader;
 use Symfony\Component\Config\Resource\FileResource,
     Symfony\Component\Yaml\Yaml,
     Symfony\Component\Routing\Loader\YamlFileLoader,
+    Symfony\Component\Config\Loader\FileLoader,
     Symfony\Component\Routing\RouteCollection,
     Symfony\Component\Routing\Route;
 
