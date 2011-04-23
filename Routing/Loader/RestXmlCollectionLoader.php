@@ -154,4 +154,28 @@ class RestXmlCollectionLoader extends XmlFileLoader
         }
         libxml_use_internal_errors($current);
     }
+
+    /**
+     * Retrieves libxml errors and clears them.
+     *
+     * @return array An array of libxml error strings
+     */
+    private function getXmlErrors()
+    {
+        $errors = array();
+        foreach (libxml_get_errors() as $error) {
+            $errors[] = sprintf('[%s %s] %s (in %s - line %d, column %d)',
+                LIBXML_ERR_WARNING == $error->level ? 'WARNING' : 'ERROR',
+                $error->code,
+                trim($error->message),
+                $error->file ? $error->file : 'n/a',
+                $error->line,
+                $error->column
+            );
+        }
+
+        libxml_clear_errors();
+
+        return $errors;
+    }
 }
