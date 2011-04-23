@@ -58,7 +58,7 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Resets the state of the view object
+     * Resets the state of this view instance
      */
     public function reset()
     {
@@ -101,7 +101,7 @@ class View implements ContainerAwareInterface
      * Verifies whether the given format is supported by this view
      *
      * @param string $format format name
-     * @return bool
+     * @return Boolean
      */
     public function supports($format)
     {
@@ -297,7 +297,7 @@ class View implements ContainerAwareInterface
      * @param Request $request Request object
      * @param Response $response optional response object to use
      *
-     * @param Response
+     * @return Response
      */
     public function handle(Request $request = null, Response $response = null)
     {

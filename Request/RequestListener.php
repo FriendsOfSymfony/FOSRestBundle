@@ -36,9 +36,9 @@ class RequestListener implements ContainerAwareInterface
     /**
      * Initialize RequestListener.
      *
-     * @param   boolean    $detectFormat        If to try and detect the format
+     * @param   Boolean    $detectFormat        If to try and detect the format
      * @param   string     $defaultFormat       Default fallback format
-     * @param   boolean    $decodeBody          If to decode the body for parameters
+     * @param   Boolean    $decodeBody          If to decode the body for parameters
      * @param   array      $formats             The supported formats as keys, encoder service id's as values
      */
     public function __construct($detectFormat, $defaultFormat, $decodeBody, array $formats = null)
