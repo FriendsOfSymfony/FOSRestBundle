@@ -20,6 +20,9 @@
 
         <service id="fos_rest.view" class="%fos_rest.view.class%">
             <argument>%fos_rest.formats%</argument>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
         </service>
 
     </services>
