@@ -182,23 +182,10 @@ class View implements ContainerAwareInterface
     /**
      * Sets template to use for the encoding
      *
-     * @param string|array|TemplateReference $template template to be used in the encoding
+     * @param string|TemplateReference $template template to be used in the encoding
      */
     public function setTemplate($template)
     {
-        if (is_array($template)) {
-            if (empty($template['name'])) {
-                throw new \InvalidArgumentException('The "name" key must be set: '.serialize($template));
-            }
-
-            $bundle = empty($template['bundle']) ? null : $template['bundle'];
-            $controller = empty($template['controller']) ? null : $template['controller'];
-            $format = empty($template['format']) ? null : $template['format'];
-            $engine = empty($template['engine']) ? null : $template['engine'];
-
-            $template = new TemplateReference($bundle, $controller, $template['name'], $format, $engine);
-        }
-
         $this->template = $template;
     }
 
