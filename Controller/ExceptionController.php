@@ -2,8 +2,8 @@
 
 namespace FOS\RestBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\ExceptionController as BaseExceptionController,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+    Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
     Symfony\Component\HttpFoundation\Response;
@@ -24,7 +24,7 @@ use FOS\RestBundle\Response\Codes;
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
  */
-class ExceptionController extends BaseExceptionController
+class ExceptionController extends ContainerAware
 {
     /**
      * Converts an Exception to a Response.
@@ -38,16 +38,20 @@ class ExceptionController extends BaseExceptionController
      *
      * @return Response                         Response instance
      */
-    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html', $code = null, $message = null, array $headers = array())
+    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
+        // the count variable avoids an infinite loop on
+        // some Windows configurations where ob_get_level()
+        // never reaches 0
+        $count = 100;
         $currentContent = '';
-        while (ob_get_level()) {
+        while (ob_get_level() && --$count) {
             $currentContent .= ob_get_clean();
         }
 
         $format = $this->getFormat($format);
-        $code = $this->getStatusCode($exception, $code);
-        $parameters = $this->getParameters($currentContent, $exception, $logger, $format, $code, $message);
+        $code = $this->getStatusCode($exception);
+        $parameters = $this->getParameters($currentContent, $code, $exception, $logger, $format);
 
         try {
             $view = $this->container->get('fos_rest.view');
@@ -62,7 +66,7 @@ class ExceptionController extends BaseExceptionController
             $response = new Response('Internal Server Error', Codes::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $response->headers->replace($headers);
+        $response->headers->replace($exception->getHeaders());
 
         return $response;
     }
@@ -79,30 +83,22 @@ class ExceptionController extends BaseExceptionController
         $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
 
-        if (empty($exceptionMap[$exceptionClass])) {
-            $exceptionClass = '*';
-        }
-
-        return $exceptionMap[$exceptionClass] ? $exception->getMessage() : '';
+        return empty($exceptionMap[$exceptionClass]) ? '' : $exception->getMessage();
     }
 
     /**
      * Determine the status code to use for the response
      *
      * @param FlattenException     $exception   A FlattenException instance
-     * @param integer              $code        An HTTP response code
      *
      * @return integer                          An HTTP response code
      */
-    protected function getStatusCode($exception, $code)
+    protected function getStatusCode($exception)
     {
-        if (isset($code)) {
-            return $code;
-        }
-
         $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.codes');
-        return isset($exceptionMap[$exceptionClass]) ? $exceptionMap[$exceptionClass] : $exceptionMap['*'];
+
+        return isset($exceptionMap[$exceptionClass]) ? $exceptionMap[$exceptionClass] : $exception->getStatusCode();
     }
 
     /**
@@ -139,22 +135,21 @@ class ExceptionController extends BaseExceptionController
      * Determine the parameters to pass to the view layer
      *
      * @param string               $currentContent  The current content in the output buffer
+     * @param integer              $code            An HTTP response code
      * @param FlattenException     $exception       A FlattenException instance
      * @param DebugLoggerInterface $logger          A DebugLoggerInterface instance
      * @param string               $format          The format to use for rendering (html, xml, ...)
-     * @param integer              $code            An HTTP response code
-     * @param string               $message         An HTTP response status message
      *
      * @return array                                Template parameters
      */
-    protected function getParameters($currentContent, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html', $code = 500, $message = '')
+    protected function getParameters($currentContent, $code, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
         $parameters  = array(
             'status' => 'error',
-            'message' => $this->getExceptionMessage($exception),
             'status_code' => $code,
-            'status_text' => $message && isset(Response::$statusTexts[$code]) ? $message : Response::$statusTexts[$code],
+            'status_text' => Response::$statusTexts[$code],
             'currentContent' => $currentContent,
+            'message' => $this->getExceptionMessage($exception),
         );
 
         if ($format === 'html') {
