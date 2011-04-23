@@ -74,8 +74,14 @@ class ExceptionController extends BaseExceptionController
      */
     protected function getExceptionMessage($exception)
     {
-        // TODO: add a map of exception classes for which it is safe to return the message?
-        return '';
+        $exceptionClass = $exception->getClass();
+        $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
+
+        if (empty($exceptionMap[$exceptionClass])) {
+            $exceptionClass = '*';
+        }
+
+        return $exceptionMap[$exceptionClass] ? $exception->getMessage() : '';
     }
 
     /**
@@ -93,7 +99,7 @@ class ExceptionController extends BaseExceptionController
         }
 
         $exceptionClass = $exception->getClass();
-        $exceptionMap = $this->container->getParameter('fos_rest.exception_map');
+        $exceptionMap = $this->container->getParameter('fos_rest.exception.codes');
         return isset($exceptionMap[$exceptionClass]) ? $exceptionMap[$exceptionClass] : $exceptionMap['*'];
     }
 

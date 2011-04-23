@@ -136,9 +136,16 @@ where the keys match a fully qualified class name and the values are either an i
 status code or a string matching a class constant of the ``FOS\RestBundle\Response\Codes`` class:
 
     fos_rest:
-        exception_map:
-            'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
-            'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+        exception:
+            codes:
+                'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
+                'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+                '*': 400
+            messages:
+                'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
+                '*': false
+
+Note in case there is no match the value for the key ``*`` will be used as the default.
 
 Routing
 =======

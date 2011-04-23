@@ -35,6 +35,10 @@ class FOSRestExtension extends Extension
                 'json'  => 'fos_rest.json',
                 'xml'   => 'fos_rest.xml',
                 'html'  => 'fos_rest.html',
+            ),
+            'exception' => array(
+                'codes' => array('*' => 500),
+                'messages' => array('*' => false),
             )
         ));
 
@@ -52,15 +56,15 @@ class FOSRestExtension extends Extension
 
         $container->setParameter($this->getAlias().'.formats', $config['formats']);
 
-        foreach ($config['exception_map'] as $key => $value) {
-            if (is_string($value)) {
-                $config['exception_map'][$key] = constant("\FOS\RestBundle\Response\Codes::$value");
+        foreach ($config['exception']['codes'] as $exception => $code) {
+            if (is_string($code)) {
+                $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Response\Codes::$code");
             }
         }
-        if (!array_key_exists('*', $config['exception_map'])) {
-            $config['exception_map']['*'] = 500;
-        }
-        $container->setParameter($this->getAlias().'.exception_map', $config['exception_map']);
+
+        $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
+
+        $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
 
         if (!empty($config['format_listener'])) {
             $loader->load('request_format_listener.xml');
