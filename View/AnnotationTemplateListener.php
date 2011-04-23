@@ -4,7 +4,8 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use Sensio\Bundle\FrameworkExtraBundle\View\AnnotationTemplateListener as BaseAnnotationTemplateListener;
 
@@ -81,6 +82,6 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
         $bundle = $this->getBundleForClass(get_class($controller[0]));
         $name = substr($controller[1], 0, -6);
 
-        return array('bundle' => $bundle->getName(), 'controller' => $match[1], 'name' => $name);
+        return new TemplateReference($bundle->getName(), $match[1], $name);
     }
 }
