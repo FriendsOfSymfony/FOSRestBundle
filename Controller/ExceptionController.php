@@ -123,20 +123,22 @@ class ExceptionController extends BaseExceptionController
     /**
      * Determine the parameters to pass to the view layer
      *
-     * @param string               $currentContent The current content in the output buffer
-     * @param FlattenException     $exception A FlattenException instance
-     * @param DebugLoggerInterface $logger    A DebugLoggerInterface instance
-     * @param string               $format    The format to use for rendering (html, xml, ...)
-     * @param integer              $code      An HTTP response code
-     * @param string               $message   An HTTP response status message
+     * @param string               $currentContent  The current content in the output buffer
+     * @param FlattenException     $exception       A FlattenException instance
+     * @param DebugLoggerInterface $logger          A DebugLoggerInterface instance
+     * @param string               $format          The format to use for rendering (html, xml, ...)
+     * @param integer              $code            An HTTP response code
+     * @param string               $message         An HTTP response status message
+     *
+     * @return array                                Template parameters
      */
-    protected function getParameters($currentContent, FlattenException $exception, DebugLoggerInterface $logger, $format, $code, $message)
+    protected function getParameters($currentContent, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html', $code = 500, $message = '')
     {
         $parameters  = array(
             'status' => 'error',
             'message' => $this->getExceptionMessage($exception),
             'status_code' => $code,
-            'status_text' => $message && isset(Response::$statusTexts[$code]) ?: Response::$statusTexts[$code],
+            'status_text' => $message && isset(Response::$statusTexts[$code]) ? $message : Response::$statusTexts[$code],
             'currentContent' => $currentContent,
         );
 
