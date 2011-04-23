@@ -70,7 +70,7 @@ class RequestListener implements ContainerAwareInterface
 
         if ($this->detectFormat) {
             $this->detectFormat($request);
-        } elseif (null === $request->getRequestFormat(null)) {
+        } elseif (null !== $this->defaultFormat && null === $request->getRequestFormat(null)) {
             $request->setRequestFormat($this->defaultFormat);
         }
 
@@ -92,17 +92,32 @@ class RequestListener implements ContainerAwareInterface
     {
         $format = $request->getRequestFormat(null);
         if (null === $format) {
-            $formats = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
-            if (!empty($formats)) {
-                $format = $request->getFormat(key($formats));
-            }
-
+            $format = $this->getFormatFromAcceptHeader($request);
             if (null === $format) {
                 $format = $this->defaultFormat;
             }
 
             $request->setRequestFormat($format);
         }
+    }
+
+    /**
+     * Get the format from the Accept header
+     *
+     * Override this method to implement more complex Accept header negotiations
+     *
+     * @param   Request     $request    The request
+     * @return  void|string             The format string
+     */
+    protected function getFormatFromAcceptHeader($request)
+    {
+        $formats = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
+        if (empty($formats)) {
+            return null;
+        }
+
+        $format = key($formats);
+        return $request->getFormat($format);
     }
 
     /**
