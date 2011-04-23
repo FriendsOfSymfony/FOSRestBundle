@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\Serializer\SerializerInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
+use FOS\RestBundle\Response\Codes,
+    FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
 
 /*
  * This file is part of the FOS/RestBundle
@@ -129,7 +130,7 @@ class View implements ContainerAwareInterface
      * @param array $parameters route parameters
      * @param int $code optional http status code
      */
-    public function setRouteRedirect($route, array $parameters = array(), $code = 302)
+    public function setRouteRedirect($route, array $parameters = array(), $code = Codes::HTTP_FOUND)
     {
         $this->redirect = array(
             'route' => $route,
@@ -144,7 +145,7 @@ class View implements ContainerAwareInterface
      * @param string $uri URI
      * @param int $code optional http status code
      */
-    public function setUriRedirect($uri, $code = 302)
+    public function setUriRedirect($uri, $code = Codes::HTTP_FOUND)
     {
         $this->redirect = array('location' => $uri, 'status_code' => $code);
     }
@@ -320,7 +321,7 @@ class View implements ContainerAwareInterface
         } elseif ($this->supports($format)) {
             $response = $this->transform($request, $response, $format, $this->getTemplate());
         } else {
-            return new Response("Format '$format' not supported, handler must be implemented", 415);
+            return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
 
         $this->reset();
