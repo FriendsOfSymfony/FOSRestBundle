@@ -144,12 +144,8 @@ status code or a string matching a class constant of the ``FOS\RestBundle\Respon
             codes:
                 'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
                 'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
-                '*': 400
             messages:
                 'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
-                '*': false
-
-Note in case there is no match the value for the key ``*`` will be used as the default.
 
 Routing
 =======

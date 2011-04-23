@@ -36,10 +36,6 @@ class FOSRestExtension extends Extension
                 'xml'   => 'fos_rest.xml',
                 'html'  => 'fos_rest.html',
             ),
-            'exception' => array(
-                'codes' => array('*' => 500),
-                'messages' => array('*' => false),
-            )
         ));
 
         $processor = new Processor();
