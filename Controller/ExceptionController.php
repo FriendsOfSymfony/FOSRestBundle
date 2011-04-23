@@ -57,7 +57,7 @@ class ExceptionController extends BaseExceptionController
 
             $response = $view->handle();
         } catch (\Exception $e) {
-            $response = new Response(var_export($parameters, true), $code);
+            $response = new Response('Internal Server Error', Codes::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $response->headers->replace($headers);
