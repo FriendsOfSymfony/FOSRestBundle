@@ -78,8 +78,8 @@ serializer service is configured. Finally the request format listener is enabled
             rss: my.encoder.rss
             xml: false
 
-Format listener support
------------------------
+Request listener support
+------------------------
 
 To enable the request listener simply adapt your configuration as follows:
 
@@ -114,12 +114,14 @@ This requires adding the SensioFrameworkExtraBundle to you vendors:
 Make sure to disable view annotations in the SensioFrameworkExtraBundle config,
 enable or disable any of the other features depending on your needs:
 
+    # app/config.yml
     sensio_framework_extra:
         view:    { annotations: false }
         router:  { annotations: true }
 
 Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 
+    # app/config.yml
     fos_rest:
         frameworkextra: true
 
@@ -128,6 +130,7 @@ ExceptionController support
 
 The RestBundle view layer aware ExceptionController is enabled as follows:
 
+    # app/config.yml
     framework:
         exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
@@ -135,6 +138,7 @@ To map Exception classes to HTTP response status codes an ``exception_map`` may 
 where the keys match a fully qualified class name and the values are either an integer HTTP response
 status code or a string matching a class constant of the ``FOS\RestBundle\Response\Codes`` class:
 
+    # app/config.yml
     fos_rest:
         exception:
             codes:
@@ -150,9 +154,10 @@ Note in case there is no match the value for the key ``*`` will be used as the d
 Routing
 =======
 
-Note: This requires ext/mbstring
+Note: The following requires the ext/mbstring PHP extension
 
-## Single RESTful controller routes
+Single RESTful controller routes
+--------------------------------
 
     # app/config/routing.yml
     users:
@@ -162,7 +167,7 @@ Note: This requires ext/mbstring
 This will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
 Notice `type:     rest` option. It's required so that the RestBundle can find which routes are supported.
 
-### Define resource actions
+## Define resource actions
 
     class UsersController extends Controller
     {
@@ -205,12 +210,13 @@ Notice `type:     rest` option. It's required so that the RestBundle can find wh
 
 That's all. All your resource (`UsersController`) actions will get mapped to proper routes (commented examples).
 
-## Relational RESTful controllers routes
+Relational RESTful controllers routes
+-------------------------------------
 
 Sometimes it's better to place subresource actions in it's own controller. Especially when
 you have more than 2 subresource actions.
 
-### Resource collection
+## Resource collection
 
 In this case, you must first specify resource relations in special rest YML or XML collection:
 
@@ -239,7 +245,7 @@ child of users resource. In this case, your `UsersController` MUST always have s
 It's used to determine parent collection name. Controller name itself not used in routes
 auto-generation process & can be any name you like.
 
-### Define child resource controller
+## Define child resource controller
 
 `CommentsController` actions now will looks like:
 
@@ -265,7 +271,7 @@ Notice, that we get rid of `User` part in action names. It's because RestBundle 
 already knows, that `CommentsController::...` is child resources of `UsersController::getUser()`
 resource.
 
-### Include resource collections in application routing
+## Include resource collections in application routing
 
 Last step is mapping of your collection routes into application `routing.yml`:
 
@@ -276,7 +282,7 @@ Last step is mapping of your collection routes into application `routing.yml`:
 
 That's all.
 
-### Routes naming
+## Routes naming
 
 RestBundle uses REST path to generate route name. It means, that URL:
 
@@ -288,7 +294,7 @@ will become route with name:
 
 For further examples, see comments of controllers code above.
 
-#### Naming collisions
+### Naming collisions
 
 Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
 collections provides a `name_prefix` (`name-prefix` for xml) parameter:
