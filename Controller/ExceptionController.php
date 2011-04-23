@@ -27,21 +27,21 @@ class ExceptionController extends BaseExceptionController
     /**
      * Converts an Exception to a Response.
      *
-     * @param FlattenException     $exception A FlattenException instance
-     * @param DebugLoggerInterface $logger    A DebugLoggerInterface instance
-     * @param string               $format    The format to use for rendering (html, xml, ...)
-     * @param integer              $code      An HTTP response code
-     * @param string               $message   An HTTP response status message
-     * @param array                $headers   HTTP response headers
+     * @param FlattenException     $exception   A FlattenException instance
+     * @param DebugLoggerInterface $logger      A DebugLoggerInterface instance
+     * @param string               $format      The format to use for rendering (html, xml, ...)
+     * @param integer              $code        An HTTP response code
+     * @param string               $message     An HTTP response status message
+     * @param array                $headers     HTTP response headers
+     *
+     * @return Response                         Response instance
      */
     public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html', $code = null, $message = null, array $headers = array())
     {
         $currentContent = '';
-        // @codeCoverageIgnoreStart
         while (ob_get_level()) {
             $currentContent .= ob_get_clean();
         }
-        // @codeCoverageIgnoreEnd
 
         $format = $this->getFormat($format);
         $code = $this->getStatusCode($exception, $code);
@@ -68,7 +68,9 @@ class ExceptionController extends BaseExceptionController
     /**
      * Extract the exception message
      *
-     * @param FlattenException     $exception A FlattenException instance
+     * @param FlattenException     $exception   A FlattenException instance
+     *
+     * @return string                           Message
      */
     protected function getExceptionMessage($exception)
     {
@@ -79,10 +81,10 @@ class ExceptionController extends BaseExceptionController
     /**
      * Determine the status code to use for the response
      *
-     * @param FlattenException     $exception A FlattenException instance
-     * @param integer              $code      An HTTP response code
+     * @param FlattenException     $exception   A FlattenException instance
+     * @param integer              $code        An HTTP response code
      *
-     * return integer              $code      An HTTP response code
+     * @return integer                          An HTTP response code
      */
     protected function getStatusCode($exception, $code)
     {
@@ -99,6 +101,8 @@ class ExceptionController extends BaseExceptionController
      * Determine the format to use for the response
      *
      * @param string               $format    The format to use for rendering (html, xml, ...)
+     *
+     * @return string                         Encoding format
      */
     protected function getFormat($format)
     {
@@ -109,12 +113,15 @@ class ExceptionController extends BaseExceptionController
      * Determine the template to use for the response
      *
      * @param string               $format    The format to use for rendering (html, xml, ...)
+     *
+     * @return TemplateReference              Template reference
      */
     protected function getTemplate($format)
     {
-        $name = $this->container->get('kernel')->isDebug() ? 'exception' : 'error';
-        if ($this->container->get('kernel')->isDebug() && 'html' == $format) {
-            $name = 'exception_full';
+        if ($this->container->get('kernel')->isDebug()) {
+            $name = 'html' === $format ? 'exception_full' : 'exception';
+        } else {
+            $name = 'error';
         }
 
         return new TemplateReference('FrameworkBundle', 'Exception', $name, $format);
