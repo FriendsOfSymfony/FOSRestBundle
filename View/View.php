@@ -311,7 +311,7 @@ class View implements ContainerAwareInterface
             $callback = $this->customHandlers[$format];
             $response = call_user_func($callback, $this, $request, $response);
         } elseif ($this->supports($format)) {
-            $response = $this->transform($request, $response, $format, $this->getTemplate());
+            $response = $this->transform($request, $response, $format);
         }
 
         $this->reset();
@@ -331,11 +331,10 @@ class View implements ContainerAwareInterface
      * @param Request $request
      * @param Response $response
      * @param string $format
-     * @param string $template
      *
      * @return Response
      */
-    protected function transform(Request $request, Response $response, $format, $template)
+    protected function transform(Request $request, Response $response, $format)
     {
         if ($this->redirect) {
             // TODO add support to optionally return the target url
@@ -354,12 +353,12 @@ class View implements ContainerAwareInterface
         $encoder = $serializer->getEncoder($format);
 
         if ($encoder instanceof TemplatingAwareEncoderInterface) {
-            $encoder->setTemplate($template);
+            $encoder->setTemplate($this->getTemplate());
         }
 
         $content = $serializer->serialize($this->getParameters(), $format);
-
         $response->setContent($content);
+
         return $response;
     }
 }
