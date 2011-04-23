@@ -70,14 +70,6 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Reset serializer service
-     */
-    public function resetSerializer()
-    {
-        $this->serializer = null;
-    }
-
-    /**
      * Sets the Container associated with this Controller.
      *
      * @param ContainerInterface $container A ContainerInterface instance
@@ -260,7 +252,7 @@ class View implements ContainerAwareInterface
      *
      * @param SerializerInterface $serializer a serializer instance
      */
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer = null)
     {
         $this->serializer = $serializer;
     }
