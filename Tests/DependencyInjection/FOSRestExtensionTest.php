@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder,
 use FOS\RestBundle\DependencyInjection\FOSRestExtension;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>

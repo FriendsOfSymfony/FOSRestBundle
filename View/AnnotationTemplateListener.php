@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
 use Sensio\Bundle\FrameworkExtraBundle\View\AnnotationTemplateListener as BaseAnnotationTemplateListener;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>

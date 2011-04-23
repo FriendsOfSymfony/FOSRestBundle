@@ -9,7 +9,7 @@ use Symfony\Component\Config\Definition\Processor,
     Symfony\Component\Config\FileLocator;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>

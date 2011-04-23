@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\DependencyInjection\ContainerInterface;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
