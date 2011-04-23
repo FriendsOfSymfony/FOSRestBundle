@@ -45,6 +45,7 @@ class View implements ContainerAwareInterface
     protected $format;
     protected $parameters;
     protected $engine;
+    protected $code;
 
     /**
      * Constructor
@@ -67,6 +68,7 @@ class View implements ContainerAwareInterface
         $this->format = null;
         $this->engine = 'twig';
         $this->parameters = array();
+        $this->code = Codes::HTTP_OK;
     }
 
     /**
@@ -120,7 +122,7 @@ class View implements ContainerAwareInterface
      *
      * @param string $route route name
      * @param array $parameters route parameters
-     * @param int $code optional http status code
+     * @param int $code HTTP status code
      */
     public function setRouteRedirect($route, array $parameters = array(), $code = Codes::HTTP_FOUND)
     {
@@ -135,11 +137,31 @@ class View implements ContainerAwareInterface
      * Sets a redirect using an URI
      *
      * @param string $uri URI
-     * @param int $code optional http status code
+     * @param int $code HTTP status code
      */
     public function setUriRedirect($uri, $code = Codes::HTTP_FOUND)
     {
         $this->redirect = array('location' => $uri, 'status_code' => $code);
+    }
+
+    /**
+     * Sets a response HTTP status code
+     *
+     * @param int $code optional http status code
+     */
+    public function setStatusCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * Gets a response HTTP status code
+     *
+     * @return int HTTP status code
+     */
+    public function getStatusCode()
+    {
+        return $this->code;
     }
 
     /**
@@ -299,6 +321,8 @@ class View implements ContainerAwareInterface
 
         if (null === $response) {
             $response = new Response();
+        } else {
+            $this->setStatusCode($response->getStatusCode());
         }
 
         $format = $this->getFormat();
@@ -318,6 +342,8 @@ class View implements ContainerAwareInterface
 
         if (!($response instanceof Response)) {
             $response = new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        } else {
+            $response->setStatusCode($this->getStatusCode());
         }
 
         return $response;
@@ -344,7 +370,7 @@ class View implements ContainerAwareInterface
             }
             $redirect = new RedirectResponse($this->redirect['location'], $this->redirect['status_code']);
             $response->setContent($redirect->getContent());
-            $response->setStatusCode($this->redirect['status_code']);
+            $this->setStatusCode($this->redirect['status_code']);
             $response->headers->set('Location', $redirect->headers->get('Location'));
             return $response;
         }
