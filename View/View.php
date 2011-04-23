@@ -160,7 +160,7 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Sets encoding parameters
+     * Sets to be encoded parameters
      *
      * @param string|array $parameters parameters to be used in the encoding
      */
@@ -170,7 +170,7 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Gets encoding parameters
+     * Gets to be encoded parameters
      *
      * @return string|array parameters to be used in the encoding
      */
@@ -317,11 +317,10 @@ class View implements ContainerAwareInterface
         if (isset($this->customHandlers[$format])) {
             $callback = $this->customHandlers[$format];
             $response = call_user_func($callback, $this, $request, $response);
-        } else {
-            if (!$this->supports($format)) {
-                return new Response("Format '$format' not supported, handler must be implemented", 415);
-            }
+        } elseif ($this->supports($format)) {
             $response = $this->transform($request, $response, $format, $this->getTemplate());
+        } else {
+            return new Response("Format '$format' not supported, handler must be implemented", 415);
         }
 
         $this->reset();
