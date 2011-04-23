@@ -62,7 +62,7 @@ class Pluralization
         );
         $lowerCasedWord = strtolower($word);
         foreach ($uncountables as $uncountable) {
-            if(substr($lowerCasedWord, (-1 * strlen($uncountable))) == $uncountable) {
+            if (substr($lowerCasedWord, (-1 * strlen($uncountable))) == $uncountable) {
                 return $word;
             }
         }
