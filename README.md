@@ -21,7 +21,7 @@ Installation
 
     1. Add this bundle to your project as a Git submodule:
 
-        $ git submodule add git://github.com/fos/RestBundle.git vendor/bundles/FOS/RestBundle
+        $ git submodule add git://github.com/FriendsOfSymfony/RestBundle.git vendor/bundles/FOS/RestBundle
 
     2. Add the FOS namespace to your autoloader:
 
@@ -44,7 +44,28 @@ Installation
         }
 
 Configuration
--------------
+=============
+
+Basic configuration
+-------------------
+
+The RestBundle allows adapting several classes it uses. Alternatively entire
+services may be adapted. In the following examples the default Json encoder class
+is modified and a custom serializer service is configured:
+
+    # app/config.yml
+    fos_rest:
+        class:
+            json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
+        service:
+            serializer: my.serializer
+
+Note the service for the RSS encoder needs to be defined in a custom bundle:
+
+    <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
+
+View support
+------------
 
 Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
@@ -56,15 +77,15 @@ serializer service is configured. Finally the request format listener is enabled
         formats:
             rss: my.encoder.rss
             xml: false
-        class:
-            json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
-        service:
-            serializer: my.serializer
+
+Format listener support
+-----------------------
+
+To enable the request listener simply adapt your configuration as follows:
+
+    # app/config.yml
+    fos_rest:
         format_listener: true
-
-Note the service for the RSS encoder needs to be defined in a custom bundle:
-
-    <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
 
 In the behavior of the request listener can be configured in a more granular fashion:
 
@@ -83,17 +104,21 @@ should either set a custom RequestListener class or register their own "onCoreRe
         class:
             request_format_listener: MyProject\MyBundle\View\RequestListener
 
-FrameworkBundle support
------------------------
+SensioFrameworkExtraBundle support
+----------------------------
 
-Make sure to disable view annotations in the FrameworkBundle config, enable
-or disable any of the other features depending on your needs:
+This requires adding the SensioFrameworkExtraBundle to you vendors:
+
+    $ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
+
+Make sure to disable view annotations in the SensioFrameworkExtraBundle config,
+enable or disable any of the other features depending on your needs:
 
     sensio_framework_extra:
         view:    { annotations: false }
         router:  { annotations: true }
 
-Finally enable the FrameworkBundle listener in the RestBundle:
+Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 
     fos_rest:
         frameworkextra: true
