@@ -320,11 +320,13 @@ class View implements ContainerAwareInterface
             $response = call_user_func($callback, $this, $request, $response);
         } elseif ($this->supports($format)) {
             $response = $this->transform($request, $response, $format, $this->getTemplate());
-        } else {
-            return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
 
         $this->reset();
+
+        if (!($response instanceof Response)) {
+            $response = new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        }
 
         return $response;
     }
