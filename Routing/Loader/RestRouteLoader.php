@@ -137,7 +137,7 @@ class RestRouteLoader implements LoaderInterface
 
         // Check that every passed parent has non-empty singular name
         foreach ($this->parents as $parent) {
-            if (empty($parent) || '/' === mb_substr($parent, -1)) {
+            if (empty($parent) || '/' === substr($parent, -1)) {
                 throw new \InvalidArgumentException('All parent controllers must have ::getSINGULAR_NAME() action');
             }
         }
@@ -160,7 +160,7 @@ class RestRouteLoader implements LoaderInterface
 
         // Trim "/" at the start
         if (null !== $this->prefix && isset($this->prefix[0]) && '/' === $this->prefix[0]) {
-            $this->prefix = mb_substr($this->prefix, 1);
+            $this->prefix = substr($this->prefix, 1);
         }
 
         $routeAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Route';
@@ -176,7 +176,7 @@ class RestRouteLoader implements LoaderInterface
             $matches = array();
 
             // If method name starts with underscore - skip
-            if ('_' === mb_substr($method->getName(), 0, 1)) {
+            if ('_' === substr($method->getName(), 0, 1)) {
                 continue;
             }
 
@@ -239,9 +239,9 @@ class RestRouteLoader implements LoaderInterface
                     }
                 }
 
-                $pattern        = mb_strtolower(implode('/', $urlParts));
+                $pattern        = strtolower(implode('/', $urlParts));
                 $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => null);
-                $requirements   = array('_method'     => mb_strtoupper($httpMethod));
+                $requirements   = array('_method'     => strtoupper($httpMethod));
                 $options        = array();
                 
                 // Read annotations
@@ -269,7 +269,7 @@ class RestRouteLoader implements LoaderInterface
                 // Create route with gathered parameters
                 $route = new Route($pattern, $defaults, $requirements, $options);
 
-                $collection->add($this->namePrefix . mb_strtolower($routeName), $route);
+                $collection->add($this->namePrefix . strtolower($routeName), $route);
             }
         }
 

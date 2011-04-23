@@ -156,8 +156,6 @@ Routing
 
 The RestBundle provides custom route loaders to help in defining REST friendly routes.
 
-Note that the following requires the ext/mbstring PHP extension.
-
 Single RESTful controller routes
 --------------------------------
 
