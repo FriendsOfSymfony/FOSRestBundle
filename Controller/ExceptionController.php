@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\ExceptionController as BaseExcepti
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
     Symfony\Component\HttpFoundation\Response;
 
+use FOS\RestBundle\Response\Codes;
+
 /*
  * This file is part of the FOSRestBundle
  *
