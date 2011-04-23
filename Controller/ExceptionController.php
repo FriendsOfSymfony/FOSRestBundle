@@ -3,6 +3,7 @@
 namespace FOS\RestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\ExceptionController as BaseExceptionController,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
     Symfony\Component\HttpFoundation\Response;
@@ -47,7 +48,7 @@ class ExceptionController extends BaseExceptionController
         $parameters = $this->getParameters($currentContent, $exception, $logger, $format, $code, $message);
 
         try {
-            $view = $this->container->get('fos_rest');
+            $view = $this->container->get('fos_rest.view');
 
             $view->setFormat($format);
             $view->setTemplate($this->getTemplate($format));
@@ -116,12 +117,7 @@ class ExceptionController extends BaseExceptionController
             $name = 'exception_full';
         }
 
-        return array(
-            'bundle' => 'FrameworkBundle',
-            'controller' => 'Exception',
-            'name' => $name,
-            'format' => $format,
-        );
+        return new TemplateReference('FrameworkBundle', 'Exception', $name, $format);
     }
 
     /**
@@ -136,12 +132,19 @@ class ExceptionController extends BaseExceptionController
      */
     protected function getParameters($currentContent, FlattenException $exception, DebugLoggerInterface $logger, $format, $code, $message)
     {
-        return array(
+        $parameters  = array(
             'status' => 'error',
             'message' => $this->getExceptionMessage($exception),
             'status_code' => $code,
             'status_text' => $message && isset(Response::$statusTexts[$code]) ?: Response::$statusTexts[$code],
             'currentContent' => $currentContent,
         );
+
+        if ($format === 'html') {
+            $parameters['exception'] = $exception;
+            $parameters['logger'] = $logger;
+        }
+
+        return $parameters;
     }
 }
