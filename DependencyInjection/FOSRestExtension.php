@@ -4,6 +4,7 @@ namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Processor,
     Symfony\Component\HttpKernel\DependencyInjection\Extension,
+    Symfony\Component\DependencyInjection\Reference,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\Config\FileLocator;
@@ -64,6 +65,10 @@ class FOSRestExtension extends Extension
         if (!empty($config['format_listener'])) {
             $loader->load('request_format_listener.xml');
             $container->setParameter($this->getAlias().'.detect_format', $config['format_listener']['detect_format']);
+            if ($config['format_listener']['detect_format']) {
+                $container->getDefinition('fos_rest.request_format_listener')
+                    ->addArgument(new Reference('fos_rest.serializer'));
+            }
             $container->setParameter($this->getAlias().'.decode_body', $config['format_listener']['decode_body']);
             $container->setParameter($this->getAlias().'.default_format', $config['format_listener']['default_format']);
         }

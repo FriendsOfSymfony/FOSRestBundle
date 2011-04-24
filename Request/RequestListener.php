@@ -5,9 +5,7 @@ namespace FOS\RestBundle\Request;
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Encoder\DecoderInterface,
-    Symfony\Component\DependencyInjection\ContainerAwareInterface,
-    Symfony\Component\DependencyInjection\ContainerInterface;
+    Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 /*
  * This file is part of the FOSRestBundle
@@ -25,38 +23,30 @@ use Symfony\Component\HttpFoundation\ParameterBag,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class RequestListener implements ContainerAwareInterface
+class RequestListener
 {
     protected $formats;
     protected $detectFormat;
     protected $defaultFormat;
     protected $decodeBody;
-    protected $container;
+    protected $serializer;
 
     /**
      * Initialize RequestListener.
      *
+     * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
      * @param   Boolean    $detectFormat        If to try and detect the format
      * @param   string     $defaultFormat       Default fallback format
      * @param   Boolean    $decodeBody          If to decode the body for parameters
      * @param   array      $formats             The supported formats as keys, encoder service id's as values
      */
-    public function __construct($detectFormat, $defaultFormat, $decodeBody, array $formats = null)
+    public function __construct($detectFormat, $defaultFormat, $decodeBody, array $formats = null, SerializerInterface $serializer = null)
     {
         $this->detectFormat = $detectFormat;
         $this->defaultFormat = $defaultFormat;
         $this->decodeBody = $decodeBody;
         $this->formats = (array)$formats;
-    }
-
-    /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -128,12 +118,14 @@ class RequestListener implements ContainerAwareInterface
      */
     protected function getEncoder($format)
     {
-        if (null === $format || empty($this->formats[$format])) {
+        if (null === $format || empty($this->formats[$format]) || empty($this->serializer)) {
             return null;
         }
 
-        $serializer = $this->container->get('fos_rest.serializer');
-        $encoder = $serializer->getEncoder($format);
+        $encoder = $this->serializer->getEncoder($format);
+        if (empty($encoder)) {
+            return null;
+        }
 
         return $encoder;
     }
