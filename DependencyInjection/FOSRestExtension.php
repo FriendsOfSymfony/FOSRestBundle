@@ -43,7 +43,7 @@ class FOSRestExtension extends Extension
         $configuration = new Configuration();
         $config = $processor->processConfiguration($configuration, $configs);
 
-        $loader = $this->getFileLoader($container);
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
@@ -82,15 +82,5 @@ class FOSRestExtension extends Extension
                 $container->setAlias($this->getAlias().'.'.$key, $value);
             }
         }
-    }
-
-    /**
-     * Get File Loader
-     *
-     * @param ContainerBuilder $container
-     */
-    public function getFileLoader($container)
-    {
-        return new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
     }
 }
