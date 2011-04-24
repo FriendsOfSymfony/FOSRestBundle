@@ -141,12 +141,12 @@ class RequestListener
             && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
         ) {
             $format = $request->getFormat($request->headers->get('Content-Type'));
+
             $encoder = $this->getEncoder($format);
+            if ($encoder instanceof DecoderInterface) {
+                $data = $encoder->decode($request->getContent(), $format);
 
-            if ($encoder && $encoder instanceof DecoderInterface) {
-                $post = $encoder->decode($request->getContent(), $format);
-
-                $request->request = new ParameterBag((array)$post);
+                $request->request = new ParameterBag((array)$data);
             }
         }
     }
