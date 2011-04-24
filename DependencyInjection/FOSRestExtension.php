@@ -67,7 +67,7 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.detect_format', $config['format_listener']['detect_format']);
             if ($config['format_listener']['detect_format']) {
                 $container->getDefinition('fos_rest.request_format_listener')
-                    ->addArgument(new Reference('fos_rest.serializer'));
+                    ->replaceArgument(3, new Reference('fos_rest.serializer'));
             }
             $container->setParameter($this->getAlias().'.decode_body', $config['format_listener']['decode_body']);
             $container->setParameter($this->getAlias().'.default_format', $config['format_listener']['default_format']);
