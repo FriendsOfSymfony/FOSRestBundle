@@ -70,13 +70,16 @@ View support
 Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
 support for xml. Also the default Json encoder class is modified and a custom
-serializer service is configured. Finally the request format listener is enabled:
+serializer service is configured. Finally the a normalizer is registered
+for the class ``Acme\HelloBundle\Document\Article``:
 
     # app/config.yml
     fos_rest:
         formats:
             rss: my.encoder.rss
             xml: false
+        normalizers:
+            'Acme\HelloBundle\Document\Article': 'my.get_set_method_normalizer'
 
 Request listener support
 ------------------------
@@ -103,6 +106,9 @@ should either set a custom RequestListener class or register their own "onCoreRe
     fos_rest:
         class:
             request_format_listener: MyProject\MyBundle\View\RequestListener
+
+Note see the section about the view support in regards to how to register/deregister
+encoders for specific formats as the request body decoding uses encoders for decoding.
 
 SensioFrameworkExtraBundle support
 ----------------------------
