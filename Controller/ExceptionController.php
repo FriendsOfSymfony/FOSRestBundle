@@ -63,7 +63,8 @@ class ExceptionController extends ContainerAware
 
             $response = $view->handle();
         } catch (\Exception $e) {
-            $response = new Response('Internal Server Error', Codes::HTTP_INTERNAL_SERVER_ERROR);
+            $message = $this->container->get('kernel')->isDebug() ? $e->getMessage() : 'Internal Server Error';
+            $response = new Response($message, Codes::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $response->headers->replace($exception->getHeaders());
