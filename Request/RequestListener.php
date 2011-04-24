@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\ParameterBag,
  */
 class RequestListener
 {
-    protected $formats;
     protected $detectFormat;
     protected $defaultFormat;
     protected $decodeBody;
@@ -37,15 +36,13 @@ class RequestListener
      * @param   Boolean    $detectFormat        If to try and detect the format
      * @param   string     $defaultFormat       Default fallback format
      * @param   Boolean    $decodeBody          If to decode the body for parameters
-     * @param   array      $formats             The supported formats as keys, encoder service id's as values
      * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
      */
-    public function __construct($detectFormat, $defaultFormat, $decodeBody, array $formats = null, SerializerInterface $serializer = null)
+    public function __construct($detectFormat, $defaultFormat, $decodeBody, SerializerInterface $serializer = null)
     {
         $this->detectFormat = $detectFormat;
         $this->defaultFormat = $defaultFormat;
         $this->decodeBody = $decodeBody;
-        $this->formats = (array)$formats;
         $this->serializer = $serializer;
     }
 
@@ -118,7 +115,7 @@ class RequestListener
      */
     protected function getEncoder($format)
     {
-        if (null === $format || empty($this->formats[$format]) || empty($this->serializer)) {
+        if (null === $format || null === $this->serializer) {
             return null;
         }
 
