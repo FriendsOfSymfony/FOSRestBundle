@@ -34,11 +34,11 @@ class RequestListener
     /**
      * Initialize RequestListener.
      *
-     * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
      * @param   Boolean    $detectFormat        If to try and detect the format
      * @param   string     $defaultFormat       Default fallback format
      * @param   Boolean    $decodeBody          If to decode the body for parameters
      * @param   array      $formats             The supported formats as keys, encoder service id's as values
+     * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
      */
     public function __construct($detectFormat, $defaultFormat, $decodeBody, array $formats = null, SerializerInterface $serializer = null)
     {
