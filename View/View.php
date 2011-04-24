@@ -292,14 +292,6 @@ class View implements ContainerAwareInterface
             $this->serializer = $this->container->get('fos_rest.serializer');
         }
 
-        if (null !== $format
-            && !$this->serializer->hasEncoder($format)
-            && isset($this->formats[$format])
-        ) {
-            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-            $this->serializer->setEncoder($format, $this->container->get($this->formats[$format]));
-        }
-
         return $this->serializer;
     }
 

@@ -51,15 +51,14 @@ class FOSRestExtension extends Extension
         }
 
         $container->setParameter($this->getAlias().'.formats', $config['formats']);
+        $container->setParameter($this->getAlias().'.normalizers', $config['normalizers']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (is_string($code)) {
                 $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Response\Codes::$code");
             }
         }
-
         $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
-
         $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
 
         if (!empty($config['format_listener'])) {

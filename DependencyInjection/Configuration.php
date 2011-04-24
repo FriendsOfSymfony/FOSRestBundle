@@ -38,8 +38,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->fixXmlConfig('format', 'formats')
+            ->fixXmlConfig('normalizer', 'normalizers')
             ->children()
                 ->arrayNode('formats')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('normalizers')
                     ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()
                 ->end()
@@ -69,7 +74,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('view')->defaultValue('FOS\RestBundle\View\View')->end()
-                        ->scalarNode('serializer')->defaultValue('Symfony\Component\Serializer\Serializer')->end()
+                        ->scalarNode('serializer')->defaultValue('FOS\RestBundle\Serializer\Serializer')->end()
                         ->scalarNode('json')->defaultValue('Symfony\Component\Serializer\Encoder\JsonEncoder')->end()
                         ->scalarNode('xml')->defaultValue('Symfony\Component\Serializer\Encoder\XmlEncoder')->end()
                         ->scalarNode('html')->defaultValue('FOS\RestBundle\Serializer\Encoder\HtmlEncoder')->end()

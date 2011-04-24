@@ -133,14 +133,7 @@ class RequestListener implements ContainerAwareInterface
         }
 
         $serializer = $this->container->get('fos_rest.serializer');
-        if (!$serializer->hasEncoder($format)) {
-            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-            $encoder = $this->container->get($this->formats[$format]);
-            // Technically not needed, but this way we have the instance for encoding later on
-            $serializer->setEncoder($format, $encoder);
-        } else {
-            $encoder = $serializer->getEncoder($format);
-        }
+        $encoder = $serializer->getEncoder($format);
 
         return $encoder;
     }
