@@ -1,20 +1,24 @@
 RestBundle
 ==========
 
-This Bundle provides various tools to rapidly develop RESTful API's with Symfony2.
+This bundle provides various tools to rapidly develop RESTful API's with Symfony2.
 
 Its currently under development so key pieces that are planned are still missing.
 
 For now the Bundle provides a view layer to enable output format agnostic Controllers,
-which includes the ability to handle redirects differently.
+which includes the ability to handle redirects differently based on a service container
+aware Serializer service that can lazy load encoders and normalizers.
 
 Furthermore a custom route loader can be used to when following a method
 naming convention to automatically provide routes for multiple actions by simply
 configuring the name of a controller.
 
-Eventually the goal is to also support RESTful decoding of request headers and body,
-serializing of form's into different formats and assisting in returning correct
-HTTP status codes. Generation of REST API end user documentation is also a goal.
+It also has support for RESTful decoding of HTTP request body and Accept headers
+as well as a custom Exception controller that assists in using appropriate HTTP
+status codes.
+
+Eventually the bundle will also provide normalizers for form and validator instances as
+well as provide a solution to generation end user documentation describing the REST API.
 
 Installation
 ============
