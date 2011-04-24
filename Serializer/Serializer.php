@@ -31,8 +31,8 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     /**
      * Set the array maps to enable lazy loading of normalizers and encoders
      *
-     * @param array $normalizerClassMap The key is the class name, the value the name of the service
      * @param array $encoderFormatMap The key is the class name, the value the name of the service
+     * @param array $normalizerClassMap The key is the class name, the value the name of the service
      */
     public function __construct(array $encoderFormatMap = null, array $normalizerClassMap = null)
     {
@@ -57,17 +57,14 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     {
         try {
             return parent::normalizeObject($object, $format, $properties);
-        } catch (\LogicException $e) {
+        } catch (\Exception $e) {
             $class = get_class($object);
-            if (isset($this->normalizerClassMap[$class])
-                && $this->container->has($this->normalizerClassMap[$class])
-            ) {
-                $this->addNormalizer($this->container->get($this->normalizerClassMap[$class]));
-                return parent::normalizeObject($object, $format, $properties);
+            if (!$this->lazyLoadNormalizer($class)) {
+                throw $e;
             }
-
-            throw $e;
         }
+
+        return parent::normalizeObject($object, $format, $properties);
     }
 
     /**
@@ -77,16 +74,33 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     {
         try {
             return parent::denormalizeObject($data, $class, $format);
-        } catch (\LogicException $e) {
-            if (isset($this->normalizerClassMap[$class])
-                && $this->container->has($this->normalizerClassMap[$class])
-            ) {
-                $this->addNormalizer($this->container->get($this->normalizerClassMap[$class]));
-                return parent::denormalizeObject($data, $class, $format);
+        } catch (\Exception $e) {
+            if (!$this->lazyLoadNormalizer($class)) {
+                throw $e;
             }
-
-            throw $e;
         }
+
+        return parent::denormalizeObject($data, $class, $format);
+    }
+
+    /**
+     * Lazy load a normalizer for the given class
+     *
+     * @param string $class A fully qualified class name
+     *
+     * @return Boolean If the normalizer was successfully lazy loaded
+     */
+    private function lazyLoadNormalizer($class)
+    {
+        if (isset($this->normalizerClassMap[$class])
+            && $this->container->has($this->normalizerClassMap[$class])
+        ) {
+            $this->addNormalizer($this->container->get($this->normalizerClassMap[$class]));
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -119,6 +133,13 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
         return parent::getEncoder($format);
     }
 
+    /**
+     * Lazy load an encoder for the given format
+     *
+     * @param string $format format name
+     *
+     * @return Boolean If the encoder was successfully lazy loaded
+     */
     private function lazyLoadEncoder($format)
     {
         if (!$this->hasEncoder($format)
@@ -126,6 +147,10 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
             && $this->container->has($this->encoderFormatMap[$format])
         ) {
             $this->setEncoder($format, $this->container->get($this->encoderFormatMap[$format]));
+
+            return true;
         }
+
+        return false;
     }
 }
