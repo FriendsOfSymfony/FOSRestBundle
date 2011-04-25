@@ -176,6 +176,15 @@ class View implements ContainerAwareInterface
         return $this->code;
     }
 
+    /**
+     * Gets a response HTTP status code
+     *
+     * By default it will return 200, however for the first form instance in the top level of the parameters it will
+     * - set the status code to the failed_validation configuration is the form instance has errors
+     * - replace the form instance with the return of createView() on the given form instance
+     *
+     * @return int HTTP status code
+     */
     private function getStatusCodeFromParameters()
     {
         $code = Codes::HTTP_OK;
