@@ -62,6 +62,11 @@ class FOSRestExtension extends Extension
         $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
         $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
 
+        if (is_string($config['failed_validation'])) {
+            $config['failed_validation'] = constant('\FOS\RestBundle\Response\Codes::'.$config['failed_validation']);
+        }
+        $container->setParameter($this->getAlias().'.failed_validation', $config['failed_validation']);
+
         if (!empty($config['format_listener'])) {
             $loader->load('request_format_listener.xml');
             $container->setParameter($this->getAlias().'.detect_format', $config['format_listener']['detect_format']);

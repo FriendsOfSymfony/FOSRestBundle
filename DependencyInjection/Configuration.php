@@ -5,6 +5,8 @@ namespace FOS\RestBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder,
     Symfony\Component\Config\Definition\ConfigurationInterface;
 
+use FOS\RestBundle\Response\Codes;
+
 /*
  * This file is part of the FOSRestBundle
  *
@@ -71,6 +73,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->booleanNode('frameworkextra')->defaultFalse()->end()
+                ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
                 ->arrayNode('class')
                     ->addDefaultsIfNotSet()
                     ->children()

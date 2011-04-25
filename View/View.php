@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+    Symfony\Component\Form\FormInterface;
 
 use FOS\RestBundle\Response\Codes,
     FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
@@ -39,6 +40,7 @@ class View implements ContainerAwareInterface
 
     protected $customHandlers = array();
     protected $formats;
+    protected $failedValidation;
 
     protected $redirect;
     protected $template;
@@ -51,11 +53,13 @@ class View implements ContainerAwareInterface
      * Constructor
      *
      * @param array $formats The supported formats
+     * @param int $failedValidation The HTTP response status code for a failed validation
      */
-    public function __construct(array $formats = null)
+    public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST)
     {
         $this->reset();
         $this->formats = (array)$formats;
+        $this->failedValidation = $failedValidation;
     }
 
     /**
@@ -68,7 +72,7 @@ class View implements ContainerAwareInterface
         $this->format = null;
         $this->engine = 'twig';
         $this->parameters = array();
-        $this->code = Codes::HTTP_OK;
+        $this->code = null;
     }
 
     /**
@@ -155,6 +159,14 @@ class View implements ContainerAwareInterface
     }
 
     /**
+     * Sets a response HTTP status code for a failed validation
+     */
+    public function setFailedValidationStatusCode()
+    {
+        $this->code = $this->failedValidation;
+    }
+
+    /**
      * Gets a response HTTP status code
      *
      * @return int HTTP status code
@@ -162,6 +174,25 @@ class View implements ContainerAwareInterface
     public function getStatusCode()
     {
         return $this->code;
+    }
+
+    private function getStatusCodeFromParameters()
+    {
+        $code = Codes::HTTP_OK;
+
+        $parameters = (array)$this->getParameters();
+        foreach ($parameters as $key => $parameter) {
+            if ($parameter instanceof FormInterface) {
+                if ($parameter->hasErrors()) {
+                    $code = $this->failedValidation;
+                }
+
+                $parameter[$key] = $parameter->createView();
+                break;
+            }
+        }
+
+        return $code;
     }
 
     /**
@@ -310,9 +341,11 @@ class View implements ContainerAwareInterface
         }
 
         if (null === $response) {
-            $response = new Response();
-        } else {
-            $this->setStatusCode($response->getStatusCode());
+            $code = $this->getStatusCode();
+            if (null === $code) {
+                $code = $this->getStatusCodeFromParameters();
+            }
+            $response = new Response('' , $code);
         }
 
         $format = $this->getFormat();
@@ -334,8 +367,6 @@ class View implements ContainerAwareInterface
 
         if (!($response instanceof Response)) {
             $response = new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
-        } else {
-            $response->setStatusCode($this->getStatusCode());
         }
 
         return $response;
