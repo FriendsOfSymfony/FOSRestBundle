@@ -280,13 +280,11 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Get the serializer service, add encoder in case there is none set for the given format
-     *
-     * @param string $format
+     * Get the serializer service
      *
      * @return SerializerInterface
      */
-    public function getSerializer($format = null)
+    public function getSerializer()
     {
         if (null === $this->serializer) {
             $this->serializer = $this->container->get('fos_rest.serializer');
@@ -328,6 +326,8 @@ class View implements ContainerAwareInterface
             $response = call_user_func($callback, $this, $request, $response);
         } elseif ($this->supports($format)) {
             $response = $this->transform($request, $response, $format);
+        } else {
+            $response = null;
         }
 
         $this->reset();
@@ -367,7 +367,7 @@ class View implements ContainerAwareInterface
             return $response;
         }
 
-        $serializer = $this->getSerializer($format);
+        $serializer = $this->getSerializer();
         $encoder = $serializer->getEncoder($format);
 
         if ($encoder instanceof TemplatingAwareEncoderInterface) {
