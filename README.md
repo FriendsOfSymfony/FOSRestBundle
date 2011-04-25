@@ -115,7 +115,7 @@ Note see the section about the view support in regards to how to register/deregi
 encoders for specific formats as the request body decoding uses encoders for decoding.
 
 SensioFrameworkExtraBundle support
-----------------------------
+----------------------------------
 
 This requires adding the SensioFrameworkExtraBundle to you vendors:
 
@@ -171,7 +171,7 @@ Single RESTful controller routes
       resource: Acme\HelloBundle\Controller\UsersController
 
 This will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
-Notice `type:     rest` option. It's required so that the RestBundle can find which routes are supported.
+Notice `type: rest` option. It's required so that the RestBundle can find which routes are supported.
 
 ## Define resource actions
 
@@ -214,12 +214,13 @@ Notice `type:     rest` option. It's required so that the RestBundle can find wh
         {} // `new_user_comments`   [GET] /users/{slug}/comments/new
     }
 
-That's all. All your resource (`UsersController`) actions will get mapped to proper routes (commented examples).
+That's all. All your resource (`UsersController`) actions will get mapped to the proper routes
+as shown in the comments in the above example.
 
 Relational RESTful controllers routes
 -------------------------------------
 
-Sometimes it's better to place subresource actions in it's own controller. Especially when
+Sometimes it's better to place subresource actions in their own controller, especially when
 you have more than 2 subresource actions.
 
 ## Resource collection
@@ -236,9 +237,9 @@ In this case, you must first specify resource relations in special rest YML or X
       parent:   users
       resource: "@AcmeHello\Controller\CommentsController"
 
-Notice `parent:   users` option in second case. This option specifies that comments resource is
-child of users resource. In this case, your `UsersController` MUST always have single resource
-`get...` action:
+Notice `parent: users` option in the second case. This option specifies that the comments resource
+is child of the users resource. In this case, your `UsersController` MUST always have a single
+resource `get...` action:
 
     class UsersController extends Controller
     {
@@ -248,8 +249,8 @@ child of users resource. In this case, your `UsersController` MUST always have s
         ...
     }
 
-It's used to determine parent collection name. Controller name itself not used in routes
-auto-generation process & can be any name you like.
+It's used to determine the parent collection name. Controller name itself not used in routes
+auto-generation process and can be any name you like.
 
 ## Define child resource controller
 
@@ -273,13 +274,13 @@ auto-generation process & can be any name you like.
         {} // `new_user_comments`   [GET] /users/{slug}/comments/new
     }
 
-Notice, that we get rid of `User` part in action names. It's because RestBundle routing
+Notice, we got rid of the `User` part in action names. That is because the RestBundle routing
 already knows, that `CommentsController::...` is child resources of `UsersController::getUser()`
 resource.
 
 ## Include resource collections in application routing
 
-Last step is mapping of your collection routes into application `routing.yml`:
+Last step is mapping of your collection routes into the application `routing.yml`:
 
     # app/config/routing.yml
     users:
@@ -290,20 +291,21 @@ That's all.
 
 ## Routes naming
 
-RestBundle uses REST path to generate route name. It means, that URL:
+RestBundle uses REST paths to generate route name. This means, that URL:
 
     [PUT] /users/{slug}/comments/{id}/vote
 
-will become route with name:
+will become the route with the name:
 
     vote_user_comment
 
-For further examples, see comments of controllers code above.
+For further examples, see comments of controllers in the code above.
 
 ### Naming collisions
 
 Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
-collections provides a `name_prefix` (`name-prefix` for xml) parameter:
+collections provides a `name_prefix` (`name-prefix` for xml and @rest:NamePrefix for
+annotations) parameter:
 
     # src/Acme/HelloBundle/Resources/config/users_routes.yml
     comments:
