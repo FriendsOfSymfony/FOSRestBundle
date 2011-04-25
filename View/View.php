@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Component\Serializer\SerializerInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+    Symfony\Component\Templating\TemplateReferenceInterface,
     Symfony\Component\Form\FormInterface;
 
 use FOS\RestBundle\Response\Codes,
@@ -237,7 +238,7 @@ class View implements ContainerAwareInterface
     /**
      * Sets template to use for the encoding
      *
-     * @param string|TemplateReference $template template to be used in the encoding
+     * @param string|TemplateReferenceInterface $template template to be used in the encoding
      */
     public function setTemplate($template)
     {
@@ -250,13 +251,13 @@ class View implements ContainerAwareInterface
      * When the template is an array this method
      * ensures that the format and engine are set
      *
-     * @return string|TemplateReference template to be used in the encoding
+     * @return string|TemplateReferenceInterface template to be used in the encoding
      */
     public function getTemplate()
     {
         $template = $this->template;
 
-        if ($template instanceOf TemplateReference) {
+        if ($template instanceOf TemplateReferenceInterface) {
             if (null === $template->get('format')) {
                 $template->set('format', $this->getFormat());
             }
