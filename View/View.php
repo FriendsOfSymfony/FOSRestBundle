@@ -393,7 +393,6 @@ class View implements ContainerAwareInterface
             }
             $redirect = new RedirectResponse($this->redirect['location'], $this->redirect['status_code']);
             $response->setContent($redirect->getContent());
-            $this->setStatusCode($this->redirect['status_code']);
             $response->headers->set('Location', $redirect->headers->get('Location'));
             return $response;
         }
