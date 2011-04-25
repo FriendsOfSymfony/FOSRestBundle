@@ -49,6 +49,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('exception')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
