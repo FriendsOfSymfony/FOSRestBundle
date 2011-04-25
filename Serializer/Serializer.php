@@ -24,8 +24,19 @@ use Symfony\Component\Serializer\Serializer as BaseSerializer,
  */
 class Serializer extends BaseSerializer implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
+
+    /**
+     * @var array key format, value a service id of an EncoderInterface instance
+     */
     private $encoderFormatMap;
+
+    /**
+     * @var array key class name, value a service id of an NormalizerInterface instance
+     */
     private $normalizerClassMap;
 
     /**

@@ -23,7 +23,14 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface,
  */
 class HtmlEncoder extends AbstractEncoder implements TemplatingAwareEncoderInterface
 {
+    /**
+     * @var EngineInterface template engine instance
+     */
     protected $templating;
+
+    /**
+     * @var string|TemplateReferenceInterface template
+     */
     protected $template;
 
     /**

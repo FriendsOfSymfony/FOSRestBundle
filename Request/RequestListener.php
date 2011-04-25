@@ -25,9 +25,24 @@ use Symfony\Component\HttpFoundation\ParameterBag,
  */
 class RequestListener
 {
+    /**
+     * @var Boolean if to try and detect the request format
+     */
     protected $detectFormat;
+
+    /**
+     * @param string default format name
+     */
     protected $defaultFormat;
+
+    /**
+     * @var Boolean if to try and decode the request body
+     */
     protected $decodeBody;
+
+    /**
+     * @var SerializerInterface
+     */
     protected $serializer;
 
     /**
