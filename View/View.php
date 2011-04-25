@@ -36,18 +36,59 @@ use FOS\RestBundle\Response\Codes,
  */
 class View implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
+
+    /**
+     * @var SerializerInterface
+     */
     protected $serializer;
 
+    /**
+     * @var array key format, value a callback that returns a Response instance
+     */
     protected $customHandlers = array();
+
+    /**
+     * @var array key format, value a service id of an EncoderInterface instance
+     */
     protected $formats;
+
+    /**
+     * @param int HTTP response status code for a failed validation
+     */
     protected $failedValidation;
 
+    /**
+     * @var array redirect configuration
+     */
     protected $redirect;
+
+    /**
+     * @var string|TemplateReferenceInterface template
+     */
     protected $template;
+
+    /**
+     * @param string format name
+     */
     protected $format;
+
+    /**
+     * @var string|array parameters
+     */
     protected $parameters;
+
+    /**
+     * @var string engine (twig, php ..)
+     */
     protected $engine;
+
+    /**
+     * @param int HTTP response status code
+     */
     protected $code;
 
     /**
@@ -100,6 +141,7 @@ class View implements ContainerAwareInterface
      * Verifies whether the given format is supported by this view
      *
      * @param string $format format name
+     * 
      * @return Boolean
      */
     public function supports($format)
