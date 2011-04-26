@@ -1,27 +1,31 @@
 RestBundle
 ==========
 
-This Bundle provides various tools to rapidly develop RESTful API's with Symfony2.
+This bundle provides various tools to rapidly develop RESTful API's with Symfony2.
 
 Its currently under development so key pieces that are planned are still missing.
 
 For now the Bundle provides a view layer to enable output format agnostic Controllers,
-which includes the ability to handle redirects differently.
+which includes the ability to handle redirects differently based on a service container
+aware Serializer service that can lazy load encoders and normalizers.
 
 Furthermore a custom route loader can be used to when following a method
 naming convention to automatically provide routes for multiple actions by simply
 configuring the name of a controller.
 
-Eventually the goal is to also support RESTful decoding of request headers and body,
-serializing of form's into different formats and assisting in returning correct
-HTTP status codes. Generation of REST API end user documentation is also a goal.
+It also has support for RESTful decoding of HTTP request body and Accept headers
+as well as a custom Exception controller that assists in using appropriate HTTP
+status codes.
+
+Eventually the bundle will also provide normalizers for form and validator instances as
+well as provide a solution to generation end user documentation describing the REST API.
 
 Installation
 ============
 
     1. Add this bundle to your project as a Git submodule:
 
-        $ git submodule add git://github.com/fos/RestBundle.git vendor/bundles/FOS/RestBundle
+        $ git submodule add git://github.com/FriendsOfSymfony/RestBundle.git vendor/bundles/FOS/RestBundle
 
     2. Add the FOS namespace to your autoloader:
 
@@ -44,27 +48,56 @@ Installation
         }
 
 Configuration
--------------
+=============
+
+Basic configuration
+-------------------
+
+The RestBundle allows adapting several classes it uses. Alternatively entire
+services may be adapted. In the following examples the default Json encoder class
+is modified and a custom serializer service is configured:
+
+    # app/config.yml
+    fos_rest:
+        classes:
+            json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
+        services:
+            serializer: my.serializer
+
+Note the service for the RSS encoder needs to be defined in a custom bundle:
+
+    <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
+
+View support
+------------
 
 Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
 support for xml. Also the default Json encoder class is modified and a custom
-serializer service is configured. Finally the request format listener is enabled:
+serializer service is configured. The a normalizer is registered for the class
+``Acme\HelloBundle\Document\Article`` and the ``fos_rest.get_set_method_normalizer``
+normalizer will be loazy loaded as soon as normalization is triggered. Finally the
+HTTP response status code for failed validation is set to ``400``:
 
     # app/config.yml
     fos_rest:
         formats:
             rss: my.encoder.rss
             xml: false
-        class:
-            json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
-        service:
-            serializer: my.serializer
+        normalizers:
+            'Acme\HelloBundle\Document\Article': 'my.article_normalizer'
+        default_normalizers:
+            - 'fos_rest.get_set_method_normalizer'
+        failed_validation: HTTP_BAD_REQUEST
+
+Request listener support
+------------------------
+
+To enable the request listener simply adapt your configuration as follows:
+
+    # app/config.yml
+    fos_rest:
         format_listener: true
-
-Note the service for the RSS encoder needs to be defined in a custom bundle:
-
-    <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
 
 In the behavior of the request listener can be configured in a more granular fashion:
 
@@ -80,40 +113,72 @@ should either set a custom RequestListener class or register their own "onCoreRe
 
     # app/config.yml
     fos_rest:
-        class:
+        classes:
             request_format_listener: MyProject\MyBundle\View\RequestListener
 
-FrameworkBundle support
------------------------
+Note see the section about the view support in regards to how to register/deregister
+encoders for specific formats as the request body decoding uses encoders for decoding.
 
-Make sure to disable view annotations in the FrameworkBundle config, enable
-or disable any of the other features depending on your needs:
+SensioFrameworkExtraBundle support
+----------------------------------
 
+This requires adding the SensioFrameworkExtraBundle to you vendors:
+
+    $ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
+
+Make sure to disable view annotations in the SensioFrameworkExtraBundle config,
+enable or disable any of the other features depending on your needs:
+
+    # app/config.yml
     sensio_framework_extra:
         view:    { annotations: false }
         router:  { annotations: true }
 
-Finally enable the FrameworkBundle listener in the RestBundle:
+Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 
+    # app/config.yml
     fos_rest:
         frameworkextra: true
+
+ExceptionController support
+---------------------------
+
+The RestBundle view layer aware ExceptionController is enabled as follows:
+
+    # app/config.yml
+    framework:
+        exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
+
+To map Exception classes to HTTP response status codes an ``exception_map`` may be configured,
+where the keys match a fully qualified class name and the values are either an integer HTTP response
+status code or a string matching a class constant of the ``FOS\RestBundle\Response\Codes`` class:
+
+    # app/config.yml
+    fos_rest:
+        exception:
+            codes:
+                'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
+                'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+            messages:
+                'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
 
 Routing
 =======
 
-Note: This requires ext/mbstring
+The RestBundle provides custom route loaders to help in defining REST friendly routes.
 
-## Single RESTful controller routes
+Single RESTful controller routes
+--------------------------------
 
     # app/config/routing.yml
     users:
       type:     rest
-      resource: Application\HelloBundle\Controller\UsersController
+      resource: Acme\HelloBundle\Controller\UsersController
 
 This will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
-Notice `type:     rest` option. It's required so that the RestBundle can find which routes are supported.
+Notice `type: rest` option. It's required so that the RestBundle can find which routes are supported.
 
-### Define resource actions
+## Define resource actions
 
     class UsersController extends Controller
     {
@@ -154,14 +219,16 @@ Notice `type:     rest` option. It's required so that the RestBundle can find wh
         {} // `new_user_comments`   [GET] /users/{slug}/comments/new
     }
 
-That's all. All your resource (`UsersController`) actions will get mapped to proper routes (commented examples).
+That's all. All your resource (`UsersController`) actions will get mapped to the proper routes
+as shown in the comments in the above example.
 
-## Relational RESTful controllers routes
+Relational RESTful controllers routes
+-------------------------------------
 
-Sometimes it's better to place subresource actions in it's own controller. Especially when
+Sometimes it's better to place subresource actions in their own controller, especially when
 you have more than 2 subresource actions.
 
-### Resource collection
+## Resource collection
 
 In this case, you must first specify resource relations in special rest YML or XML collection:
 
@@ -175,9 +242,9 @@ In this case, you must first specify resource relations in special rest YML or X
       parent:   users
       resource: "@AcmeHello\Controller\CommentsController"
 
-Notice `parent:   users` option in second case. This option specifies that comments resource is
-child of users resource. In this case, your `UsersController` MUST always have single resource
-`get...` action:
+Notice `parent: users` option in the second case. This option specifies that the comments resource
+is child of the users resource. In this case, your `UsersController` MUST always have a single
+resource `get...` action:
 
     class UsersController extends Controller
     {
@@ -187,10 +254,10 @@ child of users resource. In this case, your `UsersController` MUST always have s
         ...
     }
 
-It's used to determine parent collection name. Controller name itself not used in routes
-auto-generation process & can be any name you like.
+It's used to determine the parent collection name. Controller name itself not used in routes
+auto-generation process and can be any name you like.
 
-### Define child resource controller
+## Define child resource controller
 
 `CommentsController` actions now will looks like:
 
@@ -212,13 +279,13 @@ auto-generation process & can be any name you like.
         {} // `new_user_comments`   [GET] /users/{slug}/comments/new
     }
 
-Notice, that we get rid of `User` part in action names. It's because RestBundle routing
+Notice, we got rid of the `User` part in action names. That is because the RestBundle routing
 already knows, that `CommentsController::...` is child resources of `UsersController::getUser()`
 resource.
 
-### Include resource collections in application routing
+## Include resource collections in application routing
 
-Last step is mapping of your collection routes into application `routing.yml`:
+Last step is mapping of your collection routes into the application `routing.yml`:
 
     # app/config/routing.yml
     users:
@@ -227,22 +294,23 @@ Last step is mapping of your collection routes into application `routing.yml`:
 
 That's all.
 
-### Routes naming
+## Routes naming
 
-RestBundle uses REST path to generate route name. It means, that URL:
+RestBundle uses REST paths to generate route name. This means, that URL:
 
     [PUT] /users/{slug}/comments/{id}/vote
 
-will become route with name:
+will become the route with the name:
 
     vote_user_comment
 
-For further examples, see comments of controllers code above.
+For further examples, see comments of controllers in the code above.
 
-#### Naming collisions
+### Naming collisions
 
 Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
-collections provides a `name_prefix` (`name-prefix` for xml) parameter:
+collections provides a `name_prefix` (`name-prefix` for xml and @rest:NamePrefix for
+annotations) parameter:
 
     # src/Acme/HelloBundle/Resources/config/users_routes.yml
     comments:

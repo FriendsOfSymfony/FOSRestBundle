@@ -3,12 +3,16 @@
 <container xmlns="http://symfony.com/schema/dic/services"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
     <parameters>
+
         <parameter key="fos_rest.routing.loader.controller.class">FOS\RestBundle\Routing\Loader\RestRouteLoader</parameter>
         <parameter key="fos_rest.routing.loader.yaml_collection.class">FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader</parameter>
         <parameter key="fos_rest.routing.loader.xml_collection.class">FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader</parameter>
         <parameter key="fos_rest.routing.loader.controller.annotations_namespace">FOS\RestBundle\Controller\Annotations\</parameter>
+
     </parameters>
+
     <services>
 
         <service id="fos_rest.routing.loader.controller" class="%fos_rest.routing.loader.controller.class%">
@@ -36,4 +40,5 @@
         </service>
 
     </services>
+
 </container>

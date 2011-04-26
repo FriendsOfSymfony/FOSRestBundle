@@ -5,12 +5,10 @@ namespace FOS\RestBundle\Request;
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Encoder\DecoderInterface,
-    Symfony\Component\DependencyInjection\ContainerAwareInterface,
-    Symfony\Component\DependencyInjection\ContainerInterface;
+    Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -25,38 +23,42 @@ use Symfony\Component\HttpFoundation\ParameterBag,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class RequestListener implements ContainerAwareInterface
+class RequestListener
 {
-    protected $formats;
+    /**
+     * @var Boolean if to try and detect the request format
+     */
     protected $detectFormat;
+
+    /**
+     * @param string default format name
+     */
     protected $defaultFormat;
+
+    /**
+     * @var Boolean if to try and decode the request body
+     */
     protected $decodeBody;
-    protected $container;
+
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
 
     /**
      * Initialize RequestListener.
      *
-     * @param   boolean    $detectFormat        If to try and detect the format
+     * @param   Boolean    $detectFormat        If to try and detect the format
      * @param   string     $defaultFormat       Default fallback format
-     * @param   boolean    $decodeBody          If to decode the body for parameters
-     * @param   array      $formats             The supported formats as keys, encoder service id's as values
+     * @param   Boolean    $decodeBody          If to decode the body for parameters
+     * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
      */
-    public function __construct($detectFormat, $defaultFormat, $decodeBody, array $formats = null)
+    public function __construct($detectFormat, $defaultFormat, $decodeBody, SerializerInterface $serializer = null)
     {
         $this->detectFormat = $detectFormat;
         $this->defaultFormat = $defaultFormat;
         $this->decodeBody = $decodeBody;
-        $this->formats = (array)$formats;
-    }
-
-    /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -70,9 +72,7 @@ class RequestListener implements ContainerAwareInterface
 
         if ($this->detectFormat) {
             $this->detectFormat($request);
-        // TODO enable once https://github.com/symfony/symfony/pull/575 is merged
-        //} elseif (null === $request->getRequestFormat(null)) {
-        } elseif (null === $request->get('_format')) {
+        } elseif (null !== $this->defaultFormat && null === $request->getRequestFormat(null)) {
             $request->setRequestFormat($this->defaultFormat);
         }
 
@@ -92,21 +92,34 @@ class RequestListener implements ContainerAwareInterface
      */
     protected function detectFormat($request)
     {
-        // TODO enable once https://github.com/symfony/symfony/pull/575 is merged
-//        $format = $request->getRequestFormat(null);
-        $format = $request->get('_format');
+        $format = $request->getRequestFormat(null);
         if (null === $format) {
-            $formats = $this->splitHttpAcceptHeader($request->headers->get('Accept'));
-            if (!empty($formats)) {
-                $format = $request->getFormat(key($formats));
-            }
-
+            $format = $this->getFormatFromAcceptHeader($request);
             if (null === $format) {
                 $format = $this->defaultFormat;
             }
 
             $request->setRequestFormat($format);
         }
+    }
+
+    /**
+     * Get the format from the Accept header
+     *
+     * Override this method to implement more complex Accept header negotiations
+     *
+     * @param   Request     $request    The request
+     * @return  void|string             The format string
+     */
+    protected function getFormatFromAcceptHeader($request)
+    {
+        $formats = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
+        if (empty($formats)) {
+            return null;
+        }
+
+        $format = key($formats);
+        return $request->getFormat($format);
     }
 
     /**
@@ -117,18 +130,13 @@ class RequestListener implements ContainerAwareInterface
      */
     protected function getEncoder($format)
     {
-        if (null === $format || empty($this->formats[$format])) {
-            return;
+        if (null === $format || null === $this->serializer) {
+            return null;
         }
 
-        $serializer = $this->container->get('fos_rest.serializer');
-        if (!$serializer->hasEncoder($format)) {
-            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-            $encoder = $this->container->get($this->formats[$format]);
-            // Technically not needed, but this way we have the instance for encoding later on
-            $serializer->setEncoder($format, $encoder);
-        } else {
-            $encoder = $serializer->getEncoder($format);
+        $encoder = $this->serializer->getEncoder($format);
+        if (empty($encoder)) {
+            return null;
         }
 
         return $encoder;
@@ -145,47 +153,13 @@ class RequestListener implements ContainerAwareInterface
             && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
         ) {
             $format = $request->getFormat($request->headers->get('Content-Type'));
+
             $encoder = $this->getEncoder($format);
+            if ($encoder instanceof DecoderInterface) {
+                $data = $encoder->decode($request->getContent(), $format);
 
-            if ($encoder && $encoder instanceof DecoderInterface) {
-                $post = $encoder->decode($request->getContent(), $format);
-
-                $request->request = new ParameterBag((array)$post);
+                $request->request = new ParameterBag((array)$data);
             }
         }
     }
-
-    /**
-     * Splits an Accept-* HTTP header.
-     * TODO remove once https://github.com/symfony/symfony/pull/575 is merged
-     *
-     * @param string $header  Header to split
-     */
-    private function splitHttpAcceptHeader($header)
-    {
-        if (!$header) {
-            return array();
-        }
-
-        $values = array();
-        foreach (array_filter(explode(',', $header)) as $value) {
-            // Cut off any q-value that might come after a semi-colon
-            if ($pos = strpos($value, ';')) {
-                $q     = (float) trim(substr($value, strpos($value, '=') + 1));
-                $value = trim(substr($value, 0, $pos));
-            } else {
-                $q = 1;
-            }
-
-            if (0 < $q) {
-                $values[trim($value)] = $q;
-            }
-        }
-
-        arsort($values);
-        reset($values);
-
-        return $values;
-    }
-
 }

@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route as BaseRoute;
 use Doctrine\Common\Annotations\Annotation;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>

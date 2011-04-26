@@ -4,10 +4,10 @@ namespace FOS\RestBundle\Serializer\Encoder;
 
 use Symfony\Component\Serializer\Encoder\EncoderInterface,
     Symfony\Bundle\FrameworkBundle\Templating\EngineInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+    Symfony\Component\Templating\TemplateReferenceInterface;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -41,14 +41,14 @@ interface TemplatingAwareEncoderInterface extends EncoderInterface
     /**
      * Sets the template
      *
-     * @param string|TemplateReference $template template to be used in the encoding
+     * @param string|TemplateReferenceInterface $template template to be used in the encoding
      */
     function setTemplate($template);
 
     /**
      * Gets the template
      *
-     * @return string|TemplateReference template to be used in the encoding
+     * @return string|TemplateReferenceInterface template to be used in the encoding
      */
     function getTemplate();
 }

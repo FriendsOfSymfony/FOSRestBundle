@@ -9,7 +9,7 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader,
     FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>

@@ -4,13 +4,14 @@ namespace FOS\RestBundle\Routing\Loader;
 
 use Symfony\Component\Config\Resource\FileResource,
     Symfony\Component\Routing\Loader\XmlFileLoader,
+    Symfony\Component\Config\Loader\FileLoader,
     Symfony\Component\Routing\RouteCollection,
     Symfony\Component\Routing\Route;
 
 use FOS\RestBundle\Routing\RestRouteCollection;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -26,6 +27,8 @@ use FOS\RestBundle\Routing\RestRouteCollection;
 class RestXmlCollectionLoader extends XmlFileLoader
 {
     protected $collectionParents = array();
+
+    private $currentDir;
 
     /**
      * Loads a Xml collection file.
@@ -150,5 +153,29 @@ class RestXmlCollectionLoader extends XmlFileLoader
             throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors()));
         }
         libxml_use_internal_errors($current);
+    }
+
+    /**
+     * Retrieves libxml errors and clears them.
+     *
+     * @return array An array of libxml error strings
+     */
+    private function getXmlErrors()
+    {
+        $errors = array();
+        foreach (libxml_get_errors() as $error) {
+            $errors[] = sprintf('[%s %s] %s (in %s - line %d, column %d)',
+                LIBXML_ERR_WARNING == $error->level ? 'WARNING' : 'ERROR',
+                $error->code,
+                trim($error->message),
+                $error->file ? $error->file : 'n/a',
+                $error->line,
+                $error->column
+            );
+        }
+
+        libxml_clear_errors();
+
+        return $errors;
     }
 }

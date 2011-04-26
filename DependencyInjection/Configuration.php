@@ -5,8 +5,10 @@ namespace FOS\RestBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder,
     Symfony\Component\Config\Definition\ConfigurationInterface;
 
+use FOS\RestBundle\Response\Codes;
+
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -38,10 +40,36 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->fixXmlConfig('format', 'formats')
+            ->fixXmlConfig('normalizer', 'normalizers')
+            ->fixXmlConfig('default_normalizer', 'default_normalizers')
+            ->fixXmlConfig('class', 'classes')
+            ->fixXmlConfig('service', 'services')
             ->children()
                 ->arrayNode('formats')
-                    ->useAttributeAsKey('format')
+                    ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('default_normalizers')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('normalizers')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->arrayNode('exception')
+                    ->fixXmlConfig('code', 'codes')
+                    ->fixXmlConfig('message', 'messages')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('codes')
+                            ->useAttributeAsKey('name')
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->arrayNode('messages')
+                            ->useAttributeAsKey('name')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
                 ->end()
                 ->arrayNode('format_listener')
                     ->treatTrueLike(array('detect_format' => true, 'default_format' => 'html', 'decode_body' => true))
@@ -53,18 +81,19 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->booleanNode('frameworkextra')->defaultFalse()->end()
-                ->arrayNode('class')
+                ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
+                ->arrayNode('classes')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('view')->defaultValue('FOS\RestBundle\View\View')->end()
-                        ->scalarNode('serializer')->defaultValue('Symfony\Component\Serializer\Serializer')->end()
+                        ->scalarNode('serializer')->defaultValue('FOS\RestBundle\Serializer\Serializer')->end()
                         ->scalarNode('json')->defaultValue('Symfony\Component\Serializer\Encoder\JsonEncoder')->end()
                         ->scalarNode('xml')->defaultValue('Symfony\Component\Serializer\Encoder\XmlEncoder')->end()
                         ->scalarNode('html')->defaultValue('FOS\RestBundle\Serializer\Encoder\HtmlEncoder')->end()
                         ->scalarNode('request_format_listener')->defaultValue('FOS\RestBundle\Request\RequestListener')->end()
                     ->end()
                 ->end()
-                ->arrayNode('service')
+                ->arrayNode('services')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('view')->defaultNull()->end()

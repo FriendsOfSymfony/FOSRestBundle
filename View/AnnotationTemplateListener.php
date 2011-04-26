@@ -4,12 +4,13 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use Sensio\Bundle\FrameworkExtraBundle\View\AnnotationTemplateListener as BaseAnnotationTemplateListener;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -70,6 +71,8 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
      *
      * @param array $controller An array storing the controller object and action method
      * @param Request $request A Request instance
+     *
+     * @return TemplateReference A template reference
      * @throws \InvalidArgumentException
      */
     protected function guessTemplateName($controller, Request $request)
@@ -81,6 +84,6 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
         $bundle = $this->getBundleForClass(get_class($controller[0]));
         $name = substr($controller[1], 0, -6);
 
-        return array('bundle' => $bundle->getName(), 'controller' => $match[1], 'name' => $name);
+        return new TemplateReference($bundle->getName(), $match[1], $name);
     }
 }

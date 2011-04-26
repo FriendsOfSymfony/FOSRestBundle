@@ -16,7 +16,7 @@ use FOS\RestBundle\Routing\RestRouteCollection,
     FOS\RestBundle\Pluralization\Pluralization;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -105,37 +105,39 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Loads a Routes collection by parsing Controller method names.
      *
-     * @param   string  $class      A controller class
+     * @param   string  $controller Some identifier for the controller
      * @param   string  $type       The resource type
      *
      * @return  RouteCollection     A RouteCollection instance
      */
-    public function load($class, $type = null)
+    public function load($controller, $type = null)
     {
-        if (class_exists($class)) {
+        if (class_exists($controller)) {
             // full class name
-            $class            = $class;
+            $class            = $controller;
             $controllerPrefix = $class . '::';
-        } elseif (false !== strpos($class, ':')) {
+        } elseif (false !== strpos($controller, ':')) {
             // bundle:controller notation
             try {
-                $notation             = $this->parser->parse($class . ':method');
+                $notation             = $this->parser->parse($controller . ':method');
                 list($class, $method) = explode('::', $notation);
                 $controllerPrefix     = $class . '::';
             } catch (\Exception $e) {
-                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $class));
+                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $controller));
             }
-        } elseif ($this->container->has($class)) {
+        } elseif ($this->container->has($controller)) {
             // service_id
-            $controllerPrefix = $class . '::';
-            $class            = get_class($this->container->get($class));
-        } else {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+            $controllerPrefix = $controller . ':';
+            $class            = get_class($this->container->get($controller));
+        }
+
+        if (empty($class)) {
+            throw new \InvalidArgumentException(sprintf('Class could not be determined for Controller identified by "%s".', $controller));
         }
 
         // Check that every passed parent has non-empty singular name
         foreach ($this->parents as $parent) {
-            if (empty($parent) || '/' === mb_substr($parent, -1)) {
+            if (empty($parent) || '/' === substr($parent, -1)) {
                 throw new \InvalidArgumentException('All parent controllers must have ::getSINGULAR_NAME() action');
             }
         }
@@ -158,7 +160,7 @@ class RestRouteLoader implements LoaderInterface
 
         // Trim "/" at the start
         if (null !== $this->prefix && isset($this->prefix[0]) && '/' === $this->prefix[0]) {
-            $this->prefix = mb_substr($this->prefix, 1);
+            $this->prefix = substr($this->prefix, 1);
         }
 
         $routeAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Route';
@@ -174,7 +176,7 @@ class RestRouteLoader implements LoaderInterface
             $matches = array();
 
             // If method name starts with underscore - skip
-            if ('_' === mb_substr($method->getName(), 0, 1)) {
+            if ('_' === substr($method->getName(), 0, 1)) {
                 continue;
             }
 
@@ -237,9 +239,9 @@ class RestRouteLoader implements LoaderInterface
                     }
                 }
 
-                $pattern        = mb_strtolower(implode('/', $urlParts));
+                $pattern        = strtolower(implode('/', $urlParts));
                 $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => null);
-                $requirements   = array('_method'     => mb_strtoupper($httpMethod));
+                $requirements   = array('_method'     => strtoupper($httpMethod));
                 $options        = array();
                 
                 // Read annotations
@@ -267,7 +269,7 @@ class RestRouteLoader implements LoaderInterface
                 // Create route with gathered parameters
                 $route = new Route($pattern, $defaults, $requirements, $options);
 
-                $collection->add($this->namePrefix . mb_strtolower($routeName), $route);
+                $collection->add($this->namePrefix . strtolower($routeName), $route);
             }
         }
 

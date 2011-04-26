@@ -8,12 +8,15 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+    Symfony\Component\Templating\TemplateReferenceInterface,
+    Symfony\Component\Form\FormInterface;
 
-use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
+use FOS\RestBundle\Response\Codes,
+    FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
@@ -33,31 +36,76 @@ use FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
  */
 class View implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
+
+    /**
+     * @var SerializerInterface
+     */
     protected $serializer;
 
+    /**
+     * @var array key format, value a callback that returns a Response instance
+     */
     protected $customHandlers = array();
+
+    /**
+     * @var array key format, value a service id of an EncoderInterface instance
+     */
     protected $formats;
 
+    /**
+     * @param int HTTP response status code for a failed validation
+     */
+    protected $failedValidation;
+
+    /**
+     * @var array redirect configuration
+     */
     protected $redirect;
+
+    /**
+     * @var string|TemplateReferenceInterface template
+     */
     protected $template;
+
+    /**
+     * @param string format name
+     */
     protected $format;
+
+    /**
+     * @var string|array parameters
+     */
     protected $parameters;
+
+    /**
+     * @var string engine (twig, php ..)
+     */
     protected $engine;
+
+    /**
+     * @param int HTTP response status code
+     */
+    protected $code;
 
     /**
      * Constructor
      *
      * @param array $formats The supported formats
+     * @param int $failedValidation The HTTP response status code for a failed validation
      */
-    public function __construct(array $formats = null)
+    public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST)
     {
         $this->reset();
         $this->formats = (array)$formats;
+        $this->failedValidation = $failedValidation;
     }
 
     /**
-     * Resets the state of the view object
+     * Resets the state of this view instance
      */
     public function reset()
     {
@@ -66,14 +114,7 @@ class View implements ContainerAwareInterface
         $this->format = null;
         $this->engine = 'twig';
         $this->parameters = array();
-    }
-
-    /**
-     * Reset serializer service
-     */
-    public function resetSerializer()
-    {
-        $this->serializer = null;
+        $this->code = null;
     }
 
     /**
@@ -100,7 +141,8 @@ class View implements ContainerAwareInterface
      * Verifies whether the given format is supported by this view
      *
      * @param string $format format name
-     * @return bool
+     * 
+     * @return Boolean
      */
     public function supports($format)
     {
@@ -127,9 +169,9 @@ class View implements ContainerAwareInterface
      *
      * @param string $route route name
      * @param array $parameters route parameters
-     * @param int $code optional http status code
+     * @param int $code HTTP status code
      */
-    public function setRouteRedirect($route, array $parameters = array(), $code = 302)
+    public function setRouteRedirect($route, array $parameters = array(), $code = Codes::HTTP_FOUND)
     {
         $this->redirect = array(
             'route' => $route,
@@ -142,11 +184,67 @@ class View implements ContainerAwareInterface
      * Sets a redirect using an URI
      *
      * @param string $uri URI
-     * @param int $code optional http status code
+     * @param int $code HTTP status code
      */
-    public function setUriRedirect($uri, $code = 302)
+    public function setUriRedirect($uri, $code = Codes::HTTP_FOUND)
     {
         $this->redirect = array('location' => $uri, 'status_code' => $code);
+    }
+
+    /**
+     * Sets a response HTTP status code
+     *
+     * @param int $code optional http status code
+     */
+    public function setStatusCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * Sets a response HTTP status code for a failed validation
+     */
+    public function setFailedValidationStatusCode()
+    {
+        $this->code = $this->failedValidation;
+    }
+
+    /**
+     * Gets a response HTTP status code
+     *
+     * @return int HTTP status code
+     */
+    public function getStatusCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Gets a response HTTP status code
+     *
+     * By default it will return 200, however for the first form instance in the top level of the parameters it will
+     * - set the status code to the failed_validation configuration is the form instance has errors
+     * - replace the form instance with the return of createView() on the given form instance
+     *
+     * @return int HTTP status code
+     */
+    private function getStatusCodeFromParameters()
+    {
+        $code = Codes::HTTP_OK;
+
+        $parameters = (array)$this->getParameters();
+        foreach ($parameters as $key => $parameter) {
+            if ($parameter instanceof FormInterface) {
+                if ($parameter->hasErrors()) {
+                    $code = $this->failedValidation;
+                }
+
+                $parameter[$key] = $parameter->createView();
+                break;
+            }
+        }
+
+        return $code;
     }
 
     /**
@@ -160,7 +258,7 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Sets encoding parameters
+     * Sets to be encoded parameters
      *
      * @param string|array $parameters parameters to be used in the encoding
      */
@@ -170,7 +268,7 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Gets encoding parameters
+     * Gets to be encoded parameters
      *
      * @return string|array parameters to be used in the encoding
      */
@@ -182,23 +280,10 @@ class View implements ContainerAwareInterface
     /**
      * Sets template to use for the encoding
      *
-     * @param string|array|TemplateReference $template template to be used in the encoding
+     * @param string|TemplateReferenceInterface $template template to be used in the encoding
      */
     public function setTemplate($template)
     {
-        if (is_array($template)) {
-            if (empty($template['name'])) {
-                throw new \InvalidArgumentException('The "name" key must be set: '.serialize($template));
-            }
-
-            $bundle = empty($template['bundle']) ? null : $template['bundle'];
-            $controller = empty($template['controller']) ? null : $template['controller'];
-            $format = empty($template['format']) ? null : $template['format'];
-            $engine = empty($template['engine']) ? null : $template['engine'];
-
-            $template = new TemplateReference($bundle, $controller, $template['name'], $format, $engine);
-        }
-
         $this->template = $template;
     }
 
@@ -208,13 +293,13 @@ class View implements ContainerAwareInterface
      * When the template is an array this method
      * ensures that the format and engine are set
      *
-     * @return string|TemplateReference template to be used in the encoding
+     * @return string|TemplateReferenceInterface template to be used in the encoding
      */
     public function getTemplate()
     {
         $template = $this->template;
 
-        if ($template instanceOf TemplateReference) {
+        if ($template instanceOf TemplateReferenceInterface) {
             if (null === $template->get('format')) {
                 $template->set('format', $this->getFormat());
             }
@@ -272,30 +357,20 @@ class View implements ContainerAwareInterface
      *
      * @param SerializerInterface $serializer a serializer instance
      */
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer = null)
     {
         $this->serializer = $serializer;
     }
 
     /**
-     * Get the serializer service, add encoder in case there is none set for the given format
-     *
-     * @param string $format
+     * Get the serializer service
      *
      * @return SerializerInterface
      */
-    public function getSerializer($format = null)
+    public function getSerializer()
     {
         if (null === $this->serializer) {
             $this->serializer = $this->container->get('fos_rest.serializer');
-        }
-
-        if (null !== $format
-            && !$this->serializer->hasEncoder($format)
-            && isset($this->formats[$format])
-        ) {
-            // TODO this kind of lazy loading of encoders should be provided by the Serializer component
-            $this->serializer->setEncoder($format, $this->container->get($this->formats[$format]));
         }
 
         return $this->serializer;
@@ -309,7 +384,7 @@ class View implements ContainerAwareInterface
      * @param Request $request Request object
      * @param Response $response optional response object to use
      *
-     * @param Response
+     * @return Response
      */
     public function handle(Request $request = null, Response $response = null)
     {
@@ -318,7 +393,11 @@ class View implements ContainerAwareInterface
         }
 
         if (null === $response) {
-            $response = new Response();
+            $code = $this->getStatusCode();
+            if (null === $code) {
+                $code = $this->getStatusCodeFromParameters();
+            }
+            $response = new Response('' , $code);
         }
 
         $format = $this->getFormat();
@@ -330,14 +409,17 @@ class View implements ContainerAwareInterface
         if (isset($this->customHandlers[$format])) {
             $callback = $this->customHandlers[$format];
             $response = call_user_func($callback, $this, $request, $response);
+        } elseif ($this->supports($format)) {
+            $response = $this->transform($request, $response, $format);
         } else {
-            if (!$this->supports($format)) {
-                return new Response("Format '$format' not supported, handler must be implemented", 415);
-            }
-            $response = $this->transform($request, $response, $format, $this->getTemplate());
+            $response = null;
         }
 
         $this->reset();
+
+        if (!($response instanceof Response)) {
+            $response = new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        }
 
         return $response;
     }
@@ -350,11 +432,10 @@ class View implements ContainerAwareInterface
      * @param Request $request
      * @param Response $response
      * @param string $format
-     * @param string $template
      *
      * @return Response
      */
-    protected function transform(Request $request, Response $response, $format, $template)
+    protected function transform(Request $request, Response $response, $format)
     {
         if ($this->redirect) {
             // TODO add support to optionally return the target url
@@ -364,21 +445,20 @@ class View implements ContainerAwareInterface
             }
             $redirect = new RedirectResponse($this->redirect['location'], $this->redirect['status_code']);
             $response->setContent($redirect->getContent());
-            $response->setStatusCode($this->redirect['status_code']);
             $response->headers->set('Location', $redirect->headers->get('Location'));
             return $response;
         }
 
-        $serializer = $this->getSerializer($format);
+        $serializer = $this->getSerializer();
         $encoder = $serializer->getEncoder($format);
 
         if ($encoder instanceof TemplatingAwareEncoderInterface) {
-            $encoder->setTemplate($template);
+            $encoder->setTemplate($this->getTemplate());
         }
 
         $content = $serializer->serialize($this->getParameters(), $format);
-
         $response->setContent($content);
+
         return $response;
     }
 }

@@ -5,13 +5,14 @@ namespace FOS\RestBundle\Routing\Loader;
 use Symfony\Component\Config\Resource\FileResource,
     Symfony\Component\Yaml\Yaml,
     Symfony\Component\Routing\Loader\YamlFileLoader,
+    Symfony\Component\Config\Loader\FileLoader,
     Symfony\Component\Routing\RouteCollection,
     Symfony\Component\Routing\Route;
 
 use FOS\RestBundle\Routing\RestRouteCollection;
 
 /*
- * This file is part of the FOS/RestBundle
+ * This file is part of the FOSRestBundle
  *
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
