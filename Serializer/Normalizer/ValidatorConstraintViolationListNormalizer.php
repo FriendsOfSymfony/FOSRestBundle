@@ -30,8 +30,7 @@ class ValidatorConstraintViolationListNormalizer extends AbstractNormalizer
     {
         $errors = array();
 
-        $violations = $object->getIterator();
-        foreach ($violations as $violation) {
+        foreach ($object as $violation) {
             $errors[] = $violation->getMessage();
         }
 
