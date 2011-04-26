@@ -40,15 +40,22 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     private $normalizerClassMap;
 
     /**
+     * @var array list of service id of an NormalizerInterface instance
+     */
+    private $defaultNormalizers;
+
+    /**
      * Set the array maps to enable lazy loading of normalizers and encoders
      *
      * @param array $encoderFormatMap The key is the class name, the value the name of the service
      * @param array $normalizerClassMap The key is the class name, the value the name of the service
+     * @param array $defaultNormalizers A list of service id of an NormalizerInterface instance
      */
-    public function __construct(array $encoderFormatMap = null, array $normalizerClassMap = null)
+    public function __construct(array $encoderFormatMap = array(), array $normalizerClassMap = array(), array $defaultNormalizers = array())
     {
         $this->encoderFormatMap = $encoderFormatMap;
         $this->normalizerClassMap = $normalizerClassMap;
+        $this->defaultNormalizers = $defaultNormalizers;
     }
 
     /**
@@ -103,15 +110,27 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
      */
     private function lazyLoadNormalizer($class)
     {
+        $normalizer_loaded = false;
+
+        if (!count($this->getNormalizers())
+            && !empty($this->defaultNormalizers)
+        ) {
+            foreach ($this->defaultNormalizers as $normalizer) {
+                $this->addNormalizer($this->container->get($normalizer));
+            }
+
+            $normalizer_loaded = true;
+        }
+
         if (isset($this->normalizerClassMap[$class])
             && $this->container->has($this->normalizerClassMap[$class])
         ) {
             $this->addNormalizer($this->container->get($this->normalizerClassMap[$class]));
 
-            return true;
+            $normalizer_loaded = true;
         }
 
-        return false;
+        return $normalizer_loaded;
     }
 
     /**

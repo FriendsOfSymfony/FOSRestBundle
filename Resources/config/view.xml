@@ -6,6 +6,10 @@
 
     <services>
 
+        <service id="fos_rest.get_set_method_normalizer" class="Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer" />
+
+        <service id="fos_rest.constraint_violation_list_normalizer" class="FOS\RestBundle\Serializer\Normalizer\ValidatorConstraintViolationListNormalizer" />
+
         <service id="fos_rest.json" class="%fos_rest.json.class%" />
 
         <service id="fos_rest.xml" class="%fos_rest.xml.class%" />
@@ -19,6 +23,7 @@
         <service id="fos_rest.serializer" class="%fos_rest.serializer.class%">
             <argument>%fos_rest.formats%</argument>
             <argument>%fos_rest.normalizers%</argument>
+            <argument>%fos_rest.default_normalizers%</argument>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>

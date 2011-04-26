@@ -37,6 +37,9 @@ class FOSRestExtension extends Extension
                 'xml'   => 'fos_rest.xml',
                 'html'  => 'fos_rest.html',
             ),
+            'default_normalizers' => array(
+                'fos_rest.constraint_violation_list_normalizer',
+            ),
         ));
 
         $processor = new Processor();
@@ -53,6 +56,12 @@ class FOSRestExtension extends Extension
 
         $container->setParameter($this->getAlias().'.formats', $config['formats']);
         $container->setParameter($this->getAlias().'.normalizers', $config['normalizers']);
+        foreach ($config['default_normalizers'] as $key => $normalizer) {
+            if (!$normalizer) {
+                unset($config['default_normalizers'][$key]);
+            }
+        }
+        $container->setParameter($this->getAlias().'.default_normalizers', $config['default_normalizers']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (is_string($code)) {
