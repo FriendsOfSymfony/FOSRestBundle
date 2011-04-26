@@ -31,7 +31,7 @@ class ValidatorConstraintViolationListNormalizer extends AbstractNormalizer
         $errors = array();
 
         foreach ($object as $violation) {
-            $errors[] = $violation->getMessage();
+            $errors[] = $violation->getPropertyPath().': '.$violation->getMessage();
         }
 
         return $errors;
