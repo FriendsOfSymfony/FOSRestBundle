@@ -59,9 +59,9 @@ is modified and a custom serializer service is configured:
 
     # app/config.yml
     fos_rest:
-        class:
+        classes:
             json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
-        service:
+        services:
             serializer: my.serializer
 
 Note the service for the RSS encoder needs to be defined in a custom bundle:
@@ -110,7 +110,7 @@ should either set a custom RequestListener class or register their own "onCoreRe
 
     # app/config.yml
     fos_rest:
-        class:
+        classes:
             request_format_listener: MyProject\MyBundle\View\RequestListener
 
 Note see the section about the view support in regards to how to register/deregister

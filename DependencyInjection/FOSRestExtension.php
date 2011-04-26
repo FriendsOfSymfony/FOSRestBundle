@@ -47,7 +47,7 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
-        foreach ($config['class'] as $key => $value) {
+        foreach ($config['classes'] as $key => $value) {
             $container->setParameter($this->getAlias().'.'.$key.'.class', $value);
         }
 
@@ -82,7 +82,7 @@ class FOSRestExtension extends Extension
             $loader->load('frameworkextra.xml');
         }
 
-        foreach ($config['service'] as $key => $value) {
+        foreach ($config['services'] as $key => $value) {
             if (isset($value)) {
                 $container->setAlias($this->getAlias().'.'.$key, $value);
             }
