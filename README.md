@@ -99,16 +99,19 @@ To enable the request listener simply adapt your configuration as follows:
     fos_rest:
         format_listener: true
 
-In the behavior of the request listener can be configured in a more granular fashion:
+In the behavior of the request listener can be configured in a more granular fashion.
+Below you can see the defaults in case ``format_listener`` is set to true as above:
 
     # app/config.yml
     fos_rest:
         format_listener:
-            detect_format: true
+            format_priorities:
+                html: 1
             decode_body: true
-            default_format: json
+            default_format: html
 
-Note in case for example more complex Accept header negotiations are required, the user
+Note that setting ``format_priorities`` to a non empty array enables Accept header negotiations.
+Alsos note in case for example more complex Accept header negotiations are required, the user
 should either set a custom RequestListener class or register their own "onCoreRequest" event.
 
     # app/config.yml

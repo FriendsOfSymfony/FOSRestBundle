@@ -78,13 +78,21 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['format_listener'])) {
             $loader->load('request_format_listener.xml');
-            $container->setParameter($this->getAlias().'.detect_format', $config['format_listener']['detect_format']);
-            if ($config['format_listener']['detect_format']) {
-                $container->getDefinition('fos_rest.request_format_listener')
-                    ->replaceArgument(3, new Reference('fos_rest.serializer'));
-            }
+            $container->setParameter($this->getAlias().'.format_priorities', $config['format_listener']['format_priorities']);
             $container->setParameter($this->getAlias().'.decode_body', $config['format_listener']['decode_body']);
             $container->setParameter($this->getAlias().'.default_format', $config['format_listener']['default_format']);
+
+            if (!empty($config['format_listener']['format_priorities'])) {
+                $container->getDefinition('fos_rest.request_format_listener')
+                    ->addMethodCall('setSerializer', array(new Reference('fos_rest.serializer')));
+            }
+
+            if (!empty($config['format_listener']['format_priorities'])
+                || $config['format_listener']['default_format']
+            ) {
+                $container->getDefinition('fos_rest.request_format_listener')
+                    ->addMethodCall('setRouter', array(new Reference('router')));
+            }
         }
 
         if (!empty($config['frameworkextra'])) {
