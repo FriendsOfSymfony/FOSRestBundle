@@ -98,26 +98,13 @@ class RequestListener
             if ($this->serializer && !empty($this->formatPriorities)) {
                 $this->detectFormat($request, $this->formatPriorities);
             } elseif (null !== $this->defaultFormat && null === $request->get('_format')) {
-                $this->setFormat($request, $this->defaultFormat);
+                $request->setRequestFormat($this->defaultFormat);
             }
         }
 
         if ($this->decodeBody) {
             $this->decodeBody($request);
         }
-    }
-
-    /**
-     * Set the format on the router and request
-     *
-     * @param   Request     $request    The request
-     * @param   string      $format     The format
-     */
-    protected function setFormat($request, $format)
-    {
-        $context = $this->router->getContext();
-        $context->setParameter('_format', $format);
-        $request->setRequestFormat($format);
     }
 
     /**
@@ -139,7 +126,7 @@ class RequestListener
                 $format = $this->defaultFormat;
             }
 
-            $this->setFormat($request, $format);
+            $request->setRequestFormat($format);
         }
     }
 
@@ -148,10 +135,10 @@ class RequestListener
      *
      * Override this method to implement more complex Accept header negotiations
      *
-     * @param   Request     $request    The request
-     * @param   array       $formatPriorities    Key format, value priority
+     * @param   Request     $request            The request
+     * @param   array       $formatPriorities   Key format, value priority
      * 
-     * @return  void|string             The format string
+     * @return  void|string                     The format string
      */
     protected function getFormatFromAcceptHeader($request, $priorities)
     {
@@ -165,7 +152,7 @@ class RequestListener
         $formats = array();
         foreach ($keys as $mimetype) {
             $format = $request->getFormat($mimetype);
-            if (empty($formats[$format])) {
+            if ($format && empty($formats[$format])) {
                 $formats[$format] = $max + (isset($priorities[$format]) ? $priorities[$format] : 0);
             }
         }
