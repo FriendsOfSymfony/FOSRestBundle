@@ -92,6 +92,11 @@ class View implements ContainerAwareInterface
     protected $code;
 
     /**
+     * @var string key that points to a FormInstance inside the parameters
+     */
+    protected $inValidFormKey;
+
+    /**
      * Constructor
      *
      * @param array $formats The supported formats
@@ -115,6 +120,7 @@ class View implements ContainerAwareInterface
         $this->engine = 'twig';
         $this->parameters = array();
         $this->code = null;
+        $this->inValidFormKey = null;
     }
 
     /**
@@ -224,7 +230,7 @@ class View implements ContainerAwareInterface
      *
      * By default it will return 200, however for the first form instance in the top level of the parameters it will
      * - set the status code to the failed_validation configuration is the form instance has errors
-     * - replace the form instance with the return of createView() on the given form instance
+     * - set inValidFormKey so that the form instance can be replaced with createView() if the format encoder has template support
      *
      * @return int HTTP status code
      */
@@ -235,11 +241,11 @@ class View implements ContainerAwareInterface
         $parameters = (array)$this->getParameters();
         foreach ($parameters as $key => $parameter) {
             if ($parameter instanceof FormInterface) {
-                if ($parameter->hasErrors()) {
+                if (!$parameter->isValid()) {
                     $code = $this->failedValidation;
                 }
 
-                $parameter[$key] = $parameter->createView();
+                $this->inValidFormKey = $key;
                 break;
             }
         }
@@ -449,14 +455,18 @@ class View implements ContainerAwareInterface
             return $response;
         }
 
+        $parameters = $this->getParameters();
         $serializer = $this->getSerializer();
         $encoder = $serializer->getEncoder($format);
 
         if ($encoder instanceof TemplatingAwareEncoderInterface) {
             $encoder->setTemplate($this->getTemplate());
+            if (isset($this->inValidFormKey) && isset($parameters[$this->inValidFormKey])) {
+                $parameters[$this->inValidFormKey] = $parameters[$this->inValidFormKey]->createView();
+            }
         }
 
-        $content = $serializer->serialize($this->getParameters(), $format);
+        $content = $serializer->serialize($parameters, $format);
         $response->setContent($content);
 
         return $response;
