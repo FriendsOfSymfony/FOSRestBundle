@@ -1,10 +1,10 @@
 <?php
-namespace FOS\RestBundle\Normalizer;
+namespace FOS\RestBundle\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Form\FormView;
     
-class formNormalizer extends AbstractNormalizer
+class formViewNormalizer extends AbstractNormalizer
 {
 
     private $className = '';

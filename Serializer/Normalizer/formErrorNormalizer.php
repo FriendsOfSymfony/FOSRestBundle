@@ -1,5 +1,5 @@
 <?php
-namespace FOS\RestBundle\Normalizer;
+namespace FOS\RestBundle\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
