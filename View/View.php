@@ -94,7 +94,7 @@ class View implements ContainerAwareInterface
     /**
      * @var string key that points to a FormInstance inside the parameters
      */
-    protected $inValidFormKey;
+    protected $formKey;
 
     /**
      * Constructor
@@ -120,7 +120,7 @@ class View implements ContainerAwareInterface
         $this->engine = 'twig';
         $this->parameters = array();
         $this->code = null;
-        $this->inValidFormKey = null;
+        $this->formKey = null;
     }
 
     /**
@@ -226,6 +226,16 @@ class View implements ContainerAwareInterface
     }
 
     /**
+     * Sets the key for a FormInstance in the parameters
+     *
+     * @param string    $key   key that points to a FormInstance inside the parameters
+     */
+    public function setFormKey($key)
+    {
+        $this->formKey = $key;
+    }
+
+    /**
      * Gets a response HTTP status code
      *
      * By default it will return 200, however for the first form instance in the top level of the parameters it will
@@ -239,14 +249,20 @@ class View implements ContainerAwareInterface
         $code = Codes::HTTP_OK;
 
         $parameters = (array)$this->getParameters();
-        foreach ($parameters as $key => $parameter) {
-            if ($parameter instanceof FormInterface) {
-                if (!$parameter->isValid()) {
-                    $code = $this->failedValidation;
-                }
+        if ($this->formKey) {
+            if (!$parameters[$this->formKey]->isValid()) {
+                $code = $this->failedValidation;
+            }
+        } else {
+            foreach ($parameters as $key => $parameter) {
+                if ($parameter instanceof FormInterface) {
+                    if (!$parameter->isValid()) {
+                        $code = $this->failedValidation;
+                    }
 
-                $this->inValidFormKey = $key;
-                break;
+                    $this->formKey = $key;
+                    break;
+                }
             }
         }
 
@@ -461,8 +477,11 @@ class View implements ContainerAwareInterface
 
         if ($encoder instanceof TemplatingAwareEncoderInterface) {
             $encoder->setTemplate($this->getTemplate());
-            if (isset($this->inValidFormKey) && isset($parameters[$this->inValidFormKey])) {
-                $parameters[$this->inValidFormKey] = $parameters[$this->inValidFormKey]->createView();
+            if (isset($this->formKey)
+                && isset($parameters[$this->formKey])
+                && $parameters[$this->formKey] instanceof FormInterface
+            ) {
+                $parameters[$this->formKey] = $parameters[$this->formKey]->createView();
             }
         }
 
