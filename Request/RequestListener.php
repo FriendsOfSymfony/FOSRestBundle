@@ -158,8 +158,6 @@ class RequestListener
         }
 
         arsort($formats);
-        reset($formats);
-
         return key($formats);
     }
 
