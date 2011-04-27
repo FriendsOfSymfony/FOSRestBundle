@@ -5,7 +5,8 @@ namespace FOS\RestBundle\Request;
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Encoder\DecoderInterface;
+    Symfony\Component\Serializer\Encoder\DecoderInterface,
+    Symfony\Component\Routing\RouterInterface;
 
 /*
  * This file is part of the FOSRestBundle
@@ -26,9 +27,9 @@ use Symfony\Component\HttpFoundation\ParameterBag,
 class RequestListener
 {
     /**
-     * @var Boolean if to try and detect the request format
+     * @param   array      $formatPriorities    Key format, value priority (empty array means no Accept header matching)
      */
-    protected $detectFormat;
+    protected $formatPriorities;
 
     /**
      * @param string default format name
@@ -46,19 +47,42 @@ class RequestListener
     protected $serializer;
 
     /**
+     * @var RouterInterface
+     */
+    protected $router;
+    /**
      * Initialize RequestListener.
      *
-     * @param   Boolean    $detectFormat        If to try and detect the format
-     * @param   string     $defaultFormat       Default fallback format
-     * @param   Boolean    $decodeBody          If to decode the body for parameters
-     * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
+     * @param   array       $formatPriorities   Key format, value priority (empty array means no Accept header matching)
+     * @param   string      $defaultFormat      Default fallback format
+     * @param   Boolean     $decodeBody         If to decode the body for parameters
      */
-    public function __construct($detectFormat, $defaultFormat, $decodeBody, SerializerInterface $serializer = null)
+    public function __construct($formatPriorities, $defaultFormat, $decodeBody)
     {
-        $this->detectFormat = $detectFormat;
+        $this->formatPriorities = $formatPriorities;
         $this->defaultFormat = $defaultFormat;
         $this->decodeBody = $decodeBody;
+    }
+
+    /**
+     * Set a serializer instance
+     *
+     * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
+     */
+    public function setSerializer(SerializerInterface $serializer)
+    {
         $this->serializer = $serializer;
+    }
+
+
+    /**
+     * Set a router instance
+     *
+     * @param   RouterInterface $router A router instance
+     */
+    public function setRouter(RouterInterface $router = null)
+    {
+        $this->router = $router;
     }
 
     /**
@@ -70,10 +94,12 @@ class RequestListener
     {
         $request = $event->getRequest();
 
-        if ($this->detectFormat) {
-            $this->detectFormat($request);
-        } elseif (null !== $this->defaultFormat && null === $request->getRequestFormat(null)) {
-            $request->setRequestFormat($this->defaultFormat);
+        if ($this->router) {
+            if ($this->serializer && !empty($this->formatPriorities)) {
+                $this->detectFormat($request, $this->formatPriorities);
+            } elseif (null !== $this->defaultFormat && null === $request->get('_format')) {
+                $request->setRequestFormat($this->defaultFormat);
+            }
         }
 
         if ($this->decodeBody) {
@@ -88,13 +114,14 @@ class RequestListener
      * - Accept Header
      * - Default
      *
-     * @param   Request   $request    The request
+     * @param   Request     $request    The request
+     * @param   array       $formatPriorities    Key format, value priority
      */
-    protected function detectFormat($request)
+    protected function detectFormat($request, $priorities)
     {
-        $format = $request->getRequestFormat(null);
+        $format = $request->get('_format');
         if (null === $format) {
-            $format = $this->getFormatFromAcceptHeader($request);
+            $format = $this->getFormatFromAcceptHeader($request, $priorities);
             if (null === $format) {
                 $format = $this->defaultFormat;
             }
@@ -108,18 +135,32 @@ class RequestListener
      *
      * Override this method to implement more complex Accept header negotiations
      *
-     * @param   Request     $request    The request
-     * @return  void|string             The format string
+     * @param   Request     $request            The request
+     * @param   array       $formatPriorities   Key format, value priority
+     * 
+     * @return  void|string                     The format string
      */
-    protected function getFormatFromAcceptHeader($request)
+    protected function getFormatFromAcceptHeader($request, $priorities)
     {
-        $formats = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
-        if (empty($formats)) {
+        $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
+        if (empty($mimetypes)) {
             return null;
         }
 
-        $format = key($formats);
-        return $request->getFormat($format);
+        $max = reset($mimetypes);
+        $keys = array_keys($mimetypes, $max);
+        $formats = array();
+        foreach ($keys as $mimetype) {
+            $format = $request->getFormat($mimetype);
+            if ($format && empty($formats[$format])) {
+                $formats[$format] = $max + (isset($priorities[$format]) ? $priorities[$format] : 0);
+            }
+        }
+
+        arsort($formats);
+        reset($formats);
+
+        return key($formats);
     }
 
     /**
