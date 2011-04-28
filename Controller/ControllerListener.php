@@ -4,7 +4,11 @@ namespace FOS\RestBundle\Controller;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Encoder\DecoderInterface;
+    Symfony\Component\Serializer\Encoder\DecoderInterface,
+    Symfony\Component\HttpKernel\Exception\HttpException,
+    Symfony\Component\HttpKernel\HttpKernelInterface;
+
+use FOS\RestBundle\Response\Codes;
 
 /*
  * This file is part of the FOSRestBundle
@@ -71,6 +75,11 @@ class ControllerListener
         if (null === $format) {
             $format = $this->defaultFormat;
         }
+
+        if (null === $format) {
+            if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST)  {
+                throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
+            }
         }
 
         $request->setRequestFormat($format);

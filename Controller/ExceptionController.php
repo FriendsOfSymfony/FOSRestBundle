@@ -49,8 +49,13 @@ class ExceptionController extends ContainerAware
             $currentContent .= ob_get_clean();
         }
 
-        $format = $this->getFormat($format);
         $code = $this->getStatusCode($exception);
+        $format = $this->getFormat($format);
+        if (null === $format) {
+            $message = "No matching accepted Response format could be determined";
+            $response = new Response($message, Codes::HTTP_NOT_ACCEPTABLE);
+        }
+
         $parameters = $this->getParameters($currentContent, $code, $exception, $logger, $format);
 
         try {
