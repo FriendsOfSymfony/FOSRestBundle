@@ -65,10 +65,15 @@ class ControllerListener
         }
 
         if (!empty($priorities)) {
-            $this->detectFormat($request, $priorities);
-        } elseif (null !== $this->defaultFormat && null === $request->get('_format')) {
-            $request->setRequestFormat($this->defaultFormat);
+            $format = $this->detectFormat($request, $priorities);
         }
+
+        if (null === $format) {
+            $format = $this->defaultFormat;
+        }
+        }
+
+        $request->setRequestFormat($format);
     }
 
     /**
@@ -86,22 +91,18 @@ class ControllerListener
         $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
 
         $extension = $request->get('_format');
+
         if (null !== $extension) {
             $mimetypes[$request->getMimeType($extension)] = reset($mimetypes)+1;
+            arsort($mimetypes);
         }
 
-        if (!empty($mimetypes)) {
-            $catch_all_priority = in_array('*/*', $priorities) ? count($priorities) : false;
-            $format = $this->getFormatByPriorities($request, $mimetypes, $priorities, $catch_all_priority);
+        if (empty($mimetypes)) {
+            return null;
         }
 
-        if (null === $format) {
-            $format = $this->defaultFormat;
-        }
-
-        if (null === $format) {
-            $request->setRequestFormat($format);
-        }
+        $catch_all_priority = in_array('*/*', $priorities) ? count($priorities) : false;
+        return $this->getFormatByPriorities($request, $mimetypes, $priorities, $catch_all_priority);
     }
 
     /**
@@ -122,6 +123,9 @@ class ControllerListener
         $formats = array();
         foreach ($keys as $mimetype) {
             unset($mimetypes[$mimetype]);
+            if ($mimetype === '*/*') {
+                return reset($priorities);
+            }
             $format = $request->getFormat($mimetype);
             if ($format) {
                 $priority = array_search($format, $priorities);
