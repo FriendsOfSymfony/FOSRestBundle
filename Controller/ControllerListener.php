@@ -110,7 +110,8 @@ class ControllerListener
      * @param   Request     $request        The request
      * @param   array       $mimetypes      Ordered array of mimetypes as keys with priroties s values
      * @param   array       $priorities     Ordered array of formats (highest priority first)
-     * 
+     * @param   integer|Boolean     $catch_all_priority     If there is a catch all priority
+     *
      * @return  void|string                     The format string
      */
     protected function getFormatByPriorities($request, $mimetypes, $priorities, $catch_all_priority = false)
