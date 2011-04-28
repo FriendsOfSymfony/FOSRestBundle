@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
 class ControllerListener
 {
     /**
-     * @var     array   Order array of formats (highest priority first)
+     * @var     array   Ordered array of formats (highest priority first)
      */
     protected $defaultPriorities;
 
@@ -38,7 +38,7 @@ class ControllerListener
      * Initialize ControllerListener.
      *
      * @param   string  $defaultFormat      Default fallback format
-     * @param   array   $defaultPriorities  Order array of formats (highest priority first)
+     * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)
      */
     public function __construct($defaultFormat, array $defaultPriorities = array())
     {
@@ -79,13 +79,17 @@ class ControllerListener
      * - Default
      *
      * @param   Request     $request        The request
-     * @param   array       $priorities     Order array of formats (highest priority first)
+     * @param   array       $priorities     Ordered array of formats (highest priority first)
      */
     protected function detectFormat($request, $priorities)
     {
         $format = $request->get('_format');
         if (null === $format) {
-            $format = $this->getFormatFromAcceptHeader($request, $priorities);
+            $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
+            if (!empty($mimetypes)) {
+                $format = $this->getFormatByPriorities($request, $mimetypes, $priorities);
+            }
+
             if (null === $format) {
                 $format = $this->defaultFormat;
             }
@@ -95,28 +99,23 @@ class ControllerListener
     }
 
     /**
-     * Get the format from the Accept header
-     *
-     * Override this method to implement more complex Accept header negotiations
+     * Get the format applying the supplied priorities to the mime types
      *
      * @param   Request     $request        The request
-     * @param   array       $priorities     Order array of formats (highest priority first)
+     * @param   array       $mimetypes      Ordered array of mimetypes as keys with priroties s values
+     * @param   array       $priorities     Ordered array of formats (highest priority first)
      * 
      * @return  void|string                     The format string
      */
-    protected function getFormatFromAcceptHeader($request, $priorities)
+    protected function getFormatByPriorities($request, $mimetypes, $priorities)
     {
-        $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
-        if (empty($mimetypes)) {
-            return null;
-        }
-
         $max = reset($mimetypes);
         $keys = array_keys($mimetypes, $max);
         $catch_all_priority = in_array('*/*', $priorities) ? count($priorities) : false;
 
         $formats = array();
         foreach ($keys as $mimetype) {
+            unset($mimetypes[$mimetype]);
             $format = $request->getFormat($mimetype);
             if ($format) {
                 $priority = array_search($format, $priorities);
@@ -126,6 +125,10 @@ class ControllerListener
                     $formats[$format] = $catch_all_priority;
                 }
             }
+        }
+
+        if (empty($formats) && !empty($mimetypes)) {
+            return $this->getFormatByPriorities($request, $mimetypes, $priorities);
         }
 
         asort($formats);
