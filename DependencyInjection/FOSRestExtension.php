@@ -86,13 +86,6 @@ class FOSRestExtension extends Extension
                 $container->getDefinition('fos_rest.request_format_listener')
                     ->addMethodCall('setSerializer', array(new Reference('fos_rest.serializer')));
             }
-
-            if (!empty($config['format_listener']['format_priorities'])
-                || $config['format_listener']['default_format']
-            ) {
-                $container->getDefinition('fos_rest.request_format_listener')
-                    ->addMethodCall('setRouter', array(new Reference('router')));
-            }
         }
 
         if (!empty($config['frameworkextra'])) {

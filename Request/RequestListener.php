@@ -5,8 +5,7 @@ namespace FOS\RestBundle\Request;
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Encoder\DecoderInterface,
-    Symfony\Component\Routing\RouterInterface;
+    Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 /*
  * This file is part of the FOSRestBundle
@@ -47,10 +46,6 @@ class RequestListener
     protected $serializer;
 
     /**
-     * @var RouterInterface
-     */
-    protected $router;
-    /**
      * Initialize RequestListener.
      *
      * @param   array       $formatPriorities   Key format, value priority (empty array means no Accept header matching)
@@ -74,17 +69,6 @@ class RequestListener
         $this->serializer = $serializer;
     }
 
-
-    /**
-     * Set a router instance
-     *
-     * @param   RouterInterface $router A router instance
-     */
-    public function setRouter(RouterInterface $router = null)
-    {
-        $this->router = $router;
-    }
-
     /**
      * Core request handler
      *
@@ -94,12 +78,10 @@ class RequestListener
     {
         $request = $event->getRequest();
 
-        if ($this->router) {
-            if ($this->serializer && !empty($this->formatPriorities)) {
-                $this->detectFormat($request, $this->formatPriorities);
-            } elseif (null !== $this->defaultFormat && null === $request->get('_format')) {
-                $request->setRequestFormat($this->defaultFormat);
-            }
+        if ($this->serializer && !empty($this->formatPriorities)) {
+            $this->detectFormat($request, $this->formatPriorities);
+        } elseif (null !== $this->defaultFormat && null === $request->get('_format')) {
+            $request->setRequestFormat($this->defaultFormat);
         }
 
         if ($this->decodeBody) {
