@@ -75,13 +75,15 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
      * @return TemplateReference A template reference
      * @throws \InvalidArgumentException
      */
-    protected function guessTemplateName($controller, Request $request)
+    protected function guessTemplateName(array $controller, Request $request)
     {
-        if (!preg_match('/Controller\\\(.*)Controller$/', get_class($controller[0]), $match)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it does not end with Controller)', get_class($controller[0])));
+        $class = get_class($controller[0]); 
+        
+        if (!preg_match('/Controller\\\(.*)Controller$/', $class, $match)) {
+            throw new \InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it does not end with Controller)', $class));
         }
 
-        $bundle = $this->getBundleForClass(get_class($controller[0]));
+        $bundle = $this->getBundleForClass($class);
         $name = substr($controller[1], 0, -6);
 
         return new TemplateReference($bundle->getName(), $match[1], $name);
