@@ -51,7 +51,7 @@ class ControllerListener
     }
 
     /**
-     * Core request handler
+     * Determines and sets the Request format
      *
      * @param   GetResponseEvent   $event    The event
      */
@@ -70,37 +70,37 @@ class ControllerListener
 
         if (!empty($priorities)) {
             $format = $this->detectFormat($request, $priorities);
-        }
-
-        if (null === $format) {
-            $format = $this->defaultFormat;
+            if (null === $format) {
+                $format = $this->defaultFormat;
+            }
         }
 
         if (null === $format) {
             if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST)  {
                 throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
             }
+
+            return;
         }
 
         $request->setRequestFormat($format);
     }
 
     /**
-     * Detect the request format in the following order:
-     * 
-     * - Request
-     * - Accept Header
-     * - Default
+     * Detect the request format based on the priorities and the Accept header
+     *
+     * Note: Request "_format" parameter is considered the preferred Accept header
      *
      * @param   Request     $request        The request
      * @param   array       $priorities     Ordered array of formats (highest priority first)
+     *
+     * @return  void|string                 The format string
      */
     protected function detectFormat($request, $priorities)
     {
         $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
 
         $extension = $request->get('_format');
-
         if (null !== $extension) {
             $mimetypes[$request->getMimeType($extension)] = reset($mimetypes)+1;
             arsort($mimetypes);
@@ -110,7 +110,7 @@ class ControllerListener
             return null;
         }
 
-        $catch_all_priority = in_array('*/*', $priorities) ? count($priorities) : false;
+        $catch_all_priority = in_array('*/*', $priorities);
         return $this->getFormatByPriorities($request, $mimetypes, $priorities, $catch_all_priority);
     }
 
@@ -120,9 +120,9 @@ class ControllerListener
      * @param   Request     $request        The request
      * @param   array       $mimetypes      Ordered array of mimetypes as keys with priroties s values
      * @param   array       $priorities     Ordered array of formats (highest priority first)
-     * @param   integer|Boolean     $catch_all_priority     If there is a catch all priority
+     * @param   Boolean     $catch_all_priority     If there is a catch all priority
      *
-     * @return  void|string                     The format string
+     * @return  void|string                 The format string
      */
     protected function getFormatByPriorities($request, $mimetypes, $priorities, $catch_all_priority = false)
     {
@@ -141,7 +141,7 @@ class ControllerListener
                 if (false !== $priority) {
                     $formats[$format] = $priority;
                 } elseif ($catch_all_priority) {
-                    $formats[$format] = $catch_all_priority;
+                    $formats[$format] = count($priorities);
                 }
             }
         }
