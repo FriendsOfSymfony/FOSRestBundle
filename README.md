@@ -90,34 +90,35 @@ HTTP response status code for failed validation is set to ``400``:
             - 'fos_rest.get_set_method_normalizer'
         failed_validation: HTTP_BAD_REQUEST
 
-Request listener support
-------------------------
+Listener support
+----------------
 
-To enable the request listener simply adapt your configuration as follows:
+To enable the Request body decoding and Request format listener simply adapt your configuration as follows:
 
     # app/config.yml
     fos_rest:
         format_listener: true
+        body_listener: true
 
-In the behavior of the request listener can be configured in a more granular fashion.
+In the behavior of the format listener can be configured in a more granular fashion.
 Below you can see the defaults in case ``format_listener`` is set to true as above:
 
     # app/config.yml
     fos_rest:
         format_listener:
-            format_priorities:
-                html: 1
-            decode_body: true
+            default_priorities:
+                - html
+                - */*
             default_format: html
 
-Note that setting ``format_priorities`` to a non empty array enables Accept header negotiations.
-Alsos note in case for example more complex Accept header negotiations are required, the user
-should either set a custom RequestListener class or register their own "onCoreRequest" event.
+Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations.
+Also note in case for example more complex Accept header negotiations are required, the user should
+either set a custom ``ControllerListener`` class or register their own "onCoreController" event.
 
     # app/config.yml
     fos_rest:
         classes:
-            request_format_listener: MyProject\MyBundle\View\RequestListener
+            format_listener: MyProject\MyBundle\Controller\ControllerListener
 
 Note see the section about the view support in regards to how to register/deregister
 encoders for specific formats as the request body decoding uses encoders for decoding.
