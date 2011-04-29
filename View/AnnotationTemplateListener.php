@@ -75,7 +75,7 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
      * @return TemplateReference A template reference
      * @throws \InvalidArgumentException
      */
-    protected function guessTemplateName(array $controller, Request $request)
+    protected function guessTemplateName($controller, Request $request)
     {
         $class = get_class($controller[0]); 
         
