@@ -144,12 +144,10 @@ class RestXmlCollectionLoader extends XmlFileLoader
      */
     protected function validate(\DOMDocument $dom)
     {
-        $parts = explode('/', str_replace('\\', '/', __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd'));
-        $drive = '\\' === DIRECTORY_SEPARATOR ? array_shift($parts).'/' : '';
-        $location = 'file:///'.$drive.implode('/', $parts);
+        $schema = __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd';
 
         $current = libxml_use_internal_errors(true);
-        if (!$dom->schemaValidate($location)) {
+        if (!$dom->schemaValidate($schema)) {
             throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors()));
         }
         libxml_use_internal_errors($current);

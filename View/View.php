@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Component\Serializer\SerializerInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    Symfony\Component\Templating\TemplateReferenceInterface,
     Symfony\Component\Form\FormInterface;
 
 use FOS\RestBundle\Response\Codes,
@@ -67,7 +66,7 @@ class View implements ContainerAwareInterface
     protected $redirect;
 
     /**
-     * @var string|TemplateReferenceInterface template
+     * @var string|TemplateReference template
      */
     protected $template;
 
@@ -302,10 +301,16 @@ class View implements ContainerAwareInterface
     /**
      * Sets template to use for the encoding
      *
-     * @param string|TemplateReferenceInterface $template template to be used in the encoding
+     * @param string|TemplateReference $template template to be used in the encoding
+     * 
+     * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReference
      */
     public function setTemplate($template)
     {
+        if (!(is_string($template) || $template instanceof TemplateReference)) {
+            throw new \InvalidArgumentException('The template should be a string or extend TemplateReference');
+        }
+        
         $this->template = $template;
     }
 
@@ -315,7 +320,7 @@ class View implements ContainerAwareInterface
      * When the template is an array this method
      * ensures that the format and engine are set
      *
-     * @return string|TemplateReferenceInterface template to be used in the encoding
+     * @return string|TemplateReference template to be used in the encoding
      */
     public function getTemplate()
     {
