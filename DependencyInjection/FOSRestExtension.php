@@ -86,8 +86,8 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.default_format', $config['format_listener']['default_format']);
         }
 
-        if (!empty($config['frameworkextra'])) {
-            $loader->load('frameworkextra.xml');
+        if (!empty($config['frameworkextra_bundle'])) {
+            $loader->load('frameworkextra_bundle.xml');
         }
 
         foreach ($config['services'] as $key => $value) {

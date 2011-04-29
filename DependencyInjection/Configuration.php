@@ -83,7 +83,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->booleanNode('body_listener')->defaultFalse()->end()
-                ->booleanNode('frameworkextra')->defaultFalse()->end()
+                ->booleanNode('frameworkextra_bundle')->defaultFalse()->end()
                 ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
                 ->arrayNode('classes')
                     ->addDefaultsIfNotSet()
