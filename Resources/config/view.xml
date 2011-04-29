@@ -8,6 +8,8 @@
 
         <service id="fos_rest.get_set_method_normalizer" class="Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer" />
 
+        <service id="fos_rest.noop_normalizer" class="FOS\RestBundle\Serializer\Normalizer\NoopNormalizer" />
+
         <service id="fos_rest.constraint_violation_list_normalizer" class="FOS\RestBundle\Serializer\Normalizer\ValidatorConstraintViolationListNormalizer" />
 
         <service id="fos_rest.json" class="%fos_rest.json.class%" />
