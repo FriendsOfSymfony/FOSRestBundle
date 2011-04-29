@@ -3,7 +3,8 @@
 namespace FOS\RestBundle\Serializer\Encoder;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface,
-    Symfony\Component\Serializer\Encoder\AbstractEncoder;
+    Symfony\Component\Serializer\Encoder\AbstractEncoder,
+    Symfony\Component\Templating\TemplateReferenceInterface;
 
 /*
  * This file is part of the FOSRestBundle
@@ -51,9 +52,15 @@ class HtmlEncoder extends AbstractEncoder implements TemplatingAwareEncoderInter
 
     /**
      * {@inheritdoc}
+     * 
+     * @throws \InvalidArgumentException if the template neither is a string nor implement TemplateReferenceInterface
      */
     public function setTemplate($template)
     {
+        if (!(is_string($template) || $template instanceof TemplateReferenceInterface)) {
+            throw new \InvalidArgumentException('The template should be a string or implement TemplateReferenceInterface');
+        }
+        
         $this->template = $template;
     }
 
