@@ -157,6 +157,19 @@ Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
     fos_rest:
         frameworkextra_bundle: true
 
+JMSSerializerBundle support
+---------------------------
+
+This requires adding the JMSSerializerBundle to you vendors:
+
+    $ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/JMSSerializerBundle
+
+Finally enable the JMSSerializerBundle support in the RestBundle:
+
+    # app/config.yml
+    fos_rest:
+        serializer_bundle: true
+
 ExceptionController support
 ---------------------------
 

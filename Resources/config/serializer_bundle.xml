@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="fos_rest.serializer_preconfigured" class="%fos_rest.serializer.class%" public="false">
+            <argument>%fos_rest.formats%</argument>
+            <argument>%fos_rest.normalizers%</argument>
+            <argument>%fos_rest.default_normalizers%</argument>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
+
+        <service id="jms_serializer.serializer" class="%fos_rest.serializer.class%" public="false" factory-service="serializer_factory" factory-method="configureSerializer">
+            <argument type="service" id="fos_rest.serializer_preconfigured" />
+        </service>
+
+        <service id="fos_rest.serializer" alias="jms_serializer.serializer" />
+
+    </services>
+</container>

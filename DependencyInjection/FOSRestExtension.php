@@ -90,6 +90,10 @@ class FOSRestExtension extends Extension
             $loader->load('frameworkextra_bundle.xml');
         }
 
+        if (!empty($config['serializer_bundle'])) {
+            $loader->load('serializer_bundle.xml');
+        }
+
         foreach ($config['services'] as $key => $value) {
             if (isset($value)) {
                 $container->setAlias($this->getAlias().'.'.$key, $value);
