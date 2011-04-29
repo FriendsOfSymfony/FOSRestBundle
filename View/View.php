@@ -326,7 +326,7 @@ class View implements ContainerAwareInterface
     {
         $template = $this->template;
 
-        if ($template instanceOf TemplateReferenceInterface) {
+        if ($template instanceOf TemplateReference) {
             if (null === $template->get('format')) {
                 $template->set('format', $this->getFormat());
             }
