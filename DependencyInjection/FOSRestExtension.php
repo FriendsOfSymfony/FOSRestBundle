@@ -5,6 +5,7 @@ namespace FOS\RestBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Processor,
     Symfony\Component\HttpKernel\DependencyInjection\Extension,
     Symfony\Component\DependencyInjection\Reference,
+    Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\Config\FileLocator;
@@ -91,7 +92,9 @@ class FOSRestExtension extends Extension
         }
 
         if (!empty($config['serializer_bundle'])) {
-            $loader->load('serializer_bundle.xml');
+            $definition = $container->getDefinition('fos_rest.serializer');
+            $reference = new Reference('serializer_factory', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false);
+            $definition->setConfigurator(array($reference, 'configureSerializer'));
         }
 
         foreach ($config['services'] as $key => $value) {
