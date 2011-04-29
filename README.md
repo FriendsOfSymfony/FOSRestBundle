@@ -77,10 +77,6 @@ Note the service for the RSS encoder needs to be defined in a custom bundle:
 
     <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
 
-Note in case handling for graphs is needed consider combining the provided service container
-aware Serializer with via the configureSerializer() method:
-https://github.com/schmittjoh/SerializerBundle/blob/master/Serializer/SerializerFactory.php
-
 View support
 ------------
 
