@@ -6,11 +6,9 @@
 
     <services>
 
-        <service id="fos_rest.request_format_listener" class="%fos_rest.request_format_listener.class%">
+        <service id="fos_rest.body_listener" class="%fos_rest.body_listener.class%">
             <tag name="kernel.listener" event="onCoreRequest" />
-            <argument>%fos_rest.format_priorities%</argument>
-            <argument>%fos_rest.default_format%</argument>
-            <argument>%fos_rest.decode_body%</argument>
+            <argument type="service" id="fos_rest.serializer"/>
         </service>
 
     </services>
