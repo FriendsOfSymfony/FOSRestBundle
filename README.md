@@ -47,6 +47,15 @@ Installation
           );
         }
 
+Examples
+========
+
+The LiipHelloBundle provides several examples for the RestBundle:
+https://github.com/liip/HelloBundle
+
+There is also a fork of the Symfony2 Standard Edition that is configured to show the LiipHelloBundle examples:
+https://github.com/lsmith77/symfony-standard/tree/techtalk
+
 Configuration
 =============
 
