@@ -81,7 +81,7 @@ class FOSRestExtension extends Extension
             $loader->load('body_listener.xml');
         }
 
-        if ($config['format_listener']) {
+        if (isset($config['format_listener'])) {
             $loader->load('format_listener.xml');
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
             $container->setParameter($this->getAlias().'.default_format', $config['format_listener']['default_format']);
