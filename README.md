@@ -117,7 +117,7 @@ Below you can see the defaults in case ``format_listener`` is set to true as abo
         format_listener:
             default_priorities:
                 - html
-                - */*
+                - '*/*'
             default_format: html
 
 Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations.
