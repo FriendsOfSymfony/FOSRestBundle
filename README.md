@@ -77,10 +77,6 @@ Note the service for the RSS encoder needs to be defined in a custom bundle:
 
     <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
 
-Note in case handling for graphs is needed consider combining the provided service container
-aware Serializer with via the configureSerializer() method:
-https://github.com/schmittjoh/SerializerBundle/blob/master/Serializer/SerializerFactory.php
-
 View support
 ------------
 
@@ -155,7 +151,20 @@ Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 
     # app/config.yml
     fos_rest:
-        frameworkextra: true
+        frameworkextra_bundle: true
+
+JMSSerializerBundle support
+---------------------------
+
+This requires adding the JMSSerializerBundle to you vendors:
+
+    $ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/JMSSerializerBundle
+
+Finally enable the JMSSerializerBundle support in the RestBundle:
+
+    # app/config.yml
+    fos_rest:
+        serializer_bundle: true
 
 ExceptionController support
 ---------------------------

@@ -5,6 +5,7 @@ namespace FOS\RestBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Processor,
     Symfony\Component\HttpKernel\DependencyInjection\Extension,
     Symfony\Component\DependencyInjection\Reference,
+    Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\Config\FileLocator;
@@ -76,18 +77,24 @@ class FOSRestExtension extends Extension
         }
         $container->setParameter($this->getAlias().'.failed_validation', $config['failed_validation']);
 
-        if (!empty($config['body_listener'])) {
+        if ($config['body_listener']) {
             $loader->load('body_listener.xml');
         }
 
-        if (!empty($config['format_listener'])) {
+        if (isset($config['format_listener'])) {
             $loader->load('format_listener.xml');
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
             $container->setParameter($this->getAlias().'.default_format', $config['format_listener']['default_format']);
         }
 
-        if (!empty($config['frameworkextra'])) {
-            $loader->load('frameworkextra.xml');
+        if ($config['frameworkextra_bundle']) {
+            $loader->load('frameworkextra_bundle.xml');
+        }
+
+        if ($config['serializer_bundle']) {
+            $definition = $container->getDefinition('fos_rest.serializer');
+            $reference = new Reference('serializer_factory', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false);
+            $definition->setConfigurator(array($reference, 'configureSerializer'));
         }
 
         foreach ($config['services'] as $key => $value) {
