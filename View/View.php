@@ -256,9 +256,11 @@ class View implements ContainerAwareInterface
                 }
             }
         }
-
-        $form = $parameters[$this->formKey];
-
+        
+        if(isset($this->formKey)){
+            $form = $parameters[$this->formKey];
+        }
+        
         //Check if the form is valid, return an appropriate response code
         if (isset($form) && $form->isBound() && !$form->isValid()) {
             return $this->failedValidation;
