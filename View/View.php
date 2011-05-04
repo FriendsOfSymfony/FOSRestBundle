@@ -245,27 +245,26 @@ class View implements ContainerAwareInterface
      */
     private function getStatusCodeFromParameters()
     {
-        $code = Codes::HTTP_OK;
-
         $parameters = (array)$this->getParameters();
-        if ($this->formKey) {
-            if (!$parameters[$this->formKey]->isValid()) {
-                $code = $this->failedValidation;
-            }
-        } else {
+
+        // Assign the formKey
+        if(!$this->formKey){
             foreach ($parameters as $key => $parameter) {
                 if ($parameter instanceof FormInterface) {
-                    if (!$parameter->isValid()) {
-                        $code = $this->failedValidation;
-                    }
-
                     $this->formKey = $key;
                     break;
                 }
             }
         }
 
-        return $code;
+        $form = $parameters[$this->formKey];
+
+        //Check if the form is valid, return an appropriate response code
+        if (isset($form) && !$form->isValid()) {
+            return $this->failedValidation;
+        } else {
+            return Codes::HTTP_OK;
+        }
     }
 
     /**
