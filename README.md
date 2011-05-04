@@ -94,9 +94,9 @@ HTTP response status code for failed validation is set to ``400``:
             rss: my.encoder.rss
             xml: false
         normalizers:
-            'Acme\HelloBundle\Document\Article': 'my.article_normalizer'
+            "Acme\HelloBundle\Document\Article": "my.article_normalizer"
         default_normalizers:
-            - 'fos_rest.get_set_method_normalizer'
+            - "fos_rest.get_set_method_normalizer"
         failed_validation: HTTP_BAD_REQUEST
 
 Listener support
@@ -117,7 +117,7 @@ Below you can see the defaults in case ``format_listener`` is set to true as abo
         format_listener:
             default_priorities:
                 - html
-                - '*/*'
+                - "*/*"
             default_format: html
 
 Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations.
@@ -173,7 +173,7 @@ The RestBundle view layer aware ExceptionController is enabled as follows:
 
     # app/config.yml
     framework:
-        exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
+        exception_controller: "FOS\RestBundle\Controller\ExceptionController::showAction"
 
 To map Exception classes to HTTP response status codes an ``exception_map`` may be configured,
 where the keys match a fully qualified class name and the values are either an integer HTTP response
@@ -183,10 +183,10 @@ status code or a string matching a class constant of the ``FOS\RestBundle\Respon
     fos_rest:
         exception:
             codes:
-                'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
-                'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+                "Symfony\Component\Routing\Matcher\Exception\NotFoundException": 404
+                "Doctrine\ORM\OptimisticLockException": HTTP_CONFLICT
             messages:
-                'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
+                "Acme\HelloBundle\Exception\MyExceptionWithASafeMessage": true
 
 Routing
 =======
