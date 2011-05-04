@@ -260,7 +260,7 @@ class View implements ContainerAwareInterface
         $form = $parameters[$this->formKey];
 
         //Check if the form is valid, return an appropriate response code
-        if (isset($form) && !$form->isValid()) {
+        if (isset($form) && $form->isBound() && !$form->isValid()) {
             return $this->failedValidation;
         } else {
             return Codes::HTTP_OK;
