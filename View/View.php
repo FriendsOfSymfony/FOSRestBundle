@@ -245,28 +245,33 @@ class View implements ContainerAwareInterface
      */
     private function getStatusCodeFromParameters()
     {
-        $parameters = (array)$this->getParameters();
+        $parameters = $this->getParameters();
 
-        // Assign the formKey
-        if(!$this->formKey){
-            foreach ($parameters as $key => $parameter) {
-                if ($parameter instanceof FormInterface) {
-                    $this->formKey = $key;
-                    break;
+        if (false !== $this->formKey && is_array($parameters)) {
+            // Assign the formKey
+            if (null === $this->formKey){
+                foreach ($parameters as $key => $parameter) {
+                    if ($parameter instanceof FormInterface) {
+                        $this->formKey = $key;
+                        $form = $parameter;
+                        break;
+                    }
+                }
+            } elseif (isset($parameters[$this->formKey])
+                && $parameters[$this->formKey] instanceof FormInterface
+            ) {
+                $form = $parameters[$this->formKey];
+            }
+
+            if (isset($form)) {
+                // Check if the form is valid, return an appropriate response code
+                if ($form->isBound() && !$form->isValid()) {
+                    return $this->failedValidation;
                 }
             }
         }
-        
-        if(isset($this->formKey)){
-            $form = $parameters[$this->formKey];
-        }
-        
-        //Check if the form is valid, return an appropriate response code
-        if (isset($form) && $form->isBound() && !$form->isValid()) {
-            return $this->failedValidation;
-        } else {
-            return Codes::HTTP_OK;
-        }
+
+        return Codes::HTTP_OK;
     }
 
     /**
@@ -484,6 +489,7 @@ class View implements ContainerAwareInterface
         if ($encoder instanceof TemplatingAwareEncoderInterface) {
             $encoder->setTemplate($this->getTemplate());
             if (isset($this->formKey)
+                && false !== $this->formKey
                 && isset($parameters[$this->formKey])
                 && $parameters[$this->formKey] instanceof FormInterface
             ) {
