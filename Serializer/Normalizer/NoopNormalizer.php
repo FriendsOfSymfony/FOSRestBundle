@@ -23,14 +23,12 @@ use Symfony\Component\Serializer\SerializerInterface,
  */
 class NoopNormalizer extends AbstractNormalizer
 {
-    private $className = '';
-
     /**
      * {@inheritdoc}
      */
     public function normalize($object, $format, $properties = null)
     {
-        return array("Can not normalize ".$this->className);
+        return array("Can not normalize ".get_class($object));
     }
 
     /**
@@ -38,18 +36,33 @@ class NoopNormalizer extends AbstractNormalizer
      */
     public function denormalize($data, $class, $format = null)
     {
-        return "Can not denormalize ".$this->className;
+        return "Cannot denormalize $class";
     }
 
     /**
-     * Returns true all the time...this is just a rapid object to handle this
-     * 
-     * @param  string $format The format being (de-)serialized from or into.
-     * @return Boolean Whether the class has any getters.
+     * Checks whether the given class is supported for normalization by this normalizer
+     *
+     * @param mixed   $data   Data to normalize.
+     * @param string  $format The format being (de-)serialized from or into.
+     * @return Boolean
+     * @api
      */
-    public function supports(\ReflectionClass $class, $format = null)
+    public function supportsNormalization($data, $format = null)
     {
-        $this->className = $class->getName();
         return true;
+    }
+
+    /**
+     * Checks whether the given class is supported for denormalization by this normalizer
+     *
+     * @param mixed   $data   Data to denormalize from.
+     * @param string  $type   The class to which the data should be denormalized.
+     * @param string  $format The format being deserialized from.
+     * @return Boolean
+     * @api
+     */
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return false;
     }
 }
