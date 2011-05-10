@@ -495,11 +495,9 @@ class View implements ContainerAwareInterface
             ) {
                 $parameters[$this->formKey] = $parameters[$this->formKey]->createView();
             }
-            $content = $encoder->encode($parameters, $format);
-        } else {
-            $content = $serializer->serialize($parameters, $format);
         }
 
+        $content = $serializer->serialize($parameters, $format);
         $response->setContent($content);
 
         return $response;

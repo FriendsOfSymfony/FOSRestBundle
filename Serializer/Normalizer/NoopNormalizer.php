@@ -26,7 +26,7 @@ class NoopNormalizer extends AbstractNormalizer
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format, $properties = null)
+    public function normalize($object, $format = null)
     {
         return array("Can not normalize ".get_class($object));
     }

@@ -3,7 +3,7 @@
 namespace FOS\RestBundle\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Normalizer\AbstractNormalizer,
+    Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer,
     Symfony\Component\Validator\ConstraintViolationList;
 
 /*
@@ -22,12 +22,12 @@ use Symfony\Component\Serializer\SerializerInterface,
  *
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class ValidatorConstraintViolationListNormalizer extends AbstractNormalizer
+class ValidatorConstraintViolationListNormalizer extends SerializerAwareNormalizer
 {
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format, $properties = null)
+    public function normalize($object, $format = null)
     {
         $errors = array();
 
