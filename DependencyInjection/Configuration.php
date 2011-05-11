@@ -52,7 +52,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('default_normalizers')
                     ->prototype('scalar')->end()
                 ->end()
-                ->scalarNode('fallback_normalizer')->defaultNull()->end()
+                ->scalarNode('fallback_normalizer')->defaultValue('fos_rest.noop_normalizer')->end()
                 ->arrayNode('normalizers')
                     ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()
