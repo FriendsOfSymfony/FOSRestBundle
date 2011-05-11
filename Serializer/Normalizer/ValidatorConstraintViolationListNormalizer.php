@@ -43,7 +43,7 @@ class ValidatorConstraintViolationListNormalizer extends SerializerAwareNormaliz
      */
     public function denormalize($data, $class, $format = null)
     {
-        throw new \Exception('Not implemented');
+        throw new \BadMethodCallException('Not supported');
     }
 
     /**
