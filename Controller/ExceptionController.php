@@ -6,9 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
-    Symfony\Component\HttpFoundation\Response;
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Bundle\FrameworkBundle\Controller\ExceptionController as BaseExceptionController;
 
-use FOS\RestBundle\Response\Codes;
+use FOS\RestBundle\Response\Codes,
+    FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
 
 /*
  * This file is part of the FOSRestBundle
@@ -24,7 +26,7 @@ use FOS\RestBundle\Response\Codes;
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
  */
-class ExceptionController extends ContainerAware
+class ExceptionController extends BaseExceptionController
 {
     /**
      * Converts an Exception to a Response.
@@ -62,7 +64,16 @@ class ExceptionController extends ContainerAware
             $view = $this->container->get('fos_rest.view');
 
             $view->setFormat($format);
-            $view->setTemplate($this->getTemplate($format));
+            $serializer = $view->getSerializer();
+            $encoder = $serializer->getEncoder($format);
+
+            if ($encoder instanceof TemplatingAwareEncoderInterface) {
+                $templating = $this->container->get('templating');
+                $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug());
+                $template->set('engine', null);
+                $view->setTemplate($template);
+            }
+
             $view->setParameters($parameters);
             $view->setStatusCode($code);
 
@@ -117,24 +128,6 @@ class ExceptionController extends ContainerAware
     protected function getFormat($format)
     {
         return $format;
-    }
-
-    /**
-     * Determine the template to use for the response
-     *
-     * @param string               $format    The format to use for rendering (html, xml, ...)
-     *
-     * @return TemplateReference              Template reference
-     */
-    protected function getTemplate($format)
-    {
-        if ($this->container->get('kernel')->isDebug()) {
-            $name = 'html' === $format ? 'exception_full' : 'exception';
-        } else {
-            $name = 'error';
-        }
-
-        return new TemplateReference('FrameworkBundle', 'Exception', $name, $format);
     }
 
     /**
