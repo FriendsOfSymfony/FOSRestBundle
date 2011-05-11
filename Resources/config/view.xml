@@ -8,10 +8,10 @@
 
         <service id="fos_rest.get_set_method_normalizer" class="Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer" />
 
-        <service id="fos_rest.form_normalizer" class="FOS\RestBundle\Serializer\Normalizer\formNormalizer" />
-        <service id="fos_rest.form_error_normalizer" class="FOS\RestBundle\Serializer\Normalizer\formErrorNormalizer" />
-        <service id="fos_rest.form_view_normalizer" class="FOS\RestBundle\Serializer\Normalizer\formViewNormalizer" />
-        <service id="fos_rest.form_type_normalizer" class="FOS\RestBundle\Serializer\Normalizer\formTypeNormalizer" />
+        <service id="fos_rest.form_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormNormalizer" />
+        <service id="fos_rest.form_error_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer" />
+        <service id="fos_rest.form_view_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormViewNormalizer" />
+        <service id="fos_rest.form_type_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormTypeNormalizer" />
         
         <service id="fos_rest.noop_normalizer" class="FOS\RestBundle\Serializer\Normalizer\NoopNormalizer" />
 

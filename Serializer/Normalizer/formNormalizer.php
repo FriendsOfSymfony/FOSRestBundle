@@ -1,22 +1,39 @@
 <?php
 namespace FOS\RestBundle\Serializer\Normalizer;
 
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer,
+    Symfony\Component\Form\Form;
 
-use Symfony\Component\Form\Form;
-    
-class formNormalizer extends AbstractNormalizer
+/*
+ * This file is part of the FOSRestBundle
+ *
+ * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * (c) Bulat Shakirzyanov <mallluhuct@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ * This Normalizer is based on the GetSetNormalizer in core.
+ *
+ * It checks for invalid method names to get data from, it also checks "is" and "has" method names for data.
+ *
+ * @author John Wards <johnwards@gmail.com>
+ */
+class FormNormalizer extends SerializerAwareNormalizer
 {
-
+    /**
+     * A list of invalid methods. These generally cause recursion or contain useless data.
+     */
     private $invalidMethods = array("getParent", "getRoot");
 
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format, $properties = null)
+    public function normalize($object, $format = null)
     {
-        $propertyMap = (null === $properties) ? null : array_flip(array_map('strtolower', $properties));
-
         $reflectionObject = new \ReflectionObject($object);
         $reflectionMethods = $reflectionObject->getMethods(\ReflectionMethod::IS_PUBLIC);
 
@@ -29,14 +46,12 @@ class formNormalizer extends AbstractNormalizer
                     $attributeName = strtolower($method->getName());
                 }
 
-                if (null === $propertyMap || isset($propertyMap[$attributeName])) {
-                    $attributeValue = $method->invoke($object);
-                    if ($this->serializer->isStructuredType($attributeValue)) {
-                        $attributeValue = $this->serializer->normalize($attributeValue, $format);
-                    }
-
-                    $attributes[$attributeName] = $attributeValue;
+                $attributeValue = $method->invoke($object);
+                if (null !== $attributeValue && !is_scalar($attributeValue)) {
+                    $attributeValue = $this->serializer->normalize($attributeValue, $format);
                 }
+
+                $attributes[$attributeName] = $attributeValue;
             }
         }
 
@@ -44,15 +59,19 @@ class formNormalizer extends AbstractNormalizer
     }
 
     /**
-     * Checks if a method's name is get.* and can be called without parameters.
+     * Checks if a method's name is get.*, is.*, has.*
      *
      * @param ReflectionMethod $method the method to check
-     * @return Boolean whether the method is a getter.
+     * @return Boolean whether the method is a getter, 'is-er' or 'has-er'.
      */
     private function isValidMethod(\ReflectionMethod $method)
     {
         return (
-            (0 === strpos($method->getName(), 'get') || 0 === strpos($method->getName(), 'is') || 0 === strpos($method->getName(), 'has')) &&
+            (
+                0 === strpos($method->getName(), 'get') ||
+                0 === strpos($method->getName(), 'is') ||
+                0 === strpos($method->getName(), 'has')
+            ) &&
             3 < strlen($method->getName()) &&
             0 === $method->getNumberOfRequiredParameters() && !in_array($method->getName(),$this->invalidMethods)
         );
@@ -63,20 +82,25 @@ class formNormalizer extends AbstractNormalizer
      */
     public function denormalize($data, $class, $format = null)
     {
-        return "Form denormalization not yet supported";
+        throw new \BadMethodCallException('Not supported');
     }
 
     /**
-     * Returns true all the time...this is just a rapid object to handle this
-     * 
-     * @param  string $format The format being (de-)serialized from or into.
-     * @return Boolean Whether the class has any getters.
+     * {@inheritdoc}
      */
-    public function supports(\ReflectionClass $class, $format = null)
+    public function supportsNormalization($data, $format = null)
     {
-        if ($class->getName() === 'Symfony\Component\Form\Form') {
+        if ($data instanceof Form) {
             return true;
         }
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsDenormalization($data, $type, $format = null)
+    {
         return false;
     }
 }

@@ -36,16 +36,11 @@ class NoopNormalizer extends SerializerAwareNormalizer
      */
     public function denormalize($data, $class, $format = null)
     {
-        return "Cannot denormalize $class";
+        return $data;
     }
 
     /**
-     * Checks whether the given class is supported for normalization by this normalizer
-     *
-     * @param mixed   $data   Data to normalize.
-     * @param string  $format The format being (de-)serialized from or into.
-     * @return Boolean
-     * @api
+     * {@inheritdoc}
      */
     public function supportsNormalization($data, $format = null)
     {
@@ -53,13 +48,7 @@ class NoopNormalizer extends SerializerAwareNormalizer
     }
 
     /**
-     * Checks whether the given class is supported for denormalization by this normalizer
-     *
-     * @param mixed   $data   Data to denormalize from.
-     * @param string  $type   The class to which the data should be denormalized.
-     * @param string  $format The format being deserialized from.
-     * @return Boolean
-     * @api
+     * {@inheritdoc}
      */
     public function supportsDenormalization($data, $type, $format = null)
     {

@@ -1,30 +1,44 @@
 <?php
 namespace FOS\RestBundle\Serializer\Normalizer;
 
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Form\FormView;
-    
-class formViewNormalizer extends AbstractNormalizer
+use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer,
+    Symfony\Component\Form\FormView;
+
+/*
+ * This file is part of the FOSRestBundle
+ *
+ * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * (c) Bulat Shakirzyanov <mallluhuct@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+/**
+ * This Normalizer gets the data from the FormView::all() method.
+ *
+ * If it finds a FormView child it will recurse 
+ *
+ * @author John Wards <johnwards@gmail.com>
+ */
+class FormViewNormalizer extends SerializerAwareNormalizer
 {
-
-    private $className = '';
-
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format, $properties = null)
+    public function normalize($object, $format = null)
     {
         $attributes = array();
 
-        foreach($object->all() as $key => $attributeValue) {
-            if("form" == $key && $attributeValue instanceof FormView)
-            {
+        foreach ($object->all() as $key => $attributeValue) {
+            if ("form" == $key && $attributeValue instanceof FormView) {
                 $children = array();
                 foreach ($attributeValue->getChildren() as $formKey => $childValue) {
                     $children[$formKey] = $this->serializer->normalize($childValue, $format);
                 }
                 $attributeValue = $children;
-            } elseif ($this->serializer->isStructuredType($attributeValue)) {
+            } else if ($this->serializer->isStructuredType($attributeValue)) {
                 $attributeValue = $this->serializer->normalize($attributeValue, $format);
             }
             $attributes[$key] = $attributeValue;
@@ -37,21 +51,25 @@ class formViewNormalizer extends AbstractNormalizer
      */
     public function denormalize($data, $class, $format = null)
     {
-        return "Form denormalization not yet supported";
+        throw new \BadMethodCallException('Not supported');
     }
 
     /**
-     * Returns true all the time...this is just a rapid object to handle this
-     * 
-     * @param  string $format The format being (de-)serialized from or into.
-     * @return Boolean Whether the class has any getters.
+     * {@inheritdoc}
      */
-    public function supports(\ReflectionClass $class, $format = null)
+    public function supportsNormalization($data, $format = null)
     {
-        if ($class->getName() === 'Symfony\Component\Form\FormView') {
-            $this->className = $class->getName();
+        if ($data instanceof FormView) {
             return true;
         }
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsDenormalization($data, $type, $format = null)
+    {
         return false;
     }
 }
