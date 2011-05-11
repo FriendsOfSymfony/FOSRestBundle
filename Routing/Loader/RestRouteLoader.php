@@ -204,8 +204,15 @@ class RestRouteLoader implements LoaderInterface
 
                 $urlParts   = array();
                 $routeName  = $httpMethod;
+
+                if (empty($resources)) {
+                    $resources[] = null;
+                }
+
                 foreach ($resources as $i => $resource) {
-                    $routeName .= '_' . basename($resource);
+                    if (null !== $resource) {
+                        $routeName .= '_' . basename($resource);
+                    }
 
                     // If we already added all parent routes paths to URL & we have prefix - add it
                     if (!empty($this->prefix) && $i === count($this->parents)) {
@@ -216,14 +223,16 @@ class RestRouteLoader implements LoaderInterface
                     if (isset($arguments[$i])) {
                         if ($patternStart) {
                             $urlParts[] = $patternStart . '/{' . $arguments[$i]->getName() . '}';
-                        } else {
+                        } elseif (null !== $resource) {
                             $urlParts[] =
                                 Pluralization::pluralize($resource) . '/{' . $arguments[$i]->getName() . '}';
+                        } else {
+                            $urlParts[] ='{' . $arguments[$i]->getName() . '}';
                         }
                     } else {
                         if ($patternStart) {
                             $urlParts[] = $patternStart;
-                        } else {
+                        } elseif (null !== $resource) {
                             $urlParts[] = $resource;
                         }
                     }
@@ -243,7 +252,7 @@ class RestRouteLoader implements LoaderInterface
                 $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => null);
                 $requirements   = array('_method'     => strtoupper($httpMethod));
                 $options        = array();
-                
+
                 // Read annotations
                 foreach ($this->annotationClasses as $annotationClass) {
                     $routeAnnnotation = $this->reader->getMethodAnnotation($method, $annotationClass);
