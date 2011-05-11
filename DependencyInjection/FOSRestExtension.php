@@ -63,6 +63,12 @@ class FOSRestExtension extends Extension
             }
         }
         $container->setParameter($this->getAlias().'.default_normalizers', $config['default_normalizers']);
+        if ($config['fallback_normalizer']) {
+            $definition = $container->getDefinition('fos_rest.serializer');
+            $reference = new Reference($config['fallback_normalizer'], ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false);
+            $definition->replaceArgument(3, $reference);
+        }
+        $container->setParameter($this->getAlias().'.fallback_normalizer', $config['fallback_normalizer']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (is_string($code)) {

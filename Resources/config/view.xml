@@ -28,6 +28,7 @@
             <argument>%fos_rest.formats%</argument>
             <argument>%fos_rest.normalizers%</argument>
             <argument>%fos_rest.default_normalizers%</argument>
+            <argument />
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>

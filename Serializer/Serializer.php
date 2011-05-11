@@ -3,6 +3,7 @@
 namespace FOS\RestBundle\Serializer;
 
 use Symfony\Component\Serializer\Serializer as BaseSerializer,
+    Symfony\Component\Serializer\Normalizer\NormalizerInterface,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -45,17 +46,23 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     private $defaultNormalizers;
 
     /**
+     * @var NormalizerInterface fallback normalizer
+     */
+    private $fallbackNormalizer;
+
+    /**
      * Set the array maps to enable lazy loading of normalizers and encoders
      *
      * @param array $encoderFormatMap The key is the class name, the value the name of the service
      * @param array $normalizerClassMap The key is the class name, the value the name of the service
      * @param array $defaultNormalizers A list of service id of an NormalizerInterface instance
      */
-    public function __construct(array $encoderFormatMap = array(), array $normalizerClassMap = array(), array $defaultNormalizers = array())
+    public function __construct(array $encoderFormatMap = array(), array $normalizerClassMap = array(), array $defaultNormalizers = array(), NormalizerInterface $fallbackNormalizer = null)
     {
         $this->encoderFormatMap = $encoderFormatMap;
         $this->normalizerClassMap = $normalizerClassMap;
         $this->defaultNormalizers = $defaultNormalizers;
+        $this->fallbackNormalizer = $fallbackNormalizer;
     }
 
     /**
@@ -74,10 +81,29 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     public function normalizeObject($object, $format = null)
     {
         try {
-            return parent::normalizeObject($object, $format);
+            return $this->normalizeObjectWithFallback($object, $format);
         } catch (\Exception $e) {
             $class = get_class($object);
             if (!$this->lazyLoadNormalizer($class)) {
+                throw $e;
+            }
+        }
+
+        return $this->normalizeObjectWithFallback($object, $format);
+    }
+
+    public function normalizeObjectWithFallback($object, $format = null)
+    {
+        if ($this->fallbackNormalizer) {
+            try {
+                return parent::normalizeObject($object, $format);
+            } catch (\UnexpectedValueException $e) {
+                $class = get_class($object);
+                if ($this->fallbackNormalizer->supportsNormalization($object, $class, $format)) {
+                    $this->normalizerCache[$class][$format] = $this->fallbackNormalizer;
+                    return $this->fallbackNormalizer->normalize($object, $format);
+                }
+
                 throw $e;
             }
         }
