@@ -3,7 +3,7 @@
 namespace FOS\RestBundle\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+    Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
 
 /*
  * This file is part of the FOSRestBundle
@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\SerializerInterface,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class NoopNormalizer extends AbstractNormalizer
+class PassThroughNormalizer extends SerializerAwareNormalizer
 {
     /**
      * {@inheritdoc}
