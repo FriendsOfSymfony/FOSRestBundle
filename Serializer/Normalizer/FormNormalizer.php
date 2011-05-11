@@ -40,7 +40,7 @@ class FormNormalizer extends SerializerAwareNormalizer
         $attributes = array();
         foreach ($reflectionMethods as $method) {
             if ($this->isValidMethod($method)) {
-                if(0 === strpos($method->getName(), 'get')) {
+                if (0 === strpos($method->getName(), 'get')) {
                     $attributeName = strtolower(substr($method->getName(), 3));
                 } else {
                     $attributeName = strtolower($method->getName());
@@ -68,12 +68,13 @@ class FormNormalizer extends SerializerAwareNormalizer
     {
         return (
             (
-                0 === strpos($method->getName(), 'get') ||
-                0 === strpos($method->getName(), 'is') ||
-                0 === strpos($method->getName(), 'has')
-            ) &&
-            3 < strlen($method->getName()) &&
-            0 === $method->getNumberOfRequiredParameters() && !in_array($method->getName(),$this->invalidMethods)
+                0 === strpos($method->getName(), 'get')
+                || 0 === strpos($method->getName(), 'is')
+                || 0 === strpos($method->getName(), 'has')
+            )
+            && 3 < strlen($method->getName())
+            && 0 === $method->getNumberOfRequiredParameters()
+            && !in_array($method->getName(), $this->invalidMethods)
         );
     }
 
@@ -90,10 +91,7 @@ class FormNormalizer extends SerializerAwareNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        if ($data instanceof Form) {
-            return true;
-        }
-        return false;
+        return $data instanceof Form;
     }
 
     /**

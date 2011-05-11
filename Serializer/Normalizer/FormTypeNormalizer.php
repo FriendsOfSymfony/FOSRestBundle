@@ -47,10 +47,7 @@ class FormTypeNormalizer extends SerializerAwareNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        if ($data instanceof FormTypeInterface) {
-            return true;
-        }
-        return false;
+        return $data instanceof FormTypeInterface;
     }
 
     /**

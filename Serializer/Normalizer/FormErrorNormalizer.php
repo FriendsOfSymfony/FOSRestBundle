@@ -45,10 +45,7 @@ class FormErrorNormalizer extends SerializerAwareNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        if ($data instanceof FormError) {
-            return true;
-        }
-        return false;
+        return $data instanceof FormError;
     }
 
     /**

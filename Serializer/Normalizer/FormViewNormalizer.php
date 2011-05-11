@@ -32,7 +32,7 @@ class FormViewNormalizer extends SerializerAwareNormalizer
         $attributes = array();
 
         foreach ($object->all() as $key => $attributeValue) {
-            if ("form" == $key && $attributeValue instanceof FormView) {
+            if ('form' == $key && $attributeValue instanceof FormView) {
                 $children = array();
                 foreach ($attributeValue->getChildren() as $formKey => $childValue) {
                     $children[$formKey] = $this->serializer->normalize($childValue, $format);
@@ -59,10 +59,7 @@ class FormViewNormalizer extends SerializerAwareNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        if ($data instanceof FormView) {
-            return true;
-        }
-        return false;
+        return $data instanceof FormView;
     }
 
     /**
