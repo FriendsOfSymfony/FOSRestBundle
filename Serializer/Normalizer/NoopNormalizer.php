@@ -36,7 +36,7 @@ class NoopNormalizer extends SerializerAwareNormalizer
      */
     public function denormalize($data, $class, $format = null)
     {
-        return $data;
+        throw new \BadMethodCallException('Not supported');
     }
 
     /**
