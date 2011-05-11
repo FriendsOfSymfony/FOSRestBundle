@@ -71,10 +71,10 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function normalizeObject($object, $format, $properties = null)
+    public function normalizeObject($object, $format = null)
     {
         try {
-            return parent::normalizeObject($object, $format, $properties);
+            return parent::normalizeObject($object, $format);
         } catch (\Exception $e) {
             $class = get_class($object);
             if (!$this->lazyLoadNormalizer($class)) {
@@ -82,7 +82,7 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
             }
         }
 
-        return parent::normalizeObject($object, $format, $properties);
+        return parent::normalizeObject($object, $format);
     }
 
     /**

@@ -17,9 +17,9 @@ use Symfony\Component\Serializer\SerializerInterface,
  */
 
 /**
- * This Normalizer basically just silences any Exceptions from missing normalizers
+ * This Normalizer basically just returns the data as it was given
  *
- * @author John Wards <johnwards@gmail.com>
+ * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
 class NoopNormalizer extends AbstractNormalizer
 {
@@ -28,7 +28,7 @@ class NoopNormalizer extends AbstractNormalizer
      */
     public function normalize($object, $format = null)
     {
-        return array("Can not normalize ".get_class($object));
+        return $object;
     }
 
     /**
@@ -36,7 +36,7 @@ class NoopNormalizer extends AbstractNormalizer
      */
     public function denormalize($data, $class, $format = null)
     {
-        return "Cannot denormalize $class";
+        return $data;
     }
 
     /**
@@ -63,6 +63,6 @@ class NoopNormalizer extends AbstractNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return false;
+        return true;
     }
 }

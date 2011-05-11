@@ -245,27 +245,33 @@ class View implements ContainerAwareInterface
      */
     private function getStatusCodeFromParameters()
     {
-        $code = Codes::HTTP_OK;
+        $parameters = $this->getParameters();
 
-        $parameters = (array)$this->getParameters();
-        if ($this->formKey) {
-            if (!$parameters[$this->formKey]->isValid()) {
-                $code = $this->failedValidation;
-            }
-        } else {
-            foreach ($parameters as $key => $parameter) {
-                if ($parameter instanceof FormInterface) {
-                    if (!$parameter->isValid()) {
-                        $code = $this->failedValidation;
+        if (false !== $this->formKey && is_array($parameters)) {
+            // Assign the formKey
+            if (null === $this->formKey){
+                foreach ($parameters as $key => $parameter) {
+                    if ($parameter instanceof FormInterface) {
+                        $this->formKey = $key;
+                        $form = $parameter;
+                        break;
                     }
+                }
+            } elseif (isset($parameters[$this->formKey])
+                && $parameters[$this->formKey] instanceof FormInterface
+            ) {
+                $form = $parameters[$this->formKey];
+            }
 
-                    $this->formKey = $key;
-                    break;
+            if (isset($form)) {
+                // Check if the form is valid, return an appropriate response code
+                if ($form->isBound() && !$form->isValid()) {
+                    return $this->failedValidation;
                 }
             }
         }
 
-        return $code;
+        return Codes::HTTP_OK;
     }
 
     /**
@@ -483,6 +489,7 @@ class View implements ContainerAwareInterface
         if ($encoder instanceof TemplatingAwareEncoderInterface) {
             $encoder->setTemplate($this->getTemplate());
             if (isset($this->formKey)
+                && false !== $this->formKey
                 && isset($parameters[$this->formKey])
                 && $parameters[$this->formKey] instanceof FormInterface
             ) {

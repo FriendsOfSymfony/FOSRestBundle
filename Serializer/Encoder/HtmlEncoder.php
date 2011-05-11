@@ -3,7 +3,8 @@
 namespace FOS\RestBundle\Serializer\Encoder;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface,
-    Symfony\Component\Serializer\Encoder\AbstractEncoder,
+    Symfony\Component\Serializer\Encoder\NormalizationAwareInterface,
+    Symfony\Component\Serializer\Encoder\SerializerAwareEncoder,
     Symfony\Component\Templating\TemplateReferenceInterface;
 
 /*
@@ -22,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface,
  *
  * @author Lukas Smith <smith@pooteeweet.org>
  */
-class HtmlEncoder extends AbstractEncoder implements TemplatingAwareEncoderInterface
+class HtmlEncoder extends SerializerAwareEncoder implements NormalizationAwareInterface, TemplatingAwareEncoderInterface
 {
     /**
      * @var EngineInterface template engine instance

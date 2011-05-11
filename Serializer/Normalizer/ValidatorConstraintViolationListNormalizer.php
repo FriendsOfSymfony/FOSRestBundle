@@ -3,7 +3,8 @@
 namespace FOS\RestBundle\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+    Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer,
+    Symfony\Component\Validator\ConstraintViolationList;
 
 /*
  * This file is part of the FOSRestBundle
@@ -21,12 +22,12 @@ use Symfony\Component\Serializer\SerializerInterface,
  *
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class ValidatorConstraintViolationListNormalizer extends AbstractNormalizer
+class ValidatorConstraintViolationListNormalizer extends SerializerAwareNormalizer
 {
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format, $properties = null)
+    public function normalize($object, $format = null)
     {
         $errors = array();
 
@@ -46,15 +47,29 @@ class ValidatorConstraintViolationListNormalizer extends AbstractNormalizer
     }
 
     /**
-     * Checks if the given class is a ConstraintViolationList
+     * Checks whether the given class is supported for normalization by this normalizer
      *
-     * @param ReflectionClass $class  A ReflectionClass instance of the class
-     *                                to serialize into or from.
-     * @param string          $format The format being (de-)serialized from or into.
-     * @return Boolean Whether the class has any getters.
+     * @param mixed   $data   Data to normalize.
+     * @param string  $format The format being (de-)serialized from or into.
+     * @return Boolean
+     * @api
      */
-    public function supports(\ReflectionClass $class, $format = null)
+    public function supportsNormalization($data, $format = null)
     {
-        return $class->name === 'Symfony\Component\Validator\ConstraintViolationList';
+        return $data instanceof ConstraintViolationList;
+    }
+
+    /**
+     * Checks whether the given class is supported for denormalization by this normalizer
+     *
+     * @param mixed   $data   Data to denormalize from.
+     * @param string  $type   The class to which the data should be denormalized.
+     * @param string  $format The format being deserialized from.
+     * @return Boolean
+     * @api
+     */
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return false;
     }
 }
