@@ -72,7 +72,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                     $parents = array();
                     if (!empty($parent)) {
                         if (!isset($this->collectionParents[$parent])) {
-                            throw new \InvalidArgumentException(sprintf('Can not find parent resource with name %s', $parent));
+                            throw new \InvalidArgumentException(sprintf('Cannot find parent resource with name %s', $parent));
                         }
 
                         $parents = $this->collectionParents[$parent];

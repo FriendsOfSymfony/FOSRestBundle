@@ -28,7 +28,7 @@ class NoopNormalizer extends SerializerAwareNormalizer
      */
     public function normalize($object, $format = null)
     {
-        return array("Can not normalize ".get_class($object));
+        return array("Cannot normalize ".get_class($object));
     }
 
     /**
