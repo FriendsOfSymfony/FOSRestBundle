@@ -59,33 +59,11 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
 
         $template = $request->attributes->get('_template');
         if ($template) {
+            $template->set('format', null);
+            $template->set('engine', null);
             $view->setTemplate($template);
         }
 
         $event->setResponse($view->handle());
-    }
-
-    /**
-     * Guesses and returns the template name to render based on the controller
-     * and action names.
-     *
-     * @param array $controller An array storing the controller object and action method
-     * @param Request $request A Request instance
-     *
-     * @return TemplateReference A template reference
-     * @throws \InvalidArgumentException
-     */
-    protected function guessTemplateName($controller, Request $request)
-    {
-        $class = get_class($controller[0]); 
-        
-        if (!preg_match('/Controller\\\(.*)Controller$/', $class, $match)) {
-            throw new \InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it does not end with Controller)', $class));
-        }
-
-        $bundle = $this->getBundleForClass($class);
-        $name = substr($controller[1], 0, -6);
-
-        return new TemplateReference($bundle->getName(), $match[1], $name);
     }
 }
