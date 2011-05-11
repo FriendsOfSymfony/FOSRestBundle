@@ -1,9 +1,8 @@
 <?php
-
 namespace FOS\RestBundle\Serializer\Normalizer;
 
-use Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer;
+use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer,
+    Symfony\Component\Form\FormTypeInterface;
 
 /*
  * This file is part of the FOSRestBundle
@@ -17,18 +16,22 @@ use Symfony\Component\Serializer\SerializerInterface,
  */
 
 /**
- * This Normalizer basically just silences any Exceptions from missing normalizers
+ * This Normalizer gets some useful information from a FormTypeInterface instance
  *
  * @author John Wards <johnwards@gmail.com>
  */
-class NoopNormalizer extends SerializerAwareNormalizer
+class FormTypeNormalizer extends SerializerAwareNormalizer
 {
     /**
      * {@inheritdoc}
      */
     public function normalize($object, $format = null)
     {
-        return array("Cannot normalize ".get_class($object));
+        $attributes = array();
+        $attributes["name"] = $object->getName();
+        $attributes["parent"] = $object->getParent(array());
+        $attributes["default_options"] = $object->getDefaultOptions(array());
+        return $attributes;
     }
 
     /**
@@ -44,7 +47,7 @@ class NoopNormalizer extends SerializerAwareNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        return true;
+        return $data instanceof FormTypeInterface;
     }
 
     /**
