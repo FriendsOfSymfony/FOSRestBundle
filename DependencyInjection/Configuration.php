@@ -45,6 +45,7 @@ class Configuration implements ConfigurationInterface
             ->fixXmlConfig('class', 'classes')
             ->fixXmlConfig('service', 'services')
             ->children()
+                ->scalarNode('default_form_key')->defaultNull()->end()
                 ->arrayNode('formats')
                     ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()

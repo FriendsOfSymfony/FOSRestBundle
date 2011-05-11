@@ -103,7 +103,6 @@ class View implements ContainerAwareInterface
      */
     public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST)
     {
-        $this->reset();
         $this->formats = (array)$formats;
         $this->failedValidation = $failedValidation;
     }
@@ -119,7 +118,7 @@ class View implements ContainerAwareInterface
         $this->engine = 'twig';
         $this->parameters = array();
         $this->code = null;
-        $this->formKey = null;
+        $this->formKey = $this->container->getParameter('fos_rest.default_form_key');
     }
 
     /**
