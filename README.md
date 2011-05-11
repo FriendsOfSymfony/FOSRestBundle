@@ -82,11 +82,12 @@ View support
 
 Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
-support for xml. Also the default Json encoder class is modified and a custom
+support for xml. Also the default JSON encoder class is modified and a custom
 serializer service is configured. The a normalizer is registered for the class
 ``Acme\HelloBundle\Document\Article`` and the ``fos_rest.get_set_method_normalizer``
-normalizer will be loazy loaded as soon as normalization is triggered. Finally the
-HTTP response status code for failed validation is set to ``400``:
+normalizer will be loazy loaded as soon as normalization is triggered. If no matching
+normalizer is found a last attempt is made with the ``fos_rest.pass_through_normalizer``.
+Finally the HTTP response status code for failed validation is set to ``400``:
 
     # app/config.yml
     fos_rest:
@@ -97,6 +98,7 @@ HTTP response status code for failed validation is set to ``400``:
             "Acme\HelloBundle\Document\Article": "my.article_normalizer"
         default_normalizers:
             - "fos_rest.get_set_method_normalizer"
+        fallback_normalizer: 'fos_rest.pass_through_normalizer'
         failed_validation: HTTP_BAD_REQUEST
 
 Listener support
