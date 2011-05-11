@@ -10,7 +10,7 @@
 
         <service id="fos_rest.noop_normalizer" class="FOS\RestBundle\Serializer\Normalizer\NoopNormalizer" />
 
-        <service id="fos_rest.passthrough_normalizer" class="FOS\RestBundle\Serializer\Normalizer\PassThroughNormalizer" />
+        <service id="fos_rest.pass_through_normalizer" class="FOS\RestBundle\Serializer\Normalizer\PassThroughNormalizer" />
 
         <service id="fos_rest.constraint_violation_list_normalizer" class="FOS\RestBundle\Serializer\Normalizer\ValidatorConstraintViolationListNormalizer" />
 
