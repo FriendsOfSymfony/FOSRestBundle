@@ -51,8 +51,8 @@ class ExceptionController extends ContainerAware
 
         $format = $this->getFormat($format);
         if (null === $format) {
-            $message = "No matching accepted Response format could be determined";
-            $response = new Response($message, Codes::HTTP_NOT_ACCEPTABLE);
+            $message = 'No matching accepted Response format could be determined';
+            return new Response($message, Codes::HTTP_NOT_ACCEPTABLE);
         }
 
         $code = $this->getStatusCode($exception);
