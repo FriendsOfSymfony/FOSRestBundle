@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\SerializerInterface,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class PassThroughNormalizer extends SerializerAwareNormalizer
+class PassThruNormalizer extends SerializerAwareNormalizer
 {
     /**
      * {@inheritdoc}
