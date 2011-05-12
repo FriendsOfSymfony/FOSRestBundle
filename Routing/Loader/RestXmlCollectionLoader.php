@@ -16,6 +16,7 @@ use FOS\RestBundle\Routing\RestRouteCollection;
  * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
  * (c) Konstantin Kudryashov <ever.zet@gmail.com>
  * (c) Bulat Shakirzyanov <mallluhuct@gmail.com>
+ * (c) Donald Tyler <chekote69@gmail.com>
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -31,70 +32,47 @@ class RestXmlCollectionLoader extends XmlFileLoader
     private $currentDir;
 
     /**
-     * Loads a Xml collection file.
-     *
-     * @param  string $file A Xml file path
-     * @param  string $type The resource type
-     *
-     * @return RouteCollection A RouteCollection instance
-     *
-     * @throws \InvalidArgumentException When tag can't be parsed
+     * @inheritDoc
      */
-    public function load($file, $type = null)
+    protected function parseNode(RouteCollection $collection, \DOMElement $node, $path)
     {
-        $path = $this->locator->locate($file);
+        switch ($node->tagName) {
+            case 'route':
+                $this->parseRoute($collection, $node, $path);
+                break;
+            case 'import':
+                $this->currentDir = dirname($path);
 
-        $xml = $this->loadFile($path);
+                $name       = (string) $node->getAttribute('id');
+                $resource   = (string) $node->getAttribute('resource');
+                $prefix     = (string) $node->getAttribute('prefix');
+                $namePrefix = (string) $node->getAttribute('name-prefix');
+                $parent     = (string) $node->getAttribute('parent');
+                $type       = (string) $node->getAttribute('type');
 
-        $collection = new RouteCollection();
-        $collection->addResource(new FileResource($path));
-
-        // process routes and imports
-        foreach ($xml->documentElement->childNodes as $node) {
-            if (!$node instanceof \DOMElement) {
-                continue;
-            }
-
-            switch ($node->tagName) {
-                case 'route':
-                    $this->parseRoute($collection, $node, $path);
-                    break;
-                case 'import':
-                    $this->currentDir = dirname($path);
-
-                    $name       = (string) $node->getAttribute('id');
-                    $resource   = (string) $node->getAttribute('resource');
-                    $prefix     = (string) $node->getAttribute('prefix');
-                    $namePrefix = (string) $node->getAttribute('name-prefix');
-                    $parent     = (string) $node->getAttribute('parent');
-                    $type       = (string) $node->getAttribute('type');
-
-                    $parents = array();
-                    if (!empty($parent)) {
-                        if (!isset($this->collectionParents[$parent])) {
-                            throw new \InvalidArgumentException(sprintf('Cannot find parent resource with name %s', $parent));
-                        }
-
-                        $parents = $this->collectionParents[$parent];
+                $parents = array();
+                if (!empty($parent)) {
+                    if (!isset($this->collectionParents[$parent])) {
+                        throw new \InvalidArgumentException(sprintf('Cannot find parent resource with name %s', $parent));
                     }
 
-                    $imported = $this->importResource($resource, $parents, $prefix, $namePrefix, $type);
+                    $parents = $this->collectionParents[$parent];
+                }
 
-                    if (!empty($name) && $imported instanceof RestRouteCollection) {
-                        $parents[]  = (!empty($prefix) ? $prefix . '/' : '') . $imported->getSingularName();
-                        $prefix     = null;
+                $imported = $this->importResource($resource, $parents, $prefix, $namePrefix, $type);
 
-                        $this->collectionParents[$name] = $parents;
-                    }
+                if (!empty($name) && $imported instanceof RestRouteCollection) {
+                    $parents[]  = (!empty($prefix) ? $prefix . '/' : '') . $imported->getSingularName();
+                    $prefix     = null;
 
-                    $collection->addCollection($imported, $prefix);
-                    break;
-                default:
-                    throw new \InvalidArgumentException(sprintf('Unable to parse tag "%s"', $node->tagName));
-            }
+                    $this->collectionParents[$name] = $parents;
+                }
+
+                $collection->addCollection($imported, $prefix);
+                break;
+            default:
+                throw new \InvalidArgumentException(sprintf('Unable to parse tag "%s"', $node->tagName));
         }
-
-        return $collection;
     }
 
     /**
