@@ -7,13 +7,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 /*
  * This file is part of the FOSRestBundle
  *
- * (c) Donald Tyler <chekote69@gmail.com>
+ * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ * (c) Bulat Shakirzyanov <mallluhuct@gmail.com>
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
 
 /**
+ * @author Donald Tyler <chekote69@gmail.com>
  * @rest:Prefix("aprefix")
  */
 class AnnotatedPrefixedController extends Controller
