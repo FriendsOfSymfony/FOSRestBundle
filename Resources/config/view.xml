@@ -7,6 +7,7 @@
     <services>
 
         <service id="fos_rest.get_set_method_normalizer" class="Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer" />
+        <service id="fos_rest.custom_normalizer" class="Symfony\Component\Serializer\Normalizer\CustomNormalizer" />
 
         <service id="fos_rest.form_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormNormalizer" />
         <service id="fos_rest.form_error_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer" />
