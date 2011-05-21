@@ -23,6 +23,8 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader,
  */
 class RestRouteLoaderTest extends LoaderTest
 {
+    const CONTROLLER_FIXTURES = 'FOS\RestBundle\Tests\Fixtures\Controller\\';
+
     /**
      * Test that UsersController RESTful class gets parsed correctly.
      */
@@ -66,6 +68,26 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * @see https://github.com/FriendsOfSymfony/RestBundle/issues/37
+     */
+    public function testPrefixIsResetForEachController()
+    {
+      // we can't use the getControllerLoader method because we need to verify that the prefix
+      // is reset when using the same ControllerLoader for both Controllers.
+      $loader = $this->getControllerLoader();
+
+      // get the pattern for the prefixed controller, and verify it is prefixed
+      $collection = $loader->load(self::CONTROLLER_FIXTURES . 'AnnotatedPrefixedController', 'rest');
+      $prefixedRoute = $collection->get('get_something');
+      $this->assertTrue(substr($prefixedRoute->getPattern(), 0, 9) == '/aprefix/');
+
+      // get the pattern for the non-prefixed controller, and verify it's not prefixed
+      $collection2 = $loader->load(self::CONTROLLER_FIXTURES . 'UsersController', 'rest');
+      $nonPrefixedRoute = $collection2->get('get_users');
+      $this->assertFalse(substr($prefixedRoute->getPattern(), 0, 9) == '/aprefix/');
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param   string  $fixtureName    name of the class fixture
@@ -74,6 +96,6 @@ class RestRouteLoaderTest extends LoaderTest
     {
         $loader = $this->getControllerLoader();
 
-        return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\' . $fixtureName, 'rest');
+        return $loader->load(self::CONTROLLER_FIXTURES . $fixtureName, 'rest');
     }
 }
