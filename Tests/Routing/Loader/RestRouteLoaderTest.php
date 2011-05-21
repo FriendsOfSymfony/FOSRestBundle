@@ -23,8 +23,6 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader,
  */
 class RestRouteLoaderTest extends LoaderTest
 {
-    const CONTROLLER_FIXTURES = 'FOS\RestBundle\Tests\Fixtures\Controller\\';
-
     /**
      * Test that UsersController RESTful class gets parsed correctly.
      */
@@ -77,12 +75,12 @@ class RestRouteLoaderTest extends LoaderTest
       $loader = $this->getControllerLoader();
 
       // get the pattern for the prefixed controller, and verify it is prefixed
-      $collection = $loader->load(self::CONTROLLER_FIXTURES . 'AnnotatedPrefixedController', 'rest');
+      $collection = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\AnnotatedPrefixedController', 'rest');
       $prefixedRoute = $collection->get('get_something');
       $this->assertTrue(substr($prefixedRoute->getPattern(), 0, 9) == '/aprefix/');
 
       // get the pattern for the non-prefixed controller, and verify it's not prefixed
-      $collection2 = $loader->load(self::CONTROLLER_FIXTURES . 'UsersController', 'rest');
+      $collection2 = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\UsersController', 'rest');
       $nonPrefixedRoute = $collection2->get('get_users');
       $this->assertFalse(substr($prefixedRoute->getPattern(), 0, 9) == '/aprefix/');
     }
@@ -96,6 +94,6 @@ class RestRouteLoaderTest extends LoaderTest
     {
         $loader = $this->getControllerLoader();
 
-        return $loader->load(self::CONTROLLER_FIXTURES . $fixtureName, 'rest');
+        return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'. $fixtureName, 'rest');
     }
 }
