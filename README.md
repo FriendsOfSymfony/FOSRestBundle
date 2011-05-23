@@ -345,7 +345,7 @@ For further examples, see comments of controllers in the code above.
 ### Naming collisions
 
 Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
-collections provides a `name_prefix` (`name-prefix` for xml and @rest:NamePrefix for
+collections provides a `name_prefix` (`name-prefix` for xml and @NamePrefix for
 annotations) parameter:
 
     # src/Acme/HelloBundle/Resources/config/users_routes.yml

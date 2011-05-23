@@ -4,6 +4,8 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Prefix;
+
 /*
  * This file is part of the FOSRestBundle
  *
@@ -17,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @author Donald Tyler <chekote69@gmail.com>
- * @rest:Prefix("aprefix")
+ * @Prefix("aprefix")
  */
 class AnnotatedPrefixedController extends Controller
 {

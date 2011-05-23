@@ -58,9 +58,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
         $xmlCollectionLoaderClass           = 'FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader';
 
-        $controllerAnnotationsNS          = 'FOS\RestBundle\Controller\Annotations\\';
-        $controllerAnnotationsNSParameter = 'fos_rest.routing.loader.controller.annotations_namespace';
-
         $this->extension->load(array(), $this->container);
 
         $this->assertEquals($controllerLoaderClass, $this->container->getParameter($controllerLoaderClassParameter));
@@ -83,8 +80,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
             $xmlCollectionLoaderClassParameter
         );
-
-        $this->assertEquals($controllerAnnotationsNS, $this->container->getParameter($controllerAnnotationsNSParameter));
     }
 
     /**
@@ -101,13 +96,13 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, count($arguments));
         $this->assertEquals('service_container', (string) $arguments[0]);
         $this->assertEquals('controller_name_converter', (string) $arguments[1]);
-        $this->assertValidAnnotationReader($this->container->getDefinition((string) $arguments[2]));
+        $this->assertEquals('annotation_reader', (string) $arguments[2]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
     }
 
     /**
-     * Assert that loader definition described properly. 
-     * 
+     * Assert that loader definition described properly.
+     *
      * @param   Definition  $loader                 loader definition
      * @param   string      $loaderClassParameter   loader class parameter name
      */
@@ -120,24 +115,5 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($arguments));
         $this->assertEquals($locatorRef, $arguments[0]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
-    }
-
-    /**
-     * Assert that definition of AnnotationReader is valid
-     *
-     * @param   Definition   $reader                  reader definition
-     */
-    private function assertValidAnnotationReader(Definition $reader)
-    {
-        $annotationReaderClass  = 'Doctrine\Common\Annotations\AnnotationReader';
-        $annotationsNSParameter = 'fos_rest.routing.loader.controller.annotations_namespace';
-        $annotationsAlias       = 'rest';
-        $methodName             = 'setAnnotationNamespaceAlias';
-
-        $readerCalls = $reader->getMethodCalls();
-
-        $this->assertEquals($annotationReaderClass, $reader->getClass());
-        $this->assertEquals(1, count($readerCalls));
-        $this->assertEquals(array($methodName, array('%' . $annotationsNSParameter . '%', $annotationsAlias)), $readerCalls[0]);
     }
 }

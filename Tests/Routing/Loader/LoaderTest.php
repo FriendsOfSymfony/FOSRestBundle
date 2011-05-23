@@ -38,9 +38,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 
     private function getAnnotationReader()
     {
-        $reader = new AnnotationReader();
-        $reader->setAnnotationNamespaceAlias('FOS\RestBundle\Controller\Annotations\\', 'rest');
-        return $reader;
+        return new AnnotationReader();
     }
 
     protected function getControllerLoader()
