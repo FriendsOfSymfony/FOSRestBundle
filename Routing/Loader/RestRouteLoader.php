@@ -2,9 +2,6 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-require_once __DIR__.'/../../Controller/Annotations.php';
-
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\Config\Loader\LoaderInterface,
@@ -14,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
 
 use FOS\RestBundle\Routing\RestRouteCollection,
     FOS\RestBundle\Pluralization\Pluralization;
+
+use Doctrine\Common\Annotations\Reader;
 
 /*
  * This file is part of the FOSRestBundle
@@ -54,9 +53,9 @@ class RestRouteLoader implements LoaderInterface
      *
      * @param   ContainerInterface      $container  service container
      * @param   ControllerNameParser    $parser     controller name parser
-     * @param   AnnotationReader        $reader     annotations reader
+     * @param   Reader                  $reader     annotations reader
      */
-    public function __construct(ContainerInterface $container, ControllerNameParser $parser, AnnotationReader $reader)
+    public function __construct(ContainerInterface $container, ControllerNameParser $parser, Reader $reader)
     {
         $this->container            = $container;
         $this->parser               = $parser;
