@@ -4,6 +4,15 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Route,
+    FOS\RestBundle\Controller\Annotations\NoRoute,
+    FOS\RestBundle\Controller\Annotations\Get,
+    FOS\RestBundle\Controller\Annotations\Post,
+    FOS\RestBundle\Controller\Annotations\Put,
+    FOS\RestBundle\Controller\Annotations\Delete,
+    FOS\RestBundle\Controller\Annotations\Head;
+
+
 /*
  * This file is part of the FOSRestBundle
  *
@@ -21,62 +30,62 @@ class AnnotatedUsersController extends Controller
     {} // [GET]     /users
 
     /**
-     * @rest:Route(requirements={"slug" = "[a-z]+"})
+     * @Route(requirements={"slug" = "[a-z]+"})
      */
     public function getUserAction($slug)
     {} // [GET]     /users/{slug}
 
     /**
-     * @rest:Route(requirements={"slug" = "[a-z]+", "id" = "\d+"})
+     * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
     public function getUserCommentAction($slug, $id)
     {} // [GET]     /users/{slug}/comments/{id}
 
     /**
-     * @rest:Post(requirements={"slug" = "[a-z]+"})
+     * @Post(requirements={"slug" = "[a-z]+"})
      */
     public function rateUserAction($slug)
     {} // [POST]    /users/{slug}/rate
 
     /**
-     * @rest:Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"})
+     * @Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
     public function rateUserCommentAction($slug, $id)
     {} // [PUT]     /users/{slug}/rate_comment/{id}
 
     /**
-     * @rest:Get
+     * @Get
      */
     public function cgetUserAction($slug)
     {} // [GET]     /users/{slug}/cget
 
     /**
-     * @rest:Post
+     * @Post
      */
     public function cpostUserAction($slug)
     {} // [POST]    /users/{slug}/cpost
 
     /**
-     * @rest:Put
+     * @Put
      */
     public function cputUserAction($slug)
     {} // [PUT]     /users/{slug}/cput
 
     /**
-     * @rest:Delete
+     * @Delete
      */
     public function cdelUserAction($slug)
     {} // [DELETE]  /users/{slug}/cdel
 
     /**
-     * @rest:Head
+     * @Head
      */
     public function cheadUserAction($slug)
     {} // [HEAD]    /users/{slug}/chead
 
 
     /**
-     * @rest:NoRoute
+     * @NoRoute
      */
     public function splitUserAction($slug)
     {}
