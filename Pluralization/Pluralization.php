@@ -47,6 +47,7 @@ class Pluralization
             '/(alias|status)/i'         => '\1es',
             '/(octop|vir)us$/i'         => '\1i',
             '/(ax|test)is$/i'           => '\1es',
+            '/y$/i'                     => '\1ies',
             '/s$/i'                     => 's',
             '/$/'                       => 's'
         );
@@ -117,6 +118,7 @@ class Pluralization
             '/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i' => '\1\2sis',
             '/([ti])a$/i'           => '\1um',
             '/(n)ews$/i'            => '\1ews',
+            '/ies$/i'               => '\1y',
             '/s$/i'                 => '',
         );
         $uncountables = array(
