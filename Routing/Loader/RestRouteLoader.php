@@ -7,7 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
     Symfony\Component\Config\Loader\LoaderInterface,
     Symfony\Component\Config\Loader\LoaderResolver,
     Symfony\Component\Config\Resource\FileResource,
-    Symfony\Component\Routing\Route;
+    Symfony\Component\Routing\Route,
+    Symfony\Component\HttpFoundation\Request;
 
 use FOS\RestBundle\Routing\RestRouteCollection,
     FOS\RestBundle\Pluralization\Pluralization;
@@ -127,7 +128,11 @@ class RestRouteLoader implements LoaderInterface
         } elseif ($this->container->has($controller)) {
             // service_id
             $controllerPrefix = $controller . ':';
-            $class            = get_class($this->container->get($controller));
+            // FIXME: this is ugly, but I do not see any good alternative
+            $this->container->enterScope('request');
+            $this->container->set('request', new Request);
+            $class = get_class($this->container->get($controller));
+            $this->container->leaveScope('request');
         }
 
         if (empty($class)) {
