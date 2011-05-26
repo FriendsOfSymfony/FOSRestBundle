@@ -35,7 +35,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     /**
      * @inheritDoc
      */
-    protected function parseNode(RouteCollection $collection, \DOMElement $node, $path)
+    protected function parseNode(RouteCollection $collection, \DOMElement $node, $path, $file)
     {
         switch ($node->tagName) {
             case 'route':
