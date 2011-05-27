@@ -18,6 +18,7 @@
             <argument type="service" id="service_container" />
             <argument type="service" id="controller_name_converter" />
             <argument type="service" id="annotation_reader" />
+            <argument>%fos_rest.routing.loader.default_format%</argument>
             <tag name="routing.loader" />
         </service>
 
