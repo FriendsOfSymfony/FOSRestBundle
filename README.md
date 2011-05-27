@@ -128,7 +128,15 @@ Below you can see the defaults in case ``format_listener`` is set to true as abo
             default_priorities:
                 - html
                 - "*/*"
-            default_format: html
+            fallback_format: html
+
+You may also specify a ``default_format`` that the routing loader will use for 
+the ``_format`` parameter if none is specified.
+
+    # app/config.yml
+    fos_rest:
+        routing_loader:
+            default_format: json
 
 Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations.
 Also note in case for example more complex Accept header negotiations are required, the user should

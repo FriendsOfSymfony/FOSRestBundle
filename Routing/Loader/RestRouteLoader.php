@@ -41,6 +41,7 @@ class RestRouteLoader implements LoaderInterface
     protected $parents = array();
     protected $prefix;
     protected $namePrefix;
+    protected $defaultFormat;
 
     /**
      * Holds AnnotationReader instance
@@ -52,15 +53,17 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Initialize REST Controller routes loader.
      *
-     * @param   ContainerInterface      $container  service container
-     * @param   ControllerNameParser    $parser     controller name parser
-     * @param   Reader                  $reader     annotations reader
+     * @param   ContainerInterface      $container     service container
+     * @param   ControllerNameParser    $parser        controller name parser
+     * @param   Reader                  $reader        annotations reader
+     * @param   string                  $defaultFormat default route format
      */
-    public function __construct(ContainerInterface $container, ControllerNameParser $parser, Reader $reader)
+    public function __construct(ContainerInterface $container, ControllerNameParser $parser, Reader $reader, $defaultFormat)
     {
         $this->container            = $container;
         $this->parser               = $parser;
         $this->reader               = $reader;
+        $this->defaultFormat        = $defaultFormat;
         $this->availableHTTPMethods = array('get', 'post', 'put', 'delete', 'head');
         $this->annotationClasses    = array(
             'FOS\RestBundle\Controller\Annotations\Route',
@@ -253,7 +256,7 @@ class RestRouteLoader implements LoaderInterface
                 }
 
                 $pattern        = strtolower(implode('/', $urlParts));
-                $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => null);
+                $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => $this->defaultFormat);
                 $requirements   = array('_method'     => strtoupper($httpMethod));
                 $options        = array();
 
