@@ -138,7 +138,7 @@ class Serializer extends BaseSerializer implements ContainerAwareInterface
     private function lazyLoadNormalizer($class)
     {
         $normalizer_loaded = false;
-        $default_loaded = count($this->getNormalizers());
+        $default_loaded = count($this->normalizers);
 
         if (isset($this->normalizerClassMap[$class])
             && $this->container->has($this->normalizerClassMap[$class])

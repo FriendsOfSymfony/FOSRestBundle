@@ -176,6 +176,9 @@ Finally enable the JMSSerializerBundle support in the RestBundle:
     fos_rest:
         serializer_bundle: true
 
+When using JMSSerializerBundle the ``normalizers`` config option is ignored as in this case
+annotations should be used to register specific normalizers for a given class.
+
 ExceptionController support
 ---------------------------
 

@@ -57,10 +57,11 @@ class RequestListener
                 return;
             }
 
-            $encoder = $this->serializer->getEncoder($format);
-            if (!($encoder instanceof DecoderInterface)) {
+            if (!$this->serializer->hasDecoder($format)) {
                 return;
             }
+
+            $encoder = $this->serializer->getEncoder($format);
 
             $data = $encoder->decode($request->getContent(), $format);
             $request->request = new ParameterBag((array)$data);

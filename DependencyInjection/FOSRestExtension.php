@@ -8,7 +8,8 @@ use Symfony\Component\Config\Definition\Processor,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
     Symfony\Component\DependencyInjection\ContainerBuilder,
-    Symfony\Component\Config\FileLocator;
+    Symfony\Component\Config\FileLocator,
+    Symfony\Component\DependencyInjection\DefinitionDecorator;
 
 /*
  * This file is part of the FOSRestBundle
@@ -52,26 +53,53 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
+        $container->setParameter($this->getAlias().'.formats', $config['formats']);
         $container->setParameter($this->getAlias().'.default_form_key', $config['default_form_key']);
 
         foreach ($config['classes'] as $key => $value) {
             $container->setParameter($this->getAlias().'.'.$key.'.class', $value);
         }
 
-        $container->setParameter($this->getAlias().'.formats', $config['formats']);
-        $container->setParameter($this->getAlias().'.normalizers', $config['normalizers']);
-        foreach ($config['default_normalizers'] as $key => $normalizer) {
-            if (!$normalizer) {
-                unset($config['default_normalizers'][$key]);
+        if ($config['serializer_bundle']) {
+            foreach ($config['formats'] as $format => $encoder) {
+                $encoder = $container->getDefinition($encoder);
+                $encoder->addTag('jms_serializer.encoder', array('format' => $format));
             }
+
+            foreach ($config['default_normalizers'] as $normalizer) {
+                if ($normalizer) {
+                    $normalizer = $container->getDefinition($normalizer);
+                    $normalizer->addTag('jms_serializer.normalizer');
+                }
+            }
+
+            if ($config['fallback_normalizer']) {
+                $container->setAlias('jms_serializer.default_normalizer', $config['fallback_normalizer']);
+            }
+
+            $container->setAlias('fos_rest.serializer', 'serializer');
+        } else {
+            $loader->load('serializer.xml');
+
+            $container->setParameter($this->getAlias().'.normalizers', $config['normalizers']);
+            foreach ($config['default_normalizers'] as $key => $normalizer) {
+                if (!$normalizer) {
+                    unset($config['default_normalizers'][$key]);
+                }
+            }
+            $container->setParameter($this->getAlias().'.default_normalizers', $config['default_normalizers']);
+
+            if (null ===  $config['fallback_normalizer']) {
+                $config['fallback_normalizer'] = 'fos_rest.noop_normalizer';
+            }
+
+            if ($config['fallback_normalizer']) {
+                $definition = $container->getDefinition('fos_rest.serializer');
+                $reference = new Reference($config['fallback_normalizer'], ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false);
+                $definition->replaceArgument(3, $reference);
+            }
+            $container->setParameter($this->getAlias().'.fallback_normalizer', $config['fallback_normalizer']);
         }
-        $container->setParameter($this->getAlias().'.default_normalizers', $config['default_normalizers']);
-        if ($config['fallback_normalizer']) {
-            $definition = $container->getDefinition('fos_rest.serializer');
-            $reference = new Reference($config['fallback_normalizer'], ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false);
-            $definition->replaceArgument(3, $reference);
-        }
-        $container->setParameter($this->getAlias().'.fallback_normalizer', $config['fallback_normalizer']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (is_string($code)) {
@@ -98,12 +126,6 @@ class FOSRestExtension extends Extension
 
         if ($config['frameworkextra_bundle']) {
             $loader->load('frameworkextra_bundle.xml');
-        }
-
-        if ($config['serializer_bundle']) {
-            $definition = $container->getDefinition('fos_rest.serializer');
-            $reference = new Reference('serializer_factory', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false);
-            $definition->setConfigurator(array($reference, 'configureSerializer'));
         }
 
         foreach ($config['services'] as $key => $value) {

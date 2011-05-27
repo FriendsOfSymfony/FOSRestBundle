@@ -184,7 +184,7 @@ class RestRouteLoader implements LoaderInterface
                 continue;
             }
 
-            // If method has @rest:NoRoute annotation - skip
+            // If method has @NoRoute annotation - skip
             $noAnnotationClass = 'FOS\RestBundle\Controller\Annotations\NoRoute';
             if (null !== $this->reader->getMethodAnnotation($method, $noAnnotationClass)) {
                 continue;
