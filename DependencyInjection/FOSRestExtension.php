@@ -92,7 +92,11 @@ class FOSRestExtension extends Extension
         if (isset($config['format_listener'])) {
             $loader->load('format_listener.xml');
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
-            $container->setParameter($this->getAlias().'.default_format', $config['format_listener']['default_format']);
+            $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
+        }
+        
+        if (isset($config['routing_loader']) && isset($config['routing_loader']['default_format'])) {
+            $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
         }
 
         if ($config['frameworkextra_bundle']) {
