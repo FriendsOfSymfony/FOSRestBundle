@@ -58,8 +58,9 @@ class ControllerListener
     public function onCoreController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
-        // TODO get priorities from the controller action
+
 /*
+        // TODO get priorities from the controller action
         $action = $request->attributes->get('_controller');
         $controller = $event->getController();
         $priorities =
@@ -68,11 +69,13 @@ class ControllerListener
             $priorities = $this->defaultPriorities;
         }
 
+        $format = null;
         if (!empty($priorities)) {
             $format = $this->detectFormat($request, $priorities);
-            if (null === $format) {
-                $format = $this->defaultFormat;
-            }
+        }
+
+        if (null === $format) {
+            $format = $this->defaultFormat;
         }
 
         if (null === $format) {
