@@ -95,9 +95,7 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
         
-        if (isset($config['routing_loader']) && isset($config['routing_loader']['default_format'])) {
-            $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
-        }
+        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
 
         if ($config['frameworkextra_bundle']) {
             $loader->load('frameworkextra_bundle.xml');

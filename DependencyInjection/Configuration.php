@@ -85,6 +85,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('routing_loader')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('default_format')->defaultNull()->end()
                     ->end()
