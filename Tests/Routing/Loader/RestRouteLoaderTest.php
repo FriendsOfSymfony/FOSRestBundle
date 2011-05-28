@@ -77,12 +77,12 @@ class RestRouteLoaderTest extends LoaderTest
         // get the pattern for the prefixed controller, and verify it is prefixed
         $collection = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\AnnotatedPrefixedController', 'rest');
         $prefixedRoute = $collection->get('get_something');
-        $this->assertTrue(substr($prefixedRoute->getPattern(), 0, 9) == '/aprefix/');
+        $this->assertEquals('/aprefix/', substr($prefixedRoute->getPattern(), 0, 9));
 
         // get the pattern for the non-prefixed controller, and verify it's not prefixed
         $collection2 = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\UsersController', 'rest');
         $nonPrefixedRoute = $collection2->get('get_users');
-        $this->assertFalse(substr($nonPrefixedRoute->getPattern(), 0, 9) == '/aprefix/');
+        $this->assertNotEquals('/aprefix/', substr($nonPrefixedRoute->getPattern(), 0, 9));
     }
 
     /**

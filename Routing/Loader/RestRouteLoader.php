@@ -289,6 +289,9 @@ class RestRouteLoader implements LoaderInterface
             }
         }
 
+        $this->prefix = null;
+        $this->namePrefix = null;
+
         return $collection;
     }
 

@@ -31,7 +31,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      */
     public function testUsersFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('users_collection.xml');
+        $collection     = $this->loadFromXmlCollectionFixture('users_collection.xml');
         $etalonRoutes   = $this->loadEtalonRoutesInfo('users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
@@ -49,7 +49,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      */
     public function testPrefixedUsersFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('prefixed_users_collection.xml');
+        $collection     = $this->loadFromXmlCollectionFixture('prefixed_users_collection.xml');
         $etalonRoutes   = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
@@ -67,7 +67,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      *
      * @param   string  $fixtureName    name of the class fixture
      */
-    protected function loadFromYamlCollectionFixture($fixtureName)
+    protected function loadFromXmlCollectionFixture($fixtureName)
     {
         $collectionLoader = new RestXmlCollectionLoader(new FileLocator(
             array(__DIR__ . '/../../Fixtures/Routes')
