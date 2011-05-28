@@ -13,6 +13,9 @@ spl_autoload_register(function($class)
 {
     if (0 === strpos($class, 'FOS\\RestBundle\\')) {
         $path = implode('/', array_slice(explode('\\', $class), 2)).'.php';
+        if (!stream_resolve_include_path(__DIR__.'/../'.$path)) {
+            return false;
+        }
         require_once __DIR__.'/../'.$path;
         return true;
     }

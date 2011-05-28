@@ -93,10 +93,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $arguments = $loader->getArguments();
 
         $this->assertEquals('%' . $loaderClassParameter . '%', $loader->getClass());
-        $this->assertEquals(3, count($arguments));
+        $this->assertEquals(4, count($arguments));
         $this->assertEquals('service_container', (string) $arguments[0]);
         $this->assertEquals('controller_name_converter', (string) $arguments[1]);
         $this->assertEquals('annotation_reader', (string) $arguments[2]);
+        $this->assertEquals('%fos_rest.routing.loader.default_format%', (string) $arguments[3]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
     }
 

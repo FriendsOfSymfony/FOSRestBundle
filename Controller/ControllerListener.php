@@ -34,20 +34,20 @@ class ControllerListener
     protected $defaultPriorities;
 
     /**
-     * @var     string  default format name
+     * @var     string  fallback format name
      */
-    protected $defaultFormat;
+    protected $fallbackFormat;
 
     /**
      * Initialize ControllerListener.
      *
-     * @param   string  $defaultFormat      Default fallback format
+     * @param   string  $fallbackFormat     Default fallback format
      * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)
      */
-    public function __construct($defaultFormat, array $defaultPriorities = array())
+    public function __construct($fallbackFormat, array $defaultPriorities = array())
     {
         $this->defaultPriorities = $defaultPriorities;
-        $this->defaultFormat = $defaultFormat;
+        $this->fallbackFormat = $fallbackFormat;
     }
 
     /**
@@ -75,7 +75,7 @@ class ControllerListener
         }
 
         if (null === $format) {
-            $format = $this->defaultFormat;
+            $format = $this->fallbackFormat;
         }
 
         if (null === $format) {
