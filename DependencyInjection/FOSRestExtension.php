@@ -3,13 +3,12 @@
 namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Processor,
+    Symfony\Component\Config\FileLocator,
     Symfony\Component\HttpKernel\DependencyInjection\Extension,
     Symfony\Component\DependencyInjection\Reference,
     Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
     Symfony\Component\DependencyInjection\ContainerBuilder,
-    Symfony\Component\Config\FileLocator,
-    Symfony\Component\DependencyInjection\DefinitionDecorator;
+    Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /*
  * This file is part of the FOSRestBundle
@@ -39,10 +38,6 @@ class FOSRestExtension extends Extension
                 'xml'   => 'fos_rest.xml',
                 'html'  => 'fos_rest.html',
             ),
-            'default_normalizers' => array(
-                'fos_rest.constraint_violation_normalizer',
-                'fos_rest.constraint_violation_list_normalizer',
-            ),
         ));
 
         $processor = new Processor();
@@ -66,39 +61,23 @@ class FOSRestExtension extends Extension
                 $encoder->addTag('jms_serializer.encoder', array('format' => $format));
             }
 
-            foreach ($config['default_normalizers'] as $normalizer) {
-                if ($normalizer) {
-                    $normalizer = $container->getDefinition($normalizer);
-                    $normalizer->addTag('jms_serializer.normalizer');
-                }
-            }
-
-            if ($config['fallback_normalizer']) {
-                $container->setAlias('jms_serializer.default_normalizer', $config['fallback_normalizer']);
+            $priority = count($config['normalizers']);
+            foreach ($config['normalizers'] as $normalizer) {
+                $normalizer = $container->getDefinition($normalizer);
+                $normalizer->addTag('jms_serializer.normalizer', array('priority' => $priority--));
             }
 
             $container->setAlias('fos_rest.serializer', 'serializer');
         } else {
-            $loader->load('serializer.xml');
+            $serializer = $container->getDefinition('fos_rest.serializer');
 
-            $container->setParameter($this->getAlias().'.normalizers', $config['normalizers']);
-            foreach ($config['default_normalizers'] as $key => $normalizer) {
-                if (!$normalizer) {
-                    unset($config['default_normalizers'][$key]);
-                }
-            }
-            $container->setParameter($this->getAlias().'.default_normalizers', $config['default_normalizers']);
-
-            if (null ===  $config['fallback_normalizer']) {
-                $config['fallback_normalizer'] = 'fos_rest.noop_normalizer';
+            foreach ($config['formats'] as $format => $encoder) {
+                $serializer->addMethodCall('setEncoder', array($format, new Reference($encoder)));
             }
 
-            if ($config['fallback_normalizer']) {
-                $definition = $container->getDefinition('fos_rest.serializer');
-                $reference = new Reference($config['fallback_normalizer'], ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false);
-                $definition->replaceArgument(3, $reference);
+            foreach ($config['normalizers'] as $normalizer) {
+                $serializer->addMethodCall('addNormalizer', array(new Reference($normalizer)));
             }
-            $container->setParameter($this->getAlias().'.fallback_normalizer', $config['fallback_normalizer']);
         }
 
         foreach ($config['exception']['codes'] as $exception => $code) {
