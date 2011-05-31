@@ -26,8 +26,14 @@ class UsersController extends Controller
     public function postUsersAction()
     {} // [POST] /users
 
+    public function patchUsersAction()
+    {} // [PATCH] /users
+
     public function putUserAction($slug)
     {} // [PUT] /users/{slug}
+    
+    public function patchUserAction($slug)
+    {} // [PATCH] /users/{slug}
 
     public function lockUserAction($slug)
     {} // [PUT] /users/{slug}/lock
