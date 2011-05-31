@@ -12,11 +12,21 @@ post_users:
   method:     POST
   pattern:    /users.{_format}
   controller: ::postUsersAction
+  
+patch_users:
+  method:     PATCH
+  pattern:    /users.{_format}
+  controller: ::patchUsersAction
 
 put_user:
   method:     PUT
   pattern:    /users/{slug}.{_format}
   controller: ::putUserAction
+  
+patch_user:
+  method:     PATCH
+  pattern:    /users/{slug}.{_format}
+  controller: ::patchUserAction
 
 lock_user:
   method:     PUT
