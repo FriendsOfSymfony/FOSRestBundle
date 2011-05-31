@@ -13,8 +13,8 @@
     <services>
 
         <service id="rest.template_annotation" class="%rest.template_annotation.class%">
-            <tag name="kernel.listener" event="onCoreController" priority="-1" />
-            <tag name="kernel.listener" event="onCoreView" />
+            <tag name="kernel.listener" event="core.controller" method="onCoreController" priority="-1" />
+            <tag name="kernel.listener" event="core.view" method="onCoreView" />
             <argument type="service" id="service_container" />
         </service>
 
