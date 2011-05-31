@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  */
 
 /**
- * PUT Route annotation class.
+ * PATCH Route annotation class.
  */
 class Patch extends Route
 {
