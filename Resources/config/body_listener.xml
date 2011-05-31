@@ -7,7 +7,7 @@
     <services>
 
         <service id="fos_rest.body_listener" class="%fos_rest.body_listener.class%">
-            <tag name="kernel.listener" event="oncore.controller" method="CoreRequest" />
+            <tag name="kernel.listener" event="core.request" method="onCoreRequest" />
             <argument type="service" id="fos_rest.serializer"/>
         </service>
 
