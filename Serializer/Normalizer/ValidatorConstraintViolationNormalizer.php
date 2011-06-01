@@ -29,10 +29,7 @@ class ValidatorConstraintViolationNormalizer extends SerializerAwareNormalizer
      */
     public function normalize($object, $format = null)
     {
-        return array(
-          "propertyPath" => $object->getPropertyPath(),
-          "message" => $object->getMessage()
-        );
+        return $object->getPropertyPath().': '.$object->getMessage();
     }
 
     /**
