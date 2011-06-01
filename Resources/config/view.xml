@@ -19,7 +19,6 @@
         <service id="fos_rest.pass_thru_normalizer" class="FOS\RestBundle\Serializer\Normalizer\PassThruNormalizer" />
 
         <service id="fos_rest.constraint_violation_normalizer" class="FOS\RestBundle\Serializer\Normalizer\ValidatorConstraintViolationNormalizer" />
-        <service id="fos_rest.constraint_violation_list_normalizer" class="FOS\RestBundle\Serializer\Normalizer\ValidatorConstraintViolationListNormalizer" />
 
         <service id="fos_rest.json" class="%fos_rest.json.class%" />
 
