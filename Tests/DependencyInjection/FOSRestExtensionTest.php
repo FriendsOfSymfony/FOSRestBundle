@@ -110,11 +110,13 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     private function assertValidRestFileLoader(Definition $loader, $loaderClassParameter)
     {
         $locatorRef = new Reference('file_locator');
+        $processorRef = new Reference('fos_rest.routing.loader.processor');
         $arguments  = $loader->getArguments();
 
         $this->assertEquals('%' . $loaderClassParameter . '%', $loader->getClass());
-        $this->assertEquals(1, count($arguments));
+        $this->assertEquals(2, count($arguments));
         $this->assertEquals($locatorRef, $arguments[0]);
+        $this->assertEquals($processorRef, $arguments[1]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
     }
 }

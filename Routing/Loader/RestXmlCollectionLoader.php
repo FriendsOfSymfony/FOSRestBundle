@@ -2,13 +2,15 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
-use Symfony\Component\Config\Resource\FileResource,
+use Symfony\Component\Config\FileLocatorInterface,
+    Symfony\Component\Config\Resource\FileResource,
     Symfony\Component\Routing\Loader\XmlFileLoader,
     Symfony\Component\Config\Loader\FileLoader,
     Symfony\Component\Routing\RouteCollection,
     Symfony\Component\Routing\Route;
 
-use FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Routing\RestRouteCollection,
+    FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 
 /*
  * This file is part of the FOSRestBundle
@@ -31,6 +33,15 @@ class RestXmlCollectionLoader extends XmlFileLoader
     protected $collectionParents = array();
 
     private $currentDir;
+    
+    private $processor;
+
+    public function __construct(FileLocatorInterface $locator, RestRouteProcessor $processor)
+    {
+        parent::__construct($locator);
+        
+        $this->processor = $processor;
+    }
 
     /**
      * @inheritDoc
@@ -60,7 +71,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                     $parents = $this->collectionParents[$parent];
                 }
 
-                $imported = $this->importResource($resource, $parents, $prefix, $namePrefix, $type);
+                $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type);
 
                 if (!empty($name) && $imported instanceof RestRouteCollection) {
                     $parents[]  = (!empty($prefix) ? $prefix . '/' : '') . $imported->getSingularName();
@@ -89,33 +100,6 @@ class RestXmlCollectionLoader extends XmlFileLoader
         return is_string($resource) &&
             'xml' === pathinfo($resource, PATHINFO_EXTENSION) &&
             'rest' === $type;
-    }
-
-    /**
-     * Import & return routes collection from a resource.
-     *
-     * @param   mixed   $resource   A Resource
-     * @param   array   $parents    Array of parent resources names
-     * @param   string  $prefix     Current routes prefix
-     * @param   string  $namePrefix Routes names prefix
-     * @param   string  $type       The resource type
-     *
-     * @return  RouteCollection     A RouteCollection instance
-     */
-    protected function importResource($resource, array $parents = array(), $prefix = null,
-                                      $namePrefix = null, $type = null)
-    {
-        $loader = $this->resolve($resource, $type);
-
-        if ($loader instanceof FileLoader && null !== $this->currentDir) {
-            $resource = $this->getAbsolutePath($resource, $this->currentDir);
-        } elseif ($loader instanceof RestRouteLoader) {
-            $loader->setParents($parents);
-            $loader->setPrefix($prefix);
-            $loader->setRouteNamesPrefix($namePrefix);
-        }
-
-        return $loader->load($resource, $type);
     }
 
     /**
