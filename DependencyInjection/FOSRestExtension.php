@@ -40,7 +40,6 @@ class FOSRestExtension extends Extension
             ),
             'default_normalizers' => array(
                 'fos_rest.constraint_violation_normalizer',
-                'fos_rest.constraint_violation_list_normalizer',
             ),
         ));
 
