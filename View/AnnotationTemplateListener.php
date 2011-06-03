@@ -50,8 +50,10 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
             }
 
             $parameters = array();
-            foreach ($vars as $var) {
-                $parameters[$var] = $request->attributes->get($var);
+            if (is_array($vars)) {
+                foreach ($vars as $var) {
+                    $parameters[$var] = $request->attributes->get($var);
+                }
             }
 
             $view->setParameters($parameters);
