@@ -1,13 +1,15 @@
 <?php
 
-namespace FOS\RestBundle\View;
+namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use Sensio\Bundle\FrameworkExtraBundle\View\AnnotationTemplateListener as BaseAnnotationTemplateListener;
+use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener as BaseAnnotationTemplateListener;
+
+use FOS\RestBundle\View\View;
 
 /*
  * This file is part of the FOSRestBundle

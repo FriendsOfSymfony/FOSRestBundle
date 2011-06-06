@@ -13,10 +13,20 @@ post_users:
   pattern:    /resources/all/users.{_format}
   controller: ::postUsersAction
 
+patch_users:
+  method:     PATCH
+  pattern:    /resources/all/users.{_format}
+  controller: ::patchUsersAction
+
 put_user:
   method:     PUT
   pattern:    /resources/all/users/{slug}.{_format}
   controller: ::putUserAction
+
+patch_user:
+  method:     PATCH
+  pattern:    /resources/all/users/{slug}.{_format}
+  controller: ::patchUserAction
 
 lock_user:
   method:     PUT

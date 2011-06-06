@@ -64,12 +64,13 @@ class RestRouteLoader implements LoaderInterface
         $this->parser               = $parser;
         $this->reader               = $reader;
         $this->defaultFormat        = $defaultFormat;
-        $this->availableHTTPMethods = array('get', 'post', 'put', 'delete', 'head');
+        $this->availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'head');
         $this->annotationClasses    = array(
             'FOS\RestBundle\Controller\Annotations\Route',
             'FOS\RestBundle\Controller\Annotations\Get',
             'FOS\RestBundle\Controller\Annotations\Post',
             'FOS\RestBundle\Controller\Annotations\Put',
+            'FOS\RestBundle\Controller\Annotations\Patch',
             'FOS\RestBundle\Controller\Annotations\Delete',
             'FOS\RestBundle\Controller\Annotations\Head'
         );

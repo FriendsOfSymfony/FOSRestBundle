@@ -1,6 +1,6 @@
 <?php
 
-namespace FOS\RestBundle\Request;
+namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
@@ -50,7 +50,7 @@ class RequestListener
         $request = $event->getRequest();
 
         if (0 == count($request->request->all())
-            && in_array($request->getMethod(), array('POST', 'PUT', 'DELETE'))
+            && in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))
         ) {
             $format = $request->getFormat($request->headers->get('Content-Type'));
             if (null === $format) {
