@@ -1,6 +1,6 @@
 <?php
 
-namespace FOS\RestBundle\Controller;
+namespace FOS\RestBundle\Listener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\Serializer\SerializerInterface,

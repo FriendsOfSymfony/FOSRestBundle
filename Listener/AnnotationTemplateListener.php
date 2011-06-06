@@ -1,6 +1,6 @@
 <?php
 
-namespace FOS\RestBundle\View;
+namespace FOS\RestBundle\Listener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
