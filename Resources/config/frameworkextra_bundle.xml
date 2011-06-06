@@ -6,7 +6,7 @@
 
     <parameters>
 
-        <parameter key="rest.template_annotation.class">FOS\RestBundle\View\AnnotationTemplateListener</parameter>
+        <parameter key="rest.template_annotation.class">FOS\RestBundle\EventListener\AnnotationTemplateListener</parameter>
 
     </parameters>
 
