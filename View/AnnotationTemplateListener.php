@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use Sensio\Bundle\FrameworkExtraBundle\View\AnnotationTemplateListener as BaseAnnotationTemplateListener;
+use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener as BaseAnnotationTemplateListener;
 
 /*
  * This file is part of the FOSRestBundle
