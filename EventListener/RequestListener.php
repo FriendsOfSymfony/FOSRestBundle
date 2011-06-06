@@ -1,6 +1,6 @@
 <?php
 
-namespace FOS\RestBundle\Listener;
+namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
