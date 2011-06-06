@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
 
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener as BaseAnnotationTemplateListener;
 
+use FOS\RestBundle\View\View;
+
 /*
  * This file is part of the FOSRestBundle
  *
