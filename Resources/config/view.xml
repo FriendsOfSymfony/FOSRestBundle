@@ -31,7 +31,10 @@
             </call>
         </service>
 
-        <service id="fos_rest.serializer" class="%fos_rest.serializer.class%" />
+        <service id="fos_rest.serializer" class="%fos_rest.serializer.class%">
+            <argument type="collection"></argument>
+            <argument type="collection"></argument>
+        </service>
 
         <service id="fos_rest.view" class="%fos_rest.view.class%">
             <argument>%fos_rest.formats%</argument>
