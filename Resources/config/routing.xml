@@ -9,6 +9,7 @@
         <parameter key="fos_rest.routing.loader.controller.class">FOS\RestBundle\Routing\Loader\RestRouteLoader</parameter>
         <parameter key="fos_rest.routing.loader.yaml_collection.class">FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader</parameter>
         <parameter key="fos_rest.routing.loader.xml_collection.class">FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader</parameter>
+        <parameter key="fos_rest.routing.loader.processor.class">FOS\RestBundle\Routing\Loader\RestRouteProcessor</parameter>
 
     </parameters>
 
@@ -22,13 +23,18 @@
             <tag name="routing.loader" />
         </service>
 
+        <service id="fos_rest.routing.loader.processor" class="%fos_rest.routing.loader.processor.class%">
+        </service>
+
         <service id="fos_rest.routing.loader.yaml_collection" class="%fos_rest.routing.loader.yaml_collection.class%">
             <argument type="service" id="file_locator" />
+            <argument type="service" id="fos_rest.routing.loader.processor" />
             <tag name="routing.loader" />
         </service>
 
         <service id="fos_rest.routing.loader.xml_collection" class="%fos_rest.routing.loader.xml_collection.class%">
             <argument type="service" id="file_locator" />
+            <argument type="service" id="fos_rest.routing.loader.processor" />
             <tag name="routing.loader" />
         </service>
 
