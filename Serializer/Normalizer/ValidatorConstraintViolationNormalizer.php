@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface,
  */
 
 /**
- * Converts a ConstraintViolation instance to an array of errors
+ * Converts a ConstraintViolation instance to an array containing the error
  *
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */

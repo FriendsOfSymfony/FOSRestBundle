@@ -6,6 +6,7 @@ use Symfony\Component\Config\Loader\LoaderResolver,
     Symfony\Component\Config\FileLocator;
 
 use FOS\RestBundle\Routing\Loader\RestRouteLoader,
+    FOS\RestBundle\Routing\Loader\RestRouteProcessor,
     FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader;
 
 /*
@@ -69,9 +70,10 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      */
     protected function loadFromXmlCollectionFixture($fixtureName)
     {
-        $collectionLoader = new RestXmlCollectionLoader(new FileLocator(
-            array(__DIR__ . '/../../Fixtures/Routes')
-        ));
+        $collectionLoader = new RestXmlCollectionLoader(
+            new FileLocator(array(__DIR__ . '/../../Fixtures/Routes')),
+            new RestRouteProcessor()
+        );
         $controllerLoader = $this->getControllerLoader();
 
         $resolver = new LoaderResolver(array($collectionLoader, $controllerLoader));
