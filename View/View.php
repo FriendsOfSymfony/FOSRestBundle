@@ -61,9 +61,14 @@ class View implements ContainerAwareInterface
     protected $failedValidation;
 
     /**
-     * @var array redirect configuration
+     * @var array target uri
      */
-    protected $redirect;
+    protected $location;
+
+    /**
+     * @var Boolean if to force a redirect for the given format (key) for an Codes::HTTP_CREATED
+     */
+    protected $forceRedirects;
 
     /**
      * @var string|TemplateReference template
@@ -106,12 +111,14 @@ class View implements ContainerAwareInterface
      * @param array $formats The supported formats
      * @param int $failedValidation The HTTP response status code for a failed validation
      * @param string $defaultFormKey The default parameter form key
+     * @param array $forceRedirects For which formats to force redirection even for targets without a 3xx status code
      */
     public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST, $defaultFormKey = 'form')
     {
         $this->formats = (array)$formats;
         $this->failedValidation = $failedValidation;
         $this->defaultFormKey = $defaultFormKey;
+        $this->forceRedirects = (array)$forceRedirects;
     }
 
     /**
@@ -124,7 +131,7 @@ class View implements ContainerAwareInterface
         $this->format = null;
         $this->engine = 'twig';
         $this->parameters = array();
-        $this->code = null;
+        $this->code = Codes::HTTP_OK;
         $this->formKey = $this->defaultFormKey;
     }
 
@@ -172,13 +179,23 @@ class View implements ContainerAwareInterface
      * @param array $parameters route parameters
      * @param int $code HTTP status code
      */
-    public function setRouteRedirect($route, array $parameters = array(), $code = Codes::HTTP_FOUND)
+    public function setResourceRoute($route, array $parameters = array(), $code = Codes::HTTP_CREATED)
     {
-        $this->redirect = array(
-            'route' => $route,
-            'parameters' => $parameters,
-            'status_code' => $code,
-        );
+        $this->setLocation($this->container->get('router')->generate($route, $parameters, true));
+        $this->setStatusCode($code);
+    }
+
+    /**
+     * Sets a redirect using a route and parameters
+     *
+     * @param string $route route name
+     * @param array $parameters route parameters
+     * @param int $code HTTP status code
+     */
+    public function setRedirectRoute($route, array $parameters = array(), $code = Codes::HTTP_FOUND)
+    {
+        $this->setLocation($this->container->get('router')->generate($route, $parameters, true));
+        $this->setStatusCode($code);
     }
 
     /**
@@ -187,9 +204,36 @@ class View implements ContainerAwareInterface
      * @param string $uri URI
      * @param int $code HTTP status code
      */
-    public function setUriRedirect($uri, $code = Codes::HTTP_FOUND)
+    public function setRedirectUri($uri, $code = Codes::HTTP_FOUND)
     {
-        $this->redirect = array('location' => $uri, 'status_code' => $code);
+        $this->setLocation($uri);
+        $this->setStatusCode($code);
+    }
+
+    /**
+     * Sets target location to use when recreating a response
+     *
+     * @param string $location target uri
+     *
+     * @throws \InvalidArgumentException if the location is empty
+     */
+    public function setLocation($location)
+    {
+        if (empty($location)) {
+            throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
+        }
+
+        $this->location = $location;
+    }
+
+    /**
+     * Gets target to use for creating the response
+     *
+     * @return string target uri
+     */
+    public function getLocation()
+    {
+        return $this->location;
     }
 
     /**
@@ -203,7 +247,7 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Sets a response HTTP status code for a failed validation
+     * Sets the response HTTP status code for a failed validation
      */
     public function setFailedValidationStatusCode()
     {
@@ -248,7 +292,7 @@ class View implements ContainerAwareInterface
             if (null === $this->formKey){
                 foreach ($parameters as $key => $parameter) {
                     if ($parameter instanceof FormInterface) {
-                        $this->formKey = $key;
+                        $this->setFormKey($key);
                         $form = $parameter;
                         break;
                     }
@@ -262,22 +306,12 @@ class View implements ContainerAwareInterface
             if (isset($form)) {
                 // Check if the form is valid, return an appropriate response code
                 if ($form->isBound() && !$form->isValid()) {
-                    return $this->failedValidation;
+                    $this->setFailedValidationStatusCode();
                 }
             }
         }
 
-        return Codes::HTTP_OK;
-    }
-
-    /**
-     * Gets a redirect
-     *
-     * @return array redirect location and status code
-     */
-    public function getRedirect()
-    {
-        return $this->redirect;
+        return $this->getStatusCode();
     }
 
     /**
@@ -421,12 +455,14 @@ class View implements ContainerAwareInterface
             $request = $this->container->get('request');
         }
 
+        $code = $this->getStatusCode();
         if (null === $response) {
-            $code = $this->getStatusCode();
             if (null === $code) {
                 $code = $this->getStatusCodeFromParameters();
             }
             $response = new Response('' , $code);
+        } else {
+            $response->setStatusCode($code);
         }
 
         $format = $this->getFormat();
@@ -456,7 +492,7 @@ class View implements ContainerAwareInterface
     /**
      * Generic transformer
      *
-     * Handles redirects, or transforms the parameters into a response content
+     * Handles target and parameter transformation into a response
      *
      * @param Request $request
      * @param Response $response
@@ -466,19 +502,24 @@ class View implements ContainerAwareInterface
      */
     protected function transform(Request $request, Response $response, $format)
     {
-        if ($this->redirect) {
-            // TODO add support to optionally return the target url
-            if (empty($this->redirect['location'])) {
-                // TODO add support to optionally forward to the route
-                $this->redirect['location'] = $this->container->get('router')->generate($this->redirect['route'], $this->redirect['parameters']);
+        $parameters = $this->getParameters();
+
+        $location = $this->getLocation();
+        if ($location) {
+            if (!empty($this->forceRedirects[$format]) && !$response->isRedirect()) {
+                $response->setStatusCode(Codes::HTTP_FOUND);
             }
-            $redirect = new RedirectResponse($this->redirect['location'], $this->redirect['status_code']);
-            $response->setContent($redirect->getContent());
-            $response->headers->set('Location', $redirect->headers->get('Location'));
+
+            if ('html' === $format && $response->isRedirect()) {
+                $redirect = new RedirectResponse($location, $response->getStatusCode());
+                $response->setContent($redirect->getContent());
+            }
+
+            $response->headers->set('Location', $location);
+
             return $response;
         }
 
-        $parameters = $this->getParameters();
         $serializer = $this->getSerializer();
         $encoder = $serializer->getEncoder($format);
 

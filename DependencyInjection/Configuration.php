@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->fixXmlConfig('format', 'formats')
+            ->fixXmlConfig('force_redirect', 'force_redirects')
             ->fixXmlConfig('normalizer', 'normalizers')
             ->fixXmlConfig('default_normalizer', 'default_normalizers')
             ->fixXmlConfig('class', 'classes')
@@ -54,6 +55,10 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                 ->end()
                 ->scalarNode('fallback_normalizer')->defaultValue('fos_rest.noop_normalizer')->end()
+                ->arrayNode('force_redirects')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')->end()
+                ->end()
                 ->arrayNode('normalizers')
                     ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()

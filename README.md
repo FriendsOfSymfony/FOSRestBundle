@@ -84,7 +84,10 @@ Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
 support for xml.
 
-Also the default JSON encoder class is modified and a custom serializer service
+When using View::setResourceRoute() the default behavior of forcing
+a redirect to the route for html is disabled.
+
+The default JSON encoder class is modified and a custom serializer service
 is configured.
 
 The a normalizer is registered for the class ``Acme\HelloBundle\Document\Article``
@@ -101,6 +104,8 @@ Finally the HTTP response status code for failed validation is set to ``400``:
         formats:
             rss: my.encoder.rss
             xml: false
+        force_redirects:
+            html: false
         normalizers:
             "Acme\HelloBundle\Document\Article": "my.article_normalizer"
         default_normalizers:

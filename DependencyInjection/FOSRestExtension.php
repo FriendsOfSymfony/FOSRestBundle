@@ -41,6 +41,9 @@ class FOSRestExtension extends Extension
             'default_normalizers' => array(
                 'fos_rest.constraint_violation_normalizer',
             ),
+            'force_redirects' => array(
+                'html'  => true,
+            ),
         ));
 
         $processor = new Processor();
@@ -71,6 +74,8 @@ class FOSRestExtension extends Extension
             $definition->replaceArgument(3, $reference);
         }
         $container->setParameter($this->getAlias().'.fallback_normalizer', $config['fallback_normalizer']);
+
+        $container->setParameter($this->getAlias().'.force_redirects', $config['force_redirects']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (is_string($code)) {
