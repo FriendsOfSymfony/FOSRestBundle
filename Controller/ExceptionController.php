@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the FOSUserBundle package.
+ * This file is part of the FOSRestBundle package.
  *
  * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
  *
