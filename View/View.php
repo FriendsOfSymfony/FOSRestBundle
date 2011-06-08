@@ -132,16 +132,6 @@ class View implements ContainerAwareInterface
     }
 
     /**
-     * Sets what formats are supported
-     *
-     * @param array $formats list of supported formats
-     */
-    public function setFormats($formats)
-    {
-        $this->formats = array_replace($this->formats, $formats);
-    }
-
-    /**
      * Verifies whether the given format is supported by this view
      *
      * @param string $format format name
