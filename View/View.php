@@ -111,7 +111,7 @@ class View implements ContainerAwareInterface
      * @param string $defaultFormKey The default parameter form key
      * @param array $forceRedirects For which formats to force redirection even for targets without a 3xx status code
      */
-    public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST, $defaultFormKey = 'form')
+    public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST, $defaultFormKey = 'form', array $forceRedirects = null)
     {
         $this->formats = (array)$formats;
         $this->failedValidation = $failedValidation;
