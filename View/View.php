@@ -96,15 +96,22 @@ class View implements ContainerAwareInterface
     protected $formKey;
 
     /**
+     * @var string key that points to a FormInstance inside the parameters
+     */
+    protected $defaultFormKey;
+
+    /**
      * Constructor
      *
      * @param array $formats The supported formats
      * @param int $failedValidation The HTTP response status code for a failed validation
+     * @param string $defaultFormKey The default parameter form key
      */
-    public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST)
+    public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST, $defaultFormKey = 'form')
     {
         $this->formats = (array)$formats;
         $this->failedValidation = $failedValidation;
+        $this->defaultFormKey = $defaultFormKey;
     }
 
     /**
@@ -118,7 +125,7 @@ class View implements ContainerAwareInterface
         $this->engine = 'twig';
         $this->parameters = array();
         $this->code = null;
-        $this->formKey = $this->container->getParameter('fos_rest.default_form_key');
+        $this->formKey = $this->defaultFormKey;
     }
 
     /**
