@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the FOSUserBundle package.
+ *
+ * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FOS\RestBundle\Routing\Loader;
 
 use Symfony\Component\Config\Loader\FileLoader,
@@ -7,17 +16,6 @@ use Symfony\Component\Config\Loader\FileLoader,
     Symfony\Component\Routing\RouteCollection;
 
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
-
-/*
- * This file is part of the FOSRestBundle
- *
- * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
- * (c) Konstantin Kudryashov <ever.zet@gmail.com>
- * (c) Bulat Shakirzyanov <mallluhuct@gmail.com>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
 
 /**
  * @author Donald Tyler <chekote69@gmail.com>
