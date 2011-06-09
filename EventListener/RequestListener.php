@@ -57,7 +57,7 @@ class RequestListener
                 return;
             }
 
-            if (!$this->serializer->hasDecoder($format)) {
+            if (!$this->serializer->supportsDecoding($format)) {
                 return;
             }
 
