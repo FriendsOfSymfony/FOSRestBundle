@@ -173,6 +173,8 @@ Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 JMSSerializerBundle support
 ---------------------------
 
+Note: Temporarily please use this fork https://github.com/lsmith77/SerializerBundle/tree/use_core
+
 This requires adding the JMSSerializerBundle to you vendors:
 
     $ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/JMSSerializerBundle
