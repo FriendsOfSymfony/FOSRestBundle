@@ -84,7 +84,10 @@ Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
 support for xml.
 
-Also the default JSON encoder class is modified and a custom serializer service
+When using View::setResourceRoute() the default behavior of forcing
+a redirect to the route for html is disabled.
+
+The default JSON encoder class is modified and a custom serializer service
 is configured.
 
 The a default normalizer is registered with the ``fos_rest.get_set_method_normalizer`.
@@ -98,6 +101,8 @@ Finally the HTTP response status code for failed validation is set to ``400``:
         formats:
             rss: my.encoder.rss
             xml: false
+        force_redirects:
+            html: false
         normalizers:
             - "fos_rest.get_set_method_normalizer"
         default_form_key: form
@@ -333,7 +338,10 @@ Last step is mapping of your collection routes into the application `routing.yml
       type:     rest
       resource: "@AcmeHello/Resources/config/users_routes.yml"
 
-That's all.
+That's all. Note that it's important to use the `type: rest` param when including your application's 
+routing file. Without it, rest routes will still work but resource collections will fail. If you get an 
+exception that contains `...routing loader does not support given key: "parent"...` then you are most likely missing 
+the `type: rest` param in your application level routes include.
 
 ## Routes naming
 
