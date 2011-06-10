@@ -71,17 +71,17 @@ class FOSRestExtension extends Extension
         } else {
             $serializer = $container->getDefinition('fos_rest.serializer');
 
-            $encoders = array();
-            foreach ($config['formats'] as $format => $encoder) {
-                $encoders[$format] = new Reference($encoder);
-            }
-            $serializer->replaceArgument(0, $encoders);
-
             $normalizers = array();
             foreach ($config['normalizers'] as $normalizer) {
                 $normalizers[] = new Reference($normalizer);
             }
-            $serializer->replaceArgument(1, $normalizers);
+            $serializer->replaceArgument(0, $normalizers);
+
+            $encoders = array();
+            foreach ($config['formats'] as $format => $encoder) {
+                $encoders[$format] = new Reference($encoder);
+            }
+            $serializer->replaceArgument(1, $encoders);
         }
 
         foreach ($config['exception']['codes'] as $exception => $code) {
