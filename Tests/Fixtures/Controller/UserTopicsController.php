@@ -18,9 +18,6 @@ class UserTopicsController extends Controller
     public function getTopicsAction($slug)
     {} // [GET] /users/{slug}/topics
 
-    public function newTopicsAction($slug)
-    {} // [GET] /users/{slug}/topics/new
-
     public function getTopicAction($slug, $title)
     {} // [GET] /users/{slug}/topics/{title}
 
@@ -29,4 +26,15 @@ class UserTopicsController extends Controller
 
     public function hideTopicAction($slug, $title)
     {} // [PUT] /users/{slug}/topics/{title}/hide
+
+    // HATEOS controllers below
+
+    public function newTopicsAction($slug)
+    {} // [GET] /users/{slug}/topics/new
+
+    public function editTopicAction($slug, $title)
+    {} // [GET] /users/{slug}/topics/{title}/edit
+
+    public function removeTopicAction($slug, $title)
+    {} // [GET] /remove/{slug}/topics/{title}/remove
 }

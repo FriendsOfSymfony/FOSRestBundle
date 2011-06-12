@@ -35,7 +35,7 @@ class RestRouteLoader implements LoaderInterface
     protected $container;
     protected $parser;
     protected $availableHTTPMethods;
-    protected $availableHypertextGets;
+    protected $availableHateosActions; 
     protected $annotationClasses;
     protected $parents = array();
     protected $prefix;
@@ -64,7 +64,7 @@ class RestRouteLoader implements LoaderInterface
         $this->reader               = $reader;
         $this->defaultFormat        = $defaultFormat;
         $this->availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'head');
-        $this->availableHypertextGets = array('new', 'edit', 'remove');
+        $this->availableHateosActions = array('new', 'edit', 'remove');
         $this->annotationClasses    = array(
             'FOS\RestBundle\Controller\Annotations\Route',
             'FOS\RestBundle\Controller\Annotations\Get',
@@ -252,11 +252,10 @@ class RestRouteLoader implements LoaderInterface
                 if (!in_array($httpMethod, $this->availableHTTPMethods)) {
                     $urlParts[] = $httpMethod;
 
-                    // allow hyptext as the engine of application state
-                    if (in_array($httpMethod, $this->availableHypertextGets)) {
+                    // allow hypertext as the engine of application state
+                    if (in_array($httpMethod, $this->availableHateosActions)) {
                         $httpMethod = 'get';
                     } else {
-
                         //custom object
                         $httpMethod = 'put';
 

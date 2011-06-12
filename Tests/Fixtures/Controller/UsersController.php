@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends Controller
 {
@@ -45,12 +46,6 @@ class UsersController extends Controller
     public function deleteUserCommentAction($slug, $id)
     {} // [DELETE] /users/{slug}/comments/{id}
 
-    public function newUsersAction()
-    {} // [GET] /users/new
-
-    public function newUserCommentsAction($slug)
-    {} // [GET] /users/{slug}/comments/new
-
     public function banUserAction($slug, $id)
     {} // [PUT] /users/{slug}/ban
 
@@ -62,4 +57,25 @@ class UsersController extends Controller
 
     public function check_usernameUsersAction()
     {} // [GET] /users/check_username
+
+    // HATEOS controllers below
+
+    public function newUsersAction()
+    {
+    } // [GET] /users/new
+
+    public function editUserAction($slug)
+    {} // [GET] /user/{slug}/edit
+
+    public function removeUserAction($slug)
+    {} // [GET] /user/{slug}/remove
+
+    public function newUserCommentsAction($slug)
+    {} // [GET] /users/{slug}/comments/new
+
+    public function editUserCommentAction($slug, $id)
+    {} // [GET] /users/{slug}/comments/{id}/edit
+
+    public function removeUserCommentAction($slug, $id)
+    {} // [GET] /users/{slug}/comments/{id}/remove
 }
