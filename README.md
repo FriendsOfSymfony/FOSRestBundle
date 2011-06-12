@@ -306,10 +306,10 @@ Shown as `UsersController::putUserAction()` above.
 * **delete** - this action accepts *DELETE* requests to the url */resources/{id}* and deltes a single resource for this
 type. Shown as `UsersController::deleteUserAction()` above.
 
-### HATEOS Actions
+### HATEOAS Actions
 
-HATEOS, or Hypermedia as the Engine of Application State, is an aspect of REST which allows clients to interact with the
-REST service through hypertext - most commonly through an HTML page. There are 3 HATEOS actions routings that are
+HATEOAS, or Hypermedia as the Engine of Application State, is an aspect of REST which allows clients to interact with the
+REST service through hypertext - most commonly through an HTML page. There are 3 HATEOAS actions routings that are
 supported by this bundle:
 
 * **new** - A hypermedia representation that acts as the engine to *POST*. Typically this is a form that allows the client

@@ -27,7 +27,7 @@ class UserTopicsController extends Controller
     public function hideTopicAction($slug, $title)
     {} // [PUT] /users/{slug}/topics/{title}/hide
 
-    // HATEOS controllers below
+    // HATEOAS actions below
 
     public function newTopicsAction($slug)
     {} // [GET] /users/{slug}/topics/new

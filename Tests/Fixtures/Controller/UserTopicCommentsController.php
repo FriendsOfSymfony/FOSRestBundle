@@ -24,7 +24,7 @@ class UserTopicCommentsController extends Controller
     public function banCommentAction($slug, $title, $id)
     {} // [PUT] /users/{slug}/topics/{title}/comments/{id}/ban
 
-    // HATEOS controllers below
+    // HATEOAS actions below
 
     public function newCommentsAction($slug, $title)
     {} // [GET] /users/{slug}/topics/{title}/comments/new
