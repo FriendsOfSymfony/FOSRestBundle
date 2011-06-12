@@ -129,7 +129,7 @@ class View implements ContainerAwareInterface
         $this->format = null;
         $this->engine = 'twig';
         $this->parameters = array();
-        $this->code = Codes::HTTP_OK;
+        $this->code = null;
         $this->formKey = $this->defaultFormKey;
     }
 
@@ -300,13 +300,13 @@ class View implements ContainerAwareInterface
             ) {
                 $form = $parameters[$this->formKey];
             }
+        }
 
-            if (isset($form)) {
-                // Check if the form is valid, return an appropriate response code
-                if ($form->isBound() && !$form->isValid()) {
-                    $this->setFailedValidationStatusCode();
-                }
-            }
+        // Check if the form is valid, return an appropriate response code
+        if (isset($form) && $form->isBound() && !$form->isValid()) {
+            $this->setFailedValidationStatusCode();
+        } else {
+            $this->setStatusCode(Codes::HTTP_OK);
         }
 
         return $this->getStatusCode();
