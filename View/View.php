@@ -64,7 +64,7 @@ class View implements ContainerAwareInterface
     protected $location;
 
     /**
-     * @var Boolean if to force a redirect for the given format (key) for an Codes::HTTP_CREATED
+     * @var array if to force a redirect for the given key format, with value being the status code to use
      */
     protected $forceRedirects;
 
@@ -106,10 +106,10 @@ class View implements ContainerAwareInterface
     /**
      * Constructor
      *
-     * @param array $formats The supported formats
-     * @param int $failedValidation The HTTP response status code for a failed validation
-     * @param string $defaultFormKey The default parameter form key
-     * @param array $forceRedirects For which formats to force redirection even for targets without a 3xx status code
+     * @param array $formats            The supported formats
+     * @param int $failedValidation     The HTTP response status code for a failed validation
+     * @param string $defaultFormKey    The default parameter form key
+     * @param array $forceRedirects     If to force a redirect for the given key format, with value being the status code to use
      */
     public function __construct(array $formats = null, $failedValidation = Codes::HTTP_BAD_REQUEST, $defaultFormKey = 'form', array $forceRedirects = null)
     {
@@ -126,7 +126,7 @@ class View implements ContainerAwareInterface
      */
     public function reset()
     {
-        $this->redirect = null;
+        $this->location = null;
         $this->template = null;
         $this->format = null;
         $this->engine = 'twig';
@@ -169,6 +169,10 @@ class View implements ContainerAwareInterface
      */
     public function registerHandler($format, $callback)
     {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Registered view callback must be callable.');
+        }
+
         $this->customHandlers[$format] = $callback;
     }
 
@@ -483,7 +487,9 @@ class View implements ContainerAwareInterface
         $this->reset();
 
         if (!($response instanceof Response)) {
-            $response = new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+            // TODO should we instead set the content/status code on the original response?
+            $content = "Format '$format' not supported, handler must be implemented";
+            $response = new Response($content, Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
 
         return $response;
@@ -502,8 +508,6 @@ class View implements ContainerAwareInterface
      */
     protected function transform(Request $request, Response $response, $format)
     {
-        $parameters = $this->getParameters();
-
         $location = $this->getLocation();
         if ($location) {
             if (!empty($this->forceRedirects[$format]) && !$response->isRedirect()) {
@@ -511,6 +515,8 @@ class View implements ContainerAwareInterface
             }
 
             if ('html' === $format && $response->isRedirect()) {
+                // TODO should we just duplicate the hmtl content?
+                // or should RedirectResponse we changed to offer a static method to generate the content?
                 $redirect = new RedirectResponse($location, $response->getStatusCode());
                 $response->setContent($redirect->getContent());
             }
@@ -519,6 +525,8 @@ class View implements ContainerAwareInterface
 
             return $response;
         }
+
+        $parameters = $this->getParameters();
 
         $serializer = $this->getSerializer();
         $encoder = $serializer->getEncoder($format);
