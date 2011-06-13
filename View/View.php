@@ -505,7 +505,7 @@ class View implements ContainerAwareInterface
         $location = $this->getLocation();
         if ($location) {
             if (!empty($this->forceRedirects[$format]) && !$response->isRedirect()) {
-                $response->setStatusCode(Codes::HTTP_FOUND);
+                $response->setStatusCode($this->forceRedirects[$format]);
             }
 
             if ('html' === $format && $response->isRedirect()) {

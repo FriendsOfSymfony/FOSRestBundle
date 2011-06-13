@@ -19,6 +19,8 @@ use Symfony\Component\Config\Definition\Processor,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
+use FOS\RestBundle\Response\Codes;
+
 class FOSRestExtension extends Extension
 {
     /**
@@ -85,6 +87,11 @@ class FOSRestExtension extends Extension
             $serializer->replaceArgument(1, $encoders);
         }
 
+        foreach ($config['force_redirects'] as $format => $code) {
+            if (true === $code) {
+                $config['force_redirects'][$format] = Codes::HTTP_CREATED;
+            }
+        }
         $container->setParameter($this->getAlias().'.force_redirects', $config['force_redirects']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
