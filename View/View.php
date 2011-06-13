@@ -117,6 +117,8 @@ class View implements ContainerAwareInterface
         $this->failedValidation = $failedValidation;
         $this->defaultFormKey = $defaultFormKey;
         $this->forceRedirects = (array)$forceRedirects;
+
+        $this->reset();
     }
 
     /**
