@@ -51,7 +51,7 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
-        $container->setParameter($this->getAlias().'.formats', $config['formats']);
+        $container->setParameter($this->getAlias().'.formats', array_keys($config['formats']));
         $container->setParameter($this->getAlias().'.default_form_key', $config['default_form_key']);
 
         foreach ($config['classes'] as $key => $value) {

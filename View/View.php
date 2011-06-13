@@ -49,7 +49,7 @@ class View implements ContainerAwareInterface
     protected $customHandlers = array();
 
     /**
-     * @var array key format, value a service id of an EncoderInterface instance
+     * @var array the supported formats
      */
     protected $formats;
 
@@ -152,7 +152,7 @@ class View implements ContainerAwareInterface
      */
     public function supports($format)
     {
-        return isset($this->customHandlers[$format]) || !empty($this->formats[$format]);
+        return isset($this->customHandlers[$format]) || in_array($format, $this->formats);
     }
 
     /**
