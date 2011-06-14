@@ -20,7 +20,7 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader,
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
 class RestRouteLoaderTest extends LoaderTest
-{
+{ 
     /**
      * Test that UsersController RESTful class gets parsed correctly.
      */
@@ -30,7 +30,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(15, count($collection->all()));
+        $this->assertEquals(18, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -84,9 +84,43 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * Test that HATEOAS controllers exist and are registered as GET methods
+     * 
+     * @see https://github.com/FriendsOfSymfony/RestBundle/issues/67
+     */
+    public function testHateoasActions()
+    {
+        $expectedMethod = 'GET';
+        $collection = $this->loadFromControllerFixture('UsersController');
+        $subcollection = $this->loadFromControllerFixture('UserTopicsController');
+        $subsubcollection = $this->loadFromControllerFixture('UserTopicCommentsController');
+
+        // resource actions
+        $this->assertEquals($expectedMethod, $collection->get('new_users')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('edit_user')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('remove_user')->getRequirement('_method'));
+
+        // subresource actions
+        $this->assertEquals($expectedMethod, $collection->get('new_user_comments')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('edit_user_comment')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('remove_user_comment')->getRequirement('_method'));
+
+        // resource collection actions
+        $this->assertEquals($expectedMethod, $subcollection->get('new_topics')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $subcollection->get('edit_topic')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $subcollection->get('remove_topic')->getRequirement('_method'));
+
+        // resource collection's resource collection actions
+        $this->assertEquals($expectedMethod, $subsubcollection->get('new_comments')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $subsubcollection->get('edit_comment')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $subsubcollection->get('remove_comment')->getRequirement('_method'));
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param   string  $fixtureName    name of the class fixture
+     * @return  Symfony\Component\Routing\RouteCollection
      */
     protected function loadFromControllerFixture($fixtureName)
     {

@@ -35,6 +35,7 @@ class RestRouteLoader implements LoaderInterface
     protected $container;
     protected $parser;
     protected $availableHTTPMethods;
+    protected $availableHateoasActions;
     protected $annotationClasses;
     protected $parents = array();
     protected $prefix;
@@ -63,6 +64,7 @@ class RestRouteLoader implements LoaderInterface
         $this->reader               = $reader;
         $this->defaultFormat        = $defaultFormat;
         $this->availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'head');
+        $this->availableHateaosActions = array('new', 'edit', 'remove');
         $this->annotationClasses    = array(
             'FOS\RestBundle\Controller\Annotations\Route',
             'FOS\RestBundle\Controller\Annotations\Get',
@@ -244,13 +246,23 @@ class RestRouteLoader implements LoaderInterface
                     }
                 }
 
-                // If passed method is not valid HTTP method, then it's custom object (PUT) or collection (GET) method
+                // If passed method is not valid HTTP method
+                // then it's either a hypertext driver,
+                // a custom object (PUT) or collection (GET) method
                 if (!in_array($httpMethod, $this->availableHTTPMethods)) {
                     $urlParts[] = $httpMethod;
-                    $httpMethod = 'put';
 
-                    if (count($arguments) < count($resources)) {
+                    // allow hypertext as the engine of application state
+                    if (in_array($httpMethod, $this->availableHateaosActions)) {
                         $httpMethod = 'get';
+                    } else {
+                        //custom object
+                        $httpMethod = 'put';
+
+                        // resource collection
+                        if (count($arguments) < count($resources)) {
+                            $httpMethod = 'get';
+                        }
                     }
                 }
 
