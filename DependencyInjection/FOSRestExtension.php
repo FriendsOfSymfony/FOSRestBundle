@@ -19,6 +19,8 @@ use Symfony\Component\Config\Definition\Processor,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
+use FOS\RestBundle\Response\Codes;
+
 class FOSRestExtension extends Extension
 {
     /**
@@ -49,7 +51,7 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
-        $container->setParameter($this->getAlias().'.formats', $config['formats']);
+        $container->setParameter($this->getAlias().'.formats', array_keys($config['formats']));
         $container->setParameter($this->getAlias().'.default_form_key', $config['default_form_key']);
 
         foreach ($config['classes'] as $key => $value) {
@@ -85,6 +87,11 @@ class FOSRestExtension extends Extension
             $serializer->replaceArgument(1, $encoders);
         }
 
+        foreach ($config['force_redirects'] as $format => $code) {
+            if (true === $code) {
+                $config['force_redirects'][$format] = Codes::HTTP_CREATED;
+            }
+        }
         $container->setParameter($this->getAlias().'.force_redirects', $config['force_redirects']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
