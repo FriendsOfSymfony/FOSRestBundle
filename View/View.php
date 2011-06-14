@@ -185,8 +185,8 @@ class View implements ContainerAwareInterface
      */
     public function setResourceRoute($route, array $parameters = array(), $code = Codes::HTTP_CREATED)
     {
-        $this->setLocation($this->container->get('router')->generate($route, $parameters, true));
-        $this->setStatusCode($code);
+        $uri = $this->container->get('router')->generate($route, $parameters, true);
+        $this->setRedirectUri($uri, $code);
     }
 
     /**
@@ -198,8 +198,8 @@ class View implements ContainerAwareInterface
      */
     public function setRedirectRoute($route, array $parameters = array(), $code = Codes::HTTP_FOUND)
     {
-        $this->setLocation($this->container->get('router')->generate($route, $parameters, true));
-        $this->setStatusCode($code);
+        $uri = $this->container->get('router')->generate($route, $parameters, true);
+        $this->setRedirectUri($uri, $code);
     }
 
     /**
