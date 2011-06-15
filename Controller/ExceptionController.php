@@ -97,7 +97,7 @@ class ExceptionController extends BaseExceptionController
         $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
 
-        return empty($exceptionMap[$exceptionClass]) ? '' : $exception->getMessage();
+        return isset($exceptionMap[$exceptionClass]) ? $exceptionMap[$exceptionClass] : $exception->getMessage();
     }
 
     /**
