@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    Symfony\Component\Form\FormInterface;
+    Symfony\Component\Form\FormInterface,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use FOS\RestBundle\Response\Codes,
     FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
@@ -149,7 +149,7 @@ class View implements ContainerAwareInterface
      * Verifies whether the given format is supported by this view
      *
      * @param string $format format name
-     * 
+     *
      * @return Boolean
      */
     public function supports($format)
@@ -289,22 +289,23 @@ class View implements ContainerAwareInterface
      */
     private function getStatusCodeFromParameters()
     {
-        $parameters = $this->getParameters();
-
-        if (false !== $this->formKey && is_array($parameters)) {
-            // Assign the formKey
-            if (null === $this->formKey){
-                foreach ($parameters as $key => $parameter) {
-                    if ($parameter instanceof FormInterface) {
-                        $this->setFormKey($key);
-                        $form = $parameter;
-                        break;
+        if (false !== $this->formKey) {
+            $parameters = $this->getParameters();
+            if (is_array($parameters)) {
+                // Assign the formKey
+                if (null === $this->formKey){
+                    foreach ($parameters as $key => $parameter) {
+                        if ($parameter instanceof FormInterface) {
+                            $this->setFormKey($key);
+                            $form = $parameter;
+                            break;
+                        }
                     }
+                } elseif (isset($parameters[$this->formKey])
+                    && $parameters[$this->formKey] instanceof FormInterface
+                ) {
+                    $form = $parameters[$this->formKey];
                 }
-            } elseif (isset($parameters[$this->formKey])
-                && $parameters[$this->formKey] instanceof FormInterface
-            ) {
-                $form = $parameters[$this->formKey];
             }
         }
 
@@ -342,7 +343,7 @@ class View implements ContainerAwareInterface
      * Sets template to use for the encoding
      *
      * @param string|TemplateReference $template template to be used in the encoding
-     * 
+     *
      * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReference
      */
     public function setTemplate($template)
@@ -350,7 +351,7 @@ class View implements ContainerAwareInterface
         if (!(is_string($template) || $template instanceof TemplateReference)) {
             throw new \InvalidArgumentException('The template should be a string or extend TemplateReference');
         }
-        
+
         $this->template = $template;
     }
 
