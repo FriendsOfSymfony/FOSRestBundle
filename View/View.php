@@ -13,7 +13,6 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\ContainerAwareInterface,
     Symfony\Component\Serializer\SerializerInterface,
@@ -513,13 +512,6 @@ class View implements ContainerAwareInterface
         if ($location) {
             if (!empty($this->forceRedirects[$format]) && !$response->isRedirect()) {
                 $response->setStatusCode($this->forceRedirects[$format]);
-            }
-
-            if ('html' === $format && $response->isRedirect()) {
-                // TODO should we just duplicate the hmtl content?
-                // or should RedirectResponse we changed to offer a static method to generate the content?
-                $redirect = new RedirectResponse($location, $response->getStatusCode());
-                $response->setContent($redirect->getContent());
             }
 
             $response->headers->set('Location', $location);
