@@ -58,7 +58,7 @@ class UsersController extends Controller
     public function check_usernameUsersAction()
     {} // [GET] /users/check_username
 
-    // HATEOAS actions below
+    // conventional HATEOAS actions below
 
     public function newUsersAction()
     {
