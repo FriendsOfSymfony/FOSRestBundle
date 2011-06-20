@@ -239,6 +239,9 @@ Notice `type: rest` option. It's required so that the RestBundle can find which 
         public function postUsersAction()
         {} // `post_users`   [POST] /users
 
+        public function patchUsersAction()
+        {} // `patch_users`   [PATCH] /users
+
         public function getUserAction($slug)
         {} // `get_user`     [GET] /users/{slug}
 
@@ -247,6 +250,9 @@ Notice `type: rest` option. It's required so that the RestBundle can find which 
 
         public function putUserAction($slug)
         {} // `put_user`     [PUT] /users/{slug}
+
+        public function patchUserAction($slug)
+        {} // `patch_user`   [PATCH] /users/{slug}
 
         public function lockUserAction($slug)
         {} // `lock_user`    [PUT] /users/{slug}/lock
@@ -294,7 +300,7 @@ as shown in the comments in the above example. Here are a few things to note:
 
 ### REST Actions
 
-There are 4 actions that have special meaning in regards to REST and have the following behavior:
+There are 5 actions that have special meaning in regards to REST and have the following behavior:
 
 * **get** - this action accepts *GET* requests to the url */resources* and returns all resources for this type. Shown as
 `UsersController::getUsersAction()` above. This action also accepts *GET* requests to the url */resources/{id}* and
@@ -305,6 +311,10 @@ as `UsersController::postUsersAction()` above.
 Shown as `UsersController::putUserAction()` above.
 * **delete** - this action accepts *DELETE* requests to the url */resources/{id}* and deltes a single resource for this
 type. Shown as `UsersController::deleteUserAction()` above.
+* **patch** - this action accepts *PATCH* requests to the url */resources* and is supposed to partially modify collection
+of resources (e.g. apply batch modifications to subset of resources). Shown as `UsersController::patchUsersAction()` above.
+This action also accepts *PATCH* requests to the url */resources/{id}* and is supposed to partially modify the resource. 
+Shown as `UsersController::patchUserAction()` above.
 
 ### HATEOAS Actions
 
