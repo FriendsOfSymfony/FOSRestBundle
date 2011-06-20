@@ -316,10 +316,10 @@ of resources (e.g. apply batch modifications to subset of resources). Shown as `
 This action also accepts *PATCH* requests to the url */resources/{id}* and is supposed to partially modify the resource. 
 Shown as `UsersController::patchUserAction()` above.
 
-### HATEOAS Actions
+### Conventional Actions
 
 HATEOAS, or Hypermedia as the Engine of Application State, is an aspect of REST which allows clients to interact with the
-REST service through hypertext - most commonly through an HTML page. There are 3 HATEOAS actions routings that are
+REST service with hypertext - most commonly through an HTML page. There are 3 Conventional Action routings that are
 supported by this bundle:
 
 * **new** - A hypermedia representation that acts as the engine to *POST*. Typically this is a form that allows the client
@@ -327,7 +327,7 @@ to *POST* a new resource. Shown as `UsersController::newUsersAction()` above.
 * **edit** - A hypermedia representation that acts as the engine to *PUT*. Typically this is a form that allows the client
 to *PUT*, or update, an existing resource. Shown as `UsersController::editUserAction()` above.
 * **remove** - A hypermedia representation that acts as the engine to *DELETE*. Typically this is a form that allows the
-client to *DELETE* an existing resource. Commonly a confirmation form. Shown as `UsersController::deleteUserAction()` above.
+client to *DELETE* an existing resource. Commonly a confirmation form. Shown as `UsersController::removeUserAction()` above.
 
 ### Custom PUT Actions
 
