@@ -84,11 +84,11 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
-     * Test that HATEOAS controllers exist and are registered as GET methods
+     * Test that conventional actions exist and are registered as GET methods
      * 
      * @see https://github.com/FriendsOfSymfony/RestBundle/issues/67
      */
-    public function testHateoasActions()
+    public function testConventionalActions()
     {
         $expectedMethod = 'GET';
         $collection = $this->loadFromControllerFixture('UsersController');
