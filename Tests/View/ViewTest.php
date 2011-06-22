@@ -48,7 +48,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testSetContainer()
     {
         $view = new View();
-        $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')
+        $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\ContainerInterface')
             ->disableOriginalConstructor()->getMock();
         $view->setContainer($container);
         $this->assertAttributeEquals($container, 'container', $view);
