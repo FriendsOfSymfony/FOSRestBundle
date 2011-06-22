@@ -391,6 +391,32 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             'not templating aware and invalid form' => array(array('foo' => 'bar', 'form' => array(0 => 'error', 1 => 'error')), '\stdClass', 0, 0, false, 'form', 1, 2),
         );
     }
+
+    /**
+     * @dataProvider handleResponseDataProvider
+     */
+    public function testHandleResponse($expected, $format, $response, $transformCalls = 0, $supportCalls = 0, $supported = false) {
+        $view = $this->getMock('\FOS\RestBundle\Tests\View\ViewProxy', array('transform', 'supports', 'callback'));
+        $view
+            ->expects($this->exactly($transformCalls))
+            ->method('transform')
+            ->will($this->returnArgument(1));
+        $view
+            ->expects($this->exactly($supportCalls))
+            ->method('supports')
+            ->will($this->returnValue($supported));
+        $view->registerHandler('html', function($this, $request, $response){return $response;});
+        $response = $view->handleResponse(new Request(), $response, $format);
+        $this->assertEquals($expected, $response->getStatusCode());
+    }
+
+    public static function handleResponseDataProvider() {
+        return array(
+            'no handler' => array(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, 'xml', new Response(), 0, 1),
+            'custom handler' => array(200, 'html', new Response()),
+            'transform called' => array(200, 'json', new Response(), 1, 1, true),
+        );
+    }
 }
 
 class ViewProxy extends View {
@@ -400,5 +426,9 @@ class ViewProxy extends View {
 
     public function transform(Request $request, Response $response, $format) {
         return parent::transform($request, $response, $format);
+    }
+
+    public function handleResponse($request, $response, $format) {
+        return parent::handleResponse($request, $response, $format);
     }
 }
