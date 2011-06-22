@@ -290,22 +290,7 @@ class View implements ContainerAwareInterface
     {
         if (false !== $this->formKey) {
             $parameters = $this->getParameters();
-            if (is_array($parameters)) {
-                // Assign the formKey
-                if (null === $this->formKey){
-                    foreach ($parameters as $key => $parameter) {
-                        if ($parameter instanceof FormInterface) {
-                            $this->setFormKey($key);
-                            $form = $parameter;
-                            break;
-                        }
-                    }
-                } elseif (isset($parameters[$this->formKey])
-                    && $parameters[$this->formKey] instanceof FormInterface
-                ) {
-                    $form = $parameters[$this->formKey];
-                }
-            }
+            $form = $this->assignFormKey($parameters);
         }
 
         // Check if the form is valid, return an appropriate response code
@@ -316,6 +301,27 @@ class View implements ContainerAwareInterface
         }
 
         return $this->getStatusCode();
+    }
+
+    protected function assignFormKey($parameters) {
+        $form = null;
+        if (is_array($parameters)) {
+            // Assign the formKey
+            if (null === $this->formKey){
+                foreach ($parameters as $key => $parameter) {
+                    if ($parameter instanceof FormInterface) {
+                        $this->setFormKey($key);
+                        $form = $parameter;
+                        break;
+                    }
+                }
+            } elseif (isset($parameters[$this->formKey])
+                && $parameters[$this->formKey] instanceof FormInterface
+            ) {
+                $form = $parameters[$this->formKey];
+            }
+        }
+        return $form;
     }
 
     /**
