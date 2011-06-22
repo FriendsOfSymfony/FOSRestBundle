@@ -89,7 +89,7 @@ class FOSRestExtension extends Extension
 
         foreach ($config['force_redirects'] as $format => $code) {
             if (true === $code) {
-                $config['force_redirects'][$format] = Codes::HTTP_CREATED;
+                $config['force_redirects'][$format] = Codes::HTTP_FOUND;
             }
         }
         $container->setParameter($this->getAlias().'.force_redirects', $config['force_redirects']);
