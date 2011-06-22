@@ -459,7 +459,7 @@ class ViewProxy extends View
         return parent::transform($request, $response, $format);
     }
 
-    public function handleResponse($request, $response, $format)
+    public function handleResponse(Request $request, Response $response, $format)
     {
         return parent::handleResponse($request, $response, $format);
     }

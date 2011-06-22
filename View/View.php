@@ -487,6 +487,7 @@ class View implements ContainerAwareInterface
         }
 
         $response = $this->handleResponse($request, $response, $format);
+
         $this->reset();
 
         return $response;
@@ -500,7 +501,7 @@ class View implements ContainerAwareInterface
      * @param string $format
      * @return Response
      */
-    protected function handleResponse($request, $response, $format)
+    protected function handleResponse(Request $request, Response $response, $format)
     {
         if (isset($this->customHandlers[$format])) {
             $callback = $this->customHandlers[$format];
@@ -516,6 +517,7 @@ class View implements ContainerAwareInterface
             $content = "Format '$format' not supported, handler must be implemented";
             $response = new Response($content, Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
+
         return $response;
     }
 
