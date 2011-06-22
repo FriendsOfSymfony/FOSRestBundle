@@ -44,7 +44,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testSetContainer()
     {
         $view = new View();
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array(), array(), '', false);
+        $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')
+            ->disableOriginalConstructor()->getMock();
         $view->setContainer($container);
         $this->assertAttributeEquals($container, 'container', $view);
 
@@ -228,7 +229,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         $parameters = null;
         if ($parameterIndex) {
-            $form = $this->getMock('\Symfony\Component\Form\Form', array(), array(), '', false);
+            $form = $this->getMockBuilder('\Symfony\Component\Form\Form')
+                ->disableOriginalConstructor()->getMock();
             $parameters[$parameterIndex] = $form;
         }
         $view = new ViewProxy();
@@ -282,7 +284,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testSetSerializer()
     {
-        $serializer = $this->getMock('\Symfony\Component\Serializer\Serializer', array(), array(), '', false);
+        $serializer = $this->getMockBuilder('\Symfony\Component\Serializer\Serializer')
+            ->disableOriginalConstructor()->getMock();
         $view = new View();
 
         $view->setSerializer();
@@ -300,8 +303,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSerializer()
     {
-        $containerSerializer = $serializer = $this->getMock('\Symfony\Component\Serializer\Serializer', array(), array(), '', false);
-        $serializer = $serializer = $this->getMock('\Symfony\Component\Serializer\Serializer', array(), array(), '', false);
+        $containerSerializer = $this->getMockBuilder('\Symfony\Component\Serializer\Serializer')
+            ->disableOriginalConstructor()->getMock();
+        $serializer = $this->getMockBuilder('\Symfony\Component\Serializer\Serializer')
+            ->disableOriginalConstructor()->getMock();
 
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
         $container
