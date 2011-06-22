@@ -290,21 +290,11 @@ class View implements ContainerAwareInterface
     {
         if (false !== $this->formKey) {
             $parameters = $this->getParameters();
-            if (is_array($parameters)) {
-                // Assign the formKey
-                if (null === $this->formKey){
-                    foreach ($parameters as $key => $parameter) {
-                        if ($parameter instanceof FormInterface) {
-                            $this->setFormKey($key);
-                            $form = $parameter;
-                            break;
-                        }
-                    }
-                } elseif (isset($parameters[$this->formKey])
-                    && $parameters[$this->formKey] instanceof FormInterface
-                ) {
-                    $form = $parameters[$this->formKey];
-                }
+            $this->determineFormKey($parameters);
+            if (isset($parameters[$this->formKey])
+                && $parameters[$this->formKey] instanceof FormInterface
+            ) {
+                $form = $parameters[$this->formKey];
             }
         }
 
@@ -316,6 +306,27 @@ class View implements ContainerAwareInterface
         }
 
         return $this->getStatusCode();
+    }
+
+    /**
+     * Looks for the form in the $parameters. If no formKey is set
+     * but a form is found the formKey is set to the index of the found
+     * form.
+     *
+     * @param FormInterface $parameters
+     * @return FormInterface
+     */
+    protected function determineFormKey($parameters)
+    {
+        if (is_array($parameters) && null === $this->formKey) {
+            // Assign the formKey
+            foreach ($parameters as $key => $parameter) {
+                if ($parameter instanceof FormInterface) {
+                    $this->setFormKey($key);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -475,6 +486,22 @@ class View implements ContainerAwareInterface
             $this->setFormat($format);
         }
 
+        $response = $this->handleResponse($request, $response, $format);
+        $this->reset();
+
+        return $response;
+    }
+
+    /**
+     * Handle the response base on the format
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param string $format
+     * @return Response
+     */
+    protected function handleResponse($request, $response, $format)
+    {
         if (isset($this->customHandlers[$format])) {
             $callback = $this->customHandlers[$format];
             $response = call_user_func($callback, $this, $request, $response);
@@ -484,14 +511,11 @@ class View implements ContainerAwareInterface
             $response = null;
         }
 
-        $this->reset();
-
         if (!($response instanceof Response)) {
             // TODO should we instead set the content/status code on the original response?
             $content = "Format '$format' not supported, handler must be implemented";
             $response = new Response($content, Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
-
         return $response;
     }
 
