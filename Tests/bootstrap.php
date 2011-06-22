@@ -12,11 +12,19 @@ $loader->register();
 spl_autoload_register(function($class)
 {
     if (0 === strpos($class, 'FOS\\RestBundle\\')) {
-        $path = implode('/', array_slice(explode('\\', $class), 2)).'.php';
-        if (!stream_resolve_include_path(__DIR__.'/../'.$path)) {
+        $path = __DIR__.'/../'.implode('/', array_slice(explode('\\', $class), 2)).'.php';
+        if (!stream_resolve_include_path($path)) {
             return false;
         }
-        require_once __DIR__.'/../'.$path;
+        require_once $path;
+        return true;
+    }
+    if (0 === strpos($class, 'Sensio\\Bundle\\FrameworkExtraBundle\\')) {
+        $path = __DIR__.'/../../../Sensio/'.implode('/', array_slice(explode('\\', $class), 1)).'.php';
+        if (!stream_resolve_include_path($path)) {
+            return false;
+        }
+        require_once $path;
         return true;
     }
 });
