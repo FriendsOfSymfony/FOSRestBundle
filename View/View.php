@@ -539,6 +539,13 @@ class View implements ContainerAwareInterface
             ) {
                 $parameters[$this->formKey] = $parameters[$this->formKey]->createView();
             }
+        } else if (isset($this->formKey) && !$parameters[$this->formKey]->isValid()) {
+            $children = $parameters[$this->formKey]->getChildren();
+            foreach ($children as $key => $child) {
+                $children[$key] = $child->getErrors();
+            }
+
+            $parameters[$this->formKey] = $children;
         }
 
         $content = $serializer->serialize($parameters, $format);
