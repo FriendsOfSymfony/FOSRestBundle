@@ -514,6 +514,12 @@ class View implements ContainerAwareInterface
                 $response->setStatusCode($this->forceRedirects[$format]);
             }
 
+            if ('html' === $format && $response->isRedirect()) {
+                // or should RedirectResponse we changed to offer a static method to generate the content?
+                $redirect = new \Symfony\Component\HttpFoundation\RedirectResponse($location, $response->getStatusCode());
+                $response->setContent($redirect->getContent());
+            }
+
             $response->headers->set('Location', $location);
 
             return $response;
