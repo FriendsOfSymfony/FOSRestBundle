@@ -33,11 +33,11 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
      *
      * @param GetResponseForControllerResultEvent $event A GetResponseForControllerResultEvent instance
      */
-    public function onCoreView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $view = $event->getControllerResult();
         if (!($view instanceOf View)) {
-            return parent::onCoreView($event);
+            return parent::onKernelView($event);
         }
 
         $request = $event->getRequest();

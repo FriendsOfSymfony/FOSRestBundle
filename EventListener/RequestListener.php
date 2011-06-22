@@ -45,7 +45,7 @@ class RequestListener
      *
      * @param   GetResponseEvent   $event    The event
      */
-    public function onCoreRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
 
