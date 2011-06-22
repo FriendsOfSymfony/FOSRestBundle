@@ -107,7 +107,7 @@ class FOSRestExtension extends Extension
         }
         $container->setParameter($this->getAlias().'.failed_validation', $config['failed_validation']);
 
-        if ($config['body_listener']) {
+        if (isset($config['body_listener'])) {
             $loader->load('body_listener.xml');
         }
 
@@ -117,7 +117,7 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
         
-        if ($config['flash_message_listener']) {
+        if (isset($config['flash_message_listener'])) {
             $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
 
             $loader->load('flash_message_listener.xml');
