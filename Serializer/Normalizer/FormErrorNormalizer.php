@@ -26,9 +26,9 @@ class FormErrorNormalizer extends SerializerAwareNormalizer
      */
     public function normalize($object, $format = null)
     {
-        return str_replace(
+        return array('error' => str_replace(
             array_keys($object->getMessageParameters()), $object->getMessageParameters(), $object->getMessageTemplate()
-        );
+        ));
     }
 
     /**
