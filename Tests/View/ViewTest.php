@@ -178,7 +178,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\View', 'getStatusCodeFromParameters');
         $reflectionMethod->setAccessible(true);
 
-        $form = $this->getMock('stdClass', array('isBound', 'isValid'));
+        $form = $this->getMock('\Symfony\Component\Form\Form', array('isBound', 'isValid'), array(), '', false);
         $form
             ->expects($this->exactly($isBoundCalled))
             ->method('isBound')
@@ -188,15 +188,12 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue($isValid));
 
-        $view = $this->getMock('\FOS\RestBundle\View\View', array('assignFormKey', 'getParameters'), array(null, 403));
-        $view
-            ->expects($this->any())
-            ->method('assignFormKey')
-            ->will($this->returnValue($form));
+        $parameters = array('foo' => $form);
+        $view = $this->getMock('\FOS\RestBundle\View\View', array('getParameters'), array(null, 403));
         $view
             ->expects($this->any())
             ->method('getParameters')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue($parameters));
 
         $view->setFormKey($key);
         $this->assertEquals($expected, $reflectionMethod->invoke($view));
@@ -208,14 +205,14 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             'form key form not bound' => array(Codes::HTTP_OK, 'foo', false, true, 1),
             'form key form is bound and invalid' => array(403, 'foo', true, false, 1, 1),
             'form key form bound and valid' => array(Codes::HTTP_OK, 'foo', true, true, 1, 1),
+            'form key null form bound and valid' => array(Codes::HTTP_OK, null, true, true, 1, 1),
         );
     }
 
     /**
-     * @dataProvider assignFormKeyDataProvider
+     * @dataProvider determineFormKeyDataProvider
      */
-    public function testAssignFormKey($formKey, $parameterIndex) {
-        $form = null;
+    public function testDetermineFormKey($formKey, $parameterIndex) {
         $parameters = null;
         if ($parameterIndex) {
             $form = $this->getMock('\Symfony\Component\Form\Form', array(), array(), '', false);
@@ -223,11 +220,11 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         }
         $view = new ViewProxy();
         $view->setFormKey($formKey);
-        $this->assertEquals($form, $view->assignFormKey($parameters));
+        $view->determineFormKey($parameters);
         $this->assertAttributeEquals($parameterIndex, 'formKey', $view);
     }
 
-    public static function assignFormKeyDataProvider() {
+    public static function determineFormKeyDataProvider() {
         return array(
             'no parameters' => array(null, false),
             'form key is null' => array(null, 'form'),
@@ -420,8 +417,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 }
 
 class ViewProxy extends View {
-    public function assignFormKey($parameters) {
-        return parent::assignFormKey($parameters);
+    public function determineFormKey($parameters) {
+        return parent::determineFormKey($parameters);
     }
 
     public function transform(Request $request, Response $response, $format) {
