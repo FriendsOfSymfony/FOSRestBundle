@@ -117,6 +117,12 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
         
+        if ($config['flash_message_listener']) {
+            $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
+
+            $loader->load('flash_message_listener.xml');
+        }
+
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
 
         if ($config['frameworkextra_bundle']) {
