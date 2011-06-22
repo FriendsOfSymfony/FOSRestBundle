@@ -111,12 +111,14 @@ Finally the HTTP response status code for failed validation is set to ``400``:
 Listener support
 ----------------
 
-To enable the Request body decoding and Request format listener simply adapt your configuration as follows:
+To enable the Request body decoding, Request format and the Response flash message listener
+simply adapt your configuration as follows:
 
     # app/config.yml
     fos_rest:
         format_listener: true
         body_listener: true
+        flash_message_listener: true
 
 In the behavior of the format listener can be configured in a more granular fashion.
 Below you can see the defaults in case ``format_listener`` is set to true as above:
@@ -129,7 +131,19 @@ Below you can see the defaults in case ``format_listener`` is set to true as abo
                 - "*/*"
             fallback_format: html
 
-You may also specify a ``default_format`` that the routing loader will use for 
+In the behavior of the flash message listener can be configured in a more granular fashion.
+Below you can see the defaults in case ``flash_message_listener`` is set to true as above:
+
+    # app/config.yml
+    fos_rest:
+        flash_message_listener:
+            name: flashes
+            path: /
+            domain: ~
+            secure: false
+            httpOnly: true
+
+You may also specify a ``default_format`` that the routing loader will use for
 the ``_format`` parameter if none is specified.
 
     # app/config.yml
@@ -146,7 +160,7 @@ either set a custom ``ControllerListener`` class or register their own "onKernel
         classes:
             format_listener: MyProject\MyBundle\Controller\ControllerListener
 
-Note see the section about the view support in regards to how to register/deregister
+Note see the section about the view support in regards to how to register/unregister
 encoders for specific formats as the request body decoding uses encoders for decoding.
 
 SensioFrameworkExtraBundle support
