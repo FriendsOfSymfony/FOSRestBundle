@@ -26,7 +26,7 @@ use FOS\RestBundle\Response\Codes;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class ControllerListener
+class FormatListener
 {
     /**
      * @var     array   Ordered array of formats (highest priority first)
@@ -39,7 +39,7 @@ class ControllerListener
     protected $fallbackFormat;
 
     /**
-     * Initialize ControllerListener.
+     * Initialize FormatListener.
      *
      * @param   string  $fallbackFormat     Default fallback format
      * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)

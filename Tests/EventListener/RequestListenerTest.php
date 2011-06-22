@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\HeaderBag,
-    FOS\RestBundle\EventListener\RequestListener;
+    FOS\RestBundle\EventListener\BodyListener;
 
 /**
  * Request listener test
@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request,
  * @author Alain Horner <alain.horner@liip.ch>
  * @author Stefan Paschke <stefan.paschke@liip.ch>
  */
-class RequestListenerTest extends \PHPUnit_Framework_TestCase
+class BodyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param Symfony\Component\HttpFoundation\Request $request the original request
@@ -45,7 +45,7 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
               ->method('getEncoder')
               ->will($this->returnValue($encoder));
 
-        $listener = new RequestListener($serializer);
+        $listener = new BodyListener($serializer);
 
         $request->setMethod($method);
         $request->headers = new HeaderBag(array('Content-Type' => $contentType));

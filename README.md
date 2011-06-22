@@ -153,12 +153,12 @@ the ``_format`` parameter if none is specified.
 
 Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations.
 Also note in case for example more complex Accept header negotiations are required, the user should
-either set a custom ``ControllerListener`` class or register their own "onKernelController" event.
+either set a custom ``FormatListener`` class or register their own "onKernelController" event.
 
     # app/config.yml
     fos_rest:
         classes:
-            format_listener: MyProject\MyBundle\Controller\ControllerListener
+            format_listener: MyProject\MyBundle\Controller\FormatListener
 
 Note see the section about the view support in regards to how to register/unregister
 encoders for specific formats as the request body decoding uses encoders for decoding.

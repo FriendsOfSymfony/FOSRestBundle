@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\ParameterBag,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class RequestListener
+class BodyListener
 {
     /**
      * @var SerializerInterface
