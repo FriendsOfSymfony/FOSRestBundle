@@ -49,11 +49,11 @@ class FlashMessageListener
     }
 
    /**
-    * On 'core.response' moves flash messages from the session to a cookie
+    * Moves flash messages from the session to a cookie inside a Response Kernel listener
     *
     * @param EventInterface $event
     */
-    public function onKernelRequest(FilterResponseEvent $event)
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         $flashes = $this->session->getFlashes();
         if (empty($flashes)) {
@@ -63,25 +63,23 @@ class FlashMessageListener
         $this->session->clearFlashes();
 
         $response = $event->getResponse();
-        $cookie = $response->header->getCookie($this->options['name']);
 
-        if ($cookie) {
+        if ($response->headers->hasCookie($this->options['name'])) {
+            $cookie = $response->headers->getCookie($this->options['name']);
             $rawCookie = $cookie->getValue();
             $flashes = array_merge($flashes, explode(self::COOKIE_DELIMITER, base64_decode($rawCookie)));
-        } else {
-            $cookie = new Cookie(
-                $this->options['name'],
-                null,
-                0,
-                $this->options['path'],
-                $this->options['domain'],
-                $this->options['secure'],
-                $this->options['httponly']
-            );
         }
 
-        $cookie->setValue(base64_encode(implode(self::COOKIE_DELIMITER, $flashes)));
+        $cookie = new Cookie(
+            $this->options['name'],
+            base64_encode(implode(self::COOKIE_DELIMITER, $flashes)),
+            0,
+            $this->options['path'],
+            $this->options['domain'],
+            $this->options['secure'],
+            $this->options['httpOnly']
+        );
 
-        $response->header->setCookie($cookie);
+        $response->headers->setCookie($cookie);
     }
 }

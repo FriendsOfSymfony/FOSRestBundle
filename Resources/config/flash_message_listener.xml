@@ -9,6 +9,7 @@
         <service id="fos_rest.flash_message_listener" class="%fos_rest.flash_message_listener.class%">
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
             <argument type="service" id="session"/>
+            <argument>%fos_rest.flash_message_listener.options%</argument>
         </service>
 
     </services>
