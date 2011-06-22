@@ -24,6 +24,10 @@ use FOS\RestBundle\View\View,
  */
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @expectedException \InvalidArgumentException
+     * @exceptedExceptionMessage ->setTemplate() should accept strings and TemplateReference instances only
+     */
     public function testSetTemplateTemplateFormat()
     {
         $view = new View();
@@ -34,13 +38,13 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view->setTemplate($template = new TemplateReference());
         $this->assertEquals($template, $view->getTemplate());
         
-        try {
-            $view->setTemplate(array());
-            $this->fail('->setTemplate() should accept strings and TemplateReference instances only');
-        } catch (\InvalidArgumentException $e) {            
-        }
+        $view->setTemplate(array());
     }
 
+    /**
+     * @expectedException \Exception
+     * @exceptedExceptionMessage ->setContainer() should only accept objects implementing ContainerInterface
+     */
     public function testSetContainer()
     {
         $view = new View();
@@ -49,11 +53,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view->setContainer($container);
         $this->assertAttributeEquals($container, 'container', $view);
 
-        try {
-            $view->setContainer(new \stdClass());
-            $this->fail(__METHOD__.' should only accept objects implementing ContainerInterface');
-        } catch (\Exception $e) {
-        }
+        $view->setContainer(new \stdClass());
     }
 
     /**
@@ -84,15 +84,15 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals(array('html' => $callback), 'customHandlers', $view);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @exceptedExceptionMessage Registered view callback must be callable
+     */
     public function testRegisterHandleExpectsException()
     {
         $view = new View();
-        try {
-            $view->registerHandler('json', new \stdClass());
-            $this->fail(__METHOD__. ' should only accept callables as second argument');
-        } catch (\InvalidArgumentException $e) {
-            $this->assertEquals('Registered view callback must be callable.', $e->getMessage());
-        }
+
+        $view->registerHandler('json', new \stdClass());
     }
 
     public function testSetResourceRoute()
@@ -151,6 +151,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($code, 'code', $view);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @exceptedExceptionMessage Cannot redirect to an empty URL
+     */
     public function testSetLocation()
     {
         $view = new View();
@@ -158,12 +162,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view->setLocation($location);
         $this->assertEquals($location, $view->getLocation());
 
-        try {
-            $view->setLocation('');
-            $this->fail();
-        } catch (\InvalidArgumentException $e) {
-            $this->assertEquals('Cannot redirect to an empty URL.', $e->getMessage());
-        }
+        $view->setLocation('');
+        $this->fail();
     }
 
     public function testSetFailedValidationStatusCode()
@@ -282,9 +282,12 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($format, $view->getFormat());
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testSetSerializer()
     {
-        $serializer = $this->getMockBuilder('\Symfony\Component\Serializer\Serializer')
+        $serializer = $this->getMockBuilder('\Symfony\Component\Serializer\SerializerInterface')
             ->disableOriginalConstructor()->getMock();
         $view = new View();
 
@@ -294,18 +297,15 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view->setSerializer($serializer);
         $this->assertEquals($serializer, $view->getSerializer());
 
-        try {
-            $view->setSerializer(new \stdClass());
-            $this->fail();
-        } catch (\Exception $e) {
-        }
+        $view->setSerializer(new \stdClass());
+        $this->fail();
     }
 
     public function testGetSerializer()
     {
-        $containerSerializer = $this->getMockBuilder('\Symfony\Component\Serializer\Serializer')
+        $containerSerializer = $this->getMockBuilder('\Symfony\Component\Serializer\SerializerInterface')
             ->disableOriginalConstructor()->getMock();
-        $serializer = $this->getMockBuilder('\Symfony\Component\Serializer\Serializer')
+        $serializer = $this->getMockBuilder('\Symfony\Component\Serializer\SerializerInterface')
             ->disableOriginalConstructor()->getMock();
 
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
