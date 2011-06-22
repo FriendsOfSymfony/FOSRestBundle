@@ -139,7 +139,7 @@ the ``_format`` parameter if none is specified.
 
 Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations.
 Also note in case for example more complex Accept header negotiations are required, the user should
-either set a custom ``ControllerListener`` class or register their own "onCoreController" event.
+either set a custom ``ControllerListener`` class or register their own "onKernelController" event.
 
     # app/config.yml
     fos_rest:

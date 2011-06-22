@@ -55,7 +55,7 @@ class ControllerListener
      *
      * @param   GetResponseEvent   $event    The event
      */
-    public function onCoreController(FilterControllerEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
 
