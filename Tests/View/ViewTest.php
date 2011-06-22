@@ -41,7 +41,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testSetContainer() {
+    public function testSetContainer()
+    {
         $view = new View();
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array(), array(), '', false);
         $view->setContainer($container);
@@ -57,14 +58,16 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider supportsFormatDataProvider
      */
-    public function testSupportsFormat($expected, $formatName, $customFormatName) {
+    public function testSupportsFormat($expected, $formatName, $customFormatName)
+    {
         $view = new View(array($formatName));
         $view->registerHandler($customFormatName, function(){});
 
         $this->assertEquals($expected, $view->supports('html'));
     }
 
-    public static function supportsFormatDataProvider() {
+    public static function supportsFormatDataProvider()
+    {
         return array(
             'not supported'   => array(false, 'json', 'xml'),
             'html default'   => array(true, 'html', 'xml'),
@@ -73,13 +76,15 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRegsiterHandle() {
+    public function testRegsiterHandle()
+    {
         $view = new View();
         $view->registerHandler('html', ($callback = function(){}));
         $this->assertAttributeEquals(array('html' => $callback), 'customHandlers', $view);
     }
 
-    public function testRegisterHandleExpectsException() {
+    public function testRegisterHandleExpectsException()
+    {
         $view = new View();
         try {
             $view->registerHandler('json', new \stdClass());
@@ -89,7 +94,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testSetResourceRoute() {
+    public function testSetResourceRoute()
+    {
         $route = $this->getMock('stdClass', array('generate'));
         $route
             ->expects($this->exactly(2))
@@ -116,7 +122,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($code, 'code', $view);
     }
 
-    public function testSetRedirectRoute() {
+    public function testSetRedirectRoute()
+    {
         $route = $this->getMock('stdClass', array('generate'));
         $route
             ->expects($this->exactly(2))
@@ -143,7 +150,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($code, 'code', $view);
     }
 
-    public function testSetLocation() {
+    public function testSetLocation()
+    {
         $view = new View();
         $location = 'location';
         $view->setLocation($location);
@@ -157,14 +165,16 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testSetFailedValidationStatusCode() {
+    public function testSetFailedValidationStatusCode()
+    {
         $view = new View(null, 403);
         $this->assertNull($view->getStatusCode());
         $view->setFailedValidationStatusCode();
         $this->assertEquals(403, $view->getStatusCode());
     }
 
-    public function testSetFormKey() {
+    public function testSetFormKey()
+    {
         $view = new View();
         $key = 'foo';
         $view->setFormKey($key);
@@ -174,7 +184,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatusCodeFromParametersDataProvider
      */
-    public function testGetStatusCodeFromParameters($expected, $key = false, $isBound = false, $isValid = false, $isBoundCalled = 0, $isValidCalled = 0) {
+    public function testGetStatusCodeFromParameters($expected, $key = false, $isBound = false, $isValid = false, $isBoundCalled = 0, $isValidCalled = 0)
+    {
         $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\View', 'getStatusCodeFromParameters');
         $reflectionMethod->setAccessible(true);
 
@@ -199,7 +210,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $reflectionMethod->invoke($view));
     }
 
-    public static function getStatusCodeFromParametersDataProvider() {
+    public static function getStatusCodeFromParametersDataProvider()
+    {
         return array(
             'no form key' => array(Codes::HTTP_OK),
             'form key form not bound' => array(Codes::HTTP_OK, 'foo', false, true, 1),
@@ -212,7 +224,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider determineFormKeyDataProvider
      */
-    public function testDetermineFormKey($formKey, $parameterIndex) {
+    public function testDetermineFormKey($formKey, $parameterIndex)
+    {
         $parameters = null;
         if ($parameterIndex) {
             $form = $this->getMock('\Symfony\Component\Form\Form', array(), array(), '', false);
@@ -224,7 +237,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals($parameterIndex, 'formKey', $view);
     }
 
-    public static function determineFormKeyDataProvider() {
+    public static function determineFormKeyDataProvider()
+    {
         return array(
             'no parameters' => array(null, false),
             'form key is null' => array(null, 'form'),
@@ -235,34 +249,39 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider setParametersDataProvider
      */
-    public function testSetParameters($parameters) {
+    public function testSetParameters($parameters)
+    {
         $view = new View();
         $view->setParameters($parameters);
         $this->assertEquals($parameters, $view->getParameters());
     }
 
-    public static function setParametersDataProvider() {
+    public static function setParametersDataProvider()
+    {
         return array(
             'null as parameters' => array(null),
             'array as parameters' => array(array('foo' => 'bar')),
         );
     }
 
-    public function testSetEngine() {
+    public function testSetEngine()
+    {
         $view = new View();
         $engine = 'bar';
         $view->setEngine($engine);
         $this->assertEquals($engine, $view->getEngine());
     }
 
-    public function testSetFormat() {
+    public function testSetFormat()
+    {
         $view = new View();
         $format = 'bar';
         $view->setFormat($format);
         $this->assertEquals($format, $view->getFormat());
     }
 
-    public function testSetSerializer() {
+    public function testSetSerializer()
+    {
         $serializer = $this->getMock('\Symfony\Component\Serializer\Serializer', array(), array(), '', false);
         $view = new View();
 
@@ -279,7 +298,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testGetSerializer() {
+    public function testGetSerializer()
+    {
         $containerSerializer = $serializer = $this->getMock('\Symfony\Component\Serializer\Serializer', array(), array(), '', false);
         $serializer = $serializer = $this->getMock('\Symfony\Component\Serializer\Serializer', array(), array(), '', false);
 
@@ -300,7 +320,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider transformWithLocationDataProvider
      */
-    public function testTransformWithLocation($expected, $origStatusCode, $format, $isRedirectCalls = 0, $isRedirect = false, $setContentCalls = 0) {
+    public function testTransformWithLocation($expected, $origStatusCode, $format, $isRedirectCalls = 0, $isRedirect = false, $setContentCalls = 0)
+    {
         $response = $this->getMock('\Symfony\Component\HttpFoundation\Response', array('isRedirect', 'setContent'));
         $response
             ->expects($this->exactly($isRedirectCalls))
@@ -318,7 +339,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $response->headers->get('location'));
     }
     
-    public static function transformWithLocationDataProvider() {
+    public static function transformWithLocationDataProvider()
+    {
         return array(
             'empty forceredirects' => array(200, 200, 'xml'),
             'forceredirects response is redirect' => array(200, 200, 'json', 1, true),
@@ -330,7 +352,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider transformWithoutLocationDataProvider
      */
-    public function testTransformWithoutLocation($expected, $encoderClass, $setTemplateCalls = 0, $createViewCalls = 0, $formIsValid = false, $formKey = null, $getChildrenCalls = 0, $getErrorsCalls = 0) {
+    public function testTransformWithoutLocation($expected, $encoderClass, $setTemplateCalls = 0, $createViewCalls = 0, $formIsValid = false, $formKey = null, $getChildrenCalls = 0, $getErrorsCalls = 0)
+    {
         $encoder = $this->getMock($encoderClass, array('setTemplate'));
         $encoder
             ->expects($this->exactly($setTemplateCalls))
@@ -380,7 +403,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getContent());
     }
 
-    public static function transformWithoutLocationDataProvider() {
+    public static function transformWithoutLocationDataProvider()
+    {
         return array(
             'not templating aware no form' => array(array('foo' => 'bar'), '\stdClass'),
             'templating aware no form' => array(array('foo' => 'bar'), '\FOS\RestBundle\Serializer\Encoder\HtmlEncoder', 1),
@@ -392,7 +416,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider handleResponseDataProvider
      */
-    public function testHandleResponse($expected, $format, $response, $transformCalls = 0, $supportCalls = 0, $supported = false) {
+    public function testHandleResponse($expected, $format, $response, $transformCalls = 0, $supportCalls = 0, $supported = false)
+    {
         $view = $this->getMock('\FOS\RestBundle\Tests\View\ViewProxy', array('transform', 'supports', 'callback'));
         $view
             ->expects($this->exactly($transformCalls))
@@ -407,7 +432,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getStatusCode());
     }
 
-    public static function handleResponseDataProvider() {
+    public static function handleResponseDataProvider()
+    {
         return array(
             'no handler' => array(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, 'xml', new Response(), 0, 1),
             'custom handler' => array(200, 'html', new Response()),
@@ -416,16 +442,20 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class ViewProxy extends View {
-    public function determineFormKey($parameters) {
+class ViewProxy extends View
+{
+    public function determineFormKey($parameters)
+    {
         return parent::determineFormKey($parameters);
     }
 
-    public function transform(Request $request, Response $response, $format) {
+    public function transform(Request $request, Response $response, $format)
+    {
         return parent::transform($request, $response, $format);
     }
 
-    public function handleResponse($request, $response, $format) {
+    public function handleResponse($request, $response, $format)
+    {
         return parent::handleResponse($request, $response, $format);
     }
 }

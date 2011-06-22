@@ -316,7 +316,8 @@ class View implements ContainerAwareInterface
      * @param FormInterface $parameters
      * @return FormInterface
      */
-    protected function determineFormKey($parameters) {
+    protected function determineFormKey($parameters)
+    {
         if (is_array($parameters) && null === $this->formKey) {
             // Assign the formKey
             foreach ($parameters as $key => $parameter) {
@@ -499,7 +500,8 @@ class View implements ContainerAwareInterface
      * @param string $format
      * @return Response
      */
-    protected function handleResponse($request, $response, $format) {
+    protected function handleResponse($request, $response, $format)
+    {
         if (isset($this->customHandlers[$format])) {
             $callback = $this->customHandlers[$format];
             $response = call_user_func($callback, $this, $request, $response);
