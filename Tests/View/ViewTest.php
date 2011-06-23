@@ -334,7 +334,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $serializer
             ->expects($this->once())
             ->method('serialize')
-            ->will($this->returnArgument(0));
+            ->will($this->returnValue(var_export($expected, true)));
 
         $child = $this->getMock('\stdClass', array('getErrors'));
         $child
@@ -367,7 +367,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view->setFormKey($formKey);
         $view->setParameters($parameters);
         $response = $view->transform(new Request, new Response(), 'html');
-        $this->assertEquals($expected, $response->getContent());
+        $this->assertEquals(var_export($expected, true), $response->getContent());
     }
 
     public static function transformWithoutLocationDataProvider()
