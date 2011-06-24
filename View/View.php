@@ -565,6 +565,7 @@ class View implements ContainerAwareInterface
             ) {
                 $parameters[$this->formKey] = $parameters[$this->formKey]->createView();
             }
+        // TODO move this logic to a Normalizer that accepts a Form and only returns all errors as an array
         } else if (isset($this->formKey) && !$parameters[$this->formKey]->isValid()) {
             $children = $parameters[$this->formKey]->getChildren();
             foreach ($children as $key => $child) {
