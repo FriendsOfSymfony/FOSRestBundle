@@ -291,7 +291,8 @@ class View implements ContainerAwareInterface
         if (false !== $this->formKey) {
             $parameters = $this->getParameters();
             $this->determineFormKey($parameters);
-            if (isset($parameters[$this->formKey])
+            if (is_array($parameters)
+                && isset($parameters[$this->formKey])
                 && $parameters[$this->formKey] instanceof FormInterface
             ) {
                 $form = $parameters[$this->formKey];
@@ -332,7 +333,7 @@ class View implements ContainerAwareInterface
     /**
      * Sets to be encoded parameters
      *
-     * @param string|array $parameters parameters to be used in the encoding
+     * @param string|array|object $parameters parameters to be used in the encoding
      */
     public function setParameters($parameters)
     {
@@ -342,7 +343,7 @@ class View implements ContainerAwareInterface
     /**
      * Gets to be encoded parameters
      *
-     * @return string|array parameters to be used in the encoding
+     * @return string|array|object parameters to be used in the encoding
      */
     public function getParameters()
     {
