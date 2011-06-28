@@ -27,6 +27,45 @@ use FOS\RestBundle\View\View;
  */
 class AnnotationTemplateListener extends BaseAnnotationTemplateListener
 {
+
+    /**
+     * Guesses the template name to render and its variables and adds them to
+     * the request object.
+     *
+     * @param FilterControllerEvent $event A FilterControllerEvent instance
+     */
+    public function onKernelController(FilterControllerEvent $event)
+    {
+        if (!is_array($controller = $event->getController())) {
+            return;
+        }
+
+        $request = $event->getRequest();
+
+        if (!$configuration = $request->attributes->get('_template')) {
+            return;
+        }
+
+        if (!$configuration->getTemplate()) {
+            $configuration->setTemplate($this->guessTemplateName($controller, $request));
+        }
+
+        $request->attributes->set('_template', $configuration->getTemplate());
+        $request->attributes->set('_template_vars', $configuration->getVars());
+
+        // all controller method arguments
+        if (!$configuration->getVars()) {
+            $r = new \ReflectionObject($controller[0]);
+
+            $vars = array();
+            foreach ($r->getMethod($controller[1])->getParameters() as $param) {
+                $vars[] = $param->getName();
+            }
+
+            $request->attributes->set('_template_default_vars', $vars);
+        }
+    }
+
     /**
      * Renders the template and initializes a new response object with the
      * rendered template content.
@@ -50,8 +89,10 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
             }
 
             $parameters = array();
-            foreach ($vars as $var) {
-                $parameters[$var] = $request->attributes->get($var);
+            if (!empty($vars)) {
+                foreach ($vars as $var) {
+                    $parameters[$var] = $request->attributes->get($var);
+                }
             }
 
             $view->setParameters($parameters);
