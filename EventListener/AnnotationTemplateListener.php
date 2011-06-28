@@ -100,8 +100,10 @@ class AnnotationTemplateListener extends BaseAnnotationTemplateListener
 
         $template = $request->attributes->get('_template');
         if ($template) {
-            $template->set('format', null);
-            $template->set('engine', null);
+            if ($template instanceof TemplateReference) {
+                $template->set('format', null);
+                $template->set('engine', null);
+            }
             $view->setTemplate($template);
         }
 
