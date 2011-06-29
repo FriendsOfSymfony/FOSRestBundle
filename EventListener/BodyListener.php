@@ -54,7 +54,7 @@ class BodyListener
         ) {
             $format = $request->getFormat($request->headers->get('Content-Type'));
             if (null === $format) {
-                return;
+                $format = $request->getRequestFormat();
             }
 
             if (!$this->serializer->supportsDecoding($format)) {
