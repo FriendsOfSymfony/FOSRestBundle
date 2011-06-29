@@ -36,7 +36,9 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 
     private function getAnnotationReader()
     {
-        return new AnnotationReader();
+        $reader = new AnnotationReader();
+        $reader->setAutoloadAnnotations(true);
+        return $reader;
     }
 
     protected function getControllerLoader()
