@@ -52,7 +52,9 @@ class BodyListener
         if (0 == count($request->request->all())
             && in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))
         ) {
-            $format = $request->getFormat($request->headers->get('Content-Type'));
+            $mimeType = $request->headers->get('Content-Type') ?: $request->getMimeType($request->getRequestFormat());
+
+            $format = $request->getFormat($mimeType);
             if (null === $format) {
                 return;
             }
