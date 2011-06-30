@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route as BaseRoute;
 
 /**
  * Route annotation class.
+ * @Annotation
  */
 class Route extends BaseRoute
 {

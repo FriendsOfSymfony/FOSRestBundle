@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 
 /**
  * No Route annotation class
+ * @Annotation
  */
 class NoRoute extends Route
 {

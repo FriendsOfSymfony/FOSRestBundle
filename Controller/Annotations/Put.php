@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 
 /**
  * PUT Route annotation class.
+ * @Annotation
  */
 class Put extends Route
 {

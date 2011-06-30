@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 
 /**
  * HEAD Route annotation class.
+ * @Annotation
  */
 class Head extends Route
 {
