@@ -25,7 +25,7 @@ Installation
 
     1. Add this bundle to your project as a Git submodule:
 
-        $ git submodule add git://github.com/FriendsOfSymfony/RestBundle.git vendor/bundles/FOS/RestBundle
+        $ git submodule add git://github.com/FriendsOfSymfony/FOSRestBundle.git vendor/bundles/FOS/RestBundle
 
     2. Add the FOS namespace to your autoloader:
 
