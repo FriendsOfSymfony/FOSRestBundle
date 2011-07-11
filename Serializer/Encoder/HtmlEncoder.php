@@ -81,6 +81,9 @@ class HtmlEncoder extends SerializerAwareEncoder implements NormalizationAwareIn
             throw new \UnexpectedValueException('A template must be provided to encode to HTML');
         }
 
-        return $this->templating->render($template, (array)$data);
+        if (!is_array($data) || array_key_exists(0, $data)) {
+            $data = array('params' => $data);
+        }
+        return $this->templating->render($template, $data);
     }
 }
