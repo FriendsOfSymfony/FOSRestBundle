@@ -31,7 +31,8 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider testOnKernelRequestDataProvider
      */
-    public function testOnKernelRequest($request, $method, $contentType, $expectedParameters) {
+    public function testOnKernelRequest($request, $method, $contentType, $expectedParameters)
+    {
         $encoder = $this->getMockBuilder('Symfony\Component\Serializer\Encoder\DecoderInterface')->disableOriginalConstructor()->getMock();
         $encoder->expects($this->any())
               ->method('decode')
@@ -59,7 +60,8 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($request->request->all(), $expectedParameters);
     }
 
-    public static function testOnKernelRequestDataProvider() {
+    public static function testOnKernelRequestDataProvider()
+    {
         return array(
            'Empty POST request' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array('foo')),
            'Empty PUT request' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'PUT', 'application/json', array('foo')),
