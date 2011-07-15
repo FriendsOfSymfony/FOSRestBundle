@@ -11,25 +11,23 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
-    Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
-    Symfony\Component\HttpFoundation\Request,
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener as BaseAnnotationTemplateListener;
+use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 
 use FOS\RestBundle\View\View;
 
 /**
- * The AnnotationTemplateListener class handles the @extra:Template annotation.
+ * The ViewResponseListener class handles the View core event as well as the @extra:Template annotation.
  *
- * @author     Lukas Kahwe Smith <smith@pooteeweet.org>
+ * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class AnnotationTemplateListener extends BaseAnnotationTemplateListener
+class ViewResponseListener extends TemplateListener
 {
     /**
-     * Renders the template and initializes a new response object with the
-     * rendered template content.
+     * Renders the parameters and template and initializes a new response object with the
+     * rendered content.
      *
      * @param GetResponseForControllerResultEvent $event A GetResponseForControllerResultEvent instance
      */

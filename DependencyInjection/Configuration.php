@@ -118,6 +118,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('body_listener')->defaultValue('FOS\RestBundle\EventListener\BodyListener')->end()
                         ->scalarNode('format_listener')->defaultValue('FOS\RestBundle\EventListener\FormatListener')->end()
                         ->scalarNode('flash_message_listener')->defaultValue('FOS\RestBundle\EventListener\FlashMessageListener')->end()
+                        ->scalarNode('view_response_listener')->defaultValue('FOS\RestBundle\EventListener\ViewResponseListener')->end()
                     ->end()
                 ->end()
                 ->arrayNode('services')
