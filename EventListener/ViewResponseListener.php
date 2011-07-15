@@ -39,21 +39,19 @@ class ViewResponseListener extends TemplateListener
         }
 
         $request = $event->getRequest();
-        $parameters = $view->getParameters();
-        if (!$parameters) {
 
-            $vars = $request->attributes->get('_template_vars');
-            if (!$vars) {
-                $vars = $request->attributes->get('_template_default_vars');
-            }
+        $vars = $request->attributes->get('_template_vars');
+        if (!$vars) {
+            $vars = $request->attributes->get('_template_default_vars');
+        }
 
-            $parameters = array();
-            if (!empty($vars)) {
-                foreach ($vars as $var) {
+        if (!empty($vars)) {
+            $parameters = (array)$view->getParameters();
+            foreach ($vars as $var) {
+                if (!array_key_exists($var, $parameters)) {
                     $parameters[$var] = $request->attributes->get($var);
                 }
             }
-
             $view->setParameters($parameters);
         }
 
