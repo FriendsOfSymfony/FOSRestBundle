@@ -7,6 +7,7 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 $loader = new UniversalClassLoader();
 $loader->registerNamespace('Symfony', $_SERVER['SYMFONY']);
 $loader->registerNamespace('Doctrine', $_SERVER['DOCTRINE']);
+$loader->registerNamespace('Sensio\\Bundle\\FrameworkExtraBundle\\', __DIR__.'/../../..');
 $loader->register();
 
 spl_autoload_register(function($class)
@@ -19,12 +20,13 @@ spl_autoload_register(function($class)
         require_once $path;
         return true;
     }
-    if (0 === strpos($class, 'Sensio\\Bundle\\FrameworkExtraBundle\\')) {
-        $path = __DIR__.'/../../../Sensio/'.implode('/', array_slice(explode('\\', $class), 1)).'.php';
-        if (!stream_resolve_include_path($path)) {
-            return false;
-        }
+});
+
+use Doctrine\Common\Annotations\AnnotationRegistry;
+AnnotationRegistry::registerLoader(function($class) {
+    if (strpos($class, 'FOS\RestBundle\Controller\Annotations\\') === 0) {
+        $path = __DIR__.'/../'.str_replace('\\', '/', substr($class, strlen('FOS\RestBundle\\')))   .'.php';
         require_once $path;
-        return true;
     }
+    return class_exists($class, false);
 });
