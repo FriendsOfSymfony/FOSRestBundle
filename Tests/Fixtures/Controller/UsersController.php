@@ -30,12 +30,12 @@ class UsersController extends Controller
 
     public function putUserAction($slug)
     {} // [PUT] /users/{slug}
-    
+
     public function patchUserAction($slug)
     {} // [PATCH] /users/{slug}
 
     public function lockUserAction($slug)
-    {} // [PUT] /users/{slug}/lock
+    {} // [POST] /users/{slug}/lock
 
     public function getUserCommentsAction($slug)
     {} // [GET] /users/{slug}/comments
@@ -47,10 +47,10 @@ class UsersController extends Controller
     {} // [DELETE] /users/{slug}/comments/{id}
 
     public function banUserAction($slug, $id)
-    {} // [PUT] /users/{slug}/ban
+    {} // [POST] /users/{slug}/ban
 
     public function voteUserCommentAction($slug, $id)
-    {} // [PUT] /users/{slug}/comments/{id}/vote
+    {} // [POST] /users/{slug}/comments/{id}/vote
 
     public function _userbarAction()
     {} // NO route

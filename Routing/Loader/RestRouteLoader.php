@@ -259,7 +259,7 @@ class RestRouteLoader implements LoaderInterface
                         $httpMethod = 'get';
                     } else {
                         //custom object
-                        $httpMethod = 'put';
+                        $httpMethod = 'post';
 
                         // resource collection
                         if (count($arguments) < count($resources)) {
