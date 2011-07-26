@@ -180,6 +180,7 @@ class RestRouteLoader implements LoaderInterface
             $patternStart = trim($patternStartRoute->getPattern(), "/");
         }
 
+        $routes = array();
         foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             $matches = array();
 
@@ -295,10 +296,20 @@ class RestRouteLoader implements LoaderInterface
                 $pattern .= ".{_format}";
 
                 // Create route with gathered parameters
-                $route = new Route($pattern, $defaults, $requirements, $options);
+                $route     = new Route($pattern, $defaults, $requirements, $options);
+                $routeName = $this->namePrefix . strtolower($routeName);
 
-                $collection->add($this->namePrefix . strtolower($routeName), $route);
+                // Move custom actions at the beginning, default at the end
+                if (!preg_match('/^('.implode('|', $this->availableHTTPMethods).')/', $routeName)) {
+                    array_unshift($routes, array('name' => $routeName, 'route' => $route));
+                } else {
+                    $routes[] = array('name' => $routeName, 'route' => $route);
+                }
             }
+        }
+
+        foreach ($routes as $routeInfo) {
+            $collection->add($routeInfo['name'], $routeInfo['route']);
         }
 
         $this->prefix = null;

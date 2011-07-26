@@ -20,7 +20,7 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader,
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
 class RestRouteLoaderTest extends LoaderTest
-{ 
+{
     /**
      * Test that UsersController RESTful class gets parsed correctly.
      */
@@ -40,6 +40,29 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertEquals($params['method'], $route->getRequirement('_method'));
             $this->assertContains($params['controller'], $route->getDefault('_controller'));
         }
+    }
+
+    /**
+     * Test that custom actions (new/edit/remove) are dumped earlier.
+     */
+    public function testCustomActionRoutesOrder()
+    {
+        $collection = $this->loadFromControllerFixture('UsersController');
+        $getUserPos = 0;
+        $newUserPos = 0;
+
+        $currentPos = 0;
+        foreach ($collection as $name => $route) {
+            if ('get_user' === $name) {
+                $getUserPos = $currentPos;
+            }
+            if ('new_users' === $name) {
+                $newUserPos = $currentPos;
+            }
+            $currentPos++;
+        }
+
+        $this->assertLessThan($getUserPos, $newUserPos);
     }
 
     /**
@@ -85,7 +108,7 @@ class RestRouteLoaderTest extends LoaderTest
 
     /**
      * Test that conventional actions exist and are registered as GET methods
-     * 
+     *
      * @see https://github.com/FriendsOfSymfony/RestBundle/issues/67
      */
     public function testConventionalActions()
