@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Bundle\FrameworkBundle\Controller\ExceptionController as BaseExceptionController;
+    Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 
 use FOS\RestBundle\Response\Codes,
     FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
