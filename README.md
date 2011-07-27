@@ -205,10 +205,10 @@ annotations should be used to register specific normalizers for a given class.
 ExceptionController support
 ---------------------------
 
-The RestBundle view layer aware ExceptionController is enabled as follows:
+The RestBundle view-layer-aware ExceptionController is enabled as follows:
 
     # app/config.yml
-    framework:
+    twig:
         exception_controller: "FOS\RestBundle\Controller\ExceptionController::showAction"
 
 To map Exception classes to HTTP response status codes an ``exception_map`` may be configured,
