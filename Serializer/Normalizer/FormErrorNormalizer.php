@@ -12,7 +12,8 @@
 namespace FOS\RestBundle\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer,
-    Symfony\Component\Form\FormError;
+    Symfony\Component\Form\FormError,
+    Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This Normalizer turns the FormError classes into strings
@@ -21,13 +22,20 @@ use Symfony\Component\Serializer\Normalizer\SerializerAwareNormalizer,
  */
 class FormErrorNormalizer extends SerializerAwareNormalizer
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function normalize($object, $format = null)
     {
-        return array('error' => str_replace(
-            array_keys($object->getMessageParameters()), $object->getMessageParameters(), $object->getMessageTemplate()
+        return array('error' => $this->translator->trans(
+            $object->getMessageTemplate(), $object->getMessageParameters(), 'validators'
         ));
     }
 
