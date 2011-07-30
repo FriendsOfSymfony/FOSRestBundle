@@ -10,7 +10,11 @@
         <service id="fos_rest.custom_normalizer" class="Symfony\Component\Serializer\Normalizer\CustomNormalizer" />
 
         <service id="fos_rest.form_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormNormalizer" />
-        <service id="fos_rest.form_error_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer" />
+
+        <service id="fos_rest.form_error_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer">
+          <argument type="service" id="translator" />
+        </service>
+      
         <service id="fos_rest.form_view_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormViewNormalizer" />
         <service id="fos_rest.form_type_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormTypeNormalizer" />
         
