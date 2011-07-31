@@ -535,6 +535,8 @@ class View implements ViewInterface, ContainerAwareInterface
      */
     protected function transform(Request $request, Response $response, $format)
     {
+        $response->headers->set('Content-Type', $request->getMimeType($format));
+
         $location = $this->getLocation();
         if ($location) {
             if (!empty($this->forceRedirects[$format]) && !$response->isRedirect()) {
