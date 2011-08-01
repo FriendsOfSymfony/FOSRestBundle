@@ -11,14 +11,12 @@
 namespace FOS\RestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 
-use FOS\RestBundle\Response\Codes,
-    FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
+use FOS\RestBundle\Response\Codes;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
@@ -61,10 +59,8 @@ class ExceptionController extends BaseExceptionController
             $view = $this->container->get('fos_rest.view');
 
             $view->setFormat($format);
-            $serializer = $view->getSerializer();
-            $encoder = $serializer->getEncoder($format);
 
-            if ($encoder instanceof TemplatingAwareEncoderInterface) {
+            if ($view->isFormatTemplating($format)) {
                 $templating = $this->container->get('templating');
                 $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug());
                 $template->set('engine', null);

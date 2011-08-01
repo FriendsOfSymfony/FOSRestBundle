@@ -4,7 +4,6 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Encoder\DecoderInterface,
     Symfony\Component\HttpKernel\Exception\HttpException,
     Symfony\Component\HttpKernel\HttpKernelInterface;
 

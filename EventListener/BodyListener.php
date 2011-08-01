@@ -4,8 +4,7 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
-    Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Serializer\Encoder\DecoderInterface;
+    Symfony\Component\DependencyInjection\ContainerAware;
 
 /*
  * This file is part of the FOSRestBundle
@@ -23,21 +22,21 @@ use Symfony\Component\HttpFoundation\ParameterBag,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class BodyListener
+class BodyListener extends ContainerAware
 {
     /**
-     * @var SerializerInterface
+     * @var array
      */
-    protected $serializer;
+    protected $decoders;
 
     /**
      * Set a serializer instance
      *
-     * @param   SerializerInterface $serializer A serializer instance with all relevant encoders (lazy) loaded
+     * @param   array $decoders List of key (format) value (service ids) of decoders
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(array $decoders)
     {
-        $this->serializer = $serializer;
+        $this->decoders = $decoders;
     }
 
     /**
@@ -49,7 +48,7 @@ class BodyListener
     {
         $request = $event->getRequest();
 
-        if (0 == count($request->request->all())
+        if (!count($request->request->all())
             && in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))
         ) {
             $content_type = $request->headers->get('Content-Type');
@@ -58,17 +57,13 @@ class BodyListener
                 ? $request->getRequestFormat()
                 : $request->getFormat($request->headers->get('Content-Type'));
 
-            if (null === $format) {
+            if (null === $format || empty($this->decoders[$format])) {
                 return;
             }
 
-            if (!$this->serializer->supportsDecoding($format)) {
-                return;
-            }
+            $decoder = $this->container->get($this->decoders[$format]);
 
-            $encoder = $this->serializer->getEncoder($format);
-
-            $data = $encoder->decode($request->getContent(), $format);
+            $data = $decoder->decode($request->getContent(), $format);
             $request->request = new ParameterBag((array)$data);
         }
     }

@@ -13,12 +13,10 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\Serializer\SerializerInterface,
     Symfony\Component\Form\FormInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use FOS\RestBundle\Response\Codes,
-    FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
+use FOS\RestBundle\Response\Codes;
 
 /**
  * ViewInterfce may be used in controllers to build up a response in a format agnostic way
@@ -139,6 +137,14 @@ interface ViewInterface
     function getParameters();
 
     /**
+     * If the given format uses the templating system for rendering
+     *
+     * @param $format
+     * @return bool
+     */
+    function isFormatTemplating($format);
+
+    /**
      * Sets template to use for the encoding
      *
      * @param string|TemplateReference $template template to be used in the encoding
@@ -184,20 +190,6 @@ interface ViewInterface
      * @return string format to be used in the encoding
      */
     function getFormat();
-
-    /**
-     * Set the serializer service
-     *
-     * @param SerializerInterface $serializer a serializer instance
-     */
-    function setSerializer(SerializerInterface $serializer = null);
-
-    /**
-     * Get the serializer service
-     *
-     * @return SerializerInterface
-     */
-    function getSerializer();
 
     /**
      * Handles a request with the proper handler

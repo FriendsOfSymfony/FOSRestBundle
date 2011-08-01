@@ -34,9 +34,13 @@ class FOSRestExtension extends Extension
         // TODO move this to the Configuration class as soon as it supports setting such a default
         array_unshift($configs, array(
             'formats' => array(
-                'json'  => 'fos_rest.json',
-                'xml'   => 'fos_rest.xml',
-                'html'  => 'fos_rest.html',
+                'json'  => true,
+                'xml'   => true,
+                'html'  => 'templating',
+            ),
+            'formats' => array(
+                'json'  => 'fos_rest.decoder.json',
+                'xml'   => 'fos_rest.decoder.xml',
             ),
             'force_redirects' => array(
                 'html'  => true,
@@ -51,40 +55,12 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
-        $container->setParameter($this->getAlias().'.formats', array_keys($config['formats']));
+        $container->setParameter($this->getAlias().'.formats', $config['formats']);
+        $container->setParameter($this->getAlias().'.decoders', $config['decoders']);
         $container->setParameter($this->getAlias().'.default_form_key', $config['default_form_key']);
 
         foreach ($config['classes'] as $key => $value) {
             $container->setParameter($this->getAlias().'.'.$key.'.class', $value);
-        }
-
-        if ($config['serializer_bundle']) {
-            foreach ($config['formats'] as $format => $encoder) {
-                $encoder = $container->getDefinition($encoder);
-                $encoder->addTag('jms_serializer.encoder', array('format' => $format));
-            }
-
-            $priority = count($config['normalizers']);
-            foreach ($config['normalizers'] as $normalizer) {
-                $normalizer = $container->getDefinition($normalizer);
-                $normalizer->addTag('jms_serializer.normalizer', array('priority' => $priority--));
-            }
-
-            $container->setAlias('fos_rest.serializer', 'serializer');
-        } else {
-            $serializer = $container->getDefinition('fos_rest.serializer');
-
-            $normalizers = array();
-            foreach ($config['normalizers'] as $normalizer) {
-                $normalizers[] = new Reference($normalizer);
-            }
-            $serializer->replaceArgument(0, $normalizers);
-
-            $encoders = array();
-            foreach ($config['formats'] as $format => $encoder) {
-                $encoders[$format] = new Reference($encoder);
-            }
-            $serializer->replaceArgument(1, $encoders);
         }
 
         foreach ($config['force_redirects'] as $format => $code) {

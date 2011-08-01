@@ -13,14 +13,12 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Component\DependencyInjection\ContainerAwareInterface,
+    Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\Serializer\SerializerInterface,
     Symfony\Component\Form\FormInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use FOS\RestBundle\Response\Codes,
-    FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
+use FOS\RestBundle\Response\Codes;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -30,13 +28,8 @@ use FOS\RestBundle\Response\Codes,
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class View implements ViewInterface, ContainerAwareInterface
+class View extends ContainerAware implements ViewInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
     /**
      * @var SerializerInterface
      */
@@ -135,16 +128,6 @@ class View implements ViewInterface, ContainerAwareInterface
     }
 
     /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    /**
      * Verifies whether the given format is supported by this view
      *
      * @param string $format format name
@@ -153,7 +136,7 @@ class View implements ViewInterface, ContainerAwareInterface
      */
     public function supports($format)
     {
-        return isset($this->customHandlers[$format]) || in_array($format, $this->formats);
+        return isset($this->customHandlers[$format]) || !empty($this->formats[$format]);
     }
 
     /**
@@ -282,7 +265,7 @@ class View implements ViewInterface, ContainerAwareInterface
      *
      * By default it will return 200, however for the first form instance in the top level of the parameters it will
      * - set the status code to the failed_validation configuration is the form instance has errors
-     * - set inValidFormKey so that the form instance can be replaced with createView() if the format encoder has template support
+     * - set inValidFormKey so that the form instance can be replaced with createView() if the format uses templating
      *
      * @return int HTTP status code
      */
@@ -348,6 +331,17 @@ class View implements ViewInterface, ContainerAwareInterface
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    /**
+     * If the given format uses the templating system for rendering
+     *
+     * @param $format
+     * @return bool
+     */
+    public function isFormatTemplating($format)
+    {
+        return !empty($this->formats[$format]) && 'templating' === $this->formats[$format];
     }
 
     /**
@@ -429,30 +423,6 @@ class View implements ViewInterface, ContainerAwareInterface
     public function getFormat()
     {
         return $this->format;
-    }
-
-    /**
-     * Set the serializer service
-     *
-     * @param SerializerInterface $serializer a serializer instance
-     */
-    public function setSerializer(SerializerInterface $serializer = null)
-    {
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * Get the serializer service
-     *
-     * @return SerializerInterface
-     */
-    public function getSerializer()
-    {
-        if (null === $this->serializer) {
-            $this->serializer = $this->container->get('fos_rest.serializer');
-        }
-
-        return $this->serializer;
     }
 
     /**
@@ -556,11 +526,7 @@ class View implements ViewInterface, ContainerAwareInterface
 
         $parameters = $this->getParameters();
 
-        $serializer = $this->getSerializer();
-        $encoder = $serializer->getEncoder($format);
-
-        if ($encoder instanceof TemplatingAwareEncoderInterface) {
-            $encoder->setTemplate($this->getTemplate());
+        if ($this->isFormatTemplating($format)) {
             if (isset($this->formKey)
                 && false !== $this->formKey
                 && isset($parameters[$this->formKey])
@@ -568,17 +534,22 @@ class View implements ViewInterface, ContainerAwareInterface
             ) {
                 $parameters[$this->formKey] = $parameters[$this->formKey]->createView();
             }
-        // TODO move this logic to a Normalizer that accepts a Form and only returns all errors as an array
-        } else if (isset($this->formKey) && !$parameters[$this->formKey]->isValid()) {
-            $children = $parameters[$this->formKey]->getChildren();
-            foreach ($children as $key => $child) {
-                $children[$key] = $child->getErrors();
+
+            $content = $this->container->get('templating')->render($this->getTemplate(), (array)$parameters);
+        } else {
+            // TODO move this logic to a Normalizer that accepts a Form and only returns all errors as an array
+            if (isset($this->formKey) && !$parameters[$this->formKey]->isValid()) {
+                $children = $parameters[$this->formKey]->getChildren();
+                foreach ($children as $key => $child) {
+                    $children[$key] = $child->getErrors();
+                }
+
+                $parameters[$this->formKey] = $children;
             }
 
-            $parameters[$this->formKey] = $children;
+            $content = $this->container->get('serializer')->serialize($parameters, $format);
         }
 
-        $content = $serializer->serialize($parameters, $format);
         $response->setContent($content);
 
         return $response;

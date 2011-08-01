@@ -30,13 +30,13 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testSetTemplateTemplateFormat()
     {
         $view = new View();
-        
+
         $view->setTemplate('foo');
         $this->assertEquals('foo', $view->getTemplate());
-        
+
         $view->setTemplate($template = new TemplateReference());
         $this->assertEquals($template, $view->getTemplate());
-        
+
         $view->setTemplate(array());
     }
 
@@ -45,7 +45,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
      */
     public function testSupportsFormat($expected, $formatName, $customFormatName)
     {
-        $view = new View(array($formatName));
+        $view = new View($formatName);
         $view->registerHandler($customFormatName, function(){});
 
         $this->assertEquals($expected, $view->supports('html'));
@@ -54,10 +54,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public static function supportsFormatDataProvider()
     {
         return array(
-            'not supported'   => array(false, 'json', 'xml'),
-            'html default'   => array(true, 'html', 'xml'),
-            'html custom'   => array(true, 'json', 'html'),
-            'html both'   => array(true, 'html', 'html'),
+            'not supported'   => array(false, array('json' => true), 'xml'),
+            'html default'   => array(true, array('html' => 'templating'), 'xml'),
+            'html custom'   => array(true, array('json' => true), 'html'),
+            'html both'   => array(true, array('html' => 'templating'), 'html'),
         );
     }
 
@@ -263,27 +263,6 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($format, $view->getFormat());
     }
 
-    public function testGetSerializer()
-    {
-        $containerSerializer = $this->getMockBuilder('\Symfony\Component\Serializer\SerializerInterface')
-            ->disableOriginalConstructor()->getMock();
-        $serializer = $this->getMockBuilder('\Symfony\Component\Serializer\SerializerInterface')
-            ->disableOriginalConstructor()->getMock();
-
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
-        $container
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($containerSerializer));
-
-        $view = new View();
-        $view->setContainer($container);
-
-        $this->assertEquals($containerSerializer, $view->getSerializer());
-        $view->setSerializer($serializer);
-        $this->assertEquals($serializer, $view->getSerializer());
-    }
-
     /**
      * @dataProvider transformWithLocationDataProvider
      */
@@ -305,7 +284,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $returnedResponse->getStatusCode());
         $this->assertEquals('foo', $response->headers->get('location'));
     }
-    
+
     public static function transformWithLocationDataProvider()
     {
         return array(
@@ -319,23 +298,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider transformWithoutLocationDataProvider
      */
-    public function testTransformWithoutLocation($expected, $encoderClass, $setTemplateCalls = 0, $createViewCalls = 0, $formIsValid = false, $formKey = null, $getChildrenCalls = 0, $getErrorsCalls = 0)
+    public function testTransformWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $formKey = null, $getChildrenCalls = 0, $getErrorsCalls = 0)
     {
-        $encoder = $this->getMock($encoderClass, array('setTemplate'));
-        $encoder
-            ->expects($this->exactly($setTemplateCalls))
-            ->method('setTemplate');
-
-        $serializer = $this->getMock('\stdClass', array('serialize', 'getEncoder'));
-        $serializer
-            ->expects($this->any())
-            ->method('getEncoder')
-            ->will($this->returnValue($encoder));
-        $serializer
-            ->expects($this->once())
-            ->method('serialize')
-            ->will($this->returnValue(var_export($expected, true)));
-
         $child = $this->getMock('\stdClass', array('getErrors'));
         $child
             ->expects($this->exactly($getErrorsCalls))
@@ -355,28 +319,58 @@ class ViewTest extends \PHPUnit_Framework_TestCase
             ->expects($this->exactly($getChildrenCalls))
             ->method('getChildren')
             ->will($this->returnValue(array($child, $child)));
-        $view = $this->getMock('\FOS\RestBundle\Tests\View\ViewProxy', array('getSerializer'));
-        $view
-            ->expects($this->any())
-            ->method('getSerializer')
-            ->will($this->returnValue($serializer));
+        $view =  new ViewProxy(array('html' => 'templating', 'json' => true));
+
+
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        if ('html' === $format) {
+            $templating = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
+                ->setMethods(array('render'))
+                ->disableOriginalConstructor()
+                ->getMock();
+            $templating
+                ->expects($this->once())
+                ->method('render')
+                ->will($this->returnValue(var_export($expected, true)));
+
+            $container
+                ->expects($this->once())
+                ->method('get')
+                ->with('templating')
+                ->will($this->returnValue($templating));
+        } else {
+            $serializer = $this->getMock('\stdClass', array('serialize'));
+            $serializer
+                ->expects($this->once())
+                ->method('serialize')
+                ->will($this->returnValue(var_export($expected, true)));
+
+            $container
+                ->expects($this->once())
+                ->method('get')
+                ->with('serializer')
+                ->will($this->returnValue($serializer));
+        }
+
+        $view->setContainer($container);
+
         $parameters = array('foo' => 'bar');
         if ($formKey) {
             $parameters[$formKey] = $form;
         }
         $view->setFormKey($formKey);
         $view->setParameters($parameters);
-        $response = $view->transform(new Request, new Response(), 'html');
+        $response = $view->transform(new Request, new Response(), $format);
         $this->assertEquals(var_export($expected, true), $response->getContent());
     }
 
     public static function transformWithoutLocationDataProvider()
     {
         return array(
-            'not templating aware no form' => array(array('foo' => 'bar'), '\stdClass'),
-            'templating aware no form' => array(array('foo' => 'bar'), '\FOS\RestBundle\Serializer\Encoder\HtmlEncoder', 1),
-            'templating aware and form' => array(array('foo' => 'bar', 'form' => array('bla' => 'toto')), '\FOS\RestBundle\Serializer\Encoder\HtmlEncoder', 1, 1, false, 'form'),
-            'not templating aware and invalid form' => array(array('foo' => 'bar', 'form' => array(0 => 'error', 1 => 'error')), '\stdClass', 0, 0, false, 'form', 1, 2),
+            'not templating aware no form' => array('json', array('foo' => 'bar')),
+            'templating aware no form' => array('html', array('foo' => 'bar')),
+            'templating aware and form' => array('html', array('foo' => 'bar', 'form' => array('bla' => 'toto')), 1, true, 'form'),
+            'not templating aware and invalid form' => array('json', array('foo' => 'bar', 'form' => array(0 => 'error', 1 => 'error')), 0, false, 'form', 1, 2),
         );
     }
 
