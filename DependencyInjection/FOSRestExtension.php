@@ -34,13 +34,9 @@ class FOSRestExtension extends Extension
         // TODO move this to the Configuration class as soon as it supports setting such a default
         array_unshift($configs, array(
             'formats' => array(
-                'json'  => true,
-                'xml'   => true,
-                'html'  => 'templating',
-            ),
-            'formats' => array(
                 'json'  => 'fos_rest.decoder.json',
                 'xml'   => 'fos_rest.decoder.xml',
+                'html'  => 'templating',
             ),
             'force_redirects' => array(
                 'html'  => true,
