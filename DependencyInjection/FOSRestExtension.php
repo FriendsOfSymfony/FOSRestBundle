@@ -107,17 +107,17 @@ class FOSRestExtension extends Extension
         }
         $container->setParameter($this->getAlias().'.failed_validation', $config['failed_validation']);
 
-        if (isset($config['body_listener'])) {
+        if (!empty($config['body_listener'])) {
             $loader->load('body_listener.xml');
         }
 
-        if (isset($config['format_listener'])) {
+        if (!empty($config['format_listener'])) {
             $loader->load('format_listener.xml');
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
         
-        if (isset($config['flash_message_listener'])) {
+        if (!empty($config['flash_message_listener'])) {
             $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
 
             $loader->load('flash_message_listener.xml');
@@ -125,7 +125,7 @@ class FOSRestExtension extends Extension
 
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
 
-        if ($config['frameworkextra_bundle']) {
+        if (!empty($config['frameworkextra_bundle'])) {
             $loader->load('frameworkextra_bundle.xml');
         }
 
