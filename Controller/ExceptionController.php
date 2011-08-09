@@ -95,7 +95,8 @@ class ExceptionController extends ContainerAware
         $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
 
-        return empty($exceptionMap[$exceptionClass]) ? '' : $exception->getMessage();
+        return !empty($exceptionMap[$exceptionClass]) || $this->container->get('kernel')->isDebug()
+            ? $exception->getMessage() : '';
     }
 
     /**
