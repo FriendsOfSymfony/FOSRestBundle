@@ -80,6 +80,10 @@ Note the service for the RSS encoder needs to be defined in a custom bundle:
 View support
 ------------
 
+The view layer makes it possible to write format agnostic controllers, by
+placing a layer between the Controller and the generation of the final output
+via the templating or a Serializer encoder.
+
 Registering a custom encoder requires modifying your configuration options.
 Following is an example adding support for a custom RSS encoder while removing
 support for xml.
@@ -110,6 +114,21 @@ Finally the HTTP response status code for failed validation is set to ``400``:
 
 Listener support
 ----------------
+
+The Request body decoding listener makes it possible to decode the contents of a request
+in order to populate the "request" parameter bag of the Request. This for example allows
+sending data that normally would be send via POST as ``application/x-www-form-urlencode``
+in a different format (for example application/json) as a PUT.
+
+The Request format listener attempts to determine the best format for the request based on
+the Request's Accept-Header and the format priority configuration. This way it becomes
+possible to leverage Accept-Headers to determine the request format, rather than a file
+extension (like foo.json).
+
+The Response flash message listener moves all flash messages currently set into a cookie. This
+way it becomes possible to better handle flash messages in combination with ESI. The ESI
+configuration will need to ignore the configured cookie. It will then be up to the client
+to read out the cookie, display the flash message and remove the flash message via javascript.
 
 To enable the Request body decoding, Request format and the Response flash message listener
 simply adapt your configuration as follows:
@@ -166,6 +185,9 @@ encoders for specific formats as the request body decoding uses encoders for dec
 SensioFrameworkExtraBundle support
 ----------------------------------
 
+SensioFrameworkExtraBundle makes it possible to use annotations to setup and implement
+controllers, reducing the amount of configuration and code needed.
+
 This requires adding the SensioFrameworkExtraBundle to you vendors:
 
     $ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
@@ -187,6 +209,9 @@ Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 JMSSerializerBundle support
 ---------------------------
 
+JMSSerializerBundle makes it possible to use annotations to configure what normalizers to use.
+Additionally this approach makes it possible to lazy load normalizers.
+
 Note: Temporarily please use this fork https://github.com/lsmith77/SerializerBundle/tree/use_core
 
 This requires adding the JMSSerializerBundle to you vendors:
@@ -204,6 +229,9 @@ annotations should be used to register specific normalizers for a given class.
 
 ExceptionController support
 ---------------------------
+
+Using this custom ExceptionController it is possible to leverage the View layer
+when building responses for uncaught Exceptions.
 
 The RestBundle view-layer-aware ExceptionController is enabled as follows:
 
@@ -227,7 +255,9 @@ status code or a string matching a class constant of the ``FOS\RestBundle\Respon
 Routing
 =======
 
-The RestBundle provides custom route loaders to help in defining REST friendly routes.
+The RestBundle provides custom route loaders to help in defining REST friendly routes
+as well as reducing the manual work of configuring routes and the given requirements
+(like making sure that only GET may be used in certain routes etc.).
 
 Single RESTful controller routes
 --------------------------------
