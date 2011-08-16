@@ -108,6 +108,6 @@ class ViewResponseListener
         }
 
         $handler = $this->container->get('fos_rest.view_handler');
-        $event->setResponse($handler->handle($request, $view));
+        $event->setResponse($handler->handle($view, $request));
     }
 }

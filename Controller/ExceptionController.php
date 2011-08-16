@@ -14,8 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Response;
 
 use FOS\RestBundle\Response\Codes,
     FOS\RestBundle\View\View;
@@ -37,7 +36,7 @@ class ExceptionController extends ContainerAware
      *
      * @return Response                         Response instance
      */
-    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
+    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
         // the count variable avoids an infinite loop on
         // some Windows configurations where ob_get_level()
@@ -68,7 +67,7 @@ class ExceptionController extends ContainerAware
                 $view->setTemplate($template);
             }
 
-            $response = $viewHandler->handle($request, $view);
+            $response = $viewHandler->handle($view);
         } catch (\Exception $e) {
             $message = $this->container->get('kernel')->isDebug() ? $e->getMessage() : 'Internal Server Error';
             $response = new Response($message, Codes::HTTP_INTERNAL_SERVER_ERROR);

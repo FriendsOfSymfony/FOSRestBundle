@@ -142,13 +142,17 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * Decides on which handler to use based on the request format
      *
-     * @param Request $request Request object
      * @param View $view
+     * @param Request $request Request object
      *
      * @return Response
      */
-    public function handle(Request $request, View $view)
+    public function handle(View $view, Request $request = null)
     {
+        if (null === $request) {
+            $request = $this->container->get('request');
+        }
+
         $format = $view->getFormat() ?: $request->getRequestFormat();
 
         if (isset($this->customHandlers[$format])) {

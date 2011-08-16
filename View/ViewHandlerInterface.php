@@ -64,10 +64,10 @@ interface ViewHandlerInterface
      *
      * Decides on which handler to use based on the request format
      *
-     * @param Request $request Request object
      * @param View $view
+     * @param Request $request Request object
      *
      * @return Response
      */
-    function handle(Request $request, View $view);
+    function handle(View $view, Request $request = null);
 }
