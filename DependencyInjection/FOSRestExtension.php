@@ -75,12 +75,20 @@ class FOSRestExtension extends Extension
         if (!empty($config['body_listener'])) {
             $loader->load('body_listener.xml');
 
+            $container->getDefinition($config['service']['body_listener'])->addTag('kernel.event_listener', array(
+                'event' => 'kernel.request',
+                'method' => 'onKernelRequest'
+            ));
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
         }
 
         if (!empty($config['format_listener'])) {
             $loader->load('format_listener.xml');
 
+            $container->getDefinition($config['service']['format_listener'])->addTag('kernel.event_listener', array(
+                'event' => 'kernel.controller',
+                'method' => 'onKernelController'
+            ));
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
@@ -88,11 +96,26 @@ class FOSRestExtension extends Extension
         if (!empty($config['flash_message_listener'])) {
             $loader->load('flash_message_listener.xml');
 
+            $container->getDefinition($config['service']['flash_message_listener'])->addTag('kernel.event_listener', array(
+                'event' => 'kernel.response',
+                'method' => 'onKernelResponse'
+            ));
             $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
         }
 
         if ($config['frameworkextra_bundle']) {
             $loader->load('frameworkextra_bundle.xml');
+
+            $container->getDefinition($config['service']['view_response_listener'])
+                ->addTag('kernel.event_listener', array(
+                    'event' => 'kernel.controller',
+                    'method' => 'onKernelController'
+                ))
+                ->addTag('kernel.event_listener', array(
+                    'event' => 'kernel.view',
+                    'method' => 'onKernelView',
+                    'priority' => 100
+                ));
         }
     }
 }
