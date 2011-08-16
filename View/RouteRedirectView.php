@@ -15,9 +15,8 @@ use FOS\RestBundle\Response\Codes;
 
 class RouteRedirectView
 {
-    public static function create($route, $data = null, $statusCode = Codes::HTTP_CREATED, array $headers = array())
+    public static function create($route, array $data = array(), $statusCode = Codes::HTTP_CREATED, array $headers = array())
     {
-        $headers['Location'] = $route;
-        return new View($data, $statusCode, $headers);
+        return View::create($data, $statusCode, $headers)->setRoute($route);
     }
 }

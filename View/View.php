@@ -28,6 +28,7 @@ class View
     private $engine = 'twig';
     private $format;
     private $location;
+    private $route;
 
     /**
      * Convenience method to allow for a fluent interface.
@@ -107,6 +108,22 @@ class View
         return $this;
     }
 
+    public function setLocation($location)
+    {
+        $this->location = $location;
+        $this->route = null;
+
+        return $this;
+    }
+
+    public function setRoute($route)
+    {
+        $this->route = $route;
+        $this->location = null;
+
+        return $this;
+    }
+
     public function getData()
     {
         return $this->data;
@@ -140,5 +157,10 @@ class View
     public function getLocation()
     {
         return $this->location;
+    }
+
+    public function getRoute()
+    {
+        return $this->route;
     }
 }

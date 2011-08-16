@@ -180,12 +180,12 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $data = $view->getData();
 
         // handle redirects
-        if (isset($headers['Location'])) {
-            $url = parse_url($headers['Location']);
-            if (!$url || empty($url['host'])) {
-                $headers['Location'] = $this->container->get('router')->generate($headers['Location'], (array)$data, true);
-            }
-
+        $location = $view->getLocation();
+        if (!$location && ($route = $view->getRoute())) {
+            $location = $this->container->get('router')->generate($route, (array)$data, true);
+        }
+        if ($location) {
+            $headers['Location'] = $location;
             $code = isset($this->forceRedirects[$format]) ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view, $data);
 
             if ('html' === $format) {

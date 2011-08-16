@@ -17,7 +17,6 @@ class RedirectView
 {
     public static function create($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
     {
-        $headers['Location'] = $url;
-        return new View(null, $statusCode, $headers);
+        return View::create(null, $statusCode, $headers)->setLocation($url);
     }
 }
