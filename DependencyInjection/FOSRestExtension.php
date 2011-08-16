@@ -53,7 +53,6 @@ class FOSRestExtension extends Extension
 
         $container->setParameter($this->getAlias().'.formats', $config['formats']);
         $container->setParameter($this->getAlias().'.decoders', $config['formats']);
-        $container->setParameter($this->getAlias().'.default_form_key', $config['default_form_key']);
 
         foreach ($config['classes'] as $key => $value) {
             $container->setParameter($this->getAlias().'.'.$key.'.class', $value);
