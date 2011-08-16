@@ -38,7 +38,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     protected $serializer;
 
     /**
-     * @var array key format, value a callback that returns a Response instance
+     * @var array key format, value a callable that returns a Response instance
      */
     protected $customHandlers = array();
 
@@ -92,15 +92,15 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * Response object ready to be sent.
      *
      * @param string $format the format that is handled
-     * @param callback $callback handler callback
+     * @param callable $callable callable that can handle the given format
      */
-    public function registerHandler($format, $callback)
+    public function registerHandler($format, $callable)
     {
-        if (!is_callable($callback)) {
+        if (!is_callable($callable)) {
             throw new \InvalidArgumentException('Registered view callback must be callable.');
         }
 
-        $this->customHandlers[$format] = $callback;
+        $this->customHandlers[$format] = $callable;
     }
 
     /**
@@ -129,7 +129,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * If the given format uses the templating system for rendering
      *
-     * @param $format
+     * @param string $format
      * @return bool
      */
     public function isFormatTemplating($format)

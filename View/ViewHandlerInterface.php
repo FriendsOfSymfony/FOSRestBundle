@@ -47,14 +47,14 @@ interface ViewHandlerInterface
      * Response object ready to be sent.
      *
      * @param string $format the format that is handled
-     * @param callback $callback handler callback
+     * @param callable $callable callable that can handle the given format
      */
-    function registerHandler($format, $callback);
+    function registerHandler($format, $callable);
 
     /**
      * If the given format uses the templating system for rendering
      *
-     * @param $format
+     * @param string $format
      * @return bool
      */
     function isFormatTemplating($format);
