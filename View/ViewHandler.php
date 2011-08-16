@@ -30,7 +30,7 @@ use FOS\RestBundle\Response\Codes;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class ViewHandler extends ContainerAware
+class ViewHandler extends ContainerAware implements ViewHandlerInterface
 {
     /**
      * @var SerializerInterface
