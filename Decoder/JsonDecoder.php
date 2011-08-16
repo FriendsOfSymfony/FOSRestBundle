@@ -7,7 +7,7 @@ namespace FOS\RestBundle\Decoder;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class Jsondecoder implements DecoderInterface
+class JsonDecoder implements DecoderInterface
 {
     /**
      * {@inheritdoc}
