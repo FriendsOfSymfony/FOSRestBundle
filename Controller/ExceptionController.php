@@ -11,11 +11,11 @@
 namespace FOS\RestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+    Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
+    Symfony\Component\HttpFoundation\Request;
 
 use FOS\RestBundle\Response\Codes,
     FOS\RestBundle\View\View;
@@ -23,7 +23,7 @@ use FOS\RestBundle\Response\Codes,
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
  */
-class ExceptionController extends BaseExceptionController
+class ExceptionController extends ContainerAware
 {
     /**
      * Converts an Exception to a Response.
@@ -65,7 +65,6 @@ class ExceptionController extends BaseExceptionController
             if ($viewHandler->isFormatTemplating($format)) {
                 $templating = $this->container->get('templating');
                 $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug());
-                $template->set('engine', null);
                 $view->setTemplate($template);
             }
 
@@ -91,7 +90,8 @@ class ExceptionController extends BaseExceptionController
         $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
 
-        return empty($exceptionMap[$exceptionClass]) ? '' : $exception->getMessage();
+        return !empty($exceptionMap[$exceptionClass]) || $this->container->get('kernel')->isDebug()
+            ? $exception->getMessage() : '';
     }
 
     /**
@@ -148,5 +148,29 @@ class ExceptionController extends BaseExceptionController
         }
 
         return $parameters;
+    }
+
+    protected function findTemplate($templating, $format, $code, $debug)
+    {
+        $name = $debug ? 'exception' : 'error';
+        if ($debug && 'html' == $format) {
+            $name = 'exception_full';
+        }
+
+        // when not in debug, try to find a template for the specific HTTP status code and format
+        if (!$debug) {
+            $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format);
+            if ($templating->exists($template)) {
+                return $template;
+            }
+        }
+
+        // try to find a template for the given format
+        $template = new TemplateReference('TwigBundle', 'Exception', $name, $format);
+        if ($templating->exists($template)) {
+            return $template;
+        }
+
+        return new TemplateReference('TwigBundle', 'Exception', $name, 'html');
     }
 }
