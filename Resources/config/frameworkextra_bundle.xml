@@ -7,8 +7,8 @@
     <services>
 
         <service id="fos_rest.view_response_listener" class="%fos_rest.view_response_listener.class%">
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="-1" />
-            <tag name="kernel.event_listener" event="kernel.view" method="onKernelView" />
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
+            <tag name="kernel.event_listener" event="kernel.view" method="onKernelView" priority="100" />
             <argument type="service" id="service_container" />
         </service>
 
