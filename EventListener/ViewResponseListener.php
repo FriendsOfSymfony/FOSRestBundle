@@ -15,11 +15,13 @@ use FOS\RestBundle\View\RedirectView;
 
 use FOS\RestBundle\View\RouteRedirectView;
 
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
+    Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\DependencyInjection\ContainerInterface;
 
-use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\View,
+    FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the @extra:Template annotation.
@@ -44,6 +46,22 @@ class ViewResponseListener
     }
 
     /**
+     * Guesses the template name to render and its variables and adds them to
+     * the request object.
+     *
+     * @param FilterControllerEvent $event A FilterControllerEvent instance
+     */
+    public function onKernelController(FilterControllerEvent $event)
+    {
+        $request = $event->getRequest();
+        if (!$configuration = $request->attributes->get('_view')) {
+            return;
+        }
+
+        $request->attributes->set('_template', $configuration);
+    }
+
+    /**
      * Renders the parameters and template and initializes a new response object with the
      * rendered content.
      *
@@ -53,11 +71,15 @@ class ViewResponseListener
     {
         $view = $event->getControllerResult();
 
+        $request = $event->getRequest();
+        if ($request->attributes->get('_view')) {
+            $view = new View($view);
+        }
+
         if (!$view instanceOf View) {
             return;
         }
 
-        $request = $event->getRequest();
         if (!$vars = $request->attributes->get('_template_vars')) {
             $vars = $request->attributes->get('_template_default_vars');
         }
