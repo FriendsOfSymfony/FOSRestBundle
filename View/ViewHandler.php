@@ -30,7 +30,7 @@ use FOS\RestBundle\Response\Codes;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class View extends ContainerAware implements View
+class ViewHandler extends ContainerAware
 {
     /**
      * @var SerializerInterface
@@ -112,18 +112,18 @@ class View extends ContainerAware implements View
      *
      * @return int HTTP status code
      */
-    private function getStatusCodeFromView(View $view)
+    private function getStatusCodeFromView(View $view, $parameters)
     {
         if (null !== $code = $view->getStatusCode()) {
             return $code;
         }
 
-        if (null === $form = $view->getForm()) {
+        if (empty($parameters['form'])) {
             return Codes::HTTP_OK;
         }
 
-        return $form->isBound() && !$form->isValid()
-                ? $this->failedValidation : Codes::HTTP_OK;
+        return $parameters['form']->isBound() && !$parameters['form']->isValid()
+            ? $this->failedValidationCode : Codes::HTTP_OK;
     }
 
     /**
@@ -177,13 +177,19 @@ class View extends ContainerAware implements View
         $headers = $view->getHeaders();
         $headers['Content-Type'] = $request->getMimeType($format);
 
+        $parameters = $view->getParameters();
+
         // handle redirects
-        if ($location = $view->getLocation()) {
-            $headers['Location'] = $location;
-            $code = isset($this->forceRedirects[$format]) ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
+        if (isset($headers['Location'])) {
+            $url = parse_url($headers['Location']);
+            if (!$url || empty($url['host'])) {
+                $headers['Location'] = $this->container->get('router')->generate($headers['Location'], $parameters, true);
+            }
+
+            $code = isset($this->forceRedirects[$format]) ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view, $parameters);
 
             if ('html' === $format) {
-                $response = new RedirectResponse($location, $code);
+                $response = new RedirectResponse($headers['Location'], $code);
                 $response->headers->replace($headers);
 
                 return $response;
@@ -193,15 +199,15 @@ class View extends ContainerAware implements View
         }
 
         if ($this->isFormatTemplating($format)) {
-            if (!is_array($parameters = $view->getData())) {
+            if (!is_array($parameters)) {
                 throw new \RuntimeException(sprintf(
-                    'Data for View class must be an array if you allow a templating aware format (%s).',
+                    'Parameters must be an array if you allow a templating-aware format (%s).',
                     $format
                 ));
             }
 
-            if (!isset($parameters['form']) && null !== $form = $view->getForm()) {
-                $parameters['form'] = $form->createView();
+            if (isset($parameters['form']) && $parameters['form'] instanceof FormInterface) {
+                $parameters['form'] = $parameters['form']->createView();
             }
 
             $template = $view->getTemplate();
@@ -217,9 +223,9 @@ class View extends ContainerAware implements View
 
             $content = $this->container->get('templating')->render($template, $parameters);
         } else {
-            $content = $this->container->get('serializer')->serialize($view->getData(), $format);
+            $content = $this->container->get('serializer')->serialize($parameters, $format);
         }
 
-        return new Response($content, $this->getStatusCodeFromView($view), $headers);
+        return new Response($content, $this->getStatusCodeFromView($view, $parameters), $headers);
     }
 }

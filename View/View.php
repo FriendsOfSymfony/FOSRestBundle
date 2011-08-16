@@ -7,41 +7,41 @@ namespace FOS\RestBundle\View;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormInterface,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 class View
 {
-    private $data;
+    private $parameters;
     private $statusCode;
     private $headers;
     private $template;
-    private $engine;
-    private $form;
+    private $engine = 'twig';
     private $format;
     private $location;
 
     /**
      * Convenience method to allow for a fluent interface.
      *
-     * @param mixed $data
+     * @param mixed $parameters
      * @param integer $statusCode
      * @param array $headers
      */
-    public static function create($data = null, $statusCode = null, array $headers = array())
+    public static function create($parameters = array(), $statusCode = null, array $headers = array())
     {
-        return new self($data, $statusCode, $headers);
+        return new self($parameters, $statusCode, $headers);
     }
 
-    public function __construct($data = null, $statusCode = null, array $headers = array())
+    public function __construct($parameters = array(), $statusCode = null, array $headers = array())
     {
-        $this->data = $data;
+        $this->parameters = $parameters;
         $this->statusCode = $statusCode;
         $this->headers = $headers;
     }
 
-    public function setData($data)
+    public function setParameters($parameters)
     {
-        $this->data = $data;
+        $this->parameters = $parameters;
 
         return $this;
     }
@@ -91,13 +91,6 @@ class View
         return $this;
     }
 
-    public function setForm(FormInterface $form)
-    {
-        $this->form = $form;
-
-        return $this;
-    }
-
     public function setFormat($format)
     {
         $this->format = $format;
@@ -105,9 +98,9 @@ class View
         return $this;
     }
 
-    public function getData()
+    public function getParameters()
     {
-        return $this->data;
+        return $this->parameters;
     }
 
     public function getStatusCode()
@@ -130,13 +123,13 @@ class View
         return $this->engine;
     }
 
-    public function getForm()
-    {
-        return $this->form;
-    }
-
     public function getFormat()
     {
         return $this->format;
+    }
+
+    public function getLocation()
+    {
+        return $this->location;
     }
 }

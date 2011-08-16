@@ -2,15 +2,12 @@
 
 namespace FOS\RestBundle\View;
 
-class RedirectView extends View
-{
-    public static function create($url, $statusCode = Codes::HTTP_FOUND)
-    {
-        return new self($url, $statusCode);
-    }
+use FOS\RestBundle\Response\Codes;
 
-    public function __construct($url, $statusCode = Codes::HTTP_FOUND)
+class RedirectView
+{
+    public static function create($url, $statusCode = Codes::HTTP_FOUND, $headers = array())
     {
-        return View::create(null, $statusCode)->setLocation($url);
+        return new View($url, $statusCode, $headers);
     }
 }
