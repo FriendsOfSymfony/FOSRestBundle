@@ -11,6 +11,10 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\View\RedirectView;
+
+use FOS\RestBundle\View\RouteRedirectView;
+
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
@@ -34,29 +38,34 @@ class ViewResponseListener extends TemplateListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $view = $event->getControllerResult();
-        if (!($view instanceOf View)) {
+
+        if ($view instanceof RouteRedirectView) {
+            $view = new RedirectView($this->container->get('router')->generate($view->getRoute(), $view->getParameters()), $view->getStatusCode());
+        }
+
+        // if no view, let the default listener handle it
+        if (!$view instanceOf View) {
             return parent::onKernelView($event);
         }
 
-        $request = $event->getRequest();
-
-        $vars = $request->attributes->get('_template_vars');
-        if (!$vars) {
+        if (!$vars = $request->attributes->get('_template_vars')) {
             $vars = $request->attributes->get('_template_default_vars');
         }
 
         if (!empty($vars)) {
-            $parameters = (array)$view->getParameters();
+            if (!is_array($parameters = $view->getData())) {
+                throw new \RuntimeException('View data must be an array if using a templating aware format.');
+            }
+
             foreach ($vars as $var) {
                 if (!array_key_exists($var, $parameters)) {
                     $parameters[$var] = $request->attributes->get($var);
                 }
             }
-            $view->setParameters($parameters);
+            $view->setData($parameters);
         }
 
-        $template = $request->attributes->get('_template');
-        if ($template) {
+        if ($template = $request->attributes->get('_template')) {
             if ($template instanceof TemplateReference) {
                 $template->set('format', null);
                 $template->set('engine', null);
@@ -64,6 +73,7 @@ class ViewResponseListener extends TemplateListener
             $view->setTemplate($template);
         }
 
-        $event->setResponse($view->handle());
+        $handler = $this->container->get('fos_rest.view_handler');
+        $event->setResponse($handler->handle($request, $view));
     }
 }
