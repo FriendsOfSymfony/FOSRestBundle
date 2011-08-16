@@ -22,13 +22,44 @@ use Symfony\Component\Form\FormInterface,
  */
 class View
 {
+    /**
+     * @var mixed
+     */
     private $data;
+
+    /**
+     * @var int
+     */
     private $statusCode;
+
+    /**
+     * @var array
+     */
     private $headers;
+
+    /**
+     * @var string|TemplateReference
+     */
     private $template;
+
+    /**
+     * @var string
+     */
     private $engine = 'twig';
+
+    /**
+     * @var string
+     */
     private $format;
+
+    /**
+     * @var string
+     */
     private $location;
+
+    /**
+     * @var string
+     */
     private $route;
 
     /**
@@ -43,6 +74,13 @@ class View
         return new self($data, $statusCode, $headers);
     }
 
+    /**
+     * Constructor
+     *
+     * @param mixed $data
+     * @param integer $statusCode
+     * @param array $headers
+     */
     public function __construct($data = null, $statusCode = null, array $headers = array())
     {
         $this->data = $data;
@@ -50,6 +88,12 @@ class View
         $this->headers = $headers;
     }
 
+    /**
+     * set the data
+     *
+     * @param $data
+     * @return View
+     */
     public function setData($data)
     {
         $this->data = $data;
@@ -57,6 +101,13 @@ class View
         return $this;
     }
 
+    /**
+     * set a header
+     *
+     * @param $name
+     * @param $value
+     * @return View
+     */
     public function setHeader($name, $value)
     {
         $this->headers[$name] = $value;
@@ -64,6 +115,12 @@ class View
         return $this;
     }
 
+    /**
+     * set the headers
+     *
+     * @param array $headers
+     * @return View
+     */
     public function setHeaders(array $headers)
     {
         $this->headers = $headers;
@@ -71,6 +128,12 @@ class View
         return $this;
     }
 
+    /**
+     * set the HTTP status code
+     *
+     * @param $code
+     * @return View
+     */
     public function setStatusCode($code)
     {
         $this->statusCode = $code;
@@ -95,6 +158,12 @@ class View
         return $this;
     }
 
+    /**
+     * set the engine
+     *
+     * @param $engine
+     * @return View
+     */
     public function setEngine($engine)
     {
         $this->engine = $engine;
@@ -102,6 +171,12 @@ class View
         return $this;
     }
 
+    /**
+     * set the format
+     *
+     * @param $format
+     * @return View
+     */
     public function setFormat($format)
     {
         $this->format = $format;
@@ -109,6 +184,12 @@ class View
         return $this;
     }
 
+    /**
+     * set the location (implicitly removes the route)
+     *
+     * @param $location
+     * @return View
+     */
     public function setLocation($location)
     {
         $this->location = $location;
@@ -117,6 +198,12 @@ class View
         return $this;
     }
 
+    /**
+     * set the route (implicitly removes the location)
+     *
+     * @param $route
+     * @return View
+     */
     public function setRoute($route)
     {
         $this->route = $route;
@@ -125,41 +212,81 @@ class View
         return $this;
     }
 
+    /**
+     * get the data
+     *
+     * @return mixed data
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * get the HTTP status code
+     *
+     * @return int HTTP status code
+     */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
+    /**
+     * get the headers
+     *
+     * @return array headers
+     */
     public function getHeaders()
     {
         return $this->headers;
     }
 
+    /**
+     * get the template
+     *
+     * @return TemplateReference|string template
+     */
     public function getTemplate()
     {
         return $this->template;
     }
 
+    /**
+     * get the engine
+     *
+     * @return string engine
+     */
     public function getEngine()
     {
         return $this->engine;
     }
 
+    /**
+     * get the format
+     *
+     * @return string format
+     */
     public function getFormat()
     {
         return $this->format;
     }
 
+    /**
+     * get the location
+     *
+     * @return string url
+     */
     public function getLocation()
     {
         return $this->location;
     }
 
+    /**
+     * get the route
+     *
+     * @return string route
+     */
     public function getRoute()
     {
         return $this->route;

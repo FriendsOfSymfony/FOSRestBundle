@@ -21,6 +21,13 @@ use FOS\RestBundle\Response\Codes;
  */
 class RedirectView
 {
+    /**
+     * Convenience method to allow for a fluent interface.
+     *
+     * @param string $url
+     * @param integer $statusCode
+     * @param array $headers
+     */
     public static function create($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
     {
         return View::create(null, $statusCode, $headers)->setLocation($url);

@@ -21,6 +21,14 @@ use FOS\RestBundle\Response\Codes;
  */
 class RouteRedirectView
 {
+    /**
+     * Convenience method to allow for a fluent interface.
+     *
+     * @param string $route
+     * @param mixed $data
+     * @param integer $statusCode
+     * @param array $headers
+     */
     public static function create($route, array $data = array(), $statusCode = Codes::HTTP_CREATED, array $headers = array())
     {
         return View::create($data, $statusCode, $headers)->setRoute($route);
