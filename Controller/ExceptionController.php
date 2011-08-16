@@ -14,9 +14,11 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
     Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 
-use FOS\RestBundle\Response\Codes;
+use FOS\RestBundle\Response\Codes,
+    FOS\RestBundle\View\View;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
@@ -35,7 +37,7 @@ class ExceptionController extends BaseExceptionController
      *
      * @return Response                         Response instance
      */
-    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
+    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
         // the count variable avoids an infinite loop on
         // some Windows configurations where ob_get_level()
@@ -56,27 +58,23 @@ class ExceptionController extends BaseExceptionController
         $parameters = $this->getParameters($currentContent, $code, $exception, $logger, $format);
 
         try {
-            $view = $this->container->get('fos_rest.view');
-
+            $view = View::create($parameters, $code, $exception->getHeaders());
             $view->setFormat($format);
 
-            if ($view->isFormatTemplating($format)) {
+            $viewHandler = $this->container->get('fos_rest.view_handler');
+            if ($viewHandler->isFormatTemplating($format)) {
                 $templating = $this->container->get('templating');
                 $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug());
                 $template->set('engine', null);
                 $view->setTemplate($template);
             }
 
-            $view->setParameters($parameters);
-            $view->setStatusCode($code);
-
-            $response = $view->handle();
+            $response = $viewHandler->handle($request, $view);
         } catch (\Exception $e) {
             $message = $this->container->get('kernel')->isDebug() ? $e->getMessage() : 'Internal Server Error';
             $response = new Response($message, Codes::HTTP_INTERNAL_SERVER_ERROR);
+            $response->headers->replace($exception->getHeaders());
         }
-
-        $response->headers->replace($exception->getHeaders());
 
         return $response;
     }
