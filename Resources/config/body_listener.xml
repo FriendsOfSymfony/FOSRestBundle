@@ -4,11 +4,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="fos_rest.body_listener.class">FOS\RestBundle\EventListener\BodyListener</parameter>
+        <parameter key="fos_rest.decoder.json.class">FOS\RestBundle\Decoder\JsonDecoder</parameter>
+        <parameter key="fos_rest.decoder.xml.class">FOS\RestBundle\Decoder\XmlDecoder</parameter>
+    </parameters>
+
     <services>
 
-        <service id="fos_rest.decoder.json" class="%fos_rest.decoder_json.class%" />
+        <service id="fos_rest.decoder.json" class="%fos_rest.decoder.json.class%" />
 
-        <service id="fos_rest.decoder.xml" class="%fos_rest.decoder_xml.class%" />
+        <service id="fos_rest.decoder.xml" class="%fos_rest.decoder.xml.class%" />
 
         <service id="fos_rest.body_listener" class="%fos_rest.body_listener.class%">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />

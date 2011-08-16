@@ -4,9 +4,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="fos_rest.view_handler.class">FOS\RestBundle\View\ViewHandler</parameter>
+    </parameters>
+
     <services>
 
-        <service id="fos_rest.view_handler" class="%fos_rest.view_handler.class%">
+        <service id="fos_rest.view_handler.default" class="%fos_rest.view_handler.class%" public="false">
             <argument>%fos_rest.formats%</argument>
             <argument>%fos_rest.failed_validation%</argument>
             <argument>%fos_rest.force_redirects%</argument>
