@@ -11,14 +11,15 @@
 
 namespace FOS\RestBundle\View;
 
+use Symfony\Component\Form\FormInterface,
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+
 /**
  * Default View implementation.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-use Symfony\Component\Form\FormInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-
 class View
 {
     private $data;
