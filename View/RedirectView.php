@@ -6,8 +6,9 @@ use FOS\RestBundle\Response\Codes;
 
 class RedirectView
 {
-    public static function create($url, $statusCode = Codes::HTTP_FOUND, $headers = array())
+    public static function create($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
     {
-        return new View($url, $statusCode, $headers);
+        $headers['Location'] = $url;
+        return new View(null, $statusCode, $headers);
     }
 }
