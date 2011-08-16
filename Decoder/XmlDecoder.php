@@ -69,7 +69,7 @@ class XmlDecoder implements DecoderInterface
                     $data[] = $tmp;
                     $data[] = $value;
                 }
-            } elseif (key_exists($key, $data)) {
+            } elseif (array_key_exists($key, $data)) {
                 if ((false === is_array($data[$key]))  || (false === isset($data[$key][0]))) {
                     $data[$key] = array($data[$key]);
                 }
