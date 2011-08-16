@@ -39,15 +39,12 @@ class ViewResponseListener extends TemplateListener
     {
         $view = $event->getControllerResult();
 
-        if ($view instanceof RouteRedirectView) {
-            $view = new RedirectView($this->container->get('router')->generate($view->getRoute(), $view->getParameters()), $view->getStatusCode());
-        }
-
         // if no view, let the default listener handle it
         if (!$view instanceOf View) {
             return parent::onKernelView($event);
         }
 
+        $request = $event->getRequest();
         if (!$vars = $request->attributes->get('_template_vars')) {
             $vars = $request->attributes->get('_template_default_vars');
         }
