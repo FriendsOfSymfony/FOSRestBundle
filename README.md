@@ -5,9 +5,9 @@ This bundle provides various tools to rapidly develop RESTful API's & applicatio
 
 Its currently under development so key pieces that are planned are still missing.
 
-For now the Bundle provides a view layer to enable output format agnostic Controllers,
-which includes the ability to handle redirects differently based on a service container
-aware Serializer service that can lazy load encoders and normalizers.
+For now the Bundle provides a view layer to enable output, including redirects,
+format agnostic Controllers leveraging the JMSSerializerBundle for serialization
+of formats that do not use template.
 
 Furthermore a custom route loader can be used to when following a method
 naming convention to automatically provide routes for multiple actions by simply
@@ -16,9 +16,6 @@ configuring the name of a controller.
 It also has support for RESTful decoding of HTTP request body and Accept headers
 as well as a custom Exception controller that assists in using appropriate HTTP
 status codes.
-
-Eventually the bundle will also provide normalizers for form and validator instances as
-well as provide a solution to generation end user documentation describing the REST API.
 
 Installation
 ============
@@ -82,21 +79,28 @@ View support
 
 The view layer makes it possible to write format agnostic controllers, by
 placing a layer between the Controller and the generation of the final output
-via the templating or a Serializer encoder.
+via the templating or a Serializer.
 
-Registering a custom encoder requires modifying your configuration options.
-Following is an example adding support for a custom RSS encoder while removing
-support for xml.
+This requires adding the JMSSerializerBundle to you vendors:
 
-When using View::setResourceRoute() the default behavior of forcing
-a redirect to the route for html is disabled.
+    $ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/SerializerBundle
 
-The default JSON encoder class is modified and a custom serializer service
-is configured.
+See the JMSSerializerBundle documentation for details on how to serialize
+data into different formats.
 
-The a default normalizer is registered with the ``fos_rest.get_set_method_normalizer`.
+Setting a format to some value that evaluates to a Boolean true means that the format
+is enabled. Setting the format to "templating" mean that View layer will use templating
+service system to generate the Response content. Setting the format to the id of a
+service means that this service is supposed to be used in the optional body listener
+to decode the given request body for the given format.
 
-Also a default key for any form instances inside view parameters is set to ``form``.
+The formats may either be set to:
+- "true" aka supporting the given format while using the JMSSerializerBundle to generate the Response content
+- "some service" aka supporting the given format while using the JMSSerializerBundle to generate the Response content
+- "templating" aka supporting the given format and using the
+
+When using RouteRedirectView::create() the default behavior of forcing a redirect to the
+route for html is enabled, but needs to be enabled for other formats if needed
 
 Finally the HTTP response status code for failed validation is set to ``400``:
 
@@ -107,9 +111,6 @@ Finally the HTTP response status code for failed validation is set to ``400``:
             xml: false
         force_redirects:
             html: false
-        normalizers:
-            - "fos_rest.get_set_method_normalizer"
-        default_form_key: form
         failed_validation: HTTP_BAD_REQUEST
 
 Listener support
@@ -192,40 +193,11 @@ This requires adding the SensioFrameworkExtraBundle to you vendors:
 
     $ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
 
-Make sure to disable view annotations in the SensioFrameworkExtraBundle config,
-enable or disable any of the other features depending on your needs:
-
-    # app/config.yml
-    sensio_framework_extra:
-        view:    { annotations: false }
-        router:  { annotations: true }
-
 Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 
     # app/config.yml
     fos_rest:
         frameworkextra_bundle: true
-
-JMSSerializerBundle support
----------------------------
-
-JMSSerializerBundle makes it possible to use annotations to configure what normalizers to use.
-Additionally this approach makes it possible to lazy load normalizers.
-
-Note: Temporarily please use this fork https://github.com/lsmith77/SerializerBundle/tree/use_core
-
-This requires adding the JMSSerializerBundle to you vendors:
-
-    $ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/SerializerBundle
-
-Finally enable the JMSSerializerBundle support in the RestBundle:
-
-    # app/config.yml
-    fos_rest:
-        serializer_bundle: true
-
-When using JMSSerializerBundle the ``normalizers`` config option is ignored as in this case
-annotations should be used to register specific normalizers for a given class.
 
 ExceptionController support
 ---------------------------
