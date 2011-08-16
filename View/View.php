@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormInterface,
 
 class View
 {
-    private $parameters;
+    private $data;
     private $statusCode;
     private $headers;
     private $template;
@@ -23,25 +23,25 @@ class View
     /**
      * Convenience method to allow for a fluent interface.
      *
-     * @param mixed $parameters
+     * @param mixed $data
      * @param integer $statusCode
      * @param array $headers
      */
-    public static function create($parameters = array(), $statusCode = null, array $headers = array())
+    public static function create($data = null, $statusCode = null, array $headers = array())
     {
-        return new self($parameters, $statusCode, $headers);
+        return new self($data, $statusCode, $headers);
     }
 
-    public function __construct($parameters = array(), $statusCode = null, array $headers = array())
+    public function __construct($data = null, $statusCode = null, array $headers = array())
     {
-        $this->parameters = $parameters;
+        $this->data = $data;
         $this->statusCode = $statusCode;
         $this->headers = $headers;
     }
 
-    public function setParameters($parameters)
+    public function setData($data)
     {
-        $this->parameters = $parameters;
+        $this->data = $data;
 
         return $this;
     }
@@ -98,9 +98,9 @@ class View
         return $this;
     }
 
-    public function getParameters()
+    public function getData()
     {
-        return $this->parameters;
+        return $this->data;
     }
 
     public function getStatusCode()
