@@ -16,9 +16,8 @@ use FOS\RestBundle\View\RedirectView;
 use FOS\RestBundle\View\RouteRedirectView;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-
-use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
+    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
+    Symfony\Component\DependencyInjection\ContainerInterface;
 
 use FOS\RestBundle\View\View;
 
@@ -27,8 +26,23 @@ use FOS\RestBundle\View\View;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class ViewResponseListener extends TemplateListener
+class ViewResponseListener
 {
+    /**
+     * @var Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * Constructor.
+     *
+     * @param ContainerInterface $container The service container instance
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * Renders the parameters and template and initializes a new response object with the
      * rendered content.
@@ -39,9 +53,8 @@ class ViewResponseListener extends TemplateListener
     {
         $view = $event->getControllerResult();
 
-        // if no view, let the default listener handle it
         if (!$view instanceOf View) {
-            return parent::onKernelView($event);
+            return;
         }
 
         $request = $event->getRequest();
