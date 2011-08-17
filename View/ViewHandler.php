@@ -115,12 +115,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     private function getStatusCodeFromView(View $view)
     {
-        $data = $view->getData();
-
         if (null !== $code = $view->getStatusCode()) {
             return $code;
         }
 
+        $data = $view->getData();
         if (!is_array($data) || empty($data['form'])) {
             return Codes::HTTP_OK;
         }
