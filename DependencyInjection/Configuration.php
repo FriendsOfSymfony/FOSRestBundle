@@ -128,8 +128,8 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('name')->defaultValue('flashes')->end()
                         ->scalarNode('path')->defaultValue('/')->end()
                         ->scalarNode('domain')->defaultNull()->end()
-                        ->scalarNode('secure')->defaultFalse('')->end()
-                        ->scalarNode('httpOnly')->defaultTrue('')->end()
+                        ->scalarNode('secure')->defaultFalse()->end()
+                        ->scalarNode('httpOnly')->defaultTrue()->end()
                     ->end()
                 ->end()
             ->end();
