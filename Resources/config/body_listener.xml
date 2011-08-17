@@ -17,6 +17,7 @@
         <service id="fos_rest.decoder.xml" class="%fos_rest.decoder.xml.class%" />
 
         <service id="fos_rest.body_listener" class="%fos_rest.body_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
             <argument>%fos_rest.decoders%</argument>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
