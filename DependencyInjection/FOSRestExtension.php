@@ -81,8 +81,8 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
         }
 
-        if ($config['frameworkextra_bundle']) {
-            $loader->load('frameworkextra_bundle.xml');
+        if ($config['view_response_listener']) {
+            $loader->load('view_response_listener.xml');
         }
     }
 }

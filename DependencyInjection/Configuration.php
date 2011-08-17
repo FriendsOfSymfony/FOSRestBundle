@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('default_format')->defaultNull()->end()
                     ->end()
                 ->end()
-                ->booleanNode('frameworkextra_bundle')->defaultFalse()->end()
+                ->booleanNode('view_response_listener')->defaultTrue()->end()
                 ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
                 ->arrayNode('service')
                     ->addDefaultsIfNotSet()

@@ -124,6 +124,16 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($formats, $this->container->getParameter('fos_rest.formats'));
     }
 
+    public function testDisableViewResponseListener()
+    {
+        $config = array(
+            'fos_rest' => array('view_response_listener' => false)
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.view_response_listener'));
+    }
+
     /**
      * Test that extension loads properly.
      */
