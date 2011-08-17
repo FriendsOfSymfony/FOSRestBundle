@@ -54,6 +54,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('force_redirects')
                     ->useAttributeAsKey('name')
+                    ->defaultValue(array('html' => true))
                     ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('routing_loader')
