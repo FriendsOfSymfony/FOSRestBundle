@@ -197,7 +197,7 @@ Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 
     # app/config.yml
     fos_rest:
-        frameworkextra_bundle: true
+        view_response_listener: true
 
 ExceptionController support
 ---------------------------
