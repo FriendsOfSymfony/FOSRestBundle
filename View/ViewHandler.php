@@ -158,7 +158,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $format = $view->getFormat() ?: $request->getRequestFormat();
 
         if (isset($this->customHandlers[$format])) {
-            return call_user_func($this->customHandlers[$format], $request, $view);
+            return call_user_func($this->customHandlers[$format], $view, $request);
         } elseif ($this->supports($format)) {
             return $this->createResponse($view, $request, $format);
         }

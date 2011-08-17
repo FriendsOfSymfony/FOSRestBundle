@@ -12,8 +12,6 @@
 namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View,
-    FOS\RestBundle\View\RedirectView,
-    FOS\RestBundle\View\RouteRedirectView,
     FOS\RestBundle\View\ViewHandler,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     FOS\RestBundle\Response\Codes,
@@ -30,9 +28,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider supportsFormatDataProvider
      */
-    public function testSupportsFormat($expected, $formatName, $customFormatName)
+    public function testSupportsFormat($expected, $formats, $customFormatName)
     {
-        $viewHandler = new ViewHandler();
+        $viewHandler = new ViewHandler($formats);
         $viewHandler->registerHandler($customFormatName, function(){});
 
         $this->assertEquals($expected, $viewHandler->supports('html'));
@@ -41,10 +39,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function supportsFormatDataProvider()
     {
         return array(
-            'not supported'   => array(false, array('json' => true), 'xml'),
-            'html default'   => array(true, array('html' => 'templating'), 'xml'),
-            'html custom'   => array(true, array('json' => true), 'html'),
-            'html both'   => array(true, array('html' => 'templating'), 'html'),
+            'not supported'   => array(false, array('json' => false), 'xml'),
+            'html default'   => array(true, array('html' => true), 'xml'),
+            'html custom'   => array(true, array('json' => false), 'html'),
+            'html both'   => array(true, array('html' => true), 'html'),
         );
     }
 
@@ -63,32 +61,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler();
 
         $viewHandler->registerHandler('json', new \stdClass());
-    }
-
-    public function testSetLocation()
-    {
-        $url = 'users';
-        $code = 500;
-
-        $view = RedirectView::create($url, $code);
-        $this->assertAttributeEquals($url, 'location', $view);
-        $this->assertAttributeEquals(null, 'route', $view);
-        $this->assertAttributeEquals($code, 'code', $view);
-    }
-
-    public function testSetRoute()
-    {
-        $routeName = 'users';
-        $code = 500;
-
-        $view = RouteRedirectView::create($routeName, array(), $code);
-        $this->assertAttributeEquals($routeName, 'route', $view);
-        $this->assertAttributeEquals(null, 'location', $view);
-        $this->assertAttributeEquals(Codes::HTTP_CREATED, 'code', $view);
-
-        $view->setLocation($routeName);
-        $this->assertAttributeEquals($routeName, 'location', $view);
-        $this->assertAttributeEquals(null, 'route', $view);
     }
 
     /**
@@ -130,40 +102,31 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider createResponseWithLocationDataProvider
      */
-    public function testCreateResponseWithLocation($expected, $origStatusCode, $format, $isRedirectCalls = 0, $isRedirect = false, $setContentCalls = 0)
+    public function testCreateResponseWithLocation($expected, $format, $forceRedirects)
     {
-        $response = $this->getMock('\Symfony\Component\HttpFoundation\Response', array('isRedirect', 'setContent'));
-        $response
-            ->expects($this->exactly($isRedirectCalls))
-            ->method('isRedirect')
-            ->will($this->returnValue($isRedirect));
-        $response
-            ->expects($this->exactly($setContentCalls))
-            ->method('setContent');
-        $response->setStatusCode($origStatusCode);
-
-        $viewHandler = new ViewHandlerProxy(null, Codes::HTTP_BAD_REQUEST, array('json' => 403));
+        $viewHandler = new ViewHandlerProxy(null, Codes::HTTP_BAD_REQUEST, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
-        $returnedResponse = $viewHandler->createResponse(new \Symfony\Component\HttpFoundation\Request(), $view, $format);
+        $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
+
         $this->assertEquals($expected, $returnedResponse->getStatusCode());
-        $this->assertEquals('foo', $response->headers->get('location'));
+        $this->assertEquals('foo', $returnedResponse->headers->get('location'));
     }
 
     public static function createResponseWithLocationDataProvider()
     {
         return array(
-            'empty forceredirects' => array(200, 200, 'xml'),
-            'forceredirects response is redirect' => array(200, 200, 'json', 1, true),
-            'forceredirects response not redirect' => array(403, 200, 'json', 1),
-            'html and redirect' => array(301, 301, 'html', 1, true, 1),
+            'empty force redirects' => array(200, 'xml', array('json' => 403)),
+            'force redirects response is redirect' => array(200, 'json', array()),
+            'force redirects response not redirect' => array(403, 'json', array('json' => 403)),
+            'html and redirect' => array(301, 'html', array('html' => 301)),
         );
     }
 
     /**
      * @dataProvider createResponseWithoutLocationDataProvider
      */
-    public function testCreateResonseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false, $getChildrenCalls = 0, $getErrorsCalls = 0)
+    public function testCreateResponseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false, $getChildrenCalls = 0, $getErrorsCalls = 0)
     {
         $child = $this->getMock('\stdClass', array('getErrors'));
         $child
@@ -171,7 +134,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getErrors')
             ->will($this->returnValue('error'));
 
-        $viewHandler =  new ViewHandlerProxy(array('html' => 'templating', 'json' => true));
+        $viewHandler = new ViewHandlerProxy(array('html' => true, 'json' => false));
 
 
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
@@ -225,7 +188,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         }
 
         $view = new View($data);
-        $response = $viewHandler->createResponse(new Request, $view, $format);
+        $response = $viewHandler->createResponse($view, new Request, $format);
         $this->assertEquals(var_export($expected, true), $response->getContent());
     }
 
@@ -242,28 +205,29 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider createResponseDataProvider
      */
-    public function testCreateResponse($expected, $format, $transformCalls = 0, $supportCalls = 0, $supported = false)
+    public function testCreateResponse($expected, $format, $formats)
     {
-        $viewHandler = new ViewHandler();
-        $viewHandler->registerHandler('html', function($this, $request, $response){return $response;});
-        $response = $viewHandler->handle(new Request(), new View(), $format);
+        $viewHandler = new ViewHandler($formats);
+        $viewHandler->registerHandler('html', function($view, $request){return $view;});
+
+        $response = $viewHandler->handle(new View(), new Request(), $format);
         $this->assertEquals($expected, $response->getStatusCode());
     }
 
     public static function createResponseDataProvider()
     {
         return array(
-            'no handler' => array(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, 'xml', 0, 1),
-            'custom handler' => array(200, 'html'),
-            'transform called' => array(200, 'json', 1, 1, true),
+            'no handler' => array(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, 'xml', array()),
+            'custom handler' => array(200, 'html', array()),
+            'transform called' => array(200, 'json', array('json' => false)),
         );
     }
 }
 
 class ViewHandlerProxy extends ViewHandler
 {
-    public function createResponse(Request $request, View $view, $format)
+    public function createResponse(View $view, Request $request, $format)
     {
-        return parent::createResponse($request, $view, $format);
+        return parent::createResponse($view, $request, $format);
     }
 }

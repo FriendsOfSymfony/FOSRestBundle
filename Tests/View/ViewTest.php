@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View,
+    FOS\RestBundle\View\RedirectView,
+    FOS\RestBundle\View\RouteRedirectView,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     FOS\RestBundle\Response\Codes,
     Symfony\Component\HttpFoundation\Request,
@@ -42,6 +44,14 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testSetLocation()
     {
+        $url = 'users';
+        $code = 500;
+
+        $view = RedirectView::create($url, $code);
+        $this->assertAttributeEquals($url, 'location', $view);
+        $this->assertAttributeEquals(null, 'route', $view);
+        $this->assertAttributeEquals($code, 'statusCode', $view);
+
         $view = new View();
         $location = 'location';
         $view->setLocation($location);
@@ -50,6 +60,18 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testSetRoute()
     {
+        $routeName = 'users';
+        $code = 500;
+
+        $view = RouteRedirectView::create($routeName, array(), $code);
+        $this->assertAttributeEquals($routeName, 'route', $view);
+        $this->assertAttributeEquals(null, 'location', $view);
+        $this->assertAttributeEquals(Codes::HTTP_CREATED, 'statusCode', $view);
+
+        $view->setLocation($routeName);
+        $this->assertAttributeEquals($routeName, 'location', $view);
+        $this->assertAttributeEquals(null, 'route', $view);
+
         $view = new View();
         $route = 'route';
         $view->setRoute($route);
