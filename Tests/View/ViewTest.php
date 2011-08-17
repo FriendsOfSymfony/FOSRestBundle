@@ -61,9 +61,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testSetRoute()
     {
         $routeName = 'users';
-        $code = 500;
 
-        $view = RouteRedirectView::create($routeName, array(), $code);
+        $view = RouteRedirectView::create($routeName);
         $this->assertAttributeEquals($routeName, 'route', $view);
         $this->assertAttributeEquals(null, 'location', $view);
         $this->assertAttributeEquals(Codes::HTTP_CREATED, 'statusCode', $view);

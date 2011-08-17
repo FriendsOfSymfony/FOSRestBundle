@@ -66,7 +66,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatusCodeFromViewDataProvider
      */
-    public function testGetStatusCodeFromView($expected, $key = false, $isBound = false, $isValid = false, $isBoundCalled = 0, $isValidCalled = 0)
+    public function testGetStatusCodeFromView($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled)
     {
         $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\ViewHandler', 'getStatusCodeFromView');
         $reflectionMethod->setAccessible(true);
@@ -81,21 +81,23 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('isValid')
             ->will($this->returnValue($isValid));
 
-        $data = array('form' => $form);
+        if ($data) {
+            $data = array('form' => $form);
+        }
         $view =  new View($data);
 
-        $viewHandler = new ViewHandler();
+        $viewHandler = new ViewHandler(array(), $expected);
         $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view));
     }
 
     public static function getStatusCodeFromViewDataProvider()
     {
         return array(
-            'no form key' => array(Codes::HTTP_OK),
-            'form key form not bound' => array(Codes::HTTP_OK, 'foo', false, true, 1),
-            'form key form is bound and invalid' => array(403, 'foo', true, false, 1, 1),
-            'form key form bound and valid' => array(Codes::HTTP_OK, 'foo', true, true, 1, 1),
-            'form key null form bound and valid' => array(Codes::HTTP_OK, null, true, true, 1, 1),
+            'no data' => array(Codes::HTTP_OK, false, false, false, 0, 0),
+            'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0),
+            'form key form is bound and invalid' => array(403, true, true, false, 1, 1),
+            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1),
+            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1),
         );
     }
 
@@ -126,14 +128,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider createResponseWithoutLocationDataProvider
      */
-    public function testCreateResponseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false, $getChildrenCalls = 0, $getErrorsCalls = 0)
+    public function testCreateResponseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false)
     {
-        $child = $this->getMock('\stdClass', array('getErrors'));
-        $child
-            ->expects($this->exactly($getErrorsCalls))
-            ->method('getErrors')
-            ->will($this->returnValue('error'));
-
         $viewHandler = new ViewHandlerProxy(array('html' => true, 'json' => false));
 
 
@@ -180,10 +176,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->expects($this->any())
                 ->method('isValid')
                 ->will($this->returnValue($formIsValid));
-            $form
-                ->expects($this->exactly($getChildrenCalls))
-                ->method('getChildren')
-                ->will($this->returnValue(array($child, $child)));
             $data['form'] = $form;
         }
 
@@ -198,7 +190,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'not templating aware no form' => array('json', array('foo' => 'bar')),
             'templating aware no form' => array('html', array('foo' => 'bar')),
             'templating aware and form' => array('html', array('foo' => 'bar', 'form' => array('bla' => 'toto')), 1, true, true),
-            'not templating aware and invalid form' => array('json', array('foo' => 'bar', 'form' => array(0 => 'error', 1 => 'error')), 0, false, true, 1, 2),
+            'not templating aware and invalid form' => array('json', array('foo' => 'bar', 'form' => array(0 => 'error', 1 => 'error')), 0, false, true),
         );
     }
 
@@ -210,7 +202,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler($formats);
         $viewHandler->registerHandler('html', function($view, $request){return $view;});
 
-        $response = $viewHandler->handle(new View(), new Request(), $format);
+        $response = $viewHandler->handle(new View(null, $expected), new Request(), $format);
         $this->assertEquals($expected, $response->getStatusCode());
     }
 
