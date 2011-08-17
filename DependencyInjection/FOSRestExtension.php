@@ -36,7 +36,17 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
-        $formats = array_merge(array_fill_keys($config['formats'], false), array_fill_keys($config['templating_formats'], true));
+        $formats = array();
+        foreach ($config['formats'] as $format => $enabled) {
+            if ($enabled) {
+                $formats[$format] = false;
+            }
+        }
+        foreach ($config['templating_formats'] as $format => $enabled) {
+            if ($enabled) {
+                $formats[$format] = true;
+            }
+        }
 
         $container->setAlias($this->getAlias().'.view_handler', $config['service']['view_handler']);
         $container->setParameter($this->getAlias().'.formats', $formats);

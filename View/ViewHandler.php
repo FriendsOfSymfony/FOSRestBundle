@@ -43,7 +43,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     protected $customHandlers = array();
 
     /**
-     * @var array the supported formats
+     * @var array the supported formats as keys and if the given formats uses templating is denoted by a true value
      */
     protected $formats;
 
@@ -60,7 +60,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Constructor
      *
-     * @param array $formats            The supported formats
+     * @param array $formats the supported formats as keys and if the given formats uses templating is denoted by a true value
      * @param int $failedValidationCode The HTTP response status code for a failed validation
      * @param string $defaultFormKey    The default parameter form key
      * @param array $forceRedirects     If to force a redirect for the given key format, with value being the status code to use
@@ -81,7 +81,8 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function supports($format)
     {
-        return isset($this->customHandlers[$format]) || !empty($this->formats[$format]);
+
+        return isset($this->customHandlers[$format]) || isset($this->formats[$format]);
     }
 
     /**

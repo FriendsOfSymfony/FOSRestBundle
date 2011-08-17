@@ -88,16 +88,9 @@ This requires adding the JMSSerializerBundle to you vendors:
 See the JMSSerializerBundle documentation for details on how to serialize
 data into different formats.
 
-Setting a format to some value that evaluates to a Boolean true means that the format
-is enabled. Setting the format to "templating" mean that View layer will use templating
-service system to generate the Response content. Setting the format to the id of a
-service means that this service is supposed to be used in the optional body listener
-to decode the given request body for the given format.
-
-The formats may either be set to:
-- "true" aka supporting the given format while using the JMSSerializerBundle to generate the Response content
-- "some service" aka supporting the given format while using the JMSSerializerBundle to generate the Response content
-- "templating" aka supporting the given format and using the
+The formats and template_formats settings determine which formats are supported via
+the serializer and which via the template layer. Note that a value of "false" means
+that the given format is disabled.
 
 When using RouteRedirectView::create() the default behavior of forcing a redirect to the
 route for html is enabled, but needs to be enabled for other formats if needed
@@ -107,8 +100,10 @@ Finally the HTTP response status code for failed validation is set to ``400``:
     # app/config.yml
     fos_rest:
         formats:
-            rss: my.encoder.rss
+            rss: true
             xml: false
+        template_formats:
+            html: true
         force_redirects:
             html: false
         failed_validation: HTTP_BAD_REQUEST
