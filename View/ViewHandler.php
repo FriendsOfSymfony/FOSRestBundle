@@ -136,7 +136,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function isFormatTemplating($format)
     {
-        return !empty($this->formats[$format]) && true === $this->formats[$format];
+        return !empty($this->formats[$format]);
     }
 
     /**
@@ -160,37 +160,37 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         if (isset($this->customHandlers[$format])) {
             return call_user_func($this->customHandlers[$format], $request, $view);
         } elseif ($this->supports($format)) {
-            return $this->createResponse($request, $view, $format);
+            return $this->createResponse($view, $request, $format);
         }
 
         return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
     }
 
     /**
-     * Generic transformer
+     * Handles creation of a Response using either redirection or the templating/serializer service
      *
-     * Handles target and parameter transformation into a response
-     *
-     * @param Request $request
      * @param View $view
+     * @param Request $request
      * @param string $format
      *
      * @return Response
      */
-    protected function createResponse(Request $request, View $view, $format)
+    protected function createResponse(View $view, Request $request, $format)
     {
+        $data = $view->getData();
         $headers = $view->getHeaders();
         $headers['Content-Type'] = $request->getMimeType($format);
-
-        $data = $view->getData();
 
         $location = $view->getLocation();
         if (!$location && ($route = $view->getRoute())) {
             $location = $this->container->get('router')->generate($route, (array)$data, true);
         }
+
         if ($location) {
             $headers['Location'] = $location;
-            $code = isset($this->forceRedirects[$format]) ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
+
+            $code = isset($this->forceRedirects[$format])
+                ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
 
             if ('html' === $format) {
                 $response = new RedirectResponse($headers['Location'], $code);
