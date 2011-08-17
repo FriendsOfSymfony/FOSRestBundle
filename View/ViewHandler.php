@@ -81,7 +81,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function supports($format)
     {
-
         return isset($this->customHandlers[$format]) || isset($this->formats[$format]);
     }
 
@@ -174,7 +173,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @param Request $request
      * @param View $view
-     * @param Response $response
      * @param string $format
      *
      * @return Response
@@ -186,7 +184,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         $data = $view->getData();
 
-        // handle redirects
         $location = $view->getLocation();
         if (!$location && ($route = $view->getRoute())) {
             $location = $this->container->get('router')->generate($route, (array)$data, true);
