@@ -30,26 +30,16 @@ class FOSRestExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        // TODO move this to the Configuration class as soon as it supports setting such a default
-        array_unshift($configs, array(
-            'formats' => array(
-                'json'  => 'fos_rest.decoder.json',
-                'xml'   => 'fos_rest.decoder.xml',
-                'html'  => 'templating',
-            ),
-            'force_redirects' => array(
-                'html'  => true,
-            ),
-        ));
-
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
+        $formats = array_merge(array_fill_keys($config['formats'], false), array_fill_keys($config['templating_formats'], true));
+
         $container->setAlias($this->getAlias().'.view_handler', $config['service']['view_handler']);
-        $container->setParameter($this->getAlias().'.formats', $config['formats']);
+        $container->setParameter($this->getAlias().'.formats', $formats);
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
 
         foreach ($config['force_redirects'] as $format => $code) {

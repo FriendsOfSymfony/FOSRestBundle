@@ -112,6 +112,18 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertAlias('fos_rest.view_handler.default', 'fos_rest.view_handler');
     }
 
+    public function testLoadFormatsWithDefaults()
+    {
+        $this->extension->load(array(), $this->container);
+        $formats = array(
+            'json' => false,
+            'xml' => false,
+            'html' => true
+        );
+
+        $this->assertEquals($formats, $this->container->getParameter('fos_rest.formats'));
+    }
+
     /**
      * Test that extension loads properly.
      */
