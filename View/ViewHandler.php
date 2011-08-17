@@ -110,10 +110,13 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * - set the status code to the failed_validation configuration is the form instance has errors
      * - set inValidFormKey so that the form instance can be replaced with createView() if the format uses templating
      *
+     * @param View $view view instance
      * @return int HTTP status code
      */
-    private function getStatusCodeFromView(View $view, $data)
+    private function getStatusCodeFromView(View $view)
     {
+        $data = $view->getData();
+
         if (null !== $code = $view->getStatusCode()) {
             return $code;
         }
@@ -190,7 +193,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
         if ($location) {
             $headers['Location'] = $location;
-            $code = isset($this->forceRedirects[$format]) ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view, $data);
+            $code = isset($this->forceRedirects[$format]) ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
 
             if ('html' === $format) {
                 $response = new RedirectResponse($headers['Location'], $code);
@@ -234,6 +237,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $content = $this->container->get('serializer')->serialize($data, $format);
         }
 
-        return new Response($content, $this->getStatusCodeFromView($view, $data), $headers);
+        return new Response($content, $this->getStatusCodeFromView($view), $headers);
     }
 }
