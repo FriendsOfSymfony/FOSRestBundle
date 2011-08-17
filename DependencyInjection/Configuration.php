@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder,
+    Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition,
     Symfony\Component\Config\Definition\ConfigurationInterface;
 
 use FOS\RestBundle\Response\Codes;
@@ -38,39 +39,106 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->fixXmlConfig('format', 'formats')
-            ->fixXmlConfig('decoder', 'decoders')
+            ->fixXmlConfig('templating_format', 'templating_formats')
             ->fixXmlConfig('force_redirect', 'force_redirects')
-            ->fixXmlConfig('normalizer', 'normalizers')
-            ->fixXmlConfig('class', 'classes')
-            ->fixXmlConfig('service', 'services')
             ->children()
                 ->arrayNode('formats')
-                    ->useAttributeAsKey('name')
-                    ->prototype('scalar')
-                        ->treatFalseLike(null)
-                        ->validate()
-                            ->ifNull()
-                            ->thenUnset()
-                        ->end()
-                    ->end()
+                    ->defaultValue(array('json', 'xml'))
+                    ->prototype('scalar')->end()
                 ->end()
-                ->arrayNode('decoders')
-                    ->useAttributeAsKey('name')
-                    ->prototype('scalar')
-                        ->treatFalseLike(null)
-                        ->validate()
-                            ->ifNull()
-                            ->thenUnset()
-                        ->end()
-                    ->end()
+                ->arrayNode('templating_formats')
+                    ->defaultValue(array('html'))
+                    ->prototype('scalar')->end()
                 ->end()
                 ->arrayNode('force_redirects')
                     ->useAttributeAsKey('name')
                     ->prototype('scalar')->end()
                 ->end()
-                ->arrayNode('normalizers')
-                    ->prototype('scalar')->end()
+                ->arrayNode('routing_loader')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('default_format')->defaultNull()->end()
+                    ->end()
                 ->end()
+                ->booleanNode('view_response_listener')->defaultTrue()->end()
+                ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
+                ->arrayNode('service')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
+
+        $this->addExceptionSection($rootNode);
+        $this->addBodyListenerSection($rootNode);
+        $this->addFormatListenerSection($rootNode);
+        $this->addFlashMessageListenerSection($rootNode);
+        
+        return $treeBuilder;
+    }
+
+    private function addBodyListenerSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('body_listener')
+                    ->fixXmlConfig('decoder', 'decoders')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->arrayNode('decoders')
+                            ->useAttributeAsKey('name')
+                            ->defaultValue(array('json' => 'fos_rest.decoder.json', 'xml' => 'fos_rest.decoder.xml'))
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    private function addFormatListenerSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('format_listener')
+                    ->fixXmlConfig('default_priority', 'default_priorities')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->arrayNode('default_priorities')
+                            ->defaultValue(array('html', '*/*'))
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->scalarNode('fallback_format')->defaultValue('html')->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    private function addFlashMessageListenerSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('flash_message_listener')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->scalarNode('name')->defaultValue('flashes')->end()
+                        ->scalarNode('path')->defaultValue('/')->end()
+                        ->scalarNode('domain')->defaultNull()->end()
+                        ->scalarNode('secure')->defaultFalse()->end()
+                        ->scalarNode('httpOnly')->defaultTrue()->end()
+                    ->end()
+                ->end()
+            ->end();
+    }
+
+    private function addExceptionSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
                 ->arrayNode('exception')
                     ->fixXmlConfig('code', 'codes')
                     ->fixXmlConfig('message', 'messages')
@@ -86,64 +154,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('format_listener')
-                    ->fixXmlConfig('default_priority', 'default_priorities')
-                    ->treatTrueLike(array('default_priorities' => array('html', '*/*'), 'fallback_format' => 'html'))
-                    ->children()
-                        ->arrayNode('default_priorities')
-                            ->treatTrueLike(array('html', '*/*'))
-                            ->prototype('scalar')->end()
-                        ->end()
-                        ->scalarNode('fallback_format')->defaultValue('html')->end()
-                    ->end()
-                ->end()
-                ->arrayNode('routing_loader')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('default_format')->defaultNull()->end()
-                    ->end()
-                ->end()
-                ->booleanNode('body_listener')->defaultFalse()->end()
-                ->arrayNode('flash_message_listener')
-                    ->treatTrueLike(array('name' => 'flashes', 'path' => '/', 'domain' => null, 'secure' => false, 'httpOnly' => true))
-                    ->children()
-                        ->scalarNode('name')->defaultValue('flashes')->end()
-                        ->scalarNode('path')->defaultValue('/')->end()
-                        ->scalarNode('domain')->defaultNull()->end()
-                        ->scalarNode('secure')->defaultFalse('')->end()
-                        ->scalarNode('httpOnly')->defaultTrue('')->end()
-                    ->end()
-                ->end()
-                ->booleanNode('frameworkextra_bundle')->defaultFalse()->end()
-                ->booleanNode('serializer_bundle')->defaultFalse()->end()
-                ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
-                ->arrayNode('classes')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('view_handler')->defaultValue('FOS\RestBundle\View\ViewHandler')->end()
-                        ->scalarNode('decoder_json')->defaultValue('FOS\RestBundle\Decoder\JsonDecoder')->end()
-                        ->scalarNode('decoder_xml')->defaultValue('FOS\RestBundle\Serializer\Decoder\XmlDecoder')->end()
-                        ->scalarNode('body_listener')->defaultValue('FOS\RestBundle\EventListener\BodyListener')->end()
-                        ->scalarNode('format_listener')->defaultValue('FOS\RestBundle\EventListener\FormatListener')->end()
-                        ->scalarNode('flash_message_listener')->defaultValue('FOS\RestBundle\EventListener\FlashMessageListener')->end()
-                        ->scalarNode('view_response_listener')->defaultValue('FOS\RestBundle\EventListener\ViewResponseListener')->end()
-                    ->end()
-                ->end()
-                ->arrayNode('services')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('view')->defaultNull()->end()
-                        ->scalarNode('serializer')->defaultNull()->end()
-                        ->scalarNode('json')->defaultNull()->end()
-                        ->scalarNode('xml')->defaultNull()->end()
-                        ->scalarNode('html')->defaultNull()->end()
-                        ->scalarNode('request_format_listener')->defaultNull()->end()
-                    ->end()
-                ->end()
-            ->end()
-        ->end();
-
-        return $treeBuilder;
+            ->end();
     }
-
 }

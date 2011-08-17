@@ -11,8 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Processor,
-    Symfony\Component\Config\FileLocator,
+use Symfony\Component\Config\FileLocator,
     Symfony\Component\HttpKernel\DependencyInjection\Extension,
     Symfony\Component\DependencyInjection\Reference,
     Symfony\Component\DependencyInjection\ContainerInterface,
@@ -31,32 +30,17 @@ class FOSRestExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        // TODO move this to the Configuration class as soon as it supports setting such a default
-        array_unshift($configs, array(
-            'formats' => array(
-                'json'  => 'fos_rest.decoder.json',
-                'xml'   => 'fos_rest.decoder.xml',
-                'html'  => 'templating',
-            ),
-            'force_redirects' => array(
-                'html'  => true,
-            ),
-        ));
-
-        $processor = new Processor();
-        $configuration = new Configuration();
-        $config = $processor->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
         $loader->load('routing.xml');
 
-        $container->setParameter($this->getAlias().'.formats', $config['formats']);
-        $container->setParameter($this->getAlias().'.decoders', $config['formats']);
+        $formats = array_merge(array_fill_keys($config['formats'], false), array_fill_keys($config['templating_formats'], true));
 
-        foreach ($config['classes'] as $key => $value) {
-            $container->setParameter($this->getAlias().'.'.$key.'.class', $value);
-        }
+        $container->setAlias($this->getAlias().'.view_handler', $config['service']['view_handler']);
+        $container->setParameter($this->getAlias().'.formats', $formats);
+        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
 
         foreach ($config['force_redirects'] as $format => $code) {
             if (true === $code) {
@@ -80,30 +64,25 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['body_listener'])) {
             $loader->load('body_listener.xml');
+
+            $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
         }
 
         if (!empty($config['format_listener'])) {
             $loader->load('format_listener.xml');
+
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
         
         if (!empty($config['flash_message_listener'])) {
-            $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
-
             $loader->load('flash_message_listener.xml');
+
+            $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
         }
 
-        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
-
-        if (!empty($config['frameworkextra_bundle'])) {
-            $loader->load('frameworkextra_bundle.xml');
-        }
-
-        foreach ($config['services'] as $key => $value) {
-            if (isset($value)) {
-                $container->setAlias($this->getAlias().'.'.$key, $value);
-            }
+        if ($config['view_response_listener']) {
+            $loader->load('view_response_listener.xml');
         }
     }
 }
