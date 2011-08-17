@@ -134,7 +134,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function isFormatTemplating($format)
     {
-        return !empty($this->formats[$format]) && 'templating' === $this->formats[$format];
+        return !empty($this->formats[$format]) && true === $this->formats[$format];
     }
 
     /**
