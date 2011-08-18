@@ -72,3 +72,10 @@ check_username_users:
   method:     GET
   pattern:    /users/check_username.{_format}
   controller: ::check_usernameUsersAction
+
+hide_user_comment:
+  method:     PUT
+  pattern:    /users/{userId}/comments/{commentId}/hide.{_format}
+  controller: ::hideUserCommentAction
+
+  
