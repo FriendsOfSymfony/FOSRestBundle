@@ -35,6 +35,7 @@ class FOSRestExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
         $loader->load('routing.xml');
+        $loader->load('util.xml');
 
         $formats = array();
         foreach ($config['formats'] as $format => $enabled) {
@@ -84,7 +85,7 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
-        
+
         if (!empty($config['flash_message_listener'])) {
             $loader->load('flash_message_listener.xml');
 
