@@ -49,6 +49,7 @@ class Configuration implements ConfigurationInterface
                     ->fixXmlConfig('format', 'formats')
                     ->fixXmlConfig('templating_format', 'templating_formats')
                     ->fixXmlConfig('force_redirect', 'force_redirects')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('default_engine')->defaultValue('twig')->end()
                         ->arrayNode('force_redirects')
