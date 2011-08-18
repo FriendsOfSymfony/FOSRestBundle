@@ -95,18 +95,21 @@ that the given format is disabled.
 When using RouteRedirectView::create() the default behavior of forcing a redirect to the
 route for html is enabled, but needs to be enabled for other formats if needed
 
-Finally the HTTP response status code for failed validation is set to ``400``:
+Finally the HTTP response status code for failed validation is set to ``400`` and the
+default templating engine is set to ``php``:
 
     # app/config.yml
     fos_rest:
-        formats:
-            rss: true
-            xml: false
-        template_formats:
-            html: true
-        force_redirects:
-            html: false
-        failed_validation: HTTP_BAD_REQUEST
+        view:
+            formats:
+                rss: true
+                xml: false
+            template_formats:
+                html: true
+            force_redirects:
+                html: false
+            failed_validation: HTTP_BAD_REQUEST
+            default_engine: php
 
 Listener support
 ----------------
@@ -192,7 +195,8 @@ Finally enable the SensioFrameworkExtraBundle listener in the RestBundle:
 
     # app/config.yml
     fos_rest:
-        view_response_listener: true
+        view:
+            view_response_listener: true
 
 ExceptionController support
 ---------------------------
@@ -231,8 +235,8 @@ Single RESTful controller routes
 
     # app/config/routing.yml
     users:
-      type:     rest
-      resource: Acme\HelloBundle\Controller\UsersController
+        type:     rest
+        resource: Acme\HelloBundle\Controller\UsersController
 
 This will tell Symfony2 to automatically generate proper REST routes from your `UsersController` action names.
 Notice `type: rest` option. It's required so that the RestBundle can find which routes are supported.
@@ -367,13 +371,13 @@ In this case, you must first specify resource relations in special rest YML or X
 
     # src/Acme/HelloBundle/Resources/config/users_routes.yml
     users:
-      type:     rest
-      resource: "@AcmeHello\Controller\UsersController"
+        type:     rest
+        resource: "@AcmeHello\Controller\UsersController"
     
     comments:
-      type:     rest
-      parent:   users
-      resource: "@AcmeHello\Controller\CommentsController"
+        type:     rest
+        parent:   users
+        resource: "@AcmeHello\Controller\CommentsController"
 
 Notice `parent: users` option in the second case. This option specifies that the comments resource
 is child of the users resource. In this case, your `UsersController` MUST always have a single
@@ -428,8 +432,8 @@ Last step is mapping of your collection routes into the application `routing.yml
 
     # app/config/routing.yml
     users:
-      type:     rest
-      resource: "@AcmeHello/Resources/config/users_routes.yml"
+        type:     rest
+        resource: "@AcmeHello/Resources/config/users_routes.yml"
 
 That's all. Note that it's important to use the `type: rest` param when including your application's
 routing file. Without it, rest routes will still work but resource collections will fail. If you get an
@@ -456,9 +460,9 @@ annotations) parameter:
 
     # src/Acme/HelloBundle/Resources/config/users_routes.yml
     comments:
-      type:         rest
-      resource:     "@AcmeHello\Controller\CommentsController"
-      name_prefix:  api_
+        type:         rest
+        resource:     "@AcmeHello\Controller\CommentsController"
+        name_prefix:  api_
 
 With this configuration, route name would become:
 

@@ -38,12 +38,12 @@ class FOSRestExtension extends Extension
         $loader->load('util.xml');
 
         $formats = array();
-        foreach ($config['formats'] as $format => $enabled) {
+        foreach ($config['view']['formats'] as $format => $enabled) {
             if ($enabled) {
                 $formats[$format] = false;
             }
         }
-        foreach ($config['templating_formats'] as $format => $enabled) {
+        foreach ($config['view']['templating_formats'] as $format => $enabled) {
             if ($enabled) {
                 $formats[$format] = true;
             }
@@ -51,14 +51,25 @@ class FOSRestExtension extends Extension
 
         $container->setAlias($this->getAlias().'.view_handler', $config['service']['view_handler']);
         $container->setParameter($this->getAlias().'.formats', $formats);
-        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
+        $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);
 
-        foreach ($config['force_redirects'] as $format => $code) {
+        foreach ($config['view']['force_redirects'] as $format => $code) {
             if (true === $code) {
-                $config['force_redirects'][$format] = Codes::HTTP_FOUND;
+                $config['view']['force_redirects'][$format] = Codes::HTTP_FOUND;
             }
         }
-        $container->setParameter($this->getAlias().'.force_redirects', $config['force_redirects']);
+        $container->setParameter($this->getAlias().'.force_redirects', $config['view']['force_redirects']);
+
+        if (is_string($config['view']['failed_validation'])) {
+            $config['view']['failed_validation'] = constant('\FOS\RestBundle\Response\Codes::'.$config['view']['failed_validation']);
+        }
+        $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
+
+        if (!empty($config['view']['view_response_listener'])) {
+            $loader->load('view_response_listener.xml');
+        }
+
+        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (is_string($code)) {
@@ -67,11 +78,6 @@ class FOSRestExtension extends Extension
         }
         $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
         $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
-
-        if (is_string($config['failed_validation'])) {
-            $config['failed_validation'] = constant('\FOS\RestBundle\Response\Codes::'.$config['failed_validation']);
-        }
-        $container->setParameter($this->getAlias().'.failed_validation', $config['failed_validation']);
 
         if (!empty($config['body_listener'])) {
             $loader->load('body_listener.xml');
@@ -90,10 +96,6 @@ class FOSRestExtension extends Extension
             $loader->load('flash_message_listener.xml');
 
             $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
-        }
-
-        if (!empty($config['view_response_listener'])) {
-            $loader->load('view_response_listener.xml');
         }
     }
 }

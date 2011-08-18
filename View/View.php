@@ -45,7 +45,7 @@ class View
     /**
      * @var string
      */
-    private $engine = 'twig';
+    private $engine;
 
     /**
      * @var string

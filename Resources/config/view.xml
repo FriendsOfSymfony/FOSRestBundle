@@ -10,6 +10,7 @@
             <argument>%fos_rest.formats%</argument>
             <argument>%fos_rest.failed_validation%</argument>
             <argument>%fos_rest.force_redirects%</argument>
+            <argument>%fos_rest.default_engine%</argument>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>

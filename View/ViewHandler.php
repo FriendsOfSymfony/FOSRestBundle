@@ -58,18 +58,25 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     protected $forceRedirects;
 
     /**
+     * @var string default engine (twig, php ..)
+     */
+    protected $defaultEngine;
+
+    /**
      * Constructor
      *
      * @param array $formats the supported formats as keys and if the given formats uses templating is denoted by a true value
      * @param int $failedValidationCode The HTTP response status code for a failed validation
      * @param string $defaultFormKey    The default parameter form key
      * @param array $forceRedirects     If to force a redirect for the given key format, with value being the status code to use
+     * @param string $defaultEngine default engine (twig, php ..)
      */
-    public function __construct(array $formats = null, $failedValidationCode = Codes::HTTP_BAD_REQUEST, array $forceRedirects = null)
+    public function __construct(array $formats = null, $failedValidationCode = Codes::HTTP_BAD_REQUEST, array $forceRedirects = null, $defaultEngine = 'twig')
     {
         $this->formats = (array)$formats;
         $this->failedValidationCode = $failedValidationCode;
         $this->forceRedirects = (array)$forceRedirects;
+        $this->defaultEngine = $defaultEngine;
     }
 
     /**
@@ -225,7 +232,8 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
                 }
 
                 if (null === $template->get('engine')) {
-                    $template->set('engine', $view->getEngine());
+                    $engine = $view->getEngine() ?: $this->defaultEngine;
+                    $template->set('engine', $engine);
                 }
             }
 
