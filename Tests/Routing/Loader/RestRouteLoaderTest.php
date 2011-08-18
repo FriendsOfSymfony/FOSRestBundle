@@ -20,7 +20,7 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader,
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
 class RestRouteLoaderTest extends LoaderTest
-{ 
+{
     /**
      * Test that UsersController RESTful class gets parsed correctly.
      */
@@ -30,7 +30,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(19, count($collection->all()));
+        $this->assertEquals(20, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -85,7 +85,7 @@ class RestRouteLoaderTest extends LoaderTest
 
     /**
      * Test that conventional actions exist and are registered as GET methods
-     * 
+     *
      * @see https://github.com/FriendsOfSymfony/RestBundle/issues/67
      */
     public function testConventionalActions()

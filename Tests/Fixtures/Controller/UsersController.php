@@ -30,7 +30,7 @@ class UsersController extends Controller
 
     public function putUserAction($slug)
     {} // [PUT] /users/{slug}
-    
+
     public function patchUserAction($slug)
     {} // [PATCH] /users/{slug}
 
@@ -78,4 +78,7 @@ class UsersController extends Controller
 
     public function removeUserCommentAction($slug, $id)
     {} // [GET] /users/{slug}/comments/{id}/remove
+
+    public function hideUserCommentAction($userId, $commentId)
+    {}
 }

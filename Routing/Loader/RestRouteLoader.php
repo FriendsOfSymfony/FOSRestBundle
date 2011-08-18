@@ -230,10 +230,10 @@ class RestRouteLoader implements LoaderInterface
                     // If we have argument for current resource, then it's object. Otherwise - it's collection
                     if (isset($arguments[$i])) {
                         if ($patternStart) {
-                            $urlParts[] = $patternStart . '/{' . $arguments[$i]->getName() . '}';
+                            $urlParts[] = strtolower($patternStart) . '/{' . $arguments[$i]->getName() . '}';
                         } elseif (null !== $resource) {
                             $urlParts[] =
-                                Pluralization::pluralize($resource) . '/{' . $arguments[$i]->getName() . '}';
+                                strtolower(Pluralization::pluralize($resource)) . '/{' . $arguments[$i]->getName() . '}';
                         } else {
                             $urlParts[] ='{' . $arguments[$i]->getName() . '}';
                         }
@@ -241,7 +241,7 @@ class RestRouteLoader implements LoaderInterface
                         if ($patternStart) {
                             $urlParts[] = $patternStart;
                         } elseif (null !== $resource) {
-                            $urlParts[] = $resource;
+                            $urlParts[] = strtolower($resource);
                         }
                     }
                 }
@@ -267,7 +267,7 @@ class RestRouteLoader implements LoaderInterface
                     }
                 }
 
-                $pattern        = strtolower(implode('/', $urlParts));
+                $pattern        = implode('/', $urlParts);
                 $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => $this->defaultFormat);
                 $requirements   = array('_method'     => strtoupper($httpMethod));
                 $options        = array();
