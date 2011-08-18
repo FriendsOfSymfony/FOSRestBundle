@@ -25,7 +25,7 @@ class BodyListener extends ContainerAware
     /**
      * @var array
      */
-    protected $decoders;
+    private $decoders;
 
     /**
      * Set a serializer instance

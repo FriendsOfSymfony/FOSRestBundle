@@ -11,10 +11,6 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use FOS\RestBundle\View\RedirectView;
-
-use FOS\RestBundle\View\RouteRedirectView;
-
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
@@ -33,7 +29,7 @@ class ViewResponseListener
     /**
      * @var Symfony\Component\DependencyInjection\ContainerInterface
      */
-    protected $container;
+    private $container;
 
     /**
      * Constructor.

@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent,
@@ -28,12 +27,12 @@ class FlashMessageListener
     /**
      * @var array
      */
-    protected $options;
+    private $options;
 
     /**
      * @var Session
      */
-    protected $session;
+    private $session;
 
     /**
      * Set a serializer instance
