@@ -60,19 +60,19 @@ Basic configuration
 -------------------
 
 The RestBundle allows adapting several classes it uses. Alternatively entire
-services may be adapted. In the following examples the default Json encoder class
+services may be adapted. In the following examples the default Json decoder class
 is modified and a custom serializer service is configured:
 
     # app/config.yml
     fos_rest:
         classes:
-            json: MyProject\MyBundle\Serializer\Encoder\JsonEncoder
+            json: MyProject\MyBundle\Decoder\JsonDecoder
         services:
             serializer: my.serializer
 
-Note the service for the RSS encoder needs to be defined in a custom bundle:
+Note the service for the RSS decoder needs to be defined in a custom bundle:
 
-    <service id="my.encoder.rss" class="MyProject\MyBundle\Serializer\Encoder\RSSEncoder" />
+    <service id="my.decoder.rss" class="MyProject\MyBundle\Serializer\Decoder\RSSDecoder" />
 
 View support
 ------------
@@ -177,9 +177,6 @@ either set a custom ``FormatListener`` class or register their own "onKernelCont
     fos_rest:
         classes:
             format_listener: MyProject\MyBundle\Controller\FormatListener
-
-Note see the section about the view support in regards to how to register/unregister
-encoders for specific formats as the request body decoding uses encoders for decoding.
 
 SensioFrameworkExtraBundle support
 ----------------------------------
