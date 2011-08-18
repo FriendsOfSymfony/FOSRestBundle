@@ -31,22 +31,25 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider testOnKernelRequestDataProvider
      */
-    public function testOnKernelRequest($request, $method, $contentType, $expectedParameters)
+    public function testOnKernelRequest($decode, $request, $method, $contentType, $expectedParameters)
     {
-        $encoder = $this->getMockBuilder('Symfony\Component\Serializer\Encoder\DecoderInterface')->disableOriginalConstructor()->getMock();
-        $encoder->expects($this->any())
+        $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->disableOriginalConstructor()->getMock();
+        $decoder->expects($this->any())
               ->method('decode')
               ->will($this->returnValue($request->getContent()));
 
-        $serializer = $this->getMockBuilder('Symfony\Component\Serializer\Serializer')->disableOriginalConstructor()->getMock();
-        $serializer->expects($this->any())
-              ->method('supportsDecoding')
-              ->will($this->returnValue(true));
-        $serializer->expects($this->any())
-              ->method('getEncoder')
-              ->will($this->returnValue($encoder));
+        $listener = new BodyListener(array('json' => 'foo'));
 
-        $listener = new BodyListener($serializer);
+        if ($decode) {
+            $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+            $container
+                ->expects($this->once())
+                ->method('get')
+                ->with('foo')
+                ->will($this->returnValue($decoder));
+
+            $listener->setContainer($container);
+        }
 
         $request->setMethod($method);
         $request->headers = new HeaderBag(array('Content-Type' => $contentType));
@@ -63,14 +66,14 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public static function testOnKernelRequestDataProvider()
     {
         return array(
-           'Empty POST request' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array('foo')),
-           'Empty PUT request' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'PUT', 'application/json', array('foo')),
-           'Empty PATCH request' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'PATCH', 'application/json', array('foo')),
-           'Empty DELETE request' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'DELETE', 'application/json', array('foo')),
-           'Empty GET request' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'GET', 'application/json', array()),
-           'POST request with parameters' => array(new Request(array(), array('bar'), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array('bar')),
-           'POST request with unallowed format' => array(new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/fooformat', array()),
-           'POST request with no Content-Type' => array(new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), 'foo'), 'POST', null, array('foo')),
+           'Empty POST request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array('foo')),
+           'Empty PUT request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'PUT', 'application/json', array('foo')),
+           'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'PATCH', 'application/json', array('foo')),
+           'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'DELETE', 'application/json', array('foo')),
+           'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'GET', 'application/json', array()),
+           'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array('bar')),
+           'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/fooformat', array()),
+           'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), 'foo'), 'POST', null, array('foo')),
         );
     }
     

@@ -37,20 +37,19 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $response = new Response();
 
         $view = $this->getMockBuilder('\FOS\RestBundle\View\View')->disableOriginalConstructor()->getMock();
-        $view->expects($this->once())
-              ->method('handle')
-              ->will($this->returnValue($response));
-        $view->expects($this->once())
-              ->method('getParameters')
-              ->will($this->returnValue(array('foo' => 'bar', 'ding' => 'dong')));
-        $view->expects($this->once())
-              ->method('setParameters')
-              ->with(array('foo' => 'bar', 'ding' => 'dong', 'halli' => 'galli'));
-        $view->expects($this->once())
-              ->method('setTemplate')
-              ->with($template);
+
+        $viewHandler = $this->getMock('\FOS\RestBundle\View\ViewHandlerInterface');
+        $viewHandler->expects($this->once())
+            ->method('handle')
+            ->with($this->isInstanceOf('\FOS\RestBundle\View\View'), $this->equalTo($request))
+            ->will($this->returnValue($response));
 
         $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')->disableOriginalConstructor()->getMock();
+        $container->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('fos_rest.view_handler'))
+            ->will($this->returnValue($viewHandler));
+
         $listener = new ViewResponseListener($container);
 
         $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent')->disableOriginalConstructor()->getMock();
@@ -69,7 +68,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelView($event);
     }
 
-    public function testOnKernelViewArray()
+    public function testOnKernelViewWhenControllerResultIsNotViewObject()
     {
         $request = new Request();
 
@@ -82,9 +81,12 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $event->expects($this->exactly(2))
+        $event->expects($this->once())
             ->method('getControllerResult')
             ->will($this->returnValue(array()));
+
+        $event->expects($this->never())
+            ->method('setResponse');
 
         $listener->onKernelView($event);
     }

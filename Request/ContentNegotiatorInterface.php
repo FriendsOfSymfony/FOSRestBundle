@@ -9,14 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Controller\Annotations;
+namespace FOS\RestBundle\Request;
 
-use Doctrine\Common\Annotations\Annotation;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Prefix Route annotation class.
- * @Annotation
- */
-class Prefix extends Annotation
+interface ContentNegotiatorInterface
 {
+    function getBestMediaType(Request $request, array $availableTypes);
 }

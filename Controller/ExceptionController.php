@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the FOSRestBundle package.
  *
@@ -14,10 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
 
 use FOS\RestBundle\Response\Codes,
-    FOS\RestBundle\Serializer\Encoder\TemplatingAwareEncoderInterface;
+    FOS\RestBundle\View\View;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
@@ -36,7 +38,7 @@ class ExceptionController extends ContainerAware
      *
      * @return Response                         Response instance
      */
-    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
+    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
         // the count variable avoids an infinite loop on
         // some Windows configurations where ob_get_level()
@@ -47,7 +49,7 @@ class ExceptionController extends ContainerAware
             $currentContent .= ob_get_clean();
         }
 
-        $format = $this->getFormat($format);
+        $format = $this->getFormat($request, $format);
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined';
             return new Response($message, Codes::HTTP_NOT_ACCEPTABLE);
@@ -57,28 +59,23 @@ class ExceptionController extends ContainerAware
         $parameters = $this->getParameters($currentContent, $code, $exception, $logger, $format);
 
         try {
-            $view = $this->container->get('fos_rest.view');
-
+            $view = View::create($parameters, $code, $exception->getHeaders());
             $view->setFormat($format);
-            $serializer = $view->getSerializer();
-            $encoder = $serializer->getEncoder($format);
 
-            if ($encoder instanceof TemplatingAwareEncoderInterface) {
+            $viewHandler = $this->container->get('fos_rest.view_handler');
+            if ($viewHandler->isFormatTemplating($format)) {
                 $templating = $this->container->get('templating');
-                $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug());
+                $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug(), $this->container->getParameter('templating.engines'));
+
                 $view->setTemplate($template);
             }
 
-            $view->setParameters($parameters);
-            $view->setStatusCode($code);
-
-            $response = $view->handle();
+            $response = $viewHandler->handle($view);
         } catch (\Exception $e) {
             $message = $this->container->get('kernel')->isDebug() ? $e->getMessage() : 'Internal Server Error';
             $response = new Response($message, Codes::HTTP_INTERNAL_SERVER_ERROR);
+            $response->headers->replace($exception->getHeaders());
         }
-
-        $response->headers->replace($exception->getHeaders());
 
         return $response;
     }
@@ -117,13 +114,16 @@ class ExceptionController extends ContainerAware
     /**
      * Determine the format to use for the response
      *
+     * @param Request              $request   Request instance
      * @param string               $format    The format to use for rendering (html, xml, ...)
      *
      * @return string                         Encoding format
      */
-    protected function getFormat($format)
+    protected function getFormat(Request $request, $format)
     {
-        return $format;
+        $priorities = $this->container->getParameter('fos_rest.default_priorities');
+        $contentNegotiator = $this->container->get('fos_rest.content_negotiator');
+        return $contentNegotiator->getBestMediaType($request, $priorities);
     }
 
     /**
@@ -155,7 +155,7 @@ class ExceptionController extends ContainerAware
         return $parameters;
     }
 
-    protected function findTemplate($templating, $format, $code, $debug)
+    protected function findTemplate($templating, $format, $code, $debug, array $engines)
     {
         $name = $debug ? 'exception' : 'error';
         if ($debug && 'html' == $format) {
@@ -164,16 +164,20 @@ class ExceptionController extends ContainerAware
 
         // when not in debug, try to find a template for the specific HTTP status code and format
         if (!$debug) {
-            $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format);
-            if ($templating->exists($template)) {
-                return $template;
+            foreach ($engines as $engine) {
+                $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format, $engine);
+                if ($templating->exists($template)) {
+                    return $template;
+                }
             }
         }
 
         // try to find a template for the given format
-        $template = new TemplateReference('TwigBundle', 'Exception', $name, $format);
-        if ($templating->exists($template)) {
-            return $template;
+        foreach ($engines as $engine) {
+            $template = new TemplateReference('TwigBundle', 'Exception', $name, $format, $engine);
+            if ($templating->exists($template)) {
+                return $template;
+            }
         }
 
         return new TemplateReference('TwigBundle', 'Exception', $name, 'html');
