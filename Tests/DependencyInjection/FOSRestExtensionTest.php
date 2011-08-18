@@ -39,6 +39,101 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         unset($this->container, $this->extension);
     }
 
+    public function testDisableBodyListener()
+    {
+        $config = array(
+            'fos_rest' => array('body_listener' => false)
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.body_listener'));
+    }
+
+    public function testLoadBodyListenerWithDefaults()
+    {
+        $this->extension->load(array(), $this->container);
+        $decoders = array(
+            'json' => 'fos_rest.decoder.json',
+            'xml' => 'fos_rest.decoder.xml'
+        );
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
+        $this->assertParameter($decoders, 'fos_rest.decoders');
+    }
+
+    public function testDisableFormatListener()
+    {
+        $config = array(
+            'fos_rest' => array('format_listener' => false)
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.format_listener'));
+    }
+
+    public function testLoadFormatListenerWithDefaults()
+    {
+        $this->extension->load(array(), $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
+        $this->assertParameter(array('html', '*/*'), 'fos_rest.default_priorities');
+        $this->assertParameter('html', 'fos_rest.fallback_format');
+    }
+
+    public function testDisableFlashMessageListener()
+    {
+        $config = array(
+            'fos_rest' => array('flash_message_listener' => false)
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.flash_message_listener'));
+    }
+
+    public function testLoadFlashMessageListenerWithDefaults()
+    {
+        $this->extension->load(array(), $this->container);
+        $options = array(
+            'name' => 'flashes',
+            'path' => '/',
+            'domain' => null,
+            'secure' => '',
+            'httpOnly' => true
+        );
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.flash_message_listener'));
+        $this->assertParameter($options, 'fos_rest.flash_message_listener.options');
+    }
+
+    public function testLoadServicesWithDefaults()
+    {
+        $this->extension->load(array(), $this->container);
+
+        $this->assertAlias('fos_rest.view_handler.default', 'fos_rest.view_handler');
+    }
+
+    public function testLoadFormatsWithDefaults()
+    {
+        $this->extension->load(array(), $this->container);
+        $formats = array(
+            'json' => false,
+            'xml' => false,
+            'html' => true
+        );
+
+        $this->assertEquals($formats, $this->container->getParameter('fos_rest.formats'));
+    }
+
+    public function testDisableViewResponseListener()
+    {
+        $config = array(
+            'fos_rest' => array('view' => array('view_response_listener' => false))
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.view_response_listener'));
+    }
+
     /**
      * Test that extension loads properly.
      */
@@ -116,5 +211,15 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($locatorRef, $arguments[0]);
         $this->assertEquals($processorRef, $arguments[1]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
+    }
+
+    private function assertAlias($value, $key)
+    {
+        $this->assertEquals($value, (string) $this->container->getAlias($key), sprintf('%s alias is correct', $key));
+    }
+
+    private function assertParameter($value, $key)
+    {
+        $this->assertEquals($value, $this->container->getParameter($key), sprintf('%s parameter is correct', $key));
     }
 }

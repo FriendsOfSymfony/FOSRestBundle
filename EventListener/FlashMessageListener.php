@@ -1,21 +1,19 @@
 <?php
 
+/*
+ * This file is part of the FOSRestBundle package.
+ *
+ * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent,
     Symfony\Component\HttpFoundation\Session,
     Symfony\Component\HttpFoundation\Cookie;
-
-/*
- * This file is part of the FOSRestBundle
- *
- * (c) Lukas Kahwe Smith <smith@pooteeweet.org>
- * (c) Konstantin Kudryashov <ever.zet@gmail.com>
- * (c) Bulat Shakirzyanov <avalanche123>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
 
 /**
  * This listener reads all flash messages and moves them into a cookie.
@@ -29,12 +27,12 @@ class FlashMessageListener
     /**
      * @var array
      */
-    protected $options;
+    private $options;
 
     /**
      * @var Session
      */
-    protected $session;
+    private $session;
 
     /**
      * Set a serializer instance
