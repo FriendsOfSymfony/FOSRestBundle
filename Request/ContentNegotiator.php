@@ -39,8 +39,8 @@ class ContentNegotiator implements ContentNegotiatorInterface
             return null;
         }
 
-        $catch_all_priority = in_array('*/*', $priorities);
-        return $this->getFormatByPriorities($request, $mimetypes, $priorities, $catch_all_priority);
+        $catchAllEnabled = in_array('*/*', $priorities);
+        return $this->getFormatByPriorities($request, $mimetypes, $priorities, $catchAllEnabled);
     }
 
     /**
@@ -49,11 +49,11 @@ class ContentNegotiator implements ContentNegotiatorInterface
      * @param   Request     $request        The request
      * @param   array       $mimetypes      Ordered array of mimetypes as keys with priroties s values
      * @param   array       $priorities     Ordered array of formats (highest priority first)
-     * @param   Boolean     $catch_all_priority     If there is a catch all priority
+     * @param   Boolean     $catchAllEnabled     If there is a catch all priority
      *
      * @return  void|string                 The format string
      */
-    protected function getFormatByPriorities($request, $mimetypes, $priorities, $catch_all_priority = false)
+    protected function getFormatByPriorities($request, $mimetypes, $priorities, $catchAllEnabled = false)
     {
         $max = reset($mimetypes);
         $keys = array_keys($mimetypes, $max);
@@ -69,7 +69,7 @@ class ContentNegotiator implements ContentNegotiatorInterface
                 $priority = array_search($format, $priorities);
                 if (false !== $priority) {
                     $formats[$format] = $priority;
-                } elseif ($catch_all_priority) {
+                } elseif ($catchAllEnabled) {
                     $formats[$format] = count($priorities);
                 }
             }
