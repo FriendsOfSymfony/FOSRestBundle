@@ -63,7 +63,8 @@ class ExceptionController extends ContainerAware
             $viewHandler = $this->container->get('fos_rest.view_handler');
             if ($viewHandler->isFormatTemplating($format)) {
                 $templating = $this->container->get('templating');
-                $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug());
+                $template = $this->findTemplate($templating, $format, $code, $this->container->get('kernel')->isDebug(), $this->container->getParameter('templating.engines'));
+
                 $view->setTemplate($template);
             }
 
@@ -149,7 +150,7 @@ class ExceptionController extends ContainerAware
         return $parameters;
     }
 
-    protected function findTemplate($templating, $format, $code, $debug)
+    protected function findTemplate($templating, $format, $code, $debug, array $engines)
     {
         $name = $debug ? 'exception' : 'error';
         if ($debug && 'html' == $format) {
@@ -158,16 +159,20 @@ class ExceptionController extends ContainerAware
 
         // when not in debug, try to find a template for the specific HTTP status code and format
         if (!$debug) {
-            $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format);
-            if ($templating->exists($template)) {
-                return $template;
+            foreach ($engines as $engine) {
+                $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format, $engine);
+                if ($templating->exists($template)) {
+                    return $template;
+                }
             }
         }
 
         // try to find a template for the given format
-        $template = new TemplateReference('TwigBundle', 'Exception', $name, $format);
-        if ($templating->exists($template)) {
-            return $template;
+        foreach ($engines as $engine) {
+            $template = new TemplateReference('TwigBundle', 'Exception', $name, $format, $engine);
+            if ($templating->exists($template)) {
+                return $template;
+            }
         }
 
         return new TemplateReference('TwigBundle', 'Exception', $name, 'html');
