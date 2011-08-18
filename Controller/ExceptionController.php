@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\HttpKernel\Exception\FlattenException,
     Symfony\Component\HttpKernel\Log\DebugLoggerInterface,
+    Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
 
 use FOS\RestBundle\Response\Codes,
@@ -37,7 +38,7 @@ class ExceptionController extends ContainerAware
      *
      * @return Response                         Response instance
      */
-    public function showAction(FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
+    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
         // the count variable avoids an infinite loop on
         // some Windows configurations where ob_get_level()
@@ -48,7 +49,7 @@ class ExceptionController extends ContainerAware
             $currentContent .= ob_get_clean();
         }
 
-        $format = $this->getFormat($format);
+        $format = $this->getFormat($request, $format);
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined';
             return new Response($message, Codes::HTTP_NOT_ACCEPTABLE);
@@ -113,13 +114,16 @@ class ExceptionController extends ContainerAware
     /**
      * Determine the format to use for the response
      *
+     * @param Request              $request   Request instance
      * @param string               $format    The format to use for rendering (html, xml, ...)
      *
      * @return string                         Encoding format
      */
-    protected function getFormat($format)
+    protected function getFormat(Request $request, $format)
     {
-        return $format;
+        $priorities = $this->container->getParameter('fos_rest.default_priorities');
+        $contentNegotiator = $this->container->get('fos_rest.content_negotiator');
+        return $contentNegotiator->getBestMediaType($request, $priorities);
     }
 
     /**
