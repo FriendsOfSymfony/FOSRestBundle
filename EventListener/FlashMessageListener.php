@@ -13,7 +13,8 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent,
     Symfony\Component\HttpFoundation\Session,
-    Symfony\Component\HttpFoundation\Cookie;
+    Symfony\Component\HttpFoundation\Cookie,
+    Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * This listener reads all flash messages and moves them into a cookie.
@@ -62,9 +63,9 @@ class FlashMessageListener
 
         $response = $event->getResponse();
 
-        if ($response->headers->hasCookie($this->options['name'])) {
-            $cookie = $response->headers->getCookie($this->options['name']);
-            $rawCookie = $cookie->getValue();
+        $cookies = $response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY);
+        if (isset($cookies[$this->options['domain']][$this->options['path']][$this->options['name']])) {
+            $rawCookie = $cookies[$this->options['domain']][$this->options['path']][$this->options['name']]->getValue();
             $flashes = array_merge($flashes, explode(self::COOKIE_DELIMITER, base64_decode($rawCookie)));
         }
 
