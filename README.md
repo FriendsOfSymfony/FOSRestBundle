@@ -82,42 +82,7 @@ https://github.com/lsmith77/symfony-standard/tree/techtalk
 Configuration
 =============
 
-Below the default configuration:
-
-```yaml
-for_rest:
-    routing_loader
-        default_format: null
-    view:
-        default_engine: twig
-        force_redirects:
-            html: true
-        formats:
-            json: true
-            xml: true
-        templating_formats:
-            html: true
-        view_response_listener: true
-        failed_validation: HTTP_BAD_REQUEST
-    exception:
-        codes: ~
-        messages: ~
-    body_listener:
-        decoders:
-            json: fos_rest.decoder.json
-            xml: fos_rest.decoder.xml
-    format_listener:
-        default_priorities: [html, '*/*']
-        fallback_format: html
-    flash_message_listener:
-        name: flashes
-        path: /
-        domain: null
-        secure: false
-        httpOnly: true
-    service:
-        view_handler: fos_rest.view_handler.default
-```
+All features provided by the bundle are enabled by default.
 
 You may specify a `default_format` that the routing loader will use for the `_format` parameter
 if none is specified.
@@ -171,7 +136,7 @@ fos_rest:
         default_engine: php
 ```
 
-By defaults the view response listener is enabled, and you can in your the action controllers
+The view response listener is enabled by default, and you can in your the action controllers
 return the view object. The final output will be processed via the listener by the view handler.
 
 You can disabled the listener and use manually `fos_rest.view_handler` service for handling the view:
@@ -555,3 +520,41 @@ With this configuration, route name would become:
     api_vote_user_comment
 
 Say NO to name collisions!
+
+Full default configuration
+==========================
+
+```yaml
+for_rest:
+    routing_loader
+        default_format: null
+    view:
+        default_engine: twig
+        force_redirects:
+            html: true
+        formats:
+            json: true
+            xml: true
+        templating_formats:
+            html: true
+        view_response_listener: true
+        failed_validation: HTTP_BAD_REQUEST
+    exception:
+        codes: ~
+        messages: ~
+    body_listener:
+        decoders:
+            json: fos_rest.decoder.json
+            xml: fos_rest.decoder.xml
+    format_listener:
+        default_priorities: [html, '*/*']
+        fallback_format: html
+    flash_message_listener:
+        name: flashes
+        path: /
+        domain: null
+        secure: false
+        httpOnly: true
+    service:
+        view_handler: fos_rest.view_handler.default
+```
