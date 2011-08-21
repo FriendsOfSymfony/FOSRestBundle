@@ -139,7 +139,7 @@ fos_rest:
 The view response listener is enabled by default, and you can in your the action controllers
 return the view object. The final output will be processed via the listener by the view handler.
 
-You can disabled the listener and use manually `fos_rest.view_handler` service for handling the view:
+You can disable the listener and use manually `fos_rest.view_handler` service for handling the view:
 
 ```yaml
 # app/config/config.yml
@@ -170,7 +170,7 @@ class UsersController extends Controller
 Listener support
 ----------------
 
-By default all listeners are enabled. You can disabled one or more the listeners.
+All listeners of this bundle are enabled by default. You can disable one or more the listeners.
 For example, below you can see how to disable the body listener and the flash message listener:
 
 ```yaml
@@ -187,7 +187,7 @@ in order to populate the "request" parameter bag of the Request. This for exampl
 sending data that normally would be send via POST as ``application/x-www-form-urlencode``
 in a different format (for example application/json) as a PUT.
 
-You can add decoder for the custom format or replace decoder service for `json` or `xml` format.
+You can add a decoder for the custom format or replace decoder service for `json` or `xml` format.
 Below you can see how to override the decoder of json format:
 
 ```yaml
