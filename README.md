@@ -110,7 +110,7 @@ $ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bund
 See the JMSSerializerBundle documentation for details on how to serialize
 data into different formats.
 
-The `formats` and `template_formats` settings determine which formats are supported via
+The `formats` and `templating_formats` settings determine which formats are supported via
 the serializer and which via the template layer. Note that a value of "false" means
 that the given format is disabled.
 
@@ -128,7 +128,7 @@ fos_rest:
         formats:
             rss: true
             xml: false
-        template_formats:
+        templating_formats:
             html: true
         force_redirects:
             html: false
