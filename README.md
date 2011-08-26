@@ -525,8 +525,8 @@ Full default configuration
 ==========================
 
 ```yaml
-for_rest:
-    routing_loader
+fos_rest:
+    routing_loader:
         default_format: null
     view:
         default_engine: twig
