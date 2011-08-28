@@ -80,31 +80,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter('html', 'fos_rest.fallback_format');
     }
 
-    public function testDisableFlashMessageListener()
-    {
-        $config = array(
-            'fos_rest' => array('flash_message_listener' => false)
-        );
-        $this->extension->load($config, $this->container);
-
-        $this->assertFalse($this->container->hasDefinition('fos_rest.flash_message_listener'));
-    }
-
-    public function testLoadFlashMessageListenerWithDefaults()
-    {
-        $this->extension->load(array(), $this->container);
-        $options = array(
-            'name' => 'flashes',
-            'path' => '/',
-            'domain' => null,
-            'secure' => '',
-            'httpOnly' => true
-        );
-
-        $this->assertTrue($this->container->hasDefinition('fos_rest.flash_message_listener'));
-        $this->assertParameter($options, 'fos_rest.flash_message_listener.options');
-    }
-
     public function testLoadServicesWithDefaults()
     {
         $this->extension->load(array(), $this->container);
