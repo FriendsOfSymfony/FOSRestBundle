@@ -112,7 +112,9 @@ data into different formats.
 
 The `formats` and `templating_formats` settings determine which formats are supported via
 the serializer and which via the template layer. Note that a value of "false" means
-that the given format is disabled.
+that the given format is disabled. In other words any format listed in ``templating_formats``
+will require a template for rendering using the ``templating`` service, will any format
+listed in ``formats`` will use JMSSerializerBundle for rendering.
 
 When using `RouteRedirectView::create()` the default behavior of forcing a redirect to the
 route for html is enabled, but needs to be enabled for other formats if needed.
@@ -136,17 +138,12 @@ fos_rest:
         default_engine: php
 ```
 
-The view response listener is enabled by default, and you can in your the action controllers
-return the view object. The final output will be processed via the listener by the view handler.
-
-You can disable the listener and use manually `fos_rest.view_handler` service for handling the view:
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    view:
-        view_response_listener: false
-```
+In your controller action you will then need to create a ``View`` instance that is then
+passed to the `fos_rest.view_handler` service for processing. The ``View`` is somewhat
+modeled after the ``Response`` class, but as just stated it simply works as a container
+for all the data/configuration for the ``ViewHandler`` class for this particular action.
+So the ``View`` instance must always be processed by a ``ViewHandler`` (see the below
+section on the "view response listener" for how to get this processing applied automatically)
 
 ```php
 <?php
@@ -177,6 +174,31 @@ For example, below you can see how to disable the body listener:
 # app/config/config.yml
 fos_rest:
     body_listener: false
+```
+
+### View Response listener
+
+The view response listener makes it possible to simply return a ``View`` instance from action
+controllers. The final output will then automatically be processed via the listener by the
+`fos_rest.view_handler` service.
+
+```php
+<?php
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\View\View;
+
+class UsersController extends Controller
+{
+    public function getUsersAction()
+    {
+        $view = View:create();
+
+        ...
+
+        return $view;
+    }
+}
 ```
 
 ### Body listener
