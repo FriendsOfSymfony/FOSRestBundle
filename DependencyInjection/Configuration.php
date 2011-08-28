@@ -83,8 +83,7 @@ class Configuration implements ConfigurationInterface
         $this->addExceptionSection($rootNode);
         $this->addBodyListenerSection($rootNode);
         $this->addFormatListenerSection($rootNode);
-        $this->addFlashMessageListenerSection($rootNode);
-        
+
         return $treeBuilder;
     }
 
@@ -121,24 +120,6 @@ class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->end()
                         ->end()
                         ->scalarNode('fallback_format')->defaultValue('html')->end()
-                    ->end()
-                ->end()
-            ->end();
-    }
-
-    private function addFlashMessageListenerSection(ArrayNodeDefinition $rootNode)
-    {
-        $rootNode
-            ->children()
-                ->arrayNode('flash_message_listener')
-                    ->addDefaultsIfNotSet()
-                    ->canBeUnset()
-                    ->children()
-                        ->scalarNode('name')->defaultValue('flashes')->end()
-                        ->scalarNode('path')->defaultValue('/')->end()
-                        ->scalarNode('domain')->defaultNull()->end()
-                        ->scalarNode('secure')->defaultFalse()->end()
-                        ->scalarNode('httpOnly')->defaultTrue()->end()
                     ->end()
                 ->end()
             ->end();

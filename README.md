@@ -171,13 +171,12 @@ Listener support
 ----------------
 
 All listeners of this bundle are enabled by default. You can disable one or more the listeners.
-For example, below you can see how to disable the body listener and the flash message listener:
+For example, below you can see how to disable the body listener:
 
 ```yaml
 # app/config/config.yml
 fos_rest:
     body_listener: false
-    flash_message_listener: false
 ```
 
 ### Body listener
@@ -209,13 +208,6 @@ possible to leverage Accept-Headers to determine the request format, rather than
 extension (like foo.json).
 
 Note that setting `default_priorities` to a non empty array enables Accept header negotiations.
-
-### Flash message listener
-
-The Response flash message listener moves all flash messages currently set into a cookie. This
-way it becomes possible to better handle flash messages in combination with ESI. The ESI
-configuration will need to ignore the configured cookie. It will then be up to the client
-to read out the cookie, display the flash message and remove the flash message via javascript.
 
 SensioFrameworkExtraBundle support
 ----------------------------------
@@ -549,12 +541,6 @@ fos_rest:
     format_listener:
         default_priorities: [html, '*/*']
         fallback_format: html
-    flash_message_listener:
-        name: flashes
-        path: /
-        domain: null
-        secure: false
-        httpOnly: true
     service:
         view_handler: fos_rest.view_handler.default
 ```

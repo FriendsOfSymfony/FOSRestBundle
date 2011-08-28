@@ -91,11 +91,5 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         }
-
-        if (!empty($config['flash_message_listener'])) {
-            $loader->load('flash_message_listener.xml');
-
-            $container->setParameter($this->getAlias().'.flash_message_listener.options', $config['flash_message_listener']);
-        }
     }
 }
