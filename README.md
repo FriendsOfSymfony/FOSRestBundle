@@ -196,10 +196,9 @@ $ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendo
 ```php
 <?php
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\RestBundle\View\View;
 
-class UsersController extends Controller
+class UsersController
 {
     public function getUsersAction()
     {
@@ -221,10 +220,9 @@ but also instructs the view listener to automatically create a ``View`` instance
 ```php
 <?php
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\RestBundle\View\View;
 
-class UsersController extends Controller
+class UsersController
 {
     /**
      * @View()
