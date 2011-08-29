@@ -107,7 +107,7 @@ class UsersController extends Controller
 {
     public function getUsersAction()
     {
-        $view = View:create();
+        $view = View::create();
 
         ...
 
@@ -137,7 +137,7 @@ route for html is enabled, but needs to be enabled for other formats if needed.
 
 Finally the HTTP response status code for failed validation is defaults to `400`. Note when
 changing the default you can use name constants of `FOS\RestBundle\Response\Codes` class or
-an integer status code).
+an integer status code.
 
 You can also set the default templating engine so something different than the default of `twig`:
 
@@ -202,7 +202,7 @@ class UsersController
 {
     public function getUsersAction()
     {
-        $view = View:create();
+        $view = View::create();
 
         ...
 
