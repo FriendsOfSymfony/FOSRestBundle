@@ -81,24 +81,8 @@ https://github.com/liip/LiipHelloBundle
 There is also a fork of the Symfony2 Standard Edition that is configured to show the LiipHelloBundle examples:
 https://github.com/lsmith77/symfony-standard/tree/techtalk
 
-Configuration
-=============
-
-All features provided by the bundle are enabled by default.
-
-You may specify a `default_format` that the routing loader will use for the `_format` parameter
-if none is specified.
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    routing_loader:
-        default_format: json
-```
-
 View support
 ------------
-
 
 ### Introduction
 
@@ -137,6 +121,9 @@ to an URL called ``RedirectView`` and one to redirect to a route called ``RouteR
 Note that if these classes actually case a redirect or not is determined by the
 ``force_redirects`` configuration option is only enabled for ``html`` be default (see below).
 
+See the following example code for more details:
+https://github.com/liip/LiipHelloBundle/blob/master/Controller/HelloController.php
+
 ### Configuration
 
 The `formats` and `templating_formats` settings determine which formats are supported via
@@ -169,6 +156,9 @@ fos_rest:
         default_engine: twig
 ```
 
+See the following example configuration for more details:
+https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
+
 ### JMSSerializerBundle
 
 For serialization you will need to add JMSSerializerBundle to you vendors (and autoloader):
@@ -197,6 +187,12 @@ The view response listener makes it possible to simply return a ``View`` instanc
 controllers. The final output will then automatically be processed via the listener by the
 `fos_rest.view_handler` service.
 
+This requires adding the SensioFrameworkExtraBundle to your vendors:
+
+```bash
+$ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
+```
+
 ```php
 <?php
 
@@ -211,10 +207,39 @@ class UsersController extends Controller
 
         ...
 
+        $view->setData($data);
         return $view;
     }
 }
 ```
+
+As this feature is heavily based on the SensioFrameworkBundle, the example can further be
+simplified by using the various annotations supported by that bundle. There is also one
+additional annotation called ``@View()`` which extends from the ``@Template()`` annotation
+but also instructs the view listener to automatically create a ``View`` instance if necessary.
+
+```php
+<?php
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\View\View;
+
+class UsersController extends Controller
+{
+    /**
+     * @View()
+     */
+    public function getUsersAction()
+    {
+        ...
+
+        return $data;
+    }
+}
+```
+
+See the following example code for more details:
+https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php
 
 ### Body listener
 
@@ -223,8 +248,8 @@ in order to populate the "request" parameter bag of the Request. This for exampl
 sending data that normally would be send via POST as ``application/x-www-form-urlencode``
 in a different format (for example application/json) as a PUT.
 
-You can add a decoder for the custom format or replace decoder service for `json` or `xml` format.
-Below you can see how to override the decoder of json format:
+You can add a decoder for the custom format or replace decoder service for `json` or `xml`
+format. Below you can see how to override the decoder of json format:
 
 ```yaml
 # app/config/config.yml
@@ -235,7 +260,7 @@ fos_rest:
             xml: fos_rest.decoder.xml
 ```
 
-Your decoder class must implement `FOS\RestBundle\Decoder\DecoderInterface`.
+Your custom decoder service must use a class that must implement the `FOS\RestBundle\Decoder\DecoderInterface`.
 
 ### Format listener
 
@@ -245,18 +270,6 @@ possible to leverage Accept-Headers to determine the request format, rather than
 extension (like foo.json).
 
 Note that setting `default_priorities` to a non empty array enables Accept header negotiations.
-
-SensioFrameworkExtraBundle support
-----------------------------------
-
-SensioFrameworkExtraBundle makes it possible to use annotations to setup and implement
-controllers, reducing the amount of configuration and code needed.
-
-This requires adding the SensioFrameworkExtraBundle to you vendors:
-
-```bash
-$ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
-```
 
 ExceptionController support
 ---------------------------
@@ -287,12 +300,28 @@ fos_rest:
             'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
 ```
 
+See the following example configuration for more details:
+https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
+
 Routing
 =======
 
 The RestBundle provides custom route loaders to help in defining REST friendly routes
 as well as reducing the manual work of configuring routes and the given requirements
 (like making sure that only GET may be used in certain routes etc.).
+
+You may specify a `default_format` that the routing loader will use for the `_format`
+parameter if none is specified.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    routing_loader:
+        default_format: json
+```
+
+Many of the below explained features are used in the following example code:
+https://github.com/liip/LiipHelloBundle/blob/master/Controller/RestController.php
 
 Single RESTful controller routes
 --------------------------------
