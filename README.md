@@ -3,7 +3,9 @@ RestBundle
 
 This bundle provides various tools to rapidly develop RESTful API's & applications with Symfony2.
 
-Its currently under development so key pieces that are planned are still missing.
+Its currently under development so key pieces that are planned are still missing, see
+here for more details on what is planned:
+https://github.com/FriendsOfSymfony/FOSRestBundle/issues
 
 For now the Bundle provides a view layer to enable output, including redirects,
 format agnostic Controllers leveraging the JMSSerializerBundle for serialization
@@ -97,46 +99,12 @@ fos_rest:
 View support
 ------------
 
+
+### Introduction
+
 The view layer makes it possible to write format agnostic controllers, by
 placing a layer between the Controller and the generation of the final output
-via the templating or a Serializer.
-
-This requires adding the JMSSerializerBundle to you vendors:
-
-```bash
-$ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/SerializerBundle
-```
-
-See the JMSSerializerBundle documentation for details on how to serialize
-data into different formats.
-
-The `formats` and `templating_formats` settings determine which formats are supported via
-the serializer and which via the template layer. Note that a value of "false" means
-that the given format is disabled. In other words any format listed in ``templating_formats``
-will require a template for rendering using the ``templating`` service, will any format
-listed in ``formats`` will use JMSSerializerBundle for rendering.
-
-When using `RouteRedirectView::create()` the default behavior of forcing a redirect to the
-route for html is enabled, but needs to be enabled for other formats if needed.
-
-Finally the HTTP response status code for failed validation is set to `400` (you can use name
-constants of `FOS\RestBundle\Response\Codes` class or an integer status code) and the default
-templating engine is set to `php`:
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    view:
-        formats:
-            rss: true
-            xml: false
-        templating_formats:
-            html: true
-        force_redirects:
-            html: false
-        failed_validation: HTTP_BAD_REQUEST
-        default_engine: php
-```
+via the templating or JMSSerializerBundle.
 
 In your controller action you will then need to create a ``View`` instance that is then
 passed to the `fos_rest.view_handler` service for processing. The ``View`` is somewhat
@@ -163,6 +131,53 @@ class UsersController extends Controller
     }
 }
 ```
+
+There are also two specialized ``View`` classes for handling directs, one for redirecting
+to an URL called ``RedirectView`` and one to redirect to a route called ``RouteRedirectView``.
+Note that if these classes actually case a redirect or not is determined by the
+``force_redirects`` configuration option is only enabled for ``html`` be default (see below).
+
+### Configuration
+
+The `formats` and `templating_formats` settings determine which formats are supported via
+the serializer and which via the template layer. Note that a value of ``false`` means
+that the given format is disabled. In other words any format listed in ``templating_formats``
+will require a template for rendering using the ``templating`` service, will any format
+listed in ``formats`` will use JMSSerializerBundle for rendering.
+
+When using `RouteRedirectView::create()` the default behavior of forcing a redirect to the
+route for html is enabled, but needs to be enabled for other formats if needed.
+
+Finally the HTTP response status code for failed validation is defaults to `400`. Note when
+changing the default you can use name constants of `FOS\RestBundle\Response\Codes` class or
+an integer status code).
+
+You can also set the default templating engine so something different than the default of `twig`:
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        formats:
+            rss: true
+            xml: false
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        failed_validation: HTTP_BAD_REQUEST
+        default_engine: twig
+```
+
+### JMSSerializerBundle
+
+For serialization you will need to add JMSSerializerBundle to you vendors (and autoloader):
+
+```bash
+$ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/SerializerBundle
+```
+
+See the JMSSerializerBundle documentation for details for more information.
 
 Listener support
 ----------------
