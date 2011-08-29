@@ -161,7 +161,7 @@ https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
 
 ### JMSSerializerBundle
 
-For serialization you will need to add JMSSerializerBundle to you vendors (and autoloader):
+For serialization you will need to add JMSSerializerBundle to your vendors (and autoloader):
 
 ```bash
 $ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/SerializerBundle
