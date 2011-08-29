@@ -166,13 +166,81 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         if (isset($this->customHandlers[$format])) {
             return call_user_func($this->customHandlers[$format], $view, $request);
-        } elseif ($this->supports($format)) {
+        }
+
+        if ($this->supports($format)) {
             return $this->createResponse($view, $request, $format);
         }
 
         return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
     }
 
+    /**
+     * Create the Response from the view
+     *
+     * @param View $view
+     * @param string $location
+     * @param string $format
+     * 
+     * @return Response
+     */
+    protected function createRedirectResponse(View $view, $location, $format)
+    {
+        $headers['Location'] = $location;
+
+        $code = isset($this->forceRedirects[$format])
+            ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
+
+        if ('html' === $format) {
+            $response = new RedirectResponse($headers['Location'], $code);
+            $response->headers->replace($headers);
+
+            return $response;
+        }
+
+        return new Response('', $code, $headers);
+    }
+
+    /**
+     * Render the view data with the given template
+     * 
+     * @param View $view
+     * @param string $format
+     *
+     * @return string
+     */
+    protected function renderTemplate(View $view, $format)
+    {
+        $data = $view->getData();
+        if (null === $data) {
+            $data = array();
+        }
+
+        if (!is_array($data)) {
+            throw new \RuntimeException(sprintf(
+                'data must be an array if you allow a templating-aware format (%s).',
+                $format
+            ));
+        }
+
+        if (isset($data['form']) && $data['form'] instanceof FormInterface) {
+            $data['form'] = $data['form']->createView();
+        }
+
+        $template = $view->getTemplate();
+        if ($template instanceOf TemplateReference) {
+            if (null === $template->get('format')) {
+                $template->set('format', $format);
+            }
+
+            if (null === $template->get('engine')) {
+                $engine = $view->getEngine() ?: $this->defaultEngine;
+                $template->set('engine', $engine);
+            }
+        }
+
+        return $this->container->get('templating')->render($template, $data);
+    }
     /**
      * Handles creation of a Response using either redirection or the templating/serializer service
      *
@@ -184,62 +252,22 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     protected function createResponse(View $view, Request $request, $format)
     {
-        $data = $view->getData();
         $headers = $view->getHeaders();
         $headers['Content-Type'] = $request->getMimeType($format);
 
         $location = $view->getLocation();
         if (!$location && ($route = $view->getRoute())) {
-            $location = $this->container->get('router')->generate($route, (array)$data, true);
+            $location = $this->container->get('router')->generate($route, (array)$view->getData(), true);
         }
 
         if ($location) {
-            $headers['Location'] = $location;
-
-            $code = isset($this->forceRedirects[$format])
-                ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
-
-            if ('html' === $format) {
-                $response = new RedirectResponse($headers['Location'], $code);
-                $response->headers->replace($headers);
-
-                return $response;
-            }
-
-            return new Response('', $code, $headers);
+            return $this->createRedirectResponse($view, $location, $format);
         }
 
         if ($this->isFormatTemplating($format)) {
-            if (null === $data) {
-                $data = array();
-            }
-
-            if (!is_array($data)) {
-                throw new \RuntimeException(sprintf(
-                    'data must be an array if you allow a templating-aware format (%s).',
-                    $format
-                ));
-            }
-
-            if (isset($data['form']) && $data['form'] instanceof FormInterface) {
-                $data['form'] = $data['form']->createView();
-            }
-
-            $template = $view->getTemplate();
-            if ($template instanceOf TemplateReference) {
-                if (null === $template->get('format')) {
-                    $template->set('format', $format);
-                }
-
-                if (null === $template->get('engine')) {
-                    $engine = $view->getEngine() ?: $this->defaultEngine;
-                    $template->set('engine', $engine);
-                }
-            }
-
-            $content = $this->container->get('templating')->render($template, $data);
+            $content = $this->renderTemplate($view, $format);
         } else {
-            $content = $this->container->get('serializer')->serialize($data, $format);
+            $content = $this->container->get('serializer')->serialize($view->getData(), $format);
         }
 
         return new Response($content, $this->getStatusCodeFromView($view), $headers);
