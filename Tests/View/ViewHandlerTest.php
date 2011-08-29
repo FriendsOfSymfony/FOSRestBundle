@@ -106,7 +106,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithLocation($expected, $format, $forceRedirects)
     {
-        $viewHandler = new ViewHandlerProxy(null, Codes::HTTP_BAD_REQUEST, $forceRedirects);
+        $viewHandler = new ViewHandlerProxy(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -131,7 +131,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false)
     {
         $viewHandler = new ViewHandlerProxy(array('html' => true, 'json' => false));
-
 
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
         if ('html' === $format) {
@@ -200,7 +199,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponse($expected, $format, $formats)
     {
         $viewHandler = new ViewHandler($formats);
-        $viewHandler->registerHandler('html', function($view, $request){return $view;});
+        $viewHandler->registerHandler('html', function($handler, $view, $request){return $view;});
 
         $response = $viewHandler->handle(new View(null, $expected), new Request(), $format);
         $this->assertEquals($expected, $response->getStatusCode());

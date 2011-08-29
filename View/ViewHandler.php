@@ -165,14 +165,10 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $format = $view->getFormat() ?: $request->getRequestFormat();
 
         if (isset($this->customHandlers[$format])) {
-            return call_user_func($this->customHandlers[$format], $view, $request);
+            return call_user_func($this->customHandlers[$format], $this, $view, $request);
         }
 
-        if ($this->supports($format)) {
-            return $this->createResponse($view, $request, $format);
-        }
-
-        return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        return $this->createResponse($view, $request, $format);
     }
 
     /**
@@ -184,7 +180,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * 
      * @return Response
      */
-    protected function createRedirectResponse(View $view, $location, $format)
+    public function createRedirectResponse(View $view, $location, $format)
     {
         $headers['Location'] = $location;
 
@@ -209,7 +205,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return string
      */
-    protected function renderTemplate(View $view, $format)
+    public function renderTemplate(View $view, $format)
     {
         $data = $view->getData();
         if (null === $data) {
@@ -241,6 +237,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         return $this->container->get('templating')->render($template, $data);
     }
+
     /**
      * Handles creation of a Response using either redirection or the templating/serializer service
      *
@@ -250,8 +247,12 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return Response
      */
-    protected function createResponse(View $view, Request $request, $format)
+    public function createResponse(View $view, Request $request, $format)
     {
+        if (!$this->supports($format)) {
+            return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        }
+
         $headers = $view->getHeaders();
         $headers['Content-Type'] = $request->getMimeType($format);
 
