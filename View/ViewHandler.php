@@ -127,7 +127,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
 
         $data = $view->getData();
-        if (!is_array($data) || empty($data['form'])) {
+        if (!is_array($data) || empty($data['form']) || !($data['form'] instanceof FormInterface)) {
             return Codes::HTTP_OK;
         }
 
