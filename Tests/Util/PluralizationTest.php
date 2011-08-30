@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Tests\Pluralization;
+namespace FOS\RestBundle\Tests\Util;
 
-use FOS\RestBundle\Pluralization\Pluralization;
+use FOS\RestBundle\Util\Pluralization;
 
 /**
  * Pluralization test.

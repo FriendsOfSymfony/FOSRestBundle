@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
     Symfony\Component\HttpFoundation\Request;
 
 use FOS\RestBundle\Routing\RestRouteCollection,
-    FOS\RestBundle\Pluralization\Pluralization;
+    FOS\RestBundle\Util\Pluralization;
 
 use Doctrine\Common\Annotations\Reader;
 

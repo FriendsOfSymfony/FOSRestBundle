@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Pluralization;
+namespace FOS\RestBundle\Util;
 
 /**
  * Pluralization object.
