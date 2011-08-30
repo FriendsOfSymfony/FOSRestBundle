@@ -159,6 +159,115 @@ fos_rest:
 See the following example configuration for more details:
 https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
 
+### Custom handler
+
+While many things should be possible via the JMSSerializerBundle in some cases it might
+not be enough. In some cases you might need some custom logic to be executed in the
+``ViewHandler``. For these cases one might want to register a custom handler for a
+specific format. The custom handler can either be registered by defining a custom service,
+via a compiler pass or it can even be registered from inside the controller action.
+
+The callable will receive 3 parameters:
+- the instance of the ``ViewHandler``
+- the instance of the ``View``
+- the instance of the ``Request``
+
+Note there are several public methods on the ``ViewHandler`` which can be helpful:
+- ``createResponse()``
+- ``createRedirectResponse()``
+- ``renderTemplate()``
+
+Here is an example using a custom service:
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    service:
+        view_handler: my.view_handler
+
+services:
+    my.rss_handler:
+        class: My\RssBundle\View\ViewHandler
+
+    my.view_handler:
+        class: FOS\RestBundle\View\ViewHandler
+        arguments:
+            - %fos_rest.formats%
+            - %fos_rest.failed_validation%
+            - %fos_rest.force_redirects%
+            - %fos_rest.default_engine%
+        calls:
+            - ['setContainer', [ @service_container ] ]
+            - ['registerHandler', [ 'rss', [@my.rss_handler, 'createResponse'] ] ]
+
+```
+
+Here is an example using a compiler pass:
+
+```php
+<?php
+
+namespace My\RssBundle\DependencyInjection\Compiler;
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Reference;
+
+class AddCustomHandlerPass implements CompilerPassInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function process(ContainerBuilder $container)
+    {
+        $handler = $container->getDefinition('fos_rest.view_handler.default');
+        $handler->addMethodCall('registerHandler', array(new Reference('my.rss_handler'), 'createResponse'));
+    }
+}
+```
+
+Here is an example using a closure registered inside a controller action:
+
+```php
+<?php
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\View\View;
+
+class UsersController extends Controller
+{
+    public function getUsersAction()
+    {
+        $view = View::create();
+
+        ...
+
+        $handler = $this->get('fos_rest.view_handler');
+        if (!$handler->isFormatTemplating($view->getFormat())) {
+            $templatingHandler = function($handler, $view, $request) {
+                // if a template is set, render it using the 'params' and place the content into the data
+                if ($view->getTemplate()) {
+                    $data = $view->getData();
+                    if (empty($data['params'])) {
+                        $params = array();
+                    } else {
+                        $params = $data['params'];
+                        unset($data['params']);
+                    }
+                    $view->setData($params);
+                    $data['html'] = $handler->renderTemplate($view, 'html');
+
+                    $view->setData($data);
+                }
+                return $handler->createResponse($view, $request, $format);
+            }
+            $handler->registerHandler($view->getFormat(), $templatingHandler);
+        }
+        return $handler->handle($view);
+    }
+}
+```
+
 ### JMSSerializerBundle
 
 For serialization you will need to add JMSSerializerBundle to your vendors (and autoloader):
