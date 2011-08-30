@@ -168,14 +168,16 @@ specific format. The custom handler can either be registered by defining a custo
 via a compiler pass or it can even be registered from inside the controller action.
 
 The callable will receive 3 parameters:
-- the instance of the ``ViewHandler``
-- the instance of the ``View``
-- the instance of the ``Request``
+
+ * the instance of the ``ViewHandler``
+ * the instance of the ``View``
+ * the instance of the ``Request``
 
 Note there are several public methods on the ``ViewHandler`` which can be helpful:
-- ``createResponse()``
-- ``createRedirectResponse()``
-- ``renderTemplate()``
+
+ * ``createResponse()``
+ * ``createRedirectResponse()``
+ * ``renderTemplate()``
 
 Here is an example using a custom service:
 
@@ -202,7 +204,7 @@ services:
 
 ```
 
-Here is an example using a compiler pass:
+Here is an example using a compiler pass (be sure to register the compiler pass in your bundle):
 
 ```php
 <?php
@@ -215,9 +217,6 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AddCustomHandlerPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function process(ContainerBuilder $container)
     {
         $handler = $container->getDefinition('fos_rest.view_handler.default');
