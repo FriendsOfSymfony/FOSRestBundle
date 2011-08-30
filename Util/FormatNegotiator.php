@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Request;
+namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class ContentNegotiator implements ContentNegotiatorInterface
+class FormatNegotiator implements FormatNegotiatorInterface
 {
     /**
      * Detect the request format based on the priorities and the Accept header

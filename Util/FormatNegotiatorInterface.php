@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Request;
+namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 
-interface ContentNegotiatorInterface
+interface FormatNegotiatorInterface
 {
     function getBestMediaType(Request $request, array $availableTypes);
 }

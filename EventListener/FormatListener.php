@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use FOS\RestBundle\Response\Codes,
-    FOS\RestBundle\Request\ContentNegotiatorInterface;
+    FOS\RestBundle\Util\FormatNegotiatorInterface;
 
 /**
  * This listener handles Accept header format negotiations.
@@ -27,9 +27,9 @@ use FOS\RestBundle\Response\Codes,
 class FormatListener
 {
     /**
-     * @var ContentNegotiatorInterface
+     * @var FormatNegotiatorInterface
      */
-    private $contentNegotiator;
+    private $formatNegotiator;
 
     /**
      * @var array   Ordered array of formats (highest priority first)
@@ -44,13 +44,13 @@ class FormatListener
     /**
      * Initialize FormatListener.
      *
-     * @param   ContentNegotiatorInterface  $contentNegotiator  The content negotiator service to use
+     * @param   FormatNegotiatorInterface   $formatNegotiator  The content negotiator service to use
      * @param   string  $fallbackFormat     Default fallback format
      * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)
      */
-    public function __construct(ContentNegotiatorInterface $contentNegotiator, $fallbackFormat, array $defaultPriorities = array())
+    public function __construct(FormatNegotiatorInterface $formatNegotiator, $fallbackFormat, array $defaultPriorities = array())
     {
-        $this->contentNegotiator = $contentNegotiator;
+        $this->formatNegotiator = $formatNegotiator;
         $this->defaultPriorities = $defaultPriorities;
         $this->fallbackFormat = $fallbackFormat;
     }
@@ -77,7 +77,7 @@ class FormatListener
 
         $format = null;
         if (!empty($priorities)) {
-            $format = $this->contentNegotiator->getBestMediaType($request, $priorities);
+            $format = $this->formatNegotiator->getBestMediaType($request, $priorities);
         }
 
         if (null === $format) {
