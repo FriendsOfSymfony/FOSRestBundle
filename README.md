@@ -217,6 +217,9 @@ simplified by using the various annotations supported by that bundle. There is a
 additional annotation called ``@View()`` which extends from the ``@Template()`` annotation
 but also instructs the view listener to automatically create a ``View`` instance if necessary.
 
+Note, ``@View()`` currently only works if the following patch is applied:
+https://github.com/sensio/SensioFrameworkExtraBundle/pull/57
+
 ```php
 <?php
 
