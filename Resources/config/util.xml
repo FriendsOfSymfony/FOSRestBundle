@@ -7,6 +7,6 @@
     </parameters>
 
     <services>
-        <service id="fos_rest.format_negotiator" class="%fos_rest.format_negotiator.class%" public="false" />
+        <service id="fos_rest.format_negotiator" class="%fos_rest.format_negotiator.class%" public="true" />
     </services>
 </container>
