@@ -125,7 +125,7 @@ class ExceptionController extends ContainerAware
         $priorities = $this->container->getParameter('fos_rest.default_priorities');
         $formatNegotiator = $this->container->get('fos_rest.format_negotiator');
 
-        return $formatNegotiator->getBestMediaType($request, $priorities) ?: $format;
+        return $formatNegotiator->getBestFormat($request, $priorities) ?: $format;
     }
 
     /**

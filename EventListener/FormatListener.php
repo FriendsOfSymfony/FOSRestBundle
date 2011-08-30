@@ -77,7 +77,7 @@ class FormatListener
 
         $format = null;
         if (!empty($priorities)) {
-            $format = $this->formatNegotiator->getBestMediaType($request, $priorities);
+            $format = $this->formatNegotiator->getBestFormat($request, $priorities);
         }
 
         if (null === $format) {

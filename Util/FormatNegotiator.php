@@ -25,7 +25,7 @@ class FormatNegotiator implements FormatNegotiatorInterface
      *
      * @return  void|string                 The format string
      */
-    public function getBestMediaType(Request $request, array $priorities)
+    public function getBestFormat(Request $request, array $priorities)
     {
         $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
 
