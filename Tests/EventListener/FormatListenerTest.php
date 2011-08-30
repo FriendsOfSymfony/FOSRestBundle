@@ -33,7 +33,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\util\FormatNegotiator')->disableOriginalConstructor()->getMock();
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
 
         $listener = new FormatListener($formatNegotiator, 'xml', array());
 
@@ -52,7 +52,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\util\FormatNegotiator')->disableOriginalConstructor()->getMock();
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
         $formatNegotiator->expects($this->once())
             ->method('getBestMediaType')
             ->will($this->returnValue('xml'));
@@ -81,7 +81,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequestType')
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\util\FormatNegotiator')->disableOriginalConstructor()->getMock();
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
 
         $listener = new FormatListener($formatNegotiator, null, array());
 
