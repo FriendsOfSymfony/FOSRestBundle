@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\DependencyInjection\ContainerAware,
-    Symfony\Component\Serializer\SerializerInterface,
     Symfony\Component\Form\FormInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
@@ -32,11 +31,6 @@ use FOS\RestBundle\Response\Codes;
  */
 class ViewHandler extends ContainerAware implements ViewHandlerInterface
 {
-    /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
-
     /**
      * @var array key format, value a callable that returns a Response instance
      */
@@ -147,6 +141,36 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     }
 
     /**
+     * Get the router service
+     *
+     * @return Symfony\Component\Routing\RouterInterface
+     */
+    protected function getRouter()
+    {
+        return $this->container->get('router');
+    }
+
+    /**
+     * Get the serializer service
+     *
+     * @return Symfony\Component\Serializer\SerializerInterface
+     */
+    protected function getSerializer()
+    {
+        return $this->container->get('serializer');
+    }
+
+    /**
+     * Get the templating service
+     *
+     * @return Symfony\Bundle\FrameworkBundle\Templating\EngineInterface
+     */
+    protected function getTemplating()
+    {
+        return $this->container->get('templating');
+    }
+
+    /**
      * Handles a request with the proper handler
      *
      * Decides on which handler to use based on the request format
@@ -177,7 +201,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * @param View $view
      * @param string $location
      * @param string $format
-     * 
+     *
      * @return Response
      */
     public function createRedirectResponse(View $view, $location, $format)
@@ -199,7 +223,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
     /**
      * Render the view data with the given template
-     * 
+     *
      * @param View $view
      * @param string $format
      *
@@ -235,7 +259,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             }
         }
 
-        return $this->container->get('templating')->render($template, $data);
+        return $this->getTemplating()->render($template, $data);
     }
 
     /**
@@ -258,7 +282,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         $location = $view->getLocation();
         if (!$location && ($route = $view->getRoute())) {
-            $location = $this->container->get('router')->generate($route, (array)$view->getData(), true);
+            $location = $this->getRouter()->generate($route, (array)$view->getData(), true);
         }
 
         if ($location) {
@@ -268,7 +292,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
         } else {
-            $content = $this->container->get('serializer')->serialize($view->getData(), $format);
+            $content = $this->getSerializer()->serialize($view->getData(), $format);
         }
 
         return new Response($content, $this->getStatusCodeFromView($view), $headers);
