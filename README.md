@@ -431,9 +431,9 @@ hello:
 ```
 
 When calling:
-``/foo`` will lead to setting the request format to ``json``
-``/foo.html`` will lead to setting the request format to ``html``
 
+* ``/foo`` will lead to setting the request format to ``json``
+* ``/foo.html`` will lead to setting the request format to ``html``
 
 ExceptionController support
 ---------------------------
