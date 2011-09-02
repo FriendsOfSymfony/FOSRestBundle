@@ -20,18 +20,21 @@ class FormatNegotiator implements FormatNegotiatorInterface
      *
      * Note: Request "_format" parameter is considered the preferred Accept header
      *
-     * @param   Request     $request        The request
-     * @param   array       $priorities     Ordered array of formats (highest priority first)
+     * @param   Request     $request          The request
+     * @param   array       $priorities       Ordered array of formats (highest priority first)
+     * @param   Boolean     $preferExtension  If to consider the extension last or first
      *
      * @return  void|string                 The format string
      */
-    public function getBestFormat(Request $request, array $priorities)
+    public function getBestFormat(Request $request, array $priorities, $preferExtension = false)
     {
         $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
 
         $extension = $request->get('_format');
         if (null !== $extension) {
-            $mimetypes[$request->getMimeType($extension)] = reset($mimetypes)+1;
+            $mimetypes[$request->getMimeType($extension)] = $preferExtension
+                ? reset($mimetypes)+1
+                : end($mimetypes)-1;
             arsort($mimetypes);
         }
 

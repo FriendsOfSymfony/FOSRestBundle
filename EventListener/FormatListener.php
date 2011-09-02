@@ -42,17 +42,24 @@ class FormatListener
     private $fallbackFormat;
 
     /**
+     * @var Boolean if to consider the extension last or first
+     */
+    private $preferExtension;
+
+    /**
      * Initialize FormatListener.
      *
      * @param   FormatNegotiatorInterface   $formatNegotiator  The content negotiator service to use
      * @param   string  $fallbackFormat     Default fallback format
      * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)
+     * @param   Boolean $preferExtension    If to consider the extension last or first
      */
-    public function __construct(FormatNegotiatorInterface $formatNegotiator, $fallbackFormat, array $defaultPriorities = array())
+    public function __construct(FormatNegotiatorInterface $formatNegotiator, $fallbackFormat, array $defaultPriorities = array(), $preferExtension = false)
     {
         $this->formatNegotiator = $formatNegotiator;
         $this->defaultPriorities = $defaultPriorities;
         $this->fallbackFormat = $fallbackFormat;
+        $this->preferExtension = $preferExtension;
     }
 
     /**
@@ -77,7 +84,7 @@ class FormatListener
 
         $format = null;
         if (!empty($priorities)) {
-            $format = $this->formatNegotiator->getBestFormat($request, $priorities);
+            $format = $this->formatNegotiator->getBestFormat($request, $priorities, $this->preferExtension);
         }
 
         if (null === $format) {

@@ -11,6 +11,7 @@
             <argument type="service" id="fos_rest.format_negotiator" />
             <argument>%fos_rest.fallback_format%</argument>
             <argument>%fos_rest.default_priorities%</argument>
+            <argument>%fos_rest.prefer_extension%</argument>
         </service>
         
     </services>

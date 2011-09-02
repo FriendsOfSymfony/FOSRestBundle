@@ -119,6 +119,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(array('html', '*/*'))
                             ->prototype('scalar')->end()
                         ->end()
+                        ->booleanNode('prefer_extension')->defaultFalse()->end()
                         ->scalarNode('fallback_format')->defaultValue('html')->end()
                     ->end()
                 ->end()

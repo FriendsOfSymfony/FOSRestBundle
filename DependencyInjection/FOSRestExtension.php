@@ -90,6 +90,7 @@ class FOSRestExtension extends Extension
             $loader->load('format_listener.xml');
 
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
+            $container->setParameter($this->getAlias().'.prefer_extension', $config['format_listener']['prefer_extension']);
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         } else {
             $container->setParameter($this->getAlias().'.default_priorities', array());

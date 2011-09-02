@@ -400,8 +400,10 @@ the next lowest set of Accept headers with equal ``q`` is examine and so on unti
 are no more Accept headers to check. In this case ``fallback_format`` is used.
 
 Note that if ``_format`` is matched inside the route, then a virtual Accept header setting is
-added with a ``q`` setting one higher than the highest other Accept header, meaning that format
-is checked for a match in the priorities first.
+added with a ``q`` setting one lower than the lowest Accept header, meaning that format is
+checked for a match in the priorities last. If ``prefer_extension`` is set to ``true` then
+the virtual Accept header will be one higher than the highest ``q`` causing the extension
+to be checked first.
 
 Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations,
 while adding '*/*' to the priorities will effectively cause any priority to match.
@@ -412,6 +414,7 @@ fos_rest:
     format_listener:
         default_priorities: ['json', html, '*/*']
         fallback_format: json
+        prefer_extension: true
 ```
 
 For example using the above configuration and the following Accept header:
@@ -768,6 +771,7 @@ fos_rest:
     format_listener:
         default_priorities: [html, '*/*']
         fallback_format: html
+        prefer_extension: false
     service:
         view_handler: fos_rest.view_handler.default
 ```
