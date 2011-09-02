@@ -328,10 +328,9 @@ class UsersController
 As this feature is heavily based on the SensioFrameworkBundle, the example can further be
 simplified by using the various annotations supported by that bundle. There is also one
 additional annotation called ``@View()`` which extends from the ``@Template()`` annotation.
-The ``@View()`` and ``@Template()`` annotations essentially behave the same with a minor
-difference. In order to fallback to SensioFrameworkBundle's handling whenever no
-``View`` instance is returned and ``@View()`` isn't its necessary to change the
-``view_response_listener`` setting from the default of ``force`` to just ``true``.
+The ``@View()`` and ``@Template()`` annotations behave essentially the same with a minor
+difference. When ``view_response_listener`` is set to ``true`` instead of the default ``force``
+and ``@View()`` is not used, then rendering will be delegated to SensioFrameworkBundle.
 
 ```yaml
 # app/config/config.yml
