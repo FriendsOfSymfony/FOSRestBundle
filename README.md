@@ -287,6 +287,9 @@ For example, below you can see how to disable the body listener:
 # app/config/config.yml
 fos_rest:
     body_listener: false
+    format_listener: false
+    view:
+        view_response_listener: false
 ```
 
 ### View Response listener
@@ -324,8 +327,18 @@ class UsersController
 
 As this feature is heavily based on the SensioFrameworkBundle, the example can further be
 simplified by using the various annotations supported by that bundle. There is also one
-additional annotation called ``@View()`` which extends from the ``@Template()`` annotation
-but also instructs the view listener to automatically create a ``View`` instance if necessary.
+additional annotation called ``@View()`` which extends from the ``@Template()`` annotation.
+The ``@View()`` and ``@Template()`` annotations essentially behave the same with a minor
+difference. In order to fallback to SensioFrameworkBundle's handling whenever no
+``View`` instance is returned and ``@View()`` isn't its necessary to change the
+``view_response_listener`` setting from the default of ``force`` to just ``true``.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        view_response_listener: true
+```
 
 Note, ``@View()`` currently only works if the following patch is applied:
 https://github.com/sensio/SensioFrameworkExtraBundle/pull/57
@@ -347,16 +360,6 @@ class UsersController
         return $data;
     }
 }
-```
-
-In case even if no ``View`` instance is returned and ``@View()`` isn't used its possible
-to automatically get a ``View`` instance created by setting the ``force`` option.
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    view:
-        view_response_listener: force
 ```
 
 See the following example code for more details:
@@ -753,7 +756,7 @@ fos_rest:
             xml: true
         templating_formats:
             html: true
-        view_response_listener: true
+        view_response_listener: 'force'
         failed_validation: HTTP_BAD_REQUEST
     exception:
         codes: ~
