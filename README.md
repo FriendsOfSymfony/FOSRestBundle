@@ -390,7 +390,44 @@ the Request's Accept-Header and the format priority configuration. This way it b
 possible to leverage Accept-Headers to determine the request format, rather than a file
 extension (like foo.json).
 
-Note that setting `default_priorities` to a non empty array enables Accept header negotiations.
+The ``default_priorities`` define the order of formats as the the application prefers.
+The algorithm iteratively examines the provided Accept header first looking at all the
+options with the highest ``q``. The first priority that matches is returned. If none match
+the next lowest set of Accept headers with equal ``q`` is examine and so on until there
+are no more Accept headers to check. In this case ``fallback_format`` is used.
+
+Note that if ``_format`` is matched inside the route, then a virtual Accept header setting is
+added with a ``q`` setting one higher than the highest other Accept header, meaning that format
+is checked for a match in the priorities first.
+
+Note that setting ``default_priorities`` to a non empty array enables Accept header negotiations,
+while adding '*/*' to the priorities will effectively cause any priority to match.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    format_listener:
+        default_priorities: ['json', html, '*/*']
+        fallback_format: json
+```
+
+For example using the above configuration and the following Accept header:
+```
+text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,application/json
+```
+
+And the following route:
+
+```yaml
+hello:
+    pattern:  /foo.{_format}
+    defaults: { _controller: foo.controller:indexAction, _format: ~ }
+```
+
+When calling:
+``/foo`` will lead to setting the request format to ``json``
+``/foo.html`` will lead to setting the request format to ``html``
+
 
 ExceptionController support
 ---------------------------
