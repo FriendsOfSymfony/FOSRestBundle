@@ -393,7 +393,7 @@ the Request's Accept-Header and the format priority configuration. This way it b
 possible to leverage Accept-Headers to determine the request format, rather than a file
 extension (like foo.json).
 
-The ``default_priorities`` define the order of formats as the the application prefers.
+The ``default_priorities`` define the order of formats as the application prefers.
 The algorithm iteratively examines the provided Accept header first looking at all the
 options with the highest ``q``. The first priority that matches is returned. If none match
 the next lowest set of Accept headers with equal ``q`` is examine and so on until there
