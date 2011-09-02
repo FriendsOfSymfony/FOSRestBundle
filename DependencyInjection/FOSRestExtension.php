@@ -67,6 +67,7 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['view']['view_response_listener'])) {
             $loader->load('view_response_listener.xml');
+            $container->setParameter($this->getAlias().'.view_reponse_listener.force_view', 'force' === $config['view']['view_response_listener']);
         }
 
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);

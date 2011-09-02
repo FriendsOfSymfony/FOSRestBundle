@@ -301,6 +301,8 @@ This requires adding the SensioFrameworkExtraBundle to your vendors:
 $ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
 ```
 
+Now inside a controller its possible to simply return a ``View`` instance.
+
 ```php
 <?php
 
@@ -345,6 +347,16 @@ class UsersController
         return $data;
     }
 }
+```
+
+In case even if no ``View`` instance is returned and ``@View()`` isn't used its possible
+to automatically get a ``View`` instance created by setting the ``force`` option.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        view_response_listener: force
 ```
 
 See the following example code for more details:

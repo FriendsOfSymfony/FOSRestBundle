@@ -68,12 +68,12 @@ class ViewResponseListener
         $view = $event->getControllerResult();
 
         $request = $event->getRequest();
-        if ($request->attributes->get('_view')) {
-            $view = new View($view);
-        }
-
         if (!$view instanceOf View) {
-            return;
+            if (!$request->attributes->get('_view') && !$this->container->getParameter('fos_rest.view_reponse_listener.force_view')) {
+                return;
+            }
+
+            $view = new View($view);
         }
 
         if (!$vars = $request->attributes->get('_template_vars')) {
