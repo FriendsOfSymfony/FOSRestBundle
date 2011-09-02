@@ -67,7 +67,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(array('html' => true))
                             ->prototype('boolean')->end()
                         ->end()
-                        ->scalarNode('view_response_listener')->defaultvalue('force')->end()
+                        ->scalarNode('view_response_listener')->defaultValue('force')->end()
                         ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
                     ->end()
                 ->end()
