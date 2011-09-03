@@ -211,7 +211,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $code = isset($this->forceRedirects[$format])
             ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
 
-        if ('html' === $format) {
+        if ('html' === $format && isset($this->forceRedirects[$format])) {
             $response = new RedirectResponse($location, $code);
             $response->headers->replace($view->getHeaders());
         } else {
