@@ -14,6 +14,7 @@ namespace FOS\RestBundle\View;
 use Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpKernel\Exception\HttpException,
     Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\Form\FormInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
@@ -189,7 +190,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $format = $view->getFormat() ?: $request->getRequestFormat();
 
         if (!$this->supports($format)) {
-            return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+            return new HttpException(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, "Format '$format' not supported, handler must be implemented");
         }
 
         if (isset($this->customHandlers[$format])) {
