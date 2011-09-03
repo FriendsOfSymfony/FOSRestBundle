@@ -11,9 +11,8 @@
 
 namespace FOS\RestBundle\View;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
-use Symfony\Component\HttpFoundation\Response,
+use Symfony\Component\HttpFoundation\RedirectResponse,
+    Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\DependencyInjection\ContainerAware,
     Symfony\Component\Form\FormInterface,

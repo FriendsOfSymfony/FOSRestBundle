@@ -11,16 +11,8 @@
 
 namespace FOS\RestBundle\View;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\DependencyInjection\ContainerAware,
-    Symfony\Component\Serializer\SerializerInterface,
-    Symfony\Component\Form\FormInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-
-use FOS\RestBundle\Response\Codes;
+    Symfony\Component\HttpFoundation\Request;
 
 /**
  * ViewInterface
@@ -70,4 +62,36 @@ interface ViewHandlerInterface
      * @return Response
      */
     function handle(View $view, Request $request = null);
+
+    /**
+     * Create the Response from the view
+     *
+     * @param View $view
+     * @param string $location
+     * @param string $format
+     *
+     * @return Response
+     */
+    function createRedirectResponse(View $view, $location, $format);
+
+    /**
+     * Render the view data with the given template
+     *
+     * @param View $view
+     * @param string $format
+     *
+     * @return string
+     */
+    function renderTemplate(View $view, $format);
+
+    /**
+     * Handles creation of a Response using either redirection or the templating/serializer service
+     *
+     * @param View $view
+     * @param Request $request
+     * @param string $format
+     *
+     * @return Response
+     */
+    function createResponse(View $view, Request $request, $format);
 }

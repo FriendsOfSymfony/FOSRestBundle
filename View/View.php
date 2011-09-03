@@ -11,8 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
-use Symfony\Component\Form\FormInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 /**
  * Default View implementation.
