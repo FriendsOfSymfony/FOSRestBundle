@@ -45,10 +45,10 @@ class XmlDecoder implements DecoderInterface
     /**
      * Parse the input SimpleXmlElement into an array
      *
-     * @param SimpleXmlElement $node xml to parse
+     * @param \SimpleXmlElement $node xml to parse
      * @return array
      */
-    private function parseXml($node)
+    private function parseXml(\SimpleXmlElement $node)
     {
         $data = array();
         if ($node->attributes()) {
