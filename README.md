@@ -272,7 +272,7 @@ class UsersController extends Controller
 For serialization you will need to add JMSSerializerBundle to your vendors (and autoloader):
 
 ```bash
-$ git submodule add git://github.com/schmittjoh/SerializerBundle.git vendor/bundles/JMS/SerializerBundle
+$ git submodule add git://github.com/schmittjoh/JMSSerializerBundle.git vendor/bundles/JMS/SerializerBundle
 ```
 
 See the JMSSerializerBundle documentation for details for more information.
