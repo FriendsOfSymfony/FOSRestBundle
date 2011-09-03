@@ -206,19 +206,19 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function createRedirectResponse(View $view, $location, $format)
     {
-        $headers['Location'] = $location;
+        $view->setHeader('Location', $location);
 
         $code = isset($this->forceRedirects[$format])
             ? $this->forceRedirects[$format] : $this->getStatusCodeFromView($view);
 
         if ('html' === $format) {
-            $response = new RedirectResponse($headers['Location'], $code);
-            $response->headers->replace($headers);
-
-            return $response;
+            $response = new RedirectResponse($location, $code);
+            $response->headers->replace($view->getHeaders());
+        } else {
+            $response = new Response('', $code, $view->getHeaders());
         }
 
-        return new Response('', $code, $headers);
+        return $response;
     }
 
     /**
@@ -277,8 +277,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return new Response("Format '$format' not supported, handler must be implemented", Codes::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
 
-        $headers = $view->getHeaders();
-        $headers['Content-Type'] = $request->getMimeType($format);
+        $view->setHeader('Content-Type', $request->getMimeType($format));
 
         $location = $view->getLocation();
         if (!$location && ($route = $view->getRoute())) {
@@ -295,6 +294,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $content = $this->getSerializer()->serialize($view->getData(), $format);
         }
 
-        return new Response($content, $this->getStatusCodeFromView($view), $headers);
+        return new Response($content, $this->getStatusCodeFromView($view), $view->getHeaders());
     }
 }

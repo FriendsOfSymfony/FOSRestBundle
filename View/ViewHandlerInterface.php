@@ -47,7 +47,7 @@ interface ViewHandlerInterface
      * If the given format uses the templating system for rendering
      *
      * @param string $format
-     * 
+     *
      * @return Boolean
      */
     function isFormatTemplating($format);
