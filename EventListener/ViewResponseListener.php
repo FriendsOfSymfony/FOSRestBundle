@@ -65,11 +65,11 @@ class ViewResponseListener
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        $view = $event->getControllerResult();
-
         $request = $event->getRequest();
+
+        $view = $event->getControllerResult();
         if (!$view instanceOf View) {
-            if (!$request->attributes->get('_view') && !$this->container->getParameter('fos_rest.view_reponse_listener.force_view')) {
+            if (!$request->attributes->get('_view') && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
                 return;
             }
 
