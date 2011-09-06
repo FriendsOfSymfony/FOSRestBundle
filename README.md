@@ -269,13 +269,11 @@ class UsersController extends Controller
 
 ### JMSSerializerBundle
 
-For serialization you will need to add JMSSerializerBundle to your vendors (and autoloader):
+For serialization you will need to install JMSSerializerBundle. Please see its documentation for detailed
+instructions on how to do this:
 
-```bash
-$ git submodule add git://github.com/schmittjoh/JMSSerializerBundle.git vendor/bundles/JMS/SerializerBundle
-```
+https://github.com/schmittjoh/JMSSerializerBundle/blob/master/Resources/doc/index.rst
 
-See the JMSSerializerBundle documentation for details for more information.
 
 Listener support
 ----------------
