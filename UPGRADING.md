@@ -46,3 +46,6 @@ for major refactorings.
 
         return $this->container->get('fos_rest.view_handler')->handle($view);
     }
+
+  * The custom Serializer class was removed instead JMSSerializerBundle is now used, which
+    replaces the concept of normalizers/encoders with the concept of so called "handlers"
