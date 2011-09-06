@@ -434,6 +434,10 @@ When calling:
 * ``/foo`` will lead to setting the request format to ``json``
 * ``/foo.html`` will lead to setting the request format to ``html``
 
+Note that the format needs to either be supported by the ``Request`` class natively or
+it needs to be added as documented here:
+http://symfony.com/doc/current/cookbook/request/mime_type.html
+
 ExceptionController support
 ---------------------------
 
