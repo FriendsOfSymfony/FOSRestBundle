@@ -742,19 +742,6 @@ With this configuration, route name would become:
 
 Say NO to name collisions!
 
-### Upgrading
-
-If you are upgrading from an older version, please note that: 
- * You must change sensio_framework_extra setting. 
-   Correct configuration:
- 
-    sensio_framework_extra:
-        view:    { annotations: true }
-        
- * The ViewInterface is gone so you might have to change your controller config if you refer to the fos_rest.view service.
-
-
-
 Full default configuration
 ==========================
 
