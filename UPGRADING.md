@@ -37,9 +37,9 @@ for major refactorings.
     public function indexAction($name = null)
     {
         if (!$name) {
-            $view = RouteRedirectView::create('_welcome');
+            $view = \FOS\RestBundle\View\RouteRedirectView::create('_welcome');
         } else {
-            $view = View::Create(array('name' => $name))
+            $view = \FOS\RestBundle\View\View::create(array('name' => $name))
                 ->setTemplate(new TemplateReference('LiipHelloBundle', 'Hello', 'index'));
             ;
         }
