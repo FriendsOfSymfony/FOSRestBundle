@@ -4,10 +4,12 @@ namespace FOS\RestBundle\Examples;
 
 use FOS\RestBundle\View\View,
     FOS\RestBundle\View\ViewHandler,
-    Symfony\Bridge\Monolog\Logger,
+    FOS\RestBundle\Response\Codes;
+
+use Symfony\Bridge\Monolog\Logger,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
-    ;
+
 /**
  * This is an example RSS ViewHandler.
  * It also shows how to handle exceptions within the ViewHandler so that the 
@@ -29,7 +31,7 @@ class RssHandler
 {
     private $log;
 
-    public function __construct(Logger $logger) 
+    public function __construct(Logger $logger)
     {
         $this->log = $logger;
     }
@@ -41,18 +43,16 @@ class RssHandler
     public function createResponse(ViewHandler $handler, View $view, Request $request)
     {
         try {
-            return new Response($this->createFeed($view->getData()), 200, $view->getHeaders());
+            $content = $this->createFeed($view->getData());
+            $code = Codes::HTTP_OK;
         } catch (\Exception $e) {
-            return $this->handleException($e, $view->getHeaders());
+            $this->log->addError($e);
+
+            $content = sprintf("%s:<br/><pre>%s</pre>", $e->getMessage(), $e->getTraceAsString());
+            $code = Codes::HTTP_BAD_REQUEST;
         }
-    }
-    
-    protected function handleException($e, $headers)
-    {
-        $this->log->addError($e);
-        return new Response(
-                sprintf("%s:<br/><pre>%s</pre>", $e->getMessage(),
-                    $e->getTraceAsString(), 500, $headers );
+
+        return new Response($content, $code, $view->getHeaders());
     }
 
     /**
@@ -66,32 +66,35 @@ class RssHandler
         $feed->setLink($data['link']);
         $feed->setFeedLink($data['link'], 'rss');
         $feed->addAuthor(array(
-                    'name'  => 'ZeroCMS',
-                    'email' => 'email!',
-                    ));
+            'name'  => 'ZeroCMS',
+            'email' => 'email!',
+        ));
         $feed->setDateModified(time());
         $feed->setDescription("RSS feed from query");
-        // Add one or more entries. Note that entries must
-        // be manually added once created.
+
+        // Add one or more entries. Note that entries must be manually added once created.
         foreach ($data['documents'] as $document) {
             $entry = $feed->createEntry();
 
             $entry->setTitle($document['title']);
             $entry->setLink($document['url']);
             $entry->addAuthor(array(
-                        'name'  => $document['author'],
-                        //'email' => '',
-                        //'uri'   => '',
-                        ));
+                'name'  => $document['author'],
+                //'email' => '',
+                //'uri'   => '',
+            ));
 
             $entry->setDateModified($document['dateUpdated']->getTimestamp());
             $entry->setDateCreated($document['dateCreated']->getTimestamp());
+
             if (isset($document['summary'])) {
                 $entry->setDescription($document['summary']);
             }
+
             $entry->setContent($document['body'] );
             $feed->addEntry($entry);
         }
+
         return $feed->export($format);
     }
 }
