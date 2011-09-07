@@ -179,51 +179,9 @@ Note there are several public methods on the ``ViewHandler`` which can be helpfu
  * ``createRedirectResponse()``
  * ``renderTemplate()``
 
-Here is an example using a custom service:
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    service:
-        view_handler: my.view_handler
-
-services:
-    my.rss_handler:
-        class: My\RssBundle\View\ViewHandler
-
-    my.view_handler:
-        class: FOS\RestBundle\View\ViewHandler
-        arguments:
-            - %fos_rest.formats%
-            - %fos_rest.failed_validation%
-            - %fos_rest.force_redirects%
-            - %fos_rest.default_engine%
-        calls:
-            - ['setContainer', [ @service_container ] ]
-            - ['registerHandler', [ 'rss', [@my.rss_handler, 'createResponse'] ] ]
-
-```
-
-Here is an example using a compiler pass (be sure to register the compiler pass in your bundle):
-
-```php
-<?php
-
-namespace My\RssBundle\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\Reference;
-
-class AddCustomHandlerPass implements CompilerPassInterface
-{
-    public function process(ContainerBuilder $container)
-    {
-        $handler = $container->getDefinition('fos_rest.view_handler.default');
-        $handler->addMethodCall('registerHandler', array(new Reference('my.rss_handler'), 'createResponse'));
-    }
-}
-```
+There is an example inside LiipHelloBundle to show how to register a custom handler:
+https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
+https://github.com/liip/LiipHelloBundle/blob/master/Resources/config/config.yml
 
 Here is an example using a closure registered inside a controller action:
 
