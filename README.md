@@ -183,6 +183,8 @@ There is an example inside LiipHelloBundle to show how to register a custom hand
 https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
 https://github.com/liip/LiipHelloBundle/blob/master/Resources/config/config.yml
 
+There is another example in ``Resources\docs\examples``
+
 Here is an example using a closure registered inside a controller action:
 
 ```php
