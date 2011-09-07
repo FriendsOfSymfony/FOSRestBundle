@@ -31,7 +31,7 @@ class FormatNegotiator implements FormatNegotiatorInterface
         $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
 
         $extension = $request->get('_format');
-        if (null !== $extension) {
+        if (null !== $extension && $request->getMimeType($extension)) {
             $mimetypes[$request->getMimeType($extension)] = $preferExtension
                 ? reset($mimetypes)+1
                 : end($mimetypes)-1;
