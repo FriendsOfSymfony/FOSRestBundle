@@ -774,5 +774,8 @@ fos_rest:
         fallback_format: html
         prefer_extension: false
     service:
+        router: router
+        templating: templating
+        serializer: serializer
         view_handler: fos_rest.view_handler.default
 ```

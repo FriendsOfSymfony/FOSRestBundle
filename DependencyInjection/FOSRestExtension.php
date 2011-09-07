@@ -49,7 +49,9 @@ class FOSRestExtension extends Extension
             }
         }
 
-        $container->setAlias($this->getAlias().'.view_handler', $config['service']['view_handler']);
+        foreach ($config['service'] as $key => $service) {
+            $container->setAlias($this->getAlias().'.'.$key, $config['service'][$key]);
+        }
         $container->setParameter($this->getAlias().'.formats', $formats);
         $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);
 

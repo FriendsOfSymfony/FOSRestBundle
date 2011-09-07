@@ -148,7 +148,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     protected function getRouter()
     {
-        return $this->container->get('router');
+        return $this->container->get('fos_rest.router');
     }
 
     /**
@@ -158,7 +158,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     protected function getSerializer()
     {
-        return $this->container->get('serializer');
+        return $this->container->get('fos_rest.serializer');
     }
 
     /**
@@ -168,7 +168,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     protected function getTemplating()
     {
-        return $this->container->get('templating');
+        return $this->container->get('fos_rest.templating');
     }
 
     /**

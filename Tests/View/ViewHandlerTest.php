@@ -146,7 +146,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             $container
                 ->expects($this->once())
                 ->method('get')
-                ->with('templating')
+                ->with('fos_rest.templating')
                 ->will($this->returnValue($templating));
         } else {
             $serializer = $this->getMock('\stdClass', array('serialize'));
@@ -158,7 +158,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             $container
                 ->expects($this->once())
                 ->method('get')
-                ->with('serializer')
+                ->with('fos_rest.serializer')
                 ->will($this->returnValue($serializer));
         }
 
