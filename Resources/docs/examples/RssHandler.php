@@ -9,7 +9,7 @@ use FOS\RestBundle\View\View,
     Symfony\Component\HttpFoundation\Response;
     ;
 /**
- * This is an example ViewHandler for converting i to RSS.
+ * This is an example RSS ViewHandler.
  * It also shows how to handle exceptions within the ViewHandler so that the 
  * client can get a decent response. 
  * 
