@@ -8,7 +8,8 @@ use FOS\RestBundle\View\View,
 
 use Symfony\Bridge\Monolog\Logger,
     Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 /**
  * This is an example RSS ViewHandler.
@@ -18,22 +19,32 @@ use Symfony\Bridge\Monolog\Logger,
  * Please note that you will need to install the Zend library to use this
  * handler.
  *
- * Configuration: 
+ * Configuration:
+ * 
  * services:
  *   my.rss_handler:
- *    class: FOS\RestBundle\Examples\RssHandler
- *    arguments:
- *      logger: @logger
+ *     class: FOS\RestBundle\Examples\RssHandler
+ *     arguments:
+ *       logger: "@?logger"
+ *
+ *   my.view_handler:
+ *     parent: fos_rest.view_handler.default
+ *     calls:
+ *      - ['registerHandler', [ 'rss', ["@my.rss_handler", 'createResponse'] ] ]
+ *
+ * fos_rest:
+ *   service:
+ *     view_handler: my.view_handler
  *
  * @author Tarjei Huse (tarjei - at scanmine.com)
  */
 class RssHandler
 {
-    private $log;
+    private $logger;
 
-    public function __construct(Logger $logger)
+    public function __construct(LoggerInterface $logger = null)
     {
-        $this->log = $logger;
+        $this->logger = $logger;
     }
 
     /**
@@ -46,7 +57,9 @@ class RssHandler
             $content = $this->createFeed($view->getData());
             $code = Codes::HTTP_OK;
         } catch (\Exception $e) {
-            $this->log->addError($e);
+            if ($this->logger) {
+                $this->logger->addError($e);
+            }
 
             $content = sprintf("%s:<br/><pre>%s</pre>", $e->getMessage(), $e->getTraceAsString());
             $code = Codes::HTTP_BAD_REQUEST;
