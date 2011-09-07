@@ -12,6 +12,9 @@ use FOS\RestBundle\View\View,
  * This is an example ViewHandler for converting i to RSS.
  * It also shows how to handle exceptions within the ViewHandler so that the 
  * client can get a decent response. 
+ * 
+ * Please note that you will need to install the Zend library to use this
+ * handler.
  *
  * Configuration: 
  * services:
@@ -47,8 +50,8 @@ class RssHandler
     {
         $this->log->addError($e);
         return new Response(
-                sprintf("%s:<br/><pre>%s</pre>", $e->getStackTrace(),
-                    $e->getMessage(), 500, $headers );
+                sprintf("%s:<br/><pre>%s</pre>", $e->getMessage(),
+                    $e->getTraceAsString(), 500, $headers );
     }
 
     /**
