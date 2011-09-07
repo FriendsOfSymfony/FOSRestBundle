@@ -40,8 +40,6 @@ class RssHandler
             return new Response($this->createFeed($view->getData()), 200, $view->getHeaders());
         } catch (\Exception $e) {
             return $this->handleException($e, $view->getHeaders());
-        } catch (\Zend_Feed_Exception $e) {
-            return $this->handleException($e, $view->getHeaders());
         }
     }
     
