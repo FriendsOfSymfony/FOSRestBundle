@@ -59,7 +59,7 @@ class RssHandler
      */
     protected function createFeed($data, $format = "rss")
     {
-        $feed = new \Zend_Feed_Writer_Feed;
+        $feed = new \Zend_Feed_Writer_Feed();
         $feed->setTitle($data['title']);
         $feed->setLink($data['link']);
         $feed->setFeedLink($data['link'], 'rss');
