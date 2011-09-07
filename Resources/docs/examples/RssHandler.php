@@ -13,17 +13,16 @@ use FOS\RestBundle\View\View,
  * It also shows how to handle exceptions within the ViewHandler so that the 
  * client can get a decent response. 
  *
- * @author: Tarjei Huse (tarjei - at scanmine.com)
  * Configuration: 
- services:
-   my.rss_handler:
-    class: FOS\RestBundle\Examples\RssHandler
-    arguments:
-      logger: @logger
+ * services:
+ *   my.rss_handler:
+ *    class: FOS\RestBundle\Examples\RssHandler
+ *    arguments:
+ *      logger: @logger
+ * @author Tarjei Huse (tarjei - at scanmine.com)
  */
 class RssHandler
 {
-
     private $log;
 
     public function __construct(Logger $logger) 
@@ -35,7 +34,7 @@ class RssHandler
      * Converts the viewdata to a RSS feed. Modify to suit your datastructure.
      * @return Response
      */
-    public function createResponse(ViewHandler $handler,View $view,Request $request)
+    public function createResponse(ViewHandler $handler, View $view, Request $request)
     {
         try {
             return new Response($this->createFeed($view->getData()), 200, $view->getHeaders());
@@ -53,6 +52,7 @@ class RssHandler
                 sprintf("%s:<br/><pre>%s</pre>", $e->getStackTrace(),
                     $e->getMessage(), 500, $headers );
     }
+
     /**
      * @param $data array
      * @param format string, either rss or atom
@@ -92,8 +92,6 @@ class RssHandler
         }
         return $feed->export($format);
     }
-
-
 }
 
 
