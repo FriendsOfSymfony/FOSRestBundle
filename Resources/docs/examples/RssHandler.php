@@ -22,6 +22,7 @@ use FOS\RestBundle\View\View,
  *    class: FOS\RestBundle\Examples\RssHandler
  *    arguments:
  *      logger: @logger
+ *
  * @author Tarjei Huse (tarjei - at scanmine.com)
  */
 class RssHandler
