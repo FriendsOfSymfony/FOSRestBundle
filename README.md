@@ -203,6 +203,8 @@ services:
             - ['registerHandler', [ 'rss', [@my.rss_handler, 'createResponse'] ] ]
 
 ```
+You can find an example implementation of the RestViewhandler in Resources\docs\examples.
+
 
 Here is an example using a compiler pass (be sure to register the compiler pass in your bundle):
 
