@@ -468,6 +468,22 @@ fos_rest:
 If you want to display the message from the exception in the content of the response, add the 
 exception to the messages map as well. If not only the statuscode will be returned. 
 
+If you know what status code you want to return you do not have to add a mapping, you can do
+this in your controller:
+
+```php
+<?php
+class UsersController extends Controller
+{
+    public function postUserCommentsAction($slug)
+    {
+        if (!$this->validate($slug)) {
+            throw new HttpException(400, "New comment is not valid.");
+        }
+    }
+}
+```
+
 See the following example configuration for more details:
 https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
 
