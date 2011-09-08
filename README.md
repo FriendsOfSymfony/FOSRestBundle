@@ -442,7 +442,7 @@ ExceptionController support
 Using this custom ExceptionController it is possible to leverage the View layer
 when building responses for uncaught Exceptions.
 
-The RestBundle view-layer-aware ExceptionController is enabled as follows:
+To enable the RestBundle view-layer-aware ExceptionController update the framework section of your config like this:
 
 ```yaml
 # app/config/config.yml
@@ -464,6 +464,9 @@ fos_rest:
         messages:
             'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
 ```
+
+If you want to display the message from the exception in the content of the response, add the 
+exception to the messages map as well. If not only the statuscode will be returned. 
 
 See the following example configuration for more details:
 https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
