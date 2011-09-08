@@ -69,7 +69,9 @@ class ViewResponseListener
 
         $view = $event->getControllerResult();
         if (!$view instanceOf View) {
-            if (!$request->attributes->get('_view') && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
+            if (!$request->attributes->get('_view')
+                && !$this->container->getParameter('fos_rest.view_response_listener.force_view')
+            ) {
                 return;
             }
 
@@ -103,7 +105,8 @@ class ViewResponseListener
             $view->setTemplate($template);
         }
 
-        $handler = $this->container->get('fos_rest.view_handler');
-        $event->setResponse($handler->handle($view, $request));
+        $response = $this->container->get('fos_rest.view_handler')->handle($view, $request);
+
+        $event->setResponse($response);
     }
 }
