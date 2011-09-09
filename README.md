@@ -751,7 +751,7 @@ fos_rest:
     format_listener:
         default_priorities: [html, '*/*']
         fallback_format: html
-        prefer_extension: false
+        prefer_extension: true
     service:
         router: router
         templating: templating

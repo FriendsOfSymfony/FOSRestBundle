@@ -122,7 +122,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(array('html', '*/*'))
                             ->prototype('scalar')->end()
                         ->end()
-                        ->booleanNode('prefer_extension')->defaultFalse()->end()
+                        ->booleanNode('prefer_extension')->defaultTrue()->end()
                         ->scalarNode('fallback_format')->defaultValue('html')->end()
                     ->end()
                 ->end()
