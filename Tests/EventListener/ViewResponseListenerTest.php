@@ -23,6 +23,41 @@ use FOS\RestBundle\EventListener\ViewResponseListener;
  */
 class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testOnKernelController()
+    {
+        $request = new Request();
+        $request->attributes->set('_view', 'foo');
+
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterControllerEvent')->disableOriginalConstructor()->getMock();
+        $event->expects($this->once())
+              ->method('getRequest')
+              ->will($this->returnValue($request));
+
+        $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')->disableOriginalConstructor()->getMock();
+        $listener = new ViewResponseListener($container);
+
+        $listener->onKernelController($event);
+
+        $this->assertEquals('foo', $request->attributes->get('_template'));
+    }
+
+    public function testOnKernelControllerNoView()
+    {
+        $request = new Request();
+
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterControllerEvent')->disableOriginalConstructor()->getMock();
+        $event->expects($this->once())
+              ->method('getRequest')
+              ->will($this->returnValue($request));
+
+        $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')->disableOriginalConstructor()->getMock();
+        $listener = new ViewResponseListener($container);
+
+        $listener->onKernelController($event);
+
+        $this->assertNull($request->attributes->get('_template'));
+    }
+
     public function testOnKernelView()
     {
         $template = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Templating\TemplateReference')->disableOriginalConstructor()->getMock();
@@ -84,6 +119,39 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $event->expects($this->once())
             ->method('getControllerResult')
             ->will($this->returnValue(array()));
+
+        $event->expects($this->never())
+            ->method('setResponse');
+
+        $listener->onKernelView($event);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testOnKernelViewWithNoViewNoDataWithForce()
+    {
+        $request = new Request();
+        $request->attributes->set('_template_vars', true);
+        $request->attributes->set('_template_default_vars', array('foo', 'halli'));
+
+        $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')->disableOriginalConstructor()->getMock();
+        $container->expects($this->once())
+            ->method('getParameter')
+            ->with('fos_rest.view_response_listener.force_view')
+            ->will($this->returnValue(true));
+
+        $listener = new ViewResponseListener($container);
+
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent')->disableOriginalConstructor()->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $event->expects($this->once())
+            ->method('getControllerResult')
+            ->will($this->returnValue('foo'));
 
         $event->expects($this->never())
             ->method('setResponse');

@@ -64,6 +64,29 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($request->getRequestFormat(), 'xml');
     }
 
+    public function testOnKernelControllerNoFormat()
+    {
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterControllerEvent')->disableOriginalConstructor()->getMock();
+
+        $request = new Request();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $event->expects($this->once())
+            ->method('getRequestType')
+            ->will($this->returnValue(HttpKernelInterface::SUB_REQUEST));
+
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
+
+        $listener = new FormatListener($formatNegotiator, null, array());
+
+        $listener->onKernelController($event);
+
+        $this->assertEquals('html', $request->getRequestFormat());
+    }
+
     /**
      * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
      */

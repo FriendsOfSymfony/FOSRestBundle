@@ -106,7 +106,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithLocation($expected, $format, $forceRedirects)
     {
-        $viewHandler = new ViewHandlerProxy(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceRedirects);
+        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -130,7 +130,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false)
     {
-        $viewHandler = new ViewHandlerProxy(array('html' => true, 'json' => false));
+        $viewHandler = new ViewHandler(array('html' => true, 'json' => false));
 
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
         if ('html' === $format) {
@@ -213,12 +213,70 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'transform called' => array(200, 'json', array('json' => false)),
         );
     }
-}
 
-class ViewHandlerProxy extends ViewHandler
-{
-    public function createResponse(View $view, Request $request, $format)
+    public function testHandle()
     {
-        return parent::createResponse($view, $request, $format);
+        $viewHandler = new ViewHandler(array('html' => true));
+
+        $templating = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
+            ->setMethods(array('render'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $templating
+            ->expects($this->once())
+            ->method('render')
+            ->will($this->returnValue(''));
+
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->onConsecutiveCalls(new Request(), $templating));
+        $viewHandler->setContainer($container);
+
+        $data = array('foo' => 'bar');
+
+        $view = new View($data);
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $viewHandler->handle($view));
+    }
+
+    public function testHandleCustom()
+    {
+        $viewHandler = new ViewHandler(array());
+        $viewHandler->registerHandler('html', ($callback = function(){ return 'foo'; }));
+
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with('request')
+            ->will($this->returnValue(new Request()));
+        $viewHandler->setContainer($container);
+
+        $data = array('foo' => 'bar');
+
+        $view = new View($data);
+        $this->assertEquals('foo', $viewHandler->handle($view));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
+     */
+    public function testHandleNotSupported()
+    {
+        $viewHandler = new ViewHandler(array());
+
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with('request')
+            ->will($this->returnValue(new Request()));
+        $viewHandler->setContainer($container);
+
+        $data = array('foo' => 'bar');
+
+        $view = new View($data);
+        $viewHandler->handle($view);
     }
 }

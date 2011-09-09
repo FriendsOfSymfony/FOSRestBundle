@@ -110,4 +110,20 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view->setFormat($format);
         $this->assertEquals($format, $view->getFormat());
     }
+
+    public function testSetHeaders()
+    {
+        $view = new View();
+        $headers = array('foo' => 'bar');
+        $view->setHeaders($headers);
+        $this->assertEquals($headers, $view->getHeaders());
+    }
+
+    public function testSetStatusCode()
+    {
+        $view = new View();
+        $code = 404;
+        $view->setStatusCode($code);
+        $this->assertEquals($code, $view->getStatusCode());
+    }
 }
