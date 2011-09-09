@@ -21,14 +21,14 @@ use FOS\RestBundle\Util\Pluralization;
  */
 class PluralizationTest extends \PHPUnit_Framework_TestCase
 {
-	/**
+    /**
      * Test that pluralization pluralize words correctly.
      *
-	 * @dataProvider getWords
-	 *
-	 * @param string $singular
-	 * @param string $plural
-	 */
+     * @dataProvider getWords
+     *
+     * @param string $singular
+     * @param string $plural
+     */
     public function testPluralize($singular, $plural)
     {
         $this->assertEquals($plural, Pluralization::pluralize($singular));
