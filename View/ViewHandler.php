@@ -190,7 +190,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $format = $view->getFormat() ?: $request->getRequestFormat();
 
         if (!$this->supports($format)) {
-            return new HttpException(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, "Format '$format' not supported, handler must be implemented");
+            throw new HttpException(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, "Format '$format' not supported, handler must be implemented");
         }
 
         if (isset($this->customHandlers[$format])) {
