@@ -64,11 +64,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getStatusCodeFromViewDataProvider
+     * @dataProvider getStatusCodeDataProvider
      */
-    public function testGetStatusCodeFromView($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled)
+    public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled)
     {
-        $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\ViewHandler', 'getStatusCodeFromView');
+        $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\ViewHandler', 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
         $form = $this->getMock('\Symfony\Component\Form\Form', array('isBound', 'isValid'), array(), '', false);
@@ -90,7 +90,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view));
     }
 
-    public static function getStatusCodeFromViewDataProvider()
+    public static function getStatusCodeDataProvider()
     {
         return array(
             'no data' => array(Codes::HTTP_OK, false, false, false, 0, 0),
