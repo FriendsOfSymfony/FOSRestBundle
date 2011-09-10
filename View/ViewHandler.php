@@ -190,7 +190,8 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $format = $view->getFormat() ?: $request->getRequestFormat();
 
         if (!$this->supports($format)) {
-            throw new HttpException(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, "Format '$format' not supported, handler must be implemented");
+            $msg = "Format '$format' not supported, handler must be implemented";
+            throw new HttpException(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, $msg);
         }
 
         if (isset($this->customHandlers[$format])) {
@@ -280,20 +281,18 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     {
         $view->setHeader('Content-Type', $request->getMimeType($format));
 
-        $location = $view->getLocation();
-        if (!$location && ($route = $view->getRoute())) {
-            $location = $this->getRouter()->generate($route, (array)$view->getData(), true);
-        }
+        $route = $view->getRoute();
+        $location = $route
+            ? $this->getRouter()->generate($route, (array)$view->getData(), true)
+            : $view->getLocation();
 
         if ($location) {
             return $this->createRedirectResponse($view, $location, $format);
         }
 
-        if ($this->isFormatTemplating($format)) {
-            $content = $this->renderTemplate($view, $format);
-        } else {
-            $content = $this->getSerializer()->serialize($view->getData(), $format);
-        }
+        $content = $this->isFormatTemplating($format)
+            ? $this->renderTemplate($view, $format)
+            : $this->getSerializer()->serialize($view->getData(), $format);
 
         return new Response($content, $this->getStatusCode($view), $view->getHeaders());
     }
