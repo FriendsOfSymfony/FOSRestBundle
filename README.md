@@ -260,9 +260,7 @@ controllers. The final output will then automatically be processed via the liste
 
 This requires adding the SensioFrameworkExtraBundle to your vendors:
 
-```bash
-$ git submodule add git://github.com/sensio/SensioFrameworkExtraBundle.git vendor/bundles/Sensio/Bundle/FrameworkExtraBundle
-```
+http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
 
 Now inside a controller its possible to simply return a ``View`` instance.
 
@@ -347,7 +345,8 @@ fos_rest:
             xml: fos_rest.decoder.xml
 ```
 
-Your custom decoder service must use a class that must implement the `FOS\RestBundle\Decoder\DecoderInterface`.
+Your custom decoder service must use a class that must implement the
+`FOS\RestBundle\Decoder\DecoderInterface`.
 
 ### Format listener
 
@@ -408,7 +407,8 @@ ExceptionController support
 Using this custom ExceptionController it is possible to leverage the View layer
 when building responses for uncaught Exceptions.
 
-To enable the RestBundle view-layer-aware ExceptionController update the framework section of your config like this:
+To enable the RestBundle view-layer-aware ExceptionController update the framework
+section of your config like this:
 
 ```yaml
 # app/config/config.yml
