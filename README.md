@@ -175,6 +175,7 @@ The callable will receive 3 parameters:
 
 Note there are several public methods on the ``ViewHandler`` which can be helpful:
 
+ * ``isFormatTemplating()``
  * ``createResponse()``
  * ``createRedirectResponse()``
  * ``renderTemplate()``
@@ -183,9 +184,10 @@ There is an example inside LiipHelloBundle to show how to register a custom hand
 https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
 https://github.com/liip/LiipHelloBundle/blob/master/Resources/config/config.yml
 
-There is another example in ``Resources\docs\examples``
+There is another example in ``Resources\docs\examples``:
+https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/docs/examples/RssHandler.php
 
-Here is an example using a closure registered inside a controller action:
+Here is an example using a closure registered inside a Controller action:
 
 ```php
 <?php
