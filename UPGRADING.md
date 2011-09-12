@@ -6,12 +6,6 @@ for major refactorings.
 
 ### upgrading from 0.5.0_old_serializer
 
- * In case you are using th SensioFrameworkExtra integration you must change
-    sensio_framework_extra setting:
-
-    sensio_framework_extra:
-        view:    { annotations: true }
-
  * The ViewInterface is gone so you might have to change your controller config if you refer to the fos_rest.view service.
 
  * The View class is now split into a View (simple data container) and a ViewHandler (contains the actual rendering logic).

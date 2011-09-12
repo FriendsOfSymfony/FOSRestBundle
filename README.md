@@ -292,15 +292,19 @@ The ``@View()`` and ``@Template()`` annotations behave essentially the same with
 difference. When ``view_response_listener`` is set to ``true`` instead of the default ``force``
 and ``@View()`` is not used, then rendering will be delegated to SensioFrameworkBundle.
 
+Note that its necessary to disable view annotations in SensioFrameworkBundle so that
+FOSRestBundle can take over the handling.
+
 ```yaml
 # app/config/config.yml
 fos_rest:
     view:
-        view_response_listener: true
-```
+        view_response_listener: force
 
-Note, ``@View()`` currently only works if the following patch is applied:
-https://github.com/sensio/SensioFrameworkExtraBundle/pull/57
+sensio_framework_extra:
+    view:    { annotations: false }
+
+```
 
 ```php
 <?php

@@ -16,6 +16,8 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     Symfony\Component\DependencyInjection\ContainerInterface;
 
+use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
+
 use FOS\RestBundle\View\View,
     FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 
@@ -24,12 +26,12 @@ use FOS\RestBundle\View\View,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class ViewResponseListener
+class ViewResponseListener extends TemplateListener
 {
     /**
      * @var Symfony\Component\DependencyInjection\ContainerInterface
      */
-    private $container;
+    protected $container;
 
     /**
      * Constructor.
@@ -50,11 +52,14 @@ class ViewResponseListener
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
+
         if (!$configuration = $request->attributes->get('_view')) {
             return;
         }
 
         $request->attributes->set('_template', $configuration);
+
+        parent::onKernelController($event);
     }
 
     /**
