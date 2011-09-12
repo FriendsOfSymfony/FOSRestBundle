@@ -256,7 +256,7 @@ fos_rest:
 
 The view response listener makes it possible to simply return a ``View`` instance from action
 controllers. The final output will then automatically be processed via the listener by the
-`fos_rest.view_handler`` service.
+``fos_rest.view_handler`` service.
 
 This requires adding the SensioFrameworkExtraBundle to your vendors:
 
@@ -346,7 +346,7 @@ fos_rest:
 ```
 
 Your custom decoder service must use a class that must implement the
-`FOS\RestBundle\Decoder\DecoderInterface`.
+``FOS\RestBundle\Decoder\DecoderInterface``.
 
 ### Format listener
 
@@ -557,7 +557,7 @@ class UsersController extends Controller
 }
 ```
 
-That's all. All your resource (`UsersController`) actions will get mapped to the proper routes
+That's all. All your resource (``UsersController``) actions will get mapped to the proper routes
 as shown in the comments in the above example. Here are a few things to note:
 
 ### REST Actions
@@ -565,7 +565,7 @@ as shown in the comments in the above example. Here are a few things to note:
 There are 5 actions that have special meaning in regards to REST and have the following behavior:
 
 * **get** - this action accepts *GET* requests to the url */resources* and returns all resources for this type. Shown as
-`UsersController::getUsersAction()`` above. This action also accepts *GET* requests to the url */resources/{id}* and
+``UsersController::getUsersAction()`` above. This action also accepts *GET* requests to the url */resources/{id}* and
 returns a single resource for this type. Shown as ``UsersController::getUserAction()`` above.
 * **post** - this action accepts *POST* requests to the url */resources* and creates a new resource of this type. Shown
 as ``UsersController::postUsersAction()`` above.
@@ -594,7 +594,7 @@ client to *DELETE* an existing resource. Commonly a confirmation form. Shown as 
 ### Custom PUT Actions
 
 All actions that do not match the ones listed in the sections above will register as a *PUT* action. In the controller
-shown above, these actions are ``UsersController::lockUserAction()`` and ``UsersController::banUserAction()`. You could
+shown above, these actions are ``UsersController::lockUserAction()`` and ``UsersController::banUserAction()``. You could
 just as easily create a method called ``UsersController::promoteUserAction()`` which would take a *PUT* request to the url
 */users/{slug}/promote*. This allows for easy updating of aspects of a resource, without having to deal with the
 resource as a whole at the standard *PUT* endpoint.
@@ -603,7 +603,7 @@ resource as a whole at the standard *PUT* endpoint.
 
 Of course it's possible and common to have sub or child resources. They are easily defined within the same controller by
 following the naming convention ``ResourceController::actionResourceSubResource()`` - as seen in the example above with
-`UsersController::getUserCommentsAction()`. This is a good strategy to follow when the child resource needs the parent
+``UsersController::getUserCommentsAction()``. This is a good strategy to follow when the child resource needs the parent
 resource's ID in order to look up itself. 
 
 Relational RESTful controllers routes
@@ -648,7 +648,7 @@ auto-generation process and can be any name you like.
 
 ## Define child resource controller
 
-`CommentsController`` actions now will looks like:
+``CommentsController`` actions now will looks like:
 
 ```php
 <?php
@@ -703,16 +703,14 @@ RestBundle uses REST paths to generate route name. This means, that URL:
 
     [PUT] /users/{slug}/comments/{id}/vote
 
-will become the route with the name:
-
-    vote_user_comment
+will become the route with the name ``vote_user_comment``.
 
 For further examples, see comments of controllers in the code above.
 
 ### Naming collisions
 
 Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
-collections provides a ``name_prefix`` (``name-prefix`` for xml and @NamePrefix for
+collections provides a ``name_prefix`` (``name-prefix`` for xml and ``@NamePrefix`` for
 annotations) parameter:
 
 ```yaml
