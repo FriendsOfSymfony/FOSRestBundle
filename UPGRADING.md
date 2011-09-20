@@ -12,34 +12,34 @@ for major refactorings.
 
     The following code would need to be changed:
 
-     public function indexAction($name = null)
-     {
-        $view = $this->container->get('fos_rest.view');
+        public function indexAction($name = null)
+        {
+            $view = $this->container->get('fos_rest.view');
 
-         if (!$name) {
-            $view->setResourceRoute('_welcome');
-         } else {
-            $view->setParameters(array('name' => $name));
-            $view->setTemplate(new TemplateReference('LiipHelloBundle', 'Hello', 'index'));
-         }
+            if (!$name) {
+                $view->setResourceRoute('_welcome');
+            } else {
+                $view->setParameters(array('name' => $name));
+                $view->setTemplate(new TemplateReference('LiipHelloBundle', 'Hello', 'index'));
+            }
 
-        return $view->handle();
-     }
+            return $view->handle();
+        }
 
     To the following code:
 
-    public function indexAction($name = null)
-    {
-        if (!$name) {
-            $view = \FOS\RestBundle\View\RouteRedirectView::create('_welcome');
-        } else {
-            $view = \FOS\RestBundle\View\View::create(array('name' => $name))
-                ->setTemplate(new TemplateReference('LiipHelloBundle', 'Hello', 'index'));
-            ;
+        public function indexAction($name = null)
+        {
+            if (!$name) {
+                $view = \FOS\RestBundle\View\RouteRedirectView::create('_welcome');
+            } else {
+                $view = \FOS\RestBundle\View\View::create(array('name' => $name))
+                    ->setTemplate(new TemplateReference('LiipHelloBundle', 'Hello', 'index'));
+                ;
+            }
+
+            return $this->container->get('fos_rest.view_handler')->handle($view);
         }
 
-        return $this->container->get('fos_rest.view_handler')->handle($view);
-    }
-
   * The custom Serializer class was removed instead JMSSerializerBundle is now used, which
-    replaces the concept of normalizers/encoders with the concept of so called "handlers"
+    replaces the concept of normalizers/encoders with the concept of visitors and handler
