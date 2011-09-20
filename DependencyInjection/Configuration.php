@@ -76,7 +76,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('router')->defaultValue('router')->end()
                         ->scalarNode('templating')->defaultValue('templating')->end()
-                        ->scalarNode('serializer')->defaultValue('serializer')->end()
+                        ->scalarNode('serializer')->defaultValue('jms_serializer.serializer')->end()
                         ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
                     ->end()
                 ->end()
