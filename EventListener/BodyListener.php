@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\DecoderProvider\DecoderProviderInterface;
+
 use Symfony\Component\HttpFoundation\ParameterBag,
     Symfony\Component\HttpKernel\Event\GetResponseEvent,
     Symfony\Component\DependencyInjection\ContainerAware;
@@ -20,20 +22,27 @@ use Symfony\Component\HttpFoundation\ParameterBag,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class BodyListener extends ContainerAware
+class BodyListener
 {
+    /**
+     * @var DecoderProviderInterface
+     */
+    private $decoderProvider;
+
     /**
      * @var array
      */
     private $decoders;
 
     /**
-     * Set a serializer instance
+     * Constructor.
      *
+     * @param   DecoderProviderInterface $decoderProvider Provider for fetching decoders
      * @param   array $decoders List of key (format) value (service ids) of decoders
      */
-    public function __construct(array $decoders)
+    public function __construct(DecoderProviderInterface $decoderProvider, array $decoders)
     {
+        $this->decoderProvider = $decoderProvider;
         $this->decoders = $decoders;
     }
 
@@ -59,7 +68,7 @@ class BodyListener extends ContainerAware
                 return;
             }
 
-            $decoder = $this->container->get($this->decoders[$format]);
+            $decoder = $this->decoderProvider->getDecoder($this->decoders[$format]);
 
             $data = $decoder->decode($request->getContent(), $format);
             $request->request = new ParameterBag((array)$data);
