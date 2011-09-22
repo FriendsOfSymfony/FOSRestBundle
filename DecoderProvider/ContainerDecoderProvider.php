@@ -20,6 +20,6 @@ class ContainerDecoderProvider extends ContainerAware implements DecoderProvider
 {
     public function getDecoder($id)
     {
-    	return $this->container->get($this->decoders[$format]);
+        return $this->container->get($id);
     }
 }
