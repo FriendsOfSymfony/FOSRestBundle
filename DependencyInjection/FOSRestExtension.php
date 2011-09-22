@@ -62,7 +62,7 @@ class FOSRestExtension extends Extension
         }
         $container->setParameter($this->getAlias().'.force_redirects', $config['view']['force_redirects']);
 
-        if (is_string($config['view']['failed_validation'])) {
+        if (!is_numeric($config['view']['failed_validation'])) {
             $config['view']['failed_validation'] = constant('\FOS\RestBundle\Response\Codes::'.$config['view']['failed_validation']);
         }
         $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
@@ -75,7 +75,7 @@ class FOSRestExtension extends Extension
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
-            if (is_string($code)) {
+            if (!is_numeric($code)) {
                 $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Response\Codes::$code");
             }
         }
