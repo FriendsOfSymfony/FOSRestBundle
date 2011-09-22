@@ -11,6 +11,7 @@
         <service id="fos_rest.decoder.xml" class="FOS\RestBundle\Decoder\XmlDecoder" />
 
         <service id="fos_rest.decoder_provider" class="FOS\RestBundle\DecoderProvider\ContainerDecoderProvider">
+            <argument>%fos_rest.decoders%</argument>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
@@ -19,7 +20,6 @@
         <service id="fos_rest.body_listener" class="FOS\RestBundle\EventListener\BodyListener">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
             <argument>%fos_rest.decoder_provider%</argument>
-            <argument>%fos_rest.decoders%</argument>
         </service>
 
     </services>

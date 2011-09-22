@@ -18,8 +18,32 @@ namespace FOS\RestBundle\DecoderProvider;
  */
 class ContainerDecoderProvider extends ContainerAware implements DecoderProviderInterface
 {
-    public function getDecoder($id)
+    /**
+     * @var array
+     */
+    private $decoders;
+
+    /**
+     * Constructor.
+     *
+     * @param   array $decoders List of key (format) value (service ids) of decoders
+     */
+    public function __construct(array $decoders)
     {
-        return $this->container->get($id);
+        $this->decoders = $decoders;
+    }
+
+    public function supports($format)
+    {
+        return isset($this->decoders[$format]);
+    }
+
+    public function getDecoder($format)
+    {
+        if (!$this->supports($format)) {
+            throw new \InvalidArugmentException(sprintf("Format '%s' is not supported by ContainerDecoderProvider.", $format));
+        }
+
+        return $this->container->get($this->decoders[$format]);
     }
 }

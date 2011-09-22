@@ -30,20 +30,13 @@ class BodyListener
     private $decoderProvider;
 
     /**
-     * @var array
-     */
-    private $decoders;
-
-    /**
      * Constructor.
      *
      * @param   DecoderProviderInterface $decoderProvider Provider for fetching decoders
-     * @param   array $decoders List of key (format) value (service ids) of decoders
      */
-    public function __construct(DecoderProviderInterface $decoderProvider, array $decoders)
+    public function __construct(DecoderProviderInterface $decoderProvider)
     {
         $this->decoderProvider = $decoderProvider;
-        $this->decoders = $decoders;
     }
 
     /**
@@ -64,11 +57,11 @@ class BodyListener
                 ? $request->getRequestFormat()
                 : $request->getFormat($request->headers->get('Content-Type'));
 
-            if (null === $format || empty($this->decoders[$format])) {
+            if (!$this->decoderProvider->supports($format)) {
                 return;
             }
 
-            $decoder = $this->decoderProvider->getDecoder($this->decoders[$format]);
+            $decoder = $this->decoderProvider->getDecoder($format);
 
             $data = $decoder->decode($request->getContent(), $format);
             $request->request = new ParameterBag((array)$data);
