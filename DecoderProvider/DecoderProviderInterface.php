@@ -22,7 +22,7 @@ interface DecoderProviderInterface
      * Provides decoders, possibly lazily.
      *
      * @param string $id Identifier of the requested decoder.
-     * @return mixed
+     * @return FOS\RestBundle\Decoder\DecoderInterface
      */
     function getDecoder($id);
 }
