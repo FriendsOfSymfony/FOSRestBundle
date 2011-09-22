@@ -14,8 +14,7 @@ namespace FOS\RestBundle\EventListener;
 use FOS\RestBundle\DecoderProvider\DecoderProviderInterface;
 
 use Symfony\Component\HttpFoundation\ParameterBag,
-    Symfony\Component\HttpKernel\Event\GetResponseEvent,
-    Symfony\Component\DependencyInjection\ContainerAware;
+    Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * This listener handles Request body decoding.
