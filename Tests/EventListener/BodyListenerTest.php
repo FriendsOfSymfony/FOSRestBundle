@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\HeaderBag,
+    FOS\RestBundle\DecoderProvider\ContainerDecoderProvider,
     FOS\RestBundle\EventListener\BodyListener;
 
 /**
@@ -38,7 +39,9 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
               ->method('decode')
               ->will($this->returnValue($request->getContent()));
 
-        $listener = new BodyListener(array('json' => 'foo'));
+        $decoderProvider = new ContainerDecoderProvider(array('json' => 'foo'));
+
+        $listener = new BodyListener($decoderProvider);
 
         if ($decode) {
             $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
@@ -48,7 +51,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
                 ->with('foo')
                 ->will($this->returnValue($decoder));
 
-            $listener->setContainer($container);
+            $decoderProvider->setContainer($container);
         }
 
         $request->setMethod($method);
@@ -76,5 +79,5 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
            'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), 'foo'), 'POST', null, array('foo')),
         );
     }
-    
+
 }

@@ -11,30 +11,31 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\DecoderProvider\DecoderProviderInterface;
+
 use Symfony\Component\HttpFoundation\ParameterBag,
-    Symfony\Component\HttpKernel\Event\GetResponseEvent,
-    Symfony\Component\DependencyInjection\ContainerAware;
+    Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * This listener handles Request body decoding.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class BodyListener extends ContainerAware
+class BodyListener
 {
     /**
-     * @var array
+     * @var DecoderProviderInterface
      */
-    private $decoders;
+    private $decoderProvider;
 
     /**
-     * Set a serializer instance
+     * Constructor.
      *
-     * @param   array $decoders List of key (format) value (service ids) of decoders
+     * @param   DecoderProviderInterface $decoderProvider Provider for fetching decoders
      */
-    public function __construct(array $decoders)
+    public function __construct(DecoderProviderInterface $decoderProvider)
     {
-        $this->decoders = $decoders;
+        $this->decoderProvider = $decoderProvider;
     }
 
     /**
@@ -55,11 +56,11 @@ class BodyListener extends ContainerAware
                 ? $request->getRequestFormat()
                 : $request->getFormat($request->headers->get('Content-Type'));
 
-            if (null === $format || empty($this->decoders[$format])) {
+            if (!$this->decoderProvider->supports($format)) {
                 return;
             }
 
-            $decoder = $this->container->get($this->decoders[$format]);
+            $decoder = $this->decoderProvider->getDecoder($format);
 
             $data = $decoder->decode($request->getContent(), $format);
             $request->request = new ParameterBag((array)$data);
