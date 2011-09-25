@@ -81,7 +81,8 @@ class ViewResponseListener extends TemplateListener
             $view = new View($view);
         }
 
-        if (!$vars = $request->attributes->get('_template_vars')) {
+        $vars = $request->attributes->get('_template_vars');
+        if (!$vars) {
             $vars = $request->attributes->get('_template_default_vars');
         }
 
@@ -100,11 +101,13 @@ class ViewResponseListener extends TemplateListener
             $view->setData($parameters);
         }
 
-        if ($template = $request->attributes->get('_template')) {
+        $template = $request->attributes->get('_template');
+        if ($template) {
             if ($template instanceof TemplateReference) {
                 $template->set('format', null);
                 $template->set('engine', null);
             }
+
             $view->setTemplate($template);
         }
 
