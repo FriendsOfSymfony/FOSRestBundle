@@ -53,11 +53,9 @@ class ViewResponseListener extends TemplateListener
     {
         $request = $event->getRequest();
 
-        if (!$configuration = $request->attributes->get('_view')) {
-            return;
+        if ($configuration = $request->attributes->get('_view')) {
+            $request->attributes->set('_template', $configuration);
         }
-
-        $request->attributes->set('_template', $configuration);
 
         parent::onKernelController($event);
     }
