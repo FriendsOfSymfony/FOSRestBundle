@@ -69,14 +69,14 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public static function testOnKernelRequestDataProvider()
     {
         return array(
-           'Empty POST request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array('foo')),
-           'Empty PUT request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'PUT', 'application/json', array('foo')),
-           'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'PATCH', 'application/json', array('foo')),
-           'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'DELETE', 'application/json', array('foo')),
-           'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'GET', 'application/json', array()),
-           'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array('bar')),
-           'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/fooformat', array()),
-           'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), 'foo'), 'POST', null, array('foo')),
+           'Empty POST request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', 'application/json', array('foo')),
+           'Empty PUT request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PUT', 'application/json', array('foo')),
+           'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PATCH', 'application/json', array('foo')),
+           'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'DELETE', 'application/json', array('foo')),
+           'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', 'application/json', array()),
+           'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), array('foo')), 'POST', 'application/json', array('bar')),
+           'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', 'application/fooformat', array()),
+           'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', null, array('foo')),
         );
     }
 
