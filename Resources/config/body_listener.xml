@@ -10,7 +10,7 @@
 
         <service id="fos_rest.decoder.xml" class="FOS\RestBundle\Decoder\XmlDecoder" />
 
-        <service id="fos_rest.decoder_provider" class="FOS\RestBundle\DecoderProvider\ContainerDecoderProvider">
+        <service id="fos_rest.decoder_provider" class="FOS\RestBundle\Decoder\ContainerDecoderProvider">
             <argument>%fos_rest.decoders%</argument>
             <call method="setContainer">
                 <argument type="service" id="service_container" />

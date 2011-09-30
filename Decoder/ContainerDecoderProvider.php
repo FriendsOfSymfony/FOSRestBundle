@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\DecoderProvider;
+namespace FOS\RestBundle\Decoder;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 

@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\HeaderBag,
-    FOS\RestBundle\DecoderProvider\ContainerDecoderProvider,
+    FOS\RestBundle\Decoder\ContainerDecoderProvider,
     FOS\RestBundle\EventListener\BodyListener;
 
 /**
