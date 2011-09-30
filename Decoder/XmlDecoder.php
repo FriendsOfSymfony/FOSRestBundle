@@ -25,7 +25,11 @@ class XmlDecoder implements DecoderInterface
      */
     public function decode($data)
     {
-        $xml = simplexml_load_string($data);
+        $xml = @simplexml_load_string($data);
+        if (!$xml) {
+            return;
+        }
+
         if (!$xml->count()) {
             if (!$xml->attributes()) {
                 return (string) $xml;

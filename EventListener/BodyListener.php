@@ -63,7 +63,9 @@ class BodyListener
             $decoder = $this->decoderProvider->getDecoder($format);
 
             $data = $decoder->decode($request->getContent(), $format);
-            $request->request = new ParameterBag((array)$data);
+            if (is_array($data)) {
+                $request->request = new ParameterBag($data);
+            }
         }
     }
 }
