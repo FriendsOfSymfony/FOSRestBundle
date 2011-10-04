@@ -36,9 +36,9 @@ class RestRouteLoaderTest extends LoaderTest
             $route = $collection->get($name);
 
             $this->assertNotNull($route, sprintf('route %s exists', $name));
-            $this->assertEquals($params['pattern'], $route->getPattern());
-            $this->assertEquals($params['method'], $route->getRequirement('_method'));
-            $this->assertContains($params['controller'], $route->getDefault('_controller'));
+            $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
+            $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
     }
 
