@@ -74,8 +74,8 @@ check_username_users:
   controller: ::check_usernameUsersAction
 
 hide_user_comment:
-  method:     PUT
+  method:     POST
   pattern:    /users/{userId}/comments/{commentId}/hide.{_format}
   controller: ::hideUserCommentAction
 
-  
+ 

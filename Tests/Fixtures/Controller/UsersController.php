@@ -80,5 +80,5 @@ class UsersController extends Controller
     {} // [GET] /users/{slug}/comments/{id}/remove
 
     public function hideUserCommentAction($userId, $commentId)
-    {}
+    {} // [POST] /users/{userId}/comments/{commentId}
 }
