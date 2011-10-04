@@ -29,7 +29,7 @@ patch_user:
   controller: ::patchUserAction
 
 lock_user:
-  method:     PUT
+  method:     POST
   pattern:    /users/{slug}/lock.{_format}
   controller: ::lockUserAction
 
@@ -59,12 +59,12 @@ new_user_comments:
   controller: ::newUserCommentsAction
 
 ban_user:
-  method:     PUT
+  method:     POST
   pattern:    /users/{slug}/ban.{_format}
   controller: ::banUserAction
 
 vote_user_comment:
-  method:     PUT
+  method:     POST
   pattern:    /users/{slug}/comments/{id}/vote.{_format}
   controller: ::voteUserCommentAction
 
@@ -89,7 +89,7 @@ put_user_topic:
   controller: ::putTopic
 
 hide_user_topic:
-  method:     PUT
+  method:     POST
   pattern:    /users/{slug}/topics/{title}/hide.{_format}
   controller: ::hideTopic
 
@@ -109,6 +109,6 @@ put_user_topic_comment:
   controller: ::putComment
 
 ban_user_topic_comment:
-  method:     PUT
+  method:     POST
   pattern:    /users/{slug}/topics/{title}/comments/{id}/ban.{_format}
   controller: ::banComment

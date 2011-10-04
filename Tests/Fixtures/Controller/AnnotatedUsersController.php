@@ -32,7 +32,7 @@ class AnnotatedUsersController extends Controller
      */
     public function getUserAction($slug)
     {} // [GET]     /users/{slug}
-    
+
     /**
      * @Patch
      */
@@ -61,7 +61,7 @@ class AnnotatedUsersController extends Controller
      * @Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
     public function rateUserCommentAction($slug, $id)
-    {} // [PUT]     /users/{slug}/rate_comment/{id}
+    {} // [POST]     /users/{slug}/rate_comment/{id}
 
     /**
      * @Get

@@ -43,6 +43,29 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * Test that custom actions (new/edit/remove) are dumped earlier.
+     */
+    public function testCustomActionRoutesOrder()
+    {
+        $collection = $this->loadFromControllerFixture('UsersController');
+        $getUserPos = 0;
+        $newUserPos = 0;
+
+        $currentPos = 0;
+        foreach ($collection as $name => $route) {
+            if ('get_user' === $name) {
+                $getUserPos = $currentPos;
+            }
+            if ('new_users' === $name) {
+                $newUserPos = $currentPos;
+            }
+            $currentPos++;
+        }
+
+        $this->assertLessThan($getUserPos, $newUserPos);
+    }
+
+    /**
      * Test that annotated UsersController RESTful class gets parsed correctly.
      */
     public function testAnnotatedUsersFixture()
