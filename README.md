@@ -8,7 +8,7 @@ See here for more details on what is planned:
 https://github.com/FriendsOfSymfony/FOSRestBundle/issues
 
 For now the Bundle provides a view layer to enable output (including redirects) and
-format agnostic Controllers (to leverage the JMSSerializerBundle for serialization
+format agnostic Controllers (using the JMSSerializerBundle for serialization
 of formats that do not use template).
 
 Furthermore a custom route loader can be used when following a method naming convention.
@@ -289,8 +289,6 @@ additional annotation called ``@View()`` which extends from the ``@Template()`` 
 The ``@View()`` and ``@Template()`` annotations behave essentially the same with a minor
 difference. When ``view_response_listener`` is set to ``true`` instead of the default ``force``
 and ``@View()`` is not used, then rendering will be delegated to SensioFrameworkBundle.
-
-TODO: explain more the ``force`` value?
 
 Note that it is necessary to disable view annotations in SensioFrameworkBundle so that
 FOSRestBundle can take over the handling.
