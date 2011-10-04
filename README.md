@@ -240,9 +240,8 @@ https://github.com/schmittjoh/JMSSerializerBundle/blob/master/Resources/doc/inde
 Listener support
 ----------------
 
-All but the ``mime_type`` listeners of this bundle are enabled by default.
-You can disable one or more the listeners.
-For example, below you can see how to disable the body listener:
+All listeners except the mime_type listener of this bundle are enabled by default.
+You can disable one or more of the listeners as seen in the below example:
 
 ```yaml
 # app/config/config.yml
@@ -287,6 +286,7 @@ class UsersController
 As this feature is heavily based on the SensioFrameworkBundle, the example can further be
 simplified by using the various annotations supported by that bundle. There is also one
 additional annotation called ``@View()`` which extends from the ``@Template()`` annotation.
+
 The ``@View()`` and ``@Template()`` annotations behave essentially the same with a minor
 difference. When ``view_response_listener`` is set to ``true`` instead of the default ``force``
 and ``@View()`` is not used, then rendering will be delegated to SensioFrameworkBundle.
