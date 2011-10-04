@@ -22,7 +22,7 @@ class UserTopicCommentsController extends Controller
     {} // [PUT] /users/{slug}/topics/{title}/comments/{id}
 
     public function banCommentAction($slug, $title, $id)
-    {} // [PUT] /users/{slug}/topics/{title}/comments/{id}/ban
+    {} // [POST] /users/{slug}/topics/{title}/comments/{id}/ban
 
     // conventional HATEOAS actions below
 
