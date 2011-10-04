@@ -97,5 +97,13 @@ class FOSRestExtension extends Extension
         } else {
             $container->setParameter($this->getAlias().'.default_priorities', array());
         }
+
+        if (!empty($config['view']['mime_types'])) {
+            $loader->load('mime_types_listener.xml');
+
+            $container->setParameter($this->getAlias().'.mime_types', $config['view']['mime_types']);
+        } else {
+            $container->setParameter($this->getAlias().'.default_priorities', array());
+        }
     }
 }

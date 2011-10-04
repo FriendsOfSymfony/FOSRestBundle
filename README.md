@@ -240,7 +240,8 @@ https://github.com/schmittjoh/JMSSerializerBundle/blob/master/Resources/doc/inde
 Listener support
 ----------------
 
-All listeners of this bundle are enabled by default. You can disable one or more the listeners.
+All but the ``mime_type`` listeners of this bundle are enabled by default.
+You can disable one or more the listeners.
 For example, below you can see how to disable the body listener:
 
 ```yaml
@@ -400,6 +401,21 @@ When calling:
 Note that the format needs to either be supported by the ``Request`` class natively or
 it needs to be added as documented here:
 http://symfony.com/doc/current/cookbook/request/mime_type.html
+
+### Mime type listener
+
+This listener allows registering additional mime types in the ``Request`` class.
+It works similar to the following cookbook entry:
+http://symfony.com/doc/current/cookbook/request/mime_type.html
+
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        mime_types: ['jsonp': 'application/javascript']
+```
+
 
 ExceptionController support
 ---------------------------

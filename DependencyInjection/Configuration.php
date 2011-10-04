@@ -45,8 +45,33 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('default_format')->defaultNull()->end()
                     ->end()
                 ->end()
+                ->arrayNode('service')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('router')->defaultValue('router')->end()
+                        ->scalarNode('templating')->defaultValue('templating')->end()
+                        ->scalarNode('serializer')->defaultValue('jms_serializer.serializer')->end()
+                        ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
+
+        $this->addViewSection($rootNode);
+        $this->addExceptionSection($rootNode);
+        $this->addBodyListenerSection($rootNode);
+        $this->addFormatListenerSection($rootNode);
+
+        return $treeBuilder;
+    }
+
+    private function addViewSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
                 ->arrayNode('view')
                     ->fixXmlConfig('format', 'formats')
+                    ->fixXmlConfig('mime_type', 'mime_types')
                     ->fixXmlConfig('templating_format', 'templating_formats')
                     ->fixXmlConfig('force_redirect', 'force_redirects')
                     ->addDefaultsIfNotSet()
@@ -56,6 +81,11 @@ class Configuration implements ConfigurationInterface
                             ->useAttributeAsKey('name')
                             ->defaultValue(array('html' => true))
                             ->prototype('boolean')->end()
+                        ->end()
+                        ->arrayNode('mime_types')
+                            ->useAttributeAsKey('name')
+                            ->defaultValue(array())
+                            ->prototype('scalar')->end()
                         ->end()
                         ->arrayNode('formats')
                             ->useAttributeAsKey('name')
@@ -71,23 +101,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
                     ->end()
                 ->end()
-                ->arrayNode('service')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('router')->defaultValue('router')->end()
-                        ->scalarNode('templating')->defaultValue('templating')->end()
-                        ->scalarNode('serializer')->defaultValue('jms_serializer.serializer')->end()
-                        ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
-                    ->end()
-                ->end()
-            ->end()
-        ->end();
-
-        $this->addExceptionSection($rootNode);
-        $this->addBodyListenerSection($rootNode);
-        $this->addFormatListenerSection($rootNode);
-
-        return $treeBuilder;
+            ->end();
     }
 
     private function addBodyListenerSection(ArrayNodeDefinition $rootNode)
