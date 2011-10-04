@@ -103,7 +103,7 @@ class FOSRestExtension extends Extension
 
             $container->setParameter($this->getAlias().'.mime_types', $config['view']['mime_types']);
         } else {
-            $container->setParameter($this->getAlias().'.default_priorities', array());
+            $container->setParameter($this->getAlias().'.mime_types', array());
         }
     }
 }
