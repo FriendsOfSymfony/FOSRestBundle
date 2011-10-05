@@ -3,16 +3,16 @@ RestBundle
 
 This bundle provides various tools to rapidly develop RESTful API's & applications with Symfony2.
 
-Its currently under development so key pieces that are planned are still missing, see
-here for more details on what is planned:
+It is currently under development so key pieces that are planned are still missing.
+See here for more details on what is planned:
 https://github.com/FriendsOfSymfony/FOSRestBundle/issues
 
-For now the Bundle provides a view layer to enable output, including redirects,
-format agnostic Controllers leveraging the JMSSerializerBundle for serialization
-of formats that do not use template.
+For now the Bundle provides a view layer to enable output (including redirects) and
+format agnostic Controllers (using the JMSSerializerBundle for serialization
+of formats that do not use template).
 
-Furthermore a custom route loader can be used to when following a method
-naming convention to automatically provide routes for multiple actions by simply
+Furthermore a custom route loader can be used when following a method naming convention.
+It will automatically provide routes for multiple actions by simply
 configuring the name of a controller.
 
 It also has support for RESTful decoding of HTTP request body and Accept headers
@@ -118,28 +118,28 @@ class UsersController extends Controller
 
 There are also two specialized ``View`` classes for handling directs, one for redirecting
 to an URL called ``RedirectView`` and one to redirect to a route called ``RouteRedirectView``.
-Note that if these classes actually case a redirect or not is determined by the
-``force_redirects`` configuration option is only enabled for ``html`` be default (see below).
+Note that whether these classes actually cause a redirect or not is determined by the
+``force_redirects`` configuration option, which is only enabled for ``html`` by default (see below).
 
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/HelloController.php
 
 ### Configuration
 
-The ``formats`` and ``templating_formats`` settings determine which formats are supported via
-the serializer and which via the template layer. Note that a value of ``false`` means
+The ``formats`` and ``templating_formats`` settings determine which formats are respectively supported by
+the serializer and by the template layer. Note that a value of ``false`` means
 that the given format is disabled. In other words any format listed in ``templating_formats``
-will require a template for rendering using the ``templating`` service, will any format
+will require a template for rendering using the ``templating`` service, while any format
 listed in ``formats`` will use JMSSerializerBundle for rendering.
 
 When using ``RouteRedirectView::create()`` the default behavior of forcing a redirect to the
 route for html is enabled, but needs to be enabled for other formats if needed.
 
-Finally the HTTP response status code for failed validation is defaults to ``400``. Note when
+Finally the HTTP response status code for failed validation defaults to ``400``. Note when
 changing the default you can use name constants of ``FOS\RestBundle\Response\Codes`` class or
 an integer status code.
 
-You can also set the default templating engine so something different than the default of ``twig``:
+You can also set the default templating engine to something different than the default of ``twig``:
 
 ```yaml
 # app/config/config.yml
@@ -162,7 +162,7 @@ https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
 ### Custom handler
 
 While many things should be possible via the JMSSerializerBundle in some cases it might
-not be enough. In some cases you might need some custom logic to be executed in the
+not be enough. For example you might need some custom logic to be executed in the
 ``ViewHandler``. For these cases one might want to register a custom handler for a
 specific format. The custom handler can either be registered by defining a custom service,
 via a compiler pass or it can even be registered from inside the controller action.
@@ -240,8 +240,9 @@ https://github.com/schmittjoh/JMSSerializerBundle/blob/master/Resources/doc/inde
 Listener support
 ----------------
 
-All listeners except the mime_type listener of this bundle are enabled by default.
-You can disable one or more of the listeners as seen in the below example:
+All listeners except the ``mime_type`` one are enabled by default.
+You can disable one or more of these listeners.
+For example, below you can see how to disable all listeners:
 
 ```yaml
 # app/config/config.yml
@@ -291,7 +292,7 @@ The ``@View()`` and ``@Template()`` annotations behave essentially the same with
 difference. When ``view_response_listener`` is set to ``true`` instead of the default ``force``
 and ``@View()`` is not used, then rendering will be delegated to SensioFrameworkBundle.
 
-Note that its necessary to disable view annotations in SensioFrameworkBundle so that
+Note that it is necessary to disable view annotations in SensioFrameworkBundle so that
 FOSRestBundle can take over the handling.
 
 ```yaml
@@ -331,11 +332,13 @@ https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.p
 
 The Request body decoding listener makes it possible to decode the contents of a request
 in order to populate the "request" parameter bag of the Request. This for example allows
-sending data that normally would be send via POST as ``application/x-www-form-urlencode``
-in a different format (for example application/json) as a PUT.
+to receive data that normally would be sent via POST as ``application/x-www-form-urlencode``
+in a different format (for example application/json) in a PUT.
 
-You can add a decoder for the custom format or replace decoder service for ``json`` or ``xml``
-format. Below you can see how to override the decoder of json format:
+You can add a decoder for a custom format. You can also replace the default decoder services
+provided by the bundle for the ``json`` and ``xml`` formats.
+Below you can see how to override the decoder for the json format (the xml
+decoder is explicitely kept to its default service):
 
 ```yaml
 # app/config/config.yml
@@ -346,7 +349,7 @@ fos_rest:
             xml: fos_rest.decoder.xml
 ```
 
-Your custom decoder service must use a class that must implement the
+Your custom decoder service must use a class that implements the
 ``FOS\RestBundle\Decoder\DecoderInterface``.
 
 ### Format listener
@@ -432,7 +435,7 @@ twig:
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 ```
 
-To map Exception classes to HTTP response status codes an ``exception_map`` may be configured,
+To map Exception classes to HTTP response status codes an “exception map” may be configured,
 where the keys match a fully qualified class name and the values are either an integer HTTP response
 status code or a string matching a class constant of the ``FOS\RestBundle\Response\Codes`` class:
 
@@ -486,7 +489,7 @@ fos_rest:
         default_format: json
 ```
 
-Many of the below explained features are used in the following example code:
+Many of the features explained below are used in the following example code:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/RestController.php
 
 Single RESTful controller routes
