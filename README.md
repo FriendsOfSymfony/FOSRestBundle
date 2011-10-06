@@ -32,6 +32,15 @@ Add the following lines in your deps file:
         git=git://github.com/FriendsOfSymfony/FOSRestBundle.git
         target=bundles/FOS/RestBundle
 
+You will also need to install the 
+[JMSSerializerBundle](https://github.com/schmittjoh/JMSSerializerBundle). This bundle is used 
+for serialization. Please see the bundle's [documentation](https://github.com/schmittjoh/JMSSerializerBundle/blob/master/Resources/doc/index.rst) 
+for configuration instructions. Add these lines to your deps file:
+
+    [JMSSerializerBundle]
+        git=git://github.com/schmittjoh/JMSSerializerBundle.git
+        target=bundles/JMS/SerializerBundle
+
 Run the vendors script:
 
 ```bash
@@ -228,14 +237,6 @@ class UsersController extends Controller
     }
 }
 ```
-
-### JMSSerializerBundle
-
-For serialization you will need to install JMSSerializerBundle. Please see its documentation for detailed
-instructions on how to do this:
-
-https://github.com/schmittjoh/JMSSerializerBundle/blob/master/Resources/doc/index.rst
-
 
 Listener support
 ----------------
@@ -781,3 +782,4 @@ fos_rest:
         serializer: serializer
         view_handler: fos_rest.view_handler.default
 ```
+
