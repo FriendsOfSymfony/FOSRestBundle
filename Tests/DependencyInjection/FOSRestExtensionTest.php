@@ -61,21 +61,21 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertParameter($decoders, 'fos_rest.decoders');
     }
 
-    public function testDisableFormatListener()
+    public function testDisableRouterListener()
     {
         $config = array(
-            'fos_rest' => array('format_listener' => false)
+            'fos_rest' => array('router_listener' => false)
         );
         $this->extension->load($config, $this->container);
 
-        $this->assertFalse($this->container->hasDefinition('fos_rest.format_listener'));
+        $this->assertFalse($this->container->hasDefinition('fos_rest.router_listener'));
     }
 
-    public function testLoadFormatListenerWithDefaults()
+    public function testLoadRouterListenerWithDefaults()
     {
         $this->extension->load(array(), $this->container);
 
-        $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
+        $this->assertTrue($this->container->hasDefinition('fos_rest.router_listener'));
         $this->assertParameter(array('html', '*/*'), 'fos_rest.default_priorities');
         $this->assertParameter('html', 'fos_rest.fallback_format');
     }

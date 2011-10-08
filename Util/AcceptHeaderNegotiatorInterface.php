@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 
-interface FormatNegotiatorInterface
+interface AcceptHeaderNegotiatorInterface
 {
     function getBestFormat(Request $request, array $availableTypes);
 }

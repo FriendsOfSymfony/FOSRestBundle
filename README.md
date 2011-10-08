@@ -249,7 +249,7 @@ For example, below you can see how to disable all listeners:
 # app/config/config.yml
 fos_rest:
     body_listener: false
-    format_listener: false
+    router_listener: false
     view:
         view_response_listener: false
 ```
@@ -353,9 +353,9 @@ fos_rest:
 Your custom decoder service must use a class that implements the
 ``FOS\RestBundle\Decoder\DecoderInterface``.
 
-### Format listener
+### Router Listener
 
-The Request format listener attempts to determine the best format for the request based on
+The Request router listener attempts to determine the best format for the request based on
 the Request's Accept-Header and the format priority configuration. This way it becomes
 possible to leverage Accept-Headers to determine the request format, rather than a file
 extension (like foo.json).
@@ -378,7 +378,7 @@ while adding '*/*' to the priorities will effectively cause any priority to matc
 ```yaml
 # app/config/config.yml
 fos_rest:
-    format_listener:
+    router_listener:
         default_priorities: ['json', html, '*/*']
         fallback_format: json
         prefer_extension: true
@@ -772,7 +772,7 @@ fos_rest:
         decoders:
             json: fos_rest.decoder.json
             xml: fos_rest.decoder.xml
-    format_listener:
+    router_listener:
         default_priorities: [html, '*/*']
         fallback_format: html
         prefer_extension: true

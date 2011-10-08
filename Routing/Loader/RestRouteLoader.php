@@ -40,7 +40,6 @@ class RestRouteLoader implements LoaderInterface
     protected $parents = array();
     protected $prefix;
     protected $namePrefix;
-    protected $versions = array('');
     protected $defaultFormat;
 
     /**
@@ -73,8 +72,7 @@ class RestRouteLoader implements LoaderInterface
             'FOS\RestBundle\Controller\Annotations\Put',
             'FOS\RestBundle\Controller\Annotations\Patch',
             'FOS\RestBundle\Controller\Annotations\Delete',
-            'FOS\RestBundle\Controller\Annotations\Head',
-            'FOS\RestBundle\Controller\Annotations\Versions',
+            'FOS\RestBundle\Controller\Annotations\Head'
         );
     }
 
@@ -106,16 +104,6 @@ class RestRouteLoader implements LoaderInterface
     public function setRouteNamesPrefix($namePrefix)
     {
         $this->namePrefix = $namePrefix;
-    }
-
-    /**
-     * Set route version.
-     *
-     * @param   array  $versions Route versions
-     */
-    public function setVersions($versions)
-    {
-        $this->versions = $versions;
     }
 
     /**
@@ -176,13 +164,6 @@ class RestRouteLoader implements LoaderInterface
         $namePrefix = $this->reader->getClassAnnotation($class, $namePrefixAnnotationClass);
         if ($namePrefix) {
             $this->namePrefix = $namePrefix->value;
-        }
-
-        $versionsAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Versions';
-        $versions = $this->reader->getClassAnnotation($class, $versionsAnnotationClass);
-        if ($versions) {
-            $this->versions = explode(',', $versions->value);
-            array_walk($this->versions, function(&$val){$val = trim($val);});
         }
 
         // Trim "/" at the start
@@ -311,28 +292,18 @@ class RestRouteLoader implements LoaderInterface
                         break;
                     }
                 }
-                // Adding in the optional _format param for serialization
+                //Adding in the optional _format param for serialization
                 $pattern .= ".{_format}";
 
-                foreach ($this->versions as $version) {
+                // Create route with gathered parameters
+                $route     = new Route($pattern, $defaults, $requirements, $options);
+                $routeName = $this->namePrefix . strtolower($routeName);
 
-                    $currentRouteName = $routeName;
-                    $currentRequirements = $requirements;
-                    if ($version) {
-                        $currentRequirements['_version'] = $version;
-                        $currentRouteName.= '_'.$version;
-                    }
-
-                    // Create route with gathered parameters
-                    $route     = new Route($pattern, $defaults, $currentRequirements, $options);
-                    $currentRouteName = $this->namePrefix . strtolower($currentRouteName);
-
-                    // Move custom actions at the beginning, default at the end
-                    if (!preg_match('/^('.implode('|', $this->availableHTTPMethods).')/', $currentRouteName)) {
-                        array_unshift($routes, array('name' => $currentRouteName, 'route' => $route));
-                    } else {
-                        $routes[] = array('name' => $currentRouteName, 'route' => $route);
-                    }
+                // Move custom actions at the beginning, default at the end
+                if (!preg_match('/^('.implode('|', $this->availableHTTPMethods).')/', $routeName)) {
+                    array_unshift($routes, array('name' => $routeName, 'route' => $route));
+                } else {
+                    $routes[] = array('name' => $routeName, 'route' => $route);
                 }
             }
         }

@@ -13,8 +13,37 @@ namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class FormatNegotiator implements FormatNegotiatorInterface
+class AcceptHeaderNegotiator implements AcceptHeaderNegotiatorInterface
 {
+    /**
+     * @var array   Ordered array of formats (highest priority first)
+     */
+    private $defaultPriorities;
+
+    /**
+     * @var string  fallback format name
+     */
+    private $fallbackFormat;
+
+    /**
+     * @var Boolean if to consider the extension last or first
+     */
+    private $preferExtension;
+
+    /**
+     * Initialize AcceptHeaderNegotiator.
+     *
+     * @param   string  $fallbackFormat     Default fallback format
+     * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)
+     * @param   Boolean $preferExtension    If to consider the extension last or first
+     */
+    public function __construct($fallbackFormat, array $defaultPriorities = array(), $preferExtension = false)
+    {
+        $this->defaultPriorities = $defaultPriorities;
+        $this->fallbackFormat = $fallbackFormat;
+        $this->preferExtension = $preferExtension;
+    }
+
     /**
      * Detect the request format based on the priorities and the Accept header
      *
@@ -22,20 +51,28 @@ class FormatNegotiator implements FormatNegotiatorInterface
      *
      * @param   Request     $request          The request
      * @param   array       $priorities       Ordered array of formats (highest priority first)
-     * @param   Boolean     $preferExtension  If to consider the extension last or first
      *
      * @return  void|string                 The format string
      */
-    public function getBestFormat(Request $request, array $priorities, $preferExtension = false)
+    public function getBestFormat(Request $request, array $priorities = null)
     {
-        $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'));
+        if (empty($priorities)) {
+            $priorities = $this->defaultPriorities;
+        }
+
+        $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'), true);
 
         $extension = $request->get('_format');
         if (null !== $extension && $request->getMimeType($extension)) {
-            $mimetypes[$request->getMimeType($extension)] = $preferExtension
-                ? reset($mimetypes)+1
-                : end($mimetypes)-1;
-            arsort($mimetypes);
+            if ($this->preferExtension) {
+                $parameters = reset($mimetypes);
+                $parameters = array('q' => $parameters['q']+1);
+                $mimetypes = array($request->getMimeType($extension) => $parameters) + $mimetypes;
+            } else {
+                $parameters = end($mimetypes);
+                $parameters = array('q' => $parameters['q']-1);
+                $mimetypes[$request->getMimeType($extension)] = $parameters;
+            }
         }
 
         if (empty($mimetypes)) {
@@ -43,7 +80,13 @@ class FormatNegotiator implements FormatNegotiatorInterface
         }
 
         $catchAllEnabled = in_array('*/*', $priorities);
-        return $this->getFormatByPriorities($request, $mimetypes, $priorities, $catchAllEnabled);
+        $format = $this->getFormatByPriorities($request, $mimetypes, $priorities, $catchAllEnabled);
+
+        if (null === $format) {
+            $format = $this->fallbackFormat;
+        }
+
+        return $format;
     }
 
     /**
