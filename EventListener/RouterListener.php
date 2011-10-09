@@ -62,6 +62,9 @@ class RouterListener extends ContainerAware
     public function __construct(RouterInterface $router, Reader $reader, AcceptHeaderNegotiatorInterface $acceptHeaderNegotiator, LoggerInterface $logger = null)
     {
         $this->router = $router;
+        // TOOO figure out how to cache the annotation/config parsing
+        // potentially by moving it into the generates routes
+        // at this point this dependency should be removed again
         $this->reader = $reader;
         $this->acceptHeaderNegotiator = $acceptHeaderNegotiator;
         $this->logger = $logger;
@@ -106,13 +109,8 @@ class RouterListener extends ContainerAware
                 $versions = $this->readAnnotation($class, 'Versions', true);
                 $formatPriorities = $this->readAnnotation($class, 'FormatPriorities', true);
 
-                $format = null;
-                if (!empty($formatPriorities)) {
-                    if (isset($parameters['_format'])) {
-                        $request->attributes->set('_format', $parameters['_format']);
-                    }
-                    $format = $this->acceptHeaderNegotiator->getBestFormat($request, $formatPriorities);
-                }
+                $extension = isset($parameters['_format']) ? $parameters['_format'] : null;
+                $format = $this->acceptHeaderNegotiator->getBestFormat($request, $formatPriorities, $extension);
 
                 if (null === $format) {
                     if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST)  {

@@ -45,16 +45,9 @@ class AcceptHeaderNegotiator implements AcceptHeaderNegotiatorInterface
     }
 
     /**
-     * Detect the request format based on the priorities and the Accept header
-     *
-     * Note: Request "_format" parameter is considered the preferred Accept header
-     *
-     * @param   Request     $request          The request
-     * @param   array       $priorities       Ordered array of formats (highest priority first)
-     *
-     * @return  void|string                 The format string
+     * {@inheritdoc}
      */
-    public function getBestFormat(Request $request, array $priorities = null)
+    public function getBestFormat(Request $request, array $priorities = null, $extension = null)
     {
         if (empty($priorities)) {
             $priorities = $this->defaultPriorities;
@@ -62,7 +55,6 @@ class AcceptHeaderNegotiator implements AcceptHeaderNegotiatorInterface
 
         $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'), true);
 
-        $extension = $request->get('_format');
         if (null !== $extension && $request->getMimeType($extension)) {
             if ($this->preferExtension) {
                 $parameters = reset($mimetypes);

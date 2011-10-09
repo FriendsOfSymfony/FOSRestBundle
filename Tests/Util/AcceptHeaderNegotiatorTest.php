@@ -24,11 +24,10 @@ class AcceptHeaderNegotiatorTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request();
         $request->headers->set('Accept', $acceptHeader);
-        $request->attributes->set('_format', $format);
 
-        $acceptHeaderNegotiator = new AcceptHeaderNegotiator(null, $priorities, $preferExtension);
+        $acceptHeaderNegotiator = new AcceptHeaderNegotiator(null, array(), $preferExtension);
 
-        $this->assertEquals($expected, $acceptHeaderNegotiator->getBestFormat($request));
+        $this->assertEquals($expected, $acceptHeaderNegotiator->getBestFormat($request, $priorities, $format));
     }
 
     public function getData()

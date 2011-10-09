@@ -15,5 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface AcceptHeaderNegotiatorInterface
 {
-    function getBestFormat(Request $request, array $availableTypes);
+    /**
+     * Detect the request format based on the priorities and the Accept header
+     *
+     * @param   Request     $request        The request
+     * @param   array       $priorities     Ordered array of formats (highest priority first)
+     * @param   string      $extension      The request "file" extension
+     *
+     * @return  void|string                 The format string
+     */
+    function getBestFormat(Request $request, array $priorities = null, $extension = null);
 }
