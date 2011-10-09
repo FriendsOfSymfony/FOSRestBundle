@@ -81,9 +81,10 @@ class RouterListener extends ContainerAware
                 $this->logger->info(sprintf('Matched route "%s" (parameters: %s)', $parameters['_route'], $this->parametersToString($parameters)));
             }
 
-            if (isset($parameters['_format_priorities'])) {
+            if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
                 $extension = isset($parameters['_format']) ? $parameters['_format'] : null;
-                $format = $this->acceptHeaderNegotiator->getBestFormat($request, $parameters['_format_priorities'], $extension);
+                $formatPriorities = isset($parameters['_format_priorities']) ? $parameters['_format_priorities'] : array();
+                $format = $this->acceptHeaderNegotiator->getBestFormat($request, $formatPriorities, $extension);
 
                 // TODO determine the right controller based on $format
 
