@@ -12,21 +12,20 @@
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent,
-    Symfony\Component\Serializer\SerializerInterface,
     Symfony\Component\HttpKernel\Exception\HttpException,
     Symfony\Component\HttpKernel\HttpKernelInterface,
     Symfony\Component\HttpKernel\Log\LoggerInterface,
     Symfony\Component\Routing\RouterInterface,
     Symfony\Component\DependencyInjection\ContainerAware;
 
-use Doctrine\Common\Annotations\Reader;
-
 use FOS\RestBundle\Response\Codes,
     FOS\RestBundle\Util\AcceptHeaderNegotiatorInterface;
 
 /**
- * This listener handles Accept header format negotiations.
+ * Initializes request attributes based on a matching route and
+ * determines the request format based on the Accept header
  *
+ * @author Fabien Potencier <fabien@symfony.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
 class RouterListener extends ContainerAware
