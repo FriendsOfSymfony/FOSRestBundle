@@ -105,8 +105,6 @@ class RouterListener extends ContainerAware
                 }
 
                 $class = new \ReflectionClass($class);
-                // TODO do something with the versions
-                $versions = $this->readAnnotation($class, 'Versions', true);
                 $formatPriorities = $this->readAnnotation($class, 'FormatPriorities', true);
 
                 $extension = isset($parameters['_format']) ? $parameters['_format'] : null;
