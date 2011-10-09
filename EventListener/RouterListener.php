@@ -35,6 +35,7 @@ class RouterListener extends ContainerAware
      * @var RouterInterface
      */
     private $router;
+
     /**
      * @var Reader
      */
@@ -46,11 +47,6 @@ class RouterListener extends ContainerAware
     private $acceptHeaderNegotiator;
 
     /**
-     * @var Boolean if to consider the extension last or first
-     */
-    private $preferExtension;
-
-    /**
      * @var null|LoggerInterface
      */
     private $logger;
@@ -59,10 +55,8 @@ class RouterListener extends ContainerAware
      * Initialize RouterListener.
      *
      * @param   RouterInterface $router     Router to map requests to controllers
+     * @param   Reader          $reader     annotations reader
      * @param   AcceptHeaderNegotiatorInterface   $acceptHeaderNegotiator  The content negotiator service to use
-     * @param   string  $fallbackFormat     Default fallback format
-     * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)
-     * @param   Boolean $preferExtension    If to consider the extension last or first
      * @param   LoggerInterface $logger     Logger instance
      */
     public function __construct(RouterInterface $router, Reader $reader, AcceptHeaderNegotiatorInterface $acceptHeaderNegotiator, LoggerInterface $logger = null)
