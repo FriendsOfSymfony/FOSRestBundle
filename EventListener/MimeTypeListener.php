@@ -11,7 +11,8 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent,
+    Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * This listener handles registering custom mime types.
@@ -44,8 +45,10 @@ class MimeTypeListener
     {
         $request = $event->getRequest();
 
-        foreach ($this->mimeTypes as $format => $mimeType) {
-            $request->setFormat($format, $mimeType);
+        if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+            foreach ($this->mimeTypes as $format => $mimeType) {
+                $request->setFormat($format, $mimeType);
+            }
         }
     }
 }
