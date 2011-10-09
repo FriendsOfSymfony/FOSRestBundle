@@ -81,6 +81,8 @@ class ViewResponseListener extends TemplateListener
             $view = new View($view);
         }
 
+        $view->setFormat($request->getRequestFormat());
+
         $vars = $request->attributes->get('_template_vars');
         if (!$vars) {
             $vars = $request->attributes->get('_template_default_vars');
@@ -101,17 +103,21 @@ class ViewResponseListener extends TemplateListener
             $view->setData($parameters);
         }
 
-        $template = $request->attributes->get('_template');
-        if ($template) {
-            if ($template instanceof TemplateReference) {
-                $template->set('format', null);
-                $template->set('engine', null);
-            }
+        $viewHandler = $this->container->get('fos_rest.view_handler');
 
-            $view->setTemplate($template);
+        if ($viewHandler->isFormatTemplating($view->getFormat())) {
+            $template = $request->attributes->get('_template');
+            if ($template) {
+                if ($template instanceof TemplateReference) {
+                    $template->set('format', null);
+                    $template->set('engine', null);
+                }
+
+                $view->setTemplate($template);
+            }
         }
 
-        $response = $this->container->get('fos_rest.view_handler')->handle($view, $request);
+        $response = $viewHandler->handle($view, $request);
 
         $event->setResponse($response);
     }
