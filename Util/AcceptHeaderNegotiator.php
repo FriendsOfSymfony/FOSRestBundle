@@ -57,13 +57,11 @@ class AcceptHeaderNegotiator implements AcceptHeaderNegotiatorInterface
 
         if (null !== $extension && $request->getMimeType($extension)) {
             if ($this->preferExtension) {
-                $parameters = reset($mimeTypes);
-                $parameters = array('q' => $parameters['q']+1);
-                $mimeTypes = array($request->getMimeType($extension) => $parameters) + $mimeTypes;
+                $q = reset($mimeTypes);
+                $mimeTypes = array($request->getMimeType($extension) => $q+1) + $mimeTypes;
             } else {
-                $parameters = end($mimeTypes);
-                $parameters = array('q' => $parameters['q']-1);
-                $mimeTypes[$request->getMimeType($extension)] = $parameters;
+                $q = end($mimeTypes);
+                $mimeTypes[$request->getMimeType($extension)] = $q - 1;
             }
         }
 
