@@ -45,4 +45,5 @@ class AcceptHeaderNegotiatorTest extends \PHPUnit_Framework_TestCase
             array('text/html,application/xhtml+xml,application/xml;q=0.9,*/*', null, array('json'), false, 'json'),
             array('text/html,application/xhtml+xml,application/xml', null, array('json'), false, null),
         );
-    }}
+    }
+}

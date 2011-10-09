@@ -89,7 +89,7 @@ class AcceptHeaderNegotiator implements AcceptHeaderNegotiatorInterface
      * @param   array       $priorities     Ordered array of formats (highest priority first)
      * @param   Boolean     $catchAllEnabled     If there is a catch all priority
      *
-     * @return  void|string                 The format string
+     * @return  null|string                 The format string
      */
     protected function getFormatByPriorities($request, $mimetypes, $priorities, $catchAllEnabled = false)
     {

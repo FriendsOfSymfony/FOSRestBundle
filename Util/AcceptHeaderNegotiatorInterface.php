@@ -22,7 +22,7 @@ interface AcceptHeaderNegotiatorInterface
      * @param   array       $priorities     Ordered array of formats (highest priority first)
      * @param   string      $extension      The request "file" extension
      *
-     * @return  void|string                 The format string
+     * @return  null|string                 The format string
      */
     function getBestFormat(Request $request, array $priorities = null, $extension = null);
 }
