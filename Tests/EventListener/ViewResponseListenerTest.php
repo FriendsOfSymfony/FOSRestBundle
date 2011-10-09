@@ -69,15 +69,24 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $request->attributes->set('foo', 'baz');
         $request->attributes->set('halli', 'galli');
         $request->attributes->set('_template', $template);
+
         $response = new Response();
 
         $view = $this->getMockBuilder('\FOS\RestBundle\View\View')->disableOriginalConstructor()->getMock();
+
+        $view->expects($this->once())
+        ->method('getFormat')
+        ->will($this->returnValue('html'));
 
         $viewHandler = $this->getMock('\FOS\RestBundle\View\ViewHandlerInterface');
         $viewHandler->expects($this->once())
             ->method('handle')
             ->with($this->isInstanceOf('\FOS\RestBundle\View\View'), $this->equalTo($request))
             ->will($this->returnValue($response));
+        $viewHandler->expects($this->once())
+            ->method('isFormatTemplating')
+            ->with('html')
+            ->will($this->returnValue(true));
 
         $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')->disableOriginalConstructor()->getMock();
         $container->expects($this->once())
