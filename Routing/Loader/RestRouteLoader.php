@@ -40,6 +40,7 @@ class RestRouteLoader implements LoaderInterface
     protected $parents = array();
     protected $prefix;
     protected $namePrefix;
+    protected $formatPriorities;
     protected $defaultFormat;
 
     /**
@@ -107,6 +108,16 @@ class RestRouteLoader implements LoaderInterface
     }
 
     /**
+     * Set route format priorities.
+     *
+     * @param   array  $formatPriorities Route format priorities
+     */
+    public function setRouteFormatPriorities(array $formatPriorities)
+    {
+        $this->formatPriorities = $formatPriorities;
+    }
+
+    /**
      * Loads a Routes collection by parsing Controller method names.
      *
      * @param   string  $controller Some identifier for the controller
@@ -164,6 +175,13 @@ class RestRouteLoader implements LoaderInterface
         $namePrefix = $this->reader->getClassAnnotation($class, $namePrefixAnnotationClass);
         if ($namePrefix) {
             $this->namePrefix = $namePrefix->value;
+        }
+
+        $formatPrioritiesAnnotationClass = 'FOS\RestBundle\Controller\Annotations\FormatPriorities';
+        $formatPriorities = $this->reader->getClassAnnotation($class, $formatPrioritiesAnnotationClass);
+        if ($formatPriorities) {
+            $this->formatPriorities = explode(',', $formatPriorities->value);
+            array_walk($this->formatPriorities, function(&$val){$val = trim($val);});
         }
 
         // Trim "/" at the start
@@ -292,6 +310,11 @@ class RestRouteLoader implements LoaderInterface
                         break;
                     }
                 }
+
+                if (!empty($this->formatPriorities)) {
+                    $defaults['_format_priorities'] = $this->formatPriorities;
+                }
+
                 //Adding in the optional _format param for serialization
                 $pattern .= ".{_format}";
 
@@ -314,6 +337,7 @@ class RestRouteLoader implements LoaderInterface
 
         $this->prefix = null;
         $this->namePrefix = null;
+        $this->formatPriorities = null;
 
         return $collection;
     }

@@ -10,7 +10,6 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="1" />
             <tag name="monolog.logger" channel="request" />
             <argument type="service" id="router" />
-            <argument type="service" id="annotation_reader" />
             <argument type="service" id="fos_rest.accept_header_negotiator" />
             <argument type="service" id="logger" on-invalid="ignore" />
             <call method="setContainer">

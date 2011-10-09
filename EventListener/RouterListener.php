@@ -37,11 +37,6 @@ class RouterListener extends ContainerAware
     private $router;
 
     /**
-     * @var Reader
-     */
-    private $reader;
-
-    /**
      * @var AcceptHeaderNegotiatorInterface
      */
     private $acceptHeaderNegotiator;
@@ -55,17 +50,12 @@ class RouterListener extends ContainerAware
      * Initialize RouterListener.
      *
      * @param   RouterInterface $router     Router to map requests to controllers
-     * @param   Reader          $reader     annotations reader
      * @param   AcceptHeaderNegotiatorInterface   $acceptHeaderNegotiator  The content negotiator service to use
      * @param   LoggerInterface $logger     Logger instance
      */
-    public function __construct(RouterInterface $router, Reader $reader, AcceptHeaderNegotiatorInterface $acceptHeaderNegotiator, LoggerInterface $logger = null)
+    public function __construct(RouterInterface $router, AcceptHeaderNegotiatorInterface $acceptHeaderNegotiator, LoggerInterface $logger = null)
     {
         $this->router = $router;
-        // TOOO figure out how to cache the annotation/config parsing
-        // potentially by moving it into the generates routes
-        // at this point this dependency should be removed again
-        $this->reader = $reader;
         $this->acceptHeaderNegotiator = $acceptHeaderNegotiator;
         $this->logger = $logger;
     }
@@ -91,24 +81,9 @@ class RouterListener extends ContainerAware
                 $this->logger->info(sprintf('Matched route "%s" (parameters: %s)', $parameters['_route'], $this->parametersToString($parameters)));
             }
 
-            if (isset($parameters['_controller'])) {
-                $controller = explode(':', $parameters['_controller']);
-                $controller = reset($controller);
-                if ($this->container->has($controller)) {
-                    $class = get_class($this->container->get($controller));
-                } else {
-                    // TODO handle non service notation
-                }
-
-                if (empty($class)) {
-                    throw new \InvalidArgumentException(sprintf('Class could not be determined for Controller identified by "%s".', $parameters['_controller']));
-                }
-
-                $class = new \ReflectionClass($class);
-                $formatPriorities = $this->readAnnotation($class, 'FormatPriorities', true);
-
+            if (isset($parameters['_format_priorities'])) {
                 $extension = isset($parameters['_format']) ? $parameters['_format'] : null;
-                $format = $this->acceptHeaderNegotiator->getBestFormat($request, $formatPriorities, $extension);
+                $format = $this->acceptHeaderNegotiator->getBestFormat($request, $parameters['_format_priorities'], $extension);
 
                 // TODO determine the right controller based on $format
 
@@ -116,7 +91,11 @@ class RouterListener extends ContainerAware
                     throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
                 }
 
-                $request->setRequestFormat($request->getFormat($format));
+                if (false !== strpos($format, '/')) {
+                    $format = $request->getFormat($format);
+                }
+
+                $request->setRequestFormat($format);
             }
 
             $request->attributes->add($parameters);
@@ -142,18 +121,6 @@ class RouterListener extends ContainerAware
                 $context->setParameter('_locale', $session->getLocale());
             }
         }
-    }
-
-    private function readAnnotation($class, $name, $explode = false)
-    {
-        $AnnotationClass = 'FOS\RestBundle\Controller\Annotations\\'.$name;
-        $value = $this->reader->getClassAnnotation($class, $AnnotationClass);
-        if ($explode && $value) {
-            $value = explode(',', $value->value);
-            array_walk($value, function(&$val){$val = trim($val);});
-        }
-
-        return $value;
     }
 
     private function parametersToString(array $parameters)
