@@ -81,7 +81,9 @@ class ViewResponseListener extends TemplateListener
             $view = new View($view);
         }
 
-        $view->setFormat($request->getRequestFormat());
+        if (null === $view->getFormat()) {
+            $view->setFormat($request->getRequestFormat());
+        }
 
         $vars = $request->attributes->get('_template_vars');
         if (!$vars) {

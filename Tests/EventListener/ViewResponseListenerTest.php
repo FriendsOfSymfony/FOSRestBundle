@@ -74,9 +74,9 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
         $view = $this->getMockBuilder('\FOS\RestBundle\View\View')->disableOriginalConstructor()->getMock();
 
-        $view->expects($this->once())
+        $view->expects($this->exactly(2))
         ->method('getFormat')
-        ->will($this->returnValue('html'));
+        ->will($this->onConsecutiveCalls(null, 'html'));
 
         $viewHandler = $this->getMock('\FOS\RestBundle\View\ViewHandlerInterface');
         $viewHandler->expects($this->once())
