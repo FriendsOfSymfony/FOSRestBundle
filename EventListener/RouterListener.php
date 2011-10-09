@@ -110,15 +110,13 @@ class RouterListener extends ContainerAware
                 $extension = isset($parameters['_format']) ? $parameters['_format'] : null;
                 $format = $this->acceptHeaderNegotiator->getBestFormat($request, $formatPriorities, $extension);
 
-                if (null === $format) {
-                    if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST)  {
-                        throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
-                    }
+                // TODO determine the right controller based on $format
 
-                    return;
+                if (null === $format) {
+                    throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
                 }
 
-                $request->setRequestFormat($format);
+                $request->setRequestFormat($request->getFormat($format));
             }
 
             $request->attributes->add($parameters);

@@ -53,26 +53,27 @@ class AcceptHeaderNegotiator implements AcceptHeaderNegotiatorInterface
             $priorities = $this->defaultPriorities;
         }
 
-        $mimetypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'), true);
+        $mimeTypes = $request->splitHttpAcceptHeader($request->headers->get('Accept'), true);
 
         if (null !== $extension && $request->getMimeType($extension)) {
             if ($this->preferExtension) {
-                $parameters = reset($mimetypes);
+                $parameters = reset($mimeTypes);
                 $parameters = array('q' => $parameters['q']+1);
-                $mimetypes = array($request->getMimeType($extension) => $parameters) + $mimetypes;
+                $mimeTypes = array($request->getMimeType($extension) => $parameters) + $mimeTypes;
             } else {
-                $parameters = end($mimetypes);
+                $parameters = end($mimeTypes);
                 $parameters = array('q' => $parameters['q']-1);
-                $mimetypes[$request->getMimeType($extension)] = $parameters;
+                $mimeTypes[$request->getMimeType($extension)] = $parameters;
             }
         }
 
-        if (empty($mimetypes)) {
+        if (empty($mimeTypes)) {
             return null;
         }
 
+        // TODO also handle foo/*
         $catchAllEnabled = in_array('*/*', $priorities);
-        $format = $this->getFormatByPriorities($request, $mimetypes, $priorities, $catchAllEnabled);
+        $format = $this->getFormatByPriorities($request, $mimeTypes, $priorities, $catchAllEnabled);
 
         if (null === $format) {
             $format = $this->fallbackFormat;
@@ -85,40 +86,53 @@ class AcceptHeaderNegotiator implements AcceptHeaderNegotiatorInterface
      * Get the format applying the supplied priorities to the mime types
      *
      * @param   Request     $request        The request
-     * @param   array       $mimetypes      Ordered array of mimetypes as keys with priroties s values
+     * @param   array       $mimeTypes      Ordered array of mimetypes as keys with priroties s values
      * @param   array       $priorities     Ordered array of formats (highest priority first)
      * @param   Boolean     $catchAllEnabled     If there is a catch all priority
      *
      * @return  null|string                 The format string
      */
-    protected function getFormatByPriorities($request, $mimetypes, $priorities, $catchAllEnabled = false)
+    protected function getFormatByPriorities($request, $mimeTypes, $priorities, $catchAllEnabled = false)
     {
-        $max = reset($mimetypes);
-        $keys = array_keys($mimetypes, $max);
+        $max = reset($mimeTypes);
+        $keys = array_keys($mimeTypes, $max);
 
         $formats = array();
-        foreach ($keys as $mimetype) {
-            unset($mimetypes[$mimetype]);
-            if ($mimetype === '*/*') {
+        foreach ($keys as $mimeType) {
+            unset($mimeTypes[$mimeType]);
+            if ($mimeType === '*/*') {
                 return reset($priorities);
             }
-            $format = $request->getFormat($mimetype);
-            if ($format) {
+
+            $priority = array_search($mimeType, $priorities);
+            if (false !== $priority) {
+                $formats[$mimeType] = $priority;
+                continue;
+            }
+
+            $format = $request->getFormat($mimeType);
+            if (null !== $format) {
                 $priority = array_search($format, $priorities);
                 if (false !== $priority) {
                     $formats[$format] = $priority;
-                } elseif ($catchAllEnabled) {
-                    $formats[$format] = count($priorities);
+                    continue;
                 }
+            }
+
+            if ($catchAllEnabled) {
+                $formats[$mimeType] = count($priorities);
             }
         }
 
-        if (empty($formats) && !empty($mimetypes)) {
-            return $this->getFormatByPriorities($request, $mimetypes, $priorities);
+        if (!empty($formats)) {
+            asort($formats);
+            return key($formats);
         }
 
-        asort($formats);
+        if (!empty($mimeTypes)) {
+            return $this->getFormatByPriorities($request, $mimeTypes, $priorities);
+        }
 
-        return key($formats);
+        return null;
     }
 }
