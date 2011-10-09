@@ -99,7 +99,7 @@ class FOSRestExtension extends Extension
         }
 
         if (!empty($config['view']['mime_types'])) {
-            $loader->load('mime_types_listener.xml');
+            $loader->load('mime_type_listener.xml');
 
             $container->setParameter($this->getAlias().'.mime_types', $config['view']['mime_types']);
         } else {

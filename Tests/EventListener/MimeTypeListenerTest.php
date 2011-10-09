@@ -23,7 +23,7 @@ class MimeTypeListenerTest extends \PHPUnit_Framework_TestCase
 {
     public function testOnKernelRequest()
     {
-        $listener = new MimeTypeListener(array('jsonp' => 'application/javascript'));
+        $listener = new MimeTypeListener(array('jsonp' => array('application/javascript')));
 
         $request = new Request;
         $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')->disableOriginalConstructor()->getMock();

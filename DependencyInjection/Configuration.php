@@ -85,7 +85,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('mime_types')
                             ->useAttributeAsKey('name')
                             ->defaultValue(array())
-                            ->prototype('scalar')->end()
+                            ->prototype('variable')->end()
                         ->end()
                         ->arrayNode('formats')
                             ->useAttributeAsKey('name')
