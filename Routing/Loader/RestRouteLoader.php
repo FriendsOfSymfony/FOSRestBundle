@@ -200,6 +200,18 @@ class RestRouteLoader implements LoaderInterface
                 $resources  = preg_split('/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
                 $arguments  = $method->getParameters();
 
+                // Ignore arguments that are or extend from Symfony\Component\HttpFoundation\Request
+                foreach ($arguments as $key => $argument) {
+                    $class = $argument->getClass();
+                    if ($class
+                        && ($class->getName() === 'Symfony\Component\HttpFoundation\Request'
+                            || is_subclass_of($class->getName(), 'Symfony\Component\HttpFoundation\Request')
+                        )
+                    ) {
+                        unset($arguments[$key]);
+                    }
+                }
+
                 // If we have 1 resource passed & 1 argument, then it's object call, so
                 // we can set collection singular name
                 if (1 === count($resources) && 1 === count($arguments) - count($this->parents)) {
