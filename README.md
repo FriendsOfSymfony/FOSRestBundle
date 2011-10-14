@@ -304,7 +304,7 @@ fos_rest:
 
 sensio_framework_extra:
     view:    { annotations: false }
-
+    router:  { annotations: true }
 ```
 
 ```php
