@@ -96,6 +96,8 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
         } else {
             $container->setParameter($this->getAlias().'.default_priorities', array());
+            $container->setParameter($this->getAlias().'.prefer_extension', true);
+            $container->setParameter($this->getAlias().'.fallback_format', 'html');
         }
 
         if (!empty($config['view']['mime_types'])) {
