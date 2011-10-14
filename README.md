@@ -116,7 +116,8 @@ class UsersController extends Controller
 {
     public function getUsersAction()
     {
-        $view = View::create();
+        $view = View::create()
+          ->setStatusCode(200);
 
         ...
 
@@ -124,6 +125,10 @@ class UsersController extends Controller
     }
 }
 ```
+
+In the above example, ``View::create`` is a simple, convenient method to allow
+for a fluent interface. It is equivalent to instantiating a View by calling its
+constructor.
 
 There are also two specialized ``View`` classes for handling directs, one for redirecting
 to an URL called ``RedirectView`` and one to redirect to a route called ``RouteRedirectView``.
@@ -136,10 +141,10 @@ https://github.com/liip/LiipHelloBundle/blob/master/Controller/HelloController.p
 ### Configuration
 
 The ``formats`` and ``templating_formats`` settings determine which formats are respectively supported by
-the serializer and by the template layer. Note that a value of ``false`` means
-that the given format is disabled. In other words any format listed in ``templating_formats``
+the serializer and by the template layer. In other words any format listed in ``templating_formats``
 will require a template for rendering using the ``templating`` service, while any format
-listed in ``formats`` will use JMSSerializerBundle for rendering.
+listed in ``formats`` will use JMSSerializerBundle for rendering.  For both settings a value of
+``false`` means that the given format is disabled.
 
 When using ``RouteRedirectView::create()`` the default behavior of forcing a redirect to the
 route for html is enabled, but needs to be enabled for other formats if needed.
@@ -310,7 +315,7 @@ sensio_framework_extra:
 ```php
 <?php
 
-use FOS\RestBundle\View\View;
+use FOS\RestBundle\Controller\Annotations\View;
 
 class UsersController
 {
