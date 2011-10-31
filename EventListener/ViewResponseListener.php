@@ -90,24 +90,24 @@ class ViewResponseListener extends TemplateListener
             $vars = $request->attributes->get('_template_default_vars');
         }
 
-        if (!empty($vars)) {
-            $parameters = $view->getData();
-            if (null !== $parameters && !is_array($parameters)) {
-                throw new \RuntimeException('View data must be an array if using a templating aware format.');
-            }
-
-            $parameters = (array)$parameters;
-            foreach ($vars as $var) {
-                if (!array_key_exists($var, $parameters)) {
-                    $parameters[$var] = $request->attributes->get($var);
-                }
-            }
-            $view->setData($parameters);
-        }
-
         $viewHandler = $this->container->get('fos_rest.view_handler');
 
         if ($viewHandler->isFormatTemplating($view->getFormat())) {
+            if (!empty($vars)) {
+                $parameters = $view->getData();
+                if (null !== $parameters && !is_array($parameters)) {
+                    throw new \RuntimeException('View data must be an array if using a templating aware format.');
+                }
+
+                $parameters = (array)$parameters;
+                foreach ($vars as $var) {
+                    if (!array_key_exists($var, $parameters)) {
+                        $parameters[$var] = $request->attributes->get($var);
+                    }
+                }
+                $view->setData($parameters);
+            }
+
             $template = $request->attributes->get('_template');
             if ($template) {
                 if ($template instanceof TemplateReference) {
