@@ -9,11 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Util;
+namespace FOS\RestBundle\Controller\Annotations;
 
-use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Annotations\Annotation;
 
-interface FormatNegotiatorInterface
+/**
+ * Format Priorities Route annotation class.
+ * @Annotation
+ */
+class FormatPriorities extends Annotation
 {
-    function getBestFormat(Request $request, array $availableTypes);
 }

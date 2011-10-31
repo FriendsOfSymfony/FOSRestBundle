@@ -88,12 +88,12 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
         }
 
-        if (!empty($config['format_listener'])) {
-            $loader->load('format_listener.xml');
+        if (!empty($config['router_listener'])) {
+            $loader->load('router_listener.xml');
 
-            $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
-            $container->setParameter($this->getAlias().'.prefer_extension', $config['format_listener']['prefer_extension']);
-            $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
+            $container->setParameter($this->getAlias().'.default_priorities', $config['router_listener']['default_priorities']);
+            $container->setParameter($this->getAlias().'.prefer_extension', $config['router_listener']['prefer_extension']);
+            $container->setParameter($this->getAlias().'.fallback_format', $config['router_listener']['fallback_format']);
         } else {
             $container->setParameter($this->getAlias().'.default_priorities', array());
             $container->setParameter($this->getAlias().'.prefer_extension', true);

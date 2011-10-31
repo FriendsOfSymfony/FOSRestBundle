@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\Tests\Util;
 
-use FOS\RestBundle\Util\FormatNegotiator;
+use FOS\RestBundle\Util\AcceptHeaderNegotiator;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
+class AcceptHeaderNegotiatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getData
@@ -24,11 +24,10 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request();
         $request->headers->set('Accept', $acceptHeader);
-        $request->attributes->set('_format', $format);
 
-        $formatNegotiator = new FormatNegotiator();
+        $acceptHeaderNegotiator = new AcceptHeaderNegotiator(null, array(), $preferExtension);
 
-        $this->assertEquals($expected, $formatNegotiator->getBestFormat($request, $priorities, $preferExtension));
+        $this->assertEquals($expected, $acceptHeaderNegotiator->getBestFormat($request, $priorities, $format));
     }
 
     public function getData()
@@ -46,4 +45,5 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
             array('text/html,application/xhtml+xml,application/xml;q=0.9,*/*', null, array('json'), false, 'json'),
             array('text/html,application/xhtml+xml,application/xml', null, array('json'), false, null),
         );
-    }}
+    }
+}

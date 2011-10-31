@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
         $this->addViewSection($rootNode);
         $this->addExceptionSection($rootNode);
         $this->addBodyListenerSection($rootNode);
-        $this->addFormatListenerSection($rootNode);
+        $this->addRouterListenerSection($rootNode);
 
         return $treeBuilder;
     }
@@ -123,11 +123,11 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function addFormatListenerSection(ArrayNodeDefinition $rootNode)
+    private function addRouterListenerSection(ArrayNodeDefinition $rootNode)
     {
         $rootNode
             ->children()
-                ->arrayNode('format_listener')
+                ->arrayNode('router_listener')
                     ->fixXmlConfig('default_priority', 'default_priorities')
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()

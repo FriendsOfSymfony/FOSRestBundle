@@ -3,10 +3,14 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="fos_rest.format_negotiator.class">FOS\RestBundle\Util\FormatNegotiator</parameter>
+        <parameter key="fos_rest.accept_header_negotiator.class">FOS\RestBundle\Util\AcceptHeaderNegotiator</parameter>
     </parameters>
 
     <services>
-        <service id="fos_rest.format_negotiator" class="%fos_rest.format_negotiator.class%" public="true" />
+        <service id="fos_rest.accept_header_negotiator" class="%fos_rest.accept_header_negotiator.class%" public="true">
+            <argument>%fos_rest.fallback_format%</argument>
+            <argument>%fos_rest.default_priorities%</argument>
+            <argument>%fos_rest.prefer_extension%</argument>
+        </service>
     </services>
 </container>
