@@ -83,21 +83,37 @@ class ExceptionController extends ContainerAware
      * Extract the exception message
      *
      * @param FlattenException     $exception   A FlattenException instance
+     * @param array                $exceptionMap
+     *
+     * @return string                           Message
+     */
+    protected function isSubclassOf($exception, $exceptionMap)
+    {
+        $exceptionClass = $exception->getClass();
+        $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
+        foreach ($exceptionMap as $exceptionMapClass => $value) {
+            if ($value
+                && ($exceptionClass === $exceptionMapClass || $reflectionExceptionClass->isSubclassOf($exceptionMapClass))
+            ) {
+                return $value;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Extract the exception message
+     *
+     * @param FlattenException     $exception   A FlattenException instance
      *
      * @return string                           Message
      */
     protected function getExceptionMessage($exception)
     {
-        $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
-        $showExceptionMessage = false;
-        $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
-        foreach ($exceptionMap as $exceptionMapClass => $value) {
-            if ($value && $reflectionExceptionClass->isSubclassOf($exceptionMapClass)) {
-                $showExceptionMessage = true;
-                break;
-            }
-        }
+        $showExceptionMessage = $this->isSubclassOf($exception, $exceptionMap);
+
         return $showExceptionMessage || $this->container->get('kernel')->isDebug() ? $exception->getMessage() : '';
     }
 
@@ -110,19 +126,10 @@ class ExceptionController extends ContainerAware
      */
     protected function getStatusCode($exception)
     {
-        $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.codes');
-        $isExceptionMappedToStatusCode = false;
-        $exceptionStatusCode;
-        $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
-        foreach ($exceptionMap as $exceptionMapClass => $statusCode) {
-            if ($reflectionExceptionClass->isSubclassOf($exceptionMapClass)) {
-                $isExceptionMappedToStatusCode = true;
-                $exceptionStatusCode = $statusCode;
-                break;
-            }
-        }
-        return ($isExceptionMappedToStatusCode) ? $exceptionStatusCode : $exception->getStatusCode();
+        $isExceptionMappedToStatusCode = $this->isSubclassOf($exception, $exceptionMap);;
+
+        return ($isExceptionMappedToStatusCode) ? $isExceptionMappedToStatusCode : $exception->getStatusCode();
     }
 
     /**
