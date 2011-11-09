@@ -90,9 +90,15 @@ class ExceptionController extends ContainerAware
     {
         $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
-
-        return !empty($exceptionMap[$exceptionClass]) || $this->container->get('kernel')->isDebug()
-            ? $exception->getMessage() : '';
+        $showExceptionMessage = false;
+        $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
+        foreach ($exceptionMap as $exceptionMapClass => $value) {
+            if ($value && $reflectionExceptionClass->isSubclassOf($exceptionMapClass)) {
+                $showExceptionMessage = true;
+                break;
+            }
+        }
+        return $showExceptionMessage || $this->container->get('kernel')->isDebug() ? $exception->getMessage() : '';
     }
 
     /**
@@ -106,9 +112,17 @@ class ExceptionController extends ContainerAware
     {
         $exceptionClass = $exception->getClass();
         $exceptionMap = $this->container->getParameter('fos_rest.exception.codes');
-
-        return isset($exceptionMap[$exceptionClass])
-            ? $exceptionMap[$exceptionClass] : $exception->getStatusCode();
+        $isExceptionMappedToStatusCode = false;
+        $exceptionStatusCode;
+        $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
+        foreach ($exceptionMap as $exceptionMapClass => $statusCode) {
+            if ($reflectionExceptionClass->isSubclassOf($exceptionMapClass)) {
+                $isExceptionMappedToStatusCode = true;
+                $exceptionStatusCode = $statusCode;
+                break;
+            }
+        }
+        return ($isExceptionMappedToStatusCode) ? $exceptionStatusCode : $exception->getStatusCode();
     }
 
     /**
