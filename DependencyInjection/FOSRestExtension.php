@@ -73,7 +73,7 @@ class FOSRestExtension extends Extension
         }
 
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
-        
+
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
                 $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Response\Codes::$code");
@@ -113,6 +113,7 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.mime_types', array());
         }
     }
+
     /**
      * Check if an exception is loadable.
      * 

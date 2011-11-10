@@ -74,7 +74,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testLoadFormatListenerWithDefaults()
     {
         $this->extension->load(array(), $this->container);
-
+        
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
         $this->assertParameter(array('html', '*/*'), 'fos_rest.default_priorities');
         $this->assertParameter('html', 'fos_rest.fallback_format');
@@ -149,6 +149,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             $xmlCollectionLoaderClassParameter
         );
     }
+    
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -165,11 +166,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array('fos_rest' => array('exception' => array('codes'=> array('UnknownException' => 404)))), $this->container);
     }
     
-    /**
-     */
     public function testLoadOkMessagesClass()
     {
         $this->extension->load(array('fos_rest' => array('exception' => array('codes'=> array('\Exception' => 404)))), $this->container);
+        $this->assertFalse($this->container->hasDefinition('fos_rest.exception.codes'));
+        
     }
 
     /**
@@ -219,7 +220,4 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($value, $this->container->getParameter($key), sprintf('%s parameter is correct', $key));
     }
-    
-    
-    
 }
