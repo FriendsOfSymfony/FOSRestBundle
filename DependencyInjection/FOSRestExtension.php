@@ -73,12 +73,17 @@ class FOSRestExtension extends Extension
         }
 
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
-
+        
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
                 $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Response\Codes::$code");
             }
+            $this->testExceptionExists($exception);
         }
+        foreach ($config['exception']['messages'] as $exception => $message) {
+            $this->testExceptionExists($exception);
+        }
+        
         $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
         $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
 
@@ -106,6 +111,21 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.mime_types', $config['view']['mime_types']);
         } else {
             $container->setParameter($this->getAlias().'.mime_types', array());
+        }
+    }
+    /**
+     * Check if an exception is loadable.
+     * 
+     * @param string $exception class to test
+     * @throws InvalidArgumentException if the class was not found.
+     */
+    private function testExceptionExists($exception)
+    {
+        try {
+            $reflectionExceptionClass = new \ReflectionClass("\Exception");
+            $reflectionExceptionClass->isSubclassOf($exception);
+        } catch (\ReflectionException $re) {
+            throw new \InvalidArgumentException("FOSRestBundle exception mapper: Could not load class $exception. Most probably a problem with your configuration.");
         }
     }
 }

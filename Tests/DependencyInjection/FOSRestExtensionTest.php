@@ -149,6 +149,28 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             $xmlCollectionLoaderClassParameter
         );
     }
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testLoadBadClassThrowsException()
+    {
+        $this->extension->load(array('fos_rest' => array('exception' => array('messages'=> array('UnknownException' => true)))), $this->container);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testLoadBadMessagesClassThrowsException()
+    {
+        $this->extension->load(array('fos_rest' => array('exception' => array('codes'=> array('UnknownException' => 404)))), $this->container);
+    }
+    
+    /**
+     */
+    public function testLoadOkMessagesClass()
+    {
+        $this->extension->load(array('fos_rest' => array('exception' => array('codes'=> array('\Exception' => 404)))), $this->container);
+    }
 
     /**
      * Assert that loader definition described properly.
@@ -197,4 +219,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($value, $this->container->getParameter($key), sprintf('%s parameter is correct', $key));
     }
+    
+    
+    
 }
