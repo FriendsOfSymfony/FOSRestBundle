@@ -91,12 +91,17 @@ class ExceptionController extends ContainerAware
     {
         $exceptionClass = $exception->getClass();
         $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
-        foreach ($exceptionMap as $exceptionMapClass => $value) {
-            if ($value
-                && ($exceptionClass === $exceptionMapClass || $reflectionExceptionClass->isSubclassOf($exceptionMapClass))
-            ) {
-                return $value;
+        try {
+            foreach ($exceptionMap as $exceptionMapClass => $value) {
+                if ($value
+                    && ($exceptionClass === $exceptionMapClass || $reflectionExceptionClass->isSubclassOf($exceptionMapClass))
+                ) {
+                    return $value;
+                }
             }
+        } catch (\ReflectionException $re) {
+            return "FOSUserBundle: Invalid class in  fos_res.exception.messages: "
+                    . $re->getMessage();
         }
 
         return false;

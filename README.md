@@ -450,7 +450,7 @@ status code or a string matching a class constant of the ``FOS\RestBundle\Respon
 fos_rest:
     exception:
         codes:
-            'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
             'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
         messages:
             'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
