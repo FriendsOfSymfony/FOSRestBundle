@@ -91,12 +91,17 @@ class ExceptionController extends ContainerAware
     {
         $exceptionClass = $exception->getClass();
         $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
-        foreach ($exceptionMap as $exceptionMapClass => $value) {
-            if ($value
-                && ($exceptionClass === $exceptionMapClass || $reflectionExceptionClass->isSubclassOf($exceptionMapClass))
-            ) {
-                return $value;
+        try {
+            foreach ($exceptionMap as $exceptionMapClass => $value) {
+                if ($value
+                    && ($exceptionClass === $exceptionMapClass || $reflectionExceptionClass->isSubclassOf($exceptionMapClass))
+                ) {
+                    return $value;
+                }
             }
+        } catch (\ReflectionException $re) {
+            return "FOSUserBundle: Invalid class in  fos_res.exception.messages: "
+                    . $re->getMessage();
         }
 
         return false;
@@ -157,7 +162,7 @@ class ExceptionController extends ContainerAware
      * @param string               $currentContent  The current content in the output buffer
      * @param integer              $code            An HTTP response code
      * @param FlattenException     $exception       A FlattenException instance
-     * @param DebugLoggerInterface $logger          A DebugLoggerInterface instance
+     * @param DebugLoggerInterface $logger          A DebugLoggerInterface instance;
      * @param string               $format          The format to use for rendering (html, xml, ...)
      *
      * @return array                                Template parameters

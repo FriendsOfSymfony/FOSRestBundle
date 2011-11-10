@@ -450,11 +450,14 @@ status code or a string matching a class constant of the ``FOS\RestBundle\Respon
 fos_rest:
     exception:
         codes:
-            'Symfony\Component\Routing\Matcher\Exception\NotFoundException': 404
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
             'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
         messages:
             'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
 ```
+
+Important: Remove the samle MyExceptionWithASafeMessage from the config example above as all classes need to be
+resolvable or you will get odd runtime errors.
 
 If you want to display the message from the exception in the content of the response, add the 
 exception to the messages map as well. If not only the status code will be returned.
