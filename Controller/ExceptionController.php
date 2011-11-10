@@ -162,7 +162,7 @@ class ExceptionController extends ContainerAware
      * @param string               $currentContent  The current content in the output buffer
      * @param integer              $code            An HTTP response code
      * @param FlattenException     $exception       A FlattenException instance
-     * @param DebugLoggerInterface $logger          A DebugLoggerInterface instance;
+     * @param DebugLoggerInterface $logger          A DebugLoggerInterface instance
      * @param string               $format          The format to use for rendering (html, xml, ...)
      *
      * @return array                                Template parameters
