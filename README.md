@@ -456,9 +456,6 @@ fos_rest:
             'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
 ```
 
-Important: Remove the samle MyExceptionWithASafeMessage from the config example above as all classes need to be
-resolvable or you will get odd runtime errors.
-
 If you want to display the message from the exception in the content of the response, add the 
 exception to the messages map as well. If not only the status code will be returned.
 
