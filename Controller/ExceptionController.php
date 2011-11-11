@@ -48,15 +48,7 @@ class ExceptionController extends ContainerAware
             return new Response($message, Codes::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
         }
 
-        // the count variable avoids an infinite loop on
-        // some Windows configurations where ob_get_level()
-        // never reaches 0
-        $count = 100;
-        $currentContent = '';
-        while (ob_get_level() && --$count) {
-            $currentContent .= ob_get_clean();
-        }
-
+        $currentContent = $this->getAndCleanOutputBuffering();
         $code = $this->getStatusCode($exception);
         $viewHandler = $this->container->get('fos_rest.view_handler');
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
@@ -77,6 +69,26 @@ class ExceptionController extends ContainerAware
         }
 
         return $response;
+    }
+
+    /**
+     * Get and clean any content that was already outputted
+     *
+     * @return string
+     */
+    protected function getAndCleanOutputBuffering()
+    {
+        // the count variable avoids an infinite loop on
+        // some Windows configurations where ob_get_level()
+        // never reaches 0
+        $count = 100;
+        $startObLevel = $this->container->get('kernel')->getStartObLevel();
+        $currentContent = '';
+        while (ob_get_level() > $startObLevel && --$count) {
+            $currentContent .= ob_get_clean();
+        }
+
+        return $currentContent;
     }
 
     /**
