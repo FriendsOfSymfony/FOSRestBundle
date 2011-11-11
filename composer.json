@@ -1,0 +1,29 @@
+{
+    "name": "friendsofsymfony/rest-bundle",
+    "type": "symfony-bundle",
+    "description": "This Bundle provides various tools to rapidly develop RESTful API's with Symfony2",
+    "keywords": ["rest"],
+    "homepage": "http://friendsofsymfony.github.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lukas Kahwe Smith",
+            "email": "smith@pooteeweet.org"
+        },
+        {
+            "name": "FriendsOfSymfony Community",
+            "homepage": "https://github.com/friendsofsymfony/FOSUserBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "jms/serializer-bundle": "1.*"
+    },
+    "suggest": {
+        "symfony/framework-bundle": "2.*"
+    },
+    "autoload": {
+        "psr-0": { "FOS\\RestBundle": "" }
+    },
+    "target-dir": "FOS/RestBundle"
+}
