@@ -20,7 +20,8 @@
         "jms/serializer-bundle": "1.*"
     },
     "suggest": {
-        "symfony/framework-bundle": "2.*"
+        "symfony/framework-bundle": "2.*",
+        "sensio/framework-extra-bundle": "master-dev"
     },
     "autoload": {
         "psr-0": { "FOS\\RestBundle": "" }
