@@ -12,7 +12,7 @@
         },
         {
             "name": "FriendsOfSymfony Community",
-            "homepage": "https://github.com/friendsofsymfony/FOSUserBundle/contributors"
+            "homepage": "https://github.com/friendsofsymfony/FOSRestBundle/contributors"
         }
     ],
     "require": {
