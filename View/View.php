@@ -70,7 +70,7 @@ class View
      */
     public static function create($data = null, $statusCode = null, array $headers = array())
     {
-        return new self($data, $statusCode, $headers);
+        return new static($data, $statusCode, $headers);
     }
 
     /**
