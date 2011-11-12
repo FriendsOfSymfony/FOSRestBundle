@@ -5,7 +5,7 @@ set_time_limit(0);
 
 $vendorDir = __DIR__;
 $deps = array(
-    array('symfony', 'http://github.com/symfony/symfony', isset($_ENV['SYMFONY_VERSION']) ? $_ENV['SYMFONY_VERSION'] : 'origin/master'),
+    array('symfony', 'http://github.com/symfony/symfony', isset($_SERVER['SYMFONY_VERSION']) ? $_SERVER['SYMFONY_VERSION'] : 'origin/master'),
     array('doctrine-common', 'http://github.com/doctrine/common.git', 'origin/master'),
     array('JMS/SerializerBundle', 'http://github.com/schmittjoh/JMSSerializerBundle', 'origin/master'),
     array('Sensio/Bundle/FrameworkExtraBundle', 'http://github.com/sensio/SensioFrameworkExtraBundle', 'origin/master'),
