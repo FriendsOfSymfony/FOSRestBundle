@@ -1,0 +1,4 @@
+language: php
+php: 5.3.8
+before_script: php vendor/vendors.php
+script: phpunit
