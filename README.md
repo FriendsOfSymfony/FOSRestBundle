@@ -19,7 +19,7 @@ It also has support for RESTful decoding of HTTP request body and Accept headers
 as well as a custom Exception controller that assists in using appropriate HTTP
 status codes.
 
-[![Build Status](https://secure.travis-ci.org/friendsOfSymfony/FOSRestBundle.png)](http://travis-ci.org/friendsOfSymfony/FOSRestBundle)
+[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle)
 
 Installation
 ============
