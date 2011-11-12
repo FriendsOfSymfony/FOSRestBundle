@@ -20,6 +20,7 @@
         "jms/serializer-bundle": "1.*"
     },
     "suggest": {
+        "doctrine/common": "master-dev",
         "symfony/framework-bundle": "2.*",
         "sensio/framework-extra-bundle": "master-dev"
     },
