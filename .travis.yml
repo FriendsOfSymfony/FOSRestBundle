@@ -1,10 +1,15 @@
 language: php
-php: 5.3.8
+
+php:
+  - 5.3
+  - 5.4
+
 env:
   - SYMFONY_VERSION=v2.0.5
   - SYMFONY_VERSION=origin/master
+
 before_script: php vendor/vendors.php
-script: phpunit
+
 notifications:
   email:
     - friendsofsymfony-dev@googlegroups.com
