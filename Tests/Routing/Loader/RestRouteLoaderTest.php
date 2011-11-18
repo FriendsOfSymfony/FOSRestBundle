@@ -47,22 +47,21 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testCustomActionRoutesOrder()
     {
-        $collection = $this->loadFromControllerFixture('UsersController');
-        $getUserPos = 0;
-        $newUserPos = 0;
+        // without prefix
 
-        $currentPos = 0;
-        foreach ($collection as $name => $route) {
-            if ('get_user' === $name) {
-                $getUserPos = $currentPos;
-            }
-            if ('new_users' === $name) {
-                $newUserPos = $currentPos;
-            }
-            $currentPos++;
-        }
+        $collection = $this->loadFromControllerFixture('OrdersController');
+        $pos = array_flip(array_keys($collection->all()));
 
-        $this->assertLessThan($getUserPos, $newUserPos);
+        $this->assertLessThan($pos['get_foos'], $pos['new_foos']);
+        $this->assertLessThan($pos['get_bars'], $pos['new_bars']);
+
+        // with prefix
+
+        $collection = $this->loadFromControllerFixture('OrdersController', 'prefix_');
+        $pos = array_flip(array_keys($collection->all()));
+
+        $this->assertLessThan($pos['prefix_get_foos'], $pos['prefix_new_foos']);
+        $this->assertLessThan($pos['prefix_get_bars'], $pos['prefix_new_bars']);
     }
 
     /**
@@ -143,11 +142,13 @@ class RestRouteLoaderTest extends LoaderTest
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param   string  $fixtureName    name of the class fixture
+     * @param   string  $namePrefix     route name prefix
      * @return  Symfony\Component\Routing\RouteCollection
      */
-    protected function loadFromControllerFixture($fixtureName)
+    protected function loadFromControllerFixture($fixtureName, $namePrefix = null)
     {
         $loader = $this->getControllerLoader();
+        $loader->setRouteNamesPrefix($namePrefix);
 
         return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'. $fixtureName, 'rest');
     }
