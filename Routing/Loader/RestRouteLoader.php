@@ -312,7 +312,7 @@ class RestRouteLoader implements LoaderInterface
                 $routeName = $this->namePrefix . strtolower($routeName);
 
                 // Move custom actions at the beginning, default at the end
-                if (!preg_match('/^('.implode('|', $this->availableHTTPMethods).')/', $routeName)) {
+                if (!preg_match('/^'.preg_quote($this->namePrefix, '/').'('.implode('|', $this->availableHTTPMethods).')/', $routeName)) {
                     array_unshift($routes, array('name' => $routeName, 'route' => $route));
                 } else {
                     $routes[] = array('name' => $routeName, 'route' => $route);
