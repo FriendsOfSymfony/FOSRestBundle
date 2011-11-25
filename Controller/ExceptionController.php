@@ -20,7 +20,8 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
 
 use FOS\RestBundle\Response\Codes,
     FOS\RestBundle\View\ViewHandler,
-    FOS\RestBundle\View\View;
+    FOS\RestBundle\View\View,
+    FOS\RestBundle\Util\ExceptionWrapper;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
@@ -54,6 +55,10 @@ class ExceptionController extends ContainerAware
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
 
         try {
+            if (!$viewHandler->isFormatTemplating($format)) {
+                $parameters = new ExceptionWrapper($parameters);
+            }
+
             $view = View::create($parameters, $code, $exception->getHeaders());
             $view->setFormat($format);
 
