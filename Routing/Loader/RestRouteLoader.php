@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Routing\Loader;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\Config\Loader\LoaderInterface,
-    Symfony\Component\Config\Loader\LoaderResolver,
+    Symfony\Component\Config\Loader\LoaderResolverInterface,
     Symfony\Component\Config\Resource\FileResource,
     Symfony\Component\Routing\Route,
     Symfony\Component\HttpFoundation\Request;
@@ -348,7 +348,7 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Gets the loader resolver.
      *
-     * @return LoaderResolver A LoaderResolver instance
+     * @return LoaderResolverInterface A LoaderResolver instance
      */
     public function getResolver()
     {
@@ -357,9 +357,9 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Sets the loader resolver.
      *
-     * @param LoaderResolver $resolver A LoaderResolver instance
+     * @param LoaderResolverInterface $resolver A LoaderResolver instance
      */
-    public function setResolver(LoaderResolver $resolver)
+    public function setResolver(LoaderResolverInterface $resolver)
     {
     }
 }
