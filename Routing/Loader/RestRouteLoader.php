@@ -348,7 +348,7 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Gets the loader resolver.
      *
-     * @return LoaderResolver A LoaderResolver instance
+     * @return LoaderResolverInterface A LoaderResolver instance
      */
     public function getResolver()
     {
@@ -357,7 +357,7 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Sets the loader resolver.
      *
-     * @param LoaderResolver $resolver A LoaderResolver instance
+     * @param LoaderResolverInterface $resolver A LoaderResolver instance
      */
     public function setResolver(LoaderResolverInterface $resolver)
     {
