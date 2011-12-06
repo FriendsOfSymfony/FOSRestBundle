@@ -1,8 +1,6 @@
 RestBundle
 ==========
 
-Note: this branch is compatible with releases of Symfony2 in the 2.0.x branch.
-
 This bundle provides various tools to rapidly develop RESTful API's & applications with Symfony2.
 
 It is currently under development so key pieces that are planned are still missing.
@@ -21,7 +19,7 @@ It also has support for RESTful decoding of HTTP request body and Accept headers
 as well as a custom Exception controller that assists in using appropriate HTTP
 status codes.
 
-[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=2.0)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle)
+[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=master)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle)
 
 Installation
 ============
