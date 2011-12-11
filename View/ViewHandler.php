@@ -259,7 +259,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @param View $view
      *
-     * @return array|mixed
+     * @return array
      */
     protected function prepareTemplateParameters(View $view)
     {
