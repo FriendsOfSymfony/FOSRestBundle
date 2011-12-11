@@ -237,6 +237,32 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function renderTemplate(View $view, $format)
     {
+        $data = $this->prepareTemplateParameters($view);
+
+        $template = $view->getTemplate();
+        if ($template instanceOf TemplateReference) {
+            if (null === $template->get('format')) {
+                $template->set('format', $format);
+            }
+
+            if (null === $template->get('engine')) {
+                $engine = $view->getEngine() ?: $this->defaultEngine;
+                $template->set('engine', $engine);
+            }
+        }
+
+        return $this->getTemplating()->render($template, $data);
+    }
+
+    /**
+     * Prepare view data for use by templating engine.
+     *
+     * @param View $view
+     *
+     * @return array|mixed
+     */
+    protected function prepareTemplateParameters(View $view)
+    {
         $data = $view->getData();
         if (null === $data) {
             $data = array();
@@ -252,21 +278,10 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         if (isset($data['form']) && $data['form'] instanceof FormInterface) {
             $data['form'] = $data['form']->createView();
+            return $data;
         }
 
-        $template = $view->getTemplate();
-        if ($template instanceOf TemplateReference) {
-            if (null === $template->get('format')) {
-                $template->set('format', $format);
-            }
-
-            if (null === $template->get('engine')) {
-                $engine = $view->getEngine() ?: $this->defaultEngine;
-                $template->set('engine', $engine);
-            }
-        }
-
-        return $this->getTemplating()->render($template, $data);
+        return $data;
     }
 
     /**
