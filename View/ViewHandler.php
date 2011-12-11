@@ -237,21 +237,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function renderTemplate(View $view, $format)
     {
-        $data = $view->getData();
-        if (null === $data) {
-            $data = array();
-        }
-
-        if (!is_array($data)) {
-            throw new \RuntimeException(sprintf(
-                'data must be an array if you allow a templating-aware format (%s).',
-                $format
-            ));
-        }
-
-        if (isset($data['form']) && $data['form'] instanceof FormInterface) {
-            $data['form'] = $data['form']->createView();
-        }
+        $data = $this->prepareTemplateParameters($view);
 
         $template = $view->getTemplate();
         if ($template instanceOf TemplateReference) {
@@ -266,6 +252,35 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
 
         return $this->getTemplating()->render($template, $data);
+    }
+
+    /**
+     * Prepare view data for use by templating engine.
+     *
+     * @param View $view
+     *
+     * @return array|mixed
+     */
+    protected function prepareTemplateParameters(View $view)
+    {
+        $data = $view->getData();
+        if (null === $data) {
+            $data = array();
+        }
+
+        if (!is_array($data)) {
+            throw new \RuntimeException(sprintf(
+                'data must be an array if you allow a templating-aware format (%s).',
+                $format
+            ));
+        }
+
+        if (isset($data['form']) && $data['form'] instanceof FormInterface) {
+            $data['form'] = $data['form']->createView();
+            return $data;
+        }
+
+        return $data;
     }
 
     /**
