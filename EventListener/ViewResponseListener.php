@@ -94,9 +94,7 @@ class ViewResponseListener extends TemplateListener
 
         if ($viewHandler->isFormatTemplating($view->getFormat())) {
             if (!empty($vars)) {
-                $parameters = $viewHandler->prepareTemplateParameters($view);
-
-                $parameters = (array)$parameters;
+                $parameters = (array)$viewHandler->prepareTemplateParameters($view);
                 foreach ($vars as $var) {
                     if (!array_key_exists($var, $parameters)) {
                         $parameters[$var] = $request->attributes->get($var);
