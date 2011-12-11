@@ -94,10 +94,7 @@ class ViewResponseListener extends TemplateListener
 
         if ($viewHandler->isFormatTemplating($view->getFormat())) {
             if (!empty($vars)) {
-                $parameters = $view->getData();
-                if (null !== $parameters && !is_array($parameters)) {
-                    throw new \RuntimeException('View data must be an array if using a templating aware format.');
-                }
+                $parameters = $viewHandler->prepareTemplateParameters($view);
 
                 $parameters = (array)$parameters;
                 foreach ($vars as $var) {
