@@ -242,11 +242,12 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $data = array();
         }
 
-        if (!is_array($data)) {
-            throw new \RuntimeException(sprintf(
-                'data must be an array if you allow a templating-aware format (%s).',
-                $format
-            ));
+        if (!is_array($data) || array_key_exists(0, $data)) {
+            if ($data instanceof FormInterface) {
+                $data = array('form' => $data);
+            } else {
+                $data = array('data' => $data);
+            }
         }
 
         if (isset($data['form']) && $data['form'] instanceof FormInterface) {
