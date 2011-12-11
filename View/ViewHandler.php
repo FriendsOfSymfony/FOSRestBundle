@@ -261,7 +261,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return array
      */
-    protected function prepareTemplateParameters(View $view)
+    public function prepareTemplateParameters(View $view)
     {
         $data = $view->getData();
         if (null === $data) {
