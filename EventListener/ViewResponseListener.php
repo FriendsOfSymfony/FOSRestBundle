@@ -107,7 +107,6 @@ class ViewResponseListener extends TemplateListener
             if ($template) {
                 if ($template instanceof TemplateReference) {
                     $template->set('format', null);
-                    $template->set('engine', null);
                 }
 
                 $view->setTemplate($template);
