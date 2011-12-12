@@ -135,48 +135,4 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener->onKernelView($event);
     }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testOnKernelViewWithNoViewNoDataWithForce()
-    {
-        $request = new Request();
-        $request->attributes->set('_template_vars', true);
-        $request->attributes->set('_template_default_vars', array('foo', 'halli'));
-
-        $viewHandler = $this->getMock('\FOS\RestBundle\View\ViewHandlerInterface');
-        $viewHandler->expects($this->once())
-            ->method('isFormatTemplating')
-            ->with('html')
-            ->will($this->returnValue(true));
-
-        $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')->disableOriginalConstructor()->getMock();
-        $container->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('fos_rest.view_handler'))
-            ->will($this->returnValue($viewHandler));
-
-        $container->expects($this->once())
-            ->method('getParameter')
-            ->with('fos_rest.view_response_listener.force_view')
-            ->will($this->returnValue(true));
-
-        $listener = new ViewResponseListener($container);
-
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent')->disableOriginalConstructor()->getMock();
-
-        $event->expects($this->once())
-            ->method('getRequest')
-            ->will($this->returnValue($request));
-
-        $event->expects($this->once())
-            ->method('getControllerResult')
-            ->will($this->returnValue('foo'));
-
-        $event->expects($this->never())
-            ->method('setResponse');
-
-        $listener->onKernelView($event);
-    }
 }

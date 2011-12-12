@@ -86,6 +86,15 @@ interface ViewHandlerInterface
     function renderTemplate(View $view, $format);
 
     /**
+     * Prepare view data for use by templating engine.
+     *
+     * @param View $view
+     *
+     * @return array
+     */
+    function prepareTemplateParameters(View $view);
+
+    /**
      * Handles creation of a Response using either redirection or the templating/serializer service
      *
      * @param View $view
