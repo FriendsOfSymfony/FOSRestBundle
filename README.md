@@ -119,7 +119,8 @@ class UsersController extends Controller
     public function getUsersAction()
     {
         $view = View::create()
-          ->setStatusCode(200);
+          ->setStatusCode(200)
+	      ->setData($data);
 
         ...
 
@@ -131,6 +132,13 @@ class UsersController extends Controller
 In the above example, ``View::create`` is a simple, convenient method to allow
 for a fluent interface. It is equivalent to instantiating a View by calling its
 constructor.
+
+As the purpose is to create a format-agnostic controller, data assigned to the ``View``
+instance should ideally be an object graph, though any data type is acceptable. Note that when rendering
+templating formats, the ``ViewHandler`` will wrap data types other than associative arrays in an
+associative array with the single key ``'data'``, which will become the variable name of the object in
+the respective template. If the view data is an instance of ``Symfony\Component\Form\FormInterface``,
+the key will be named ``'form'``.
 
 There are also two specialized ``View`` classes for handling directs, one for redirecting
 to an URL called ``RedirectView`` and one to redirect to a route called ``RouteRedirectView``.
