@@ -122,7 +122,7 @@ class UsersController extends Controller
     {
         $view = View::create()
           ->setStatusCode(200)
-	      ->setData($data);
+          ->setData($data);
 
         ...
 
