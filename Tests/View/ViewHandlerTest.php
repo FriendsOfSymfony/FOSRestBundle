@@ -16,7 +16,8 @@ use FOS\RestBundle\View\View,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
     FOS\RestBundle\Response\Codes,
     Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\Form\FormView;
 
 /**
  * View test
@@ -278,5 +279,40 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $view = new View($data);
         $viewHandler->handle($view);
+    }
+
+    /**
+     * @dataProvider prepareTemplateParametersDataProvider
+     */
+    public function testPrepareTemplateParametersWithProvider($viewData, $expected)
+    {
+        $handler = new ViewHandler();
+
+        $view = new View();
+        $view->setData($viewData);
+
+        $this->assertEquals($expected, $handler->prepareTemplateParameters($view));
+    }
+
+    public function prepareTemplateParametersDataProvider()
+    {
+        $object = new \stdClass();
+
+        $formView = new FormView();
+        $form = $this->getMockBuilder('\Symfony\Component\Form\Form')
+            ->setMethods(array('createView'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $form
+            ->expects($this->once())
+            ->method('createView')
+            ->will($this->returnValue($formView));
+
+        return array(
+            'assoc array does not change'   => array(array('foo' => 'bar'), array('foo' => 'bar')),
+            'array is wrapped as data key'  => array(array('foo', 'bar'), array('data' => array('foo', 'bar'))),
+            'object is wrapped as data key' => array($object, array('data' => $object)),
+            'form is wrapped as form key'   => array($form, array('form' => $formView))
+        );
     }
 }
