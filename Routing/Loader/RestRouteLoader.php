@@ -203,8 +203,7 @@ class RestRouteLoader implements LoaderInterface
                 // Ignore arguments that are optional or are or extend from Symfony\Component\HttpFoundation\Request
                 foreach ($arguments as $key => $argument) {
                     $class = $argument->getClass();
-                    if (
-                        $argument->isOptional()
+                    if ($argument->isOptional()
                         || (
                             $class
                             && ($class->getName() === 'Symfony\Component\HttpFoundation\Request'
