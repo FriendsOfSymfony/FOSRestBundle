@@ -10,6 +10,8 @@ env:
 
 before_script: php vendor/vendors.php
 
+script: phpunit --coverage-text
+
 notifications:
   email:
     - friendsofsymfony-dev@googlegroups.com
