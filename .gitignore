@@ -3,3 +3,4 @@ vendor/doctrine-common
 vendor/JMS/SerializerBundle
 vendor/Sensio/Bundle/FrameworkExtraBundle
 vendor/symfony
+Tests/autoload.php
