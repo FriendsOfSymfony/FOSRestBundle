@@ -43,8 +43,17 @@ class RestRouteLoader implements LoaderInterface
      */
     private $reader;
 
-    public function __construct(ContainerInterface $container, ControllerNameParser $controllerParser,
-                                RestControllerReader $controllerReader, $defaultFormat)
+    /**
+     * Initializes loader.
+     *
+     * @param ContainerInterface   $container        service container
+     * @param ControllerNameParser $controllerParser controller name parser
+     * @param RestControllerReader $controllerReader controller reader
+     * @param string               $defaultFormat    default http format
+     */
+    public function __construct(ContainerInterface $container,
+                                ControllerNameParser $controllerParser,
+                                RestControllerReader $controllerReader, $defaultFormat = 'html')
     {
         $this->container        = $container;
         $this->controllerParser = $controllerParser;
@@ -53,42 +62,22 @@ class RestRouteLoader implements LoaderInterface
     }
 
     /**
-     * Set routes prefix.
+     * Returns controller reader.
      *
-     * @param   string  $prefix     Routes prefix
+     * @return RestControllerReader
      */
-    public function setPrefix($prefix)
+    public function getControllerReader()
     {
-        $this->controllerReader->getActionReader()->setRoutePrefix($prefix);
-    }
-
-    /**
-     * Set route names prefix.
-     *
-     * @param   string  $namePrefix Route names prefix
-     */
-    public function setRouteNamesPrefix($namePrefix)
-    {
-        $this->controllerReader->getActionReader()->setNamePrefix($namePrefix);
-    }
-
-    /**
-     * Set parent routes.
-     *
-     * @param   array   $parents    Array of parent resources names
-     */
-    public function setParents(array $parents)
-    {
-        $this->controllerReader->getActionReader()->setParents($parents);
+        return $this->controllerReader;
     }
 
     /**
      * Loads a Routes collection by parsing Controller method names.
      *
-     * @param   string  $controller Some identifier for the controller
-     * @param   string  $type       The resource type
+     * @param string $controller Some identifier for the controller
+     * @param string $type       The resource type
      *
-     * @return  RouteCollection     A RouteCollection instance
+     * @return RouteCollection A RouteCollection instance
      */
     public function load($controller, $type = null)
     {
@@ -108,8 +97,8 @@ class RestRouteLoader implements LoaderInterface
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param  mixed  $resource A resource
-     * @param  string $type     The resource type
+     * @param mixed  $resource A resource
+     * @param string $type     The resource type
      *
      * @return Boolean true if this class supports the given resource, false otherwise
      */
