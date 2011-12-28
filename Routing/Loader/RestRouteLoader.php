@@ -20,9 +20,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
     Symfony\Component\HttpFoundation\Request;
 
 use FOS\RestBundle\Routing\RestRouteCollection,
-    FOS\RestBundle\Util\Pluralization;
-
-use Doctrine\Common\Annotations\Reader;
+    FOS\RestBundle\Util\Pluralization,
+    FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
@@ -32,15 +31,10 @@ use Doctrine\Common\Annotations\Reader;
  */
 class RestRouteLoader implements LoaderInterface
 {
-    protected $container;
-    protected $parser;
-    protected $availableHTTPMethods;
-    protected $availableConventionalActions;
-    protected $annotationClasses;
-    protected $parents = array();
-    protected $prefix;
-    protected $namePrefix;
-    protected $defaultFormat;
+    private $container;
+    private $controllerParser;
+    private $contollerReader;
+    private $defaultFormat;
 
     /**
      * Holds AnnotationReader instance
@@ -49,41 +43,13 @@ class RestRouteLoader implements LoaderInterface
      */
     private $reader;
 
-    /**
-     * Initialize REST Controller routes loader.
-     *
-     * @param   ContainerInterface      $container     service container
-     * @param   ControllerNameParser    $parser        controller name parser
-     * @param   Reader                  $reader        annotations reader
-     * @param   string                  $defaultFormat default route format
-     */
-    public function __construct(ContainerInterface $container, ControllerNameParser $parser, Reader $reader, $defaultFormat)
+    public function __construct(ContainerInterface $container, ControllerNameParser $controllerParser,
+                                RestControllerReader $controllerReader, $defaultFormat)
     {
-        $this->container            = $container;
-        $this->parser               = $parser;
-        $this->reader               = $reader;
-        $this->defaultFormat        = $defaultFormat;
-        $this->availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'head');
-        $this->availableConventionalActions = array('new', 'edit', 'remove');
-        $this->annotationClasses    = array(
-            'FOS\RestBundle\Controller\Annotations\Route',
-            'FOS\RestBundle\Controller\Annotations\Get',
-            'FOS\RestBundle\Controller\Annotations\Post',
-            'FOS\RestBundle\Controller\Annotations\Put',
-            'FOS\RestBundle\Controller\Annotations\Patch',
-            'FOS\RestBundle\Controller\Annotations\Delete',
-            'FOS\RestBundle\Controller\Annotations\Head'
-        );
-    }
-
-    /**
-     * Set parent routes.
-     *
-     * @param   array   $parents    Array of parent resources names
-     */
-    public function setParents(array $parents)
-    {
-        $this->parents = $parents;
+        $this->container        = $container;
+        $this->controllerParser = $controllerParser;
+        $this->controllerReader = $controllerReader;
+        $this->defaultFormat    = $defaultFormat;
     }
 
     /**
@@ -93,7 +59,7 @@ class RestRouteLoader implements LoaderInterface
      */
     public function setPrefix($prefix)
     {
-        $this->prefix = $prefix;
+        $this->controllerReader->getActionReader()->setRoutePrefix($prefix);
     }
 
     /**
@@ -103,7 +69,17 @@ class RestRouteLoader implements LoaderInterface
      */
     public function setRouteNamesPrefix($namePrefix)
     {
-        $this->namePrefix = $namePrefix;
+        $this->controllerReader->getActionReader()->setNamePrefix($namePrefix);
+    }
+
+    /**
+     * Set parent routes.
+     *
+     * @param   array   $parents    Array of parent resources names
+     */
+    public function setParents(array $parents)
+    {
+        $this->controllerReader->getActionReader()->setParents($parents);
     }
 
     /**
@@ -116,193 +92,15 @@ class RestRouteLoader implements LoaderInterface
      */
     public function load($controller, $type = null)
     {
-        list($controllerPrefix, $class) = $this->getControllerLocator($controller);
-        $class = new \ReflectionClass($class);
+        list($prefix, $class) = $this->getControllerLocator($controller);
 
-        // Check that every passed parent has non-empty singular name
-        foreach ($this->parents as $parent) {
-            if (empty($parent) || '/' === substr($parent, -1)) {
-                throw new \InvalidArgumentException(
-                    'All parent controllers must have ::getSINGULAR_NAME() action'
-                );
-            }
-        }
+        $collection = $this->controllerReader->read(new \ReflectionClass($class));
+        $collection->prependRouteControllersWithPrefix($prefix);
+        $collection->setDefaultFormat($this->defaultFormat);
 
-        $collection = new RestRouteCollection();
-        $collection->addResource(new FileResource($class->getFileName()));
-
-        $prefixAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Prefix';
-        $prefix = $this->reader->getClassAnnotation($class, $prefixAnnotationClass);
-        if ($prefix) {
-            $this->prefix = $prefix->value;
-        }
-
-        $namePrefixAnnotationClass = 'FOS\RestBundle\Controller\Annotations\NamePrefix';
-        $namePrefix = $this->reader->getClassAnnotation($class, $namePrefixAnnotationClass);
-        if ($namePrefix) {
-            $this->namePrefix = $namePrefix->value;
-        }
-
-        // Trim "/" at the start
-        if (null !== $this->prefix && isset($this->prefix[0]) && '/' === $this->prefix[0]) {
-            $this->prefix = substr($this->prefix, 1);
-        }
-
-        $routeAnnotationClass = 'FOS\RestBundle\Controller\Annotations\Route';
-
-        $patternStartRoute = $this->reader->getClassAnnotation($class, $routeAnnotationClass);
-        $patternStart = null;
-
-        if ($patternStartRoute) {
-            $patternStart = trim($patternStartRoute->getPattern(), "/");
-        }
-
-        $routes = array();
-        foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            $matches = array();
-
-            // If method name starts with underscore - skip
-            if ('_' === substr($method->getName(), 0, 1)) {
-                continue;
-            }
-
-            // If method has @NoRoute annotation - skip
-            $noAnnotationClass = 'FOS\RestBundle\Controller\Annotations\NoRoute';
-            if (null !== $this->reader->getMethodAnnotation($method, $noAnnotationClass)) {
-                continue;
-            }
-
-            if (preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
-                $httpMethod = $matches[1];
-                $resources  = preg_split('/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-                $arguments  = $method->getParameters();
-
-                // Ignore arguments that are or extend from Symfony\Component\HttpFoundation\Request
-                foreach ($arguments as $key => $argument) {
-                    $class = $argument->getClass();
-                    if ($class
-                        && ($class->getName() === 'Symfony\Component\HttpFoundation\Request'
-                            || is_subclass_of($class->getName(), 'Symfony\Component\HttpFoundation\Request')
-                        )
-                    ) {
-                        unset($arguments[$key]);
-                    }
-                }
-
-                // If we have 1 resource passed & 1 argument, then it's object call, so
-                // we can set collection singular name
-                if (1 === count($resources) && 1 === count($arguments) - count($this->parents)) {
-                    $collection->setSingularName($resources[0]);
-                }
-
-                // If we have parents passed - merge them with own resource names
-                if (count($this->parents)) {
-                    $resources = array_merge($this->parents, $resources);
-                }
-
-                $urlParts   = array();
-                $routeName  = $httpMethod;
-
-                if (empty($resources)) {
-                    $resources[] = null;
-                }
-
-                foreach ($resources as $i => $resource) {
-                    if (null !== $resource) {
-                        $routeName .= '_' . basename($resource);
-                    }
-
-                    // If we already added all parent routes paths to URL & we have prefix - add it
-                    if (!empty($this->prefix) && $i === count($this->parents)) {
-                        $urlParts[] = $this->prefix;
-                    }
-
-                    // If we have argument for current resource, then it's object. Otherwise - it's collection
-                    if (isset($arguments[$i])) {
-                        if ($patternStart) {
-                            $urlParts[] = strtolower($patternStart) . '/{' . $arguments[$i]->getName() . '}';
-                        } elseif (null !== $resource) {
-                            $urlParts[] =
-                                strtolower(Pluralization::pluralize($resource)) . '/{' . $arguments[$i]->getName() . '}';
-                        } else {
-                            $urlParts[] ='{' . $arguments[$i]->getName() . '}';
-                        }
-                    } else {
-                        if ($patternStart) {
-                            $urlParts[] = $patternStart;
-                        } elseif (null !== $resource) {
-                            $urlParts[] = strtolower($resource);
-                        }
-                    }
-                }
-
-                // If passed method is not valid HTTP method
-                // then it's either a hypertext driver,
-                // a custom object (PUT) or collection (GET) method
-                if (!in_array($httpMethod, $this->availableHTTPMethods)) {
-                    $urlParts[] = $httpMethod;
-
-                    // allow hypertext as the engine of application state
-                    // through conventional GET actions
-                    if (in_array($httpMethod, $this->availableConventionalActions)) {
-                        $httpMethod = 'get';
-                    } else {
-                        //custom object
-                        $httpMethod = 'post';
-
-                        // resource collection
-                        if (count($arguments) < count($resources)) {
-                            $httpMethod = 'get';
-                        }
-                    }
-                }
-
-                $pattern        = implode('/', $urlParts);
-                $defaults       = array('_controller' => $controllerPrefix . $method->getName(), '_format' => $this->defaultFormat);
-                $requirements   = array('_method'     => strtoupper($httpMethod));
-                $options        = array();
-
-                // Read annotations
-                foreach ($this->annotationClasses as $annotationClass) {
-                    $routeAnnnotation = $this->reader->getMethodAnnotation($method, $annotationClass);
-
-                    if (null !== $routeAnnnotation) {
-                        $annoRequirements   = $routeAnnnotation->getRequirements();
-
-                        if (!isset($annoRequirements['_method']) || null === $annoRequirements['_method']) {
-                            $annoRequirements['_method'] = $requirements['_method'];
-                        }
-
-                        $pattern        = $routeAnnnotation->getPattern() ?: $pattern;
-                        $requirements   = array_merge($requirements, $annoRequirements);
-                        $options        = array_merge($options, $routeAnnnotation->getOptions());
-                        $defaults       = array_merge($defaults, $routeAnnnotation->getDefaults());
-
-                        break;
-                    }
-                }
-                //Adding in the optional _format param for serialization
-                $pattern .= ".{_format}";
-
-                // Create route with gathered parameters
-                $route     = new Route($pattern, $defaults, $requirements, $options);
-                $routeName = $this->namePrefix . strtolower($routeName);
-
-                // Move custom actions at the beginning, default at the end
-                if (!preg_match('/^'.preg_quote($this->namePrefix, '/').'('.implode('|', $this->availableHTTPMethods).')/', $routeName)) {
-                    array_unshift($routes, array('name' => $routeName, 'route' => $route));
-                } else {
-                    $routes[] = array('name' => $routeName, 'route' => $route);
-                }
-            }
-        }
-
-        foreach ($routes as $routeInfo) {
-            $collection->add($routeInfo['name'], $routeInfo['route']);
-        }
-
-        $this->prefix = null;
-        $this->namePrefix = null;
+        $this->controllerReader->getActionReader()->setRoutePrefix(null);
+        $this->controllerReader->getActionReader()->setNamePrefix(null);
+        $this->controllerReader->getActionReader()->setParents(array());
 
         return $collection;
     }
@@ -359,7 +157,7 @@ class RestRouteLoader implements LoaderInterface
         } elseif (false !== strpos($controller, ':')) {
             // bundle:controller notation
             try {
-                $notation             = $this->parser->parse($controller . ':method');
+                $notation             = $this->controllerParser->parse($controller . ':method');
                 list($class, $method) = explode('::', $notation);
                 $prefix               = $class . '::';
             } catch (\Exception $e) {
