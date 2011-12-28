@@ -11,6 +11,10 @@
             "email": "smith@pooteeweet.org"
         },
         {
+            "name": "Konstantin Kudryashov",
+            "email": "ever.zet@gmail.com"
+        },
+        {
             "name": "FriendsOfSymfony Community",
             "homepage": "https://github.com/friendsofsymfony/FOSRestBundle/contributors"
         }
