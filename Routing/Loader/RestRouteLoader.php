@@ -116,41 +116,18 @@ class RestRouteLoader implements LoaderInterface
      */
     public function load($controller, $type = null)
     {
-        if (class_exists($controller)) {
-            // full class name
-            $class            = $controller;
-            $controllerPrefix = $class . '::';
-        } elseif (false !== strpos($controller, ':')) {
-            // bundle:controller notation
-            try {
-                $notation             = $this->parser->parse($controller . ':method');
-                list($class, $method) = explode('::', $notation);
-                $controllerPrefix     = $class . '::';
-            } catch (\Exception $e) {
-                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $controller));
-            }
-        } elseif ($this->container->has($controller)) {
-            // service_id
-            $controllerPrefix = $controller . ':';
-            // FIXME: this is ugly, but I do not see any good alternative
-            $this->container->enterScope('request');
-            $this->container->set('request', new Request);
-            $class = get_class($this->container->get($controller));
-            $this->container->leaveScope('request');
-        }
-
-        if (empty($class)) {
-            throw new \InvalidArgumentException(sprintf('Class could not be determined for Controller identified by "%s".', $controller));
-        }
+        list($controllerPrefix, $class) = $this->getControllerLocator($controller);
+        $class = new \ReflectionClass($class);
 
         // Check that every passed parent has non-empty singular name
         foreach ($this->parents as $parent) {
             if (empty($parent) || '/' === substr($parent, -1)) {
-                throw new \InvalidArgumentException('All parent controllers must have ::getSINGULAR_NAME() action');
+                throw new \InvalidArgumentException(
+                    'All parent controllers must have ::getSINGULAR_NAME() action'
+                );
             }
         }
 
-        $class      = new \ReflectionClass($class);
         $collection = new RestRouteCollection();
         $collection->addResource(new FileResource($class->getFileName()));
 
@@ -361,5 +338,50 @@ class RestRouteLoader implements LoaderInterface
      */
     public function setResolver(LoaderResolver $resolver)
     {
+    }
+
+    /**
+     * Returns controller locator by it's id.
+     *
+     * @param string $controller
+     *
+     * @return array
+     */
+    private function getControllerLocator($controller)
+    {
+        $class  = null;
+        $prefix = null;
+
+        if (class_exists($controller)) {
+            // full class name
+            $class  = $controller;
+            $prefix = $class . '::';
+        } elseif (false !== strpos($controller, ':')) {
+            // bundle:controller notation
+            try {
+                $notation             = $this->parser->parse($controller . ':method');
+                list($class, $method) = explode('::', $notation);
+                $prefix               = $class . '::';
+            } catch (\Exception $e) {
+                throw new \InvalidArgumentException(
+                    sprintf('Can\'t locate "%s" controller.', $controller)
+                );
+            }
+        } elseif ($this->container->has($controller)) {
+            // service_id
+            $prefix = $controller . ':';
+            $this->container->enterScope('request');
+            $this->container->set('request', new Request);
+            $class = get_class($this->container->get($controller));
+            $this->container->leaveScope('request');
+        }
+
+        if (empty($class)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Class could not be determined for Controller identified by "%s".', $controller
+            ));
+        }
+
+        return array($prefix, $class);
     }
 }
