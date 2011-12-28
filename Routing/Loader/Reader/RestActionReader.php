@@ -120,23 +120,13 @@ class RestActionReader
             return;
         }
 
-        $httpMethod = strtolower($matches[1]);
-        $resources  = preg_split(
-            '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
-        );
-
-        // ignore arguments that are or extend from Symfony\Component\HttpFoundation\Request
-        $arguments = array();
-        foreach ($method->getParameters() as $argument) {
-            if ($argumentClass = $argument->getClass()) {
-                if ($argumentClass->getName() === 'Symfony\Component\HttpFoundation\Request'
-                 || $argumentClass->isSubclassOf('Symfony\Component\HttpFoundation\Request')) {
-                     continue;
-                }
-            }
-
-            $arguments[] = $argument;
+        // if we can't get http-method and resources from method name - skip
+        if (!$httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method)) {
+            return;
         }
+
+        list($httpMethod, $resources) = $httpMethodAndResources;
+        $arguments                    = $this->getMethodArguments($method);
 
         // if we have only 1 resource & 1 argument passed, then it's object call, so
         // we can set collection singular name
@@ -153,82 +143,35 @@ class RestActionReader
             $resources[] = null;
         }
 
-        // generate route name
-        $routeName = $httpMethod;
-        foreach ($resources as $resource) {
-            if (null !== $resource) {
-                $routeName .= '_' . basename($resource);
-            }
-        }
-
-        // generate URL parts
-        $urlParts = array();
-        foreach ($resources as $i => $resource) {
-            // if we already added all parent routes paths to URL & we have
-            // prefix - add it
-            if (!empty($this->routePrefix) && $i === count($this->parents)) {
-                $urlParts[] = $this->routePrefix;
-            }
-
-            // if we have argument for current resource, then it's object.
-            // otherwise - it's collection
-            if (isset($arguments[$i])) {
-                if (null !== $resource) {
-                    $urlParts[] =
-                        strtolower(Pluralization::pluralize($resource))
-                        .'/{'.$arguments[$i]->getName().'}';
-                } else {
-                    $urlParts[] =
-                        '{'.$arguments[$i]->getName().'}';
-                }
-            } elseif (null !== $resource) {
-                $urlParts[] = strtolower($resource);
-            }
-        }
+        $routeName = $httpMethod.$this->generateRouteName($resources);
+        $urlParts  = $this->generateUrlParts($resources, $arguments);
 
         // if passed method is not valid HTTP method then it's either
         // a hypertext driver, a custom object (PUT) or collection (GET)
         // method
         if (!in_array($httpMethod, $this->availableHTTPMethods)) {
             $urlParts[] = $httpMethod;
-
-            if (in_array($httpMethod, $this->availableConventionalActions)) {
-                // allow hypertext as the engine of application state
-                // through conventional GET actions
-                $httpMethod = 'get';
-            } elseif (count($arguments) < count($resources)) {
-                // resource collection
-                $httpMethod = 'get';
-            } else {
-                //custom object
-                $httpMethod = 'post';
-            }
+            $httpMethod = $this->getCustomHttpMethod($httpMethod, $resources, $arguments);
         }
 
-        // generated parameters:
-        // TODO: $controllerPrefix, _format => defaultFormat, sort
-        $routeName      = $this->namePrefix.strtolower($routeName);
-        $pattern        = implode('/', $urlParts);
-        $defaults       = array('_controller' => $method->getName());
-        $requirements   = array('_method' => strtoupper($httpMethod));
-        $options        = array();
+        // generated parameters
+        $routeName    = $this->namePrefix.strtolower($routeName);
+        $pattern      = implode('/', $urlParts);
+        $defaults     = array('_controller' => $method->getName());
+        $requirements = array('_method' => strtoupper($httpMethod));
+        $options      = array();
 
-        // read method annotations
-        foreach (array('Route','Get','Post','Put','Patch','Delete','Head') as $annotationName) {
-            if ($annotation = $this->readMethodAnnotation($method, $annotationName)) {
-                $annoRequirements = $annotation->getRequirements();
+        if ($annotation = $this->readRouteAnnotation($method)) {
+            $annoRequirements = $annotation->getRequirements();
 
-                if (!isset($annoRequirements['_method']) || null === $annoRequirements['_method']) {
-                    $annoRequirements['_method'] = $requirements['_method'];
-                }
-
-                $pattern      = $annotation->getPattern() ?: $pattern;
-                $requirements = array_merge($requirements, $annoRequirements);
-                $options      = array_merge($options, $annotation->getOptions());
-                $defaults     = array_merge($defaults, $annotation->getDefaults());
-
-                break;
+            if (!isset($annoRequirements['_method']) || null === $annoRequirements['_method']) {
+                $annoRequirements['_method'] = $requirements['_method'];
             }
+
+            $pattern      = $annotation->getPattern() ?: $pattern;
+            $requirements = array_merge($requirements, $annoRequirements);
+            $options      = array_merge($options, $annotation->getOptions());
+            $defaults     = array_merge($defaults, $annotation->getDefaults());
         }
 
         // add route to collection
@@ -256,6 +199,151 @@ class RestActionReader
         }
 
         return true;
+    }
+
+    /**
+     * Returns HTTP method and resources list from method signature.
+     *
+     * @param \ReflectionMethod $method
+     *
+     * @return array
+     */
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method)
+    {
+        // if method doesn't match regex - skip
+        if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
+            return;
+        }
+
+        $httpMethod = strtolower($matches[1]);
+        $resources  = preg_split(
+            '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+        );
+
+        return array($httpMethod, $resources);
+    }
+
+    /**
+     * Returns readable arguments from method.
+     *
+     * @param \ReflectionMethod $method
+     *
+     * @return array
+     */
+    private function getMethodArguments(\ReflectionMethod $method)
+    {
+        // ignore arguments that are or extend from Symfony\Component\HttpFoundation\Request
+        $arguments = array();
+        foreach ($method->getParameters() as $argument) {
+            if ($argumentClass = $argument->getClass()) {
+                if ($argumentClass->getName() === 'Symfony\Component\HttpFoundation\Request'
+                 || $argumentClass->isSubclassOf('Symfony\Component\HttpFoundation\Request')) {
+                     continue;
+                }
+            }
+
+            $arguments[] = $argument;
+        }
+
+        return $arguments;
+    }
+
+    /**
+     * Generates route name from resources list.
+     *
+     * @param array $resources
+     *
+     * @return string
+     */
+    private function generateRouteName(array $resources)
+    {
+        $routeName = '';
+        foreach ($resources as $resource) {
+            if (null !== $resource) {
+                $routeName .= '_' . basename($resource);
+            }
+        }
+
+        return $routeName;
+    }
+
+    /**
+     * Generates URL parts for route from resources list.
+     *
+     * @param array $resources
+     * @param array $arguments
+     *
+     * @return array
+     */
+    private function generateUrlParts(array $resources, array $arguments)
+    {
+        $urlParts = array();
+        foreach ($resources as $i => $resource) {
+            // if we already added all parent routes paths to URL & we have
+            // prefix - add it
+            if (!empty($this->routePrefix) && $i === count($this->parents)) {
+                $urlParts[] = $this->routePrefix;
+            }
+
+            // if we have argument for current resource, then it's object.
+            // otherwise - it's collection
+            if (isset($arguments[$i])) {
+                if (null !== $resource) {
+                    $urlParts[] =
+                        strtolower(Pluralization::pluralize($resource))
+                        .'/{'.$arguments[$i]->getName().'}';
+                } else {
+                    $urlParts[] =
+                        '{'.$arguments[$i]->getName().'}';
+                }
+            } elseif (null !== $resource) {
+                $urlParts[] = strtolower($resource);
+            }
+        }
+
+        return $urlParts;
+    }
+
+    /**
+     * Returns custom HTTP method for provided list of resources, arguments, method.
+     *
+     * @param string $httpMethod current HTTP method
+     * @param array  $resources  resources list
+     * @param array  $arguments  list of method arguments
+     *
+     * @return string
+     */
+    private function getCustomHttpMethod($httpMethod, array $resources, array $arguments)
+    {
+        if (in_array($httpMethod, $this->availableConventionalActions)) {
+            // allow hypertext as the engine of application state
+            // through conventional GET actions
+            return 'get';
+        } elseif (count($arguments) < count($resources)) {
+            // resource collection
+            return 'get';
+        } else {
+            //custom object
+            return 'post';
+        }
+    }
+
+    /**
+     * Returns first route annotation for method.
+     *
+     * @param \ReflectionMethod $reflection
+     *
+     * @return Annotation|null
+     */
+    private function readRouteAnnotation(\ReflectionMethod $reflection)
+    {
+        foreach (array('Route','Get','Post','Put','Patch','Delete','Head') as $annotationName) {
+            if ($annotation = $this->readMethodAnnotation($reflection, $annotationName)) {
+                return $annotation;
+
+                break;
+            }
+        }
     }
 
     /**
