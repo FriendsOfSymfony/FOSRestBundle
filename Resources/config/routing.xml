@@ -10,6 +10,8 @@
         <parameter key="fos_rest.routing.loader.yaml_collection.class">FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader</parameter>
         <parameter key="fos_rest.routing.loader.xml_collection.class">FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader</parameter>
         <parameter key="fos_rest.routing.loader.processor.class">FOS\RestBundle\Routing\Loader\RestRouteProcessor</parameter>
+        <parameter key="fos_rest.routing.loader.reader.controller.class">FOS\RestBundle\Routing\Loader\Reader\RestControllerReader</parameter>
+        <parameter key="fos_rest.routing.loader.reader.action.class">FOS\RestBundle\Routing\Loader\Reader\RestActionReader</parameter>
 
     </parameters>
 
@@ -18,7 +20,7 @@
         <service id="fos_rest.routing.loader.controller" class="%fos_rest.routing.loader.controller.class%">
             <argument type="service" id="service_container" />
             <argument type="service" id="controller_name_converter" />
-            <argument type="service" id="annotation_reader" />
+            <argument type="service" id="fos_rest.routing.loader.reader.controller" />
             <argument>%fos_rest.routing.loader.default_format%</argument>
             <tag name="routing.loader" />
         </service>
@@ -35,6 +37,15 @@
             <argument type="service" id="file_locator" />
             <argument type="service" id="fos_rest.routing.loader.processor" />
             <tag name="routing.loader" />
+        </service>
+
+        <service id="fos_rest.routing.loader.reader.controller" class="%fos_rest.routing.loader.reader.controller.class%">
+            <argument type="service" id="fos_rest.routing.loader.reader.action" />
+            <argument type="service" id="annotation_reader" />
+        </service>
+
+        <service id="fos_rest.routing.loader.reader.action" class="%fos_rest.routing.loader.reader.action.class%">
+            <argument type="service" id="annotation_reader" />
         </service>
 
     </services>
