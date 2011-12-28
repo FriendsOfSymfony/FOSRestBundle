@@ -11,18 +11,20 @@
             "email": "smith@pooteeweet.org"
         },
         {
+            "name": "Konstantin Kudryashov",
+            "email": "ever.zet@gmail.com"
+        },
+        {
             "name": "FriendsOfSymfony Community",
             "homepage": "https://github.com/friendsofsymfony/FOSRestBundle/contributors"
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "jms/serializer-bundle": "1.*"
-    },
-    "suggest": {
-        "doctrine/common": "master-dev",
-        "symfony/framework-bundle": "2.*",
-        "sensio/framework-extra-bundle": "master-dev"
+        "php":                            ">=5.3.2",
+        "symfony/symfony":                ">=2.1.0-dev",
+        "doctrine/common":                ">=2.1.0",
+        "sensio/framework-extra-bundle":  "*",
+        "jms/serializer-bundle":          "*"
     },
     "autoload": {
         "psr-0": { "FOS\\RestBundle": "" }
