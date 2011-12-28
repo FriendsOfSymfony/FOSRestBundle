@@ -18,19 +18,22 @@ use Symfony\Component\Config\Loader\FileLoader,
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
 
 /**
+ * Processes resource in provided loader.
+ *
  * @author Donald Tyler <chekote69@gmail.com>
+ * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
 class RestRouteProcessor
 {
     /**
      * Import & return routes collection from a resource.
      *
-     * @param   LoaderInterface   $loader     The Loader
-     * @param   mixed             $resource   A Resource
-     * @param   array             $parents    Array of parent resources names
-     * @param   string            $prefix     Current routes prefix
-     * @param   string            $namePrefix Routes names prefix
-     * @param   string            $type       The resource type
+     * @param LoaderInterface $loader      The Loader
+     * @param mixed           $resource    A Resource
+     * @param array           $parents     Array of parent resources names
+     * @param string          $routePrefix Current routes prefix
+     * @param string          $namePrefix  Routes names prefix
+     * @param string          $type        The resource type
      *
      * @return  RouteCollection     A RouteCollection instance
      */
@@ -38,7 +41,7 @@ class RestRouteProcessor
         LoaderInterface $loader,
         $resource,
         array $parents = array(),
-        $prefix = null,
+        $routePrefix = null,
         $namePrefix = null,
         $type = null)
     {
@@ -47,9 +50,9 @@ class RestRouteProcessor
         if ($loader instanceof FileLoader && null !== $this->currentDir) {
             $resource = $this->getAbsolutePath($resource, $this->currentDir);
         } elseif ($loader instanceof RestRouteLoader) {
-            $loader->setParents($parents);
-            $loader->setPrefix($prefix);
-            $loader->setRouteNamesPrefix($namePrefix);
+            $loader->getControllerReader()->getActionReader()->setParents($parents);
+            $loader->getControllerReader()->getActionReader()->setRoutePrefix($routePrefix);
+            $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
         }
 
         return $loader->load($resource, $type);

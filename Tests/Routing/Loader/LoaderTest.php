@@ -16,6 +16,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Yaml\Yaml;
 
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
+use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
+use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
 
 /**
  * Base Loader testing class.
@@ -48,6 +50,11 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        return new RestRouteLoader($c, $p, $this->getAnnotationReader(), 'html');
+        $annotationReader = $this->getAnnotationReader();
+
+        $ar = new RestActionReader($annotationReader);
+        $cr = new RestControllerReader($ar, $annotationReader);
+
+        return new RestRouteLoader($c, $p, $cr, 'html');
     }
 }
