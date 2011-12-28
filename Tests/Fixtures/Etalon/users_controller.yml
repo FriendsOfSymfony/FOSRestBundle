@@ -78,4 +78,7 @@ hide_user_comment:
   pattern:    /users/{userId}/comments/{commentId}/hide.{_format}
   controller: ::hideUserCommentAction
 
- 
+get_user_threads:
+  method:     GET
+  pattern:    /users/{slug}/threads.{_format}
+  controller: ::getUserThreadsAction

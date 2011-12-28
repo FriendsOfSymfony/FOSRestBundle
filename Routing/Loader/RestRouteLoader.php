@@ -200,12 +200,15 @@ class RestRouteLoader implements LoaderInterface
                 $resources  = preg_split('/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
                 $arguments  = $method->getParameters();
 
-                // Ignore arguments that are or extend from Symfony\Component\HttpFoundation\Request
+                // Ignore arguments that are optional or are or extend from Symfony\Component\HttpFoundation\Request
                 foreach ($arguments as $key => $argument) {
                     $class = $argument->getClass();
-                    if ($class
-                        && ($class->getName() === 'Symfony\Component\HttpFoundation\Request'
-                            || is_subclass_of($class->getName(), 'Symfony\Component\HttpFoundation\Request')
+                    if ($argument->isOptional()
+                        || (
+                            $class
+                            && ($class->getName() === 'Symfony\Component\HttpFoundation\Request'
+                                || is_subclass_of($class->getName(), 'Symfony\Component\HttpFoundation\Request')
+                            )
                         )
                     ) {
                         unset($arguments[$key]);

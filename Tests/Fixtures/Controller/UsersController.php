@@ -81,4 +81,7 @@ class UsersController extends Controller
 
     public function hideUserCommentAction($userId, $commentId)
     {} // [POST] /users/{userId}/comments/{commentId}
+
+    public function getUserThreadsAction($slug, $sort = 'date')
+    {} // [GET] /users/{slug}/threads
 }
