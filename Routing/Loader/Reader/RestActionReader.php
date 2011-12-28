@@ -110,14 +110,11 @@ class RestActionReader
             }
         }
 
-        // if method starts with _ - skip
-        if ('_' === substr($method->getName(), 0, 1)) {
+        // if method is not readable - skip
+        if (!$this->isMethodReadable($method)) {
             return;
         }
-        // if method has NoRoute annotation - skip
-        if ($annotation = $this->readMethodAnnotation($method, 'NoRoute')) {
-            return;
-        }
+
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
             return;
@@ -238,6 +235,27 @@ class RestActionReader
         $collection->add($routeName, new Route(
             $pattern.'.{_format}', $defaults, $requirements, $options
         ));
+    }
+
+    /**
+     * Checks whether provided method is readable.
+     *
+     * @param \ReflectionMethod $method
+     *
+     * @return Boolean
+     */
+    private function isMethodReadable(\ReflectionMethod $method)
+    {
+        // if method starts with _ - skip
+        if ('_' === substr($method->getName(), 0, 1)) {
+            return false;
+        }
+        // if method has NoRoute annotation - skip
+        if ($annotation = $this->readMethodAnnotation($method, 'NoRoute')) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
