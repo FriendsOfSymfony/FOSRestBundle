@@ -1,6 +1,4 @@
-/phpunit.xml
-vendor/doctrine-common
-vendor/JMS/SerializerBundle
-vendor/Sensio/Bundle/FrameworkExtraBundle
-vendor/symfony
-Tests/autoload.php
+phpunit.xml
+vendor
+composer.lock
+composer.phar
