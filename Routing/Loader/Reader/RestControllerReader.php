@@ -4,6 +4,7 @@ namespace FOS\RestBundle\Routing\Loader\Reader;
 
 use Symfony\Component\Config\Resource\FileResource;
 use Doctrine\Common\Annotations\Reader;
+use FOS\RestBundle\Routing\RestRouteCollection;
 
 /**
  * REST controller reader.
@@ -38,15 +39,14 @@ class RestControllerReader
     /**
      * Reads controller routes.
      *
-     * @param string $class
+     * @param ReflectionClass $reflection
      *
      * @return RestRouteCollection
      */
-    public function read($class)
+    public function read(\ReflectionClass $reflection)
     {
-        $reflection = new \ReflectionClass($class);
         $collection = new RestRouteCollection();
-        $collection->addResource(new FileResource($class->getFileName()));
+        $collection->addResource(new FileResource($reflection->getFileName()));
 
         // read prefix annotation
         if ($annotation = $this->readClassAnnotation($reflection, 'Prefix')) {
@@ -64,7 +64,7 @@ class RestControllerReader
         }
 
         // read action routes into collection
-        foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             $this->actionReader->read($collection, $method);
         }
 

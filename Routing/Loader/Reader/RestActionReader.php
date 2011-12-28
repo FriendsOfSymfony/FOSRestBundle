@@ -5,6 +5,7 @@ namespace FOS\RestBundle\Routing\Loader\Reader;
 use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Util\Pluralization;
 use Symfony\Component\Routing\Route;
+use FOS\RestBundle\Routing\RestRouteCollection;
 
 /**
  * RestActionReader.
@@ -136,6 +137,8 @@ class RestActionReader
                      continue;
                 }
             }
+
+            $arguments[] = $argument;
         }
 
         // if we have only 1 resource & 1 argument passed, then it's object call, so
