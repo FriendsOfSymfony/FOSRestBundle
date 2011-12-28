@@ -148,7 +148,7 @@ class RestRouteLoaderTest extends LoaderTest
     protected function loadFromControllerFixture($fixtureName, $namePrefix = null)
     {
         $loader = $this->getControllerLoader();
-        $loader->setRouteNamesPrefix($namePrefix);
+        $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
 
         return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'. $fixtureName, 'rest');
     }
