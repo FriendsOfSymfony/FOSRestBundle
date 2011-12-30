@@ -80,10 +80,6 @@ class RestRouteLoader implements LoaderInterface
         $collection->prependRouteControllersWithPrefix($prefix);
         $collection->setDefaultFormat($this->defaultFormat);
 
-        $this->controllerReader->getActionReader()->setRoutePrefix(null);
-        $this->controllerReader->getActionReader()->setNamePrefix(null);
-        $this->controllerReader->getActionReader()->setParents(array());
-
         return $collection;
     }
 
