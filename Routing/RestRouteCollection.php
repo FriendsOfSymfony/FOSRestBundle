@@ -49,7 +49,7 @@ class RestRouteCollection extends RouteCollection
      */
     public function prependRouteControllersWithPrefix($prefix)
     {
-        foreach ($this->all() as $route) {
+        foreach (parent::all() as $route) {
             $route->setDefault('_controller', $prefix.$route->getDefault('_controller'));
         }
     }
@@ -61,7 +61,7 @@ class RestRouteCollection extends RouteCollection
      */
     public function setDefaultFormat($format)
     {
-        foreach ($this->all() as $route) {
+        foreach (parent::all() as $route) {
             $route->setDefault('_format', $format);
         }
     }
