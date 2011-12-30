@@ -15,13 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\Config\Loader\LoaderInterface,
     Symfony\Component\Config\Loader\LoaderResolver,
-    Symfony\Component\Config\Resource\FileResource,
-    Symfony\Component\Routing\Route,
     Symfony\Component\HttpFoundation\Request;
 
-use FOS\RestBundle\Routing\RestRouteCollection,
-    FOS\RestBundle\Util\Pluralization,
-    FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
+use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
