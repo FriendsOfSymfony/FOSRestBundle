@@ -33,15 +33,8 @@ class RestRouteLoader implements LoaderInterface
 {
     private $container;
     private $controllerParser;
-    private $contollerReader;
+    private $controllerReader;
     private $defaultFormat;
-
-    /**
-     * Holds AnnotationReader instance
-     *
-     * @var Doctrine\Common\Annotations\AnnotationReader
-     */
-    private $reader;
 
     /**
      * Initializes loader.
