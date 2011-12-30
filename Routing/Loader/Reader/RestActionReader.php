@@ -116,7 +116,8 @@ class RestActionReader
         foreach ($this->parents as $parent) {
             if (empty($parent) || '/' === substr($parent, -1)) {
                 throw new \InvalidArgumentException(
-                    'All parent controllers must have ::getSINGULAR_NAME() action'
+                    "Every parent controller must have `get{SINGULAR}Action(\$id)` method\n".
+                    "where {SINGULAR} is a singular form of associated object"
                 );
             }
         }
@@ -126,13 +127,8 @@ class RestActionReader
             return;
         }
 
-        // if method doesn't match regex - skip
-        if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
-            return;
-        }
-
         // if we can't get http-method and resources from method name - skip
-        if (!$httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method)) {
+        if (!($httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method))) {
             return;
         }
 
@@ -175,7 +171,7 @@ class RestActionReader
         if ($annotation = $this->readRouteAnnotation($method)) {
             $annoRequirements = $annotation->getRequirements();
 
-            if (!isset($annoRequirements['_method']) || null === $annoRequirements['_method']) {
+            if (!isset($annoRequirements['_method'])) {
                 $annoRequirements['_method'] = $requirements['_method'];
             }
 
@@ -205,7 +201,7 @@ class RestActionReader
             return false;
         }
         // if method has NoRoute annotation - skip
-        if ($annotation = $this->readMethodAnnotation($method, 'NoRoute')) {
+        if ($this->readMethodAnnotation($method, 'NoRoute')) {
             return false;
         }
 

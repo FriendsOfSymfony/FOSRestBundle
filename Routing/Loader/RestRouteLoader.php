@@ -15,13 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\Config\Loader\LoaderInterface,
     Symfony\Component\Config\Loader\LoaderResolverInterface,
-    Symfony\Component\Config\Resource\FileResource,
-    Symfony\Component\Routing\Route,
     Symfony\Component\HttpFoundation\Request;
 
-use FOS\RestBundle\Routing\RestRouteCollection,
-    FOS\RestBundle\Util\Pluralization,
-    FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
+use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
@@ -33,15 +29,8 @@ class RestRouteLoader implements LoaderInterface
 {
     private $container;
     private $controllerParser;
-    private $contollerReader;
+    private $controllerReader;
     private $defaultFormat;
-
-    /**
-     * Holds AnnotationReader instance
-     *
-     * @var Doctrine\Common\Annotations\AnnotationReader
-     */
-    private $reader;
 
     /**
      * Initializes loader.
@@ -86,10 +75,6 @@ class RestRouteLoader implements LoaderInterface
         $collection = $this->controllerReader->read(new \ReflectionClass($class));
         $collection->prependRouteControllersWithPrefix($prefix);
         $collection->setDefaultFormat($this->defaultFormat);
-
-        $this->controllerReader->getActionReader()->setRoutePrefix(null);
-        $this->controllerReader->getActionReader()->setNamePrefix(null);
-        $this->controllerReader->getActionReader()->setParents(array());
 
         return $collection;
     }

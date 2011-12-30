@@ -79,6 +79,10 @@ class RestControllerReader
             $this->actionReader->read($collection, $method);
         }
 
+        $this->actionReader->setRoutePrefix(null);
+        $this->actionReader->setNamePrefix(null);
+        $this->actionReader->setParents(array());
+
         return $collection;
     }
 
