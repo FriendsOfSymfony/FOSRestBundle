@@ -170,7 +170,7 @@ class RestActionReader
         if ($annotation = $this->readRouteAnnotation($method)) {
             $annoRequirements = $annotation->getRequirements();
 
-            if (!isset($annoRequirements['_method']) || null === $annoRequirements['_method']) {
+            if (!isset($annoRequirements['_method'])) {
                 $annoRequirements['_method'] = $requirements['_method'];
             }
 
