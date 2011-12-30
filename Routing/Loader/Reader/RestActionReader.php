@@ -127,7 +127,7 @@ class RestActionReader
         }
 
         // if we can't get http-method and resources from method name - skip
-        if (!$httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method)) {
+        if (!($httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method))) {
             return;
         }
 
