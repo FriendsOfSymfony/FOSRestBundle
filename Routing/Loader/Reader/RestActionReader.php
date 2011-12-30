@@ -126,11 +126,6 @@ class RestActionReader
             return;
         }
 
-        // if method doesn't match regex - skip
-        if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
-            return;
-        }
-
         // if we can't get http-method and resources from method name - skip
         if (!$httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method)) {
             return;
