@@ -200,7 +200,7 @@ class RestActionReader
             return false;
         }
         // if method has NoRoute annotation - skip
-        if ($annotation = $this->readMethodAnnotation($method, 'NoRoute')) {
+        if ($this->readMethodAnnotation($method, 'NoRoute')) {
             return false;
         }
 
