@@ -116,7 +116,8 @@ class RestActionReader
         foreach ($this->parents as $parent) {
             if (empty($parent) || '/' === substr($parent, -1)) {
                 throw new \InvalidArgumentException(
-                    'All parent controllers must have ::getSINGULAR_NAME() action'
+                    "Every parent controller must have `get{SINGULAR}Action(\$id)` method\n".
+                    "where {SINGULAR} is a singular form of associated object"
                 );
             }
         }
