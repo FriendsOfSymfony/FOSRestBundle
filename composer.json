@@ -19,15 +19,17 @@
             "homepage": "https://github.com/friendsofsymfony/FOSRestBundle/contributors"
         }
     ],
+
     "require": {
         "php":                            ">=5.3.2",
-        "symfony/symfony":                ">=2.1.0-dev",
-        "doctrine/common":                ">=2.1.0",
+        "symfony/framework-bundle":       ">=2.1.0-dev",
         "sensio/framework-extra-bundle":  "*",
         "jms/serializer-bundle":          "*"
     },
+
     "autoload": {
         "psr-0": { "FOS\\RestBundle": "" }
     },
+
     "target-dir": "FOS/RestBundle"
 }
