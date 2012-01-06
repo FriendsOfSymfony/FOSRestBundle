@@ -138,9 +138,8 @@ constructor.
 As the purpose is to create a format-agnostic controller, data assigned to the ``View``
 instance should ideally be an object graph, though any data type is acceptable. Note that when rendering
 templating formats, the ``ViewHandler`` will wrap data types other than associative arrays in an
-associative array with the single key ``'data'``, which will become the variable name of the object in
-the respective template. If the view data is an instance of ``Symfony\Component\Form\FormInterface``,
-the key will be named ``'form'``.
+associative array with a single key (default  ``'data'``), which will become the variable name of the
+object in the respective template.
 
 There are also two specialized ``View`` classes for handling directs, one for redirecting
 to an URL called ``RedirectView`` and one to redirect to a route called ``RouteRedirectView``.
@@ -342,7 +341,20 @@ class UsersController
     }
 }
 ```
+If ``@View()`` is used, the template variable name used to render templating formats can be
+configured (default  ``'data'``):
 
+```php
+<?php
+
+/**
+ * @View(templateVar="users")
+ */
+public function getUsersAction()
+{
+    ...
+}
+```
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php
 
