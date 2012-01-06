@@ -139,8 +139,7 @@ As the purpose is to create a format-agnostic controller, data assigned to the `
 instance should ideally be an object graph, though any data type is acceptable. Note that when rendering
 templating formats, the ``ViewHandler`` will wrap data types other than associative arrays in an
 associative array with a single key (default  ``'data'``), which will become the variable name of the
-object in the respective template. If the view data is an instance of
-``Symfony\Component\Form\FormInterface``, the key will be named ``'form'``.
+object in the respective template.
 
 There are also two specialized ``View`` classes for handling directs, one for redirecting
 to an URL called ``RedirectView`` and one to redirect to a route called ``RouteRedirectView``.
