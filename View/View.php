@@ -44,6 +44,11 @@ class View
     /**
      * @var string
      */
+    private $templateVar;
+
+    /**
+     * @var string
+     */
     private $engine;
 
     /**
@@ -85,6 +90,7 @@ class View
         $this->data = $data;
         $this->statusCode = $statusCode;
         $this->headers = $headers;
+        $this->templateVar = 'data';
     }
 
     /**
@@ -153,6 +159,18 @@ class View
             throw new \InvalidArgumentException('The template should be a string or extend TemplateReference');
         }
         $this->template = $template;
+
+        return $this;
+    }
+
+    /**
+     * Sets template variable name to be used in templating formats
+     *
+     * @param string
+     */
+    public function setTemplateVar($templateVar)
+    {
+        $this->templateVar = $templateVar;
 
         return $this;
     }
@@ -249,6 +267,16 @@ class View
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    /**
+     * Get the template variable name.
+     *
+     * @param string
+     */
+    public function getTemplateVar()
+    {
+        return $this->templateVar;
     }
 
     /**

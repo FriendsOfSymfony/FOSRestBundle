@@ -20,6 +20,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class View extends Template
 {
     /**
+     * @var string The name of the template var for templating formats.
+     */
+    protected $templateVar;
+
+    /**
      * Returns the annotation alias name.
      *
      * @return string
@@ -28,5 +33,21 @@ class View extends Template
     public function getAliasName()
     {
         return 'view';
+    }
+
+    /**
+     * @param string $templateVar
+     */
+    public function setTemplateVar($templateVar)
+    {
+        $this->templateVar = $templateVar;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateVar()
+    {
+        return $this->templateVar;
     }
 }
