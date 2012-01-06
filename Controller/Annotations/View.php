@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class View extends Template
 {
     /**
-     * @var string The name of the template var for templating formats.
+     * @var string
      */
     protected $templateVar;
 
@@ -36,6 +36,8 @@ class View extends Template
     }
 
     /**
+     * Sets the template var name to be used for templating formats.
+     *
      * @param string $templateVar
      */
     public function setTemplateVar($templateVar)
@@ -44,6 +46,8 @@ class View extends Template
     }
 
     /**
+     * Returns the template var name to be used for templating formats.
+     *
      * @return string
      */
     public function getTemplateVar()
