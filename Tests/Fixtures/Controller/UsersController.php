@@ -11,8 +11,9 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller,
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpFoundation\Request;
 
 class UsersController extends Controller
 {
@@ -84,4 +85,14 @@ class UsersController extends Controller
 
     public function getFooBarsAction($foo)
     {} // [GET] /foos/{foo}/bars
+
+    // Parameter of type Request should be ignored
+    public function getUserVotesAction(Request $request, $slug)
+    {} // [GET] /users/{slug}/votes
+
+    public function getUserVoteAction(Request $request, $slug, $id)
+    {} // [GET] /users/{slug}/votes/{id}
+
+    public function getUserFoosAction($slug, Request $request)
+    {} // [GET] /users/{slug}/foos
 }
