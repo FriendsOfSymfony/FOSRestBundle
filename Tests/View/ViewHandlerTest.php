@@ -165,18 +165,18 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $viewHandler->setContainer($container);
 
-        $data = array('foo' => 'bar');
         if ($form) {
-            $form = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'isValid', 'getChildren'), array(), '', false);
-            $form
+            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'isValid', 'getChildren'), array(), '', false);
+            $data
                 ->expects($this->exactly($createViewCalls))
                 ->method('createView')
                 ->will($this->returnValue(array('bla' => 'toto')));
-            $form
+            $data
                 ->expects($this->any())
                 ->method('isValid')
                 ->will($this->returnValue($formIsValid));
-            $data['form'] = $form;
+        } else {
+            $data = array('foo' => 'bar');
         }
 
         $view = new View($data);
@@ -189,8 +189,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         return array(
             'not templating aware no form' => array('json', array('foo' => 'bar')),
             'templating aware no form' => array('html', array('foo' => 'bar')),
-            'templating aware and form' => array('html', array('foo' => 'bar', 'form' => array('bla' => 'toto')), 1, true, true),
-            'not templating aware and invalid form' => array('json', array('foo' => 'bar', 'form' => array(0 => 'error', 1 => 'error')), 0, false, true),
+            'templating aware and form' => array('html', array('data' => array('bla' => 'toto')), 1, true, true),
+            'not templating aware and invalid form' => array('json', array('data' => array(0 => 'error', 1 => 'error')), 0, false, true),
         );
     }
 
@@ -312,7 +312,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'assoc array does not change'   => array(array('foo' => 'bar'), array('foo' => 'bar')),
             'array is wrapped as data key'  => array(array('foo', 'bar'), array('data' => array('foo', 'bar'))),
             'object is wrapped as data key' => array($object, array('data' => $object)),
-            'form is wrapped as form key'   => array($form, array('form' => $formView))
+            'form is wrapped as form key'   => array($form, array('data' => $formView))
         );
     }
 }
