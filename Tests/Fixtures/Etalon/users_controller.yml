@@ -82,3 +82,18 @@ get_foo_bars:
   method:     GET
   pattern:    /foos/{foo}/bars.{_format}
   controller: ::getFooBarsAction
+
+get_user_votes:
+  method:     GET
+  pattern:    /users/{slug}/votes.{_format}
+  controller: ::getUserVotesAction
+
+get_user_vote:
+  method:     GET
+  pattern:    /users/{slug}/votes/{id}.{_format}
+  controller: ::getUserVoteAction
+
+get_user_foos:
+  method:     GET
+  pattern:    /users/{slug}/foos.{_format}
+  controller: ::getUserFoosAction
