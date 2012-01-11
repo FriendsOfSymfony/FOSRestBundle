@@ -310,7 +310,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         return array(
             'assoc array does not change'   => array(array('foo' => 'bar'), array('foo' => 'bar')),
-            'array is wrapped as data key'  => array(array('foo', 'bar'), array('data' => array('foo', 'bar'))),
+            'ordered array is wrapped as data key'  => array(array('foo', 'bar'), array('data' => 'foo')),
             'object is wrapped as data key' => array($object, array('data' => $object)),
             'form is wrapped as form key'   => array($form, array('data' => $formView))
         );

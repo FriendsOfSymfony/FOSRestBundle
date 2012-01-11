@@ -71,17 +71,18 @@ class ViewResponseListener extends TemplateListener
         $request = $event->getRequest();
 
         $view = $event->getControllerResult();
+        $configuration = $request->attributes->get('_view');
         if (!$view instanceOf View) {
-            $configuration = $request->attributes->get('_view');
 
             if (!$configuration && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
                 return;
             }
 
             $view = new View($view);
-            if ($configuration && $configuration->getTemplateVar()) {
-                $view->setTemplateVar($configuration->getTemplateVar());
-            }
+        }
+
+        if ($configuration && $configuration->getTemplateVar()) {
+            $view->setTemplateVar($configuration->getTemplateVar());
         }
 
         if (null === $view->getFormat()) {
