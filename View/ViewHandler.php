@@ -266,7 +266,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $data = $view->getData();
 
         if (!is_array($data) || array_key_exists(0, $data)) {
-            if (is_array($data)) {
+            if (array_key_exists(0, $data)) {
                 $data = reset($data);
             }
 
