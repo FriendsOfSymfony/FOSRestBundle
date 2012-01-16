@@ -264,16 +264,21 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     public function prepareTemplateParameters(View $view)
     {
         $data = $view->getData();
+        if (empty($data)) {
+            return array($view->getTemplateVar() => $data);
+        }
 
-        if (!is_array($data) || array_key_exists(0, $data)) {
-            if (array_key_exists(0, $data)) {
-                $data = reset($data);
+        if (!is_array($data)) {
+            $data = array($view->getTemplateVar() => $data);
+        }
+
+        foreach (array_keys($data) as $key) {
+            if ($data[$key] instanceof FormInterface) {
+                $data[$key] = $data[$key]->createView();
             }
+        }
 
-            if ($data instanceof FormInterface) {
-                $data = $data->createView();
-            }
-
+        if (is_numeric($key)) {
             $data = array($view->getTemplateVar() => $data);
         }
 
