@@ -1,7 +1,9 @@
 RestBundle
 ==========
 
-This bundle provides various tools to rapidly develop RESTful API's & applications with Symfony2.
+This bundle provides various tools to rapidly develop RESTful API's & applications with Symfony2
+This version is compatible with Symfony2 master version, aka 2.1 and later. Use the 2.0 branch
+when using 2.0.x versions of Symfony2.
 
 It is currently under development so key pieces that are planned are still missing.
 See here for more details on what is planned:
