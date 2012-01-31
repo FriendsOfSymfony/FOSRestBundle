@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="fos_rest.request.query_fetcher.class">FOS\RestBundle\Request\QueryFetcher</parameter>
+        <parameter key="fos_rest.request.query_fetcher.reader.query_param.class">FOS\RestBundle\Request\RestQueryParamReader</parameter>
+
+    </parameters>
+
+    <services>
+
+        <service id="fos_rest.request.query_fetcher" class="%fos_rest.request.query_fetcher.class%" scope="request">
+            <argument type="service" id="request" />
+            <argument type="service" id="fos_rest.request.query_fetcher.reader.query_param" />
+        </service>
+
+        <service id="fos_rest.request.query_fetcher.reader.query_param" class="%fos_rest.request.query_fetcher.reader.query_param.class%">
+            <argument type="service" id="annotation_reader" />
+        </service>
+
+    </services>
+
+</container>
