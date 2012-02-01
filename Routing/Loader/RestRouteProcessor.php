@@ -31,6 +31,7 @@ class RestRouteProcessor
      * @param   string            $prefix     Current routes prefix
      * @param   string            $namePrefix Routes names prefix
      * @param   string            $type       The resource type
+     * @param   string            $currentDir Current directory of the loader
      *
      * @return  RouteCollection     A RouteCollection instance
      */
@@ -40,12 +41,13 @@ class RestRouteProcessor
         array $parents = array(),
         $prefix = null,
         $namePrefix = null,
-        $type = null)
+        $type = null,
+        $currentDir = null)
     {
         $loader = $loader->resolve($resource, $type);
 
-        if ($loader instanceof FileLoader && null !== $this->currentDir) {
-            $resource = $this->getAbsolutePath($resource, $this->currentDir);
+        if ($loader instanceof FileLoader && null !== $currentDir) {
+            $resource = $this->getAbsolutePath($resource, $currentDir);
         } elseif ($loader instanceof RestRouteLoader) {
             $loader->setParents($parents);
             $loader->setPrefix($prefix);
