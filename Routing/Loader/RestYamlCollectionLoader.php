@@ -29,14 +29,12 @@ class RestYamlCollectionLoader extends YamlFileLoader
 {
     protected $collectionParents = array();
 
-    private $currentDir;
-    
     private $processor;
 
     public function __construct(FileLocatorInterface $locator, RestRouteProcessor $processor)
     {
         parent::__construct($locator);
-        
+
         $this->processor = $processor;
     }
 
@@ -62,13 +60,12 @@ class RestYamlCollectionLoader extends YamlFileLoader
         // process routes and imports
         foreach ($config as $name => $config) {
             if (isset($config['resource'])) {
-                $this->currentDir = dirname($path);
-
                 $resource   = $config['resource'];
                 $prefix     = isset($config['prefix'])      ? $config['prefix']         : null;
                 $namePrefix = isset($config['name_prefix']) ? $config['name_prefix']    : null;
                 $parent     = isset($config['parent'])      ? $config['parent']         : null;
                 $type       = isset($config['type'])        ? $config['type']           : null;
+                $currentDir = dirname($path);
 
                 $parents = array();
                 if (!empty($parent)) {
@@ -79,7 +76,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                     $parents = $this->collectionParents[$parent];
                 }
 
-                $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type);
+                $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type, $currentDir);
 
                 if ($imported instanceof RestRouteCollection) {
                     $parents[]  = ($prefix ? $prefix . '/' : '') . $imported->getSingularName();
