@@ -7,7 +7,7 @@
     <parameters>
 
         <parameter key="fos_rest.request.query_fetcher.class">FOS\RestBundle\Request\QueryFetcher</parameter>
-        <parameter key="fos_rest.request.query_fetcher.reader.query_param.class">FOS\RestBundle\Request\RestQueryParamReader</parameter>
+        <parameter key="fos_rest.request.query_fetcher.reader.query_param.class">FOS\RestBundle\Request\QueryParamReader</parameter>
 
     </parameters>
 

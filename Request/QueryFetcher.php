@@ -36,11 +36,10 @@ class QueryFetcher
      * @param Request              $request          Active request
      * @param RestQueryParamReader $queryParamReader Query param reader
      */
-    public function __construct(Request $request, RestQueryParamReader $queryParamReader)
+    public function __construct(Request $request, QueryParamReader $queryParamReader)
     {
         if (null === $request->attributes->get('_controller')) {
-            // todo: better exception
-            throw new \Exception(sprintf("No @QueryParam configuration for parameter '%s'", $name));
+            throw new \InvalidArgumentException("No _controller for request.");
         }
 
         // todo: for now Controller::Method notation is assumed
@@ -61,11 +60,10 @@ class QueryFetcher
     public function getParameter($name, $default)
     {
         if (!isset($this->params[$name])) {
-            // todo: better exception
-            throw new \Exception(sprintf("No @QueryParam configuration for parameter '%s'", $name));
+            throw new \InvalidArgumentException(sprintf("No @QueryParam configuration for parameter '%s'.", $name));
         }
 
-        $param = $this->request->get($name, $default);
+        $param = $this->request->query->get($name, $default);
 
         // Set default if the requirements do not match
         if ($param !== $default && !preg_match('#^' . $this->params[$name]->requires . '#xs', $param)) {

@@ -10,14 +10,16 @@
  */
 
 namespace FOS\RestBundle\Request;
+
 use Doctrine\Common\Annotations\Reader;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 
 /**
  * Class loading @QueryParameter annotations from methods.
  *
  * @author Alexander <iam.asm89@gmail.com>
  */
-class RestQueryParamReader
+class QueryParamReader
 {
     private $annotationReader;
 
@@ -42,14 +44,14 @@ class RestQueryParamReader
     public function read(\ReflectionClass $reflection, $method)
     {
         if (!$reflection->hasMethod($method)) {
-            throw new \Exception(sprintf("Class '%s' has no method '%s' method.", $reflection->getName(), $method));
+            throw new \InvalidArgumentException(sprintf("Class '%s' has no method '%s' method.", $reflection->getName(), $method));
         }
 
         $annotations = $this->annotationReader->getMethodAnnotations($reflection->getMethod($method));
 
         $params = array();
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof \FOS\RestBundle\Controller\Annotations\QueryParam) {
+            if ($annotation instanceof QueryParam) {
                 $params[$annotation->name] = $annotation;
             }
         }
