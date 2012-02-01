@@ -30,14 +30,12 @@ class RestXmlCollectionLoader extends XmlFileLoader
 {
     protected $collectionParents = array();
 
-    private $currentDir;
-    
     private $processor;
 
     public function __construct(FileLocatorInterface $locator, RestRouteProcessor $processor)
     {
         parent::__construct($locator);
-        
+
         $this->processor = $processor;
     }
 
@@ -51,14 +49,13 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $this->parseRoute($collection, $node, $path);
                 break;
             case 'import':
-                $this->currentDir = dirname($path);
-
                 $name       = (string) $node->getAttribute('id');
                 $resource   = (string) $node->getAttribute('resource');
                 $prefix     = (string) $node->getAttribute('prefix');
                 $namePrefix = (string) $node->getAttribute('name-prefix');
                 $parent     = (string) $node->getAttribute('parent');
                 $type       = (string) $node->getAttribute('type');
+                $currentDir = dirname($path);
 
                 $parents = array();
                 if (!empty($parent)) {
@@ -69,7 +66,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                     $parents = $this->collectionParents[$parent];
                 }
 
-                $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type);
+                $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type, $currentDir);
 
                 if (!empty($name) && $imported instanceof RestRouteCollection) {
                     $parents[]  = (!empty($prefix) ? $prefix . '/' : '') . $imported->getSingularName();
