@@ -532,6 +532,18 @@ users:
     resource: Acme\HelloBundle\Controller\UsersController
 ```
 
+```xml
+# app/config/routing.xml
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://friendsofsymfony.github.com/schema/rest"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://friendsofsymfony.github.com/schema/rest https://raw.github.com/FriendsOfSymfony/FOSRestBundle/master/Resources/config/schema/routing/rest_routing-1.0.xsd">
+
+    <import type="rest" resource="Acme\HelloBundle\Controller\UsersController" />
+</routes>
+```
+
 This will tell Symfony2 to automatically generate proper REST routes from your ``UsersController`` action names.
 Notice ``type: rest`` option. It's required so that the RestBundle can find which routes are supported.
 
@@ -669,12 +681,25 @@ In this case, you must first specify resource relations in special rest YML or X
 # src/Acme/HelloBundle/Resources/config/users_routes.yml
 users:
     type:     rest
-    resource: "@AcmeHello\Controller\UsersController"
+    resource: "@AcmeHelloBundle\Controller\UsersController"
 
 comments:
     type:     rest
     parent:   users
-    resource: "@AcmeHello\Controller\CommentsController"
+    resource: "@AcmeHelloBundle\Controller\CommentsController"
+```
+
+```xml
+# src/Acme/HelloBundle/Resources/config/users_routes.xml
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://friendsofsymfony.github.com/schema/rest"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://friendsofsymfony.github.com/schema/rest https://raw.github.com/FriendsOfSymfony/FOSRestBundle/master/Resources/config/schema/routing/rest_routing-1.0.xsd">
+
+    <import type="rest" resource="@AcmeHelloBundle\Controller\UsersController" />
+    <import type="rest" parent="users" resource="@AcmeHelloBundle\Controller\CommentsController" />
+</routes>
 ```
 
 Notice ``parent: users`` option in the second case. This option specifies that the comments resource
@@ -738,7 +763,7 @@ Last step is mapping of your collection routes into the application ``routing.ym
 # app/config/routing.yml
 users:
     type:     rest
-    resource: "@AcmeHello/Resources/config/users_routes.yml"
+    resource: "@AcmeHelloBundle/Resources/config/users_routes.yml"
 ```
 
 That's all. Note that it's important to use the ``type: rest`` param when including your application's
@@ -766,7 +791,7 @@ annotations) parameter:
 # src/Acme/HelloBundle/Resources/config/users_routes.yml
 comments:
     type:         rest
-    resource:     "@AcmeHello\Controller\CommentsController"
+    resource:     "@AcmeHelloBundle\Controller\CommentsController"
     name_prefix:  api_
 ```
 
