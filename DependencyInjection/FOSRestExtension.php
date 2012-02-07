@@ -36,6 +36,7 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
         $loader->load('util.xml');
+        $loader->load('request.xml');
 
         $formats = array();
         foreach ($config['view']['formats'] as $format => $enabled) {
