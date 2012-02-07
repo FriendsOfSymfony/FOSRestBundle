@@ -20,6 +20,6 @@ namespace FOS\RestBundle\Controller\Annotations;
 class QueryParam
 {
     public $name;
-    public $requires;
+    public $requirements;
     public $description;
 }

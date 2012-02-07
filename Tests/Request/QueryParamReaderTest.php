@@ -34,13 +34,13 @@ class QueryParamReaderTest extends \PHPUnit_Framework_TestCase
         $annotations = array();
         $foo = new QueryParam;
         $foo->name = 'foo';
-        $foo->requires = '\d+';
+        $foo->requirements = '\d+';
         $foo->description = 'The foo';
         $annotations[] = $foo;
 
         $bar = new QueryParam;
         $bar->name = 'bar';
-        $bar->requires = '\d+';
+        $bar->requirements = '\d+';
         $bar->description = 'The bar';
         $annotations[] = $bar;
 

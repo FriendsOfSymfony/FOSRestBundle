@@ -38,12 +38,12 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations = array();
         $annotations['foo'] = new QueryParam;
         $annotations['foo']->name = 'foo';
-        $annotations['foo']->requires = '\d+';
+        $annotations['foo']->requirements = '\d+';
         $annotations['foo']->description = 'The foo';
 
         $annotations['bar'] = new QueryParam;
         $annotations['bar']->name = 'bar';
-        $annotations['bar']->requires = '\d+';
+        $annotations['bar']->requirements = '\d+';
         $annotations['bar']->description = 'The bar';
 
         $this->queryParamReader

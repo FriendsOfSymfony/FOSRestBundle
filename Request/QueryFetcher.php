@@ -66,7 +66,7 @@ class QueryFetcher
         $param = $this->request->query->get($name, $default);
 
         // Set default if the requirements do not match
-        if ($param !== $default && !preg_match('#^' . $this->params[$name]->requires . '#xs', $param)) {
+        if ($param !== $default && !preg_match('#^' . $this->params[$name]->requirements . '#xs', $param)) {
             $param = $default;
         }
 
