@@ -56,6 +56,29 @@ class QueryFetcher
         $this->request = $request;
     }
 
+    private function initParams()
+    {
+        $_controller = $this->request->attributes->get('_controller');
+
+        if (null === $_controller) {
+            throw new \InvalidArgumentException('No _controller for request.');
+        }
+
+        if (false !== strpos($_controller, '::')) {
+            list($class, $method) = explode('::', $_controller);
+        } else {
+            list($controller, $method) = explode(':', $_controller);
+            if (!$this->container->has($controller)) {
+                throw new \InvalidArgumentException('Controller service not available: '.$controller);
+            }
+
+            $controller = $this->container->get($controller);
+            $class = get_class($controller);
+        }
+
+        $this->params = $this->queryParamReader->read(new \ReflectionClass($class), $method);
+    }
+
     /**
      * Get a validated query parameter.
      *
@@ -66,24 +89,7 @@ class QueryFetcher
     public function getParameter($name)
     {
         if (!isset($this->params)) {
-            $_controller = $this->request->attributes->get('_controller');
-
-            if (null === $_controller) {
-                throw new \InvalidArgumentException('No _controller for request.');
-            }
-
-            if (false !== strpos($_controller, '::')) {
-                list($class, $method) = explode('::', $this->request->attributes->get('_controller'));
-            } else {
-                list($controller, $method) = explode(':', $_controller);
-                if (!$this->container->has($controller)) {
-                    throw new \InvalidArgumentException('Controller service for request not available: '.$controller);
-                }
-                $controller = $this->container->get($controller);
-                $class = get_class($controller);
-            }
-
-            $this->params = $this->queryParamReader->read(new \ReflectionClass($class), $method);
+            $this->initParams();
         }
 
         if (!isset($this->params[$name])) {
