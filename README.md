@@ -35,6 +35,7 @@ Add the following lines in your deps file:
     [FOSRestBundle]
         git=git://github.com/FriendsOfSymfony/FOSRestBundle.git
         target=bundles/FOS/RestBundle
+        version=origin/2.0
 
 You will also need to install the 
 [JMSSerializerBundle](https://github.com/schmittjoh/JMSSerializerBundle). This bundle is used 
