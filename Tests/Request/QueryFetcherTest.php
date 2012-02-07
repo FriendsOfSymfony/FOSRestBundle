@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class QueryFetcherTest extends \PHPUnit_Framework_TestCase
 {
+    private $container;
     private $queryParamReader;
 
     /**
@@ -31,6 +32,10 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
+        $this->container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\ContainerInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->queryParamReader = $this->getMockBuilder('\FOS\RestBundle\Request\QueryParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -39,11 +44,13 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['foo'] = new QueryParam;
         $annotations['foo']->name = 'foo';
         $annotations['foo']->requirements = '\d+';
+        $annotations['foo']->default = '1';
         $annotations['foo']->description = 'The foo';
 
         $annotations['bar'] = new QueryParam;
         $annotations['bar']->name = 'bar';
         $annotations['bar']->requirements = '\d+';
+        $annotations['bar']->default = '1';
         $annotations['bar']->description = 'The bar';
 
         $this->queryParamReader
@@ -67,7 +74,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request($query, array(), $attributes);
 
-        return new QueryFetcher($request, $this->queryParamReader);
+        return new QueryFetcher($this->container, $this->queryParamReader, $request);
     }
 
     /**
@@ -80,7 +87,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidatesConfiguredQueryParam($expected, $query)
     {
-        $this->assertEquals($expected, $this->getQueryFetcher($query)->getParameter('foo', '1'));
+        $this->assertEquals($expected, $this->getQueryFetcher($query)->getParameter('foo'));
     }
 
     /**
@@ -103,7 +110,8 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnRequestWithoutControllerAttribute()
     {
-        new QueryFetcher(new Request(), $this->queryParamReader);
+        $queryFetcher = new QueryFetcher($this->container, $this->queryParamReader, new Request());
+        $queryFetcher->getParameter('qux', '42');
     }
 
     /**
