@@ -36,6 +36,10 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->parser = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->queryParamReader = $this->getMockBuilder('\FOS\RestBundle\Request\QueryParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -74,7 +78,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request($query, array(), $attributes);
 
-        return new QueryFetcher($this->container, $this->queryParamReader, $request);
+        return new QueryFetcher($this->container, $this->parser, $this->queryParamReader, $request);
     }
 
     /**
@@ -105,12 +109,12 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage No _controller for request.
+     * @expectedException        LogicException
+     * @expectedExceptionMessage Unable to parse the controller name ""
      */
     public function testExceptionOnRequestWithoutControllerAttribute()
     {
-        $queryFetcher = new QueryFetcher($this->container, $this->queryParamReader, new Request());
+        $queryFetcher = new QueryFetcher($this->container, $this->parser, $this->queryParamReader, new Request());
         $queryFetcher->getParameter('qux', '42');
     }
 

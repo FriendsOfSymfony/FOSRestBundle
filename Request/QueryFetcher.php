@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Request;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 
 /**
  * Helper to validate query parameters from the active request.
@@ -25,6 +26,11 @@ class QueryFetcher
      * @var ContainerInterface
      */
     private $container;
+
+    /**
+     * @var ControllerNameParser
+     */
+    private $parser;
 
     /**
      * @var QueryParamReader
@@ -45,35 +51,43 @@ class QueryFetcher
     /**
      * Initializes fetcher.
      *
-     * @param ContainerInterface $container       Container
-     * @param Request           $request          Active request
-     * @param QueryParamReader  $queryParamReader Query param reader
+     * @param ContainerInterface    $container        Container
+     * @param ControllerNameParser  $parser           A ControllerNameParser instance
+     * @param Request               $request          Active request
+     * @param QueryParamReader      $queryParamReader Query param reader
      */
-    public function __construct(ContainerInterface $container, QueryParamReader $queryParamReader, Request $request)
+    public function __construct(ContainerInterface $container, ControllerNameParser $parser, QueryParamReader $queryParamReader, Request $request)
     {
         $this->container = $container;
+        $this->parser = $parser;
         $this->queryParamReader = $queryParamReader;
         $this->request = $request;
     }
 
     private function initParams()
     {
-        $_controller = $this->request->attributes->get('_controller');
+        $controller = $this->request->attributes->get('_controller');
 
-        if (null === $_controller) {
-            throw new \InvalidArgumentException('No _controller for request.');
+        if (false === strpos($controller, '::')) {
+            $count = substr_count($controller, ':');
+            if (2 == $count) {
+                // controller in the a:b:c notation then
+                $controller = $this->parser->parse($controller);
+            } elseif (1 == $count) {
+                // controller in the service:method notation
+                list($service, $method) = explode(':', $controller, 2);
+                $class = get_class($this->container->get($service));
+            } else {
+                throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
+            }
         }
 
-        if (false !== strpos($_controller, '::')) {
-            list($class, $method) = explode('::', $_controller);
-        } else {
-            list($controller, $method) = explode(':', $_controller);
-            if (!$this->container->has($controller)) {
-                throw new \InvalidArgumentException('Controller service not available: '.$controller);
-            }
+        if (empty($class)) {
+            list($class, $method) = explode('::', $controller, 2);
+        }
 
-            $controller = $this->container->get($controller);
-            $class = get_class($controller);
+        if (!class_exists($class)) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
         $this->params = $this->queryParamReader->read(new \ReflectionClass($class), $method);
