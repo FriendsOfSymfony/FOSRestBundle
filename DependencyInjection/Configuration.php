@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->booleanNode('query_fetcher_listener')->defaultFalse()->end()
                 ->arrayNode('routing_loader')
                     ->addDefaultsIfNotSet()
                     ->children()

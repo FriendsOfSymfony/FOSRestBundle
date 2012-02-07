@@ -239,12 +239,17 @@ class RestActionReader
      */
     private function getMethodArguments(\ReflectionMethod $method)
     {
-        // ignore arguments that are or extend from Symfony\Component\HttpFoundation\Request
+        // ignore arguments that are or extend from:
+        // * Symfony\Component\HttpFoundation\Request
+        // * FOS\RestBundle\Request\QueryFetcher
         $arguments = array();
         foreach ($method->getParameters() as $argument) {
             if ($argumentClass = $argument->getClass()) {
                 if ($argumentClass->getName() === 'Symfony\Component\HttpFoundation\Request'
-                 || $argumentClass->isSubclassOf('Symfony\Component\HttpFoundation\Request')) {
+                    || $argumentClass->isSubclassOf('Symfony\Component\HttpFoundation\Request')
+                    || $argumentClass->getName() === 'FOS\RestBundle\Request\QueryFetcher'
+                    || $argumentClass->isSubclassOf('FOS\RestBundle\Request\QueryFetcher')
+            ) {
                      continue;
                 }
             }

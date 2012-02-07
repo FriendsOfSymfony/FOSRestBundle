@@ -113,6 +113,10 @@ class FOSRestExtension extends Extension
         } else {
             $container->setParameter($this->getAlias().'.mime_types', array());
         }
+
+        if (!empty($config['query_fetcher_listener'])) {
+            $loader->load('query_fetcher_listener.xml');
+        }
     }
 
     /**
