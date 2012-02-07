@@ -21,5 +21,6 @@ class QueryParam
 {
     public $name;
     public $requirements;
+    public $default;
     public $description;
 }

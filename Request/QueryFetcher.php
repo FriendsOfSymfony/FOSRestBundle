@@ -63,11 +63,13 @@ class QueryFetcher
             throw new \InvalidArgumentException(sprintf("No @QueryParam configuration for parameter '%s'.", $name));
         }
 
-        $param = $this->request->query->get($name, $default);
+        $param = $this->request->query->get($name, $this->params[$name]->default);
 
         // Set default if the requirements do not match
-        if ($param !== $default && !preg_match('#^' . $this->params[$name]->requirements . '#xs', $param)) {
-            $param = $default;
+        if ($param !== $this->params[$name]->default
+            && !preg_match('/^' . $this->params[$name]->requirements . '/xs', $param)
+        ) {
+            $param = $this->params[$name]->default;
         }
 
         return $param;
