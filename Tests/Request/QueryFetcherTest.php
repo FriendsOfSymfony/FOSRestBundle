@@ -117,10 +117,21 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      * @expectedException        LogicException
      * @expectedExceptionMessage Controller and method needs to be set via setController
      */
-    public function testExceptionOnNonController()
+    public function testExceptionOnNoController()
     {
         $queryFetcher = $this->getQueryFetcher();
         $queryFetcher->setController(array());
+        $queryFetcher->getParameter('qux', '42');
+    }
+
+    /**
+     * @expectedException        LogicException
+     * @expectedExceptionMessage Controller needs to be set as a class instance (closures/functions are not supported)
+     */
+    public function testExceptionOnNonController()
+    {
+        $queryFetcher = $this->getQueryFetcher();
+        $queryFetcher->setController(array('foo', 'bar'));
         $queryFetcher->getParameter('qux', '42');
     }
 
