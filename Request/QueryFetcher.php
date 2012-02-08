@@ -59,11 +59,11 @@ class QueryFetcher
 
     private function initParams()
     {
-        if (!is_array($this->controller) || empty($this->controller[0]) || empty($this->controller[1])) {
+        if (empty($this->controller)) {
             throw new \InvalidArgumentException('Controller and method needs to be set via setController');
         }
 
-        if (isset($this->controller[0]) && !is_object($this->controller[0])) {
+        if (!is_array($this->controller) || empty($this->controller[0]) || !is_object($this->controller[0])) {
             throw new \InvalidArgumentException('Controller needs to be set as a class instance (closures/functions are not supported)');
         }
 
