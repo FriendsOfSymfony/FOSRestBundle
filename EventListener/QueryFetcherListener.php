@@ -11,12 +11,15 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent,
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
     Symfony\Component\HttpKernel\HttpKernelInterface,
     Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * This listener handles setting the query fetcher request attribute
+ * This listener handles various setup tasks related to the query fetcher
+ *
+ * Setting the controller callable on the query fetcher
+ * Setting the query fetcher as a request attribute
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
@@ -38,13 +41,15 @@ class QueryFetcherListener
     }
 
     /**
-     * Core request handler
+     * Core controller handler
      *
-     * @param   GetResponseEvent   $event    The event
+     * @param   FilterControllerEvent   $event    The event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
-        $request = $event->getRequest();
-        $request->attributes->set('queryFetcher', $this->container->get('fos_rest.request.query_fetcher'));
+        $queryFetcher = $this->container->get('fos_rest.request.query_fetcher');
+
+        $queryFetcher->setController($event->getController());
+        $event->getRequest()->attributes->set('queryFetcher', $queryFetcher);
     }
 }

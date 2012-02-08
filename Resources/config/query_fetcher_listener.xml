@@ -4,10 +4,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+
+        <parameter key="fos_rest.query_fetch_listener.class">FOS\RestBundle\EventListener\QueryFetcherListener</parameter>
+
+    </parameters>
+
     <services>
 
-        <service id="fos_rest.query_fetch_listener" class="FOS\RestBundle\EventListener\QueryFetcherListener">
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="200"/>
+        <service id="fos_rest.query_fetch_listener" class="%fos_rest.query_fetch_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
             <argument type="service" id="service_container"/>
         </service>
 

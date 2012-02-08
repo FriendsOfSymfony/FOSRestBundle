@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class QueryFetcherTest extends \PHPUnit_Framework_TestCase
 {
-    private $container;
+    private $controller;
     private $queryParamReader;
 
     /**
@@ -32,13 +32,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $this->container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\ContainerInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->parser = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->controller = array(new \stdClass(), 'indexAction');
 
         $this->queryParamReader = $this->getMockBuilder('\FOS\RestBundle\Request\QueryParamReader')
             ->disableOriginalConstructor()
@@ -61,7 +55,6 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('read')
             ->will($this->returnValue($annotations));
-
     }
 
     /**
@@ -78,7 +71,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
 
         $request = new Request($query, array(), $attributes);
 
-        return new QueryFetcher($this->container, $this->parser, $this->queryParamReader, $request);
+        return new QueryFetcher($this->queryParamReader, $request);
     }
 
     /**
@@ -91,7 +84,9 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidatesConfiguredQueryParam($expected, $query)
     {
-        $this->assertEquals($expected, $this->getQueryFetcher($query)->getParameter('foo'));
+        $queryFetcher = $this->getQueryFetcher($query);
+        $queryFetcher->setController($this->controller);
+        $this->assertEquals($expected, $queryFetcher->getParameter('foo'));
     }
 
     /**
@@ -110,11 +105,33 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        LogicException
-     * @expectedExceptionMessage Unable to parse the controller name ""
+     * @expectedExceptionMessage Controller and method needs to be set via setController
      */
-    public function testExceptionOnRequestWithoutControllerAttribute()
+    public function testExceptionOnRequestWithoutController()
     {
-        $queryFetcher = new QueryFetcher($this->container, $this->parser, $this->queryParamReader, new Request());
+        $queryFetcher = new QueryFetcher($this->queryParamReader, new Request());
+        $queryFetcher->getParameter('qux', '42');
+    }
+
+    /**
+     * @expectedException        LogicException
+     * @expectedExceptionMessage Controller and method needs to be set via setController
+     */
+    public function testExceptionOnNoController()
+    {
+        $queryFetcher = $this->getQueryFetcher();
+        $queryFetcher->setController(array());
+        $queryFetcher->getParameter('qux', '42');
+    }
+
+    /**
+     * @expectedException        LogicException
+     * @expectedExceptionMessage Controller needs to be set as a class instance (closures/functions are not supported)
+     */
+    public function testExceptionOnNonController()
+    {
+        $queryFetcher = $this->getQueryFetcher();
+        $queryFetcher->setController(array('foo', 'bar'));
         $queryFetcher->getParameter('qux', '42');
     }
 
@@ -124,6 +141,8 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnNonConfiguredQueryParameter()
     {
-        $this->getQueryFetcher()->getParameter('qux', '42');
+        $queryFetcher = $this->getQueryFetcher();
+        $queryFetcher->setController($this->controller);
+        $queryFetcher->getParameter('qux', '42');
     }
 }

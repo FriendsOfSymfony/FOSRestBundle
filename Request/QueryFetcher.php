@@ -11,9 +11,7 @@
 
 namespace FOS\RestBundle\Request;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 
 /**
  * Helper to validate query parameters from the active request.
@@ -22,16 +20,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
  */
 class QueryFetcher
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @var ControllerNameParser
-     */
-    private $parser;
-
     /**
      * @var QueryParamReader
      */
@@ -47,50 +35,39 @@ class QueryFetcher
      */
     private $params;
 
+    /**
+     * @var callable
+     */
+    private $controller;
 
     /**
      * Initializes fetcher.
      *
-     * @param ContainerInterface    $container        Container
-     * @param ControllerNameParser  $parser           A ControllerNameParser instance
-     * @param Request               $request          Active request
      * @param QueryParamReader      $queryParamReader Query param reader
+     * @param Request               $request          Active request
      */
-    public function __construct(ContainerInterface $container, ControllerNameParser $parser, QueryParamReader $queryParamReader, Request $request)
+    public function __construct(QueryParamReader $queryParamReader, Request $request)
     {
-        $this->container = $container;
-        $this->parser = $parser;
         $this->queryParamReader = $queryParamReader;
         $this->request = $request;
     }
 
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+    }
+
     private function initParams()
     {
-        $controller = $this->request->attributes->get('_controller');
-
-        if (false === strpos($controller, '::')) {
-            $count = substr_count($controller, ':');
-            if (2 == $count) {
-                // controller in the a:b:c notation then
-                $controller = $this->parser->parse($controller);
-            } elseif (1 == $count) {
-                // controller in the service:method notation
-                list($service, $method) = explode(':', $controller, 2);
-                $class = get_class($this->container->get($service));
-            } else {
-                throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
-            }
+        if (!is_array($this->controller) || empty($this->controller[0]) || empty($this->controller[1])) {
+            throw new \InvalidArgumentException('Controller and method needs to be set via setController');
         }
 
-        if (empty($class)) {
-            list($class, $method) = explode('::', $controller, 2);
+        if (isset($this->controller[0]) && !is_object($this->controller[0])) {
+            throw new \InvalidArgumentException('Controller needs to be set as a class instance (closures/functions are not supported)');
         }
 
-        if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
-        }
-
-        $this->params = $this->queryParamReader->read(new \ReflectionClass($class), $method);
+        $this->params = $this->queryParamReader->read(new \ReflectionClass($this->controller[0]), $this->controller[1]);
     }
 
     /**
