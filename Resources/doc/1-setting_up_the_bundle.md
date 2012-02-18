@@ -21,6 +21,7 @@ Add the following lines in your `deps` file:
 [FOSRestBundle]
     git=git://github.com/FriendsOfSymfony/FOSRestBundle.git
     target=bundles/FOS/RestBundle
+    version=origin/0.6
 ```
 
 Now, run the vendors script to download the bundle:

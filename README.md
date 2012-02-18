@@ -1,8 +1,8 @@
 FOSRestBundle
 =============
 
-> Note: This branch is compatible with Symfony2 master (2.1.x).
-> For Symfony2 2.0.x compatibility use the 2.0 branch.
+> Note: This branch is compatible with Symfony2 2.0.x.
+> For Symfony2 2.1.x compatibility use the master branch.
 
 This bundle provides various tools to rapidly develop RESTful API's &
 applications with Symfony2. Features include:
@@ -12,7 +12,7 @@ applications with Symfony2. Features include:
 - RESTful decoding of HTTP request body and Accept headers
 - Exception controller for sending appropriate HTTP status codes
 
-[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=master)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle)
+[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=0.6)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle)
 
 Documentation
 -------------
