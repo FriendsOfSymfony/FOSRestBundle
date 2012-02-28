@@ -1,6 +1,6 @@
 Step 1: Setting up the bundle
 =============================
-### A) Download FOSCommentBundle
+### A) Download FOSRestBundle
 
 **Note:**
 
