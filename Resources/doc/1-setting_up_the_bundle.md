@@ -18,6 +18,10 @@ method is the standard Symfony2 method.
 Add the following lines in your `deps` file:
 
 ```
+[FOSRest]
+    git=git://github.com/FriendsOfSymfony/FOSRest.git
+    target=fos/FOS/RestBundle
+
 [FOSRestBundle]
     git=git://github.com/FriendsOfSymfony/FOSRestBundle.git
     target=bundles/FOS/RestBundle
@@ -35,6 +39,7 @@ If you prefer instead to use git submodules, then run the following:
 
 ``` bash
 $ git submodule add git://github.com/FriendsOfSymfony/FOSRestBundle.git vendor/bundles/FOS/RestBundle
+$ git submodule add git://github.com/FriendsOfSymfony/FOSRest.git vendor/fos/FOS/Rest
 $ git submodule update --init
 ```
 
@@ -48,7 +53,7 @@ Add the `FOS` namespace to your autoloader:
 
 $loader->registerNamespaces(array(
     // ...
-    'FOS' => __DIR__.'/../vendor/bundles',
+    'FOS' => array(__DIR__.'/../vendor/bundles', __DIR__.'/../vendor/fos'),
 ));
 ```
 
