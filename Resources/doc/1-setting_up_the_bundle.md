@@ -20,7 +20,7 @@ Add the following lines in your `deps` file:
 ```
 [FOSRest]
     git=git://github.com/FriendsOfSymfony/FOSRest.git
-    target=fos/FOS/RestBundle
+    target=fos/FOS/Rest
 
 [FOSRestBundle]
     git=git://github.com/FriendsOfSymfony/FOSRestBundle.git
