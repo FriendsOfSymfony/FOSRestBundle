@@ -4,7 +4,7 @@ namespace FOS\RestBundle\Examples;
 
 use FOS\RestBundle\View\View,
     FOS\RestBundle\View\ViewHandler,
-    FOS\RestBundle\Response\Codes;
+    FOS\Rest\Util\Codes;
 
 use Symfony\Bridge\Monolog\Logger,
     Symfony\Component\HttpFoundation\Request,

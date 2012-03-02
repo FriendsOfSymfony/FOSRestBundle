@@ -15,7 +15,7 @@ use FOS\RestBundle\View\View,
     FOS\RestBundle\View\RedirectView,
     FOS\RestBundle\View\RouteRedirectView,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    FOS\RestBundle\Response\Codes,
+    FOS\Rest\Util\Codes,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
 

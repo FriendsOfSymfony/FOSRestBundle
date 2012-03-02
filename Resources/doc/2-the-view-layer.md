@@ -70,7 +70,7 @@ formats if needed.
 
 Finally the HTTP response status code for failed validation defaults to
 ``400``. Note when changing the default you can use name constants of
-``FOS\RestBundle\Response\Codes`` class or an integer status code.
+``FOS\Rest\Util\Codes`` class or an integer status code.
 
 You can also set the default templating engine to something different than the
 default of ``twig``:
@@ -119,8 +119,8 @@ There is an example inside LiipHelloBundle to show how to register a custom hand
 https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
 https://github.com/liip/LiipHelloBundle/blob/master/Resources/config/config.yml
 
-There is another example in ``Resources\docs\examples``:
-https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/docs/examples/RssHandler.php
+There is another example in ``Resources\doc\examples``:
+https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/examples/RssHandler.php
 
 Here is an example using a closure registered inside a Controller action:
 
