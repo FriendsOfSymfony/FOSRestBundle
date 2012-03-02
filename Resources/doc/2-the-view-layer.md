@@ -119,8 +119,8 @@ There is an example inside LiipHelloBundle to show how to register a custom hand
 https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
 https://github.com/liip/LiipHelloBundle/blob/master/Resources/config/config.yml
 
-There is another example in ``Resources\docs\examples``:
-https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/docs/examples/RssHandler.php
+There is another example in ``Resources\doc\examples``:
+https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/examples/RssHandler.php
 
 Here is an example using a closure registered inside a Controller action:
 
