@@ -126,7 +126,7 @@ fos_rest:
 ```
 
 Your custom decoder service must use a class that implements the
-``FOS\RestBundle\Decoder\DecoderInterface``.
+``FOS\Rest\Decoder\DecoderInterface``.
 
 ### Format listener
 

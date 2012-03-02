@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\RestBundle\Response\Codes;
+use FOS\Rest\Util\Codes;
 
 /**
  * Route based redirect implementation.
