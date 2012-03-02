@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\Form\FormInterface,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use FOS\RestBundle\Response\Codes;
+use FOS\Rest\Util\Codes;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way

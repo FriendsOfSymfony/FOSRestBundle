@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests\View;
 use FOS\RestBundle\View\View,
     FOS\RestBundle\View\ViewHandler,
     Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    FOS\RestBundle\Response\Codes,
+    FOS\Rest\Util\Codes,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\Form\FormView;

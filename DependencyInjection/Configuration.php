@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder,
     Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition,
     Symfony\Component\Config\Definition\ConfigurationInterface;
 
-use FOS\RestBundle\Response\Codes;
+use FOS\Rest\Util\Codes;
 
 /**
  * This class contains the configuration information for the bundle
