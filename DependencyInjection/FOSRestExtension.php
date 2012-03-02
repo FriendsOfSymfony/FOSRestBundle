@@ -18,7 +18,7 @@ use Symfony\Component\Config\FileLocator,
     Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-use FOS\RestBundle\Response\Codes;
+use FOS\Rest\Util\Codes;
 
 class FOSRestExtension extends Extension
 {
@@ -63,7 +63,7 @@ class FOSRestExtension extends Extension
         $container->setParameter($this->getAlias().'.force_redirects', $config['view']['force_redirects']);
 
         if (!is_numeric($config['view']['failed_validation'])) {
-            $config['view']['failed_validation'] = constant('\FOS\RestBundle\Response\Codes::'.$config['view']['failed_validation']);
+            $config['view']['failed_validation'] = constant('\FOS\Rest\Util\Codes::'.$config['view']['failed_validation']);
         }
         $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
 
@@ -76,7 +76,7 @@ class FOSRestExtension extends Extension
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
-                $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Response\Codes::$code");
+                $config['exception']['codes'][$exception] = constant("\FOS\Rest\Util\Codes::$code");
             }
             $this->testExceptionExists($exception);
         }
