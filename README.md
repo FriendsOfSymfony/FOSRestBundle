@@ -1,13 +1,8 @@
 FOSRestBundle
 =============
 
-<<<<<<< HEAD
 > Note: This branch is compatible with Symfony2 2.0.x.
 > For Symfony2 2.1.x compatibility use the master branch.
-=======
-> Note: This branch is compatible with Symfony2 master (2.1.x).
-> For Symfony2 2.0.x compatibility use the 0.6 branch.
->>>>>>> master
 
 This bundle provides various tools to rapidly develop RESTful API's &
 applications with Symfony2. Features include:
