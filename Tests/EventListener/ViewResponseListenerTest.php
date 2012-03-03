@@ -147,13 +147,11 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->attributes->set('_template', $template);
 
-        $response = new Response();
-
         $templating = $this->getMock('\Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $templating->expects($this->once())
-            ->method('render')
+            ->method('renderResponse')
             ->with($template, array())
-            ->will($this->returnValue('output'));
+            ->will($this->returnValue(new Response('output')));
 
         $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\Container')->disableOriginalConstructor()->getMock();
         $container->expects($this->once())
