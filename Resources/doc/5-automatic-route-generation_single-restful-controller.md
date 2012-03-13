@@ -141,9 +141,10 @@ client to *DELETE* an existing resource. Commonly a confirmation form. Shown as 
 
 All actions that do not match the ones listed in the sections above will register as a *POST* action. In the controller
 shown above, these actions are ``UsersController::lockUserAction()``, ``UsersController::banUserAction()`` and 
-``UsersController::voteUserAction()``. You could just as easily create a method called ``UsersController::promoteUserAction()`` 
-which would take a *POST* request to the url */users/{slug}/promote*. This allows for easy updating of aspects of a resource, 
-without having to deal with the resource as a whole at the standard *POST* endpoint.
+``UsersController::voteUserCommentAction()``. You could just as easily create a method called
+``UsersController::promoteUserAction()`` which would take a *POST* request to the url */users/{slug}/promote*.
+This allows for easy updating of aspects of a resource, without having to deal with the resource as a whole at
+the standard *POST* endpoint.
 
 ### Sub-Resource Actions
 
