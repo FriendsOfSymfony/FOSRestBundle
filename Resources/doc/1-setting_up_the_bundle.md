@@ -53,7 +53,8 @@ Add the `FOS` namespace to your autoloader:
 
 $loader->registerNamespaces(array(
     // ...
-    'FOS' => array(__DIR__.'/../vendor/bundles', __DIR__.'/../vendor/fos'),
+    'FOS\\Rest' => __DIR__.'/../vendor/fos',
+    'FOS'       => __DIR__.'/../vendor/bundles',
 ));
 ```
 
