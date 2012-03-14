@@ -31,7 +31,8 @@ users:
 
 This will tell Symfony2 to automatically generate proper REST routes from your ``UsersController`` action names.
 Notice ``type: rest`` option. It's required so that the RestBundle can find which routes are supported.
-Notice ``name_prefix: my_bundle_`` option. It's usefull to prefix the generated controller routes.
+Notice ``name_prefix: my_bundle_`` option. It's useful to prefix the generated controller routes. Take care that
+you can use ``name_prefix`` on an import only when the file is imported itself with the type ``rest``.
 
 ## Define resource actions
 
