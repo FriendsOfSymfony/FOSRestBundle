@@ -118,7 +118,7 @@ class FOSRestExtension extends Extension
 
     /**
      * Check if an exception is loadable.
-     * 
+     *
      * @param string $exception class to test
      * @throws InvalidArgumentException if the class was not found.
      */

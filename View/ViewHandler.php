@@ -133,7 +133,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * If the given format uses the templating system for rendering
      *
      * @param string $format
-     * 
+     *
      * @return Boolean
      */
     public function isFormatTemplating($format)
