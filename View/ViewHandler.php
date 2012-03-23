@@ -162,6 +162,16 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     }
 
     /**
+     * Get the serializer objects version
+     *
+     * @return string "Objects versioning" version
+     */
+    protected function getObjectsVersion()
+    {
+        return $this->container->getParameter('fos_rest.objects_version');
+    }
+
+    /**
      * Get the templating service
      *
      * @return Symfony\Bundle\FrameworkBundle\Templating\EngineInterface
@@ -307,9 +317,13 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->createRedirectResponse($view, $location, $format);
         }
 
-        $content = $this->isFormatTemplating($format)
-            ? $this->renderTemplate($view, $format)
-            : $this->getSerializer()->serialize($view->getData(), $format);
+        if ($this->isFormatTemplating($format)) {
+            $content = $this->renderTemplate($view, $format);
+        } else {
+            $serializer = $this->getSerializer();
+            $serializer->setVersion($this->getObjectsVersion());
+            $content = $serializer->serialize($view->getData(), $format);
+        }
 
         return new Response($content, $this->getStatusCode($view), $view->getHeaders());
     }
