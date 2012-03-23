@@ -164,11 +164,13 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Get the serializer objects version
      *
-     * @return string "Objects versioning" version
+     * @param View $view
+     *
+     * @return string|null "Objects versioning" version
      */
-    protected function getObjectsVersion()
+    protected function getObjectsVersion(View $view)
     {
-        return $this->container->getParameter('fos_rest.objects_version');
+        return $view->getObjectsVersion() ?: $this->container->getParameter('fos_rest.objects_version');
     }
 
     /**
@@ -321,7 +323,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $content = $this->renderTemplate($view, $format);
         } else {
             $serializer = $this->getSerializer();
-            $serializer->setVersion($this->getObjectsVersion());
+            $serializer->setVersion($this->getObjectsVersion($view));
             $content = $serializer->serialize($view->getData(), $format);
         }
 

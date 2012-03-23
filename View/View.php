@@ -67,15 +67,20 @@ class View
     private $route;
 
     /**
+     * @var string
+     */
+    private $objectsVersion;
+
+    /**
      * Convenience method to allow for a fluent interface.
      *
      * @param mixed $data
      * @param integer $statusCode
      * @param array $headers
      */
-    public static function create($data = null, $statusCode = null, array $headers = array())
+    public static function create($data = null, $statusCode = null, array $headers = array(), $objectsVersion = null)
     {
-        return new static($data, $statusCode, $headers);
+        return new static($data, $statusCode, $headers, $objectsVersion);
     }
 
     /**
@@ -85,11 +90,12 @@ class View
      * @param integer $statusCode
      * @param array $headers
      */
-    public function __construct($data = null, $statusCode = null, array $headers = array())
+    public function __construct($data = null, $statusCode = null, array $headers = array(), $objectsVersion = null)
     {
         $this->data = $data;
         $this->statusCode = $statusCode;
         $this->headers = $headers;
+        $this->objectsVersion = $objectsVersion;
         $this->templateVar = 'data';
     }
 
@@ -142,6 +148,19 @@ class View
     public function setStatusCode($code)
     {
         $this->statusCode = $code;
+
+        return $this;
+    }
+
+    /**
+     * set the serializer objects version
+     *
+     * @param $objectsVersion
+     * @return View
+     */
+    public function setObjectsVersion($objectsVersion)
+    {
+        $this->objectsVersion = $objectsVersion;
 
         return $this;
     }
@@ -317,5 +336,15 @@ class View
     public function getRoute()
     {
         return $this->route;
+    }
+
+    /**
+     * get the objects version
+     *
+     * @return string objects version
+     */
+    public function getObjectsVersion()
+    {
+        return $this->objectsVersion;
     }
 }
