@@ -12,14 +12,13 @@
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
-    Symfony\Component\Serializer\SerializerInterface,
     Symfony\Component\HttpKernel\Exception\HttpException,
     Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use FOS\Rest\Util\Codes,
     FOS\Rest\Util\FormatNegotiatorInterface;
 
-/**
+    /**
  * This listener handles Accept header format negotiations.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>

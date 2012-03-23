@@ -154,7 +154,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Get the serializer service
      *
-     * @return Symfony\Component\Serializer\SerializerInterface
+     * @return JMS\SerializerBundle\Serializer\SerializerInterface
      */
     protected function getSerializer()
     {
