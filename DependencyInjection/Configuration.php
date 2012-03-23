@@ -54,6 +54,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
                     ->end()
                 ->end()
+                ->scalarNode('objects_version')->defaultNull()->end()
             ->end()
         ->end();
 
