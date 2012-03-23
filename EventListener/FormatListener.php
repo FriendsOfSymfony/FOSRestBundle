@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
 use FOS\Rest\Util\Codes,
     FOS\Rest\Util\FormatNegotiatorInterface;
 
-    /**
+/**
  * This listener handles Accept header format negotiations.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
