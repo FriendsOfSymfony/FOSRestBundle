@@ -78,9 +78,9 @@ class View
      * @param integer $statusCode
      * @param array $headers
      */
-    public static function create($data = null, $statusCode = null, array $headers = array(), $objectsVersion = null)
+    public static function create($data = null, $statusCode = null, array $headers = array())
     {
-        return new static($data, $statusCode, $headers, $objectsVersion);
+        return new static($data, $statusCode, $headers);
     }
 
     /**
@@ -90,12 +90,11 @@ class View
      * @param integer $statusCode
      * @param array $headers
      */
-    public function __construct($data = null, $statusCode = null, array $headers = array(), $objectsVersion = null)
+    public function __construct($data = null, $statusCode = null, array $headers = array())
     {
         $this->data = $data;
         $this->statusCode = $statusCode;
         $this->headers = $headers;
-        $this->objectsVersion = $objectsVersion;
         $this->templateVar = 'data';
     }
 
