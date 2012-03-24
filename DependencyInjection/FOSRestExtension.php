@@ -52,6 +52,8 @@ class FOSRestExtension extends Extension
         foreach ($config['service'] as $key => $service) {
             $container->setAlias($this->getAlias().'.'.$key, $config['service'][$key]);
         }
+        $container->setParameter($this->getAlias().'.objects_version', $config['objects_version']);
+
         $container->setParameter($this->getAlias().'.formats', $formats);
         $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);
 
@@ -83,7 +85,7 @@ class FOSRestExtension extends Extension
         foreach ($config['exception']['messages'] as $exception => $message) {
             $this->testExceptionExists($exception);
         }
-        
+
         $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
         $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
 
@@ -116,7 +118,7 @@ class FOSRestExtension extends Extension
 
     /**
      * Check if an exception is loadable.
-     * 
+     *
      * @param string $exception class to test
      * @throws InvalidArgumentException if the class was not found.
      */

@@ -67,6 +67,11 @@ class View
     private $route;
 
     /**
+     * @var string
+     */
+    private $objectsVersion;
+
+    /**
      * Convenience method to allow for a fluent interface.
      *
      * @param mixed $data
@@ -142,6 +147,19 @@ class View
     public function setStatusCode($code)
     {
         $this->statusCode = $code;
+
+        return $this;
+    }
+
+    /**
+     * set the serializer objects version
+     *
+     * @param $objectsVersion
+     * @return View
+     */
+    public function setObjectsVersion($objectsVersion)
+    {
+        $this->objectsVersion = $objectsVersion;
 
         return $this;
     }
@@ -317,5 +335,15 @@ class View
     public function getRoute()
     {
         return $this->route;
+    }
+
+    /**
+     * get the objects version
+     *
+     * @return string objects version
+     */
+    public function getObjectsVersion()
+    {
+        return $this->objectsVersion;
     }
 }
