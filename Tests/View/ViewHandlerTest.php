@@ -133,7 +133,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $viewHandler = new ViewHandler(array('html' => true, 'json' => false));
 
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
         if ('html' === $format) {
             $templating = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
                 ->setMethods(array('render'))
@@ -150,7 +150,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->with('fos_rest.templating')
                 ->will($this->returnValue($templating));
         } else {
-            $serializer = $this->getMock('\stdClass', array('serialize'));
+            $serializer = $this->getMock('\stdClass', array('serialize', 'setVersion'));
             $serializer
                 ->expects($this->once())
                 ->method('serialize')
@@ -161,6 +161,12 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->method('get')
                 ->with('fos_rest.serializer')
                 ->will($this->returnValue($serializer));
+
+            $container
+                ->expects($this->once())
+                ->method('getParameter')
+                ->with('fos_rest.objects_version')
+                ->will($this->returnValue('1.0'));
         }
 
         $viewHandler->setContainer($container);

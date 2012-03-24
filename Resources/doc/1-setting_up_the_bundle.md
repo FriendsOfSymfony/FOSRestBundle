@@ -20,7 +20,7 @@ Add the following lines in your `deps` file:
 ```
 [FOSRest]
     git=git://github.com/FriendsOfSymfony/FOSRest.git
-    target=fos/FOS/RestBundle
+    target=fos/FOS/Rest
 
 [FOSRestBundle]
     git=git://github.com/FriendsOfSymfony/FOSRestBundle.git
@@ -53,7 +53,8 @@ Add the `FOS` namespace to your autoloader:
 
 $loader->registerNamespaces(array(
     // ...
-    'FOS' => array(__DIR__.'/../vendor/bundles', __DIR__.'/../vendor/fos'),
+    'FOS\\Rest' => __DIR__.'/../vendor/fos',
+    'FOS'       => __DIR__.'/../vendor/bundles',
 ));
 ```
 
