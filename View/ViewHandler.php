@@ -156,7 +156,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return JMS\SerializerBundle\Serializer\SerializerInterface
      */
-    protected function getSerializer()
+    public function getSerializer()
     {
         return $this->container->get('fos_rest.serializer');
     }
