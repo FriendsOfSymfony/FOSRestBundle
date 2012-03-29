@@ -21,7 +21,7 @@ comments:
 ```
 
 ```xml
-# src/Acme/HelloBundle/Resources/config/users_routes.xml
+<!-- src/Acme/HelloBundle/Resources/config/users_routes.xml -->
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <routes xmlns="http://friendsofsymfony.github.com/schema/rest"
@@ -39,7 +39,7 @@ is child of the users resource.
 It is also necessary to add ``type: rest`` to the ``routing.yml`` file:
 
 ```yaml
-#app/config/routing.yml
+# app/config/routing.yml
 acme_hello:
     type: rest
     resource: "@AcmeHelloBundle/Resources/config/users_routes.yml"
