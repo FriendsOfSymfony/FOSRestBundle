@@ -133,7 +133,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * If the given format uses the templating system for rendering
      *
      * @param string $format
-     * 
+     *
      * @return Boolean
      */
     public function isFormatTemplating($format)
@@ -156,9 +156,21 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return JMS\SerializerBundle\Serializer\SerializerInterface
      */
-    protected function getSerializer()
+    public function getSerializer()
     {
         return $this->container->get('fos_rest.serializer');
+    }
+
+    /**
+     * Get the serializer objects version
+     *
+     * @param View $view
+     *
+     * @return string|null "Objects versioning" version
+     */
+    protected function getObjectsVersion(View $view)
+    {
+        return $view->getObjectsVersion() ?: $this->container->getParameter('fos_rest.objects_version');
     }
 
     /**
@@ -307,9 +319,13 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->createRedirectResponse($view, $location, $format);
         }
 
-        $content = $this->isFormatTemplating($format)
-            ? $this->renderTemplate($view, $format)
-            : $this->getSerializer()->serialize($view->getData(), $format);
+        if ($this->isFormatTemplating($format)) {
+            $content = $this->renderTemplate($view, $format);
+        } else {
+            $serializer = $this->getSerializer();
+            $serializer->setVersion($this->getObjectsVersion($view));
+            $content = $serializer->serialize($view->getData(), $format);
+        }
 
         return new Response($content, $this->getStatusCode($view), $view->getHeaders());
     }
