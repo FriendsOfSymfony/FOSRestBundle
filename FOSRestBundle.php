@@ -11,8 +11,19 @@
 
 namespace FOS\RestBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder,
+    Symfony\Component\HttpKernel\Bundle\Bundle;
 
+use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+
+/**
+ * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ * @author Eriksen Costa <eriksencosta@gmail.com>
+ */
 class FOSRestBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new ConfigurationCheckPass());
+    }
 }
