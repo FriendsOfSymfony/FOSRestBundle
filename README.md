@@ -21,6 +21,7 @@ The bulk of the documentation is stored in the `Resources/doc/index.md`
 file in this bundle:
 
 [Read the Documentation for master](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/index.md)
+
 [Read the Documentation for 0.6](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/0.6/Resources/doc/index.md)
 
 Installation
