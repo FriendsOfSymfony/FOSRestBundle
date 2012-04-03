@@ -52,10 +52,10 @@ extends from the ``@Template()`` annotation.
 The ``@View()`` and ``@Template()`` annotations behave essentially the same
 with a minor difference. When ``view_response_listener`` is set to ``true``
 instead of the default ``force`` and ``@View()`` is not used, then rendering
-will be delegated to SensioFrameworkBundle.
+will be delegated to SensioFrameworkExtraBundle.
 
-Note that it is necessary to disable view annotations in SensioFrameworkBundle
-so that FOSRestBundle can take over the handling.
+Note that it is necessary to disable view annotations in
+SensioFrameworkExtraBundle so that FOSRestBundle can take over the handling.
 
 ```yaml
 # app/config/config.yml
