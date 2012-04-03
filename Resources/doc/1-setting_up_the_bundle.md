@@ -27,6 +27,19 @@ Add the following lines in your `deps` file:
     target=bundles/FOS/RestBundle
 ```
 
+If you are using Symfony 2.0.x, you should specify the 0.6 branch of the bundle instead:
+
+```
+[FOSRest]
+    git=git://github.com/FriendsOfSymfony/FOSRest.git
+    target=fos/FOS/Rest
+
+[FOSRestBundle]
+    git=git://github.com/FriendsOfSymfony/FOSRestBundle.git
+    target=bundles/FOS/RestBundle
+    version=origin/0.6
+```
+
 Now, run the vendors script to download the bundle:
 
 ``` bash
@@ -41,6 +54,16 @@ If you prefer instead to use git submodules, then run the following:
 $ git submodule add git://github.com/FriendsOfSymfony/FOSRestBundle.git vendor/bundles/FOS/RestBundle
 $ git submodule add git://github.com/FriendsOfSymfony/FOSRest.git vendor/fos/FOS/Rest
 $ git submodule update --init
+```
+
+If you are using Symfony 2.0.x, you should specify the 0.6 branch of the bundle instead:
+
+``` bash
+$ git submodule add git://github.com/FriendsOfSymfony/FOSRestBundle.git vendor/bundles/FOS/RestBundle
+$ git submodule add git://github.com/FriendsOfSymfony/FOSRest.git vendor/fos/FOS/Rest
+$ git submodule update --init
+$ cd vendor/bundles/FOS/RestBundle
+$ git checkout 0.6
 ```
 
 ### B) Configure the Autoloader
