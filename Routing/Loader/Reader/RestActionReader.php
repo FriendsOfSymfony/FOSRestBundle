@@ -331,7 +331,7 @@ class RestActionReader
             return 'get';
         } else {
             //custom object
-            return 'post';
+            return 'patch';
         }
     }
 

@@ -29,7 +29,7 @@ patch_user:
   controller: ::patchUserAction
 
 lock_user:
-  method:     POST
+  method:     PATCH
   pattern:    /users/{slug}/lock.{_format}
   controller: ::lockUserAction
 
@@ -59,14 +59,14 @@ new_user_comments:
   controller: ::newUserCommentsAction
 
 ban_user:
-  method:     POST
+  method:     PATCH
   pattern:    /users/{slug}/ban.{_format}
   controller: ::banUserAction
 
-vote_user_comment:
+post_user_comment_vote:
   method:     POST
   pattern:    /users/{slug}/comments/{id}/vote.{_format}
-  controller: ::voteUserCommentAction
+  controller: ::postUserCommentVoteAction
 
 check_username_users:
   method:     GET
@@ -74,7 +74,7 @@ check_username_users:
   controller: ::check_usernameUsersAction
 
 hide_user_comment:
-  method:     POST
+  method:     PATCH
   pattern:    /users/{userId}/comments/{commentId}/hide.{_format}
   controller: ::hideUserCommentAction
 
