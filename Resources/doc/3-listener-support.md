@@ -100,6 +100,21 @@ public function getUsersAction()
     //...
 }
 ```
+
+The status code of the view can also be configured:
+
+```php
+<?php
+
+/**
+ * @View(statusCode=204)
+ */
+public function deleteUserAction()
+{
+    //...
+}
+```
+
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php
 
