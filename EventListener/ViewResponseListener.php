@@ -80,8 +80,13 @@ class ViewResponseListener extends TemplateListener
             $view = new View($view);
         }
 
-        if ($configuration && $configuration->getTemplateVar()) {
-            $view->setTemplateVar($configuration->getTemplateVar());
+        if ($configuration) {
+            if ($configuration->getTemplateVar()) {
+                $view->setTemplateVar($configuration->getTemplateVar());
+            }
+            if (null === $view->getStatusCode() && $configuration->getStatusCode()) {
+                $view->setStatusCode($configuration->getStatusCode());
+            }
         }
 
         if (null === $view->getFormat()) {
