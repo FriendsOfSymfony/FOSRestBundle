@@ -174,6 +174,18 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     }
 
     /**
+     * Get the serializer objects groups
+     *
+     * @param View $view
+     *
+     * @return array|null "Objects groups" groups
+     */
+    protected function getObjectsGroups(View $view)
+    {
+        return $view->getObjectsGroups();
+    }
+
+    /**
      * Get the templating service
      *
      * @return Symfony\Bundle\FrameworkBundle\Templating\EngineInterface
@@ -324,6 +336,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         } else {
             $serializer = $this->getSerializer();
             $serializer->setVersion($this->getObjectsVersion($view));
+
+            if ($this->getObjectsGroups($view)) {
+                $serializer->setGroups($this->getObjectsGroups($view));
+            }
+
             $content = $serializer->serialize($view->getData(), $format);
         }
 
