@@ -324,6 +324,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         } else {
             $serializer = $this->getSerializer();
             $serializer->setVersion($this->getObjectsVersion($view));
+            if( $view->getObjectsGroups() ) $serializer->setGroups( $view->getObjectsGroups() );
             $content = $serializer->serialize($view->getData(), $format);
         }
 
