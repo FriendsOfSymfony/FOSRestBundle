@@ -72,6 +72,12 @@ class View
     private $objectsVersion;
 
     /**
+     *
+     * @var array
+     */
+    private $objectsGroups;
+
+    /**
      * Convenience method to allow for a fluent interface.
      *
      * @param mixed $data
@@ -160,6 +166,18 @@ class View
     public function setObjectsVersion($objectsVersion)
     {
         $this->objectsVersion = $objectsVersion;
+
+        return $this;
+    }
+
+    /**
+     * set the serializer objects groups
+     * @param $objectsGroups
+     * @return View
+     */
+    public function setObjectsGroups($objectsGroups)
+    {
+        $this->objectsGroups = $objectsGroups;
 
         return $this;
     }
@@ -345,5 +363,15 @@ class View
     public function getObjectsVersion()
     {
         return $this->objectsVersion;
+    }
+
+    /**
+     * get the objects groups
+     *
+     * @return array objects groups
+     */
+    public function getObjectsGroups()
+    {
+        return $this->objectsGroups;
     }
 }
