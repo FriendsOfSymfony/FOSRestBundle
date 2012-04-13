@@ -12,22 +12,24 @@
 namespace FOS\RestBundle\Routing\Loader;
 
 use Symfony\Component\Config\Loader\LoaderInterface,
-    Symfony\Component\Config\Loader\LoaderResolverInterface;
+    Symfony\Component\Config\Loader\LoaderResolver;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  * @author Bulat Shakirzyanov <mallluhuct@gmail.com>
+ *
+ * @codeCoverageIgnore
  */
-class RestRouteLoader extends AbstractRestRouteLoader implements LoaderInterface
+class RestRouteLoader20 extends AbstractRestRouteLoader implements LoaderInterface
 {
     /**
      * Sets the loader resolver.
      *
-     * @param LoaderResolverInterface $resolver A LoaderResolver instance
+     * @param LoaderResolver $resolver A LoaderResolver instance
      */
-    public function setResolver(LoaderResolverInterface $resolver)
+    public function setResolver(LoaderResolver $resolver)
     {
     }
 }
