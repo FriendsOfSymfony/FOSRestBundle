@@ -30,8 +30,7 @@ class FOSRestBundle extends Bundle
     /**
      * Returns a cleaned version number
      *
-     * @static
-     * @param $version
+     * @param string $version
      * @return string
      */
     public static function getSymfonyVersion($version)
