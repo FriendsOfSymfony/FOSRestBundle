@@ -1,9 +1,6 @@
 FOSRestBundle
 =============
 
-> Note: This branch is compatible with Symfony2 master (2.1.x).
-> For Symfony2 2.0.x compatibility use the 0.6 branch.
-
 This bundle provides various tools to rapidly develop RESTful API's &
 applications with Symfony2. Features include:
 
@@ -21,8 +18,6 @@ The bulk of the documentation is stored in the `Resources/doc/index.md`
 file in this bundle:
 
 [Read the Documentation for master](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/index.md)
-
-[Read the Documentation for 0.6](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/0.6/Resources/doc/index.md)
 
 Installation
 ------------

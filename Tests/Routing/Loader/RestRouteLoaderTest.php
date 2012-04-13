@@ -11,8 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
-use FOS\RestBundle\Routing\Loader\RestRouteLoader,
-    FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Routing\RestRouteCollection;
 
 /**
  * RestRouteLoader test.

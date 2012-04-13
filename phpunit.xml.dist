@@ -12,6 +12,7 @@
         <whitelist>
             <directory>./</directory>
             <exclude>
+                <file>./Routing/Loader/RestRouteLoader20.php</file>
                 <directory>./Resources</directory>
                 <directory>./Tests</directory>
                 <directory>./vendor</directory>
