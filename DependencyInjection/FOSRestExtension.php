@@ -16,9 +16,12 @@ use Symfony\Component\Config\FileLocator,
     Symfony\Component\DependencyInjection\Reference,
     Symfony\Component\DependencyInjection\ContainerInterface,
     Symfony\Component\DependencyInjection\ContainerBuilder,
-    Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+    Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
+    Symfony\Component\HttpKernel\Kernel;
 
 use FOS\Rest\Util\Codes;
+
+use FOS\RestBundle\FOSRestBundle;
 
 class FOSRestExtension extends Extension
 {
@@ -36,6 +39,10 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
         $loader->load('util.xml');
+
+        if (version_compare(FOSRestBundle::getSymfonyVersion(Kernel::VERSION), '2.1.0', '<')) {
+            $container->setParameter('fos_rest.routing.loader.controller.class', $container->getParameter('fos_rest.routing.loader_2_0.controller.class'));
+        }
 
         $formats = array();
         foreach ($config['view']['formats'] as $format => $enabled) {

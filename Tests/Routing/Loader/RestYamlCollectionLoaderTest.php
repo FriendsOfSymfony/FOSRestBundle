@@ -14,8 +14,7 @@ namespace FOS\RestBundle\Tests\Routing\Loader;
 use Symfony\Component\Config\Loader\LoaderResolver,
     Symfony\Component\Config\FileLocator;
 
-use FOS\RestBundle\Routing\Loader\RestRouteLoader,
-    FOS\RestBundle\Routing\Loader\RestRouteProcessor,
+use FOS\RestBundle\Routing\Loader\RestRouteProcessor,
     FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader;
 
 /**

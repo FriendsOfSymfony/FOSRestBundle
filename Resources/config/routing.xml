@@ -6,6 +6,7 @@
 
     <parameters>
 
+        <parameter key="fos_rest.routing.loader_2_0.controller.class">FOS\RestBundle\Routing\Loader\RestRouteLoader20</parameter>
         <parameter key="fos_rest.routing.loader.controller.class">FOS\RestBundle\Routing\Loader\RestRouteLoader</parameter>
         <parameter key="fos_rest.routing.loader.yaml_collection.class">FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader</parameter>
         <parameter key="fos_rest.routing.loader.xml_collection.class">FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader</parameter>
