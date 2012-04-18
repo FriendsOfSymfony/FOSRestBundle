@@ -59,7 +59,14 @@ class FOSRestExtension extends Extension
         foreach ($config['service'] as $key => $service) {
             $container->setAlias($this->getAlias().'.'.$key, $config['service'][$key]);
         }
-        $container->setParameter($this->getAlias().'.objects_version', $config['objects_version']);
+
+        if (!empty($config['serializer']['version'])) {
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.type', 'version');
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.value', $config['serializer']['version']);
+        } elseif (!empty($config['serializer']['groups'])) {
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.type', 'groups');
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.value', $config['serializer']['groups']);
+        }
 
         $container->setParameter($this->getAlias().'.formats', $formats);
         $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);

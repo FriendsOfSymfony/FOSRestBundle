@@ -69,13 +69,19 @@ class View
     /**
      * @var string
      */
-    private $objectsVersion;
+    private $serializerVersion;
 
     /**
      *
      * @var array
      */
-    private $objectsGroups;
+    private $serializerGroups;
+
+    /**
+     *
+     * @var array
+     */
+    private $serializerCallback;
 
     /**
      * Convenience method to allow for a fluent interface.
@@ -107,7 +113,7 @@ class View
     /**
      * set the data
      *
-     * @param $data
+     * @param mixed $data
      * @return View
      */
     public function setData($data)
@@ -120,8 +126,8 @@ class View
     /**
      * set a header
      *
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param string $value
      * @return View
      */
     public function setHeader($name, $value)
@@ -147,7 +153,7 @@ class View
     /**
      * set the HTTP status code
      *
-     * @param $code
+     * @param int $code
      * @return View
      */
     public function setStatusCode($code)
@@ -160,24 +166,41 @@ class View
     /**
      * set the serializer objects version
      *
-     * @param $objectsVersion
+     * @param string $serializerVersion
      * @return View
      */
-    public function setObjectsVersion($objectsVersion)
+    public function setSerializerVersion($serializerVersion)
     {
-        $this->objectsVersion = $objectsVersion;
+        $this->serializerVersion = $serializerVersion;
+        $this->serializerGroups = null;
 
         return $this;
     }
 
     /**
      * set the serializer objects groups
-     * @param $objectsGroups
+     * @param array $serializerGroups
      * @return View
      */
-    public function setObjectsGroups($objectsGroups)
+    public function setSerializerGroups($serializerGroups)
     {
-        $this->objectsGroups = $objectsGroups;
+        $this->serializerGroups = $serializerGroups;
+        $this->serializerVersion = null;
+
+        return $this;
+    }
+
+    /**
+     * set the serializer callback
+     *
+     * function (\FOS\RestBundle\View\ViewHnadler $viewHandler, \JMS\SerializerBundle\Serializer\SerializerInterface $serializer) { .. }
+     *
+     * @param callable $serializerCallback
+     * @return View
+     */
+    public function setSerializerCallback($serializerCallback)
+    {
+        $this->serializerCallback = $serializerCallback;
 
         return $this;
     }
@@ -268,7 +291,7 @@ class View
     /**
      * get the data
      *
-     * @return mixed data
+     * @return mixed|null data
      */
     public function getData()
     {
@@ -278,7 +301,7 @@ class View
     /**
      * get the HTTP status code
      *
-     * @return int HTTP status code
+     * @return int|null HTTP status code
      */
     public function getStatusCode()
     {
@@ -288,7 +311,7 @@ class View
     /**
      * get the headers
      *
-     * @return array headers
+     * @return array|null headers
      */
     public function getHeaders()
     {
@@ -298,7 +321,7 @@ class View
     /**
      * get the template
      *
-     * @return TemplateReference|string template
+     * @return TemplateReference|string|null template
      */
     public function getTemplate()
     {
@@ -308,7 +331,7 @@ class View
     /**
      * Get the template variable name.
      *
-     * @param string
+     * @param string|null
      */
     public function getTemplateVar()
     {
@@ -318,7 +341,7 @@ class View
     /**
      * get the engine
      *
-     * @return string engine
+     * @return string|null engine
      */
     public function getEngine()
     {
@@ -328,7 +351,7 @@ class View
     /**
      * get the format
      *
-     * @return string format
+     * @return string|null format
      */
     public function getFormat()
     {
@@ -338,7 +361,7 @@ class View
     /**
      * get the location
      *
-     * @return string url
+     * @return string|null url
      */
     public function getLocation()
     {
@@ -348,7 +371,7 @@ class View
     /**
      * get the route
      *
-     * @return string route
+     * @return string|null route
      */
     public function getRoute()
     {
@@ -356,22 +379,48 @@ class View
     }
 
     /**
-     * get the objects version
+     * get the serializer version
      *
-     * @return string objects version
+     * @return string|null serializer version
      */
-    public function getObjectsVersion()
+    public function getSerializerVersion()
     {
-        return $this->objectsVersion;
+        return $this->serializerVersion;
     }
 
     /**
-     * get the objects groups
+     * get the serializer groups
      *
-     * @return array objects groups
+     * @return array|null serializer groups
      */
-    public function getObjectsGroups()
+    public function getSerializerGroups()
     {
-        return $this->objectsGroups;
+        return $this->serializerGroups;
+    }
+
+    /**
+     * get the serializer exclusion strategy
+     *
+     * @return string|null serializer groups
+     */
+    public function getSerializerExclusionStrategy()
+    {
+        if ($this->serializerVersion) {
+            return 'version';
+        } elseif ($this->serializerGroups) {
+            return 'groups';
+        }
+
+        return null;
+    }
+
+    /**
+     * get the serializer callback
+     *
+     * @return calllable|null serializer callback
+     */
+    public function getSerializerCallback()
+    {
+        return $this->serializerCallback;
     }
 }

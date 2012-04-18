@@ -1,8 +1,14 @@
 Upgrading
 =========
 
-Note as FOSRestBundle is not yet declared stable, this document will only be updated
-for major refactorings.
+Note as FOSRestBundle is not yet declared stable, this document will be updated to
+list important BC breaks.
+
+### upgrading from 0.6.0 to master
+
+ * renamed [get|set]Objects*() to [get|set]Serializer()
+ * renamed the "objects_version: XXX" configuration option to "serializer: [version: XXX]"
+ * moved serializer configuration code from ViewHandler::createResponse() to ViewHandler::getSerializer()
 
 ### upgrading from 0.5.0_old_serializer
 

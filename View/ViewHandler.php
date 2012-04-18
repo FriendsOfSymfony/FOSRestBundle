@@ -112,6 +112,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * configuration if the form instance has errors.
      *
      * @param View $view view instance
+     *
      * @return int HTTP status code
      */
     private function getStatusCode(View $view)
@@ -154,35 +155,28 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Get the serializer service
      *
+     * @param View $view view instance from which the serializer should be configured
+     *
      * @return JMS\SerializerBundle\Serializer\SerializerInterface
      */
-    public function getSerializer()
+    public function getSerializer(View $view = null)
     {
-        return $this->container->get('fos_rest.serializer');
-    }
+        $serializer = $this->container->get('fos_rest.serializer');
 
-    /**
-     * Get the serializer objects version
-     *
-     * @param View $view
-     *
-     * @return string|null "Objects versioning" version
-     */
-    protected function getObjectsVersion(View $view)
-    {
-        return $view->getObjectsVersion() ?: $this->container->getParameter('fos_rest.objects_version');
-    }
+        if ($view) {
+            $type = $view->getSerializerExclusionStrategy() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.type');
+            if ($type) {
+                $value = $view->{'getSerializer'.ucfirst($type)}() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.value');
+                $serializer->{'set'.ucfirst($type)}($value);
+            }
 
-    /**
-     * Get the serializer objects groups
-     *
-     * @param View $view
-     *
-     * @return array|null "Objects groups" groups
-     */
-    protected function getObjectsGroups(View $view)
-    {
-        return $view->getObjectsGroups();
+            $callback = $view->getSerializerCallback();
+            if ($callback) {
+                call_user_func($callback, $this, $serializer);
+            }
+        }
+
+        return $serializer;
     }
 
     /**
@@ -337,13 +331,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
         } else {
-            $serializer = $this->getSerializer();
-            $serializer->setVersion($this->getObjectsVersion($view));
-
-            if ($this->getObjectsGroups($view)) {
-                $serializer->setGroups($this->getObjectsGroups($view));
-            }
-
+            $serializer = $this->getSerializer($view);
             $content = $serializer->serialize($view->getData(), $format);
         }
 
