@@ -6,10 +6,20 @@ applications with Symfony2. Features include:
 
 - A View layer to enable output and format agnostic Controllers
 - A custom route loader to generate url's following REST conventions
+- Accept header format negotiation including handling for custom mime types
 - RESTful decoding of HTTP request body and Accept headers
 - Exception controller for sending appropriate HTTP status codes
 
 [![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=master)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle)
+
+State
+-----
+
+While the provided feature set is certainly production ready, this Bundle is still under development.
+As a result users must expect BC breaks when using the master version. Such breaks will however be
+noted in the [UPGRADING.md](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING.md).
+A new version of the Bundle will be tagged in most cases before a BC break, however do not expect bug
+fixes for these tagged versions.
 
 Documentation
 -------------
