@@ -165,7 +165,13 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             $container
                 ->expects($this->once())
                 ->method('getParameter')
-                ->with('fos_rest.serializer_version')
+                ->with('fos_rest.serializer.exclusion_strategy.type')
+                ->will($this->returnValue('version'));
+
+            $container
+                ->expects($this->once())
+                ->method('getParameter')
+                ->with('fos_rest.serializer.exclusion_strategy.value')
                 ->will($this->returnValue('1.0'));
         }
 
