@@ -9,6 +9,7 @@ list important BC breaks.
  * renamed [get|set]Objects*() to [get|set]Serializer()
  * renamed the "objects_version: XXX" configuration option to "serializer: [version: XXX]"
  * moved serializer configuration code from ViewHandler::createResponse() to ViewHandler::getSerializer()
+ * made ViewHandler::getSerializer() protected again
 
 ### upgrading from 0.5.0_old_serializer
 
