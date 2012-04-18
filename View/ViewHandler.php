@@ -320,7 +320,10 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function createResponse(View $view, Request $request, $format)
     {
-        $view->setHeader('Content-Type', $request->getMimeType($format));
+        $headers = $view->getHeaders();
+        if (empty($headers['Content-Type'])) {
+            $view->setHeader('Content-Type', $request->getMimeType($format));
+        }
 
         $route = $view->getRoute();
         $location = $route
