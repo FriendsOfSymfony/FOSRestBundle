@@ -304,7 +304,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $object = new \stdClass();
 
-        $formView = new FormView();
+        $formView = new FormView('foo');
         $form = $this->getMockBuilder('\Symfony\Component\Form\Form')
             ->setMethods(array('createView'))
             ->disableOriginalConstructor()
