@@ -10,7 +10,7 @@ fos_rest:
         templating:           templating
         serializer:           jms_serializer.serializer
         view_handler:         fos_rest.view_handler.default
-    objects_version:      ~
+    serializer_version:      ~
     view:
         default_engine:       twig
         force_redirects:

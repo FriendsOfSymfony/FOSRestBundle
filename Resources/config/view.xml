@@ -4,6 +4,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="fos_rest.serializer.exclusion_strategy.type" />
+        <parameter key="fos_rest.serializer.exclusion_strategy.value"/>
+    </parameters>
+
     <services>
 
         <service id="fos_rest.view_handler.default" class="FOS\RestBundle\View\ViewHandler" public="false">
