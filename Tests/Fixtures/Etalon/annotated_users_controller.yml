@@ -31,7 +31,7 @@ rate_user:
 rate_user_comment:
   pattern:      /users/{slug}/rate_comment/{id}.{_format}
   controller:   ::rateUserCommentAction
-  requirements: {_method: POST, slug: '[a-z]+', id: '\d+'}
+  requirements: {_method: PATCH, slug: '[a-z]+', id: '\d+'}
 
 cget_user:
   pattern:      /users/{slug}/cget.{_format}
