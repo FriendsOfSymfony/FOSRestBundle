@@ -69,8 +69,8 @@ auto-generation process and can be any name you like.
 <?php
 class CommentsController extends Controller
 {
-    public function voteCommentAction($slug, $id)
-    {} // "vote_user_comment"   [POST] /users/{slug}/comments/{id}/vote
+    public function postCommentVoteAction($slug, $id)
+    {} // "post_user_comment_vote" [POST] /users/{slug}/comments/{id}/vote
 
     public function getCommentsAction($slug)
     {} // "get_user_comments"   [GET] /users/{slug}/comments
@@ -118,7 +118,7 @@ RestBundle uses REST paths to generate route name. This means, that URL:
 
     [POST] /users/{slug}/comments/{id}/vote
 
-will become the route with the name ``vote_user_comment``.
+will become the route with the name ``post_user_comment_vote``.
 
 For further examples, see comments of controllers in the code above.
 

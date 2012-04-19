@@ -36,7 +36,7 @@ class UsersController extends Controller
     {} // [PATCH] /users/{slug}
 
     public function lockUserAction($slug)
-    {} // [POST] /users/{slug}/lock
+    {} // [PATCH] /users/{slug}/lock
 
     public function getUserCommentsAction($slug)
     {} // [GET] /users/{slug}/comments
@@ -48,9 +48,9 @@ class UsersController extends Controller
     {} // [DELETE] /users/{slug}/comments/{id}
 
     public function banUserAction($slug, $id)
-    {} // [POST] /users/{slug}/ban
+    {} // [PATCH] /users/{slug}/ban
 
-    public function voteUserCommentAction($slug, $id)
+    public function postUserCommentVoteAction($slug, $id)
     {} // [POST] /users/{slug}/comments/{id}/vote
 
     public function _userbarAction()
@@ -81,7 +81,7 @@ class UsersController extends Controller
     {} // [GET] /users/{slug}/comments/{id}/remove
 
     public function hideUserCommentAction($userId, $commentId)
-    {} // [POST] /users/{userId}/comments/{commentId}
+    {} // [PATCH] /users/{userId}/comments/{commentId}/hide
 
     public function getFooBarsAction($foo)
     {} // [GET] /foos/{foo}/bars

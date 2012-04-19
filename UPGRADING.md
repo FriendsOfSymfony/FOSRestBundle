@@ -11,6 +11,14 @@ list important BC breaks.
  * moved serializer configuration code from ViewHandler::createResponse() to ViewHandler::getSerializer()
  * made ViewHandler::getSerializer() protected again
 
+### 19 April 2012
+
+ * Change route fallback action to PATCH instead of POST
+
+ Automatically generated routes will now fall back to the PATCH instead of the POST method.
+
+ More information in the docs, at [this issue](https://github.com/FriendsOfSymfony/FOSRestBundle/issues/223) and [this PR](https://github.com/FriendsOfSymfony/FOSRestBundle/pull/224).
+
 ### upgrading from 0.5.0_old_serializer
 
  * The ViewInterface is gone so you might have to change your controller config if you refer to the fos_rest.view service.
