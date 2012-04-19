@@ -47,7 +47,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRegsiterHandle()
+    public function testRegisterHandle()
     {
         $viewHandler = new ViewHandler();
         $viewHandler->registerHandler('html', ($callback = function(){}));
@@ -156,6 +156,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->method('serialize')
                 ->will($this->returnValue(var_export($expected, true)));
 
+            $serializer
+                ->expects($this->once())
+                ->method('setVersion')
+                ->will($this->returnValue('1.0'));
+
             $container
                 ->expects($this->once())
                 ->method('get')
@@ -163,10 +168,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue($serializer));
 
             $container
-                ->expects($this->once())
+                ->expects($this->any())
                 ->method('getParameter')
-                ->with('fos_rest.serializer_version')
-                ->will($this->returnValue('1.0'));
+                ->will($this->onConsecutiveCalls('version', '1.0'));
         }
 
         $viewHandler->setContainer($container);
@@ -304,7 +308,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $object = new \stdClass();
 
-        $formView = new FormView();
+        $formView = new FormView('foo');
         $form = $this->getMockBuilder('\Symfony\Component\Form\Form')
             ->setMethods(array('createView'))
             ->disableOriginalConstructor()
