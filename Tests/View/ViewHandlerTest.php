@@ -170,7 +170,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             $container
                 ->expects($this->any())
                 ->method('getParameter')
-                ->will($this->onConsecutiveCalls(array('version', '1.0')));
+                ->will($this->onConsecutiveCalls('version', '1.0'));
         }
 
         $viewHandler->setContainer($container);
