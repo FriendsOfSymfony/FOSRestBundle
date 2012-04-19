@@ -58,7 +58,7 @@ class RssHandler
             $code = Codes::HTTP_OK;
         } catch (\Exception $e) {
             if ($this->logger) {
-                $this->logger->addError($e);
+                $this->logger->err($e);
             }
 
             $content = sprintf("%s:<br/><pre>%s</pre>", $e->getMessage(), $e->getTraceAsString());
