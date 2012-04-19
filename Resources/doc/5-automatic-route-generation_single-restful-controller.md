@@ -65,10 +65,10 @@ class UsersController extends Controller
     {} // "patch_user"   [PATCH] /users/{slug}
 
     public function lockUserAction($slug)
-    {} // "lock_user"    [POST] /users/{slug}/lock
+    {} // "lock_user"    [PATCH] /users/{slug}/lock
 
     public function banUserAction($slug, $id)
-    {} // "ban_user"     [POST] /users/{slug}/ban
+    {} // "ban_user"     [PATCH] /users/{slug}/ban
 
     public function removeUserAction($slug)
     {} // "remove_user"  [GET] /users/{slug}/remove
