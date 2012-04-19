@@ -65,10 +65,10 @@ class UsersController extends Controller
     {} // "patch_user"   [PATCH] /users/{slug}
 
     public function lockUserAction($slug)
-    {} // "lock_user"    [POST] /users/{slug}/lock
+    {} // "lock_user"    [PATCH] /users/{slug}/lock
 
     public function banUserAction($slug, $id)
-    {} // "ban_user"     [POST] /users/{slug}/ban
+    {} // "ban_user"     [PATCH] /users/{slug}/ban
 
     public function removeUserAction($slug)
     {} // "remove_user"  [GET] /users/{slug}/remove
@@ -94,8 +94,8 @@ class UsersController extends Controller
     public function putUserCommentAction($slug, $id)
     {} // "put_user_comment"     [PUT] /users/{slug}/comments/{id}
 
-    public function voteUserCommentAction($slug, $id)
-    {} // "vote_user_comment"    [POST] /users/{slug}/comments/{id}/vote
+    public function postUserCommentVoteAction($slug, $id)
+    {} // "post_user_comment_vote" [POST] /users/{slug}/comments/{id}/vote
 
     public function removeUserCommentAction($slug, $id)
     {} // "remove_user_comment"  [GET] /users/{slug}/comments/{id}/remove
@@ -139,14 +139,14 @@ to *PUT*, or update, an existing resource. Shown as ``UsersController::editUserA
 * **remove** - A hypermedia representation that acts as the engine to *DELETE*. Typically this is a form that allows the
 client to *DELETE* an existing resource. Commonly a confirmation form. Shown as ``UsersController::removeUserAction()`` above.
 
-### Custom POST Actions
+### Custom PATCH Actions
 
-All actions that do not match the ones listed in the sections above will register as a *POST* action. In the controller
+All actions that do not match the ones listed in the sections above will register as a *PATCH* action. In the controller
 shown above, these actions are ``UsersController::lockUserAction()``, ``UsersController::banUserAction()`` and 
 ``UsersController::voteUserCommentAction()``. You could just as easily create a method called
-``UsersController::promoteUserAction()`` which would take a *POST* request to the url */users/{slug}/promote*.
+``UsersController::promoteUserAction()`` which would take a *PATCH* request to the url */users/{slug}/promote*.
 This allows for easy updating of aspects of a resource, without having to deal with the resource as a whole at
-the standard *POST* endpoint.
+the standard *PATCH* or *PUT* endpoint.
 
 ### Sub-Resource Actions
 
