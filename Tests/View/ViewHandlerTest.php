@@ -47,7 +47,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRegsiterHandle()
+    public function testRegisterHandle()
     {
         $viewHandler = new ViewHandler();
         $viewHandler->registerHandler('html', ($callback = function(){}));
