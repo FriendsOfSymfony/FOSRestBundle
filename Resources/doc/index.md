@@ -25,6 +25,7 @@ Check out the [configuration reference](configuration-reference.md) for a refere
 
 The following bundles/applications use the FOSRestBundle and can be used as a
 guideline:
+
 - The LiipHelloBundle provides several examples for the RestBundle:
   https://github.com/liip/LiipHelloBundle
 
