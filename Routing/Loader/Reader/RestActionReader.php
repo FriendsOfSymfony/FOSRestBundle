@@ -12,9 +12,12 @@
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
 use Doctrine\Common\Annotations\Reader;
-use FOS\RestBundle\Util\Pluralization;
+
 use Symfony\Component\Routing\Route;
+
+use FOS\RestBundle\Util\Pluralization;
 use FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Request\QueryParamReader;
 
 /**
  * REST controller actions reader.
@@ -24,6 +27,7 @@ use FOS\RestBundle\Routing\RestRouteCollection;
 class RestActionReader
 {
     private $annotationReader;
+    private $queryParamReader;
 
     private $routePrefix;
     private $namePrefix;
@@ -37,9 +41,10 @@ class RestActionReader
      *
      * @param Reader $annotationReader annotation reader
      */
-    public function __construct(Reader $annotationReader)
+    public function __construct(Reader $annotationReader, QueryParamReader $queryParamReader)
     {
         $this->annotationReader = $annotationReader;
+        $this->queryParamReader = $queryParamReader;
     }
 
     /**
@@ -239,18 +244,29 @@ class RestActionReader
      */
     private function getMethodArguments(\ReflectionMethod $method)
     {
-        // ignore arguments that are or extend from:
+        // ignore all query params
+        $params = $this->queryParamReader->getParamsFromMethod($method);
+
+        // ignore type hinted arguments that are or extend from:
         // * Symfony\Component\HttpFoundation\Request
         // * FOS\RestBundle\Request\QueryFetcher
+        $ignoreClasses = array(
+            'Symfony\Component\HttpFoundation\Request',
+            'FOS\RestBundle\Request\QueryFetcher',
+        );
+
         $arguments = array();
         foreach ($method->getParameters() as $argument) {
-            if ($argumentClass = $argument->getClass()) {
-                if ($argumentClass->getName() === 'Symfony\Component\HttpFoundation\Request'
-                    || $argumentClass->isSubclassOf('Symfony\Component\HttpFoundation\Request')
-                    || $argumentClass->getName() === 'FOS\RestBundle\Request\QueryFetcher'
-                    || $argumentClass->isSubclassOf('FOS\RestBundle\Request\QueryFetcher')
-            ) {
-                     continue;
+            if (isset($params[$argument->getName()])) {
+                continue;
+            }
+
+            $argumentClass = $argument->getClass();
+            if ($argumentClass) {
+                foreach ($ignoreClasses as $class) {
+                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class)) {
+                        continue 2;
+                    }
                 }
             }
 

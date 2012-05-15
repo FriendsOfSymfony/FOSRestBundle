@@ -47,7 +47,19 @@ class QueryParamReader
             throw new \InvalidArgumentException(sprintf("Class '%s' has no method '%s' method.", $reflection->getName(), $method));
         }
 
-        $annotations = $this->annotationReader->getMethodAnnotations($reflection->getMethod($method));
+        return $this->getParamsFromMethod($reflection->getMethod($method));
+    }
+
+    /**
+     * Read annotations for a given method.
+     *
+     * @param \ReflectionMethod $method     Reflection method
+     *
+     * @return array QueryParam annotation objects of the method. Indexed by parameter name.
+     */
+    public function getParamsFromMethod(\ReflectionMethod $method)
+    {
+        $annotations = $this->annotationReader->getMethodAnnotations($method);
 
         $params = array();
         foreach ($annotations as $annotation) {
