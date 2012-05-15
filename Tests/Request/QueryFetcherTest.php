@@ -78,15 +78,17 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      * Test valid parameters.
      *
      * @param string $expected Expected query parameter value.
+     * @param string $expectedAll Expected query parameter values.
      * @param array  $query    Query parameters for the request.
      *
      * @dataProvider validatesConfiguredQueryParamDataProvider
      */
-    public function testValidatesConfiguredQueryParam($expected, $query)
+    public function testValidatesConfiguredQueryParam($expected, $expectedAll, $query)
     {
         $queryFetcher = $this->getQueryFetcher($query);
         $queryFetcher->setController($this->controller);
-        $this->assertEquals($expected, $queryFetcher->getParameter('foo'));
+        $this->assertEquals($expected, $queryFetcher->get('foo'));
+        $this->assertEquals($expectedAll, $queryFetcher->all());
     }
 
     /**
@@ -97,9 +99,9 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     public static function validatesConfiguredQueryParamDataProvider()
     {
         return array(
-            array('1', array('foo' => '1')),
-            array('42', array('foo' => '42')),
-            array('1', array('foo' => 'bar')),
+            array('1', array('foo' => '1', 'bar' => '1'), array('foo' => '1')),
+            array('42', array('foo' => '42', 'bar' => '1'), array('foo' => '42')),
+            array('1', array('foo' => '1', 'bar' => '1'), array('foo' => 'bar')),
         );
     }
 
@@ -110,7 +112,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     public function testExceptionOnRequestWithoutController()
     {
         $queryFetcher = new QueryFetcher($this->queryParamReader, new Request());
-        $queryFetcher->getParameter('qux', '42');
+        $queryFetcher->get('qux', '42');
     }
 
     /**
@@ -121,7 +123,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $queryFetcher = $this->getQueryFetcher();
         $queryFetcher->setController(array());
-        $queryFetcher->getParameter('qux', '42');
+        $queryFetcher->get('qux', '42');
     }
 
     /**
@@ -132,7 +134,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $queryFetcher = $this->getQueryFetcher();
         $queryFetcher->setController(array('foo', 'bar'));
-        $queryFetcher->getParameter('qux', '42');
+        $queryFetcher->get('qux', '42');
     }
 
     /**
@@ -143,6 +145,6 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $queryFetcher = $this->getQueryFetcher();
         $queryFetcher->setController($this->controller);
-        $queryFetcher->getParameter('qux', '42');
+        $queryFetcher->get('qux', '42');
     }
 }

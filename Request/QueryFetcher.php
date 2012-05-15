@@ -77,7 +77,7 @@ class QueryFetcher
      *
      * @return mixed Value of the parameter.
      */
-    public function getParameter($name)
+    public function get($name)
     {
         if (!isset($this->params)) {
             $this->initParams();
@@ -97,5 +97,32 @@ class QueryFetcher
         }
 
         return $param;
+    }
+
+    /**
+     * Get all validated query parameter.
+     *
+     * @return array Values of all the parameters.
+     */
+    public function all()
+    {
+        if (!isset($this->params)) {
+            $this->initParams();
+        }
+
+        $params = array();
+        foreach ($this->params as $name => $config) {
+            $default = $config->default;
+            $param = $this->request->query->get($name, $default);
+
+            // Set default if the requirements do not match
+            if ($param !== $default && !preg_match('#^'.$config->requirements.'$#xs', $param)) {
+                $param = $default;
+            }
+
+            $params[$name] = $param;
+        }
+
+        return $params;
     }
 }
