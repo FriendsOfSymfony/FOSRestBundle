@@ -30,14 +30,17 @@ class QueryFetcherListener
      */
     private $container;
 
+    private $setParamsAsAttributes;
+
     /**
      * Constructor.
      *
      * @param   ContainerInterface $container container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, $setParamsAsAttributes = false)
     {
         $this->container = $container;
+        $this->setParamsAsAttributes = $setParamsAsAttributes;
     }
 
     /**
@@ -47,9 +50,22 @@ class QueryFetcherListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
+        $request = $event->getRequest();
         $queryFetcher = $this->container->get('fos_rest.request.query_fetcher');
 
         $queryFetcher->setController($event->getController());
-        $event->getRequest()->attributes->set('queryFetcher', $queryFetcher);
+        $request->attributes->set('queryFetcher', $queryFetcher);
+
+        if ($this->setParamsAsAttributes) {
+            $params = $queryFetcher->all();
+            foreach ($params as $name => $param) {
+                if ($request->attributes->has($name)) {
+                    $msg = sprintf("QueryFetcher parameter conflicts with a path parameter '$name' for route '%s'", $request->attributes->get('_route'));
+                    throw new \InvalidArgumentException($msg);
+                }
+
+                $request->attributes->set($name, $param);
+            }
+        }
     }
 }

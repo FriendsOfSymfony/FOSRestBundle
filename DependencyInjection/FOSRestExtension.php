@@ -132,6 +132,10 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['query_fetcher_listener'])) {
             $loader->load('query_fetcher_listener.xml');
+
+            if ('force' === $config['query_fetcher_listener']) {
+                $container->setParameter($this->getAlias().'.query_fetch_listener.set_params_as_attributes', true);
+            }
         }
     }
 
