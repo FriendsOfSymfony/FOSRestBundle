@@ -133,7 +133,8 @@ class RestActionReader
         }
 
         // if we can't get http-method and resources from method name - skip
-        if (!($httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method))) {
+        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method);
+        if (!$httpMethodAndResources) {
             return;
         }
 
@@ -173,7 +174,8 @@ class RestActionReader
         $requirements = array('_method' => strtoupper($httpMethod));
         $options      = array();
 
-        if ($annotation = $this->readRouteAnnotation($method)) {
+        $annotation = $this->readRouteAnnotation($method);
+        if ($annotation) {
             $annoRequirements = $annotation->getRequirements();
 
             if (!isset($annoRequirements['_method'])) {
@@ -205,6 +207,7 @@ class RestActionReader
         if ('_' === substr($method->getName(), 0, 1)) {
             return false;
         }
+
         // if method has NoRoute annotation - skip
         if ($this->readMethodAnnotation($method, 'NoRoute')) {
             return false;
@@ -218,13 +221,13 @@ class RestActionReader
      *
      * @param \ReflectionMethod $method
      *
-     * @return array
+     * @return Boolean|array
      */
     private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method)
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
-            return;
+            return false;
         }
 
         $httpMethod = strtolower($matches[1]);
@@ -321,8 +324,7 @@ class RestActionReader
                         strtolower(Pluralization::pluralize($resource))
                         .'/{'.$arguments[$i]->getName().'}';
                 } else {
-                    $urlParts[] =
-                        '{'.$arguments[$i]->getName().'}';
+                    $urlParts[] = '{'.$arguments[$i]->getName().'}';
                 }
             } elseif (null !== $resource) {
                 $urlParts[] = strtolower($resource);
@@ -347,13 +349,15 @@ class RestActionReader
             // allow hypertext as the engine of application state
             // through conventional GET actions
             return 'get';
-        } elseif (count($arguments) < count($resources)) {
+        }
+
+        if (count($arguments) < count($resources)) {
             // resource collection
             return 'get';
-        } else {
-            //custom object
-            return 'patch';
         }
+
+        //custom object
+        return 'patch';
     }
 
     /**
@@ -368,8 +372,6 @@ class RestActionReader
         foreach (array('Route','Get','Post','Put','Patch','Delete','Head') as $annotationName) {
             if ($annotation = $this->readMethodAnnotation($reflection, $annotationName)) {
                 return $annotation;
-
-                break;
             }
         }
     }
