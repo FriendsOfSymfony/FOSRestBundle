@@ -12,9 +12,12 @@
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
 use Doctrine\Common\Annotations\Reader;
-use FOS\RestBundle\Util\Pluralization;
+
 use Symfony\Component\Routing\Route;
+
+use FOS\RestBundle\Util\Pluralization;
 use FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Request\QueryParamReader;
 
 /**
  * REST controller actions reader.
@@ -24,6 +27,7 @@ use FOS\RestBundle\Routing\RestRouteCollection;
 class RestActionReader
 {
     private $annotationReader;
+    private $queryParamReader;
 
     private $routePrefix;
     private $namePrefix;
@@ -37,9 +41,10 @@ class RestActionReader
      *
      * @param Reader $annotationReader annotation reader
      */
-    public function __construct(Reader $annotationReader)
+    public function __construct(Reader $annotationReader, QueryParamReader $queryParamReader)
     {
         $this->annotationReader = $annotationReader;
+        $this->queryParamReader = $queryParamReader;
     }
 
     /**
@@ -128,7 +133,8 @@ class RestActionReader
         }
 
         // if we can't get http-method and resources from method name - skip
-        if (!($httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method))) {
+        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method);
+        if (!$httpMethodAndResources) {
             return;
         }
 
@@ -168,7 +174,8 @@ class RestActionReader
         $requirements = array('_method' => strtoupper($httpMethod));
         $options      = array();
 
-        if ($annotation = $this->readRouteAnnotation($method)) {
+        $annotation = $this->readRouteAnnotation($method);
+        if ($annotation) {
             $annoRequirements = $annotation->getRequirements();
 
             if (!isset($annoRequirements['_method'])) {
@@ -200,6 +207,7 @@ class RestActionReader
         if ('_' === substr($method->getName(), 0, 1)) {
             return false;
         }
+
         // if method has NoRoute annotation - skip
         if ($this->readMethodAnnotation($method, 'NoRoute')) {
             return false;
@@ -213,13 +221,13 @@ class RestActionReader
      *
      * @param \ReflectionMethod $method
      *
-     * @return array
+     * @return Boolean|array
      */
     private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method)
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
-            return;
+            return false;
         }
 
         $httpMethod = strtolower($matches[1]);
@@ -239,13 +247,29 @@ class RestActionReader
      */
     private function getMethodArguments(\ReflectionMethod $method)
     {
-        // ignore arguments that are or extend from Symfony\Component\HttpFoundation\Request
+        // ignore all query params
+        $params = $this->queryParamReader->getParamsFromMethod($method);
+
+        // ignore type hinted arguments that are or extend from:
+        // * Symfony\Component\HttpFoundation\Request
+        // * FOS\RestBundle\Request\QueryFetcher
+        $ignoreClasses = array(
+            'Symfony\Component\HttpFoundation\Request',
+            'FOS\RestBundle\Request\QueryFetcherInterface',
+        );
+
         $arguments = array();
         foreach ($method->getParameters() as $argument) {
-            if ($argumentClass = $argument->getClass()) {
-                if ($argumentClass->getName() === 'Symfony\Component\HttpFoundation\Request'
-                 || $argumentClass->isSubclassOf('Symfony\Component\HttpFoundation\Request')) {
-                     continue;
+            if (isset($params[$argument->getName()])) {
+                continue;
+            }
+
+            $argumentClass = $argument->getClass();
+            if ($argumentClass) {
+                foreach ($ignoreClasses as $class) {
+                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class)) {
+                        continue 2;
+                    }
                 }
             }
 
@@ -300,8 +324,7 @@ class RestActionReader
                         strtolower(Pluralization::pluralize($resource))
                         .'/{'.$arguments[$i]->getName().'}';
                 } else {
-                    $urlParts[] =
-                        '{'.$arguments[$i]->getName().'}';
+                    $urlParts[] = '{'.$arguments[$i]->getName().'}';
                 }
             } elseif (null !== $resource) {
                 $urlParts[] = strtolower($resource);
@@ -326,13 +349,15 @@ class RestActionReader
             // allow hypertext as the engine of application state
             // through conventional GET actions
             return 'get';
-        } elseif (count($arguments) < count($resources)) {
+        }
+
+        if (count($arguments) < count($resources)) {
             // resource collection
             return 'get';
-        } else {
-            //custom object
-            return 'patch';
         }
+
+        //custom object
+        return 'patch';
     }
 
     /**
@@ -347,8 +372,6 @@ class RestActionReader
         foreach (array('Route','Get','Post','Put','Patch','Delete','Head') as $annotationName) {
             if ($annotation = $this->readMethodAnnotation($reflection, $annotationName)) {
                 return $annotation;
-
-                break;
             }
         }
     }
