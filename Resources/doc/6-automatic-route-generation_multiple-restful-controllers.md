@@ -126,18 +126,27 @@ For further examples, see comments of controllers in the code above.
 
 Sometimes, routes auto-naming will lead to route names collisions, so RestBundle route
 collections provides a ``name_prefix`` (``name-prefix`` for xml and ``@NamePrefix`` for
-annotations) parameter:
+annotations) parameter (you can use ``name_prefix`` only in a file loaded by the rest loader.):
+
+```yaml
+# app/config/routing.yml
+users:
+    type: rest  # Required for `RestYamlLoader` to process imported routes
+    prefix: /api
+    resource: "@AcmeHelloBundle/Resources/config/users_routes.yml"
+```
 
 ```yaml
 # src/Acme/HelloBundle/Resources/config/users_routes.yml
 comments:
     type:         rest
     resource:     "@AcmeHelloBundle\Controller\CommentsController"
-    name_prefix:  api_
+    name_prefix:  api_ # Our precious parameter
 ```
 
 With this configuration, route name would become:
 
     api_vote_user_comment
+
 
 Say NO to name collisions!
