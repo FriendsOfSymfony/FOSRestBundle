@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="fos_rest.query_fetch_listener.class">FOS\RestBundle\EventListener\QueryFetcherListener</parameter>
+        <parameter key="fos_rest.query_fetch_listener.set_params_as_attributes">false</parameter>
+
+    </parameters>
+
+    <services>
+
+        <service id="fos_rest.query_fetch_listener" class="%fos_rest.query_fetch_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+            <argument type="service" id="service_container"/>
+            <argument>%fos_rest.query_fetch_listener.set_params_as_attributes%</argument>
+        </service>
+
+    </services>
+</container>

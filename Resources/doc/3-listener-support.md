@@ -214,3 +214,64 @@ fos_rest:
 
 ## That was it!
 [Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
+
+### Query fetcher listener
+
+The query fetcher listener simply sets the QueryFetcher instance as a request attribute
+configured for the matched controller so that the user does not need to do this manually.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    query_fetcher_listener: true
+```
+
+```php
+class FooController extends Controller
+{
+    /**
+     * Will look for a page query parameters, ie. ?page=XX
+     * If not passed it will be automatically be set to the default of "1"
+     * If passed but doesn't match the requirement "\d+" it will be also be set to the default of "1"
+     * Note that if the value matches the default then no validation is run.
+     * So make sure the default value really matches your expectations.
+     * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
+     *
+     * @param QueryFetcher $queryFetcher
+     */
+    public function getArticlesAction(QueryFetcher $queryFetcher)
+    {
+        $page = $queryFetcher->get('page');
+        $articles = array('bim', 'bam', 'bingo');
+
+        return array('articles' => $articles, 'page' => $page);
+    }
+```
+
+Note: There is also ``$queryFetcher->all()`` to fetch all configured query parameters at once. And also
+both ``$queryFetcher->get()`` and ``$queryFetcher->all()`` support and optional ``$strict`` parameter
+to throw a ``\RuntimeException`` on a validation error.
+
+Optionally the listener can also already set all configured query parameters as request attributes
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    query_fetcher_listener: force
+```
+
+```php
+class FooController extends Controller
+{
+    /**
+     * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
+     *
+     * @param string $page
+     */
+    public function getArticlesAction($page)
+    {
+        $articles = array('bim', 'bam', 'bingo');
+
+        return array('articles' => $articles, 'page' => $page);
+    }
+```

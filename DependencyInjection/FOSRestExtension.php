@@ -39,6 +39,7 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('routing.xml');
         $loader->load('util.xml');
+        $loader->load('request.xml');
 
         if (version_compare(FOSRestBundle::getSymfonyVersion(Kernel::VERSION), '2.1.0', '<')) {
             $container->setParameter('fos_rest.routing.loader.controller.class', $container->getParameter('fos_rest.routing.loader_2_0.controller.class'));
@@ -127,6 +128,14 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.mime_types', $config['view']['mime_types']);
         } else {
             $container->setParameter($this->getAlias().'.mime_types', array());
+        }
+
+        if (!empty($config['query_fetcher_listener'])) {
+            $loader->load('query_fetcher_listener.xml');
+
+            if ('force' === $config['query_fetcher_listener']) {
+                $container->setParameter($this->getAlias().'.query_fetch_listener.set_params_as_attributes', true);
+            }
         }
     }
 

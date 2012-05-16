@@ -47,6 +47,7 @@
 
         <service id="fos_rest.routing.loader.reader.action" class="%fos_rest.routing.loader.reader.action.class%">
             <argument type="service" id="annotation_reader" />
+            <argument type="service" id="fos_rest.request.query_fetcher.reader.query_param" />
         </service>
 
     </services>
