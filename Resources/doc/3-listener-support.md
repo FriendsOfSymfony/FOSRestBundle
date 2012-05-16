@@ -233,6 +233,8 @@ class FooController extends Controller
      * Will look for a page query parameters, ie. ?page=XX
      * If not passed it will be automatically be set to the default of "1"
      * If passed but doesn't match the requirement "\d+" it will be also be set to the default of "1"
+     * Note that if the value matches the default then no validation is run.
+     * So make sure the default value really matches your expectations.
      * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
      *
      * @param QueryFetcher $queryFetcher
@@ -262,9 +264,6 @@ fos_rest:
 class FooController extends Controller
 {
     /**
-     * Will look for a page query parameters, ie. ?page=XX
-     * If not passed it will be automatically be set to the default of "1"
-     * If passed but doesn't match the requirement "\d+" it will be also be set to the default of "1"
      * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
      *
      * @param string $page
