@@ -19,8 +19,12 @@ namespace FOS\RestBundle\Controller\Annotations;
  */
 class QueryParam
 {
+    /** @var string */
     public $name;
+    /** @var string */
     public $requirements;
+    /** @var string */
     public $default;
+    /** @var string */
     public $description;
 }
