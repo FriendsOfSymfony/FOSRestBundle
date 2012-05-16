@@ -74,10 +74,11 @@ class QueryFetcher
      * Get a validated query parameter.
      *
      * @param string $name    Name of the query parameter
+     * @param Boolean $strict If a requirement mismatch should cause an exception
      *
      * @return mixed Value of the parameter.
      */
-    public function get($name)
+    public function get($name, $strict = false)
     {
         if (!isset($this->params)) {
             $this->initParams();
@@ -92,7 +93,11 @@ class QueryFetcher
         $param = $this->request->query->get($name, $default);
 
         // Set default if the requirements do not match
-        if ($param !== $default && !preg_match('#^' .$config->requirements . '$#xs', $param)) {
+        if ($param !== $default && !preg_match('#^'.$config->requirements.'$#xs', $param)) {
+            if ($strict) {
+                throw new \RuntimeException("Query parameter value '$param', does not match requirements '{$config->requirements}'");
+            }
+
             $param = $default;
         }
 
@@ -102,9 +107,11 @@ class QueryFetcher
     /**
      * Get all validated query parameter.
      *
+     * @param Boolean $strict If a requirement mismatch should cause an exception
+     *
      * @return array Values of all the parameters.
      */
-    public function all()
+    public function all($strict = false)
     {
         if (!isset($this->params)) {
             $this->initParams();
@@ -112,15 +119,7 @@ class QueryFetcher
 
         $params = array();
         foreach ($this->params as $name => $config) {
-            $default = $config->default;
-            $param = $this->request->query->get($name, $default);
-
-            // Set default if the requirements do not match
-            if ($param !== $default && !preg_match('#^'.$config->requirements.'$#xs', $param)) {
-                $param = $default;
-            }
-
-            $params[$name] = $param;
+            $params[$name] = $this->get($name, $strict);
         }
 
         return $params;

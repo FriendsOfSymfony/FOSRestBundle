@@ -106,6 +106,31 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Throw exception on invalid parameters.
+     */
+    public function testExceotionOnValidatesFailure()
+    {
+        $queryFetcher = $this->getQueryFetcher(array('foo' => 'bar'));
+        $queryFetcher->setController($this->controller);
+
+        try {
+            try {
+                $queryFetcher->get('foo', true);
+                $this->fail('Fetching get() in strict mode did not throw an exception');
+            } catch (\RuntimeException $e) {
+                try {
+                    $queryFetcher->all(true);
+                    $this->fail('Fetching all() in strict mode did not throw an exception');
+                } catch (\RuntimeException $e) {
+                    return;
+                }
+            }
+        } catch (\Exception $e) {
+            $this->fail('Fetching in strict mode did not throw an \RuntimeException');
+        }
+    }
+
+    /**
      * @expectedException        LogicException
      * @expectedExceptionMessage Controller and method needs to be set via setController
      */

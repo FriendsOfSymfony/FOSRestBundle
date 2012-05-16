@@ -246,6 +246,10 @@ class FooController extends Controller
     }
 ```
 
+Note: There is also ``$queryFetcher->all()`` to fetch all configured query parameters at once. And also
+both ``$queryFetcher->get()`` and ``$queryFetcher->all()`` support and optional ``$strict`` parameter
+to throw a ``\RuntimeException`` on a validation error.
+
 Optionally the listener can also already set all configured query parameters as request attributes
 
 ```yaml
