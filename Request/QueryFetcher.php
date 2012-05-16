@@ -74,11 +74,11 @@ class QueryFetcher implements QueryFetcherInterface
      */
     public function get($name, $strict = false)
     {
-        if (!isset($this->params)) {
+        if (null === $this->params) {
             $this->initParams();
         }
 
-        if (!isset($this->params[$name])) {
+        if (!array_key_exists($name, $this->params)) {
             throw new \InvalidArgumentException(sprintf("No @QueryParam configuration for parameter '%s'.", $name));
         }
 
@@ -107,10 +107,6 @@ class QueryFetcher implements QueryFetcherInterface
      */
     public function all($strict = false)
     {
-        if (!isset($this->params)) {
-            $this->initParams();
-        }
-
         $params = array();
         foreach ($this->params as $name => $config) {
             $params[$name] = $this->get($name, $strict);
