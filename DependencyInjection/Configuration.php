@@ -27,6 +27,8 @@ use FOS\Rest\Util\Codes;
  */
 class Configuration implements ConfigurationInterface
 {
+    private $forceOptionValues = array(false, true, 'force');
+
     /**
      * Generates the configuration tree.
      *
@@ -39,7 +41,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('query_fetcher_listener')->defaultValue(false)->end()
+                ->scalarNode('query_fetcher_listener')->defaultFalse()
+                    ->validate()
+                    ->ifNotInArray($this->forceOptionValues)
+                    ->thenInvalid('The query_fetcher_listener option does not support %s. Please choose one of '.json_encode($this->forceOptionValues))
+                    ->end()
+                ->end()
                 ->arrayNode('routing_loader')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -112,7 +119,12 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(array('html' => true))
                             ->prototype('boolean')->end()
                         ->end()
-                        ->scalarNode('view_response_listener')->defaultValue('force')->end()
+                        ->scalarNode('view_response_listener')->defaultValue('force')
+                            ->validate()
+                            ->ifNotInArray($this->forceOptionValues)
+                            ->thenInvalid('The view_response_listener option does not support %s. Please choose one of '.json_encode($this->forceOptionValues))
+                            ->end()
+                        ->end()
                         ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
                     ->end()
                 ->end()
