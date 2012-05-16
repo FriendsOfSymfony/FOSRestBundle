@@ -104,13 +104,13 @@ class FOSRestExtension extends Extension
         $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
         $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
 
-        if ($config['body_listener']) {
+        if (!empty($config['body_listener'])) {
             $loader->load('body_listener.xml');
 
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
         }
 
-        if ($config['format_listener']) {
+        if (!empty($config['format_listener'])) {
             $loader->load('format_listener.xml');
 
             $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
@@ -130,7 +130,7 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.mime_types', array());
         }
 
-        if ($config['query_fetcher_listener']) {
+        if (!empty($config['query_fetcher_listener'])) {
             $loader->load('query_fetcher_listener.xml');
 
             if ('force' === $config['query_fetcher_listener']) {
