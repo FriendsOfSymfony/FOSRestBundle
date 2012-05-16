@@ -17,8 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
  * Helper to validate query parameters from the active request.
  *
  * @author Alexander <iam.asm89@gmail.com>
+ * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class QueryFetcher
+class QueryFetcher implements QueryFetcherInterface
 {
     /**
      * @var QueryParamReader
@@ -52,22 +53,15 @@ class QueryFetcher
         $this->request = $request;
     }
 
+    /**
+     * @abstract
+     * @param callable $controller
+     *
+     * @return void
+     */
     public function setController($controller)
     {
         $this->controller = $controller;
-    }
-
-    private function initParams()
-    {
-        if (empty($this->controller)) {
-            throw new \InvalidArgumentException('Controller and method needs to be set via setController');
-        }
-
-        if (!is_array($this->controller) || empty($this->controller[0]) || !is_object($this->controller[0])) {
-            throw new \InvalidArgumentException('Controller needs to be set as a class instance (closures/functions are not supported)');
-        }
-
-        $this->params = $this->queryParamReader->read(new \ReflectionClass($this->controller[0]), $this->controller[1]);
     }
 
     /**
@@ -123,5 +117,23 @@ class QueryFetcher
         }
 
         return $params;
+    }
+
+    /**
+     * Initialize the parameters
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function initParams()
+    {
+        if (empty($this->controller)) {
+            throw new \InvalidArgumentException('Controller and method needs to be set via setController');
+        }
+
+        if (!is_array($this->controller) || empty($this->controller[0]) || !is_object($this->controller[0])) {
+            throw new \InvalidArgumentException('Controller needs to be set as a class instance (closures/functions are not supported)');
+        }
+
+        $this->params = $this->queryParamReader->read(new \ReflectionClass($this->controller[0]), $this->controller[1]);
     }
 }

@@ -18,8 +18,9 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
  * Class loading @QueryParameter annotations from methods.
  *
  * @author Alexander <iam.asm89@gmail.com>
+ * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class QueryParamReader
+class QueryParamReader implements QueryParamReaderInterface
 {
     private $annotationReader;
 
