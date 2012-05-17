@@ -107,6 +107,10 @@ class QueryFetcher implements QueryFetcherInterface
      */
     public function all($strict = false)
     {
+        if (null === $this->params) {
+            $this->initParams();
+        }
+
         $params = array();
         foreach ($this->params as $name => $config) {
             $params[$name] = $this->get($name, $strict);
