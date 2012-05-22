@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Request;
 
+use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -134,6 +135,6 @@ class QueryFetcher implements QueryFetcherInterface
             throw new \InvalidArgumentException('Controller needs to be set as a class instance (closures/functions are not supported)');
         }
 
-        $this->params = $this->queryParamReader->read(new \ReflectionClass($this->controller[0]), $this->controller[1]);
+        $this->params = $this->queryParamReader->read(new \ReflectionClass(ClassUtils::getClass($this->controller[0])), $this->controller[1]);
     }
 }

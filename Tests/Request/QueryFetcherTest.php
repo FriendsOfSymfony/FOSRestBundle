@@ -108,7 +108,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     /**
      * Throw exception on invalid parameters.
      */
-    public function testExceotionOnValidatesFailure()
+    public function testExceptionOnValidatesFailure()
     {
         $queryFetcher = $this->getQueryFetcher(array('foo' => 'bar'));
         $queryFetcher->setController($this->controller);
