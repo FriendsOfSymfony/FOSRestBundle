@@ -90,6 +90,7 @@ class FOSRestExtension extends Extension
         }
 
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
+        $container->setParameter($this->getAlias().'.routing.loader.use_patch', $config['routing_loader']['use_patch']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
@@ -143,7 +144,7 @@ class FOSRestExtension extends Extension
      * Check if an exception is loadable.
      *
      * @param string $exception class to test
-     * @throws InvalidArgumentException if the class was not found.
+     * @throws \InvalidArgumentException if the class was not found.
      */
     private function testExceptionExists($exception)
     {

@@ -5,6 +5,7 @@ Full default configuration
 fos_rest:
     routing_loader:
         default_format:       ~
+        use_patch:            true
     service:
         router:               router
         templating:           templating

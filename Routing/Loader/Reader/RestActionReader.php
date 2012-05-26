@@ -35,16 +35,20 @@ class RestActionReader
 
     private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'head');
     private $availableConventionalActions = array('new', 'edit', 'remove');
+    private $usePatch;
 
     /**
      * Initializes controller reader.
      *
      * @param Reader $annotationReader annotation reader
+     * @param QueryParamReader $queryParamReader
+     * @param boolean $usePatch
      */
-    public function __construct(Reader $annotationReader, QueryParamReader $queryParamReader)
+    public function __construct(Reader $annotationReader, QueryParamReader $queryParamReader, $usePatch = true)
     {
         $this->annotationReader = $annotationReader;
         $this->queryParamReader = $queryParamReader;
+        $this->usePatch = $usePatch;
     }
 
     /**
@@ -357,7 +361,7 @@ class RestActionReader
         }
 
         //custom object
-        return 'patch';
+        return $this->usePatch ? 'patch' : 'post';
     }
 
     /**
@@ -365,7 +369,7 @@ class RestActionReader
      *
      * @param \ReflectionMethod $reflection
      *
-     * @return Annotation|null
+     * @return mixed
      */
     private function readRouteAnnotation(\ReflectionMethod $reflection)
     {
@@ -379,10 +383,10 @@ class RestActionReader
     /**
      * Reads method annotations.
      *
-     * @param ReflectionMethod $reflection     controller action
+     * @param \ReflectionMethod $reflection     controller action
      * @param string           $annotationName annotation name
      *
-     * @return Annotation|null
+     * @return mixed
      */
     private function readMethodAnnotation(\ReflectionMethod $reflection, $annotationName)
     {
