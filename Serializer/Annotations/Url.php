@@ -4,11 +4,10 @@ namespace FOS\RestBundle\Serializer\Annotations;
 
 /**
  * @Annotation
- * @Target({"CLASS"})
+ * @Target({"PROPERTY"})
  */
 final class Url
 {
-    public $field;
     public $routeName;
     public $params = array();
 }

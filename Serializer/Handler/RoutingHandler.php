@@ -20,7 +20,7 @@ class RoutingHandler implements SerializationHandlerInterface
     }
 
     /**
-     * Serialize if there is Url annotation
+     * Serialize if there is HasUrl annotation
      *
      * @param VisitorInterface
      * @param mixed $data
@@ -30,18 +30,23 @@ class RoutingHandler implements SerializationHandlerInterface
     public function serialize(VisitorInterface $visitor, $data, $type, &$visited)
     {
         $refl = new \ReflectionClass($data);
-        $classAnnotations = $this->reader->getClassAnnotations($refl);
-        foreach ($classAnnotations as $annotation) {
-            if ($annotation instanceof Url) {
-                $params = array();
-                foreach ($annotation->params as $param) {
-                    $value = $refl->getMethod('get'.ucwords($param->field))->invoke($data);
-                    $params[$param->key] = $value;
+        if ($hasUrlAnnot = $this->reader->getClassAnnotation($refl, 'FOS\\RestBundle\\Serializer\\Annotations\\HasUrl')){
+            foreach ($refl->getProperties() as $property) {
+                if ($urlAnnot = $this->reader->getPropertyAnnotation($property, 'FOS\\RestBundle\\Serializer\\Annotations\\Url')){
+                    $params = array();
+                    foreach ($urlAnnot->params as $param) {
+                        $value = $refl->getMethod('get'.ucwords($param->field))->invoke($data);
+                        $params[$param->key] = $value;
+                    }
+                    $url = $this->router->generate($urlAnnot->routeName, $params);
+                    $property->setAccessible(true);
+                    $property->setValue($data, $url);
                 }
-                $url = $this->router->generate($annotation->routeName, $params);
-                $refl->getMethod('set'.ucwords($annotation->field))->invoke($data, $url);
             }
         }
+
+        return;
+    }
     }
 }
 
