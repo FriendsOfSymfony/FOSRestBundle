@@ -31,21 +31,24 @@ api_get_category_books:
 
 namespace Acme\DemoBundle\Entity;
 
+use FOS\RestBundle\Serializer\Annotations\HasUrl;
 use FOS\RestBundle\Serializer\Annotations\Url;
 use FOS\RestBundle\Serializer\Annotations\Param;
 
 /**
- * @Url(field="bookUrl",
- *      routeName="api_get_category_books",
- *      params={
- *          @Param(key="categoryId", field="id")
- *      }
- *  )
+ * @HasUrl
  */
 class Category
 {
     private $id;
     private $title;
+
+    /**
+     * @Url(routeName="api_get_category_books",
+     *      params={
+     *          @Param(key="categoryId", field="id")
+     *      }
+     *  )
     private $bookUrl;
 
     //getter and setter
