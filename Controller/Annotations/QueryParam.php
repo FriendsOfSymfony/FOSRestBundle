@@ -22,9 +22,9 @@ class QueryParam
     /** @var string */
     public $name;
     /** @var string */
-    public $requirements;
+    public $requirements = '';
     /** @var string */
-    public $default;
+    public $default = '';
     /** @var string */
     public $description;
 }

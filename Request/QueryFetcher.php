@@ -88,7 +88,10 @@ class QueryFetcher implements QueryFetcherInterface
         $param = $this->request->query->get($name, $default);
 
         // Set default if the requirements do not match
-        if ($param !== $default && !preg_match('#^'.$config->requirements.'$#xs', $param)) {
+        if ("" !== $config->requirements
+            && $param !== $default
+            && !preg_match('#^'.$config->requirements.'$#xs', $param)
+        ) {
             if ($strict) {
                 throw new \RuntimeException("Query parameter value '$param', does not match requirements '{$config->requirements}'");
             }
