@@ -123,7 +123,7 @@ Shown as ``UsersController::putUserAction()`` above.
 type. Shown as ``UsersController::deleteUserAction()`` above.
 * **patch** - this action accepts *PATCH* requests to the url */resources* and is supposed to partially modify collection
 of resources (e.g. apply batch modifications to subset of resources). Shown as ``UsersController::patchUsersAction()`` above.
-This action also accepts *PATCH* requests to the url */resources/{id}* and is supposed to partially modify the resource. 
+This action also accepts *PATCH* requests to the url */resources/{id}* and is supposed to partially modify the resource.
 Shown as ``UsersController::patchUserAction()`` above.
 
 ### Conventional Actions
@@ -142,18 +142,26 @@ client to *DELETE* an existing resource. Commonly a confirmation form. Shown as 
 ### Custom PATCH Actions
 
 All actions that do not match the ones listed in the sections above will register as a *PATCH* action. In the controller
-shown above, these actions are ``UsersController::lockUserAction()``, ``UsersController::banUserAction()`` and 
+shown above, these actions are ``UsersController::lockUserAction()``, ``UsersController::banUserAction()`` and
 ``UsersController::voteUserCommentAction()``. You could just as easily create a method called
 ``UsersController::promoteUserAction()`` which would take a *PATCH* request to the url */users/{slug}/promote*.
 This allows for easy updating of aspects of a resource, without having to deal with the resource as a whole at
 the standard *PATCH* or *PUT* endpoint.
+
+**NOTE:** If you want to use *POST* instead of *PATCH* for custom actions, simply change your configuration:
+
+```yaml
+fos_rest:
+    routing_loader:
+        use_patch: false
+```
 
 ### Sub-Resource Actions
 
 Of course it's possible and common to have sub or child resources. They are easily defined within the same controller by
 following the naming convention ``ResourceController::actionResourceSubResource()`` - as seen in the example above with
 ``UsersController::getUserCommentsAction()``. This is a good strategy to follow when the child resource needs the parent
-resource's ID in order to look up itself. 
+resource's ID in order to look up itself.
 
 ## That was it!
 [Return to the index](index.md) or continue reading about [Automatic route generation: multiple RESTful controllers](6-automatic-route-generation_multiple-restful-controllers.md).
