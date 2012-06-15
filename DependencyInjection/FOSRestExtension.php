@@ -137,6 +137,17 @@ class FOSRestExtension extends Extension
                 $container->setParameter($this->getAlias().'.query_fetch_listener.set_params_as_attributes', true);
             }
         }
+
+        if (!empty($config['request_content_param_converter'])) {
+            if($config['request_content_param_converter']['enabled']) {
+                $loader->load('request_content_param_converter.xml');
+
+                // Default - false
+                $exceptionOnFault = $config['request_content_param_converter']['exception_on_fault'];
+
+                $container->setParameter($this->getAlias().'.request.param_converter.request_content_param_converter.exception_on_fault', $exceptionOnFault);
+            }
+        }
     }
 
     /**
