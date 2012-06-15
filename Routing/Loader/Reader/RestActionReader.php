@@ -253,9 +253,11 @@ class RestActionReader
         // ignore type hinted arguments that are or extend from:
         // * Symfony\Component\HttpFoundation\Request
         // * FOS\RestBundle\Request\QueryFetcher
+        // * FOS\RestBundle\Request\DataTransferObject - needed for ParamConverter
         $ignoreClasses = array(
             'Symfony\Component\HttpFoundation\Request',
             'FOS\RestBundle\Request\QueryFetcherInterface',
+            'FOS\RestBundle\Request\DataTransferObject',
         );
 
         $arguments = array();
