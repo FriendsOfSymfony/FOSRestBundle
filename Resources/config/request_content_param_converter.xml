@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        
+        <parameter key="fos_rest.request.param_converter.request_content_param_converter.class">FOS\RestBundle\Request\ParamConverter\RequestContentParamConverter</parameter>
+    
+    </parameters>
+        
+    <services>
+        
+        <service id="fos_rest.request.param_converter.request_content_param_converter"
+                 class="%fos_rest.request.param_converter.request_content_param_converter.class%">
+            <argument type="service" id="serializer" />
+            <argument type="collection">
+                <argument key="exception_on_fault">%fos_rest.request.param_converter.request_content_param_converter.exception_on_fault%</argument>
+            </argument>
+            <tag name="request.param_converter" priority="-100" />
+        </service>
+        
+    </services>
+    
+</container>
