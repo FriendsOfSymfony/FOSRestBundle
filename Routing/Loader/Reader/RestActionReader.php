@@ -253,11 +253,15 @@ class RestActionReader
         // ignore type hinted arguments that are or extend from:
         // * Symfony\Component\HttpFoundation\Request
         // * FOS\RestBundle\Request\QueryFetcher
-        // * FOS\RestBundle\Request\DataTransferObject - needed for ParamConverter
         $ignoreClasses = array(
             'Symfony\Component\HttpFoundation\Request',
             'FOS\RestBundle\Request\QueryFetcherInterface',
-            'FOS\RestBundle\Request\DataTransferObject',
+        );
+        
+        // ignore type hinted arguments that are interfaces of:
+        // * FOS\RestBundle\Request\DataTransferObject - needed for ParamConverter
+        $ignoreInterfaces = array(
+            'FOS\RestBundle\Request\DataTransferObjectInterface',
         );
 
         $arguments = array();
@@ -269,7 +273,12 @@ class RestActionReader
             $argumentClass = $argument->getClass();
             if ($argumentClass) {
                 foreach ($ignoreClasses as $class) {
-                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class)) {
+                    $interfaceNames = $argumentClass->getInterfaceNames();
+                    
+                    $interfacesIntersect = array_intersect($ignoreInterfaces, $interfaceNames);
+                    $hasInterface = !empty($interfacesIntersect);
+                    
+                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class) || $hasInterface) {
                         continue 2;
                     }
                 }

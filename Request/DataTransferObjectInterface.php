@@ -13,13 +13,13 @@ namespace FOS\RestBundle\Request;
 
 /**
  * All objects which you want to deserialize from the Request content 
- * must extend DataTransferObject.
+ * must implements DataTransferObjectInterface.
  * 
  * Instances should accept empty constructor.
  * 
  * @author Antoni Orfin <a.orfin@imagin.com.pl>
  * @copyright (c) 2012  IMAGIN IT Marcin Engelmann
  */
-abstract class DataTransferObject
+interface DataTransferObjectInterface
 {
 }
