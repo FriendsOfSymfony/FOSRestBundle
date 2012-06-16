@@ -49,18 +49,26 @@ class RequestContentParamConverter implements ParamConverterInterface
     }
 
     /**
-     * Only objects are supported.
+     * Only objects implementing FOS\RestBundle\Request\DataTransferObjectInterface
+     * are supported.
      *
      * @param  ConfigurationInterface $configuration
      * @return boolean
      */
     public function supports(ConfigurationInterface $configuration)
     {
-        if (!$configuration->getClass()) {
+        $class = $configuration->getClass();
+        
+        if (!$class) {
             return false;
         }
+        
+        $argumentClass = new \ReflectionClass($class);
+        
+        $interfaceNames = $argumentClass->getInterfaceNames();
+        $hasInterface = in_array('FOS\RestBundle\Request\DataTransferObjectInterface', $interfaceNames);
 
-        return true;
+        return $hasInterface;
     }
 
     /**
