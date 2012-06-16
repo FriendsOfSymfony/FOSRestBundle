@@ -12,8 +12,6 @@
 namespace FOS\RestBundle\Request;
 
 /**
- * DataTransferObject
- * 
  * All objects which you want to deserialize from the Request content 
  * must extend DataTransferObject.
  * 

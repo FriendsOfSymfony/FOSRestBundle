@@ -18,8 +18,6 @@ use JMS\SerializerBundle\Serializer\SerializerInterface;
 use JMS\SerializerBundle\Exception\RuntimeException;
 
 /**
- * RequestContentParamConverter
- *
  * It supports deserializing content of the request into needed object.
  * 
  * Based on http://php-and-symfony.matthiasnoback.nl/2012/03/symfony2-creating-a-paramconverter-for-deserializing-request-content/
@@ -28,7 +26,8 @@ use JMS\SerializerBundle\Exception\RuntimeException;
  * @author Antoni Orfin <a.orfin@imagin.com.pl>
  * @copyright (c) 2012  IMAGIN IT Marcin Engelmann
  */
-class RequestContentParamConverter implements ParamConverterInterface {
+class RequestContentParamConverter implements ParamConverterInterface 
+{
     
     /**
      * Serializer instance.
@@ -68,6 +67,7 @@ class RequestContentParamConverter implements ParamConverterInterface {
      * 
      * @param Request $request
      * @param ConfigurationInterface $configuration
+     * 
      * @throws RuntimeException Only if request_content_param_converter.exception_on_fault is set to true
      */
     public function apply(Request $request, ConfigurationInterface $configuration) {
@@ -103,5 +103,4 @@ class RequestContentParamConverter implements ParamConverterInterface {
         // (this will later be an argument for the action)
         $request->attributes->set($configuration->getName(), $object);
     }
-
 }
