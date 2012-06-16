@@ -303,5 +303,31 @@ class FooController extends Controller
     }
 ```
 
+### Allowed Http Methods Listener
+
+This listener add the ``Allow`` HTTP header to each request appending all allowed methods for a given resource.
+
+Let's say we have the following routes:
+```
+api_get_users
+api_post_users
+api_get_user
+```
+
+A ``GET`` request to ``api_get_users`` will response in:
+
+```
+< HTTP/1.0 200 OK
+< Date: Sat, 16 Jun 2012 15:17:22 GMT
+< Server: Apache/2.2.22 (Ubuntu)
+< allow: GET, POST
+```
+You may disable this listener like this as it is true by default:
+
+```
+fos_rest:
+    allowed_http_methods_listener: false
+```
+
 ## That was it!
 [Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
