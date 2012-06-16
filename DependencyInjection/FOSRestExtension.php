@@ -137,6 +137,10 @@ class FOSRestExtension extends Extension
                 $container->setParameter($this->getAlias().'.query_fetch_listener.set_params_as_attributes', true);
             }
         }
+
+        if (!empty($config['allowed_http_methods_listener'])) {
+            $loader->load('allowed_http_methods_listener.xml');
+        }
     }
 
     /**
