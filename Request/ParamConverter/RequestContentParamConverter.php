@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInte
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\SerializerBundle\Serializer\SerializerInterface;
-use JMS\SerializerBundle\Exception\RuntimeException;
+use JMS\SerializerBundle\Exception\Exception;
 
 /**
  * It supports deserializing content of the request into needed object.
@@ -69,14 +69,14 @@ class RequestContentParamConverter implements ParamConverterInterface
      * @param Request                $request
      * @param ConfigurationInterface $configuration
      *
-     * @throws RuntimeException Only if request_content_param_converter.exception_on_fault is set to true
+     * @throws Exception Only if request_content_param_converter.exception_on_fault is set to true
      */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
         $class = $configuration->getClass();
 
         $contentType = $request->headers->get('Content-Type');
-
+        
         $format = null === $contentType
             ? $request->getRequestFormat()
             : $request->getFormat($request->headers->get('Content-Type'));
@@ -85,7 +85,7 @@ class RequestContentParamConverter implements ParamConverterInterface
             $object = $this->serializer->deserialize(
                     $request->getContent(), $class, $format
             );
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
 
             /**
              * If request_content_param_converter.exception_on_fault is set to false
