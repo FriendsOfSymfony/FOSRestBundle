@@ -139,7 +139,7 @@ class FOSRestExtension extends Extension
         }
 
         if (!empty($config['request_content_param_converter'])) {
-            if($config['request_content_param_converter']['enabled']) {
+            if ($config['request_content_param_converter']['enabled']) {
                 $loader->load('request_content_param_converter.xml');
 
                 // Default - false
