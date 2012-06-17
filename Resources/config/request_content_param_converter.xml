@@ -15,9 +15,7 @@
         <service id="fos_rest.request.param_converter.request_content_param_converter"
                  class="%fos_rest.request.param_converter.request_content_param_converter.class%">
             <argument type="service" id="serializer" />
-            <argument type="collection">
-                <argument key="exception_on_fault">%fos_rest.request.param_converter.request_content_param_converter.exception_on_fault%</argument>
-            </argument>
+            <argument>%fos_rest.request.param_converter.request_content_param_converter.exception_on_fault%</argument>
             <tag name="request.param_converter" priority="-100" />
         </service>
         

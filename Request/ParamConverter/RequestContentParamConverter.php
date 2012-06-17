@@ -36,16 +36,17 @@ class RequestContentParamConverter implements ParamConverterInterface
     private $serializer;
 
     /**
-     * Optional options.
+     * If true exceptions from serializer will be thrown, otherwise
+     * new instance of object will be returned (using empty constructor).
      *
-     * @var array
+     * @var boolean
      */
-    private $options;
+    private $exceptionOnFault;
 
-    public function __construct(SerializerInterface $serializer, array $options = array())
+    public function __construct(SerializerInterface $serializer, $exceptionOnFault)
     {
         $this->serializer = $serializer;
-        $this->options = $options;
+        $this->exceptionOnFault = $exceptionOnFault;
     }
 
     /**
@@ -101,7 +102,7 @@ class RequestContentParamConverter implements ParamConverterInterface
              * don't throw Exception but new Object (using empty constructor)
              */
 
-            if (isset($this->options['exception_on_fault']) && $this->options['exception_on_fault'] === true) {
+            if ($this->exceptionOnFault) {
                 throw $e;
             } 
             
