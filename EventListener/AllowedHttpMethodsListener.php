@@ -12,8 +12,6 @@ class AllowedHttpMethodsListener
      */
     private $container;
 
-    private $setParamsAsAttributes;
-
     /**
      * Constructor.
      *
@@ -26,40 +24,23 @@ class AllowedHttpMethodsListener
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        /**
-         * @var \Symfony\Component\Routing\Router
-         */
-        $router = $this->container->get('router');
+        $cacheFile = $this->container->getParameter('kernel.cache_dir') . '/fos_rest/allowed_http_methods.php';
 
-        $routes = $router->getRouteCollection()->all();
-        foreach ($routes as $name => $route) {
-            if ($event->getRequest()->get('_route') === $name) {
-                $currentRoute = $route;
-                break;
-            }
+        if (!is_file($cacheFile)) {
+            $this->container->get('fos_rest.allowed_http_methods_cache_warmer')
+                ->warmUp($this->container->getParameter('kernel.cache_dir'));
         }
 
-        if (null !== $currentRoute) {
-            $allowedMethods = array();
-            $requirements = $currentRoute->getRequirements();
-            if (isset($requirements['_method'])) {
-                $allowedMethods[] = $requirements['_method'];
-            }
+        $allowedMethods = require $cacheFile;
 
-            foreach ($routes as $route) {
-                if ($currentRoute->getPattern() === $route->getPattern()) {
-                    $requirements = $route->getRequirements();
-                    if (isset($requirements['_method'])) {
-                        $allowedMethods[] = $requirements['_method'];
-                    }
-                }
-            }
+        if (isset($allowedMethods[$event->getRequest()->get('_route')])) {
 
-            $allowedMethods = array_unique($allowedMethods);
-
-            if (count($allowedMethods) > 0) {
-                $event->getResponse()->headers->set('Allow', implode(', ', $allowedMethods));
-            }
+            $event->getResponse()
+                ->headers
+                ->set(
+                    'Allow',
+                    implode(', ', $allowedMethods[$event->getRequest()->get('_route')])
+            );
         }
     }
 }
