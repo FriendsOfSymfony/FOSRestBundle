@@ -103,9 +103,9 @@ class RequestContentParamConverter implements ParamConverterInterface
 
             if (isset($this->options['exception_on_fault']) && $this->options['exception_on_fault'] === true) {
                 throw $e;
-            } else {
-                $object = new $class;
-            }
+            } 
+            
+            $object = new $class;
         }
 
         // set the object as the request attribute with the given name
