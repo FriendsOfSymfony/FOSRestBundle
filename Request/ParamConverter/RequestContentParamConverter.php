@@ -63,12 +63,13 @@ class RequestContentParamConverter implements ParamConverterInterface
             return false;
         }
         
+        $acceptedInterface = 'FOS\RestBundle\Request\DataTransferObjectInterface';
+
         $argumentClass = new \ReflectionClass($class);
         
-        $interfaceNames = $argumentClass->getInterfaceNames();
-        $hasInterface = in_array('FOS\RestBundle\Request\DataTransferObjectInterface', $interfaceNames);
-
-        return $hasInterface;
+        $implementsInterface = $argumentClass->implementsInterface($acceptedInterface);
+        
+        return $implementsInterface;
     }
 
     /**
