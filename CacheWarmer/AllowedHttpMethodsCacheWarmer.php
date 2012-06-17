@@ -1,9 +1,24 @@
 <?php
 
+/*
+ * This file is part of the FOSRestBundle package.
+ *
+ * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace FOS\RestBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmer,
     Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * CacheWarmer to generate Allow-ed for each routes
+ *
+ * @author Boris Guéry <guery.b@gmail.com>
+ */
 
 class AllowedHttpMethodsCacheWarmer extends CacheWarmer
 {
