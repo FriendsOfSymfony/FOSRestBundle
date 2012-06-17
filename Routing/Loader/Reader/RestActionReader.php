@@ -272,13 +272,14 @@ class RestActionReader
 
             $argumentClass = $argument->getClass();
             if ($argumentClass) {
+                foreach ($ignoreInterfaces as $interface) {
+                    if ($argumentClass->implementsInterface($interface)) {
+                        continue 2;
+                    }
+                }
+                
                 foreach ($ignoreClasses as $class) {
-                    $interfaceNames = $argumentClass->getInterfaceNames();
-                    
-                    $interfacesIntersect = array_intersect($ignoreInterfaces, $interfaceNames);
-                    $hasInterface = !empty($interfacesIntersect);
-                    
-                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class) || $hasInterface) {
+                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class)) {
                         continue 2;
                     }
                 }
