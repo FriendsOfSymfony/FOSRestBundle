@@ -23,11 +23,11 @@ use JMS\SerializerBundle\Exception\Exception;
  * by Matthias Noback (http://php-and-symfony.matthiasnoback.nl)
  *
  * @author Antoni Orfin <a.orfin@imagin.com.pl>
+ * @author Matthias Noback
  * @copyright (c) 2012  IMAGIN IT Marcin Engelmann
  */
 class RequestContentParamConverter implements ParamConverterInterface
 {
-
     /**
      * Serializer instance.
      *
