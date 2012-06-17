@@ -142,7 +142,6 @@ class FOSRestExtension extends Extension
             if ($config['request_content_param_converter']['enabled']) {
                 $loader->load('request_content_param_converter.xml');
 
-                // Default - false
                 $exceptionOnFault = $config['request_content_param_converter']['exception_on_fault'];
 
                 $container->setParameter($this->getAlias().'.request.param_converter.request_content_param_converter.exception_on_fault', $exceptionOnFault);
