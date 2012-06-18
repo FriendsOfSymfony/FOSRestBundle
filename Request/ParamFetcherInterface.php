@@ -26,12 +26,12 @@ interface ParamFetcherInterface
      *
      * @return void
      */
-    function setController($controller);
+    public function setController($controller);
 
     /**
      * Get a validated parameter.
      *
-     * @param string $name    Name of the parameter
+     * @param string  $name   Name of the parameter
      * @param Boolean $strict Whether a requirement mismatch should cause an exception
      *
      * @return mixed Value of the parameter.
@@ -45,5 +45,5 @@ interface ParamFetcherInterface
      *
      * @return array Values of all the parameters.
      */
-    function all($strict = null);
+    public function all($strict = false);
 }

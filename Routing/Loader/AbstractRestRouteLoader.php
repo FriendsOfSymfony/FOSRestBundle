@@ -11,10 +11,10 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Component\Config\Loader\LoaderInterface,
-    Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 

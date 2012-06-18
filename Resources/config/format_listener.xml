@@ -13,6 +13,6 @@
             <argument>%fos_rest.default_priorities%</argument>
             <argument>%fos_rest.prefer_extension%</argument>
         </service>
-        
+
     </services>
 </container>

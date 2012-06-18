@@ -63,7 +63,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
     /**
      * Load routes collection from YAML fixture routes under Tests\Fixtures directory.
      *
-     * @param   string  $fixtureName    name of the class fixture
+     * @param string $fixtureName name of the class fixture
      */
     protected function loadFromYamlCollectionFixture($fixtureName)
     {

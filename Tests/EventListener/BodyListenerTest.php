@@ -25,10 +25,10 @@ use Symfony\Component\HttpFoundation\Request,
 class BodyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param Symfony\Component\HttpFoundation\Request $request the original request
-     * @param string $method a http method (e.g. POST, GET, PUT, ...)
-     * @param string $contentType the request header content type
-     * @param array $expectedParameters the http parameters of the updated request
+     * @param Symfony\Component\HttpFoundation\Request $request            the original request
+     * @param string                                   $method             a http method (e.g. POST, GET, PUT, ...)
+     * @param string                                   $contentType        the request header content type
+     * @param array                                    $expectedParameters the http parameters of the updated request
      *
      * @dataProvider testOnKernelRequestDataProvider
      */

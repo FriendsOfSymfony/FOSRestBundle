@@ -22,9 +22,9 @@ class Pluralization
     /**
      * Pluralizes English noun.
      *
-     * @param  string  $word english noun to pluralize
+     * @param string $word english noun to pluralize
      *
-     * @return string        plural noun
+     * @return string plural noun
      */
     public static function pluralize($word)
     {
@@ -85,9 +85,9 @@ class Pluralization
     /**
      * Singularizes English plural.
      *
-     * @param  string  $word English noun to singularize
+     * @param string $word English noun to singularize
      *
-     * @return string        Singular noun.
+     * @return string Singular noun.
      */
     public static function singularize($word)
     {

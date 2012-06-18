@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder,
-    Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
 
@@ -30,14 +30,13 @@ class FOSRestBundle extends Bundle
     /**
      * Returns a cleaned version number
      *
-     * @param string $version
+     * @param  string $version
      * @return string
      */
     public static function getSymfonyVersion($version)
     {
-        return implode('.', array_slice(array_map(function($val)
-        {
-            return (int)$val;
+        return implode('.', array_slice(array_map(function($val) {
+            return (int) $val;
         }, explode('.', $version)), 0, 3));
     }
 }

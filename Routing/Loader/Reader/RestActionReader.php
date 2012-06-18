@@ -39,7 +39,8 @@ class RestActionReader
     /**
      * Initializes controller reader.
      *
-     * @param Reader $annotationReader annotation reader
+     * @param Reader           $annotationReader annotation reader
+     * @param queryParamReader $queryParamReader query param reader
      */
     public function __construct(Reader $annotationReader, ParamReader $paramReader)
     {

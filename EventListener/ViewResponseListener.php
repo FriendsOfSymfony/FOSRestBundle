@@ -11,15 +11,14 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
-    Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 
-use FOS\RestBundle\View\View,
-    FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
+use FOS\RestBundle\View\View;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the @extra:Template annotation.

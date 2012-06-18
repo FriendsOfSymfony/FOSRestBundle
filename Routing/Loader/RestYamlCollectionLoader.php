@@ -11,16 +11,16 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
-use Symfony\Component\Config\FileLocatorInterface,
-    Symfony\Component\Config\Resource\FileResource,
-    Symfony\Component\Yaml\Yaml,
-    Symfony\Component\Routing\Loader\YamlFileLoader,
-    Symfony\Component\Config\Loader\FileLoader,
-    Symfony\Component\Routing\RouteCollection,
-    Symfony\Component\Routing\Route;
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
+use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
 
-use FOS\RestBundle\Routing\RestRouteCollection,
-    FOS\RestBundle\Routing\Loader\RestRouteProcessor;
+use FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 
 /**
  * RestYamlCollectionLoader YAML file collections loader.
@@ -31,6 +31,12 @@ class RestYamlCollectionLoader extends YamlFileLoader
 
     private $processor;
 
+    /**
+     * Initializes yaml loader.
+     *
+     * @param FileLocatorInterface $locator   locator
+     * @param RestRouteProcessor   $processor route processor
+     */
     public function __construct(FileLocatorInterface $locator, RestRouteProcessor $processor)
     {
         parent::__construct($locator);
@@ -41,8 +47,8 @@ class RestYamlCollectionLoader extends YamlFileLoader
     /**
      * Loads a Yaml collection file.
      *
-     * @param  string $file A Yaml file path
-     * @param  string $type The resource type
+     * @param string $file A Yaml file path
+     * @param string $type The resource type
      *
      * @return RouteCollection A RouteCollection instance
      *
@@ -99,8 +105,8 @@ class RestYamlCollectionLoader extends YamlFileLoader
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param  mixed  $resource A resource
-     * @param  string $type     The resource type
+     * @param mixed  $resource A resource
+     * @param string $type     The resource type
      *
      * @return Boolean true if this class supports the given resource, false otherwise
      */

@@ -12,7 +12,7 @@ post_users:
   method:     POST
   pattern:    /users.{_format}
   controller: ::postUsersAction
-  
+
 patch_users:
   method:     PATCH
   pattern:    /users.{_format}

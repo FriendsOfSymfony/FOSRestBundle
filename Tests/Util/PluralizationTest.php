@@ -16,7 +16,7 @@ use FOS\RestBundle\Util\Pluralization;
 /**
  * Pluralization test.
  *
- * @author Bulat Shakirzyanov <avalanche123> 
+ * @author Bulat Shakirzyanov <avalanche123>
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
 class PluralizationTest extends \PHPUnit_Framework_TestCase
@@ -48,9 +48,9 @@ class PluralizationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Words provider. 
-     * 
-     * @return  array of hashes (singular => plural)
+     * Words provider.
+     *
+     * @return array of hashes (singular => plural)
      */
     public function getWords()
     {

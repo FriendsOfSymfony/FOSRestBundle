@@ -11,12 +11,12 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
-    Symfony\Component\HttpKernel\Exception\HttpException,
-    Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use FOS\Rest\Util\Codes,
-    FOS\Rest\Util\FormatNegotiatorInterface;
+use FOS\Rest\Util\Codes;
+use FOS\Rest\Util\FormatNegotiatorInterface;
 
 /**
  * This listener handles Accept header format negotiations.
@@ -48,10 +48,10 @@ class FormatListener
     /**
      * Initialize FormatListener.
      *
-     * @param   FormatNegotiatorInterface   $formatNegotiator  The content negotiator service to use
-     * @param   string  $fallbackFormat     Default fallback format
-     * @param   array   $defaultPriorities  Ordered array of formats (highest priority first)
-     * @param   Boolean $preferExtension    If to consider the extension last or first
+     * @param FormatNegotiatorInterface $formatNegotiator  The content negotiator service to use
+     * @param string                    $fallbackFormat    Default fallback format
+     * @param array                     $defaultPriorities Ordered array of formats (highest priority first)
+     * @param Boolean                   $preferExtension   If to consider the extension last or first
      */
     public function __construct(FormatNegotiatorInterface $formatNegotiator, $fallbackFormat, array $defaultPriorities = array(), $preferExtension = false)
     {
@@ -64,7 +64,7 @@ class FormatListener
     /**
      * Determines and sets the Request format
      *
-     * @param   GetResponseEvent   $event    The event
+     * @param GetResponseEvent $event The event
      */
     public function onKernelController(FilterControllerEvent $event)
     {
@@ -91,7 +91,7 @@ class FormatListener
         }
 
         if (null === $format) {
-            if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST)  {
+            if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
                 throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
             }
 
