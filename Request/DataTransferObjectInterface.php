@@ -18,7 +18,6 @@ namespace FOS\RestBundle\Request;
  * Instances should accept empty constructor.
  * 
  * @author Antoni Orfin <a.orfin@imagin.com.pl>
- * @copyright (c) 2012  IMAGIN IT Marcin Engelmann
  */
 interface DataTransferObjectInterface
 {

@@ -24,7 +24,6 @@ use JMS\SerializerBundle\Exception\Exception;
  *
  * @author Antoni Orfin <a.orfin@imagin.com.pl>
  * @author Matthias Noback
- * @copyright (c) 2012  IMAGIN IT Marcin Engelmann
  */
 class RequestContentParamConverter implements ParamConverterInterface
 {
