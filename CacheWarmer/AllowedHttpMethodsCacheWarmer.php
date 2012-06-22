@@ -12,22 +12,27 @@
 namespace FOS\RestBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmer,
-    Symfony\Component\DependencyInjection\ContainerInterface;
+    Symfony\Component\Routing\RouterInterface;
 
 /**
  * CacheWarmer to generate Allow-ed for each routes
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
-
 class AllowedHttpMethodsCacheWarmer extends CacheWarmer
 {
 
-    private $container;
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @param RouterInterface $router
+     */
+    public function __construct(RouterInterface $router)
     {
-        $this->container = $container;
+        $this->router = $router;
     }
 
     /**
@@ -40,7 +45,7 @@ class AllowedHttpMethodsCacheWarmer extends CacheWarmer
      *
      * @return Boolean true if the warmer is optional, false otherwise
      */
-    function isOptional()
+    public function isOptional()
     {
         return true;
     }
@@ -50,15 +55,11 @@ class AllowedHttpMethodsCacheWarmer extends CacheWarmer
      *
      * @param string $cacheDir The cache directory
      */
-    function warmUp($cacheDir)
+    public function warmUp($cacheDir)
     {
-        /**
-         * @var \Symfony\Component\Routing\Router
-         */
-        $router = $this->container->get('router');
         $processedRoutes = array();
 
-        foreach ($router->getRouteCollection()->all() as $name => $route) {
+        foreach ($this->router->getRouteCollection()->all() as $name => $route) {
 
             if (!isset($processedRoutes[$route->getPattern()])) {
                 $processedRoutes[$route->getPattern()] = array(
@@ -71,7 +72,11 @@ class AllowedHttpMethodsCacheWarmer extends CacheWarmer
 
             $requirements = $route->getRequirements();
             if (isset($requirements['_method'])) {
-                $processedRoutes[$route->getPattern()]['methods'][] = $requirements['_method'];
+                $methods = explode('|', $requirements['_method']);
+                $processedRoutes[$route->getPattern()]['methods'] = array_merge(
+                    $processedRoutes[$route->getPattern()]['methods'],
+                    $methods
+                );
             }
         }
 
@@ -80,7 +85,7 @@ class AllowedHttpMethodsCacheWarmer extends CacheWarmer
         foreach ($processedRoutes as $processedRoute) {
             if (count($processedRoute['methods']) > 0) {
                 foreach ($processedRoute['names'] as $name) {
-                    $allowedMethods[$name] = $processedRoute['methods'];
+                    $allowedMethods[$name] = array_unique($processedRoute['methods']);
                 }
             }
         }
