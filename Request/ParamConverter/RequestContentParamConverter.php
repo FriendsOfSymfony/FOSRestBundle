@@ -23,7 +23,7 @@ use JMS\SerializerBundle\Exception\Exception;
  * by Matthias Noback (http://php-and-symfony.matthiasnoback.nl)
  *
  * @author Antoni Orfin <a.orfin@imagin.com.pl>
- * @author Matthias Noback
+ * @author Matthias Noback <matthiasnoback@gmail.com>
  */
 class RequestContentParamConverter implements ParamConverterInterface
 {
@@ -91,9 +91,7 @@ class RequestContentParamConverter implements ParamConverterInterface
             : $request->getFormat($request->headers->get('Content-Type'));
 
         try {
-            $object = $this->serializer->deserialize(
-                    $request->getContent(), $class, $format
-            );
+            $object = $this->serializer->deserialize($request->getContent(), $class, $format);
         } catch (Exception $e) {
 
             /**
