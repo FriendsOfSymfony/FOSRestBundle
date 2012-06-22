@@ -138,7 +138,7 @@ class FOSRestExtension extends Extension
             }
         }
 
-        if (!empty($config['allowed_http_methods_listener'])) {
+        if ($config['allowed_http_methods_listener']) {
             $loader->load('allowed_http_methods_listener.xml');
         }
     }
