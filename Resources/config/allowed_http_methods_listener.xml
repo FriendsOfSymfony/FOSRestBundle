@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="fos_rest.allowed_http_methods_listener.class">FOS\RestBundle\EventListener\AllowedHttpMethodsListener</parameter>
+        <parameter key="fos_rest.allowed_http_methods_cache_warmer.class">FOS\RestBundle\CacheWarmer\AllowedHttpMethodsCacheWarmer</parameter>
+
+    </parameters>
+
+    <services>
+
+        <service id="fos_rest.allowed_http_methods_listener" class="%fos_rest.allowed_http_methods_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
+            <argument type="service" id="fos_rest.allowed_http_methods_cache_warmer"/>
+            <argument>%kernel.cache_dir%</argument>
+        </service>
+
+        <service id="fos_rest.allowed_http_methods_cache_warmer" class="%fos_rest.allowed_http_methods_cache_warmer.class%">
+            <tag name="kernel.cache_warmer"/>
+            <argument type="service" id="router"/>
+        </service>
+
+    </services>
+</container>

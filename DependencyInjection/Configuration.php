@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('The query_fetcher_listener option does not support %s. Please choose one of '.json_encode($this->forceOptionValues))
                     ->end()
                 ->end()
+                ->scalarNode('allowed_http_methods_listener')->defaultTrue()->end()
                 ->arrayNode('routing_loader')
                     ->addDefaultsIfNotSet()
                     ->children()
