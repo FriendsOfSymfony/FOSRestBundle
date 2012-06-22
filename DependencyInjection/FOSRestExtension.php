@@ -138,14 +138,12 @@ class FOSRestExtension extends Extension
             }
         }
 
-        if (!empty($config['request_content_param_converter'])) {
-            if ($config['request_content_param_converter']['enabled']) {
-                $loader->load('request_content_param_converter.xml');
+        if (!empty($config['request_content_param_converter']['enabled'])) {
+            $loader->load('request_content_param_converter.xml');
 
-                $exceptionOnFault = $config['request_content_param_converter']['exception_on_fault'];
+            $exceptionOnFault = $config['request_content_param_converter']['exception_on_fault'];
 
-                $container->setParameter($this->getAlias().'.request.param_converter.request_content_param_converter.exception_on_fault', $exceptionOnFault);
-            }
+            $container->setParameter($this->getAlias().'.request.param_converter.request_content_param_converter.exception_on_fault', $exceptionOnFault);
         }
     }
 
