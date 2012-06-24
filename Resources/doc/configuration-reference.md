@@ -53,5 +53,7 @@ fos_rest:
             - */*
         prefer_extension:     true
         fallback_format:      html
+    request_content_param_converter:
+        enabled: true
+        exception_on_fault: false
 ```
-

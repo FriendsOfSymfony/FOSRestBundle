@@ -41,6 +41,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('request_content_param_converter')
+                    ->canBeUnset()
+                    ->children()
+                        ->scalarNode('enabled')->defaultTrue()->end()
+                        ->scalarNode('exception_on_fault')->defaultFalse()->end()
+                    ->end()
+                ->end()
                 ->scalarNode('query_fetcher_listener')->defaultFalse()
                     ->validate()
                         ->ifNotInArray($this->forceOptionValues)
