@@ -46,7 +46,7 @@ will wrap data types other than associative arrays in an associative array with
 a single key (default  ``'data'``), which will become the variable name of the
 object in the respective template.
 
-There are also two specialized ``View`` classes for handling directs, one for
+There are also two specialized ``View`` classes for handling redirects, one for
 redirecting to an URL called ``RedirectView`` and one to redirect to a route
 called ``RouteRedirectView``.  Note that whether these classes actually cause a
 redirect or not is determined by the ``force_redirects`` configuration option,
