@@ -143,7 +143,7 @@ class FOSRestExtension extends Extension
 
             $exceptionOnFault = $config['request_content_param_converter']['exception_on_fault'];
 
-            $container->setParameter($this->getAlias().'.request.param_converter.request_content_param_converter.exception_on_fault', $exceptionOnFault);
+            $container->setParameter($this->getAlias().'.request.param_converter.request_content.exception_on_fault', $exceptionOnFault);
         }
     }
 

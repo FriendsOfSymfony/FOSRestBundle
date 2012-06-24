@@ -6,16 +6,16 @@
 
     <parameters>
         
-        <parameter key="fos_rest.request.param_converter.request_content_param_converter.class">FOS\RestBundle\Request\ParamConverter\RequestContentParamConverter</parameter>
+        <parameter key="fos_rest.request.param_converter.request_content.class">FOS\RestBundle\Request\ParamConverter\RequestContentParamConverter</parameter>
     
     </parameters>
         
     <services>
         
-        <service id="fos_rest.request.param_converter.request_content_param_converter"
-                 class="%fos_rest.request.param_converter.request_content_param_converter.class%">
+        <service id="fos_rest.request.param_converter.request_content"
+                 class="%fos_rest.request.param_converter.request_content.class%">
             <argument type="service" id="serializer" />
-            <argument>%fos_rest.request.param_converter.request_content_param_converter.exception_on_fault%</argument>
+            <argument>%fos_rest.request.param_converter.request_content.exception_on_fault%</argument>
             <tag name="request.param_converter" priority="-100" />
         </service>
         
