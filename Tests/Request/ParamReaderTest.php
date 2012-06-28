@@ -13,16 +13,16 @@ namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Request\QueryParamReader;
+use FOS\RestBundle\Request\ParamReader;
 
 /**
  * QueryParamReader test.
  *
  * @author Alexander <iam.asm89@gmail.com>
  */
-class QueryParamReaderTest extends \PHPUnit_Framework_TestCase
+class ParamReaderTest extends \PHPUnit_Framework_TestCase
 {
-    private $queryParamReader;
+    private $paramReader;
 
     /**
      * Test setup.
@@ -51,30 +51,30 @@ class QueryParamReaderTest extends \PHPUnit_Framework_TestCase
             ->method('getMethodAnnotations')
             ->will($this->returnValue($annotations));
 
-        $this->queryParamReader = new QueryParamReader($annotationReader);
+        $this->paramReader = new ParamReader($annotationReader);
     }
 
     /**
      * Test that only QueryParam annotations are returned.
      */
-    public function testReadsOnlyQueryParamAnnotations()
+    public function testReadsOnlyParamAnnotations()
     {
-        $annotations = $this->queryParamReader->read(new \ReflectionClass(__CLASS__), 'setup');
+        $annotations = $this->paramReader->read(new \ReflectionClass(__CLASS__), 'setup');
 
         $this->assertCount(2, $annotations);
 
         foreach ($annotations as $name => $annotation) {
-            $this->assertThat($annotation, $this->isInstanceOf('FOS\RestBundle\Controller\Annotations\QueryParam'));
+            $this->assertThat($annotation, $this->isInstanceOf('FOS\RestBundle\Controller\Annotations\Param'));
             $this->assertEquals($annotation->name, $name);
         }
     }
 
     /**
      * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Class 'FOS\RestBundle\Tests\Request\QueryParamReaderTest' has no method 'foo' method.
+     * @expectedExceptionMessage Class 'FOS\RestBundle\Tests\Request\ParamReaderTest' has no method 'foo' method.
      */
     public function testExceptionOnNonExistingMethod()
     {
-        $this->queryParamReader->read(new \ReflectionClass(__CLASS__), 'foo');
+        $this->paramReader->read(new \ReflectionClass(__CLASS__), 'foo');
     }
 }

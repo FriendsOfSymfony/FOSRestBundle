@@ -12,9 +12,11 @@
 namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Request\QueryParamReader;
-use FOS\RestBundle\Request\QueryFetcher;
+use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,10 +24,10 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Alexander <iam.asm89@gmail.com>
  */
-class QueryFetcherTest extends \PHPUnit_Framework_TestCase
+class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 {
     private $controller;
-    private $queryParamReader;
+    private $paramReader;
 
     /**
      * Test setup.
@@ -34,7 +36,7 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $this->controller = array(new \stdClass(), 'indexAction');
 
-        $this->queryParamReader = $this->getMockBuilder('\FOS\RestBundle\Request\QueryParamReader')
+        $this->paramReader = $this->getMockBuilder('\FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -45,33 +47,42 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['foo']->default = '1';
         $annotations['foo']->description = 'The foo';
 
-        $annotations['bar'] = new QueryParam;
+        $annotations['bar'] = new RequestParam;
         $annotations['bar']->name = 'bar';
         $annotations['bar']->requirements = '\d+';
-        $annotations['bar']->default = '1';
         $annotations['bar']->description = 'The bar';
 
-        $this->queryParamReader
+        $annotations['baz'] = new Param;
+        $annotations['baz']->name = 'baz';
+        $annotations['baz']->requirements = '\d+';
+        $annotations['baz']->description = 'The baz';
+
+        $annotations['qux'] = new RequestParam;
+        $annotations['qux']->name = 'qux';
+        $annotations['qux']->requirements = '\d?';
+
+        $this->paramReader
             ->expects($this->any())
             ->method('read')
             ->will($this->returnValue($annotations));
     }
 
     /**
-     * Get a query fetcher.
+     * Get a param fetcher.
      *
      * @param array $query      Query parameters for the request.
+     * @param array $request    Request parameters for the request.
      * @param array $attributes Attributes for the request.
      *
-     * @return QueryFetcher
+     * @return ParamFetcher
      */
-    public function getQueryFetcher($query = array(), $attributes = null)
+    public function getParamFetcher($query = array(), $request = array(), $attributes = null)
     {
         $attributes = $attributes ?: array('_controller' => __CLASS__.'::stubAction');
 
-        $request = new Request($query, array(), $attributes);
+        $req = new Request($query, $request, $attributes);
 
-        return new QueryFetcher($this->queryParamReader, $request);
+        return new ParamFetcher($this->paramReader, $req);
     }
 
     /**
@@ -80,12 +91,13 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      * @param string $expected Expected query parameter value.
      * @param string $expectedAll Expected query parameter values.
      * @param array  $query    Query parameters for the request.
+     * @param array  $request  Request parameters for the request.
      *
-     * @dataProvider validatesConfiguredQueryParamDataProvider
+     * @dataProvider validatesConfiguredParamDataProvider
      */
-    public function testValidatesConfiguredQueryParam($expected, $expectedAll, $query)
+    public function testValidatesConfiguredParam($expected, $expectedAll, $query, $request)
     {
-        $queryFetcher = $this->getQueryFetcher($query);
+        $queryFetcher = $this->getParamFetcher($query, $request);
         $queryFetcher->setController($this->controller);
         $this->assertEquals($expected, $queryFetcher->get('foo'));
         $this->assertEquals($expectedAll, $queryFetcher->all());
@@ -96,26 +108,42 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      *
      * @return array Data
      */
-    public static function validatesConfiguredQueryParamDataProvider()
+    public static function validatesConfiguredParamDataProvider()
     {
         return array(
-            array('1', array('foo' => '1', 'bar' => '1'), array('foo' => '1')),
-            array('42', array('foo' => '42', 'bar' => '1'), array('foo' => '42')),
-            array('1', array('foo' => '1', 'bar' => '1'), array('foo' => 'bar')),
+            array( // pass Param in POST, check that non-strict missing params take default value
+                '1',
+                array('foo' => '1', 'bar' => '2', 'baz' => '3', 'qux' => '4'),
+                array(),
+                array('bar' => '2', 'baz' => '3', 'qux' => '4'),
+            ),
+            array( // pass Param in GET
+                '42',
+                array('foo' => '42', 'bar' => '2', 'baz' => '3', 'qux' => '4'),
+                array('foo' => '42', 'baz' => '3'),
+                array('bar' => '2', 'qux' => '4'),
+            ),
+            array( // check that invalid non-strict params take default value
+                '1',
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'qux' => '4'),
+                array('foo' => 'bar'),
+                array('bar' => '1', 'baz' => '1', 'qux' => '4'),
+            ),
         );
     }
 
     /**
      * Throw exception on invalid parameters.
+     * @dataProvider exceptionOnValidatesFailureDataProvider
      */
-    public function testExceptionOnValidatesFailure()
+    public function testExceptionOnValidatesFailure($query, $request, $param)
     {
-        $queryFetcher = $this->getQueryFetcher(array('foo' => 'bar'));
+        $queryFetcher = $this->getParamFetcher($query, $request);
         $queryFetcher->setController($this->controller);
 
         try {
             try {
-                $queryFetcher->get('foo', true);
+                $queryFetcher->get($param, true);
                 $this->fail('Fetching get() in strict mode did not throw an exception');
             } catch (\RuntimeException $e) {
                 try {
@@ -131,13 +159,37 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return array Data
+     */
+    public static function exceptionOnValidatesFailureDataProvider()
+    {
+        return array(
+            array( // test missing strict param
+                array(),
+                array(),
+                'bar'
+            ),
+            array( // test invalid strict param
+                array(),
+                array('bar' => 'foo'),
+                'bar'
+            ),
+            array( // test missing strict param with lax requirement
+                array(),
+                array('qux' => 'foo'),
+                'qux'
+            ),
+        );
+    }
+
+    /**
      * @expectedException        LogicException
      * @expectedExceptionMessage Controller and method needs to be set via setController
      */
     public function testExceptionOnRequestWithoutController()
     {
-        $queryFetcher = new QueryFetcher($this->queryParamReader, new Request());
-        $queryFetcher->get('qux', '42');
+        $queryFetcher = new ParamFetcher($this->paramReader, new Request());
+        $queryFetcher->get('none', '42');
     }
 
     /**
@@ -146,9 +198,9 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnNoController()
     {
-        $queryFetcher = $this->getQueryFetcher();
+        $queryFetcher = $this->getParamFetcher();
         $queryFetcher->setController(array());
-        $queryFetcher->get('qux', '42');
+        $queryFetcher->get('none', '42');
     }
 
     /**
@@ -157,19 +209,19 @@ class QueryFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnNonController()
     {
-        $queryFetcher = $this->getQueryFetcher();
+        $queryFetcher = $this->getParamFetcher();
         $queryFetcher->setController(array('foo', 'bar'));
-        $queryFetcher->get('qux', '42');
+        $queryFetcher->get('none', '42');
     }
 
     /**
      * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage No @QueryParam configuration for parameter 'qux'.
+     * @expectedExceptionMessage No @*Param configuration for parameter 'none'.
      */
-    public function testExceptionOnNonConfiguredQueryParameter()
+    public function testExceptionOnNonConfiguredParameter()
     {
-        $queryFetcher = $this->getQueryFetcher();
+        $queryFetcher = $this->getParamFetcher();
         $queryFetcher->setController($this->controller);
-        $queryFetcher->get('qux', '42');
+        $queryFetcher->get('none', '42');
     }
 }

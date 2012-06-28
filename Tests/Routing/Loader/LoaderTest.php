@@ -18,7 +18,7 @@ use Symfony\Component\Yaml\Yaml;
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
-use FOS\RestBundle\Request\QueryParamReader;
+use FOS\RestBundle\Request\ParamReader;
 
 /**
  * Base Loader testing class.
@@ -52,9 +52,9 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $annotationReader = $this->getAnnotationReader();
-        $queryParamReader = new QueryParamReader($annotationReader);
+        $paramReader = new ParamReader($annotationReader);
 
-        $ar = new RestActionReader($annotationReader, $queryParamReader);
+        $ar = new RestActionReader($annotationReader, $paramReader);
         $cr = new RestControllerReader($ar, $annotationReader);
 
         return new RestRouteLoader($c, $p, $cr, 'html');
