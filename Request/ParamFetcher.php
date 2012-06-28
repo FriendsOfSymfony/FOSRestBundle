@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Request;
 
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,7 +92,46 @@ class ParamFetcher implements ParamFetcherInterface
             $param = $this->request->query->get($name, $default);
         }
 
-        // Set default if the requirements do not match
+        if ($config->array) {
+            if (!is_array($param)) {
+                if ($strict) {
+                    throw new \RuntimeException(sprintf("Query parameter value '%s' is not an array", $param));
+                }
+
+                return array($default);
+            }
+
+            $self = $this;
+            array_walk($param, function (&$data) use ($config, $strict, $self) {
+                $data = $self->cleanParamWithRequirements($config, $data, $strict);
+            });
+
+            return $param;
+        }
+
+        if (!is_scalar($param)) {
+            if ($strict) {
+                throw new \RuntimeException(sprintf("Query parameter value '%s' is not a scalar", $param));
+            }
+
+            return $default;
+        }
+
+        return $this->cleanParamWithRequirements($config, $param, $strict);
+    }
+
+    /**
+     * @param Param   $config config
+     * @param string  $param  param to clean
+     * @param boolean $strict is strict
+     *
+     * @throws \RuntimeException
+     * @return string
+     */
+    public function cleanParamWithRequirements(Param $config, $param, $strict)
+    {
+        $default = $config->default;
+
         if ("" !== $config->requirements
             && ($param !== $default || null === $default)
             && !preg_match('#^'.$config->requirements.'$#xs', $param)
@@ -102,7 +142,7 @@ class ParamFetcher implements ParamFetcherInterface
                 throw new HttpException(400, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
             }
 
-            $param = null === $default ? '' : $default;
+            return null === $default ? '' : $default;
         }
 
         return $param;

@@ -224,6 +224,8 @@ fos_rest:
 ```
 
 ```php
+<?php
+
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 
@@ -245,6 +247,17 @@ class FooController extends Controller
      * So make sure the default value really matches your expectations.
      *
      * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
+     *
+     * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337, use:
+     *
+     * @QueryParam(array="true", name="ids", requirements="\d+", default="1", description="List of ids")
+     * (works with QueryParam and RequestParam)
+     *
+     * It will validate each entries of ids with your requirement, by this way, if an entry is invalid,
+     * this one will be replaced by default value.
+     *
+     * ie: ?ids[]=1337&ids[]=notinteger will return array(1337, 1);
+     * If ids is not defined, array(1) will be given
      *
      * @param ParamFetcher $paramFetcher
      */
@@ -270,6 +283,8 @@ fos_rest:
 ```
 
 ```php
+<?php
+
 class FooController extends Controller
 {
     /**

@@ -28,4 +28,6 @@ abstract class Param
     public $description;
     /** @var string */
     public $strict = false;
+    /** @var boolean */
+    public $array = false;
 }

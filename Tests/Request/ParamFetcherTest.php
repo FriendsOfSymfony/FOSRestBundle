@@ -56,6 +56,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['baz']->name = 'baz';
         $annotations['baz']->requirements = '\d?';
 
+        $annotations['buzz'] = new QueryParam;
+        $annotations['buzz']->array = true;
+        $annotations['buzz']->name = 'buzz';
+        $annotations['buzz']->requirements = '\d+';
+        $annotations['buzz']->default = '1';
+        $annotations['buzz']->description = 'An array';
+
         $this->paramReader
             ->expects($this->any())
             ->method('read')
@@ -83,6 +90,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     /**
      * Test valid parameters.
      *
+     * @param string $param which param to test
      * @param string $expected Expected query parameter value.
      * @param string $expectedAll Expected query parameter values.
      * @param array  $query    Query parameters for the request.
@@ -90,11 +98,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider validatesConfiguredParamDataProvider
      */
-    public function testValidatesConfiguredParam($expected, $expectedAll, $query, $request)
+    public function testValidatesConfiguredParam($param, $expected, $expectedAll, $query, $request)
     {
         $queryFetcher = $this->getParamFetcher($query, $request);
         $queryFetcher->setController($this->controller);
-        $this->assertEquals($expected, $queryFetcher->get('foo'));
+        $this->assertEquals($expected, $queryFetcher->get($param));
         $this->assertEquals($expectedAll, $queryFetcher->all());
     }
 
@@ -107,22 +115,46 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array( // check that non-strict missing params take default value
+                'foo',
                 '1',
-                array('foo' => '1', 'bar' => '2', 'baz' => '4'),
+                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1)),
                 array(),
                 array('bar' => '2', 'baz' => '4'),
             ),
             array( // pass Param in GET
+                'foo',
                 '42',
-                array('foo' => '42', 'bar' => '2', 'baz' => '4'),
+                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1)),
                 array('foo' => '42'),
                 array('bar' => '2', 'baz' => '4'),
             ),
             array( // check that invalid non-strict params take default value
+                'foo',
                 '1',
-                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4'),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1)),
                 array('foo' => 'bar'),
-                array('bar' => '1', 'baz' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4'),
+            ),
+            array( // invalid array
+                'buzz',
+                array(1),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1)),
+                array('buzz' => 'invaliddata'),
+                array('bar' => '1', 'baz' => '4'),
+            ),
+            array( // multiple array
+                'buzz',
+                array(2, 3, 4),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4)),
+                array('buzz' => array(2, 3, 4)),
+                array('bar' => '1', 'baz' => '4'),
+            ),
+            array( // multiple array with one invalid value
+                'buzz',
+                array(2, 1, 4),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4)),
+                array('buzz' => array(2, 'invaliddata', 4)),
+                array('bar' => '1', 'baz' => '4'),
             ),
         );
     }
