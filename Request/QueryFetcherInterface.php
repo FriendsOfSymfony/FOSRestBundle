@@ -37,7 +37,7 @@ interface QueryFetcherInterface
      *
      * @return mixed Value of the parameter.
      */
-    function get($name, $strict = false);
+    function get($name, $strict = null);
 
     /**
      * Get all validated query parameter.
@@ -46,5 +46,5 @@ interface QueryFetcherInterface
      *
      * @return array Values of all the parameters.
      */
-    function all($strict = false);
+    function all($strict = null);
 }

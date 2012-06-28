@@ -74,7 +74,7 @@ class QueryFetcher implements QueryFetcherInterface
      *
      * @return mixed Value of the parameter.
      */
-    public function get($name, $strict = false)
+    public function get($name, $strict = null)
     {
         if (null === $this->params) {
             $this->initParams();
@@ -87,6 +87,10 @@ class QueryFetcher implements QueryFetcherInterface
         $config = $this->params[$name];
         $default = $config->default;
         $param = $this->request->query->get($name, $default);
+
+        if (null === $strict) {
+            $strict = $config->strict;
+        }
 
         // Set default if the requirements do not match
         if ("" !== $config->requirements
@@ -110,7 +114,7 @@ class QueryFetcher implements QueryFetcherInterface
      *
      * @return array Values of all the parameters.
      */
-    public function all($strict = false)
+    public function all($strict = null)
     {
         if (null === $this->params) {
             $this->initParams();

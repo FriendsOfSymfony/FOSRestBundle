@@ -27,4 +27,6 @@ class QueryParam
     public $default = '';
     /** @var string */
     public $description;
+    /** @var string */
+    public $strict = false;
 }
