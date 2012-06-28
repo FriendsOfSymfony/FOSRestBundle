@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Request;
 
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Helper to validate query parameters from the active request.
@@ -93,7 +94,7 @@ class QueryFetcher implements QueryFetcherInterface
             && !preg_match('#^'.$config->requirements.'$#xs', $param)
         ) {
             if ($strict) {
-                throw new \RuntimeException("Query parameter value '$param', does not match requirements '{$config->requirements}'");
+                throw new HttpException(400, "Query parameter value '$param', does not match requirements '{$config->requirements}'");
             }
 
             $param = $default;
