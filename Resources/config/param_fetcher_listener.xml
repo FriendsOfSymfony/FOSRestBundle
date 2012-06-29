@@ -6,17 +6,17 @@
 
     <parameters>
 
-        <parameter key="fos_rest.query_fetch_listener.class">FOS\RestBundle\EventListener\QueryFetcherListener</parameter>
-        <parameter key="fos_rest.query_fetch_listener.set_params_as_attributes">false</parameter>
+        <parameter key="fos_rest.param_fetcher_listener.class">FOS\RestBundle\EventListener\ParamFetcherListener</parameter>
+        <parameter key="fos_rest.param_fetcher_listener.set_params_as_attributes">false</parameter>
 
     </parameters>
 
     <services>
 
-        <service id="fos_rest.query_fetch_listener" class="%fos_rest.query_fetch_listener.class%">
+        <service id="fos_rest.param_fetcher_listener" class="%fos_rest.param_fetcher_listener.class%">
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
             <argument type="service" id="service_container"/>
-            <argument>%fos_rest.query_fetch_listener.set_params_as_attributes%</argument>
+            <argument>%fos_rest.param_fetcher_listener.set_params_as_attributes%</argument>
         </service>
 
     </services>

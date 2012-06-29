@@ -12,15 +12,15 @@
 namespace FOS\RestBundle\Request;
 
 use Doctrine\Common\Annotations\Reader;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\Param;
 
 /**
- * Class loading @QueryParameter annotations from methods.
+ * Class loading @QueryParam and @RequestParam annotations from methods.
  *
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class QueryParamReader implements QueryParamReaderInterface
+class ParamReader implements ParamReaderInterface
 {
     private $annotationReader;
 
@@ -35,12 +35,7 @@ class QueryParamReader implements QueryParamReaderInterface
     }
 
     /**
-     * Read annotations for a given method.
-     *
-     * @param \ReflectionClass $reflection Reflection class
-     * @param string           $method     Method name
-     *
-     * @return array QueryParam annotation objects of the method. Indexed by parameter name.
+     * {@inheritDoc}
      */
     public function read(\ReflectionClass $reflection, $method)
     {
@@ -52,11 +47,7 @@ class QueryParamReader implements QueryParamReaderInterface
     }
 
     /**
-     * Read annotations for a given method.
-     *
-     * @param \ReflectionMethod $method     Reflection method
-     *
-     * @return array QueryParam annotation objects of the method. Indexed by parameter name.
+     * {@inheritDoc}
      */
     public function getParamsFromMethod(\ReflectionMethod $method)
     {
@@ -64,7 +55,7 @@ class QueryParamReader implements QueryParamReaderInterface
 
         $params = array();
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof QueryParam) {
+            if ($annotation instanceof Param) {
                 $params[$annotation->name] = $annotation;
             }
         }

@@ -12,11 +12,15 @@
 namespace FOS\RestBundle\Controller\Annotations;
 
 /**
- * Represents a parameter that must be present in GET data.
+ * Represents a parameter that must be present in POST data.
  *
  * @Annotation
- * @author Alexander <iam.asm89@gmail.com>
+ * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class QueryParam extends Param
+class RequestParam extends Param
 {
+    /** @var string */
+    public $strict = true;
+    /** @var string */
+    public $default = null;
 }

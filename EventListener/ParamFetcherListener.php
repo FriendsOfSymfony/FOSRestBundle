@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class QueryFetcherListener
+class ParamFetcherListener
 {
     /**
      * @var ContainerInterface
@@ -51,16 +51,16 @@ class QueryFetcherListener
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
-        $queryFetcher = $this->container->get('fos_rest.request.query_fetcher');
+        $paramFetcher = $this->container->get('fos_rest.request.param_fetcher');
 
-        $queryFetcher->setController($event->getController());
-        $request->attributes->set('queryFetcher', $queryFetcher);
+        $paramFetcher->setController($event->getController());
+        $request->attributes->set('paramFetcher', $paramFetcher);
 
         if ($this->setParamsAsAttributes) {
-            $params = $queryFetcher->all();
+            $params = $paramFetcher->all();
             foreach ($params as $name => $param) {
                 if ($request->attributes->has($name)) {
-                    $msg = sprintf("QueryFetcher parameter conflicts with a path parameter '$name' for route '%s'", $request->attributes->get('_route'));
+                    $msg = sprintf("ParamFetcher parameter conflicts with a path parameter '$name' for route '%s'", $request->attributes->get('_route'));
                     throw new \InvalidArgumentException($msg);
                 }
 

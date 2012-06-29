@@ -17,7 +17,7 @@ namespace FOS\RestBundle\Request;
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-interface QueryParamReaderInterface
+interface ParamReaderInterface
 {
     /**
      * Read annotations for a given method.
@@ -25,7 +25,7 @@ interface QueryParamReaderInterface
      * @param \ReflectionClass $reflection Reflection class
      * @param string           $method     Method name
      *
-     * @return array QueryParam annotation objects of the method. Indexed by parameter name.
+     * @return array Param annotation objects of the method. Indexed by parameter name.
      */
     function read(\ReflectionClass $reflection, $method);
 
@@ -34,7 +34,7 @@ interface QueryParamReaderInterface
      *
      * @param \ReflectionMethod $method     Reflection method
      *
-     * @return array QueryParam annotation objects of the method. Indexed by parameter name.
+     * @return array Param annotation objects of the method. Indexed by parameter name.
      */
     function getParamsFromMethod(\ReflectionMethod $method);
 }
