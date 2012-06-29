@@ -215,41 +215,52 @@ fos_rest:
 ## That was it!
 [Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
 
-### Query fetcher listener
+### Param fetcher listener
 
-The query fetcher listener simply sets the QueryFetcher instance as a request attribute
+The param fetcher listener simply sets the ParamFetcher instance as a request attribute
 configured for the matched controller so that the user does not need to do this manually.
 
 ```yaml
 # app/config/config.yml
 fos_rest:
-    query_fetcher_listener: true
+    param_fetcher_listener: true
 ```
 
 ```php
+use FOS\RestBundle\Request\ParamFetcher;
+
 class FooController extends Controller
 {
     /**
-     * Will look for a page query parameters, ie. ?page=XX
+     * Will look for a page query parameter, ie. ?page=XX
      * If not passed it will be automatically be set to the default of "1"
      * If passed but doesn't match the requirement "\d+" it will be also be set to the default of "1"
      * Note that if the value matches the default then no validation is run.
      * So make sure the default value really matches your expectations.
+     *
      * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
      *
-     * @param QueryFetcher $queryFetcher
+     * Will look for a firstname request parameters, ie. firstname=foo in POST data.
+     * If not passed it will error out when read out of the ParamFetcher since RequestParam defaults to strict=true
+     * If passed but doesn't match the requirement "\d+" it will also error out (400 Bad Request)
+     * Note that if the value matches the default then no validation is run.
+     * So make sure the default value really matches your expectations.
+     *
+     * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
+     *
+     * @param ParamFetcher $paramFetcher
      */
-    public function getArticlesAction(QueryFetcher $queryFetcher)
+    public function getArticlesAction(ParamFetcher $paramFetcher)
     {
-        $page = $queryFetcher->get('page');
+        $page = $paramFetcher->get('page');
         $articles = array('bim', 'bam', 'bingo');
 
         return array('articles' => $articles, 'page' => $page);
     }
 ```
 
-Note: There is also ``$queryFetcher->all()`` to fetch all configured query parameters at once. And also
-both ``$queryFetcher->get()`` and ``$queryFetcher->all()`` support and optional ``$strict`` parameter
+Note: There is also ``$paramFetcher->all()`` to fetch all configured query parameters at once. And also
+both ``$paramFetcher->get()`` and ``$paramFetcher->all()`` support and optional ``$strict`` parameter
 to throw a ``\RuntimeException`` on a validation error.
 
 Optionally the listener can also already set all configured query parameters as request attributes
@@ -257,7 +268,7 @@ Optionally the listener can also already set all configured query parameters as 
 ```yaml
 # app/config/config.yml
 fos_rest:
-    query_fetcher_listener: force
+    param_fetcher_listener: force
 ```
 
 ```php

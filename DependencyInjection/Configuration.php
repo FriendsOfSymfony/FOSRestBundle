@@ -41,10 +41,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('query_fetcher_listener')->defaultFalse()
+                ->scalarNode('param_fetcher_listener')->defaultFalse()
                     ->validate()
                         ->ifNotInArray($this->forceOptionValues)
-                        ->thenInvalid('The query_fetcher_listener option does not support %s. Please choose one of '.json_encode($this->forceOptionValues))
+                        ->thenInvalid('The param_fetcher_listener option does not support %s. Please choose one of '.json_encode($this->forceOptionValues))
                     ->end()
                 ->end()
                 ->arrayNode('routing_loader')

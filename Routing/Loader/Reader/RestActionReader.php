@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Route;
 
 use FOS\RestBundle\Util\Pluralization;
 use FOS\RestBundle\Routing\RestRouteCollection;
-use FOS\RestBundle\Request\QueryParamReader;
+use FOS\RestBundle\Request\ParamReader;
 
 /**
  * REST controller actions reader.
@@ -27,7 +27,7 @@ use FOS\RestBundle\Request\QueryParamReader;
 class RestActionReader
 {
     private $annotationReader;
-    private $queryParamReader;
+    private $paramReader;
 
     private $routePrefix;
     private $namePrefix;
@@ -41,10 +41,10 @@ class RestActionReader
      *
      * @param Reader $annotationReader annotation reader
      */
-    public function __construct(Reader $annotationReader, QueryParamReader $queryParamReader)
+    public function __construct(Reader $annotationReader, ParamReader $paramReader)
     {
         $this->annotationReader = $annotationReader;
-        $this->queryParamReader = $queryParamReader;
+        $this->paramReader = $paramReader;
     }
 
     /**
@@ -248,7 +248,7 @@ class RestActionReader
     private function getMethodArguments(\ReflectionMethod $method)
     {
         // ignore all query params
-        $params = $this->queryParamReader->getParamsFromMethod($method);
+        $params = $this->paramReader->getParamsFromMethod($method);
 
         // ignore type hinted arguments that are or extend from:
         // * Symfony\Component\HttpFoundation\Request

@@ -19,10 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-interface QueryFetcherInterface
+interface ParamFetcherInterface
 {
     /**
-     * @abstract
      * @param callable $controller
      *
      * @return void
@@ -30,21 +29,21 @@ interface QueryFetcherInterface
     function setController($controller);
 
     /**
-     * Get a validated query parameter.
+     * Get a validated parameter.
      *
-     * @param string $name    Name of the query parameter
-     * @param Boolean $strict If a requirement mismatch should cause an exception
+     * @param string $name    Name of the parameter
+     * @param Boolean $strict Whether a requirement mismatch should cause an exception
      *
      * @return mixed Value of the parameter.
      */
-    function get($name, $strict = false);
+    function get($name, $strict = null);
 
     /**
-     * Get all validated query parameter.
+     * Get all validated parameter.
      *
-     * @param Boolean $strict If a requirement mismatch should cause an exception
+     * @param Boolean $strict Whether a requirement mismatch should cause an exception
      *
      * @return array Values of all the parameters.
      */
-    function all($strict = false);
+    function all($strict = null);
 }

@@ -11,21 +11,25 @@
 
 namespace FOS\RestBundle\Request;
 
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * Helper to validate query parameters from the active request.
+ * Helper to validate parameters of the active request.
  *
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class QueryFetcher implements QueryFetcherInterface
+class ParamFetcher implements ParamFetcherInterface
 {
     /**
-     * @var QueryParamReader
+     * @var ParamReader
      */
-    private $queryParamReader;
+    private $paramReader;
 
     /**
      * @var Request
@@ -45,20 +49,17 @@ class QueryFetcher implements QueryFetcherInterface
     /**
      * Initializes fetcher.
      *
-     * @param QueryParamReader      $queryParamReader Query param reader
-     * @param Request               $request          Active request
+     * @param ParamReader $paramReader Query param reader
+     * @param Request     $request     Active request
      */
-    public function __construct(QueryParamReader $queryParamReader, Request $request)
+    public function __construct(ParamReader $paramReader, Request $request)
     {
-        $this->queryParamReader = $queryParamReader;
+        $this->paramReader = $paramReader;
         $this->request = $request;
     }
 
     /**
-     * @abstract
-     * @param callable $controller
-     *
-     * @return void
+     * {@inheritDoc}
      */
     public function setController($controller)
     {
@@ -66,50 +67,51 @@ class QueryFetcher implements QueryFetcherInterface
     }
 
     /**
-     * Get a validated query parameter.
-     *
-     * @param string $name    Name of the query parameter
-     * @param Boolean $strict If a requirement mismatch should cause an exception
-     *
-     * @return mixed Value of the parameter.
+     * {@inheritDoc}
      */
-    public function get($name, $strict = false)
+    public function get($name, $strict = null)
     {
         if (null === $this->params) {
             $this->initParams();
         }
 
         if (!array_key_exists($name, $this->params)) {
-            throw new \InvalidArgumentException(sprintf("No @QueryParam configuration for parameter '%s'.", $name));
+            throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
         $config = $this->params[$name];
         $default = $config->default;
-        $param = $this->request->query->get($name, $default);
+        if (null === $strict) {
+            $strict = $config->strict;
+        }
+
+        if ($config instanceof RequestParam) {
+            $param = $this->request->request->get($name, $default);
+        } elseif ($config instanceof QueryParam) {
+            $param = $this->request->query->get($name, $default);
+        }
 
         // Set default if the requirements do not match
         if ("" !== $config->requirements
-            && $param !== $default
+            && ($param !== $default || null === $default)
             && !preg_match('#^'.$config->requirements.'$#xs', $param)
         ) {
             if ($strict) {
-                throw new \RuntimeException("Query parameter value '$param', does not match requirements '{$config->requirements}'");
+                $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
+
+                throw new HttpException(400, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
             }
 
-            $param = $default;
+            $param = null === $default ? '' : $default;
         }
 
         return $param;
     }
 
     /**
-     * Get all validated query parameter.
-     *
-     * @param Boolean $strict If a requirement mismatch should cause an exception
-     *
-     * @return array Values of all the parameters.
+     * {@inheritDoc}
      */
-    public function all($strict = false)
+    public function all($strict = null)
     {
         if (null === $this->params) {
             $this->initParams();
@@ -138,6 +140,6 @@ class QueryFetcher implements QueryFetcherInterface
             throw new \InvalidArgumentException('Controller needs to be set as a class instance (closures/functions are not supported)');
         }
 
-        $this->params = $this->queryParamReader->read(new \ReflectionClass(ClassUtils::getClass($this->controller[0])), $this->controller[1]);
+        $this->params = $this->paramReader->read(new \ReflectionClass(ClassUtils::getClass($this->controller[0])), $this->controller[1]);
     }
 }
