@@ -255,7 +255,7 @@ class RestActionReader
         // * FOS\RestBundle\Request\QueryFetcher
         $ignoreClasses = array(
             'Symfony\Component\HttpFoundation\Request',
-            'FOS\RestBundle\Request\QueryFetcherInterface',
+            'FOS\RestBundle\Request\ParamFetcherInterface',
         );
 
         $arguments = array();
