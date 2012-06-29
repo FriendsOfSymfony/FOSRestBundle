@@ -76,7 +76,7 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if (!array_key_exists($name, $this->params)) {
-            throw new \InvalidArgumentException(sprintf("No @*Param configuration for parameter '%s'.", $name));
+            throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
         $config = $this->params[$name];
@@ -89,8 +89,6 @@ class ParamFetcher implements ParamFetcherInterface
             $param = $this->request->request->get($name, $default);
         } elseif ($config instanceof QueryParam) {
             $param = $this->request->query->get($name, $default);
-        } else {
-            $param = $this->request->query->get($name, $this->request->request->get($name, $default));
         }
 
         // Set default if the requirements do not match
@@ -99,11 +97,9 @@ class ParamFetcher implements ParamFetcherInterface
             && !preg_match('#^'.$config->requirements.'$#xs', $param)
         ) {
             if ($strict) {
-                $message = $config instanceof QueryParam
-                    ? 'Query parameter'
-                    : $config instanceof RequestParam ? 'Request parameter': 'Parameter';
+                $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
-                throw new HttpException(400, $message . " value '$param', does not match requirements '{$config->requirements}'");
+                throw new HttpException(400, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
             }
 
             $param = null === $default ? '' : $default;

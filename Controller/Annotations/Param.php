@@ -17,7 +17,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * @Annotation
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class Param
+abstract class Param
 {
     /** @var string */
     public $name;

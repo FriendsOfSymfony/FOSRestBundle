@@ -52,14 +52,9 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['bar']->requirements = '\d+';
         $annotations['bar']->description = 'The bar';
 
-        $annotations['baz'] = new Param;
+        $annotations['baz'] = new RequestParam;
         $annotations['baz']->name = 'baz';
-        $annotations['baz']->requirements = '\d+';
-        $annotations['baz']->description = 'The baz';
-
-        $annotations['qux'] = new RequestParam;
-        $annotations['qux']->name = 'qux';
-        $annotations['qux']->requirements = '\d?';
+        $annotations['baz']->requirements = '\d?';
 
         $this->paramReader
             ->expects($this->any())
@@ -111,23 +106,23 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     public static function validatesConfiguredParamDataProvider()
     {
         return array(
-            array( // pass Param in POST, check that non-strict missing params take default value
+            array( // check that non-strict missing params take default value
                 '1',
-                array('foo' => '1', 'bar' => '2', 'baz' => '3', 'qux' => '4'),
+                array('foo' => '1', 'bar' => '2', 'baz' => '4'),
                 array(),
-                array('bar' => '2', 'baz' => '3', 'qux' => '4'),
+                array('bar' => '2', 'baz' => '4'),
             ),
             array( // pass Param in GET
                 '42',
-                array('foo' => '42', 'bar' => '2', 'baz' => '3', 'qux' => '4'),
-                array('foo' => '42', 'baz' => '3'),
-                array('bar' => '2', 'qux' => '4'),
+                array('foo' => '42', 'bar' => '2', 'baz' => '4'),
+                array('foo' => '42'),
+                array('bar' => '2', 'baz' => '4'),
             ),
             array( // check that invalid non-strict params take default value
                 '1',
-                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'qux' => '4'),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4'),
                 array('foo' => 'bar'),
-                array('bar' => '1', 'baz' => '1', 'qux' => '4'),
+                array('bar' => '1', 'baz' => '1', 'baz' => '4'),
             ),
         );
     }
@@ -176,8 +171,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ),
             array( // test missing strict param with lax requirement
                 array(),
-                array('qux' => 'foo'),
-                'qux'
+                array('baz' => 'foo'),
+                'baz'
             ),
         );
     }
@@ -216,7 +211,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage No @*Param configuration for parameter 'none'.
+     * @expectedExceptionMessage No @QueryParam/@RequestParam configuration for parameter 'none'.
      */
     public function testExceptionOnNonConfiguredParameter()
     {
