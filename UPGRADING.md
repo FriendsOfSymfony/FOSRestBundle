@@ -4,6 +4,10 @@ Upgrading
 Note as FOSRestBundle is not yet declared stable, this document will be updated to
 list important BC breaks.
 
+### upgrading from 0.7.0 to master
+
+ * renamed "query" fetcher to "param" fetcher, this affects the configuration as well as the name of interfaces and request attributes
+
 ### upgrading from 0.6.0 to master
 
  * renamed [get|set]Objects*() to [get|set]Serializer*()
