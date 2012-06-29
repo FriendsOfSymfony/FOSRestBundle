@@ -134,7 +134,7 @@ class FOSRestExtension extends Extension
             $loader->load('param_fetcher_listener.xml');
 
             if ('force' === $config['param_fetcher_listener']) {
-                $container->setParameter($this->getAlias().'.query_fetch_listener.set_params_as_attributes', true);
+                $container->setParameter($this->getAlias().'.param_fetcher_listener.set_params_as_attributes', true);
             }
         }
     }
