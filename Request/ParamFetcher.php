@@ -49,8 +49,8 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * Initializes fetcher.
      *
-     * @param ParamReader      $paramReader Query param reader
-     * @param Request               $request          Active request
+     * @param ParamReader $paramReader Query param reader
+     * @param Request     $request     Active request
      */
     public function __construct(ParamReader $paramReader, Request $request)
     {
