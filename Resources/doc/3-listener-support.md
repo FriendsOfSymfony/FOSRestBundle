@@ -227,7 +227,8 @@ fos_rest:
 ```
 
 ```php
-use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Request\ParamFetcher,
+    FOS\RestBundle\Controller\Annotations\RequestParam;
 
 class FooController extends Controller
 {
