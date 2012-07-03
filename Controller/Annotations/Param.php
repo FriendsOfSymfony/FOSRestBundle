@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Controller\Annotations;
 /**
  * Represents a parameter that can be present in GET or POST data.
  *
- * @Annotation
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
 abstract class Param
