@@ -212,9 +212,6 @@ fos_rest:
         mime_types: ['jsonp': ['application/javascript', 'application/javascript+jsonp']]
 ```
 
-## That was it!
-[Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
-
 ### Param fetcher listener
 
 The param fetcher listener simply sets the ParamFetcher instance as a request attribute
@@ -287,3 +284,6 @@ class FooController extends Controller
         return array('articles' => $articles, 'page' => $page);
     }
 ```
+
+## That was it!
+[Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
