@@ -93,9 +93,17 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config->array) {
-            if (!is_array($param) || count($param) !== count($param, COUNT_RECURSIVE)) {
+            $failMessage = null;
+
+            if (!is_array($param)) {
+                $failMessage = sprintf("Query parameter value '%s' is not an array", $param);
+            } elseif(count($param) !== count($param, COUNT_RECURSIVE)) {
+                $failMessage = sprintf("Query parameter value '%s' must not have more than one depth", $param);
+            }
+
+            if (null !== $failMessage) {
                 if ($strict) {
-                    throw new \RuntimeException(sprintf("Query parameter value '%s' is not an array", $param));
+                    throw new \RuntimeException($failMessage);
                 }
 
                 return array($default);
