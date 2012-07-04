@@ -80,8 +80,13 @@ class ParamFetcher implements ParamFetcherInterface
             throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
-        $config = $this->params[$name];
+        $config  = $this->params[$name];
         $default = $config->default;
+
+        if ($config->array) {
+            $default = (array) $default;
+        }
+
         if (null === $strict) {
             $strict = $config->strict;
         }
@@ -106,7 +111,7 @@ class ParamFetcher implements ParamFetcherInterface
                     throw new \RuntimeException($failMessage);
                 }
 
-                return array($default);
+                return $default;
             }
 
             $self = $this;
