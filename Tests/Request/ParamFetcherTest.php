@@ -142,6 +142,14 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('buzz' => 'invaliddata'),
                 array('bar' => '1', 'baz' => '4'),
             ),
+            array( // invalid array (multiple depth)
+                'buzz',
+                array(1),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1)),
+                array('buzz' => array(array(1))),
+                array('bar' => '1', 'baz' => '4'),
+            ),
+
             array( // multiple array
                 'buzz',
                 array(2, 3, 4),

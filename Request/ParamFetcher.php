@@ -93,7 +93,7 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config->array) {
-            if (!is_array($param)) {
+            if (!is_array($param) || count($param) !== count($param, COUNT_RECURSIVE)) {
                 if ($strict) {
                     throw new \RuntimeException(sprintf("Query parameter value '%s' is not an array", $param));
                 }

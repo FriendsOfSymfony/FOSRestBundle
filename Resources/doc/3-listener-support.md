@@ -259,6 +259,9 @@ class FooController extends Controller
      * ie: ?ids[]=1337&ids[]=notinteger will return array(1337, 1);
      * If ids is not defined, array(1) will be given
      *
+     * Array must have a single depth or it will return default value. It's difficult to validate with
+     * preg_match each deeps of array, if you want to deal with that, use another validation system.
+     *
      * @param ParamFetcher $paramFetcher
      */
     public function getArticlesAction(ParamFetcher $paramFetcher)
