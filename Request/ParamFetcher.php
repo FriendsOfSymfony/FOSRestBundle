@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Request;
 
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,8 +80,13 @@ class ParamFetcher implements ParamFetcherInterface
             throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
-        $config = $this->params[$name];
+        $config  = $this->params[$name];
         $default = $config->default;
+
+        if ($config->array) {
+            $default = (array) $default;
+        }
+
         if (null === $strict) {
             $strict = $config->strict;
         }
@@ -91,7 +97,54 @@ class ParamFetcher implements ParamFetcherInterface
             $param = $this->request->query->get($name, $default);
         }
 
-        // Set default if the requirements do not match
+        if ($config->array) {
+            $failMessage = null;
+
+            if (!is_array($param)) {
+                $failMessage = sprintf("Query parameter value '%s' is not an array", $param);
+            } elseif(count($param) !== count($param, COUNT_RECURSIVE)) {
+                $failMessage = sprintf("Query parameter value '%s' must not have more than one depth", $param);
+            }
+
+            if (null !== $failMessage) {
+                if ($strict) {
+                    throw new \RuntimeException($failMessage);
+                }
+
+                return $default;
+            }
+
+            $self = $this;
+            array_walk($param, function (&$data) use ($config, $strict, $self) {
+                $data = $self->cleanParamWithRequirements($config, $data, $strict);
+            });
+
+            return $param;
+        }
+
+        if (!is_scalar($param)) {
+            if ($strict) {
+                throw new \RuntimeException(sprintf("Query parameter value '%s' is not a scalar", $param));
+            }
+
+            return $default;
+        }
+
+        return $this->cleanParamWithRequirements($config, $param, $strict);
+    }
+
+    /**
+     * @param Param   $config config
+     * @param string  $param  param to clean
+     * @param boolean $strict is strict
+     *
+     * @throws \RuntimeException
+     * @return string
+     */
+    public function cleanParamWithRequirements(Param $config, $param, $strict)
+    {
+        $default = $config->default;
+
         if ("" !== $config->requirements
             && ($param !== $default || null === $default)
             && !preg_match('#^'.$config->requirements.'$#xs', $param)
@@ -102,7 +155,7 @@ class ParamFetcher implements ParamFetcherInterface
                 throw new HttpException(400, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
             }
 
-            $param = null === $default ? '' : $default;
+            return null === $default ? '' : $default;
         }
 
         return $param;
