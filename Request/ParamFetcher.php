@@ -95,6 +95,8 @@ class ParamFetcher implements ParamFetcherInterface
             $param = $this->request->request->get($name, $default);
         } elseif ($config instanceof QueryParam) {
             $param = $this->request->query->get($name, $default);
+        } else {
+            $param = null;
         }
 
         if ($config->array) {
@@ -102,8 +104,8 @@ class ParamFetcher implements ParamFetcherInterface
 
             if (!is_array($param)) {
                 $failMessage = sprintf("Query parameter value '%s' is not an array", $param);
-            } elseif(count($param) !== count($param, COUNT_RECURSIVE)) {
-                $failMessage = sprintf("Query parameter value '%s' must not have more than one depth", $param);
+            } elseif (count($param) !== count($param, COUNT_RECURSIVE)) {
+                $failMessage = sprintf("Query parameter value '%s' must not have a depth of more than one", $param);
             }
 
             if (null !== $failMessage) {
@@ -145,7 +147,7 @@ class ParamFetcher implements ParamFetcherInterface
     {
         $default = $config->default;
 
-        if ("" !== $config->requirements
+        if ('' !== $config->requirements
             && ($param !== $default || null === $default)
             && !preg_match('#^'.$config->requirements.'$#xs', $param)
         ) {
