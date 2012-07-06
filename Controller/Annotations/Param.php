@@ -26,7 +26,7 @@ abstract class Param
     public $default = '';
     /** @var string */
     public $description;
-    /** @var string */
+    /** @var boolean */
     public $strict = false;
     /** @var boolean */
     public $array = false;

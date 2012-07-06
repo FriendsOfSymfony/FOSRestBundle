@@ -19,7 +19,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  */
 class RequestParam extends Param
 {
-    /** @var string */
+    /** @var boolean */
     public $strict = true;
     /** @var string */
     public $default = null;
