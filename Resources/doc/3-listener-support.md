@@ -235,7 +235,7 @@ You may disable this listener like this as it is true by default:
 
 ```
 fos_rest:
-    allowed_http_methods_listener: false
+    allowed_methods_listener: false
 ```
 
 ## That was it!
