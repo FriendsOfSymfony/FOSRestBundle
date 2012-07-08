@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the FOSRestBundle package.
  *
@@ -9,41 +8,58 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\CacheWarmer;
+namespace FOS\RestBundle\EventListener\AllowedMethodsLoader;
 
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmer,
-    Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\RouterInterface,
+    Symfony\Component\Config\ConfigCache,
+    Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 /**
- * CacheWarmer to generate Allow-ed for each routes
+ * AllowedMethodsRouterLoader implementation using RouterInterface to fetch
+ * allowed http methods
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class AllowedHttpMethodsCacheWarmer extends CacheWarmer
+class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, CacheWarmerInterface
 {
-
     /**
      * @var RouterInterface
      */
     private $router;
 
+
     /**
-     * @param RouterInterface $router
+     * @var ConfigCache
      */
-    public function __construct(RouterInterface $router)
+    private $cache;
+
+    /**
+     * Constructor
+     *
+     * @param RouterInterface $router
+     * @param string          $cacheDir
+     * @param boolean         $isDebug Kernel debug flag
+     */
+    public function __construct(RouterInterface $router, $cacheDir, $isDebug)
     {
         $this->router = $router;
+        $this->cache  = new ConfigCache(sprintf('%s/allowed_methods.cache.php', $cacheDir), $isDebug);
     }
 
     /**
-     * Checks whether this warmer is optional or not.
-     *
-     * Optional warmers can be ignored on certain conditions.
-     *
-     * A warmer should return true if the cache can be
-     * generated incrementally and on-demand.
-     *
-     * @return Boolean true if the warmer is optional, false otherwise
+     * {@inheritdoc}
+     */
+    public function getAllowedMethods()
+    {
+        if (!$this->cache->isFresh()) {
+            $this->warmUp(null);
+        }
+
+        return require $this->cache;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function isOptional()
     {
@@ -51,9 +67,7 @@ class AllowedHttpMethodsCacheWarmer extends CacheWarmer
     }
 
     /**
-     * Warms up the cache.
-     *
-     * @param string $cacheDir The cache directory
+     * {@inheritdoc}
      */
     public function warmUp($cacheDir)
     {
@@ -90,15 +104,9 @@ class AllowedHttpMethodsCacheWarmer extends CacheWarmer
             }
         }
 
-        if (!is_dir($cacheDir.'/fos_rest')) {
-            if (false === @mkdir($cacheDir.'/fos_rest', 0777, true)) {
-                throw new \RuntimeException(sprintf('Could not create cache directory "%s"', $cacheDir.'/fos_rest'));
-            }
-        }
-
-        $this->writeCacheFile(
-            $cacheDir.'/fos_rest/allowed_http_methods.php',
-            sprintf('<?php return %s;', var_export($allowedMethods, true))
+        $this->cache->write(
+            sprintf('<?php return %s;', var_export($allowedMethods, true)),
+            $this->router->getRouteCollection()->getResources()
         );
     }
 }

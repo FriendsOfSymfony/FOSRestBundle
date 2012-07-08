@@ -39,6 +39,11 @@ class FOSRestExtension extends Extension
         $loader->load('util.xml');
         $loader->load('request.xml');
 
+        $container->setParameter(
+            'fos_rest.cache_dir',
+            $container->getParameterBag()->resolveValue($config['cache_dir'])
+        );
+
         if (version_compare(FOSRestBundle::getSymfonyVersion(Kernel::VERSION), '2.1.0', '<')) {
             $container->setParameter('fos_rest.routing.loader.controller.class', $container->getParameter('fos_rest.routing.loader_2_0.controller.class'));
         }
@@ -136,8 +141,8 @@ class FOSRestExtension extends Extension
             }
         }
 
-        if ($config['allowed_http_methods_listener']) {
-            $loader->load('allowed_http_methods_listener.xml');
+        if ($config['allowed_methods_listener']) {
+            $loader->load('allowed_methods_listener.xml');
         }
     }
 
