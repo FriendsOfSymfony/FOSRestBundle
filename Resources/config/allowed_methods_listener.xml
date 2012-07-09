@@ -7,7 +7,7 @@
     <parameters>
 
         <parameter key="fos_rest.allowed_methods_listener.class">FOS\RestBundle\EventListener\AllowedMethodsListener</parameter>
-        <parameter key="fos_rest.allowed_methods_loader.class">FOS\RestBundle\Util\AllowedMethodsRouterLoader</parameter>
+        <parameter key="fos_rest.allowed_methods_loader.class">FOS\RestBundle\EventListener\AllowedMethodsLoader\AllowedMethodsRouterLoader</parameter>
 
     </parameters>
 
