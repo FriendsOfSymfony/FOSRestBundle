@@ -73,7 +73,9 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
     {
         $processedRoutes = array();
 
-        foreach ($this->router->getRouteCollection()->all() as $name => $route) {
+        $routeCollection = $this->router->getRouteCollection();
+
+        foreach ($routeCollection->all() as $name => $route) {
 
             if (!isset($processedRoutes[$route->getPattern()])) {
                 $processedRoutes[$route->getPattern()] = array(
@@ -106,7 +108,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
 
         $this->cache->write(
             sprintf('<?php return %s;', var_export($allowedMethods, true)),
-            $this->router->getRouteCollection()->getResources()
+            $routeCollection->getResources()
         );
     }
 }
