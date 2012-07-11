@@ -49,7 +49,7 @@ class Pluralization
             '/$/'                       => 's'
         );
         $uncountables = array(
-            'equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep'
+            'equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'media'
         );
         $irregulars = array(
             'person'  => 'people',
@@ -118,7 +118,7 @@ class Pluralization
             '/s$/i'                 => '',
         );
         $uncountables = array(
-            'equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep'
+            'equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'media'
         );
         $irregulars = array(
             'person'  => 'people',
