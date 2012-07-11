@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle\Tests\View;
 
-use FOS\RestBundle\View\View,
-    FOS\RestBundle\View\RedirectView,
-    FOS\RestBundle\View\RouteRedirectView,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    FOS\Rest\Util\Codes,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\RedirectView;
+use FOS\RestBundle\View\RouteRedirectView;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use FOS\Rest\Util\Codes;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * View test

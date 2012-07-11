@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle\Tests\View;
 
-use FOS\RestBundle\View\View,
-    FOS\RestBundle\View\ViewHandler,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference,
-    FOS\Rest\Util\Codes,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\Form\FormView;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use FOS\Rest\Util\Codes;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormView;
 
 /**
  * View test

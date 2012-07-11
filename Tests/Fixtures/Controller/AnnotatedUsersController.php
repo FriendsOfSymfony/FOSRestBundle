@@ -13,14 +13,14 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Route,
-    FOS\RestBundle\Controller\Annotations\NoRoute,
-    FOS\RestBundle\Controller\Annotations\Get,
-    FOS\RestBundle\Controller\Annotations\Post,
-    FOS\RestBundle\Controller\Annotations\Put,
-    FOS\RestBundle\Controller\Annotations\Patch,
-    FOS\RestBundle\Controller\Annotations\Delete,
-    FOS\RestBundle\Controller\Annotations\Head;
+use FOS\RestBundle\Controller\Annotations\Route;
+use FOS\RestBundle\Controller\Annotations\NoRoute;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\Patch;
+use FOS\RestBundle\Controller\Annotations\Delete;
+use FOS\RestBundle\Controller\Annotations\Head;
 
 class AnnotatedUsersController extends Controller
 {

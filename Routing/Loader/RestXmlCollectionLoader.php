@@ -12,9 +12,7 @@
 namespace FOS\RestBundle\Routing\Loader;
 
 use Symfony\Component\Config\FileLocatorInterface;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\Loader\XmlFileLoader;
-use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 
@@ -104,7 +102,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * @param \DOMDocument $dom
+     * @param  \DOMDocument              $dom
      * @throws \InvalidArgumentException When xml doesn't validate its xsd schema
      */
     protected function validate(\DOMDocument $dom)

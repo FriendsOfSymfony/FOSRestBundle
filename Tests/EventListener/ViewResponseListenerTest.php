@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use FOS\RestBundle\EventListener\ViewResponseListener;
 
