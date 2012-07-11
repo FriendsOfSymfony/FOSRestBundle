@@ -103,9 +103,9 @@ class ParamFetcher implements ParamFetcherInterface
             $failMessage = null;
 
             if (!is_array($param)) {
-                $failMessage = sprintf("Query parameter value '%s' is not an array", $param);
+                $failMessage = sprintf("Query parameter value '%s' is not an array", $name);
             } elseif (count($param) !== count($param, COUNT_RECURSIVE)) {
-                $failMessage = sprintf("Query parameter value '%s' must not have a depth of more than one", $param);
+                $failMessage = sprintf("Query parameter value '%s' must not have a depth of more than one", $name);
             }
 
             if (null !== $failMessage) {
