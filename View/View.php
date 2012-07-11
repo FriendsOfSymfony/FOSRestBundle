@@ -113,7 +113,8 @@ class View
     /**
      * set the data
      *
-     * @param  mixed $data
+     * @param mixed $data
+     *
      * @return View
      */
     public function setData($data)

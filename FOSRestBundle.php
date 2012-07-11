@@ -22,6 +22,9 @@ use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
  */
 class FOSRestBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new ConfigurationCheckPass());
@@ -30,7 +33,8 @@ class FOSRestBundle extends Bundle
     /**
      * Returns a cleaned version number
      *
-     * @param  string $version
+     * @param string $version
+     *
      * @return string
      */
     public static function getSymfonyVersion($version)
