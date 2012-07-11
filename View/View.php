@@ -86,9 +86,9 @@ class View
     /**
      * Convenience method to allow for a fluent interface.
      *
-     * @param mixed $data
+     * @param mixed   $data
      * @param integer $statusCode
-     * @param array $headers
+     * @param array   $headers
      */
     public static function create($data = null, $statusCode = null, array $headers = array())
     {
@@ -98,9 +98,9 @@ class View
     /**
      * Constructor
      *
-     * @param mixed $data
+     * @param mixed   $data
      * @param integer $statusCode
-     * @param array $headers
+     * @param array   $headers
      */
     public function __construct($data = null, $statusCode = null, array $headers = array())
     {
@@ -114,6 +114,7 @@ class View
      * set the data
      *
      * @param mixed $data
+     *
      * @return View
      */
     public function setData($data)
@@ -126,8 +127,8 @@ class View
     /**
      * set a header
      *
-     * @param string $name
-     * @param string $value
+     * @param  string $name
+     * @param  string $value
      * @return View
      */
     public function setHeader($name, $value)
@@ -140,7 +141,7 @@ class View
     /**
      * set the headers
      *
-     * @param array $headers
+     * @param  array $headers
      * @return View
      */
     public function setHeaders(array $headers)
@@ -153,7 +154,7 @@ class View
     /**
      * set the HTTP status code
      *
-     * @param int $code
+     * @param  int  $code
      * @return View
      */
     public function setStatusCode($code)
@@ -166,7 +167,7 @@ class View
     /**
      * set the serializer objects version
      *
-     * @param string $serializerVersion
+     * @param  string $serializerVersion
      * @return View
      */
     public function setSerializerVersion($serializerVersion)
@@ -179,7 +180,7 @@ class View
 
     /**
      * set the serializer objects groups
-     * @param array $serializerGroups
+     * @param  array $serializerGroups
      * @return View
      */
     public function setSerializerGroups($serializerGroups)
@@ -195,7 +196,7 @@ class View
      *
      * function (\FOS\RestBundle\View\ViewHnadler $viewHandler, \JMS\SerializerBundle\Serializer\SerializerInterface $serializer) { .. }
      *
-     * @param callable $serializerCallback
+     * @param  callable $serializerCallback
      * @return View
      */
     public function setSerializerCallback($serializerCallback)

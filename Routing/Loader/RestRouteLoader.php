@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
-use Symfony\Component\Config\Loader\LoaderInterface,
-    Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.

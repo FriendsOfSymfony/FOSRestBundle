@@ -7,7 +7,7 @@ get_user:
   pattern:      /users/{slug}.{_format}
   controller:   ::getUserAction
   requirements: {_method: GET, slug: '[a-z]+'}
-  
+
 patch_users:
   pattern:      /users.{_format}
   controller:   ::patchUsersAction
@@ -17,7 +17,7 @@ patch_user:
   pattern:      /users/{slug}.{_format}
   controller:   ::patchUserAction
   requirements: {_method: PATCH, slug: '[a-z]+'}
-  
+
 get_user_comment:
   pattern:      /users/{slug}/comments/{id}.{_format}
   controller:   ::getUserCommentAction

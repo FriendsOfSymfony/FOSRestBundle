@@ -30,18 +30,29 @@ class ContainerDecoderProvider extends ContainerAware implements DecoderProvider
     /**
      * Constructor.
      *
-     * @param   array $decoders List of key (format) value (service ids) of decoders
+     * @param array $decoders List of key (format) value (service ids) of decoders
      */
     public function __construct(array $decoders)
     {
         $this->decoders = $decoders;
     }
 
+    /**
+     * @param string $format format
+     *
+     * @return boolean
+     */
     public function supports($format)
     {
         return isset($this->decoders[$format]);
     }
 
+    /**
+     * @param string $format format
+     *
+     * @throws \InvalidArgumentException
+     * @return FOS\Rest\Decoder\DecoderInterface
+     */
     public function getDecoder($format)
     {
         if (!$this->supports($format)) {

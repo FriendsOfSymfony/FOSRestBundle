@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle\View;
 
-use Symfony\Component\HttpFoundation\RedirectResponse,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpKernel\Exception\HttpException,
-    Symfony\Component\DependencyInjection\ContainerAware,
-    Symfony\Component\Form\FormInterface,
-    Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use FOS\Rest\Util\Codes;
 
@@ -59,17 +59,16 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Constructor
      *
-     * @param array $formats the supported formats as keys and if the given formats uses templating is denoted by a true value
-     * @param int $failedValidationCode The HTTP response status code for a failed validation
-     * @param string $defaultFormKey    The default parameter form key
-     * @param array $forceRedirects     If to force a redirect for the given key format, with value being the status code to use
-     * @param string $defaultEngine default engine (twig, php ..)
+     * @param array  $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
+     * @param int    $failedValidationCode The HTTP response status code for a failed validation
+     * @param array  $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
+     * @param string $defaultEngine        default engine (twig, php ..)
      */
     public function __construct(array $formats = null, $failedValidationCode = Codes::HTTP_BAD_REQUEST, array $forceRedirects = null, $defaultEngine = 'twig')
     {
-        $this->formats = (array)$formats;
+        $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
-        $this->forceRedirects = (array)$forceRedirects;
+        $this->forceRedirects = (array) $forceRedirects;
         $this->defaultEngine = $defaultEngine;
     }
 
@@ -92,7 +91,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * It can use the public methods of this class to retrieve the needed data and return a
      * Response object ready to be sent.
      *
-     * @param string $format the format that is handled
+     * @param string   $format   the format that is handled
      * @param callable $callable callable that can handle the given format
      */
     public function registerHandler($format, $callable)
@@ -194,7 +193,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * Decides on which handler to use based on the request format
      *
-     * @param View $view
+     * @param View    $view
      * @param Request $request Request object
      *
      * @return Response
@@ -222,7 +221,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Create the Response from the view
      *
-     * @param View $view
+     * @param View   $view
      * @param string $location
      * @param string $format
      *
@@ -248,7 +247,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Render the view data with the given template
      *
-     * @param View $view
+     * @param View   $view
      * @param string $format
      *
      * @return string
@@ -306,9 +305,9 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Handles creation of a Response using either redirection or the templating/serializer service
      *
-     * @param View $view
+     * @param View    $view
      * @param Request $request
-     * @param string $format
+     * @param string  $format
      *
      * @return Response
      */
@@ -321,7 +320,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         $route = $view->getRoute();
         $location = $route
-            ? $this->getRouter()->generate($route, (array)$view->getData(), true)
+            ? $this->getRouter()->generate($route, (array) $view->getData(), true)
             : $view->getLocation();
 
         if ($location) {

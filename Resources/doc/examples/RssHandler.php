@@ -2,25 +2,25 @@
 
 namespace FOS\RestBundle\Examples;
 
-use FOS\RestBundle\View\View,
-    FOS\RestBundle\View\ViewHandler,
-    FOS\Rest\Util\Codes;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
+use FOS\Rest\Util\Codes;
 
-use Symfony\Bridge\Monolog\Logger,
-    Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 /**
  * This is an example RSS ViewHandler.
- * It also shows how to handle exceptions within the ViewHandler so that the 
- * client can get a decent response. 
- * 
+ * It also shows how to handle exceptions within the ViewHandler so that the
+ * client can get a decent response.
+ *
  * Please note that you will need to install the Zend library to use this
  * handler.
  *
  * Configuration:
- * 
+ *
  * services:
  *   my.rss_handler:
  *     class: FOS\RestBundle\Examples\RssHandler
@@ -111,5 +111,4 @@ class RssHandler
         return $feed->export($format);
     }
 }
-
 

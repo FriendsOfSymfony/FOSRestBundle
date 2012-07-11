@@ -63,7 +63,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
     /**
      * Load routes collection from XML fixture routes under Tests\Fixtures directory.
      *
-     * @param   string  $fixtureName    name of the class fixture
+     * @param string $fixtureName name of the class fixture
      */
     protected function loadFromXmlCollectionFixture($fixtureName)
     {

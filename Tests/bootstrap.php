@@ -22,5 +22,6 @@ AnnotationRegistry::registerLoader(function($class) {
         $path = __DIR__.'/../'.str_replace('\\', '/', substr($class, strlen('FOS\RestBundle\\')))   .'.php';
         require_once $path;
     }
+
     return class_exists($class, false);
 });

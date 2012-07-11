@@ -175,8 +175,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * Assert that loader definition described properly.
      *
-     * @param   Definition  $loader                 loader definition
-     * @param   string      $loaderClassParameter   loader class parameter name
+     * @param Definition $loader               loader definition
+     * @param string     $loaderClassParameter loader class parameter name
      */
     private function assertValidRestRouteLoader(Definition $loader, $loaderClassParameter)
     {
@@ -194,8 +194,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * Assert that loader definition described properly.
      *
-     * @param   Definition  $loader                 loader definition
-     * @param   string      $loaderClassParameter   loader class parameter name
+     * @param Definition $loader               loader definition
+     * @param string     $loaderClassParameter loader class parameter name
      */
     private function assertValidRestFileLoader(Definition $loader, $loaderClassParameter)
     {

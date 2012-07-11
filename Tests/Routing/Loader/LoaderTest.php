@@ -30,7 +30,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * Load routes etalon from yml fixture file under Tests\Fixtures directory.
      *
-     * @param   string  $etalonName     name of the YML fixture
+     * @param string $etalonName name of the YML fixture
      */
     protected function loadEtalonRoutesInfo($etalonName)
     {

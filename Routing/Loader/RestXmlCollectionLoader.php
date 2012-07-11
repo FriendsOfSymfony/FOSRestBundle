@@ -11,15 +11,15 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
-use Symfony\Component\Config\FileLocatorInterface,
-    Symfony\Component\Config\Resource\FileResource,
-    Symfony\Component\Routing\Loader\XmlFileLoader,
-    Symfony\Component\Config\Loader\FileLoader,
-    Symfony\Component\Routing\RouteCollection,
-    Symfony\Component\Routing\Route;
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Routing\Loader\XmlFileLoader;
+use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
 
-use FOS\RestBundle\Routing\RestRouteCollection,
-    FOS\RestBundle\Routing\Loader\RestRouteProcessor;
+use FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 
 /**
  * RestXmlCollectionLoader XML file collections loader.
@@ -32,6 +32,12 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
     private $processor;
 
+    /**
+     * Initializes xml loader.
+     *
+     * @param FileLocatorInterface $locator   locator
+     * @param RestRouteProcessor   $processor route processor
+     */
     public function __construct(FileLocatorInterface $locator, RestRouteProcessor $processor)
     {
         parent::__construct($locator);
@@ -40,7 +46,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function parseNode(RouteCollection $collection, \DOMElement $node, $path, $file)
     {
@@ -85,8 +91,8 @@ class RestXmlCollectionLoader extends XmlFileLoader
     /**
      * Returns true if this class supports the given resource.
      *
-     * @param  mixed  $resource A resource
-     * @param  string $type     The resource type
+     * @param mixed  $resource A resource
+     * @param string $type     The resource type
      *
      * @return Boolean true if this class supports the given resource, false otherwise
      */
@@ -98,6 +104,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
+     * @param \DOMDocument $dom
      * @throws \InvalidArgumentException When xml doesn't validate its xsd schema
      */
     protected function validate(\DOMDocument $dom)
