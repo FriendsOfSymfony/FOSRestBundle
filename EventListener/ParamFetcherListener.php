@@ -11,9 +11,8 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent,
-    Symfony\Component\HttpKernel\HttpKernelInterface,
-    Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This listener handles various setup tasks related to the query fetcher
@@ -35,7 +34,8 @@ class ParamFetcherListener
     /**
      * Constructor.
      *
-     * @param   ContainerInterface $container container
+     * @param ContainerInterface $container             container
+     * @param boolean            $setParamsAsAttributes params as attributes
      */
     public function __construct(ContainerInterface $container, $setParamsAsAttributes = false)
     {
@@ -46,7 +46,7 @@ class ParamFetcherListener
     /**
      * Core controller handler
      *
-     * @param   FilterControllerEvent   $event    The event
+     * @param FilterControllerEvent $event The event
      */
     public function onKernelController(FilterControllerEvent $event)
     {

@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Component\Config\FileLocator,
-    Symfony\Component\HttpKernel\DependencyInjection\Extension,
-    Symfony\Component\DependencyInjection\Reference,
-    Symfony\Component\DependencyInjection\ContainerInterface,
-    Symfony\Component\DependencyInjection\ContainerBuilder,
-    Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
-    Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\HttpKernel\Kernel;
 
 use FOS\Rest\Util\Codes;
 
@@ -28,7 +28,7 @@ class FOSRestExtension extends Extension
     /**
      * Loads the services based on your application configuration.
      *
-     * @param array $configs
+     * @param array            $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
@@ -142,7 +142,7 @@ class FOSRestExtension extends Extension
     /**
      * Check if an exception is loadable.
      *
-     * @param string $exception class to test
+     * @param  string                   $exception class to test
      * @throws InvalidArgumentException if the class was not found.
      */
     private function testExceptionExists($exception)

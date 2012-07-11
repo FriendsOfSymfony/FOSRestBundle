@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use FOS\RestBundle\Routing\RestRouteCollection;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * RestRouteLoader test.
@@ -140,9 +141,10 @@ class RestRouteLoaderTest extends LoaderTest
     /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
-     * @param   string  $fixtureName    name of the class fixture
-     * @param   string  $namePrefix     route name prefix
-     * @return  Symfony\Component\Routing\RouteCollection
+     * @param string $fixtureName name of the class fixture
+     * @param string $namePrefix  route name prefix
+     *
+     * @return RouteCollection
      */
     protected function loadFromControllerFixture($fixtureName, $namePrefix = null)
     {

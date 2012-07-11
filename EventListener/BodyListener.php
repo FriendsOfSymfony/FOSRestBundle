@@ -13,8 +13,8 @@ namespace FOS\RestBundle\EventListener;
 
 use FOS\Rest\Decoder\DecoderProviderInterface;
 
-use Symfony\Component\HttpFoundation\ParameterBag,
-    Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * This listener handles Request body decoding.
@@ -31,7 +31,7 @@ class BodyListener
     /**
      * Constructor.
      *
-     * @param   DecoderProviderInterface $decoderProvider Provider for fetching decoders
+     * @param DecoderProviderInterface $decoderProvider Provider for fetching decoders
      */
     public function __construct(DecoderProviderInterface $decoderProvider)
     {
@@ -41,7 +41,7 @@ class BodyListener
     /**
      * Core request handler
      *
-     * @param   GetResponseEvent   $event    The event
+     * @param GetResponseEvent $event The event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -50,9 +50,9 @@ class BodyListener
         if (!count($request->request->all())
             && in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))
         ) {
-            $content_type = $request->headers->get('Content-Type');
+            $contentType = $request->headers->get('Content-Type');
 
-            $format = null === $content_type
+            $format = null === $contentType
                 ? $request->getRequestFormat()
                 : $request->getFormat($request->headers->get('Content-Type'));
 
