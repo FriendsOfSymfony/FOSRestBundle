@@ -36,7 +36,7 @@ interface ParamFetcherInterface
      *
      * @return mixed Value of the parameter.
      */
-    function get($name, $strict = null);
+    public function get($name, $strict = null);
 
     /**
      * Get all validated parameter.

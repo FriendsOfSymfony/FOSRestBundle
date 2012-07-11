@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use Symfony\Component\HttpKernel\HttpKernelInterface,
-    Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 use FOS\RestBundle\EventListener\FormatListener;
 

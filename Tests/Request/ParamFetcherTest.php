@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
@@ -90,11 +89,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     /**
      * Test valid parameters.
      *
-     * @param string $param which param to test
-     * @param string $expected Expected query parameter value.
+     * @param string $param       which param to test
+     * @param string $expected    Expected query parameter value.
      * @param string $expectedAll Expected query parameter values.
-     * @param array  $query    Query parameters for the request.
-     * @param array  $request  Request parameters for the request.
+     * @param array  $query       Query parameters for the request.
+     * @param array  $request     Request parameters for the request.
      *
      * @dataProvider validatesConfiguredParamDataProvider
      */
