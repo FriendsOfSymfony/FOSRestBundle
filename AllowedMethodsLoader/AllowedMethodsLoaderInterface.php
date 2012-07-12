@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\EventListener\AllowedMethodsLoader;
+namespace FOS\RestBundle\AllowedMethodsLoader;
 
 /**
  * AllowedMethodsLoaderInterface

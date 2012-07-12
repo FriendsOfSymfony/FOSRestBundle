@@ -214,7 +214,7 @@ fos_rest:
 
 ### Allowed Http Methods Listener
 
-This listener add the ``Allow`` HTTP header to each request appending all allowed methods for a given resource.
+This listener adds the ``Allow`` HTTP header to each request, appending all allowed methods for a given resource.
 
 Let's say we have the following routes:
 ```
@@ -231,11 +231,11 @@ A ``GET`` request to ``api_get_users`` will response in:
 < Server: Apache/2.2.22 (Ubuntu)
 < allow: GET, POST
 ```
-You may disable this listener like this as it is true by default:
+You need to enable this listener as it is disabled by default:
 
 ```
 fos_rest:
-    allowed_methods_listener: false
+    allowed_methods_listener: true
 ```
 
 ## That was it!

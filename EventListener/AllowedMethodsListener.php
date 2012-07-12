@@ -13,7 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
-use FOS\RestBundle\EventListener\AllowedMethodsLoader\AllowedMethodsLoaderInterface;
+use FOS\RestBundle\AllowedMethodsLoader\AllowedMethodsLoaderInterface;
 
 /**
  * Listener to append Allow-ed methods for a given route/resource
