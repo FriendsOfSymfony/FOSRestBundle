@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+use JMS\SerializerBundle\DependencyInjection\JMSSerializerExtension;
+use FOS\RestBundle\DependencyInjection\Factory\RoutingHandlerFactory;
 
 /**
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
@@ -42,5 +44,10 @@ class FOSRestBundle extends Bundle
         return implode('.', array_slice(array_map(function($val) {
             return (int) $val;
         }, explode('.', $version)), 0, 3));
+    }
+
+    public function configureSerializerExtension(JMSSerializerExtension $ext)
+    {
+        $ext->addHandlerFactory(new RoutingHandlerFactory());
     }
 }
