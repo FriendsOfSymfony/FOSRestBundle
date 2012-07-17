@@ -8,11 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\AllowedMethodsLoader;
+namespace FOS\RestBundle\Response\AllowedMethodsLoader;
 
-use Symfony\Component\Routing\RouterInterface,
-    Symfony\Component\Config\ConfigCache,
-    Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 /**
  * AllowedMethodsRouterLoader implementation using RouterInterface to fetch
@@ -26,7 +26,6 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
      * @var RouterInterface
      */
     private $router;
-
 
     /**
      * @var ConfigCache
