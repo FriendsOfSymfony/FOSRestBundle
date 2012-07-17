@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\AllowedMethodsLoader;
+namespace FOS\RestBundle\Response\AllowedMethodsLoader;
 
 /**
  * AllowedMethodsLoaderInterface
@@ -25,7 +25,6 @@ interface AllowedMethodsLoaderInterface
      *  'another_route' => array('DELETE', 'PUT'),
      * );
      *
-     * @abstract
      * @return array
      */
     function getAllowedMethods();
