@@ -83,11 +83,11 @@ class RestRouteCollection extends RouteCollection
 
             if ($route1Match && !$route2Match) {
                 return 1;
-            } elseif (!$route1Match && $route2Match) {
-                return -1;
-            } else {
-                return strcmp($route1, $route2);
             }
+            if (!$route1Match && $route2Match) {
+                return -1;
+            }
+            return strcmp($route1, $route2);
         });
 
         return $routes;
