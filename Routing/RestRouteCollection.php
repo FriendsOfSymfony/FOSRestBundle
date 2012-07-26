@@ -78,8 +78,8 @@ class RestRouteCollection extends RouteCollection
         // sort routes by names - move custom actions at the beginning,
         // default at the end
         uksort($routes, function($route1, $route2) {
-            $route1Match = preg_match('/(_|^)(get|post|put|delete|patch|head)_/', $route1);
-            $route2Match = preg_match('/(_|^)(get|post|put|delete|patch|head)_/', $route2);
+            $route1Match = preg_match('/(_|^)(get|post|put|delete|patch|head|options)_/', $route1);
+            $route2Match = preg_match('/(_|^)(get|post|put|delete|patch|head|options)_/', $route2);
 
             if ($route1Match && !$route2Match) {
                 return 1;

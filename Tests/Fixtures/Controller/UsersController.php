@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UsersController extends Controller
 {
+    public function optionsUsersAction()
+    {} // [OPTION] /users
+
     public function getUsersAction()
     {} // [GET] /users
 

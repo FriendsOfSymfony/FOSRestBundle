@@ -40,41 +40,44 @@ you can use ``name_prefix`` on an import only when the file is imported itself w
 <?php
 class UsersController extends Controller
 {
+    public function optionsUsersAction()
+    {} // "options_users" [OPTIONS] /users
+
     public function getUsersAction()
-    {} // "get_users"    [GET] /users
+    {} // "get_users"     [GET] /users
 
     public function newUsersAction()
-    {} // "new_users"    [GET] /users/new
+    {} // "new_users"     [GET] /users/new
 
     public function postUsersAction()
-    {} // "post_users"   [POST] /users
+    {} // "post_users"    [POST] /users
 
     public function patchUsersAction()
     {} // "patch_users"   [PATCH] /users
 
     public function getUserAction($slug)
-    {} // "get_user"     [GET] /users/{slug}
+    {} // "get_user"      [GET] /users/{slug}
 
     public function editUserAction($slug)
-    {} // "edit_user"    [GET] /users/{slug}/edit
+    {} // "edit_user"     [GET] /users/{slug}/edit
 
     public function putUserAction($slug)
-    {} // "put_user"     [PUT] /users/{slug}
+    {} // "put_user"      [PUT] /users/{slug}
 
     public function patchUserAction($slug)
-    {} // "patch_user"   [PATCH] /users/{slug}
+    {} // "patch_user"    [PATCH] /users/{slug}
 
     public function lockUserAction($slug)
-    {} // "lock_user"    [PATCH] /users/{slug}/lock
+    {} // "lock_user"     [PATCH] /users/{slug}/lock
 
     public function banUserAction($slug, $id)
-    {} // "ban_user"     [PATCH] /users/{slug}/ban
+    {} // "ban_user"      [PATCH] /users/{slug}/ban
 
     public function removeUserAction($slug)
-    {} // "remove_user"  [GET] /users/{slug}/remove
+    {} // "remove_user"   [GET] /users/{slug}/remove
 
     public function deleteUserAction($slug)
-    {} // "delete_user"  [DELETE] /users/{slug}
+    {} // "delete_user"   [DELETE] /users/{slug}
 
     public function getUserCommentsAction($slug)
     {} // "get_user_comments"    [GET] /users/{slug}/comments
@@ -125,6 +128,8 @@ type. Shown as ``UsersController::deleteUserAction()`` above.
 of resources (e.g. apply batch modifications to subset of resources). Shown as ``UsersController::patchUsersAction()`` above.
 This action also accepts *PATCH* requests to the url */resources/{id}* and is supposed to partially modify the resource. 
 Shown as ``UsersController::patchUserAction()`` above.
+* **option** - this action accepts *OPTION* requests to the url */resources* and is supposed to return a list of REST
+resources that the user has access to.  Shown as ``UsersController::userAction()`` above.
 
 ### Conventional Actions
 
