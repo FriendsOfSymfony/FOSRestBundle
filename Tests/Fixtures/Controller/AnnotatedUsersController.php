@@ -21,14 +21,19 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Head;
+use FOS\RestBundle\Controller\Annotations\Options;
 
 class AnnotatedUsersController extends Controller
 {
+    public function optionsUsersAction()
+    {} // [OPTIONS]     /users
+
     /**
      * @Options
      */
-    public function optionsUsersAction()
-    {} // [OPTIONS]     /users
+    public function coptionsUsersAction()
+    {
+    } // [OPTIONS]     /users
 
     public function getUsersAction()
     {} // [GET]     /users
