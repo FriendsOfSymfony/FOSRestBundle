@@ -24,6 +24,12 @@ use FOS\RestBundle\Controller\Annotations\Head;
 
 class AnnotatedUsersController extends Controller
 {
+    /**
+     * @Options
+     */
+    public function optionsUsersAction()
+    {} // [OPTIONS]     /users
+
     public function getUsersAction()
     {} // [GET]     /users
 
