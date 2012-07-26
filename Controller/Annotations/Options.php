@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Controller\Annotations;
 
 /**
- * HEAD Route annotation class.
+ * OPTIONS Route annotation class.
  * @Annotation
  */
 class Options extends Route
