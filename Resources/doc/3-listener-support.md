@@ -322,11 +322,12 @@ A ``GET`` request to ``api_get_users`` will response in:
 < Server: Apache/2.2.22 (Ubuntu)
 < allow: GET, POST
 ```
-You may disable this listener like this as it is true by default:
+
+You need to enable this listener like this as it is disabled by default:
 
 ```
 fos_rest:
-    allowed_http_methods_listener: false
+    allowed_methods_listener: true
 ```
 
 ## That was it!
