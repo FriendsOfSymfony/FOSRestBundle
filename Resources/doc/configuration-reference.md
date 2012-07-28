@@ -3,6 +3,9 @@ Full default configuration
 
 ```yaml
 fos_rest:
+    param_fetcher_listener:  false
+    cache_dir:            %kernel.cache_dir%/fos_rest
+    allowed_methods_listener:  false
     routing_loader:
         default_format:       ~
     service:
@@ -10,7 +13,9 @@ fos_rest:
         templating:           templating
         serializer:           jms_serializer.serializer
         view_handler:         fos_rest.view_handler.default
-    serializer_version:      ~
+    serializer:
+        version:              ~
+        groups:               []
     view:
         default_engine:       twig
         force_redirects:
