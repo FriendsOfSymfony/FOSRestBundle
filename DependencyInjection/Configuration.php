@@ -41,8 +41,8 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('param_fetcher_listener')->defaultFalse()
-                ->scalarNode('cache_dir')->cannotBeEmpty()->defaultValue('%kernel.cache_dir%/fos_rest')->end()
+                ->scalarNode('param_fetcher_listener')->defaultFalse()->end()
+                ->scalarNode('cache_dir')->cannotBeEmpty()->defaultValue('%kernel.cache_dir%/fos_rest')
                     ->validate()
                         ->ifNotInArray($this->forceOptionValues)
                         ->thenInvalid('The param_fetcher_listener option does not support %s. Please choose one of '.json_encode($this->forceOptionValues))
