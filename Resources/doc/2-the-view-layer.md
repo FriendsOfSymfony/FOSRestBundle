@@ -214,5 +214,43 @@ class UsersController extends Controller
 }
 ```
 
+#### Jsonp custom handler
+
+To enable the common use case of creating Jsonp responses this Bundle provides an
+easy solution to handle a custom handler for this use case. Enabling this setting
+also automatically uses the mime type listener (see the next chapter) to register
+a mime type for Jsonp.
+
+Simply add the following to your configuration
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        jsonp_handler: ~
+```
+
+It is also possible to customize both the name of the GET parameter with the callback,
+as well as the filter pattern that validates if the provided callback is valid or not.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        jsonp_handler:
+           callback_param:       mycallback
+           callback_filter:      /^[a-z0-9_]+$/i
+```
+
+Finally the filter can also be disabled by setting it to false.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        jsonp_handler:
+            callback_param:       false
+```
+
 ## That was it!
 [Return to the index](index.md) or continue reading about [Listener support](3-listener-support.md).
