@@ -73,7 +73,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         );
         $controllerLoader = $this->getControllerLoader();
 
-        $resolver = new LoaderResolver(array($collectionLoader, $controllerLoader));
+        new LoaderResolver(array($collectionLoader, $controllerLoader));
 
         return $collectionLoader->load($fixtureName, 'rest');
     }
