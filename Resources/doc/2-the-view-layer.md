@@ -15,7 +15,7 @@ must always be processed by a ``ViewHandler`` (see the below section on the
 "view response listener" for how to get this processing applied automatically)
 
 FOSRestBundle ships with a controller extending the default Symfony controller,
-which adds several convenince methods:
+which adds several convenience methods:
 
 ```php
 <?php
