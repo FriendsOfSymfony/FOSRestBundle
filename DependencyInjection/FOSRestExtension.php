@@ -41,10 +41,6 @@ class FOSRestExtension extends Extension
 
         $container->setParameter('fos_rest.cache_dir', $config['cache_dir']);
 
-        if (version_compare(FOSRestBundle::getSymfonyVersion(Kernel::VERSION), '2.1.0', '<')) {
-            $container->setParameter('fos_rest.routing.loader.controller.class', $container->getParameter('fos_rest.routing.loader_2_0.controller.class'));
-        }
-
         $formats = array();
         foreach ($config['view']['formats'] as $format => $enabled) {
             if ($enabled) {
