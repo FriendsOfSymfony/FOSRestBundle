@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Config\FileLocatorInterface;
 
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 
@@ -30,20 +31,24 @@ class RestRouteLoader extends Loader
     protected $controllerParser;
     protected $controllerReader;
     protected $defaultFormat;
+    protected $locator;
 
         /**
      * Initializes loader.
      *
      * @param ContainerInterface   $container        service container
+     * @param FileLocatorInterface $locator A FileLocatorInterface instance
      * @param ControllerNameParser $controllerParser controller name parser
      * @param RestControllerReader $controllerReader controller reader
      * @param string               $defaultFormat    default http format
      */
     public function __construct(ContainerInterface $container,
+                                FileLocatorInterface $locator,
                                 ControllerNameParser $controllerParser,
                                 RestControllerReader $controllerReader, $defaultFormat = 'html')
     {
         $this->container        = $container;
+        $this->locator          = $locator;
         $this->controllerParser = $controllerParser;
         $this->controllerReader = $controllerReader;
         $this->defaultFormat    = $defaultFormat;
@@ -104,6 +109,11 @@ class RestRouteLoader extends Loader
     {
         $class  = null;
         $prefix = null;
+
+        if (0 === strpos($controller, '@')) {
+            $file = $this->locator->locate($controller);
+            $controller = $this->findClass($file);
+        }
 
         if (class_exists($controller)) {
             // full class name

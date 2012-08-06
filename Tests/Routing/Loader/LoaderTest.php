@@ -47,6 +47,9 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         $c = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->disableOriginalConstructor()
             ->getMock();
+        $l = $this->getMockBuilder('Symfony\Component\Config\FileLocator')
+            ->disableOriginalConstructor()
+            ->getMock();
         $p = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser')
             ->disableOriginalConstructor()
             ->getMock();
@@ -57,6 +60,6 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         $ar = new RestActionReader($annotationReader, $paramReader);
         $cr = new RestControllerReader($ar, $annotationReader);
 
-        return new RestRouteLoader($c, $p, $cr, 'html');
+        return new RestRouteLoader($c, $l, $p, $cr, 'html');
     }
 }
