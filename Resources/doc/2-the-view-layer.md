@@ -84,6 +84,20 @@ the important ones for configurating the view:
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/HelloController.php
 
+### Forms and Views
+
+Symfony Forms have special handling inside the view layer. Whenever you
+
+- return a Form from the controller
+- Set the form as only data of the view
+- return an array with a 'form' key, containing a form
+
+Then:
+
+- If the form is bound and no status code is set explicitly, an invalid form leads to a "validation failed" response.
+- In a rendered template, the form is passed as 'form' and ``createView()`` is called automatically.
+- ``$form->getData()`` is passed into the view as template as ``'data'`` if the form is the only view data.
+
 ### Configuration
 
 The ``formats`` and ``templating_formats`` settings determine which formats are
