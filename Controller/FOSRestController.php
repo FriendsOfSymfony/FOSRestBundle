@@ -28,11 +28,9 @@ abstract class FOSRestController extends Controller
      *
      * @return View
      */
-    protected function view($data = null, $statusCode = null, array $headers = array(), $templateVar = 'data')
+    protected function view($data = null, $statusCode = null, array $headers = array())
     {
-        return View::create($data, $statusCode, $headers)
-            ->setTemplateVar($templateVar)
-        ;
+        return View::create($data, $statusCode, $headers);
     }
 
     /**
