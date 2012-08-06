@@ -54,7 +54,7 @@ class RestControllerReader
      *
      * @return RestRouteCollection
      */
-    public function read(\ReflectionClass $reflection)
+    public function read(\ReflectionClass $reflection, $type = 'rest')
     {
         $collection = new RestRouteCollection();
         $collection->addResource(new FileResource($reflection->getFileName()));
@@ -74,9 +74,18 @@ class RestControllerReader
             $this->actionReader->setRoutePrefix(substr($prefix, 1));
         }
 
+        $resource = '';
+        if ('rest_class' === $type) {
+            if (!preg_match('/([_a-zA-Z0-9]+)Controller/', $reflection->getShortName(), $matches)) {
+                throw new \Exception('Cannot split off resource name from controller name ');
+            }
+
+            $resource = $matches[1];
+        }
+
         // read action routes into collection
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            $this->actionReader->read($collection, $method);
+            $this->actionReader->read($collection, $method, $resource);
         }
 
         $this->actionReader->setRoutePrefix(null);

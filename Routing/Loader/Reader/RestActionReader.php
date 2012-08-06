@@ -116,7 +116,7 @@ class RestActionReader
      *
      * @return Route
      */
-    public function read(RestRouteCollection $collection, \ReflectionMethod $method)
+    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource = 'rest')
     {
         // check that every route parent has non-empty singular name
         foreach ($this->parents as $parent) {
@@ -134,7 +134,7 @@ class RestActionReader
         }
 
         // if we can't get http-method and resources from method name - skip
-        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method);
+        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method, $resource);
         if (!$httpMethodAndResources) {
             return;
         }
@@ -224,20 +224,31 @@ class RestActionReader
      *
      * @return Boolean|array
      */
-    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method)
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource)
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
             return false;
         }
 
-        $httpMethod = strtolower($matches[1]);
+        $resources = $resource ? $resource : $matches[2];
+
         $resources  = preg_split(
-            '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+            '/([A-Z][^A-Z]*)/', $resources, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
 
-        return array($httpMethod, $resources);
-    }
+        if ($resource &&
+            (in_array($matches[1], $this->availableConventionalActions)
+                || in_array($matches[1], array('post', 'patch', 'delete', 'options'))
+                || 'List' === $matches[2]
+            )
+        ) {
+            $resources[0] = Pluralization::pluralize($resources[0]);
+        }
+
+        return array(strtolower($matches[1]), $resources);
+
+}
 
     /**
      * Returns readable arguments from method.

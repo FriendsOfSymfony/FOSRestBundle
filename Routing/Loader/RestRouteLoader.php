@@ -76,7 +76,7 @@ class RestRouteLoader extends Loader
     {
         list($prefix, $class) = $this->getControllerLocator($controller);
 
-        $collection = $this->controllerReader->read(new \ReflectionClass($class));
+        $collection = $this->controllerReader->read(new \ReflectionClass($class), $type);
         $collection->prependRouteControllersWithPrefix($prefix);
         $collection->setDefaultFormat($this->defaultFormat);
 
@@ -94,7 +94,7 @@ class RestRouteLoader extends Loader
     public function supports($resource, $type = null)
     {
         return is_string($resource)
-            && 'rest' === $type
+            && ('rest' === $type || 'rest_class' === $type)
             && !in_array(pathinfo($resource, PATHINFO_EXTENSION), array('xml', 'yml'));
     }
 
