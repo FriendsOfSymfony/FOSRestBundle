@@ -14,43 +14,72 @@ it simply works as a container for all the data/configuration for the
 must always be processed by a ``ViewHandler`` (see the below section on the
 "view response listener" for how to get this processing applied automatically)
 
+FOSRestBundle ships with a controller extending the default Symfony controller,
+which adds several convenince methods:
+
 ```php
 <?php
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use FOS\RestBundle\View\View;
+use FOS\RestBundle\Controller\FOSRestController;
 
-class UsersController extends Controller
+class UsersController extends FOSRestController
 {
     public function getUsersAction()
     {
-        $view = View::create()
-          ->setStatusCode(200)
-          ->setData($data);
+        $data = // get data, in this case list of users.
+        $view = $this->view($data, 200)
+            ->setTemplate("MyBundle:Users:getUsers.html.twig")
+            ->setTemplateVar('users')
+        ;
 
-        ...
+        return $this->handleView($view);
+    }
 
-        return $this->get('fos_rest.view_handler')->handle($view);
+    public function redirectAction()
+    {
+        $view = $this->redirectView($this->generateUrl('some_route'), 301);
+        // or
+        $view = $this->routeRedirectView('some_route', array(), 301);
+
+        return $this->handleView($view);
     }
 }
 ```
 
-In the above example, ``View::create`` is a simple, convenient method to allow
-for a fluent interface. It is equivalent to instantiating a View by calling its
-constructor.
+To simplify this even more: If you rely on the ``ViewResponseListener`` in combination with
+SensioFrameworkExtraBundle you can even omit the calls to ``$this->handleView($view)``
+and directly return the view objects. See chapter 3 on listeners for more details
+on the View Response Listener.
 
 As the purpose is to create a format-agnostic controller, data assigned to the
 ``View`` instance should ideally be an object graph, though any data type is
 acceptable. Note that when rendering templating formats, the ``ViewHandler``
 will wrap data types other than associative arrays in an associative array with
 a single key (default  ``'data'``), which will become the variable name of the
-object in the respective template.
+object in the respective template. You can change this variable by calling
+the ``setTemplateVar()`` method on the view object.
 
 There are also two specialized ``View`` classes for handling redirects, one for
 redirecting to an URL called ``RedirectView`` and one to redirect to a route
 called ``RouteRedirectView``.  Note that whether these classes actually cause a
 redirect or not is determined by the ``force_redirects`` configuration option,
 which is only enabled for ``html`` by default (see below).
+
+There are several more methods on the ``View`` class, here is a list of all
+the important ones for configurating the view:
+
+* ``setData($data)`` - Set the object graph or list of objects to serialize.
+* ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
+* ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
+* ``setSerializerVersion($version)`` - Set the version of the serialization format to use.
+* ``setSerializerGroups($groups)`` - Set the groups for serialization.
+* ``setSerializerCallback($callback)`` - Set a callback that receives the serializer for configuration purposes.
+* ``setTemplate($name)`` - Name of the template to use in case of HTML rendering.
+* ``setTemplateVar($name)`` - Name of the variable the data is in, when passed to HTML template. Defaults to ``'data'``.
+* ``setEngine($name)`` - Name of the engine to render HTML template. Can be autodetected.
+* ``setFormat($format)`` - The format the response is supposed to be rendered in. Can be autodetected using HTTP semantics.
+* ``setLocation($location)`` - The location to redirect to with a response.
+* ``setRoute($route)`` - The route to redirect to with a response.
 
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/HelloController.php
