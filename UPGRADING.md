@@ -7,6 +7,7 @@ list important BC breaks.
 ### upgrading from 0.7.0 to master
 
  * renamed "query" fetcher to "param" fetcher, this affects the configuration as well as the name of interfaces and request attributes
+ * ViewHandler now only calls "createView()" in a single form instance set as "form" in the data array
 
 ### upgrading from 0.6.0 to master
 

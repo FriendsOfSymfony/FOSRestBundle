@@ -116,16 +116,20 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     private function getStatusCode(View $view)
     {
-        if (null !== $code = $view->getStatusCode()) {
+        if (null !== ($code = $view->getStatusCode())) {
             return $code;
         }
 
         $data = $view->getData();
-        if (!is_array($data) || empty($data['form']) || !($data['form'] instanceof FormInterface)) {
-            return Codes::HTTP_OK;
+        if ($data instanceof FormInterface) {
+            $form = $data;
+        } elseif (is_array($data) && isset($data['form'])  && $data['form'] instanceof FormInterface) {
+            $form = $data['form'];
+        } else {
+            $form = false;
         }
 
-        return $data['form']->isBound() && !$data['form']->isValid()
+        return $form && $form->isBound() && !$form->isValid()
             ? $this->failedValidationCode : Codes::HTTP_OK;
     }
 
@@ -281,22 +285,16 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     public function prepareTemplateParameters(View $view)
     {
         $data = $view->getData();
-        if (empty($data)) {
+        if ($data instanceof FormInterface) {
+            return array('form' => $data->createView(), $view->getTemplateVar() => $data->getData());
+        }
+
+        if (empty($data) || !is_array($data) || is_numeric((key($data)))) {
             return array($view->getTemplateVar() => $data);
         }
 
-        if (!is_array($data)) {
-            $data = array($view->getTemplateVar() => $data);
-        }
-
-        foreach (array_keys($data) as $key) {
-            if ($data[$key] instanceof FormInterface) {
-                $data[$key] = $data[$key]->createView();
-            }
-        }
-
-        if (is_numeric($key)) {
-            $data = array($view->getTemplateVar() => $data);
+        if (isset($data['form']) && $data['form'] instanceof FormInterface) {
+            $data['form'] = $data['form']->createView();
         }
 
         return $data;

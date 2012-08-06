@@ -176,10 +176,14 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         if ($form) {
-            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'isValid', 'getChildren'), array(), '', false);
+            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'getData', 'isValid'), array(), '', false);
             $data
                 ->expects($this->exactly($createViewCalls))
                 ->method('createView')
+                ->will($this->returnValue(array('bla' => 'toto')));
+            $data
+                ->expects($this->exactly($createViewCalls))
+                ->method('getData')
                 ->will($this->returnValue(array('bla' => 'toto')));
             $data
                 ->expects($this->any())
@@ -310,19 +314,23 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $formView = new FormView();
         $form = $this->getMockBuilder('\Symfony\Component\Form\Form')
-            ->setMethods(array('createView'))
+            ->setMethods(array('createView', 'getData'))
             ->disableOriginalConstructor()
             ->getMock();
         $form
             ->expects($this->once())
             ->method('createView')
             ->will($this->returnValue($formView));
+        $form
+            ->expects($this->once())
+            ->method('getData')
+            ->will($this->returnValue($formView));
 
         return array(
             'assoc array does not change'   => array(array('foo' => 'bar'), array('foo' => 'bar')),
             'ordered array is wrapped as data key'  => array(array('foo', 'bar'), array('data' => array('foo', 'bar'))),
             'object is wrapped as data key' => array($object, array('data' => $object)),
-            'form is wrapped as form key'   => array($form, array('data' => $formView))
+            'form is wrapped as form key'   => array($form, array('form' => $formView, 'data' => $formView))
         );
     }
 }
