@@ -116,7 +116,7 @@ class RestActionReader
      *
      * @return Route
      */
-    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource = 'rest')
+    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource = null)
     {
         // check that every route parent has non-empty singular name
         foreach ($this->parents as $parent) {

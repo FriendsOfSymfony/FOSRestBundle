@@ -74,7 +74,7 @@ class RestControllerReader
             $this->actionReader->setRoutePrefix(substr($prefix, 1));
         }
 
-        $resource = '';
+        $resource = null;
         if ('rest_class' === $type) {
             if (!preg_match('/([_a-zA-Z0-9]+)Controller/', $reflection->getShortName(), $matches)) {
                 throw new \Exception('Cannot split off resource name from controller name ');
