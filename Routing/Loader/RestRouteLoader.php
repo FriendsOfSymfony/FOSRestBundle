@@ -94,7 +94,7 @@ class RestRouteLoader extends Loader
     public function supports($resource, $type = null)
     {
         return is_string($resource)
-            && ('rest' === $type || 'rest_class' === $type)
+            && 'rest' === $type
             && !in_array(pathinfo($resource, PATHINFO_EXTENSION), array('xml', 'yml'));
     }
 

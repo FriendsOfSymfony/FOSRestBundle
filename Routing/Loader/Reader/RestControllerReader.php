@@ -69,18 +69,21 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
-        // trim '/' at the start of the prefix
-        if ('/' === substr($prefix = $this->actionReader->getRoutePrefix(), 0, 1)) {
-            $this->actionReader->setRoutePrefix(substr($prefix, 1));
-        }
-
+        // read route-strategy annotation
         $resource = null;
-        if ('rest_class' === $type) {
+        if ($annotation = $this->readClassAnnotation($reflection, 'RouteStrategy')
+            && $annotation->value = 'controller'
+        ) {
             if (!preg_match('/([_a-zA-Z0-9]+)Controller/', $reflection->getShortName(), $matches)) {
                 throw new \Exception('Cannot split off resource name from controller name ');
             }
 
             $resource = $matches[1];
+        }
+
+        // trim '/' at the start of the prefix
+        if ('/' === substr($prefix = $this->actionReader->getRoutePrefix(), 0, 1)) {
+            $this->actionReader->setRoutePrefix(substr($prefix, 1));
         }
 
         // read action routes into collection
