@@ -35,6 +35,7 @@ class RestActionReader
 
     private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'head', 'options');
     private $availableConventionalActions = array('new', 'edit', 'remove');
+    private $forcePluralizationMethods = array();
 
     /**
      * Initializes controller reader.
@@ -46,6 +47,7 @@ class RestActionReader
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
+        $this->forcePluralizationMethods = array_merge($this->availableConventionalActions, array('post', 'patch', 'delete', 'options'));
     }
 
     /**
@@ -172,7 +174,7 @@ class RestActionReader
         // generated parameters
         $routeName    = $this->namePrefix.strtolower($routeName);
         if ($collection->has($routeName)) {
-            throw new \InvalidArgumentException("There already is a method that resulted in defining a route '$routeName'");
+            throw new \InvalidArgumentException("Another method before '{$method->getName()}' already defined route also named '$routeName'");
         }
 
         $pattern      = implode('/', $urlParts);
@@ -261,8 +263,7 @@ class RestActionReader
             $resources = array_merge($resource, $resources);
         }
 
-        if (in_array($httpMethod, $this->availableConventionalActions)
-            || in_array($httpMethod, array('post', 'patch', 'delete', 'options'))
+        if (('' === $matches[2] && in_array($httpMethod, $this->forcePluralizationMethods))
             || 'List' === $matches[2]
         ) {
             $resources[0] = Pluralization::pluralize($resources[0]);
