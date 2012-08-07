@@ -171,6 +171,10 @@ class RestActionReader
 
         // generated parameters
         $routeName    = $this->namePrefix.strtolower($routeName);
+        if ($collection->has($routeName)) {
+            throw new \InvalidArgumentException("There already is a method that resulted in defining a route '$routeName'");
+        }
+
         $pattern      = implode('/', $urlParts);
         $defaults     = array('_controller' => $method->getName());
         $requirements = array('_method' => strtoupper($httpMethod));
