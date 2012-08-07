@@ -113,6 +113,7 @@ class RestActionReader
      *
      * @param RestRouteCollection $collection route collection to read into
      * @param \ReflectionMethod   $method     method reflection
+     * @param array|null $resource
      *
      * @return Route
      */
@@ -218,72 +219,52 @@ class RestActionReader
     }
 
     /**
-     * @param string $name
-     *
-     * @return Boolean|array
-     */
-    private function parseMethodName($name)
-    {
-        // if method doesn't match regex - skip
-        if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $name, $matches)) {
-            return false;
-        }
-
-        return $matches;
-    }
-
-    /**
-     * Returns the route strategy employed by the given method
-     *
-     * @param \ReflectionMethod $method
-     *
-     * @return Boolean|string
-     */
-    public function getMethodStrategy(\ReflectionMethod $method)
-    {
-        $matches = $this->parseMethodName($method->getName());
-        if (!$matches) {
-            return false;
-        }
-
-        if ('' === $matches[2] || 'List' === $matches[2]) {
-            return 'controller';
-        }
-
-        return 'method';
-    }
-
-    /**
      * Returns HTTP method and resources list from method signature.
      *
      * @param \ReflectionMethod $method
-     * @param string|null $resource
+     * @param array|null $resource
      *
      * @return Boolean|array
      */
     private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource = null)
     {
-        $matches = $this->parseMethodName($method->getName());
-        if (!$matches) {
+        // if method doesn't match regex - skip
+        if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
             return false;
         }
 
-        $resources = $resource ? $resource : $matches[2];
+        $httpMethod = $matches[1];
+        $resources = $matches[2];
 
-        $resources  = preg_split(
-            '/([A-Z][^A-Z]*)/', $resources, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
-        );
+        $prepend = false;
+        if ('' === $matches[2] || 'List' === $matches[2]) {
+            if (null === $resource) {
+                $resources = array(preg_replace('/^.*\\\([_a-zA-Z0-9]+)Controller$/', '$1', $method->class));
+            } else {
+                $resources = $resource;
+            }
+        } elseif ($resource) {
+            $prepend = true;
+        }
 
-        if ($resource &&
-            (in_array($matches[1], $this->availableConventionalActions)
-                || in_array($matches[1], array('post', 'patch', 'delete', 'options'))
-                || 'List' === $matches[2]
-            )
+        if (!is_array($resources)) {
+            $resources  = preg_split(
+                '/([A-Z][^A-Z]*)/', $resources, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+            );
+        }
+
+        if ($prepend) {
+            $resources = array_merge($resource, $resources);
+        }
+
+        if (in_array($httpMethod, $this->availableConventionalActions)
+            || in_array($httpMethod, array('post', 'patch', 'delete', 'options'))
+            || 'List' === $matches[2]
         ) {
             $resources[0] = Pluralization::pluralize($resources[0]);
         }
 
-        return array(strtolower($matches[1]), $resources);
+        return array($httpMethod, $resources);
 
 }
 
