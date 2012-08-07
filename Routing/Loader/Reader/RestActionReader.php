@@ -218,16 +218,53 @@ class RestActionReader
     }
 
     /**
-     * Returns HTTP method and resources list from method signature.
-     *
-     * @param \ReflectionMethod $method
+     * @param string $name
      *
      * @return Boolean|array
      */
-    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource)
+    private function parseMethodName($name)
     {
         // if method doesn't match regex - skip
-        if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
+        if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $name, $matches)) {
+            return false;
+        }
+
+        return $matches;
+    }
+
+    /**
+     * Returns the route strategy employed by the given method
+     *
+     * @param \ReflectionMethod $method
+     *
+     * @return Boolean|string
+     */
+    public function getMethodStrategy(\ReflectionMethod $method)
+    {
+        $matches = $this->parseMethodName($method->getName());
+        if (!$matches) {
+            return false;
+        }
+
+        if ('' === $matches[2] || 'List' === $matches[2]) {
+            return 'controller';
+        }
+
+        return 'method';
+    }
+
+    /**
+     * Returns HTTP method and resources list from method signature.
+     *
+     * @param \ReflectionMethod $method
+     * @param string|null $resource
+     *
+     * @return Boolean|array
+     */
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource = null)
+    {
+        $matches = $this->parseMethodName($method->getName());
+        if (!$matches) {
             return false;
         }
 

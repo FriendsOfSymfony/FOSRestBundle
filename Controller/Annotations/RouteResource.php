@@ -11,12 +11,12 @@
 
 namespace FOS\RestBundle\Controller\Annotations;
 
-use Doctrine\Common\Annotations\Annotation;
-
 /**
- * RouteStrategy annotation class.
+ * RouteResource annotation class.
  * @Annotation
  */
-class RouteStrategy extends Annotation
+class RouteResource
 {
+    /** @var string required */
+    public $resource;
 }

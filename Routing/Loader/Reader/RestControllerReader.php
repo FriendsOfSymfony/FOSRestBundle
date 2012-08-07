@@ -69,16 +69,28 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
-        // read route-strategy annotation
+
         $resource = null;
-        if ($annotation = $this->readClassAnnotation($reflection, 'RouteStrategy')
-            && $annotation->value = 'controller'
-        ) {
-            if (!preg_match('/([_a-zA-Z0-9]+)Controller/', $reflection->getShortName(), $matches)) {
-                throw new \Exception('Cannot split off resource name from controller name ');
+        if ($annotation = $this->readClassAnnotation($reflection, 'RouteResource')) {
+            $resource = $annotation->resource;
+        } else {
+            // guess route strategy
+            $strategy = 'controller';
+            foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                $methodStrategy = $this->actionReader->getMethodStrategy($method);
+                if ('method' === $methodStrategy) {
+                    $strategy = $methodStrategy;
+                    break;
+                }
             }
 
-            $resource = $matches[1];
+            if ('controller' === $strategy) {
+                if (!preg_match('/([_a-zA-Z0-9]+)Controller/', $reflection->getShortName(), $matches)) {
+                    throw new \Exception('Cannot split off resource name from controller name.');
+                }
+
+                $resource = $matches[1];
+            }
         }
 
         // trim '/' at the start of the prefix
