@@ -69,7 +69,7 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
-        $resource = null;
+        $resource = array();
         // read route-resource annotation
         if ($annotation = $this->readClassAnnotation($reflection, 'RouteResource')) {
             $resource = explode('_', $annotation->resource);
