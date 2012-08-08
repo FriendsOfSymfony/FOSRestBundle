@@ -35,7 +35,6 @@ class RestActionReader
 
     private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'head', 'options');
     private $availableConventionalActions = array('new', 'edit', 'remove');
-    private $forcePluralizationMethods = array();
 
     /**
      * Initializes controller reader.
@@ -47,7 +46,6 @@ class RestActionReader
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
-        $this->forcePluralizationMethods = array_merge($this->availableConventionalActions, array('post', 'patch', 'delete', 'options'));
     }
 
     /**
@@ -263,9 +261,7 @@ class RestActionReader
             $resources = array_merge($resource, $resources);
         }
 
-        if (('' === $matches[2] && in_array($httpMethod, $this->forcePluralizationMethods))
-            || 'List' === $matches[2]
-        ) {
+        if ('List' === $matches[2] ) {
             $resources[0] = Pluralization::pluralize($resources[0]);
         }
 
