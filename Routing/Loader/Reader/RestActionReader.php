@@ -184,10 +184,6 @@ class RestActionReader
 
         // generated parameters
         $routeName    = $this->namePrefix.strtolower($routeName);
-        if ($collection->has($routeName)) {
-            throw new \InvalidArgumentException("Another method before '{$method->getName()}' already defined route also named '$routeName'");
-        }
-
         $pattern      = implode('/', $urlParts);
         $defaults     = array('_controller' => $method->getName());
         $requirements = array('_method' => strtoupper($httpMethod));

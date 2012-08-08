@@ -23,19 +23,6 @@ class RestRouteCollection extends RouteCollection
     private $singularName;
 
     /**
-     * Checks if there is already a route by the same name in the collection.
-     *
-     * @param string $name  The route name
-     *
-     * @api
-     */
-    public function has($name)
-    {
-        $routes = $this->all();
-        return isset($routes[$name]);
-    }
-
-    /**
      * Set collection singular name.
      *
      * @param string $name Singular name
