@@ -113,11 +113,12 @@ class RestActionReader
      *
      * @param RestRouteCollection $collection route collection to read into
      * @param \ReflectionMethod   $method     method reflection
-     * @param array|null $resource
+     * @param array $resource
+     * @param Boolean $force
      *
      * @return Route
      */
-    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource = null)
+    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource, $force)
     {
         // check that every route parent has non-empty singular name
         foreach ($this->parents as $parent) {
@@ -135,7 +136,7 @@ class RestActionReader
         }
 
         // if we can't get http-method and resources from method name - skip
-        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method, $resource);
+        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method, $resource, $force);
         if (!$httpMethodAndResources) {
             return;
         }
@@ -226,48 +227,36 @@ class RestActionReader
      * Returns HTTP method and resources list from method signature.
      *
      * @param \ReflectionMethod $method
-     * @param array|null $resource
+     * @param array $resource
+     * @param Boolean $force
      *
      * @return Boolean|array
      */
-    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource = null)
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource, $force)
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
             return false;
         }
 
-        $httpMethod = $matches[1];
-        $resources = $matches[2];
+        $httpMethod = strtolower($matches[1]);
+        $resources  = preg_split(
+            '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+        );
 
-        $prepend = false;
-        if ('' === $matches[2] || 'List' === $matches[2]) {
-            if (null === $resource) {
-                $resources = array(preg_replace('/^.*\\\([_a-zA-Z0-9]+)Controller$/', '$1', $method->class));
-            } else {
-                $resources = $resource;
+        $first = reset($resources);
+        if (!$first || 'List' === $first) {
+            if ('List' === $first || in_array($httpMethod, $this->availableConventionalActions)) {
+                $resource[0] = Pluralization::pluralize($resource[0]);
             }
-        } elseif ($resource) {
-            $prepend = true;
-        }
 
-        if (!is_array($resources)) {
-            $resources  = preg_split(
-                '/([A-Z][^A-Z]*)/', $resources, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
-            );
-        }
-
-        if ($prepend) {
+            $resources = $resource;
+        } elseif ($force) {
             $resources = array_merge($resource, $resources);
         }
 
-        if ('List' === $matches[2] ) {
-            $resources[0] = Pluralization::pluralize($resources[0]);
-        }
-
         return array($httpMethod, $resources);
-
-}
+    }
 
     /**
      * Returns readable arguments from method.
