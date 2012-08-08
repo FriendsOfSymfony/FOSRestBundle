@@ -244,7 +244,7 @@ class RestActionReader
             ) {
                 $resource[0] = Pluralization::pluralize($resource[0]);
                 $httpMethod = substr($httpMethod, 1);
-            } elseif (in_array($httpMethod, $this->availableConventionalActions)) {
+            } elseif ('new' === $httpMethod) {
                 $resource[0] = Pluralization::pluralize($resource[0]);
             }
         }
