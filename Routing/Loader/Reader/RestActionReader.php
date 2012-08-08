@@ -238,11 +238,10 @@ class RestActionReader
             '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
 
-        if (empty($resources)
-            && 0 === strpos($httpMethod, 'c')
+        if (0 === strpos($httpMethod, 'c')
             && in_array(substr($httpMethod, 1), $this->availableHTTPMethods)
         ) {
-            $resource[0] = Pluralization::pluralize($resource[0]);
+            $resource[count($resource)-1] = Pluralization::pluralize(end($resource));
             $httpMethod = substr($httpMethod, 1);
         }
 
