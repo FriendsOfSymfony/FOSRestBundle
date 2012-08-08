@@ -340,7 +340,7 @@ class RestActionReader
                     $urlParts[] = '{'.$arguments[$i]->getName().'}';
                 }
             } elseif (null !== $resource) {
-                if (in_array($httpMethod, $this->availableConventionalActions)) {
+                if (!in_array($httpMethod, $this->availableHTTPMethods)) {
                     $urlParts[] = Pluralization::pluralize(strtolower($resource));
                 } else {
                     $urlParts[] = strtolower($resource);
