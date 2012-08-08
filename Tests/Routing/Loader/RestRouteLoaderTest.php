@@ -43,6 +43,27 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * Test that ResourceController RESTful class gets parsed correctly.
+     */
+    public function testResourceFixture()
+    {
+        $collection     = $this->loadFromControllerFixture('ResourceController');
+        $etalonRoutes   = $this->loadEtalonRoutesInfo('resource_controller.yml');
+
+        $this->assertTrue($collection instanceof RestRouteCollection);
+        $this->assertEquals(24, count($collection->all()));
+
+        foreach ($etalonRoutes as $name => $params) {
+            $route = $collection->get($name);
+
+            $this->assertNotNull($route, sprintf('route %s exists', $name));
+            $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
+            $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
+        }
+    }
+
+    /**
      * Test that custom actions (new/edit/remove) are dumped earlier.
      */
     public function testCustomActionRoutesOrder()
