@@ -159,7 +159,7 @@ class RestActionReader
         }
 
         $routeName = $httpMethod.$this->generateRouteName($resources);
-        $urlParts  = $this->generateUrlParts($resources, $arguments);
+        $urlParts  = $this->generateUrlParts($resources, $arguments, $httpMethod);
 
         // if passed method is not valid HTTP method then it's either
         // a hypertext driver, a custom object (PUT) or collection (GET)
@@ -238,15 +238,12 @@ class RestActionReader
             '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
 
-        if (empty($resources)) {
-            if (0 === strpos($httpMethod, 'c')
-                && in_array(substr($httpMethod, 1), $this->availableHTTPMethods)
-            ) {
-                $resource[0] = Pluralization::pluralize($resource[0]);
-                $httpMethod = substr($httpMethod, 1);
-            } elseif ('new' === $httpMethod) {
-                $resource[0] = Pluralization::pluralize($resource[0]);
-            }
+        if (empty($resources)
+            && 0 === strpos($httpMethod, 'c')
+            && in_array(substr($httpMethod, 1), $this->availableHTTPMethods)
+        ) {
+            $resource[0] = Pluralization::pluralize($resource[0]);
+            $httpMethod = substr($httpMethod, 1);
         }
 
         $resources = array_merge($resource, $resources);
@@ -319,10 +316,11 @@ class RestActionReader
      *
      * @param array $resources
      * @param array $arguments
+     * @param string $httpMethod
      *
      * @return array
      */
-    private function generateUrlParts(array $resources, array $arguments)
+    private function generateUrlParts(array $resources, array $arguments, $httpMethod)
     {
         $urlParts = array();
         foreach ($resources as $i => $resource) {
@@ -343,7 +341,11 @@ class RestActionReader
                     $urlParts[] = '{'.$arguments[$i]->getName().'}';
                 }
             } elseif (null !== $resource) {
-                $urlParts[] = strtolower($resource);
+                if (in_array($httpMethod, $this->availableConventionalActions)) {
+                    $urlParts[] = Pluralization::pluralize(strtolower($resource));
+                } else {
+                    $urlParts[] = strtolower($resource);
+                }
             }
         }
 
