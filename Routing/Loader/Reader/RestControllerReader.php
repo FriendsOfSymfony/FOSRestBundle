@@ -54,7 +54,7 @@ class RestControllerReader
      *
      * @return RestRouteCollection
      */
-    public function read(\ReflectionClass $reflection, $type = 'rest')
+    public function read(\ReflectionClass $reflection)
     {
         $collection = new RestRouteCollection();
         $collection->addResource(new FileResource($reflection->getFileName()));
@@ -69,7 +69,7 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
-
+        // read route-resource annotation
         $resource = null;
         if ($annotation = $this->readClassAnnotation($reflection, 'RouteResource')) {
             $resource = explode('_', $annotation->resource);
