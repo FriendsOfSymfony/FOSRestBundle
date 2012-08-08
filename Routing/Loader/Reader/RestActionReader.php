@@ -113,12 +113,11 @@ class RestActionReader
      *
      * @param RestRouteCollection $collection route collection to read into
      * @param \ReflectionMethod   $method     method reflection
-     * @param array $resource
-     * @param Boolean $force
+     * @param array|null $resource
      *
      * @return Route
      */
-    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource, $force)
+    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource)
     {
         // check that every route parent has non-empty singular name
         foreach ($this->parents as $parent) {
@@ -136,13 +135,26 @@ class RestActionReader
         }
 
         // if we can't get http-method and resources from method name - skip
-        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method, $resource, $force);
+        $httpMethodAndResources = $this->getHttpMethodAndResourcesFromMethod($method);
         if (!$httpMethodAndResources) {
             return;
         }
 
         list($httpMethod, $resources) = $httpMethodAndResources;
         $arguments                    = $this->getMethodArguments($method);
+
+        if ($resource) {
+            $first = reset($resources);
+            if (!$first || 'List' === $first) {
+                if ('List' === $first || in_array($httpMethod, $this->availableConventionalActions)) {
+                    $resource[0] = Pluralization::pluralize($resource[0]);
+                }
+
+                $resources = $resource;
+            } else {
+                $resources = array_merge($resource, $resources);
+            }
+        }
 
         // if we have only 1 resource & 1 argument passed, then it's object call, so
         // we can set collection singular name
@@ -227,12 +239,10 @@ class RestActionReader
      * Returns HTTP method and resources list from method signature.
      *
      * @param \ReflectionMethod $method
-     * @param array $resource
-     * @param Boolean $force
      *
      * @return Boolean|array
      */
-    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource, $force)
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method)
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
@@ -243,17 +253,6 @@ class RestActionReader
         $resources  = preg_split(
             '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
-
-        $first = reset($resources);
-        if (!$first || 'List' === $first) {
-            if ('List' === $first || in_array($httpMethod, $this->availableConventionalActions)) {
-                $resource[0] = Pluralization::pluralize($resource[0]);
-            }
-
-            $resources = $resource;
-        } elseif ($force) {
-            $resources = array_merge($resource, $resources);
-        }
 
         return array($httpMethod, $resources);
     }

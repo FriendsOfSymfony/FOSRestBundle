@@ -69,16 +69,17 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
+        $resource = null;
         // read route-resource annotation
         if ($annotation = $this->readClassAnnotation($reflection, 'RouteResource')) {
             $resource = explode('_', $annotation->resource);
-            $force = true;
-        } else {
-            preg_match('/([A-Z][_a-zA-Z0-9]*)Controller/', $reflection->getShortName(), $matches);
+        } elseif ($reflection->implementsInterface('FOS\RestBundle\Routing\ClassResourceInterface')) {
             $resource  = preg_split(
-                '/([A-Z][^A-Z]*)/', $matches[1], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+                '/([A-Z][^A-Z]*)Controller/', $reflection->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
             );
-            $force = false;
+            if (empty($resource)) {
+                throw new \InvalidArgumentException("Controller '{$reflection->name}' does not identify a resource");
+            }
         }
 
         // trim '/' at the start of the prefix
@@ -88,7 +89,7 @@ class RestControllerReader
 
         // read action routes into collection
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            $this->actionReader->read($collection, $method, $resource, $force);
+            $this->actionReader->read($collection, $method, $resource);
         }
 
         $this->actionReader->setRoutePrefix(null);
