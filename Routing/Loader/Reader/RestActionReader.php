@@ -241,8 +241,10 @@ class RestActionReader
         if (0 === strpos($httpMethod, 'c')
             && in_array(substr($httpMethod, 1), $this->availableHTTPMethods)
         ) {
-            $resource[count($resource)-1] = Pluralization::pluralize(end($resource));
             $httpMethod = substr($httpMethod, 1);
+            if (!empty($resource)) {
+                $resource[count($resource)-1] = Pluralization::pluralize(end($resource));
+            }
         }
 
         $resources = array_merge($resource, $resources);
