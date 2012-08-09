@@ -35,7 +35,7 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            $this->assertNotNull($route, sprintf('route %s exists', $name));
+            $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
             $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
             $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
@@ -56,7 +56,7 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            $this->assertNotNull($route, sprintf('route %s exists', $name));
+            $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
             $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
             $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
