@@ -159,7 +159,6 @@ class RestActionReader
         }
 
         $routeName = $httpMethod.$this->generateRouteName($resources);
-
         $urlParts  = $this->generateUrlParts($resources, $arguments, $httpMethod);
 
         // if passed method is not valid HTTP method then it's either
@@ -343,7 +342,7 @@ class RestActionReader
                     $urlParts[] = '{'.$arguments[$i]->getName().'}';
                 }
             } elseif (null !== $resource) {
-                if (0 === count($arguments)) {
+                if (0 === count($arguments) || 'new' === $httpMethod) {
                     $urlParts[] = Pluralization::pluralize(strtolower($resource));
                 } else {
                     $urlParts[] = strtolower($resource);

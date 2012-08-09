@@ -1,94 +1,94 @@
-cget_users:
+get_articles:
   method:     GET
-  pattern:    /users.{_format}
+  pattern:    /articles.{_format}
   controller: ::cgetAction
 
-get_user:
+get_article:
   method:     GET
-  pattern:    /users/{slug}.{_format}
+  pattern:    /articles/{slug}.{_format}
   controller: ::getAction
 
-cpost_users:
+post_articles:
   method:     POST
-  pattern:    /users.{_format}
+  pattern:    /articles.{_format}
   controller: ::cpostAction
 
-cpatch_users:
+patch_articles:
   method:     PATCH
-  pattern:    /users.{_format}
+  pattern:    /articles.{_format}
   controller: ::cpatchAction
 
-put_user:
+put_article:
   method:     PUT
-  pattern:    /users/{slug}.{_format}
+  pattern:    /articles/{slug}.{_format}
   controller: ::putAction
 
-patch_user:
+patch_article:
   method:     PATCH
-  pattern:    /users/{slug}.{_format}
+  pattern:    /articles/{slug}.{_format}
   controller: ::patchAction
 
-lock_user:
+lock_article:
   method:     PATCH
-  pattern:    /users/{slug}/lock.{_format}
+  pattern:    /articles/{slug}/lock.{_format}
   controller: ::lockAction
 
-get_user_comments:
+get_article_comments:
   method:     GET
-  pattern:    /users/{slug}/comments.{_format}
+  pattern:    /articles/{slug}/comments.{_format}
   controller: ::getCommentsAction
 
-get_user_comment:
+get_article_comment:
   method:     GET
-  pattern:    /users/{slug}/comments/{id}.{_format}
+  pattern:    /articles/{slug}/comments/{id}.{_format}
   controller: ::getCommentAction
 
-delete_user_comment:
+delete_article_comment:
   method:     DELETE
-  pattern:    /users/{slug}/comments/{id}.{_format}
+  pattern:    /articles/{slug}/comments/{id}.{_format}
   controller: ::deleteCommentAction
 
-new_users:
+new_article:
   method:     GET
-  pattern:    /users/new.{_format}
+  pattern:    /articles/new.{_format}
   controller: ::newAction
 
-new_user_comments:
+new_article_comment:
   method:     GET
-  pattern:    /users/{slug}/comments/new.{_format}
-  controller: ::newCommentsAction
+  pattern:    /articles/{slug}/comments/new.{_format}
+  controller: ::newCommentAction
 
-ban_user:
+ban_article:
   method:     PATCH
-  pattern:    /users/{slug}/ban.{_format}
+  pattern:    /articles/{slug}/ban.{_format}
   controller: ::banAction
 
-post_user_comment_vote:
+post_article_comment_vote:
   method:     POST
-  pattern:    /users/{slug}/comments/{id}/vote.{_format}
+  pattern:    /articles/{slug}/comments/{id}/vote.{_format}
   controller: ::postCommentVoteAction
 
-check_username_users:
+check_articlename_article:
   method:     GET
-  pattern:    /users/check_username.{_format}
-  controller: ::check_usernameAction
+  pattern:    /articles/check_articlename.{_format}
+  controller: ::check_articlenameAction
 
-hide_user_comment:
+hide_article_comment:
   method:     PATCH
-  pattern:    /users/{userId}/comments/{commentId}/hide.{_format}
+  pattern:    /articles/{articleId}/comments/{commentId}/hide.{_format}
   controller: ::hideCommentAction
 
-get_user_votes:
+get_article_votes:
   method:     GET
-  pattern:    /users/{slug}/votes.{_format}
+  pattern:    /articles/{slug}/votes.{_format}
   controller: ::getVotesAction
 
-get_user_vote:
+get_article_vote:
   method:     GET
-  pattern:    /users/{slug}/votes/{id}.{_format}
+  pattern:    /articles/{slug}/votes/{id}.{_format}
   controller: ::getVoteAction
 
-get_user_foos:
+get_article_foos:
   method:     GET
-  pattern:    /users/{slug}/foos.{_format}
+  pattern:    /articles/{slug}/foos.{_format}
   controller: ::getFoosAction

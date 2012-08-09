@@ -47,7 +47,7 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testResourceFixture()
     {
-        $collection     = $this->loadFromControllerFixture('ResourceController');
+        $collection     = $this->loadFromControllerFixture('ArticleController');
         $etalonRoutes   = $this->loadEtalonRoutesInfo('resource_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
