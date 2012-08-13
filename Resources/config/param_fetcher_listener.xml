@@ -14,7 +14,7 @@
     <services>
 
         <service id="fos_rest.param_fetcher_listener" class="%fos_rest.param_fetcher_listener.class%">
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="5"/>
             <argument type="service" id="service_container"/>
             <argument>%fos_rest.param_fetcher_listener.set_params_as_attributes%</argument>
         </service>
