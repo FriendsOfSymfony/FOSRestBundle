@@ -30,6 +30,11 @@ class View extends Template
     protected $statusCode;
 
     /**
+     * @var array
+     */
+    protected $serializerGroups;
+
+    /**
      * Returns the annotation alias name.
      *
      * @return string
@@ -74,5 +79,21 @@ class View extends Template
     public function getStatusCode()
     {
         return $this->statusCode;
+    }
+
+    /**
+     * @var array $serializerGroups
+     */
+    public function setSerializerGroups($serializerGroups)
+    {
+        $this->serializerGroups = $serializerGroups;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializerGroups()
+    {
+        return $this->serializerGroups;
     }
 }
