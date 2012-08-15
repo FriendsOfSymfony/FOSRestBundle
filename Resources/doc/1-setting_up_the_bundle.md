@@ -5,7 +5,7 @@ Step 1: Setting up the bundle
 **Note:**
 
 > This bundle depends on the [JMSSerializerBundle](https://github.com/schmittjoh/JMSSerializerBundle). Please follow the instructions of the bundle to set it up.
-
+> If you install the bundle with composer then it will automatically require this bundle and others as dependencies.
 
 Ultimately, the FOSRestBundle files should be downloaded to the
 `vendor/bundles/FOS/RestBundle` directory.
@@ -43,7 +43,15 @@ $ git submodule add git://github.com/FriendsOfSymfony/FOSRest.git vendor/fos/FOS
 $ git submodule update --init
 ```
 
-### B) Configure the Autoloader
+**Using composer**
+
+Simply run assuming you have installed composer.phar or composer binary:
+
+``` bash
+$ composer require friendsofsymfony/rest-bundle
+```
+
+### B) Configure the Autoloader (no needed for composer)
 
 Add the `FOS` namespace to your autoloader:
 
