@@ -66,7 +66,7 @@ redirect or not is determined by the ``force_redirects`` configuration option,
 which is only enabled for ``html`` by default (see below).
 
 There are several more methods on the ``View`` class, here is a list of all
-the important ones for configurating the view:
+the important ones for configuring the view:
 
 * ``setData($data)`` - Set the object graph or list of objects to serialize.
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
