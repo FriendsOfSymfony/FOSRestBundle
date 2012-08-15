@@ -115,6 +115,20 @@ public function deleteUserAction()
 }
 ```
 
+The groups for the serializer can be configured as follows:
+
+```php
+<?php
+
+/**
+ * @View(serializerGroups={"group1", "group2"})
+ */
+public function getUsersAction()
+{
+    //...
+}
+```
+
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php
 
