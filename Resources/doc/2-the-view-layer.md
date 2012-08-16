@@ -199,7 +199,7 @@ class UsersController extends Controller
                     $view->setData($data);
                 }
                 return $handler->createResponse($view, $request, $format);
-            }
+            };
             $handler->registerHandler($view->getFormat(), $templatingHandler);
         }
         return $handler->handle($view);
