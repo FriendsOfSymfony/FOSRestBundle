@@ -86,6 +86,9 @@ class ViewResponseListener extends TemplateListener
             if (null === $view->getStatusCode() && $configuration->getStatusCode()) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
+            if ($configuration->getSerializerGroups()) {
+                $view->setSerializerGroups($configuration->getSerializerGroups());
+            }
         }
 
         if (null === $view->getFormat()) {
