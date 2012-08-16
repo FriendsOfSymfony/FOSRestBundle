@@ -143,7 +143,7 @@ application/json) in a PUT.
 You can add a decoder for a custom format. You can also replace the default
 decoder services provided by the bundle for the ``json`` and ``xml`` formats.
 Below you can see how to override the decoder for the json format (the xml
-decoder is explicitely kept to its default service):
+decoder is explicitly kept to its default service):
 
 ```yaml
 # app/config/config.yml
