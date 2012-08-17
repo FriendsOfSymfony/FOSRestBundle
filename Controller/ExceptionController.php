@@ -29,6 +29,19 @@ use FOS\RestBundle\Util\ExceptionWrapper;
 class ExceptionController extends ContainerAware
 {
     /**
+     * Creates a new ExceptionWrapper instance that can be overwritten by a custom
+     * ExceptionController class.
+     *
+     * @param array $parameters Template parameters
+     *
+     * @return ExceptionWrapper ExceptionWrapper instance
+     */
+    protected function createExceptionWrapper(array $parameters)
+    {
+        return new ExceptionWrapper($parameters);
+    }
+
+    /**
      * Converts an Exception to a Response.
      *
      * @param Request              $request   Request
@@ -55,7 +68,7 @@ class ExceptionController extends ContainerAware
 
         try {
             if (!$viewHandler->isFormatTemplating($format)) {
-                $parameters = new ExceptionWrapper($parameters);
+                $parameters = $this->createExceptionWrapper($parameters);
             }
 
             $view = View::create($parameters, $code, $exception->getHeaders());
@@ -172,7 +185,10 @@ class ExceptionController extends ContainerAware
     }
 
     /**
-     * Determine the parameters to pass to the view layer
+     * Determine the parameters to pass to the view layer.
+     *
+     * Overwrite it in a custom ExceptionController class to add additionally parameters
+     * that should be passed to the view layer.
      *
      * @param ViewHandler          $viewHandler    The view handler instance
      * @param string               $currentContent The current content in the output buffer
