@@ -18,13 +18,14 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\RedirectView;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 
 /**
  * Base Controller for Controllers using the View functionality of FOSRestBundle.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-abstract class FOSRestController extends Controller
+abstract class FOSRestController extends Controller implements ClassResourceInterface
 {
     /**
      * Create a view

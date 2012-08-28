@@ -33,27 +33,27 @@ rate_user_comment:
   controller:   ::rateUserCommentAction
   requirements: {_method: PATCH, slug: '[a-z]+', id: '\d+'}
 
-cget_user:
-  pattern:      /users/{slug}/cget.{_format}
-  controller:   ::cgetUserAction
+bget_user:
+  pattern:      /users/{slug}/bget.{_format}
+  controller:   ::bgetUserAction
   requirements: {_method: GET}
 
-cpost_user:
-  pattern:      /users/{slug}/cpost.{_format}
-  controller:   ::cpostUserAction
+bpost_user:
+  pattern:      /users/{slug}/bpost.{_format}
+  controller:   ::bpostUserAction
   requirements: {_method: POST}
 
-cput_user:
-  pattern:      /users/{slug}/cput.{_format}
-  controller:   ::cputUserAction
+bput_user:
+  pattern:      /users/{slug}/bput.{_format}
+  controller:   ::bputUserAction
   requirements: {_method: PUT}
 
-cdel_user:
-  pattern:      /users/{slug}/cdel.{_format}
-  controller:   ::cdelUserAction
+bdel_user:
+  pattern:      /users/{slug}/bdel.{_format}
+  controller:   ::bdelUserAction
   requirements: {_method: DELETE}
 
-chead_user:
-  pattern:      /users/{slug}/chead.{_format}
-  controller:   ::cheadUserAction
+bhead_user:
+  pattern:      /users/{slug}/bhead.{_format}
+  controller:   ::bheadUserAction
   requirements: {_method: HEAD}

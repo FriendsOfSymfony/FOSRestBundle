@@ -1,0 +1,94 @@
+get_articles:
+  method:     GET
+  pattern:    /articles.{_format}
+  controller: ::cgetAction
+
+get_article:
+  method:     GET
+  pattern:    /articles/{slug}.{_format}
+  controller: ::getAction
+
+post_articles:
+  method:     POST
+  pattern:    /articles.{_format}
+  controller: ::cpostAction
+
+patch_articles:
+  method:     PATCH
+  pattern:    /articles.{_format}
+  controller: ::cpatchAction
+
+put_article:
+  method:     PUT
+  pattern:    /articles/{slug}.{_format}
+  controller: ::putAction
+
+patch_article:
+  method:     PATCH
+  pattern:    /articles/{slug}.{_format}
+  controller: ::patchAction
+
+lock_article:
+  method:     PATCH
+  pattern:    /articles/{slug}/lock.{_format}
+  controller: ::lockAction
+
+get_article_comments:
+  method:     GET
+  pattern:    /articles/{slug}/comments.{_format}
+  controller: ::getCommentsAction
+
+get_article_comment:
+  method:     GET
+  pattern:    /articles/{slug}/comments/{id}.{_format}
+  controller: ::getCommentAction
+
+delete_article_comment:
+  method:     DELETE
+  pattern:    /articles/{slug}/comments/{id}.{_format}
+  controller: ::deleteCommentAction
+
+new_article:
+  method:     GET
+  pattern:    /articles/new.{_format}
+  controller: ::newAction
+
+new_article_comment:
+  method:     GET
+  pattern:    /articles/{slug}/comments/new.{_format}
+  controller: ::newCommentAction
+
+ban_article:
+  method:     PATCH
+  pattern:    /articles/{slug}/ban.{_format}
+  controller: ::banAction
+
+post_article_comment_vote:
+  method:     POST
+  pattern:    /articles/{slug}/comments/{id}/vote.{_format}
+  controller: ::postCommentVoteAction
+
+check_articlename_article:
+  method:     GET
+  pattern:    /articles/check_articlename.{_format}
+  controller: ::check_articlenameAction
+
+hide_article_comment:
+  method:     PATCH
+  pattern:    /articles/{articleId}/comments/{commentId}/hide.{_format}
+  controller: ::hideCommentAction
+
+get_article_votes:
+  method:     GET
+  pattern:    /articles/{slug}/votes.{_format}
+  controller: ::getVotesAction
+
+get_article_vote:
+  method:     GET
+  pattern:    /articles/{slug}/votes/{id}.{_format}
+  controller: ::getVoteAction
+
+get_article_foos:
+  method:     GET
+  pattern:    /articles/{slug}/foos.{_format}
+  controller: ::getFoosAction
