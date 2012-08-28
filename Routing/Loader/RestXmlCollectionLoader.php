@@ -110,8 +110,10 @@ class RestXmlCollectionLoader extends XmlFileLoader
         $schema = __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd';
 
         $current = libxml_use_internal_errors(true);
+        libxml_clear_errors();
+
         if (!$dom->schemaValidate($schema)) {
-            throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors()));
+            throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors($current)));
         }
         libxml_use_internal_errors($current);
     }
