@@ -8,6 +8,7 @@ list important BC breaks.
 
  * renamed "query" fetcher to "param" fetcher, this affects the configuration as well as the name of interfaces and request attributes
  * ViewHandler now only calls "createView()" in a single form instance set as "form" in the data array
+ * removed "serializer_version" config option on favor of "serializer: ['version': ..]"
 
 ### upgrading from 0.6.0 to master
 
