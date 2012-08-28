@@ -121,7 +121,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
      *
      * @return array An array of libxml error strings
      */
-    private function getXmlErrors()
+    private function getXmlErrors($internalErrors)
     {
         $errors = array();
         foreach (libxml_get_errors() as $error) {
@@ -136,6 +136,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         }
 
         libxml_clear_errors();
+        libxml_use_internal_errors($internalErrors);
 
         return $errors;
     }
