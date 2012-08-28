@@ -110,8 +110,10 @@ class RestXmlCollectionLoader extends XmlFileLoader
         $schema = __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd';
 
         $current = libxml_use_internal_errors(true);
+        libxml_clear_errors();
+
         if (!$dom->schemaValidate($schema)) {
-            throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors()));
+            throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors_($current)));
         }
         libxml_use_internal_errors($current);
     }
@@ -121,7 +123,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
      *
      * @return array An array of libxml error strings
      */
-    private function getXmlErrors()
+    private function getXmlErrors_($internalErrors)
     {
         $errors = array();
         foreach (libxml_get_errors() as $error) {
@@ -136,6 +138,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         }
 
         libxml_clear_errors();
+        libxml_use_internal_errors($internalErrors);
 
         return $errors;
     }
