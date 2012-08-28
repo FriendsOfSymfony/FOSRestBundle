@@ -113,7 +113,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         libxml_clear_errors();
 
         if (!$dom->schemaValidate($schema)) {
-            throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors($current)));
+            throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors_($current)));
         }
         libxml_use_internal_errors($current);
     }
@@ -123,7 +123,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
      *
      * @return array An array of libxml error strings
      */
-    private function getXmlErrors($internalErrors)
+    private function getXmlErrors_($internalErrors)
     {
         $errors = array();
         foreach (libxml_get_errors() as $error) {
