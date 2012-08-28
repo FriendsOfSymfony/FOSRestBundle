@@ -107,12 +107,12 @@ class RestXmlCollectionLoader extends XmlFileLoader
      */
     protected function validate(\DOMDocument $dom)
     {
-        $schema = __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd';
+        $location = __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd';
 
         $current = libxml_use_internal_errors(true);
         libxml_clear_errors();
 
-        if (!$dom->schemaValidate($schema)) {
+        if (!$dom->schemaValidate($location)) {
             throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors_($current)));
         }
         libxml_use_internal_errors($current);
@@ -120,6 +120,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
     /**
      * Retrieves libxml errors and clears them.
+     *
+     * Note: The underscore postfix on the method name is to ensure compatibility with versions
+     *       before 2.0.16 while working around a bug in PHP https://bugs.php.net/bug.php?id=62956
      *
      * @return array An array of libxml error strings
      */
