@@ -38,7 +38,7 @@ you can use ``name_prefix`` on an import only when the file is imported itself w
 
 ```php
 <?php
-class UsersController extends Controller
+class UsersController
 {
     public function optionsUsersAction()
     {} // "options_users" [OPTIONS] /users
@@ -110,6 +110,72 @@ class UsersController extends Controller
 
 That's all. All your resource (``UsersController``) actions will get mapped to the proper routes
 as shown in the comments in the above example. Here are a few things to note:
+
+#### Implicit resource name definition
+
+Its possible to omit the ``User`` part of the method names since optionally FOSRestBundle
+can determine the resource based on the Controller name. However for this to work its important
+to use singular names in the Controller. However by omitting the resource name from the methods
+``getUserAction`` and ``getUsersAction`` there would be an overlap of method names there is a
+special convention to call the methods ``getAction`` and ``cgetAction``, where the ``c`` standard
+for collection. So the following would work as well.
+
+```
+<?php
+
+class UserController
+{
+    ..
+
+    public function cgetAction()
+    {} // "get_users"     [GET] /users
+
+    public function newAction()
+    {} // "new_users"     [GET] /users/new
+
+    public function getAction($slug)
+    {} // "get_user"      [GET] /users/{slug}
+
+    ..
+    public function getCommentsAction($slug)
+    {} // "get_user_comments"    [GET] /users/{slug}/comments
+
+    ..
+}
+```
+
+Finally its possible to override the resource name derived from the Controller name via the
+``@RouteResource`` annotation:
+
+
+```
+<?php
+
+use FOS\RestBundle\Controller\Annotations\RouteResource;
+
+/**
+ * @RouteResource("User")
+ */
+class FooController
+{
+    ..
+
+    public function cgetAction()
+    {} // "get_users"     [GET] /users
+
+    public function newAction()
+    {} // "new_users"     [GET] /users/new
+
+    public function getAction($slug)
+    {} // "get_user"      [GET] /users/{slug}
+
+    ..
+    public function getCommentsAction($slug)
+    {} // "get_user_comments"    [GET] /users/{slug}/comments
+
+    ..
+}
+```
 
 ### REST Actions
 
