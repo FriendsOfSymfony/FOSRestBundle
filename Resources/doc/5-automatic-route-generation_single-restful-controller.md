@@ -113,17 +113,20 @@ as shown in the comments in the above example. Here are a few things to note:
 
 #### Implicit resource name definition
 
-Its possible to omit the ``User`` part of the method names since optionally FOSRestBundle
-can determine the resource based on the Controller name. However for this to work its important
-to use singular names in the Controller. However by omitting the resource name from the methods
-``getUserAction`` and ``getUsersAction`` there would be an overlap of method names there is a
-special convention to call the methods ``getAction`` and ``cgetAction``, where the ``c`` standard
-for collection. So the following would work as well.
+Its possible to omit the ``User`` part of the method names when the Controller implements the
+``ClassResourceInterface``. In this case FOSRestBundle can determine the resource based on the
+Controller name. However for this to work its important to use singular names in the Controller.
+However by omitting the resource name from the methods ``getUserAction`` and ``getUsersAction``
+there would be an overlap of method names there is a special convention to call the methods
+``getAction`` and ``cgetAction``, where the ``c`` standard for collection. So the following
+would work as well.
 
 ```
 <?php
 
-class UserController
+use FOS\RestBundle\Routing\ClassResourceInterface;
+
+class UserController implements ClassResourceInterface
 {
     ..
 
