@@ -60,7 +60,7 @@ class AnnotatedUsersController extends Controller
      * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
     public function getUserCommentAction($slug, $id)
-    {} // [GET]     /users/{slug}/bomments/{id}
+    {} // [GET]     /users/{slug}/comments/{id}
 
     /**
      * @Post(requirements={"slug" = "[a-z]+"})
