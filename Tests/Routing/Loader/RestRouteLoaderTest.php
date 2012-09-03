@@ -35,7 +35,28 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            $this->assertNotNull($route, sprintf('route %s exists', $name));
+            $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
+            $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
+            $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
+        }
+    }
+
+    /**
+     * Test that ResourceController RESTful class gets parsed correctly.
+     */
+    public function testResourceFixture()
+    {
+        $collection     = $this->loadFromControllerFixture('ArticleController');
+        $etalonRoutes   = $this->loadEtalonRoutesInfo('resource_controller.yml');
+
+        $this->assertTrue($collection instanceof RestRouteCollection);
+        $this->assertEquals(24, count($collection->all()));
+
+        foreach ($etalonRoutes as $name => $params) {
+            $route = $collection->get($name);
+
+            $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
             $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
             $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
@@ -78,7 +99,7 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            $this->assertNotNull($route);
+            $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['pattern'], $route->getPattern(), 'pattern failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);

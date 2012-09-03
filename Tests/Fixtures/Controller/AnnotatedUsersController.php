@@ -31,7 +31,7 @@ class AnnotatedUsersController extends Controller
     /**
      * @Options
      */
-    public function coptionsUsersAction()
+    public function boptionsUsersAction()
     {
     } // [OPTIONS]     /users
 
@@ -60,7 +60,7 @@ class AnnotatedUsersController extends Controller
      * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
     public function getUserCommentAction($slug, $id)
-    {} // [GET]     /users/{slug}/comments/{id}
+    {} // [GET]     /users/{slug}/bomments/{id}
 
     /**
      * @Post(requirements={"slug" = "[a-z]+"})
@@ -77,32 +77,32 @@ class AnnotatedUsersController extends Controller
     /**
      * @Get
      */
-    public function cgetUserAction($slug)
-    {} // [GET]     /users/{slug}/cget
+    public function bgetUserAction($slug)
+    {} // [GET]     /users/{slug}/bget
 
     /**
      * @Post
      */
-    public function cpostUserAction($slug)
-    {} // [POST]    /users/{slug}/cpost
+    public function bpostUserAction($slug)
+    {} // [POST]    /users/{slug}/bpost
 
     /**
      * @Put
      */
-    public function cputUserAction($slug)
-    {} // [PUT]     /users/{slug}/cput
+    public function bputUserAction($slug)
+    {} // [PUT]     /users/{slug}/bput
 
     /**
      * @Delete
      */
-    public function cdelUserAction($slug)
-    {} // [DELETE]  /users/{slug}/cdel
+    public function bdelUserAction($slug)
+    {} // [DELETE]  /users/{slug}/bdel
 
     /**
      * @Head
      */
-    public function cheadUserAction($slug)
-    {} // [HEAD]    /users/{slug}/chead
+    public function bheadUserAction($slug)
+    {} // [HEAD]    /users/{slug}/bhead
 
     /**
      * @NoRoute
