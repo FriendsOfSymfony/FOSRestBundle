@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\View;
 
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Default View implementation.
@@ -82,6 +83,11 @@ class View
      * @var array
      */
     private $serializerCallback;
+
+    /**
+     * @var Response
+     */
+    private $response;
 
     /**
      * Convenience method to allow for a fluent interface.
@@ -290,6 +296,19 @@ class View
     }
 
     /**
+     * set the response
+     *
+     * @param Response $response
+     * @return View
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+
+        return $this;
+    }
+
+    /**
      * get the data
      *
      * @return mixed|null data
@@ -380,6 +399,16 @@ class View
     }
 
     /**
+     * get the response
+     *
+     * @return Response|null response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
      * get the serializer version
      *
      * @return string|null serializer version
@@ -408,7 +437,8 @@ class View
     {
         if ($this->serializerVersion) {
             return 'version';
-        } elseif ($this->serializerGroups) {
+        }
+        if ($this->serializerGroups) {
             return 'groups';
         }
 

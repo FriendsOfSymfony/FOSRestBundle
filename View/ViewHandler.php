@@ -238,9 +238,17 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $code = isset($this->forceRedirects[$format])
             ? $this->forceRedirects[$format] : $this->getStatusCode($view);
 
+        $response = $view->getResponse();
         if ('html' === $format && isset($this->forceRedirects[$format])) {
-            $response = new RedirectResponse($location, $code);
-            $response->headers->replace($view->getHeaders());
+            if ($response) {
+                $response->setContent(RedirectResponse::create($location)->getContent());
+                $response->setStatusCode($code);
+            } else {
+                $response = new RedirectResponse($location, $code, $view->getHeaders());
+            }
+        } elseif ($response) {
+            $response->setContent('');
+            $response->setStatusCode($code);
         } else {
             $response = new Response('', $code, $view->getHeaders());
         }
@@ -332,6 +340,14 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $content = $serializer->serialize($view->getData(), $format);
         }
 
-        return new Response($content, $this->getStatusCode($view), $view->getHeaders());
+        $response = $view->getResponse();
+        if ($response) {
+            $response->setContent($content);
+            $response->setStatusCode($this->getStatusCode($view));
+        } else {
+            $response = new Response($content, $this->getStatusCode($view), $view->getHeaders());
+        }
+
+        return $response;
     }
 }
