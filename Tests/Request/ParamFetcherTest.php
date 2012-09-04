@@ -62,6 +62,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['buzz']->default = '1';
         $annotations['buzz']->description = 'An array';
 
+        $annotations['boo'] = new QueryParam;
+        $annotations['boo']->array = true;
+        $annotations['boo']->name = 'boo';
+        $annotations['boo']->description = 'An array with no default value';
+
         $this->paramReader
             ->expects($this->any())
             ->method('read')
@@ -116,35 +121,35 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array( // check that non-strict missing params take default value
                 'foo',
                 '1',
-                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1)),
+                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array()),
                 array(),
                 array('bar' => '2', 'baz' => '4'),
             ),
             array( // pass Param in GET
                 'foo',
                 '42',
-                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1)),
+                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array()),
                 array('foo' => '42'),
                 array('bar' => '2', 'baz' => '4'),
             ),
             array( // check that invalid non-strict params take default value
                 'foo',
                 '1',
-                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1)),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array()),
                 array('foo' => 'bar'),
                 array('bar' => '1', 'baz' => '4'),
             ),
             array( // invalid array
                 'buzz',
                 array(1),
-                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1)),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array()),
                 array('buzz' => 'invaliddata'),
                 array('bar' => '1', 'baz' => '4'),
             ),
             array( // invalid array (multiple depth)
                 'buzz',
                 array(1),
-                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1)),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array()),
                 array('buzz' => array(array(1))),
                 array('bar' => '1', 'baz' => '4'),
             ),
@@ -152,17 +157,38 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array( // multiple array
                 'buzz',
                 array(2, 3, 4),
-                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4)),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array()),
                 array('buzz' => array(2, 3, 4)),
                 array('bar' => '1', 'baz' => '4'),
             ),
             array( // multiple array with one invalid value
                 'buzz',
                 array(2, 1, 4),
-                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4)),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array()),
                 array('buzz' => array(2, 'invaliddata', 4)),
                 array('bar' => '1', 'baz' => '4'),
             ),
+            array(  // Array not provided in GET query
+                'boo',
+                array(),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array()),
+                array('buzz' => array(2, 3, 4)),
+                array('bar' => '1', 'baz' => '4'),
+            ),
+            array(  // QueryParam provided in GET query but as a scalar
+                'boo',
+                array(),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array()),
+                array('buzz' => array(2, 3, 4), 'boo' => 'scalar'),
+                array('bar' => '1', 'baz' => '4'),
+            ),
+            array(  // QueryParam provided in GET query with valid values
+                'boo',
+                array('1', 'foo', 5),
+                array('foo' => '1', 'bar' => '1', 'baz' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
+                array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
+                array('bar' => '1', 'baz' => '4'),
+            )
         );
     }
 
