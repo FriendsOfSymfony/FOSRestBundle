@@ -243,12 +243,14 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             if ($response) {
                 $response->setContent(RedirectResponse::create($location)->getContent());
                 $response->setStatusCode($code);
+                $response->headers->replace($view->getHeaders());
             } else {
                 $response = new RedirectResponse($location, $code, $view->getHeaders());
             }
         } elseif ($response) {
             $response->setContent('');
             $response->setStatusCode($code);
+            $response->headers->replace($view->getHeaders());
         } else {
             $response = new Response('', $code, $view->getHeaders());
         }
@@ -344,6 +346,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         if ($response) {
             $response->setContent($content);
             $response->setStatusCode($this->getStatusCode($view));
+            $response->headers->replace($view->getHeaders());
         } else {
             $response = new Response($content, $this->getStatusCode($view), $view->getHeaders());
         }
