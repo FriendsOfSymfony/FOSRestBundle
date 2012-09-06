@@ -24,14 +24,14 @@
     "require": {
         "php":                            ">=5.3.2",
         "friendsofsymfony/rest":          "0.7.*",
-        "symfony/framework-bundle":       ">=2.0,<2.2-dev",
-        "sensio/framework-extra-bundle":  ">=2.0,<2.2-dev",
+        "symfony/framework-bundle":       ">=2.0,<2.3-dev",
+        "sensio/framework-extra-bundle":  ">=2.0,<2.3-dev",
         "jms/serializer-bundle":          "0.9.*"
     },
 
     "require-dev":{
-        "symfony/form": ">=2.0,<2.2-dev",
-        "symfony/yaml": ">=2.0,<2.2-dev"
+        "symfony/form": ">=2.0,<2.3-dev",
+        "symfony/yaml": ">=2.0,<2.3-dev"
     },
 
     "autoload": {
