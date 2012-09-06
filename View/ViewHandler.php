@@ -238,7 +238,8 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         $response = $view->getResponse();
         if ('html' === $format && isset($this->forceRedirects[$format])) {
-            $response->setContent(RedirectResponse::create($location)->getContent());
+            $redirect = new RedirectResponse($location);
+            $response->setContent($redirect->getContent());
         }
 
         $response->setStatusCode($code);
