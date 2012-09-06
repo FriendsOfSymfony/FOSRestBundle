@@ -15,7 +15,7 @@ use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\Annotations\Param;
 
 /**
- * Class loading @QueryParam and @RequestParam annotations from methods.
+ * Class loading "@QueryParam" and "@RequestParam" annotations from methods.
  *
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
