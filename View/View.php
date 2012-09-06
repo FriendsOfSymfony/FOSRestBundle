@@ -139,7 +139,7 @@ class View
      */
     public function setHeader($name, $value)
     {
-        $this->headers[$name] = $value;
+        $this->getResponse()->headers->set($name, $value);
 
         return $this;
     }
@@ -152,7 +152,7 @@ class View
      */
     public function setHeaders(array $headers)
     {
-        $this->headers = $headers;
+        $this->getResponse()->headers->replace($headers);
 
         return $this;
     }
@@ -335,7 +335,7 @@ class View
      */
     public function getHeaders()
     {
-        return $this->headers;
+        return $this->response->headers->all();
     }
 
     /**
@@ -401,10 +401,14 @@ class View
     /**
      * get the response
      *
-     * @return Response|null response
+     * @return Response response
      */
     public function getResponse()
     {
+        if (null === $this->response) {
+            $this->response = new Response();
+        }
+
         return $this->response;
     }
 
