@@ -311,11 +311,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function createResponse(View $view, Request $request, $format)
     {
-        $headers = $view->getHeaders();
-        if (empty($headers['Content-Type'])) {
-            $view->setHeader('Content-Type', $request->getMimeType($format));
-        }
-
         $route = $view->getRoute();
         $location = $route
             ? $this->getRouter()->generate($route, (array) $view->getData(), true)
@@ -323,6 +318,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         if ($location) {
             return $this->createRedirectResponse($view, $location, $format);
+        }
+
+        $headers = $view->getHeaders();
+        if (empty($headers['Content-Type'])) {
+            $view->setHeader('Content-Type', $request->getMimeType($format));
         }
 
         if ($this->isFormatTemplating($format)) {
