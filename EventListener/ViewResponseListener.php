@@ -21,7 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use FOS\RestBundle\View\View;
 
 /**
- * The ViewResponseListener class handles the View core event as well as the @extra:Template annotation.
+ * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
