@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\View;
 
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Default View implementation.
@@ -84,6 +85,11 @@ class View
     private $serializerCallback;
 
     /**
+     * @var Response
+     */
+    private $response;
+
+    /**
      * Convenience method to allow for a fluent interface.
      *
      * @param mixed   $data
@@ -133,7 +139,7 @@ class View
      */
     public function setHeader($name, $value)
     {
-        $this->headers[$name] = $value;
+        $this->getResponse()->headers->set($name, $value);
 
         return $this;
     }
@@ -146,7 +152,7 @@ class View
      */
     public function setHeaders(array $headers)
     {
-        $this->headers = $headers;
+        $this->getResponse()->headers->replace($headers);
 
         return $this;
     }
@@ -290,6 +296,19 @@ class View
     }
 
     /**
+     * set the response
+     *
+     * @param Response $response
+     * @return View
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+
+        return $this;
+    }
+
+    /**
      * get the data
      *
      * @return mixed|null data
@@ -316,7 +335,7 @@ class View
      */
     public function getHeaders()
     {
-        return $this->headers;
+        return $this->response->headers->all();
     }
 
     /**
@@ -380,6 +399,20 @@ class View
     }
 
     /**
+     * get the response
+     *
+     * @return Response response
+     */
+    public function getResponse()
+    {
+        if (null === $this->response) {
+            $this->response = new Response();
+        }
+
+        return $this->response;
+    }
+
+    /**
      * get the serializer version
      *
      * @return string|null serializer version
@@ -408,7 +441,8 @@ class View
     {
         if ($this->serializerVersion) {
             return 'version';
-        } elseif ($this->serializerGroups) {
+        }
+        if ($this->serializerGroups) {
             return 'groups';
         }
 
