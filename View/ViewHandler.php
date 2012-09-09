@@ -233,18 +233,17 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function createRedirectResponse(View $view, $location, $format)
     {
-        $view->setHeader('Location', $location);
-
         $code = isset($this->forceRedirects[$format])
             ? $this->forceRedirects[$format] : $this->getStatusCode($view);
 
+        $response = $view->getResponse();
         if ('html' === $format && isset($this->forceRedirects[$format])) {
-            $response = new RedirectResponse($location, $code);
-            $response->headers->replace($view->getHeaders());
-        } else {
-            $response = new Response('', $code, $view->getHeaders());
+            $redirect = new RedirectResponse($location);
+            $response->setContent($redirect->getContent());
         }
 
+        $response->setStatusCode($code);
+        $response->headers->set('Location', $location);
         return $response;
     }
 
@@ -320,11 +319,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->createRedirectResponse($view, $location, $format);
         }
 
-        $headers = $view->getHeaders();
-        if (empty($headers['Content-Type'])) {
-            $view->setHeader('Content-Type', $request->getMimeType($format));
-        }
-
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
         } else {
@@ -332,6 +326,13 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $content = $serializer->serialize($view->getData(), $format);
         }
 
-        return new Response($content, $this->getStatusCode($view), $view->getHeaders());
+        $response = $view->getResponse();
+        $response->setContent($content);
+        $response->setStatusCode($this->getStatusCode($view));
+        if (!$response->headers->has('Content-Type')) {
+            $response->headers->set('Content-Type', $request->getMimeType($format));
+        }
+
+        return $response;
     }
 }

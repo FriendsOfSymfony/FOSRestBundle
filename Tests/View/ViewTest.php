@@ -115,8 +115,9 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         $view = new View();
         $headers = array('foo' => 'bar');
+        $expected = array('foo' => array('bar'), 'cache-control' => array('no-cache'));
         $view->setHeaders($headers);
-        $this->assertEquals($headers, $view->getHeaders());
+        $this->assertEquals($expected, $view->getHeaders());
     }
 
     public function testSetStatusCode()
