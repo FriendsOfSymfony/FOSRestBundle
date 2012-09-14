@@ -33,11 +33,6 @@ class View
     private $statusCode;
 
     /**
-     * @var array
-     */
-    private $headers;
-
-    /**
      * @var string|TemplateReference
      */
     private $template;
@@ -112,8 +107,8 @@ class View
     {
         $this->data = $data;
         $this->statusCode = $statusCode;
-        $this->headers = $headers;
         $this->templateVar = 'data';
+        $this->getResponse()->headers->replace($headers);
     }
 
     /**
@@ -298,7 +293,7 @@ class View
     /**
      * set the response
      *
-     * @param Response $response
+     * @param  Response $response
      * @return View
      */
     public function setResponse(Response $response)
@@ -335,7 +330,7 @@ class View
      */
     public function getHeaders()
     {
-        return $this->response->headers->all();
+        return $this->getResponse()->headers->all();
     }
 
     /**
