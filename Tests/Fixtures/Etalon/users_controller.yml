@@ -97,3 +97,8 @@ get_user_foos:
   method:     GET
   pattern:    /users/{slug}/foos.{_format}
   controller: ::getUserFoosAction
+
+get_categories:
+  method:     GET
+  pattern:    /categories.{_format}
+  controller: ::getCategoriesAction

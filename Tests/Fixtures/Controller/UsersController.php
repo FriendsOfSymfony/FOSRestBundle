@@ -98,4 +98,7 @@ class UsersController extends Controller
 
     public function getUserFoosAction($slug, Request $request)
     {} // [GET] /users/{slug}/foos
+
+    public function getCategoriesAction()
+    {} // [GET] /categories
 }
