@@ -23,7 +23,7 @@ abstract class Param
     /** @var string */
     public $requirements = '';
     /** @var string */
-    public $default = '';
+    public $default = null;
     /** @var string */
     public $description;
     /** @var boolean */
