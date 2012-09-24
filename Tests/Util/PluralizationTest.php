@@ -24,27 +24,27 @@ class PluralizationTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that pluralization pluralize words correctly.
      *
-     * @dataProvider getWords
+     * @dataProvider getPluralizableWords
      *
-     * @param string $singular
+     * @param string $source
      * @param string $plural
      */
-    public function testPluralize($singular, $plural)
+    public function testPluralize($source, $plural)
     {
-        $this->assertEquals($plural, Pluralization::pluralize($singular));
+        $this->assertEquals($plural, Pluralization::pluralize($source));
     }
 
     /**
      * Test that pluralization singularize words correctly.
      *
-     * @dataProvider getWords
+     * @dataProvider getSingularizableWords
      *
      * @param string $singular
-     * @param string $plural
+     * @param string $source
      */
-    public function testSingularize($singular, $plural)
+    public function testSingularize($singular, $source)
     {
-        $this->assertEquals($singular, Pluralization::singularize($plural));
+        $this->assertEquals($singular, Pluralization::singularize($source));
     }
 
     /**
@@ -61,5 +61,37 @@ class PluralizationTest extends \PHPUnit_Framework_TestCase
             array('news',       'news'),
             array('comment',    'comments'),
         );
+    }
+
+    /**
+     * Singularizable words provider.
+     *
+     * @return array of hashes (singular => source)
+     */
+    public function getSingularizableWords()
+    {
+        $singularizables = array(
+            array('company',    'company'),
+        );
+
+        $words = $this->getWords();
+
+        return array_merge($words, $singularizables);
+    }
+
+    /**
+     * Pluralizable words provider.
+     *
+     * @return array of hashes (source => plural)
+     */
+    public function getPluralizableWords()
+    {
+        $pluralizables = array(
+            array('companies',    'companies'),
+        );
+
+        $words = $this->getWords();
+
+        return array_merge($words, $pluralizables);
     }
 }
