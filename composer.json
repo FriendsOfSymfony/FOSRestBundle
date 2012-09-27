@@ -25,13 +25,17 @@
         "php":                            ">=5.3.2",
         "friendsofsymfony/rest":          ">=0.7.0,<0.9.0-dev",
         "symfony/framework-bundle":       ">=2.0,<2.3-dev",
-        "sensio/framework-extra-bundle":  ">=2.0,<2.3-dev",
         "jms/serializer-bundle":          "0.9.*"
     },
 
-    "require-dev":{
+    "require-dev": {
+        "sensio/framework-extra-bundle":  ">=2.0,<2.3-dev",
         "symfony/form": ">=2.0,<2.3-dev",
         "symfony/yaml": ">=2.0,<2.3-dev"
+    },
+
+    "suggest": {
+        "sensio/framework-extra-bundle":  "Add support for route annotations"
     },
 
     "autoload": {
