@@ -1,16 +1,18 @@
 Step 3: Listener support
 ========================
-All listeners except the ``mime_type`` one are enabled by default.  You can
-disable one or more of these listeners.  For example, below you can see how to
-disable all listeners:
+
+All listeners except the ``mime_type`` one are disabled by default.  You can
+enable one or more of these listeners.  For example, below you can see how to
+enable all listeners:
 
 ```yaml
 # app/config/config.yml
 fos_rest:
-    body_listener: false
-    format_listener: false
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener: true
     view:
-        view_response_listener: false
+        view_response_listener: 'force'
 ```
 
 ### View Response listener
@@ -51,7 +53,7 @@ extends from the ``@Template()`` annotation.
 
 The ``@View()`` and ``@Template()`` annotations behave essentially the same
 with a minor difference. When ``view_response_listener`` is set to ``true``
-instead of the default ``force`` and ``@View()`` is not used, then rendering
+instead of ``force`` and ``@View()`` is not used, then rendering
 will be delegated to SensioFrameworkExtraBundle.
 
 Note that it is necessary to disable view annotations in

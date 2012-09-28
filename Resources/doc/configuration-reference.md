@@ -34,7 +34,7 @@ fos_rest:
 
             # Prototype
             name:                 []
-        view_response_listener:  force
+        view_response_listener:  false
         failed_validation:    400
     exception:
         codes:

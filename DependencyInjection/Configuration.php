@@ -121,7 +121,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(array('html' => true))
                             ->prototype('boolean')->end()
                         ->end()
-                        ->scalarNode('view_response_listener')->defaultValue('force')
+                        ->scalarNode('view_response_listener')->defaultFalse()
                             ->validate()
                                 ->ifNotInArray($this->forceOptionValues)
                                 ->thenInvalid('The view_response_listener option does not support %s. Please choose one of '.json_encode($this->forceOptionValues))
