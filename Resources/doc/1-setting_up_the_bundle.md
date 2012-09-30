@@ -79,6 +79,11 @@ public function registerBundles()
     $bundles = array(
         // ...
         new FOS\RestBundle\FOSRestBundle(),
+        
+        // if you installed FOSRestBundle using composer you shoudn't forget
+        // also registering JMSSerializerBundle.
+        
+        // new JMS\SerializerBundle\JMSSerializerBundle($this),
     );
 }
 ```
