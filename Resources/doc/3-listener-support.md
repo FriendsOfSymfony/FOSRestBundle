@@ -346,5 +346,22 @@ fos_rest:
     allowed_methods_listener: true
 ```
 
+### Security Exception Listener
+
+By default it is the responsibility of firewall access points to deal with AccessDeniedExceptions.
+For example the ``form`` entry point will redirect to the login page. However for a RESTful application
+the proper thing to happen is to return a 403 HTTP status code. This listener is triggered before
+the normal exception listener and firewall entry points and forces returning a 403 for any of the
+formats configured.
+
+You need to enable this listener like this as it is disabled by default:
+
+```
+fos_rest:
+    access_denied_listener:
+        # all requests using the 'json' format will return a 403 on an access denied violation
+        json: true
+```
+
 ## That was it!
 [Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
