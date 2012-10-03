@@ -3,6 +3,10 @@ Full default configuration
 
 ```yaml
 fos_rest:
+    access_denied_listener:
+
+        # Prototype
+        name:                 []
     param_fetcher_listener:  false
     cache_dir:            %kernel.cache_dir%/fos_rest
     allowed_methods_listener:  false

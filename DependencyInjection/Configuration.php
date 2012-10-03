@@ -41,6 +41,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('access_denied_listener')
+                    ->useAttributeAsKey('name')
+                    ->prototype('boolean')->end()
+                ->end()
                 ->scalarNode('param_fetcher_listener')->defaultFalse()->end()
                 ->scalarNode('cache_dir')->cannotBeEmpty()->defaultValue('%kernel.cache_dir%/fos_rest')
                     ->validate()
@@ -73,7 +77,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('version')->defaultNull()->end()
                         ->arrayNode('groups')
-                            ->defaultValue(array())
                             ->prototype('scalar')->end()
                         ->end()
                     ->end()
@@ -108,7 +111,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('mime_types')
                             ->useAttributeAsKey('name')
-                            ->defaultValue(array())
                             ->prototype('variable')->end()
                         ->end()
                         ->arrayNode('formats')

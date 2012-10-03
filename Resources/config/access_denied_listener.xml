@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="fos_rest.access_denied_listener.class">FOS\RestBundle\EventListener\AccessDeniedListener</parameter>
+        <parameter key="fos_rest.access_denied_listener.formats" type="collection"/>
+
+    </parameters>
+
+    <services>
+
+        <service id="fos_rest.access_denied_listener" class="%fos_rest.access_denied_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="5"/>
+            <argument>%fos_rest.access_denied_listener.formats%</argument>
+        </service>
+
+    </services>
+</container>
