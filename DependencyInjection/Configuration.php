@@ -41,6 +41,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('access_denied_listener')
+                    ->useAttributeAsKey('name')
+                    ->defaultValue(array())
+                    ->prototype('boolean')->end()
+                ->end()
                 ->scalarNode('param_fetcher_listener')->defaultFalse()->end()
                 ->scalarNode('cache_dir')->cannotBeEmpty()->defaultValue('%kernel.cache_dir%/fos_rest')
                     ->validate()
