@@ -25,7 +25,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-abstract class FOSRestController extends Controller implements ClassResourceInterface
+abstract class FOSRestController extends Controller
 {
     /**
      * Create a view
