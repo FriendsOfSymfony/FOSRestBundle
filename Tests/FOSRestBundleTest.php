@@ -30,4 +30,9 @@ class FOSRestBundleTest extends \PHPUnit_Framework_TestCase
         $bundle = new FOSRestBundle();
         $bundle->build($container);
     }
+    
+    public function testGetSymfonyVersion()
+    {
+        $this->assertSame('2.2.0', FOSRestBundle::getSymfonyVersion('2.2.0.DEV'));
+    }
 }

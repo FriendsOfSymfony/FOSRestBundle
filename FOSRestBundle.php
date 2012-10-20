@@ -39,8 +39,6 @@ class FOSRestBundle extends Bundle
      */
     public static function getSymfonyVersion($version)
     {
-        return implode('.', array_slice(array_map(function($val) {
-            return (int) $val;
-        }, explode('.', $version)), 0, 3));
+        return implode('.', sscanf($version, '%d.%d.%d'));
     }
 }
