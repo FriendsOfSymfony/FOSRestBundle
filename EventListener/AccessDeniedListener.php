@@ -52,16 +52,19 @@ class AccessDeniedListener extends ExceptionListener
             return false;
         }
 
+        // TODO do we need to do content type negotiation here?
+        if (empty($this->formats[$event->getRequest()->getRequestFormat()])) {
+            return false;
+        }
+
         $handling = true;
 
         $exception = $event->getException();
-        if (!$exception instanceof AccessDeniedException) {
-            return;
+        if ($exception instanceof AccessDeniedException) {
+            $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
+            $event->setException($exception);
+            parent::onKernelException($event);
         }
-
-        $exception = new AccessDeniedHttpException('You dont have the necessary permissions', $exception);
-        $event->setException($exception);
-        return parent::onKernelException($event);
     }
 
     public static function getSubscribedEvents()
