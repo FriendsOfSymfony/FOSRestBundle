@@ -14,8 +14,11 @@
     <services>
 
         <service id="fos_rest.access_denied_listener" class="%fos_rest.access_denied_listener.class%">
-            <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="5"/>
+            <tag name="kernel.event_subscriber" />
+            <tag name="monolog.logger" channel="request" />
             <argument>%fos_rest.access_denied_listener.formats%</argument>
+            <argument>%twig.exception_listener.controller%</argument>
+            <argument type="service" id="logger" on-invalid="null" />
         </service>
 
     </services>

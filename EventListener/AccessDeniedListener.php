@@ -12,6 +12,10 @@
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -21,19 +25,20 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class AccessDeniedListener
+class AccessDeniedListener extends ExceptionListener
 {
     private $formats;
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container             container
-     * @param boolean            $setParamsAsAttributes params as attributes
+     * @param array $formats    key value pairs of format names and if for the given format
+     *                          the exception should be intercepted to return a 403
      */
-    public function __construct($formats = array())
+    public function __construct($formats, $controller, LoggerInterface $logger = null)
     {
         $this->formats = $formats;
+        parent::__construct($controller, $logger);
     }
 
     /**
@@ -41,15 +46,28 @@ class AccessDeniedListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        static $handling;
+
+        if (true === $handling) {
+            return false;
+        }
+
+        $handling = true;
+
         $exception = $event->getException();
         if (!$exception instanceof AccessDeniedException) {
             return;
         }
 
-        $request = $event->getRequest();
-        if (!empty($this->formats[$request->getRequestFormat()])) {
-            $response = new Response('You dont have the necessary permissions', 403);
-            $event->setResponse($response);
-        }
+        $exception = new AccessDeniedHttpException('You dont have the necessary permissions', $exception);
+        $event->setException($exception);
+        return parent::onKernelException($event);
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::EXCEPTION => array('onKernelException', 5),
+        );
     }
 }
