@@ -150,7 +150,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->with('fos_rest.templating')
                 ->will($this->returnValue($templating));
         } else {
-            $serializer = $this->getMock('\stdClass', array('serialize', 'setVersion'));
+            $serializer = $this->getMockBuilder('\JMS\SerializerBundle\Serializer\Serializer')
+                ->setMethods(array('serialize', 'setExclusionStrategy'))
+                ->disableOriginalConstructor()
+                ->getMock();
             $serializer
                 ->expects($this->once())
                 ->method('serialize')
@@ -158,8 +161,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
             $serializer
                 ->expects($this->once())
-                ->method('setVersion')
-                ->will($this->returnValue('1.0'));
+                ->method('setExclusionStrategy')
+                ->will($this->returnValue(null));
 
             $container
                 ->expects($this->once())
@@ -170,7 +173,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             $container
                 ->expects($this->any())
                 ->method('getParameter')
-                ->will($this->onConsecutiveCalls('version', '1.0'));
+                ->will($this->onConsecutiveCalls('foo', '1.0'));
         }
 
         $viewHandler->setContainer($container);

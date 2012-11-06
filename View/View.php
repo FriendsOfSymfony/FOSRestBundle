@@ -174,7 +174,6 @@ class View
     public function setSerializerVersion($serializerVersion)
     {
         $this->serializerVersion = $serializerVersion;
-        $this->serializerGroups = null;
 
         return $this;
     }
@@ -187,7 +186,6 @@ class View
     public function setSerializerGroups($serializerGroups)
     {
         $this->serializerGroups = $serializerGroups;
-        $this->serializerVersion = null;
 
         return $this;
     }
@@ -425,23 +423,6 @@ class View
     public function getSerializerGroups()
     {
         return $this->serializerGroups;
-    }
-
-    /**
-     * get the serializer exclusion strategy
-     *
-     * @return string|null serializer groups
-     */
-    public function getSerializerExclusionStrategy()
-    {
-        if ($this->serializerVersion) {
-            return 'version';
-        }
-        if ($this->serializerGroups) {
-            return 'groups';
-        }
-
-        return null;
     }
 
     /**
