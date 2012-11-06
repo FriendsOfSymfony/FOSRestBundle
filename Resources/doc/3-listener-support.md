@@ -363,5 +363,7 @@ fos_rest:
         json: true
 ```
 
+It is also recommended to enable the exception controller described in the next chapter.
+
 ## That was it!
 [Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
