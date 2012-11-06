@@ -31,7 +31,9 @@
     "require-dev": {
         "sensio/framework-extra-bundle":  ">=2.0,<2.3-dev",
         "symfony/form": ">=2.0,<2.3-dev",
-        "symfony/yaml": ">=2.0,<2.3-dev"
+        "symfony/yaml": ">=2.0,<2.3-dev",
+        "symfony/security": ">=2.0,<2.3-dev"
+
     },
 
     "suggest": {
