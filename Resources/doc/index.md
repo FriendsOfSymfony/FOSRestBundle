@@ -31,7 +31,7 @@ guideline:
 
 - There is also a fork of the Symfony2 Standard Edition that is configured to
   show the LiipHelloBundle examples:
-  https://github.com/lsmith77/symfony-standard/tree/techtalk
+  https://github.com/liip-forks/symfony-standard/tree/techtalk
 
 - The FOSCommentBundle uses FOSRestBundle for its api:
   https://github.com/FriendsOfSymfony/FOSCommentBundle

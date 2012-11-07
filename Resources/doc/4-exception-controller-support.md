@@ -50,7 +50,7 @@ class UsersController extends Controller
 ```
 
 See the following example configuration for more details:
-https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
+https://github.com/liip-forks/symfony-standard/blob/techtalk/app/config/config.yml
 
 ## That was it!
 [Return to the index](index.md) or continue reading about [Automatic route generation: single RESTful controller](5-automatic-route-generation_single-restful-controller.md).

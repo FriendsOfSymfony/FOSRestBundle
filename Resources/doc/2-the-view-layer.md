@@ -135,7 +135,7 @@ fos_rest:
 ```
 
 See the following example configuration for more details:
-https://github.com/lsmith77/symfony-standard/blob/techtalk/app/config/config.yml
+https://github.com/liip-forks/symfony-standard/blob/techtalk/app/config/config.yml
 
 ### Custom handler
 
