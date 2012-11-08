@@ -19,6 +19,7 @@ use FOS\RestBundle\Controller\Annotations\Param;
  *
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ * @author Boris Guéry  <guery.b@gmail.com>
  */
 class ParamReader implements ParamReaderInterface
 {

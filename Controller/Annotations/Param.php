@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * Represents a parameter that can be present in GET or POST data.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ * @author Boris Guéry <guery.b@gmail.com>
  */
 abstract class Param
 {
@@ -30,4 +31,6 @@ abstract class Param
     public $strict = false;
     /** @var boolean */
     public $array = false;
+    /** @var boolean */
+    public $nullable = false;
 }
