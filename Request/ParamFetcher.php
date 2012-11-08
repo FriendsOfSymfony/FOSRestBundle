@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ * @author Boris Guéry <guery.b@gmail.com>
  */
 class ParamFetcher implements ParamFetcherInterface
 {
@@ -80,8 +81,9 @@ class ParamFetcher implements ParamFetcherInterface
             throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
-        $config  = $this->params[$name];
-        $default = $config->default;
+        $config   = $this->params[$name];
+        $nullable = $config->nullable;
+        $default  = $config->default;
 
         if ($config->array) {
             $default = (array) $default;
@@ -125,8 +127,12 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if (!is_scalar($param)) {
-            if ($strict) {
-                throw new \RuntimeException(sprintf("Query parameter value '%s' is not a scalar", $param));
+            if (!$nullable) {
+                if ($strict) {
+                    throw new \RuntimeException(sprintf("Query parameter value '%s' is not a scalar", $param));
+                }
+
+                return $this->cleanParamWithRequirements($config, $param, $strict);
             }
 
             return $default;

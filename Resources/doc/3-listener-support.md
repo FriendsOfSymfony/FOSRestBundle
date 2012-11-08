@@ -256,6 +256,14 @@ class FooController extends Controller
      *
      * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
      *
+     * In some case you also want to have a strict requirements but accept a null value, this is possible
+     * thanks to the nullable option.
+     * If ?count= parameter is set, the requirements will be checked strictly, if not, the null value will be used.
+     * If you set the strict parameter without a nullable option, this will result in an error if the parameter is
+     * missing from the query.
+     *
+     * @QueryParam(name="count", requirements="\d+", strict=true, nullable=true, description="Item count limit")
+     *
      * Will look for a firstname request parameters, ie. firstname=foo in POST data.
      * If not passed it will error out when read out of the ParamFetcher since RequestParam defaults to strict=true
      * If passed but doesn't match the requirement "\d+" it will also error out (400 Bad Request)
