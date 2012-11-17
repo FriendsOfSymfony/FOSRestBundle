@@ -58,11 +58,10 @@ class FOSRestExtension extends Extension
         }
 
         if (!empty($config['serializer']['version'])) {
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.type', 'version');
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.value', $config['serializer']['version']);
-        } elseif (!empty($config['serializer']['groups'])) {
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.type', 'groups');
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.value', $config['serializer']['groups']);
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.version', $config['serializer']['version']);
+        }
+        if (!empty($config['serializer']['groups'])) {
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.groups', $config['serializer']['groups']);
         }
 
         $container->setParameter($this->getAlias().'.formats', $formats);

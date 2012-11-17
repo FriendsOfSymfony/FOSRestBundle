@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use JMS\SerializerBundle\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -160,17 +161,22 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @param View $view view instance from which the serializer should be configured
      *
-     * @return JMS\SerializerBundle\Serializer\SerializerInterface
+     * @return \JMS\SerializerBundle\Serializer\SerializerInterface
      */
     protected function getSerializer(View $view = null)
     {
         $serializer = $this->container->get('fos_rest.serializer');
 
-        if ($view) {
-            $type = $view->getSerializerExclusionStrategy() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.type');
-            if ($type) {
-                $value = $view->{'getSerializer'.ucfirst($type)}() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.value');
-                $serializer->{'set'.ucfirst($type)}($value);
+        if ($view && $serializer instanceof Serializer) {
+            $groups = $view->getSerializerGroups() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.groups');
+            $version = $view->getSerializerVersion() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.version');
+
+            if ($groups && $version) {
+                $serializer->setExclusionStrategy(new GroupsVersionExclusionStrategy($groups, $version));
+            } elseif ($groups) {
+                $serializer->setGroups($groups);
+            } elseif ($version) {
+                $serializer->setVersion($version);
             }
 
             $callback = $view->getSerializerCallback();
