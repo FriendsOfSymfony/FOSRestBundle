@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use FOS\RestBundle\Routing\HateoasCollectionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
@@ -124,6 +125,53 @@ class ViewResponseListener extends TemplateListener
                 }
 
                 $view->setTemplate($template);
+            }
+        } elseif ($this->container->has('fsc_hateoas.metadata.factory')) {
+            $data = $view->getData();
+            if (is_object($data)) {
+                $class = $data instanceof HateoasCollectionInterface
+                    ? $data->getSubject() : get_class($data);
+
+                $cacheDir = $this->container->getParameter('kernel.cache_dir');
+                $file = $cacheDir.'/fos_rest/hateoas/'.str_replace('\\', '', $class);
+                if (file_exists($file)) {
+                    $collection = file_get_contents($file);
+                    $collection = unserialize($collection);
+
+                    $relationsBuilder = $this->container->get('fsc_hateoas.metadata.relation_builder.factory')->create();
+                    $subject = strtolower($collection->getSingularName());
+                    $baseParameters = array();
+                    if ($collection->isFormatInRoute()
+                        && null !== $request->attributes->get('_format')
+                    ) {
+                        $baseParameters['_format'] = $view->getFormat();
+                    }
+                    foreach ($collection as $routeName => $route) {
+                        $relName = $route->getRelName();
+                        if (!$relName) {
+                            continue;
+                        }
+
+                        $relName = $routeName === $request->attributes->get('_route') ? 'self' : $relName;
+                        $parameters = array(
+                            'route' => $routeName,
+                            'parameters' => $baseParameters,
+                        );
+                        foreach ($route->getPlaceholders() as $placeholder) {
+                            if ($placeholder === $subject) {
+                                $value = $data instanceof HateoasCollectionInterface
+                                    ? '{'.$placeholder.'}' : $data->{$collection->getIdentifier()}()
+                                ;
+                            } else {
+                                $value = $request->attributes->get($placeholder);
+                            }
+                            $parameters['parameters'][$placeholder] = $value;
+                        }
+                        $relationsBuilder->add($relName, $parameters);
+                    }
+
+                    $this->container->get('fsc_hateoas.metadata.factory')->addObjectRelations($data, $relationsBuilder->build());
+                }
             }
         }
 
