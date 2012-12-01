@@ -161,7 +161,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @param View $view view instance from which the serializer should be configured
      *
-     * @return \JMS\SerializerBundle\Serializer\SerializerInterface
+     * @return object that must provide a "serialize()" method
      */
     protected function getSerializer(View $view = null)
     {
