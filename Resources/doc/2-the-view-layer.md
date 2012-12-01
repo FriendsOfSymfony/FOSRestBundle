@@ -4,7 +4,7 @@ Step 2: The view layer
 
 The view layer makes it possible to write format agnostic controllers, by
 placing a layer between the Controller and the generation of the final output
-via the templating or JMSSerializerBundle.
+via the templating or serializer.
 
 In your controller action you will then need to create a ``View`` instance that
 is then passed to the ``fos_rest.view_handler`` service for processing. The
@@ -105,7 +105,7 @@ The ``formats`` and ``templating_formats`` settings determine which formats are
 respectively supported by the serializer and by the template layer. In other
 words any format listed in ``templating_formats`` will require a template for
 rendering using the ``templating`` service, while any format listed in
-``formats`` will use JMSSerializerBundle for rendering.  For both settings a
+``formats`` will use the serializer for rendering.  For both settings a
 value of ``false`` means that the given format is disabled.
 
 When using ``RouteRedirectView::create()`` the default behavior of forcing a
@@ -139,7 +139,7 @@ https://github.com/liip-forks/symfony-standard/blob/techtalk/app/config/config.y
 
 ### Custom handler
 
-While many things should be possible via the JMSSerializerBundle in some cases
+While many things should be possible via the serializer in some cases
 it might not be enough. For example you might need some custom logic to be
 executed in the ``ViewHandler``. For these cases one might want to register a
 custom handler for a specific format. The custom handler can either be
