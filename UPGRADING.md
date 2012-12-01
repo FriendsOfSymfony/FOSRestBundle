@@ -7,6 +7,7 @@ list important BC breaks.
 ### upgrading from 0.9.0
 
  * the view response listener is now disabled by default. See [enable view listener](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/3-listener-support.md#view-response-listener) for how to enable it.
+ * JMSSerializerBundle is now an optional dependency and therefore needs to be added explicitly
 
 ### upgrading from 0.7.0
 
