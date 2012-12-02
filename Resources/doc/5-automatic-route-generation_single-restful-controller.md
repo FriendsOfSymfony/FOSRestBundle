@@ -191,7 +191,7 @@ returns a single resource for this type. Shown as ``UsersController::getUserActi
 as ``UsersController::postUsersAction()`` above.
 * **put** - this action accepts *PUT* requests to the url */resources/{id}* and updates a single resource for this type.
 Shown as ``UsersController::putUserAction()`` above.
-* **delete** - this action accepts *DELETE* requests to the url */resources/{id}* and deltes a single resource for this
+* **delete** - this action accepts *DELETE* requests to the url */resources/{id}* and deletes a single resource for this
 type. Shown as ``UsersController::deleteUserAction()`` above.
 * **patch** - this action accepts *PATCH* requests to the url */resources* and is supposed to partially modify collection
 of resources (e.g. apply batch modifications to subset of resources). Shown as ``UsersController::patchUsersAction()`` above.
