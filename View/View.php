@@ -428,7 +428,7 @@ class View
     /**
      * get the serializer callback
      *
-     * @return calllable|null serializer callback
+     * @return callable|null serializer callback
      */
     public function getSerializerCallback()
     {
