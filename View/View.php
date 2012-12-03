@@ -193,7 +193,7 @@ class View
     /**
      * set the serializer callback
      *
-     * function (\FOS\RestBundle\View\ViewHandler $viewHandler, \JMS\SerializerBundle\Serializer\SerializerInterface $serializer) { .. }
+     * function (\FOS\RestBundle\View\ViewHandler $viewHandler, \JMS\Serializer\SerializerInterface $serializer) { .. }
      *
      * @param  callable $serializerCallback
      * @return View
