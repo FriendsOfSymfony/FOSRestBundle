@@ -29,16 +29,4 @@ class FOSRestBundle extends Bundle
     {
         $container->addCompilerPass(new ConfigurationCheckPass());
     }
-
-    /**
-     * Returns a cleaned version number
-     *
-     * @param string $version
-     *
-     * @return string
-     */
-    public static function getSymfonyVersion($version)
-    {
-        return implode('.', sscanf($version, '%d.%d.%d'));
-    }
 }
