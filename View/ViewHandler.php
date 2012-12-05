@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use JMS\SerializerBundle\Serializer\Serializer;
+use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
