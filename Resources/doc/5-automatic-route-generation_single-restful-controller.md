@@ -22,6 +22,11 @@ https://github.com/liip/LiipHelloBundle/blob/master/Controller/RestController.ph
 Single RESTful controller routes
 ================================
 
+Single as opposed to multiple is just the focus of our routes, that is whether they are referring
+to just one resource without subresources or to resources that have subresources. The resource
+routes in the second case is described a bit different and is seen in the next section. Now we
+turn to simple resource routes.
+
 ```yaml
 # app/config/routing.yml
 users:
@@ -31,9 +36,11 @@ users:
 
 This will tell Symfony2 to automatically generate proper REST routes from your ``UsersController`` action names.
 Notice ``type: rest`` option. It's required so that the RestBundle can find which routes are supported.
-Notice ``name_prefix: <my_bundle_>`` option. It's useful to prefix the generated controller routes to organize
-your several resources paths. Take care that you can use ``name_prefix`` on an import only when the file is
-imported itself with the type ``rest``. You can also set a parent and a regular prefix as well as any other route.
+
+Notice the ``name_prefix: my_bundle_`` option. It's useful to prefix the generated controller routes to organize
+your several resources paths. Take care that you can use ``name_prefix`` on an import only when the file is imported
+itself with the type ``rest``. The parent option is used in subresources as we will see in the next section for
+multiple RESTful controller routes.
 
 ## Define resource actions
 
