@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\View;
 
-use JMS\SerializerBundle\Metadata\ClassMetadata;
-use JMS\SerializerBundle\Metadata\PropertyMetadata;
-use JMS\SerializerBundle\Serializer\Exclusion\ExclusionStrategyInterface;
-use JMS\SerializerBundle\Serializer\Exclusion\VersionExclusionStrategy;
-use JMS\SerializerBundle\Serializer\Exclusion\GroupsExclusionStrategy;
+use JMS\Serializer\Metadata\ClassMetadata;
+use JMS\Serializer\Metadata\PropertyMetadata;
+use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
+use JMS\Serializer\Exclusion\VersionExclusionStrategy;
+use JMS\Serializer\Exclusion\GroupsExclusionStrategy;
 
 class GroupsVersionExclusionStrategy implements ExclusionStrategyInterface
 {

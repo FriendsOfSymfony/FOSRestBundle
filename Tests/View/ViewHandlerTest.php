@@ -150,7 +150,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->with('fos_rest.templating')
                 ->will($this->returnValue($templating));
         } else {
-            $serializer = $this->getMockBuilder('\JMS\SerializerBundle\Serializer\Serializer')
+            $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
                 ->setMethods(array('serialize', 'setExclusionStrategy'))
                 ->disableOriginalConstructor()
                 ->getMock();

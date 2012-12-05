@@ -28,16 +28,16 @@
     },
 
     "require-dev": {
-        "sensio/framework-extra-bundle":  ">=2.0,<2.3-dev",
-        "symfony/form": ">=2.0,<2.3-dev",
-        "symfony/yaml": ">=2.0,<2.3-dev",
-        "symfony/security": ">=2.0,<2.3-dev",
-        "jms/serializer-bundle": ">=0.9,<=0.10"
+        "sensio/framework-extra-bundle":  ">=2.1,<2.3-dev",
+        "symfony/form": ">=2.1,<2.3-dev",
+        "symfony/yaml": ">=2.1,<2.3-dev",
+        "symfony/security": ">=2.1,<2.3-dev",
+        "jms/serializer-bundle": "1.0.*"
     },
 
     "suggest": {
-        "sensio/framework-extra-bundle":  "Add support for route annotations",
-        "jms/serializer-bundle":          "Add support for advanced serialization capabilities, recommended, requires >=0.9,<=0.10",
+        "sensio/framework-extra-bundle":  "Add support for route annotations and the view response listener",
+        "jms/serializer-bundle":          "Add support for advanced serialization capabilities, recommended, requires 1.0.*",
         "symfony/serializer":             "Add support for basic serialization capabilities, requires >=2.0,<2.3-dev"
     },
 
@@ -49,7 +49,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "0.10.x-dev"
+            "dev-master": "0.11.x-dev"
         }
     }
 }
