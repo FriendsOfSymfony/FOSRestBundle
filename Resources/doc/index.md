@@ -14,8 +14,8 @@ FOSRestBundle provides several tools to assist in building REST applications:
 - [The view layer](2-the-view-layer.md)
 - [Listener support](3-listener-support.md)
 - [ExceptionController support](4-exception-controller-support.md)
-- [Automatic route generation: single RESTful controller](5-automatic-route-generation_single-restful-controller.md)
-- [Automatic route generation: multiple RESTful controllers](6-automatic-route-generation_multiple-restful-controllers.md)
+- [Automatic route generation: single RESTful controller](5-automatic-route-generation_single-restful-controller.md) (for simple resources)
+- [Automatic route generation: multiple RESTful controllers](6-automatic-route-generation_multiple-restful-controllers.md) (for resources with child/subresources)
 
 ### Config reference
 Check out the [configuration reference](configuration-reference.md) for a reference on the available configuration options.
