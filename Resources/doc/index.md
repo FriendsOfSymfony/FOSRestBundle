@@ -9,6 +9,10 @@ Installation is a quick (I promise!) 1 step process:
 
 ## Bundle usage
 
+Before you start using the bundle it is advised you run a quick look over the 5 sections listed below.
+This bundle contains many features that are loosly coupled so you may or may not need to use all of
+them. This bundle is just a tool to help you in the job of creating a REST API with Symfony2.
+
 FOSRestBundle provides several tools to assist in building REST applications:
 
 - [The view layer](2-the-view-layer.md)
