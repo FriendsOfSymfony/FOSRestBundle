@@ -1,6 +1,17 @@
 Step 3: Listener support
 ========================
 
+[Listeners](http://symfony.com/doc/master/cookbook/service_container/event_listener.html)
+are a way to hook into the REST handling of
+a request and in the preparation of a response to send back. The hooks in view relate
+to getting things from the request (parameter fetcher listener), doing some processing
+with the payload gotten from a request (body listener), formatting the response either
+with a template engine like twig or to json format or xml via the serializer (format
+listener), and finally also how to affect the response like in the previous listener
+but in things relating to the view (view response listener).
+
+With this in mind we now turn to explain each one of them.
+
 All listeners except the ``mime_type`` one are disabled by default.  You can
 enable one or more of these listeners.  For example, below you can see how to
 enable all listeners:
