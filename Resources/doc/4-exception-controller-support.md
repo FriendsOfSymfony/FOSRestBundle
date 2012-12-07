@@ -1,12 +1,11 @@
 Step 4: ExceptionController support
 ===================================
 
-When implementing a secured REST API you would want to block requests firing
+When implementing a secured REST API you would want to block requests by firing
 exceptions with default or custom information back to the client. This bundle
-provides an extra controller for that job.
-
-Using this custom ExceptionController it is possible to leverage the View layer
-when building responses for uncaught Exceptions.
+provides an extra controller for that job. Using this custom ExceptionController
+it is possible to leverage the View layer when building responses for uncaught
+Exceptions.
 
 To enable the RestBundle view-layer-aware ExceptionController update the twig
 section of your config as follows:
