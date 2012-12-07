@@ -1,8 +1,8 @@
 Step 4: ExceptionController support
 ===================================
 
-When implementing a secured REST API you would want to block requests by firing
-exceptions with default or custom information back to the client. This bundle
+When implementing an API it is also necessary to handle exceptions in a RESTful
+way, while ensuring that no security sensitive information leaks out. This bundle
 provides an extra controller for that job. Using this custom ExceptionController
 it is possible to leverage the View layer when building responses for uncaught
 Exceptions.
