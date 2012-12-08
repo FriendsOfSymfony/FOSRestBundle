@@ -33,7 +33,7 @@ class RestActionReader
     private $namePrefix;
     private $parents = array();
 
-    private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'link', 'head', 'options');
+    private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options');
     private $availableConventionalActions = array('new', 'edit', 'remove');
 
     /**
