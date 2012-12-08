@@ -216,7 +216,8 @@ related anymore. When calling a UNLINK url you must provide in your header at le
 
 Important note about **link** and **unlink**: The implementation of the request listener extracting the resources as entities is not provided
 by this bundle. A good implementation can be found here : http://williamdurand.fr/2012/08/02/rest-apis-with-symfony2-the-right-way/
-It also contains some examples on how to use it.
+It also contains some examples on how to use it. **link** and **unlink** were obsoleted by RFC 2616, RFC 5988 aims to define
+it in a more clear way. Using these methods is not risky, but remains unclear (cf. issues 323 and 325).
 
 ### Conventional Actions
 
