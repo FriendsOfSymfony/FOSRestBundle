@@ -107,10 +107,10 @@ class UsersController
     {} // "delete_user_comment"  [DELETE] /users/{slug}/comments/{id}
     
     public function linkUserAction($slug)
-    {} // "link_user_friend"     [LINK] /users/{slug}/friend
+    {} // "link_user_friend"     [LINK] /users/{slug}
     
     public function unlinkUserAction($slug)
-    {} // "link_user_friend"     [UNLINK] /users/{slug}/friend
+    {} // "link_user_friend"     [UNLINK] /users/{slug}
 }
 ```
 
