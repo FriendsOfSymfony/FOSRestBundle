@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\View;
 
 use JMS\Serializer\Metadata\ClassMetadata;
+use JMS\Serializer\NavigatorContext;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 use JMS\Serializer\Exclusion\VersionExclusionStrategy;
@@ -28,13 +29,15 @@ class GroupsVersionExclusionStrategy implements ExclusionStrategyInterface
         $this->versionExclusion = new VersionExclusionStrategy($version);
     }
 
-    public function shouldSkipClass(ClassMetadata $metadata, $object = null)
+    public function shouldSkipClass(ClassMetadata $metadata, NavigatorContext $navigatorContext)
     {
         return false;
     }
 
-    public function shouldSkipProperty(PropertyMetadata $metadata, $object = null)
+    public function shouldSkipProperty(PropertyMetadata $property, NavigatorContext $navigatorContext)
     {
-        return $this->groupExclusion->shouldSkipProperty($metadata) || $this->versionExclusion->shouldSkipProperty($metadata);
+        return $this->groupExclusion->shouldSkipProperty($property, $navigatorContext)
+            || $this->versionExclusion->shouldSkipProperty($property, $navigatorContext)
+        ;
     }
 }
