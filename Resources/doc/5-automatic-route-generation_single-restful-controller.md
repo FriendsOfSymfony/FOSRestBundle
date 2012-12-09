@@ -112,6 +112,12 @@ class UsersController
 
     public function deleteUserCommentAction($slug, $id)
     {} // "delete_user_comment"  [DELETE] /users/{slug}/comments/{id}
+    
+    public function linkUserAction($slug)
+    {} // "link_user_friend"     [LINK] /users/{slug}
+    
+    public function unlinkUserAction($slug)
+    {} // "link_user_friend"     [UNLINK] /users/{slug}
 }
 ```
 
@@ -206,6 +212,19 @@ This action also accepts *PATCH* requests to the url */resources/{id}* and is su
 Shown as ``UsersController::patchUserAction()`` above.
 * **option** - this action accepts *OPTION* requests to the url */resources* and is supposed to return a list of REST
 resources that the user has access to.  Shown as ``UsersController::userAction()`` above.
+* **link** - this action accepts *LINK* requests to the url */resources/{id}* and is supposed to return nothing but a
+status code indicating that the specified resources were linked. It is used to declare a resource as related to an other one.
+When calling a LINK url you must provide in your header at least one link header formatted as follow : 
+``<http://example.com/resources/{id}\>; rel="kind_of_relation"``
+* **unlink** - this action accepts *UNLINK* requests to the url */resources/{id}* and is supposed to return nothing but
+a status code indicating that the specified resources were unlinked. It is used to declare that some resources are not
+related anymore. When calling a UNLINK url you must provide in your header at least one link header formatted as follow : 
+``<http://example.com/resources/{id}\>; rel="kind_of_relation"``
+
+Important note about **link** and **unlink**: The implementation of the request listener extracting the resources as entities is not provided
+by this bundle. A good implementation can be found here : http://williamdurand.fr/2012/08/02/rest-apis-with-symfony2-the-right-way/
+It also contains some examples on how to use it. **link** and **unlink** were obsoleted by RFC 2616, RFC 5988 aims to define
+it in a more clear way. Using these methods is not risky, but remains unclear (cf. issues 323 and 325).
 
 ### Conventional Actions
 
