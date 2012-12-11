@@ -108,7 +108,9 @@ class View
         $this->data = $data;
         $this->statusCode = $statusCode;
         $this->templateVar = 'data';
-        $this->getResponse()->headers->replace($headers);
+        if (!empty($headers)) {
+            $this->getResponse()->headers->replace($headers);
+        }
     }
 
     /**
