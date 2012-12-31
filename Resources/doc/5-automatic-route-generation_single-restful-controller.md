@@ -77,7 +77,7 @@ class UsersController
     public function lockUserAction($slug)
     {} // "lock_user"     [PATCH] /users/{slug}/lock
 
-    public function banUserAction($slug, $id)
+    public function banUserAction($slug)
     {} // "ban_user"      [PATCH] /users/{slug}/ban
 
     public function removeUserAction($slug)
