@@ -33,7 +33,8 @@ class Pluralization
         'series',
         'fish',
         'sheep',
-        'media'
+        'media',
+        'content'
     );
 
     /**
