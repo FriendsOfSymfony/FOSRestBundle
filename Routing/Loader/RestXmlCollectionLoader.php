@@ -19,6 +19,8 @@ use Symfony\Component\Routing\Route;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 
+use Symfony\Component\Config\Util\XmlUtils;
+
 /**
  * RestXmlCollectionLoader XML file collections loader.
  *
@@ -119,6 +121,18 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function loadFile($file)
+    {
+        if (class_exists('Symfony\Component\Config\Util\XmlUtils')) {
+            return XmlUtils::loadFile($file, __DIR__ . '/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
+        }
+ 
+        return parent::loadFile($file);
+    }
+
+    /**
      * Retrieves libxml errors and clears them.
      *
      * Note: The underscore postfix on the method name is to ensure compatibility with versions
@@ -145,4 +159,5 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
         return $errors;
     }
+
 }
