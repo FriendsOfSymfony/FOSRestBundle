@@ -149,17 +149,6 @@ class Pluralization
      */
     public static function singularize($word)
     {
-
-        static::$uncountables = array(
-            'equipment', 'information', 'rice', 'money', 'species', 'series', 'fish', 'sheep', 'media'
-        );
-        static::$irregulars = array(
-            'person'  => 'people',
-            'man'     => 'men',
-            'child'   => 'children',
-            'sex'     => 'sexes',
-            'move'    => 'moves'
-        );
         $lowerCasedWord = strtolower($word);
         foreach (static::$uncountables as $uncountable) {
             if (substr($lowerCasedWord, (-1 * strlen($uncountable))) == $uncountable) {
