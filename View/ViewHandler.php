@@ -53,6 +53,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     protected $forceNoContentCode;
 
     /**
+     * @param int Whether or not to serialize null view data
+     */
+    protected $shouldSerializeNull;
+
+    /**
      * @var array if to force a redirect for the given key format, with value being the status code to use
      */
     protected $forceRedirects;
@@ -68,6 +73,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * @param array   $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
      * @param int     $failedValidationCode The HTTP response status code for a failed validation
      * @param Boolean $forceNoContentCode   Forces a 204 HTTP response status code when the view data is empty
+     * @param Boolean $shouldSerializeNull  Whether or not to serialize null view data
      * @param array   $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
      * @param string  $defaultEngine        default engine (twig, php ..)
      */
@@ -75,12 +81,14 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         array $formats = null,
         $failedValidationCode = Codes::HTTP_BAD_REQUEST,
         $forceNoContentCode = false,
+        $shouldSerializeNull = false,
         array $forceRedirects = null,
         $defaultEngine = 'twig'
     ) {
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
         $this->forceNoContentCode = $forceNoContentCode;
+        $this->shouldSerializeNull = $shouldSerializeNull;
         $this->forceRedirects = (array) $forceRedirects;
         $this->defaultEngine = $defaultEngine;
     }
@@ -343,9 +351,9 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $content = null;
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
-        } elseif (null !== ($data = $view->getData())) {
+        } elseif ($this->shouldSerializeNull || null !== $view->getData()) {
             $serializer = $this->getSerializer($view);
-            $content = $serializer->serialize($data, $format);
+            $content = $serializer->serialize($view->getData(), $format);
         }
 
         $response = $view->getResponse();

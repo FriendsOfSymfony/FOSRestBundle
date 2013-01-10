@@ -122,6 +122,19 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->getParameter('fos_rest.force_no_content_code'));
     }
 
+    public function testViewShouldSerializeNullDefault()
+    {
+        $this->extension->load(array(), $this->container);
+        $this->assertFalse($this->container->getParameter('fos_rest.should_serialize_null'));
+    }
+
+    public function testViewShouldSerializeNullIsTrue()
+    {
+        $config = array('fos_rest' => array('view' => array('should_serialize_null' => true)));
+        $this->extension->load($config, $this->container);
+        $this->assertTrue($this->container->getParameter('fos_rest.should_serialize_null'));
+    }
+
     /**
      * Test that extension loads properly.
      */

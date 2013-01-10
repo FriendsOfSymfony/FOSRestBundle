@@ -108,7 +108,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $forceNoContentCode)
     {
-        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceNoContentCode, $forceRedirects);
+        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceNoContentCode, false, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -210,6 +210,53 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'templating aware no form' => array('html', array('foo' => 'bar')),
             'templating aware and form' => array('html', array('data' => array('bla' => 'toto')), 1, true, true),
             'not templating aware and invalid form' => array('json', array('data' => array(0 => 'error', 1 => 'error')), 0, false, true),
+        );
+    }
+    /**
+     * @dataProvider createShouldSerializeNullDataProvider
+     */
+    public function testShouldSerializeNull($expected, $shouldSerializeNull)
+    {
+        $viewHandler = new ViewHandler(array('json' => false), 404, 200, $shouldSerializeNull);
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+
+        $viewHandler->setContainer($container);
+
+        $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
+            ->setMethods(array('serialize', 'setExclusionStrategy'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        if ($shouldSerializeNull) {
+            $serializer
+                ->expects($this->once())
+                ->method('serialize')
+                ->will($this->returnValue(json_encode(null)));
+
+            $container
+                ->expects($this->once())
+                ->method('get')
+                ->with('fos_rest.serializer')
+                ->will($this->returnValue($serializer));
+        } else {
+            $serializer
+                ->expects($this->never())
+                ->method('serialize');
+
+            $container
+                ->expects($this->never())
+                ->method('get');
+        }
+
+        $response = $viewHandler->createResponse(new View(), new Request(), 'json');
+        $this->assertEquals($expected, $response->getContent());
+    }
+
+    public static function createShouldSerializeNullDataProvider()
+    {
+        return array(
+            'should serialize null'     => array("null", true),
+            'should not serialize null' => array("", false)
         );
     }
 
