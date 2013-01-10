@@ -109,6 +109,32 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->container->hasDefinition('fos_rest.view_response_listener'));
     }
 
+    public function testForceEmptyContentDefault()
+    {
+        $this->extension->load(array(), $this->container);
+        $this->assertEquals(204, $this->container->getParameter('fos_rest.empty_content'));
+    }
+
+    public function testForceEmptyContentIs200()
+    {
+        $config = array('fos_rest' => array('view' => array('empty_content' => 200)));
+        $this->extension->load($config, $this->container);
+        $this->assertEquals(200, $this->container->getParameter('fos_rest.empty_content'));
+    }
+
+    public function testViewSerializeNullDefault()
+    {
+        $this->extension->load(array(), $this->container);
+        $this->assertFalse($this->container->getParameter('fos_rest.serialize_null'));
+    }
+
+    public function testViewSerializeNullIsTrue()
+    {
+        $config = array('fos_rest' => array('view' => array('serialize_null' => true)));
+        $this->extension->load($config, $this->container);
+        $this->assertTrue($this->container->getParameter('fos_rest.serialize_null'));
+    }
+
     /**
      * Test that extension loads properly.
      */

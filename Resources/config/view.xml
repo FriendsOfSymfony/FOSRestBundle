@@ -14,6 +14,8 @@
         <service id="fos_rest.view_handler.default" class="FOS\RestBundle\View\ViewHandler" public="false">
             <argument>%fos_rest.formats%</argument>
             <argument>%fos_rest.failed_validation%</argument>
+            <argument>%fos_rest.empty_content%</argument>
+            <argument>%fos_rest.serialize_null%</argument>
             <argument>%fos_rest.force_redirects%</argument>
             <argument>%fos_rest.default_engine%</argument>
             <call method="setContainer">
