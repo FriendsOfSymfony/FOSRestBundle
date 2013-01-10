@@ -48,6 +48,16 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     protected $failedValidationCode;
 
     /**
+     * @param int HTTP response status code when the view data is null
+     */
+    protected $emptyContentCode;
+
+    /**
+     * @param int Whether or not to serialize null view data
+     */
+    protected $serializeNull;
+
+    /**
      * @var array if to force a redirect for the given key format, with value being the status code to use
      */
     protected $forceRedirects;
@@ -60,15 +70,25 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Constructor
      *
-     * @param array  $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
-     * @param int    $failedValidationCode The HTTP response status code for a failed validation
-     * @param array  $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
-     * @param string $defaultEngine        default engine (twig, php ..)
+     * @param array   $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
+     * @param int     $failedValidationCode The HTTP response status code for a failed validation
+     * @param int     $emptyContentCode     HTTP response status code when the view data is null
+     * @param Boolean $serializeNull        Whether or not to serialize null view data
+     * @param array   $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
+     * @param string  $defaultEngine        default engine (twig, php ..)
      */
-    public function __construct(array $formats = null, $failedValidationCode = Codes::HTTP_BAD_REQUEST, array $forceRedirects = null, $defaultEngine = 'twig')
-    {
+    public function __construct(
+        array $formats = null,
+        $failedValidationCode = Codes::HTTP_BAD_REQUEST,
+        $emptyContentCode = Codes::HTTP_NO_CONTENT,
+        $serializeNull = false,
+        array $forceRedirects = null,
+        $defaultEngine = 'twig'
+    ) {
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
+        $this->emptyContentCode = $emptyContentCode;
+        $this->serializeNull = $serializeNull;
         $this->forceRedirects = (array) $forceRedirects;
         $this->defaultEngine = $defaultEngine;
     }
@@ -130,8 +150,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $form = false;
         }
 
-        return $form && $form->isBound() && !$form->isValid()
-            ? $this->failedValidationCode : Codes::HTTP_OK;
+        if ($form && $form->isBound() && !$form->isValid()) {
+            return $this->failedValidationCode;
+        }
+
+        return null !== $data ? Codes::HTTP_OK : $this->emptyContentCode;
     }
 
     /**
@@ -325,16 +348,21 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->createRedirectResponse($view, $location, $format);
         }
 
+        $content = null;
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
-        } else {
+        } elseif ($this->serializeNull || null !== $view->getData()) {
             $serializer = $this->getSerializer($view);
             $content = $serializer->serialize($view->getData(), $format);
         }
 
         $response = $view->getResponse();
-        $response->setContent($content);
         $response->setStatusCode($this->getStatusCode($view));
+
+        if (null !== $content) {
+            $response->setContent($content);
+        }
+
         if (!$response->headers->has('Content-Type')) {
             $response->headers->set('Content-Type', $request->getMimeType($format));
         }

@@ -79,6 +79,13 @@ class FOSRestExtension extends Extension
         }
         $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
 
+        if (!is_numeric($config['view']['empty_content'])) {
+            $config['view']['empty_content'] = constant('\FOS\Rest\Util\Codes::'.$config['view']['empty_content']);
+        }
+        $container->setParameter($this->getAlias().'.empty_content', $config['view']['empty_content']);
+
+        $container->setParameter($this->getAlias().'.serialize_null', $config['view']['serialize_null']);
+
         if (!empty($config['view']['view_response_listener'])) {
             $loader->load('view_response_listener.xml');
             $container->setParameter($this->getAlias().'.view_response_listener.force_view', 'force' === $config['view']['view_response_listener']);
