@@ -48,6 +48,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     protected $failedValidationCode;
 
     /**
+     * @param int Forces a 204 HTTP response status code when the view data is empty
+     */
+    protected $forceNoContentCode;
+
+    /**
      * @var array if to force a redirect for the given key format, with value being the status code to use
      */
     protected $forceRedirects;
@@ -60,15 +65,22 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Constructor
      *
-     * @param array  $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
-     * @param int    $failedValidationCode The HTTP response status code for a failed validation
-     * @param array  $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
-     * @param string $defaultEngine        default engine (twig, php ..)
+     * @param array   $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
+     * @param int     $failedValidationCode The HTTP response status code for a failed validation
+     * @param Boolean $forceNoContentCode   Forces a 204 HTTP response status code when the view data is empty
+     * @param array   $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
+     * @param string  $defaultEngine        default engine (twig, php ..)
      */
-    public function __construct(array $formats = null, $failedValidationCode = Codes::HTTP_BAD_REQUEST, array $forceRedirects = null, $defaultEngine = 'twig')
-    {
+    public function __construct(
+        array $formats = null,
+        $failedValidationCode = Codes::HTTP_BAD_REQUEST,
+        $forceNoContentCode = false,
+        array $forceRedirects = null,
+        $defaultEngine = 'twig'
+    ) {
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
+        $this->forceNoContentCode = $forceNoContentCode;
         $this->forceRedirects = (array) $forceRedirects;
         $this->defaultEngine = $defaultEngine;
     }
@@ -134,7 +146,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->failedValidationCode;
         }
 
-        return null !== $data ? Codes::HTTP_OK : Codes::HTTP_NO_CONTENT;
+        return null !== $data ? Codes::HTTP_OK : ($this->forceNoContentCode ? Codes::HTTP_NO_CONTENT : Codes::HTTP_OK);
     }
 
     /**

@@ -130,6 +130,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
+                        ->booleanNode('force_no_content_code')->defaultFalse()->end()
                     ->end()
                 ->end()
             ->end();

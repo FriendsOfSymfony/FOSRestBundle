@@ -109,6 +109,19 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->container->hasDefinition('fos_rest.view_response_listener'));
     }
 
+    public function testViewForceNoContentCodeDefault()
+    {
+        $this->extension->load(array(), $this->container);
+        $this->assertFalse($this->container->getParameter('fos_rest.force_no_content_code'));
+    }
+
+    public function testViewForceNoContentCodeIsTrue()
+    {
+        $config = array('fos_rest' => array('view' => array('force_no_content_code' => true)));
+        $this->extension->load($config, $this->container);
+        $this->assertTrue($this->container->getParameter('fos_rest.force_no_content_code'));
+    }
+
     /**
      * Test that extension loads properly.
      */

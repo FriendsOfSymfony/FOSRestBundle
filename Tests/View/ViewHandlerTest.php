@@ -67,7 +67,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatusCodeDataProvider
      */
-    public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled)
+    public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled, $forceNoContentCode)
     {
         $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\ViewHandler', 'getStatusCode');
         $reflectionMethod->setAccessible(true);
@@ -87,27 +87,28 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         }
         $view =  new View($data ? $data : null);
 
-        $viewHandler = new ViewHandler(array(), $expected);
+        $viewHandler = new ViewHandler(array(), $expected, $forceNoContentCode);
         $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view));
     }
 
     public static function getStatusCodeDataProvider()
     {
         return array(
-            'no data' => array(Codes::HTTP_NO_CONTENT, false, false, false, 0, 0),
-            'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0),
-            'form key form is bound and invalid' => array(403, true, true, false, 1, 1),
-            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1),
-            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1),
+            'no data' => array(Codes::HTTP_OK, false, false, false, 0, 0, 0),
+            'no data with 204' => array(Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, 1),
+            'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0, 0),
+            'form key form is bound and invalid' => array(403, true, true, false, 1, 1, 0),
+            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, 0),
+            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, 0)
         );
     }
 
     /**
      * @dataProvider createResponseWithLocationDataProvider
      */
-    public function testCreateResponseWithLocation($expected, $format, $forceRedirects)
+    public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $forceNoContentCode)
     {
-        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceRedirects);
+        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceNoContentCode, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -119,10 +120,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseWithLocationDataProvider()
     {
         return array(
-            'empty force redirects' => array(204, 'xml', array('json' => 403)),
-            'force redirects response is redirect' => array(204, 'json', array()),
-            'force redirects response not redirect' => array(403, 'json', array('json' => 403)),
-            'html and redirect' => array(301, 'html', array('html' => 301)),
+            'empty force redirects' => array(200, 'xml', array('json' => 403), 0),
+            'empty force redirects with 204' => array(204, 'xml', array('json' => 403), 1),
+            'force redirects response is redirect' => array(200, 'json', array(), 0),
+            'force redirects response not redirect' => array(403, 'json', array('json' => 403), 0),
+            'html and redirect' => array(301, 'html', array('html' => 301), 0),
         );
     }
 
