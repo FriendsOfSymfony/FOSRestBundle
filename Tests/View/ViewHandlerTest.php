@@ -67,7 +67,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatusCodeDataProvider
      */
-    public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled, $forceNoContentCode)
+    public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled, $noContentCode)
     {
         $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\ViewHandler', 'getStatusCode');
         $reflectionMethod->setAccessible(true);
@@ -87,28 +87,28 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         }
         $view =  new View($data ? $data : null);
 
-        $viewHandler = new ViewHandler(array(), $expected, $forceNoContentCode);
+        $viewHandler = new ViewHandler(array(), $expected, $noContentCode);
         $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view));
     }
 
     public static function getStatusCodeDataProvider()
     {
         return array(
-            'no data' => array(Codes::HTTP_OK, false, false, false, 0, 0, 0),
-            'no data with 204' => array(Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, 1),
-            'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0, 0),
-            'form key form is bound and invalid' => array(403, true, true, false, 1, 1, 0),
-            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, 0),
-            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, 0)
+            'no data' => array(Codes::HTTP_OK, false, false, false, 0, 0, Codes::HTTP_OK),
+            'no data with 204' => array(Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, Codes::HTTP_NO_CONTENT),
+            'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0, Codes::HTTP_OK),
+            'form key form is bound and invalid' => array(403, true, true, false, 1, 1, Codes::HTTP_OK),
+            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK),
+            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK)
         );
     }
 
     /**
      * @dataProvider createResponseWithLocationDataProvider
      */
-    public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $forceNoContentCode)
+    public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $noContentCode)
     {
-        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $forceNoContentCode, false, $forceRedirects);
+        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $noContentCode, false, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -120,11 +120,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseWithLocationDataProvider()
     {
         return array(
-            'empty force redirects' => array(200, 'xml', array('json' => 403), 0),
-            'empty force redirects with 204' => array(204, 'xml', array('json' => 403), 1),
-            'force redirects response is redirect' => array(200, 'json', array(), 0),
-            'force redirects response not redirect' => array(403, 'json', array('json' => 403), 0),
-            'html and redirect' => array(301, 'html', array('html' => 301), 0),
+            'empty force redirects' => array(200, 'xml', array('json' => 403), Codes::HTTP_OK),
+            'empty force redirects with 204' => array(204, 'xml', array('json' => 403), Codes::HTTP_NO_CONTENT),
+            'force redirects response is redirect' => array(200, 'json', array(), Codes::HTTP_OK),
+            'force redirects response not redirect' => array(403, 'json', array('json' => 403), Codes::HTTP_OK),
+            'html and redirect' => array(301, 'html', array('html' => 301), Codes::HTTP_OK),
         );
     }
 
@@ -213,11 +213,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         );
     }
     /**
-     * @dataProvider createShouldSerializeNullDataProvider
+     * @dataProvider createSerializeNullDataProvider
      */
-    public function testShouldSerializeNull($expected, $shouldSerializeNull)
+    public function testSerializeNull($expected, $serializeNull)
     {
-        $viewHandler = new ViewHandler(array('json' => false), 404, 200, $shouldSerializeNull);
+        $viewHandler = new ViewHandler(array('json' => false), 404, 200, $serializeNull);
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
 
         $viewHandler->setContainer($container);
@@ -227,7 +227,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        if ($shouldSerializeNull) {
+        if ($serializeNull) {
             $serializer
                 ->expects($this->once())
                 ->method('serialize')
@@ -252,7 +252,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $response->getContent());
     }
 
-    public static function createShouldSerializeNullDataProvider()
+    public static function createSerializeNullDataProvider()
     {
         return array(
             'should serialize null'     => array("null", true),

@@ -109,30 +109,30 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->container->hasDefinition('fos_rest.view_response_listener'));
     }
 
-    public function testViewForceNoContentCodeDefault()
+    public function testForceEmptyContentDefault()
     {
         $this->extension->load(array(), $this->container);
-        $this->assertFalse($this->container->getParameter('fos_rest.force_no_content_code'));
+        $this->assertEquals(204, $this->container->getParameter('fos_rest.empty_content'));
     }
 
-    public function testViewForceNoContentCodeIsTrue()
+    public function testForceEmptyContentIs200()
     {
-        $config = array('fos_rest' => array('view' => array('force_no_content_code' => true)));
+        $config = array('fos_rest' => array('view' => array('empty_content' => 200)));
         $this->extension->load($config, $this->container);
-        $this->assertTrue($this->container->getParameter('fos_rest.force_no_content_code'));
+        $this->assertEquals(200, $this->container->getParameter('fos_rest.empty_content'));
     }
 
-    public function testViewShouldSerializeNullDefault()
+    public function testViewSerializeNullDefault()
     {
         $this->extension->load(array(), $this->container);
-        $this->assertFalse($this->container->getParameter('fos_rest.should_serialize_null'));
+        $this->assertFalse($this->container->getParameter('fos_rest.serialize_null'));
     }
 
-    public function testViewShouldSerializeNullIsTrue()
+    public function testViewSerializeNullIsTrue()
     {
-        $config = array('fos_rest' => array('view' => array('should_serialize_null' => true)));
+        $config = array('fos_rest' => array('view' => array('serialize_null' => true)));
         $this->extension->load($config, $this->container);
-        $this->assertTrue($this->container->getParameter('fos_rest.should_serialize_null'));
+        $this->assertTrue($this->container->getParameter('fos_rest.serialize_null'));
     }
 
     /**
