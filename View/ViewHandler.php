@@ -130,8 +130,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $form = false;
         }
 
-        return $form && $form->isBound() && !$form->isValid()
-            ? $this->failedValidationCode : Codes::HTTP_OK;
+        if ($form && $form->isBound() && !$form->isValid()) {
+            return $this->failedValidationCode;
+        }
+
+        return null !== $data ? Codes::HTTP_OK : Codes::HTTP_NO_CONTENT;
     }
 
     /**
@@ -325,16 +328,21 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->createRedirectResponse($view, $location, $format);
         }
 
+        $content = null;
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
-        } else {
+        } elseif (null !== ($data = $view->getData())) {
             $serializer = $this->getSerializer($view);
-            $content = $serializer->serialize($view->getData(), $format);
+            $content = $serializer->serialize($data, $format);
         }
 
         $response = $view->getResponse();
-        $response->setContent($content);
         $response->setStatusCode($this->getStatusCode($view));
+
+        if (null !== $content) {
+            $response->setContent($content);
+        }
+
         if (!$response->headers->has('Content-Type')) {
             $response->headers->set('Content-Type', $request->getMimeType($format));
         }
