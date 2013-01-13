@@ -54,7 +54,7 @@ class BodyListener
 
             $format = null === $contentType
                 ? $request->getRequestFormat()
-                : $request->getFormat($request->headers->get('Content-Type'));
+                : $request->getFormat($contentType);
 
             if (!$this->decoderProvider->supports($format)) {
                 return;
