@@ -54,7 +54,7 @@ Simply run assuming you have installed composer.phar or composer binary:
 $ composer require friendsofsymfony/rest-bundle
 ```
 
-### B) Configure the Autoloader (no needed for composer)
+### B) Configure the Autoloader (not needed for composer)
 
 Add the `FOS` namespace to your autoloader:
 
