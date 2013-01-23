@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -52,19 +51,23 @@ class AccessDeniedListener extends ExceptionListener
             return false;
         }
 
-        // TODO do we need to do content type negotiation here?
-        if (empty($this->formats[$event->getRequest()->getRequestFormat()])) {
+        $request = $event->getRequest();
+
+        if (empty($this->formats[$request->getRequestFormat()]) && empty($this->formats[$request->getContentType()])) {
             return false;
         }
 
         $handling = true;
 
         $exception = $event->getException();
+
         if ($exception instanceof AccessDeniedException) {
             $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
             $event->setException($exception);
             parent::onKernelException($event);
         }
+
+        $handling = false;
     }
 
     public static function getSubscribedEvents()

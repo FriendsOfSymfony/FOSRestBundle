@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Tests\EventListener;
 use FOS\RestBundle\EventListener\AccessDeniedListener;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -39,12 +38,35 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getFormatsDataProvider
+     *
      * @param array $formats
      */
-    public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpException($formats)
+    public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
     {
         $request = new Request();
-        $request->setRequestFormat(key($formats));
+        $request->setRequestFormat($format);
+
+        $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats);
+    }
+
+    /**
+     * @dataProvider getContentTypesDataProvider
+     * @param array $contentTypes
+     */
+    public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
+    {
+        $request = new Request();
+        $request->headers->set('Content-Type', $contentType);
+
+        $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats);
+    }
+
+    /**
+     * @param Request $request
+     * @param array $formats
+     */
+    private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats)
+    {
         $exception = new AccessDeniedException();
         $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
         $listener = new AccessDeniedListener($formats, 'foo');
@@ -75,7 +97,14 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
     public static function getFormatsDataProvider()
     {
         return array(
-            array(array('json'  => true)),
+            array(array('json'  => true), 'json'),
+        );
+    }
+
+    public static function getContentTypesDataProvider()
+    {
+        return array(
+            array(array('json'  => true), 'application/json'),
         );
     }
 }
