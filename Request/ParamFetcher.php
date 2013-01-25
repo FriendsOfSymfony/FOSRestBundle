@@ -89,11 +89,14 @@ class ParamFetcher implements ParamFetcherInterface
         $default  = $config->default;
         $groups = explode('|', $config->groups);
 
-        $isGroup = false;
-        foreach($groups as $group){
-            if(in_array($group, $this->groups)){
-                $isGroup = true;
-                break;
+        $isGroup = true;
+        if(isset($groups[0]) && $groups[0] != ''){
+            $isGroup = false;
+            foreach($groups as $group){
+                if(in_array($group, $this->groups)){
+                    $isGroup = true;
+                    break;
+                }
             }
         }
 
