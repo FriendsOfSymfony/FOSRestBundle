@@ -22,6 +22,8 @@ abstract class Param
     /** @var string */
     public $name;
     /** @var string */
+    public $groups;
+    /** @var string */
     public $requirements = '';
     /** @var string */
     public $default = null;
