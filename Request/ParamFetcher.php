@@ -48,7 +48,7 @@ class ParamFetcher implements ParamFetcherInterface
      */
     private $controller;
 
-    private $groups;
+    private $groups = array();
 
     /**
      * Initializes fetcher.
@@ -89,7 +89,6 @@ class ParamFetcher implements ParamFetcherInterface
         $default  = $config->default;
         $groups = explode('|', $config->groups);
 
-        $isGroup = true;
         if(isset($groups[0]) && $groups[0] != ''){
             $isGroup = false;
             foreach($groups as $group){
@@ -98,10 +97,9 @@ class ParamFetcher implements ParamFetcherInterface
                     break;
                 }
             }
-        }
-
-        if(!$isGroup){
-            return $default;
+            if(!$isGroup){
+                return $default;
+            }
         }
 
         if ($config->array) {
