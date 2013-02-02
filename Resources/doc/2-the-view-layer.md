@@ -2,9 +2,9 @@ Step 2: The view layer
 ======================
 ### Introduction
 
-The view layer makes it possible to write format agnostic controllers, by
-placing a layer between the Controller and the generation of the final output
-via the templating or serializer.
+The view layer makes it possible to write `format` (html, json, xml, etc) agnostic
+controllers, by placing a layer between the Controller and the generation of the
+final output via the templating or serializer.
 
 In your controller action you will then need to create a ``View`` instance that
 is then passed to the ``fos_rest.view_handler`` service for processing. The
