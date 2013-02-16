@@ -32,11 +32,11 @@
         "symfony/form": ">=2.1,<2.3-dev",
         "symfony/yaml": ">=2.1,<2.3-dev",
         "symfony/security": ">=2.1,<2.3-dev",
-        "jms/serializer-bundle": "1.0.*"
+        "jms/serializer-bundle": "0.11.*"
     },
     
     "conflict": {
-        "jms/serializer-bundle": "<1.0-dev"
+        "jms/serializer-bundle": "<0.11-dev"
     },
 
     "suggest": {
