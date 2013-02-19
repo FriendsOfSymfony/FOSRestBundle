@@ -355,9 +355,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $handler = new ViewHandler();
 
         $view = new View();
-        $view->setData($viewData);
+        $view->setData("Test with accent : déjà");
 
-        $this->assertEquals($expected, $handler->prepareTemplateParameters($view));
+        $this->assertEquals("Test with accent : déjà", $handler->prepareTemplateParameters($view));
     }
 
     public function prepareTemplateParametersDataProvider()
