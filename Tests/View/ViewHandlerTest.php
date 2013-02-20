@@ -85,10 +85,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         if ($data) {
             $data = array('form' => $form);
         }
-        $view =  new View($data ? $data : null);
+        $view = new View($data ? $data : null);
 
         $viewHandler = new ViewHandler(array(), $expected, $noContentCode);
-        $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view));
+        $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view, $view->getData()));
     }
 
     public static function getStatusCodeDataProvider()

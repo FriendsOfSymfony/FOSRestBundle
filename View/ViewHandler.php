@@ -132,10 +132,11 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * configuration if the form instance has errors.
      *
      * @param View $view view instance
+     * @param mixed $content
      *
      * @return int HTTP status code
      */
-    protected function getStatusCode(View $view)
+    protected function getStatusCode(View $view, $content = null)
     {
         if (null !== ($code = $view->getStatusCode())) {
             return $code;
@@ -154,7 +155,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->failedValidationCode;
         }
 
-        return null !== $data ? Codes::HTTP_OK : $this->emptyContentCode;
+        return null !== $content ? Codes::HTTP_OK : $this->emptyContentCode;
     }
 
     /**
@@ -262,14 +263,16 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function createRedirectResponse(View $view, $location, $format)
     {
-        $code = isset($this->forceRedirects[$format])
-            ? $this->forceRedirects[$format] : $this->getStatusCode($view);
-
+        $content = null;
         $response = $view->getResponse();
         if ('html' === $format && isset($this->forceRedirects[$format])) {
             $redirect = new RedirectResponse($location);
-            $response->setContent($redirect->getContent());
+            $content = $redirect->getContent();
+            $response->setContent($content);
         }
+
+        $code = isset($this->forceRedirects[$format])
+            ? $this->forceRedirects[$format] : $this->getStatusCode($view, $content);
 
         $response->setStatusCode($code);
         $response->headers->set('Location', $location);
@@ -357,7 +360,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
 
         $response = $view->getResponse();
-        $response->setStatusCode($this->getStatusCode($view));
+        $response->setStatusCode($this->getStatusCode($view, $content));
 
         if (null !== $content) {
             $response->setContent($content);
