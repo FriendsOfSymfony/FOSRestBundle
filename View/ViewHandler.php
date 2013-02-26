@@ -13,6 +13,7 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -192,17 +193,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $serializer = $this->container->get('fos_rest.serializer');
 
         if ($view && $serializer instanceof Serializer) {
-            $groups = $view->getSerializerGroups() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.groups');
-            $version = $view->getSerializerVersion() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.version');
-
-            if ($groups && $version) {
-                $serializer->setExclusionStrategy(new GroupsVersionExclusionStrategy($groups, $version));
-            } elseif ($groups) {
-                $serializer->setGroups($groups);
-            } elseif ($version) {
-                $serializer->setVersion($version);
-            }
-
             $callback = $view->getSerializerCallback();
             if ($callback) {
                 call_user_func($callback, $this, $serializer);
@@ -210,6 +200,35 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
 
         return $serializer;
+    }
+
+    /**
+     * Creates a JMS\Serializer\SerializationContext and intializes it with
+     * the view exclusion strategies, groups & versions
+     *
+     * @param View       $view
+     * @param Serializer $serializer
+     *
+     * @return SerializationContext
+     */
+    public function getSerializationContext(Serializer $serializer, View $view = null)
+    {
+        $context = new SerializationContext();
+
+        if ($view && $serializer instanceof Serializer) {
+            $groups = $view->getSerializerGroups() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.groups');
+            $version = $view->getSerializerVersion() ?: $this->container->getParameter('fos_rest.serializer.exclusion_strategy.version');
+
+            if ($groups && $version) {
+                $context->setExclusionStrategy(new GroupsVersionExclusionStrategy($groups, $version));
+            } elseif ($groups) {
+                $context->setGroups($groups);
+            } elseif ($version) {
+                $context->setVersion($version);
+            }
+        }
+
+        return $context;
     }
 
     /**
@@ -356,7 +375,8 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $content = $this->renderTemplate($view, $format);
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $serializer = $this->getSerializer($view);
-            $content = $serializer->serialize($view->getData(), $format);
+            $context = $this->getSerializationContext($serializer, $view);
+            $content = $serializer->serialize($view->getData(), $format, $context);
         }
 
         $response = $view->getResponse();
