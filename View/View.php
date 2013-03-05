@@ -90,6 +90,7 @@ class View
      * @param mixed   $data
      * @param integer $statusCode
      * @param array   $headers
+     * @return \FOS\RestBundle\View\View
      */
     public static function create($data = null, $statusCode = null, array $headers = array())
     {
