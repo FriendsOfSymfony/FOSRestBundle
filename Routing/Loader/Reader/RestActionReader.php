@@ -15,7 +15,7 @@ use Doctrine\Common\Annotations\Reader;
 
 use Symfony\Component\Routing\Route;
 
-use FOS\RestBundle\Util\Pluralization;
+use Doctrine\Common\Inflector\Inflector;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Request\ParamReader;
 
@@ -243,7 +243,7 @@ class RestActionReader
         ) {
             $httpMethod = substr($httpMethod, 1);
             if (!empty($resource)) {
-                $resource[count($resource)-1] = Pluralization::pluralize(end($resource));
+                $resource[count($resource)-1] = Inflector::pluralize(end($resource));
             }
         }
 
@@ -336,7 +336,7 @@ class RestActionReader
             if (isset($arguments[$i])) {
                 if (null !== $resource) {
                     $urlParts[] =
-                        strtolower(Pluralization::pluralize($resource))
+                        strtolower(Inflector::pluralize($resource))
                         .'/{'.$arguments[$i]->getName().'}';
                 } else {
                     $urlParts[] = '{'.$arguments[$i]->getName().'}';
@@ -345,7 +345,7 @@ class RestActionReader
                 if ((0 === count($arguments) && !in_array($httpMethod, $this->availableHTTPMethods))
                     || 'new' === $httpMethod
                 ) {
-                    $urlParts[] = Pluralization::pluralize(strtolower($resource));
+                    $urlParts[] = Inflector::pluralize(strtolower($resource));
                 } else {
                     $urlParts[] = strtolower($resource);
                 }
