@@ -66,6 +66,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('templating')->defaultValue('templating')->end()
                         ->scalarNode('serializer')->defaultValue('jms_serializer.serializer')->end()
                         ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
+                        ->scalarNode('inflector')->defaultValue('fos_rest.inflector.doctrine')->end()
                     ->end()
                 ->end()
                 ->arrayNode('serializer')
