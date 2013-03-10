@@ -17,12 +17,12 @@ namespace FOS\RestBundle\Util\Inflector;
  */
 interface InflectorInterface
 {
-	/**
-	 * Pluralizes noun
-	 * 
-	 * @param string $word noun to pluralize
-	 * 
-	 * @return string plural noun
-	 */
-	public function pluralize($word);
+    /**
+     * Pluralizes noun
+     * 
+     * @param string $word noun to pluralize
+     * 
+     * @return string plural noun
+     */
+    public function pluralize($word);
 }

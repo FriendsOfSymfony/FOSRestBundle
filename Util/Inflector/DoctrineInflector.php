@@ -19,8 +19,8 @@ use Doctrine\Common\Inflector\Inflector;
  */
 class DoctrineInflector implements InflectorInterface
 {
-	public function pluralize($word)
-	{
-		return Inflector::pluralize($word);
-	}
+    public function pluralize($word)
+    {
+        return Inflector::pluralize($word);        
+    }
 }

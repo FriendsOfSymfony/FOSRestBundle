@@ -28,7 +28,7 @@ class RestActionReader
 {
     private $annotationReader;
     private $paramReader;
-	private $inflector;
+    private $inflector;
 
     private $routePrefix;
     private $namePrefix;
@@ -47,7 +47,7 @@ class RestActionReader
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
-		$this->inflector = $inflector;
+        $this->inflector = $inflector;
     }
 
     /**
