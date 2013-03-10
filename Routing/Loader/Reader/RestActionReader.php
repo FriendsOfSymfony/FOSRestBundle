@@ -15,7 +15,7 @@ use Doctrine\Common\Annotations\Reader;
 
 use Symfony\Component\Routing\Route;
 
-use Doctrine\Common\Inflector\Inflector;
+use FOS\RestBundle\Util\Inflector\InflectorInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Request\ParamReader;
 
@@ -43,7 +43,7 @@ class RestActionReader
      * @param Reader           $annotationReader annotation reader
      * @param queryParamReader $queryParamReader query param reader
      */
-    public function __construct(Reader $annotationReader, ParamReader $paramReader, Inflector $inflector)
+    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector)
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
