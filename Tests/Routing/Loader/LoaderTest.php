@@ -19,7 +19,7 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader;
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
 use FOS\RestBundle\Request\ParamReader;
-use Doctrine\Common\Inflector\Inflector;
+use FOS\RestBundle\Util\Inflector\DoctrineInflector;
 
 /**
  * Base Loader testing class.
@@ -57,7 +57,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 
         $annotationReader = $this->getAnnotationReader();
         $paramReader = new ParamReader($annotationReader);
-		$inflector = new Inflector();
+		$inflector = new DoctrineInflector();
 
         $ar = new RestActionReader($annotationReader, $paramReader, $inflector);
         $cr = new RestControllerReader($ar, $annotationReader);
