@@ -28,10 +28,10 @@
     },
 
     "require-dev": {
-        "sensio/framework-extra-bundle":  ">=2.1,<2.3-dev",
-        "symfony/form": ">=2.1,<2.3-dev",
-        "symfony/yaml": ">=2.1,<2.3-dev",
-        "symfony/security": ">=2.1,<2.3-dev",
+        "sensio/framework-extra-bundle":  ">=2.1,<2.4-dev",
+        "symfony/form": ">=2.1,<2.4-dev",
+        "symfony/yaml": ">=2.1,<2.4-dev",
+        "symfony/security": ">=2.1,<2.4-dev",
         "jms/serializer-bundle": "0.11.*"
     },
     
