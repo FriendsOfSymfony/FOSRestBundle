@@ -28,6 +28,7 @@ class RestActionReader
 {
     private $annotationReader;
     private $paramReader;
+	private $inflector;
 
     private $routePrefix;
     private $namePrefix;
@@ -42,10 +43,11 @@ class RestActionReader
      * @param Reader           $annotationReader annotation reader
      * @param queryParamReader $queryParamReader query param reader
      */
-    public function __construct(Reader $annotationReader, ParamReader $paramReader)
+    public function __construct(Reader $annotationReader, ParamReader $paramReader, Inflector $inflector)
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
+		$this->inflector = $inflector;
     }
 
     /**
@@ -243,7 +245,7 @@ class RestActionReader
         ) {
             $httpMethod = substr($httpMethod, 1);
             if (!empty($resource)) {
-                $resource[count($resource)-1] = Inflector::pluralize(end($resource));
+                $resource[count($resource)-1] = $this->inflector->pluralize(end($resource));
             }
         }
 
@@ -336,7 +338,7 @@ class RestActionReader
             if (isset($arguments[$i])) {
                 if (null !== $resource) {
                     $urlParts[] =
-                        strtolower(Inflector::pluralize($resource))
+                        strtolower($this->inflector->pluralize($resource))
                         .'/{'.$arguments[$i]->getName().'}';
                 } else {
                     $urlParts[] = '{'.$arguments[$i]->getName().'}';
@@ -345,7 +347,7 @@ class RestActionReader
                 if ((0 === count($arguments) && !in_array($httpMethod, $this->availableHTTPMethods))
                     || 'new' === $httpMethod
                 ) {
-                    $urlParts[] = Inflector::pluralize(strtolower($resource));
+                    $urlParts[] = $this->inflector->pluralize(strtolower($resource));
                 } else {
                     $urlParts[] = strtolower($resource);
                 }
