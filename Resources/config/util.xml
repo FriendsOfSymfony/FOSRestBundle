@@ -4,9 +4,11 @@
 
     <parameters>
         <parameter key="fos_rest.format_negotiator.class">FOS\Rest\Util\FormatNegotiator</parameter>
+        <parameter key="fos_rest.inflector.class">FOS\RestBundle\Util\Inflector\DoctrineInflector</parameter>
     </parameters>
 
     <services>
         <service id="fos_rest.format_negotiator" class="%fos_rest.format_negotiator.class%" public="true" />
+        <service id="fos_rest.inflector.doctrine" class="%fos_rest.inflector.class%" />
     </services>
 </container>
