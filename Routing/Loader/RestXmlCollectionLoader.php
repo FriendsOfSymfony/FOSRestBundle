@@ -80,8 +80,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
                     $this->collectionParents[$name] = $parents;
                 }
-
-                $collection->addCollection($imported, $prefix);
+				
+                $imported->addPrefix($prefix);
+                $collection->addCollection($imported);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf('Unable to parse tag "%s"', $node->tagName));
