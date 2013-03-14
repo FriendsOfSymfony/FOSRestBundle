@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Request;
 
+use FOS\Rest\Util\Codes;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
@@ -112,7 +113,7 @@ class ParamFetcher implements ParamFetcherInterface
 
             if (null !== $failMessage) {
                 if ($strict) {
-                    throw new \RuntimeException($failMessage);
+                    throw new HttpException(Codes::HTTP_BAD_REQUEST, $failMessage);
                 }
 
                 return $default;
@@ -129,7 +130,7 @@ class ParamFetcher implements ParamFetcherInterface
         if (!is_scalar($param)) {
             if (!$nullable) {
                 if ($strict) {
-                    throw new \RuntimeException(sprintf("Query parameter value '%s' is not a scalar", $param));
+                    throw new HttpException(Codes::HTTP_BAD_REQUEST, sprintf("Query parameter value '%s' is not a scalar", $param));
                 }
 
                 return $this->cleanParamWithRequirements($config, $param, $strict);
@@ -160,7 +161,7 @@ class ParamFetcher implements ParamFetcherInterface
             if ($strict) {
                 $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
-                throw new HttpException(400, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
+                throw new HttpException(Codes::HTTP_BAD_REQUEST, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
             }
 
             return null === $default ? '' : $default;

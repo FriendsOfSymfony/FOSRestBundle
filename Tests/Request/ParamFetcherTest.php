@@ -11,15 +11,14 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Request\QueryParamReader;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * QueryParamReader test.
+ * ParamFetcher test.
  *
  * @author Alexander <iam.asm89@gmail.com>
  * @author Boris Guéry <guery.b@gmail.com>
@@ -232,7 +231,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         try {
             $queryFetcher->get('boozz', true);
             $this->fail('Fetching get() in strict mode with no default value did not throw an exception');
-        } catch (\RuntimeException $e) {}
+        } catch (HttpException $e) {}
 
         $queryFetcher = $this->getParamFetcher(array(), array());
         $queryFetcher->setController($this->controller);
@@ -252,16 +251,16 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             try {
                 $queryFetcher->get($param, true);
                 $this->fail('Fetching get() in strict mode did not throw an exception');
-            } catch (\RuntimeException $e) {
+            } catch (HttpException $e) {
                 try {
                     $queryFetcher->all(true);
                     $this->fail('Fetching all() in strict mode did not throw an exception');
-                } catch (\RuntimeException $e) {
+                } catch (HttpException $e) {
                     return;
                 }
             }
         } catch (\Exception $e) {
-            $this->fail('Fetching in strict mode did not throw an \RuntimeException');
+            $this->fail('Fetching in strict mode did not throw an Symfony\Component\HttpKernel\Exception\HttpException');
         }
     }
 
