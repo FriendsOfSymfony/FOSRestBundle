@@ -266,7 +266,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponse($expected, $format, $formats)
     {
         $viewHandler = new ViewHandler($formats);
-        $viewHandler->registerHandler('html', function($handler, $view, $request){return $view;});
+        $viewHandler->registerHandler('html', function(View $view, $request, $format){return $view;});
 
         $response = $viewHandler->handle(new View(null, $expected), new Request(), $format);
         $this->assertEquals($expected, $response->getStatusCode());
@@ -310,7 +310,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandleCustom()
     {
         $viewHandler = new ViewHandler(array());
-        $viewHandler->registerHandler('html', ($callback = function(){ return 'foo'; }));
+        $viewHandler->registerHandler('html', ($callback = function(View $view, Request $request, $format){ return 'foo'; }));
 
         $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
         $container
