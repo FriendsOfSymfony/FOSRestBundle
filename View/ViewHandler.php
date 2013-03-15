@@ -87,7 +87,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Registers a custom handler
      *
-     * The handler must have the following signature: handler($viewObject, $request, $response)
+     * The handler must have the following signature: handler(ViewHandler $viewHandler, View $view, Request $request, $format)
      * It can use the public methods of this class to retrieve the needed data and return a
      * Response object ready to be sent.
      *
