@@ -13,10 +13,12 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
+
+use JMS\Serializer\SerializationContext;
 
 use FOS\RestBundle\View\View;
 
@@ -87,7 +89,9 @@ class ViewResponseListener extends TemplateListener
                 $view->setStatusCode($configuration->getStatusCode());
             }
             if ($configuration->getSerializerGroups()) {
-                $view->setSerializerGroups($configuration->getSerializerGroups());
+                $context = $view->getSerializationContext() ?: new SerializationContext();
+                $context->setGroups($configuration->getSerializerGroups());
+                $view->setSerializationContext($context);
             }
         }
 

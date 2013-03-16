@@ -256,59 +256,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * this tests the new api of schmittjoh/serializer v0.11
-     */
-    public function testSerializationContext()
-    {
-        $view = new View();
-        $view->setSerializerCallback(array($this, '_testSerializerApiSerializerCallback'));
-
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
-
-        $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
-            ->setMethods(array('serialize'))
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $serializer
-            ->expects($this->once())
-            ->method('serialize')
-            ->will($this->returnValue(json_encode(array('test'))));
-
-        $container
-            ->expects($this->once())
-            ->method('get')
-            ->with('fos_rest.serializer')
-            ->will($this->returnValue($serializer));
-
-        $serializationContext = $this->getMockBuilder('\JMS\Serializer\SerializationContext')
-            ->setMethods(array('setExclusionStrategy', 'setVersion', 'setGroups'))
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $viewHandler = $this->getMockBuilder('\FOS\RestBundle\View\ViewHandler')
-            ->setMethods(array('getSerializationContext'))
-            ->setConstructorArgs(array(array('json' => false), 404, 200, true))
-            ->getMock();
-
-        $viewHandler
-            ->expects($this->once())
-            ->method('getSerializationContext')
-            ->will($this->returnValue($serializationContext));
-
-        $viewHandler->setContainer($container);
-
-        $response = $viewHandler->createResponse($view, new Request(), 'json');
-        $this->assertEquals('["test"]', $response->getContent());
-    }
-
-    public function _testSerializerApiSerializerCallback($viewHandler, $serializer)
-    {
-        $this->assertInstanceOf('FOS\RestBundle\View\ViewHandler', $viewHandler);
-        $this->assertInstanceOf('JMS\Serializer\Serializer', $serializer);
-    }
-
-    /**
      * @dataProvider createResponseDataProvider
      */
     public function testCreateResponse($expected, $format, $formats)
