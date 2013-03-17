@@ -14,6 +14,8 @@ namespace FOS\RestBundle\View;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 
+use JMS\Serializer\SerializationContext;
+
 /**
  * Default View implementation.
  *
@@ -63,21 +65,9 @@ class View
     private $route;
 
     /**
-     * @var string
+     * @var SerializationContext
      */
-    private $serializerVersion;
-
-    /**
-     *
-     * @var array
-     */
-    private $serializerGroups;
-
-    /**
-     *
-     * @var array
-     */
-    private $serializerCallback;
+    private $serializationContext;
 
     /**
      * @var Response
@@ -169,41 +159,13 @@ class View
     }
 
     /**
-     * set the serializer objects version
-     *
-     * @param  string $serializerVersion
+     * set the serialization context
+     * @param  SerializationContext $serializationContext
      * @return View
      */
-    public function setSerializerVersion($serializerVersion)
+    public function setSerializationContext(SerializationContext $serializationContext)
     {
-        $this->serializerVersion = $serializerVersion;
-
-        return $this;
-    }
-
-    /**
-     * set the serializer objects groups
-     * @param  array $serializerGroups
-     * @return View
-     */
-    public function setSerializerGroups($serializerGroups)
-    {
-        $this->serializerGroups = $serializerGroups;
-
-        return $this;
-    }
-
-    /**
-     * set the serializer callback
-     *
-     * function (\FOS\RestBundle\View\ViewHandler $viewHandler, \JMS\Serializer\SerializerInterface $serializer) { .. }
-     *
-     * @param  callable $serializerCallback
-     * @return View
-     */
-    public function setSerializerCallback($serializerCallback)
-    {
-        $this->serializerCallback = $serializerCallback;
+        $this->serializationContext = $serializationContext;
 
         return $this;
     }
@@ -409,32 +371,12 @@ class View
     }
 
     /**
-     * get the serializer version
+     * get the serialization context
      *
-     * @return string|null serializer version
+     * @return SerializationContext|null serialization context
      */
-    public function getSerializerVersion()
+    public function getSerializationContext()
     {
-        return $this->serializerVersion;
-    }
-
-    /**
-     * get the serializer groups
-     *
-     * @return array|null serializer groups
-     */
-    public function getSerializerGroups()
-    {
-        return $this->serializerGroups;
-    }
-
-    /**
-     * get the serializer callback
-     *
-     * @return callable|null serializer callback
-     */
-    public function getSerializerCallback()
-    {
-        return $this->serializerCallback;
+        return $this->serializationContext;
     }
 }

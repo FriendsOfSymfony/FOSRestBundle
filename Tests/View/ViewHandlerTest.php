@@ -153,18 +153,13 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue($templating));
         } else {
             $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
-                ->setMethods(array('serialize', 'setExclusionStrategy'))
+                ->setMethods(array('serialize'))
                 ->disableOriginalConstructor()
                 ->getMock();
             $serializer
                 ->expects($this->once())
                 ->method('serialize')
                 ->will($this->returnValue(var_export($expected, true)));
-
-            $serializer
-                ->expects($this->once())
-                ->method('setExclusionStrategy')
-                ->will($this->returnValue(null));
 
             $container
                 ->expects($this->once())
