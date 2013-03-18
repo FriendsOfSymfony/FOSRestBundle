@@ -36,7 +36,7 @@
     },
 
     "conflict": {
-        "jms/serializer-bundle": "<=0.11-dev"
+        "jms/serializer-bundle": "<0.12-dev"
     },
 
     "suggest": {
