@@ -71,7 +71,9 @@ the important ones for configuring the view:
 * ``setData($data)`` - Set the object graph or list of objects to serialize.
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
 * ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
-* ``setSerializationContext($context)`` - Set the serialization context (JMSSerializerBundle only).
+* ``setSerializerVersion($serializerVersion)`` - Set the serializer version to use (JMSSerializerBundle only).
+* ``setSerializerGroups($serializerGroups)`` - Set the serializer groups to use (JMSSerializerBundle only).
+* ``setSerializerCallback($serializerCallback)`` - Set the serializer callback to execute (JMSSerializerBundle only).
 * ``setTemplate($name)`` - Name of the template to use in case of HTML rendering.
 * ``setTemplateVar($name)`` - Name of the variable the data is in, when passed to HTML template. Defaults to ``'data'``.
 * ``setEngine($name)`` - Name of the engine to render HTML template. Can be autodetected.
