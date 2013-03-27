@@ -67,7 +67,7 @@ class AccessDeniedListener extends ExceptionListener
             $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
             $event->setException($exception);
             parent::onKernelException($event);
-        } elseif($exception instanceof AuthenticationException) {
+        } elseif ($exception instanceof AuthenticationException) {
             $exception = new HttpException(401, 'You are not authenticated', $exception);
             $event->setException($exception);
             parent::onKernelException($event);
