@@ -4,7 +4,14 @@ Step 2: The view layer
 
 The view layer makes it possible to write `format` (html, json, xml, etc) agnostic
 controllers, by placing a layer between the Controller and the generation of the
-final output via the templating or serializer.
+final output via the templating or a serializer.
+
+The Bundle works with both the Symfony2 core serializer:
+http://symfony.com/doc/2.0/components/serializer.html
+
+But also with the more sophisticated serializer by Johannes Schmitt:
+https://github.com/schmittjoh/serializer
+https://github.com/schmittjoh/JMSSerializerBundle
 
 In your controller action you will then need to create a ``View`` instance that
 is then passed to the ``fos_rest.view_handler`` service for processing. The
@@ -71,7 +78,9 @@ the important ones for configuring the view:
 * ``setData($data)`` - Set the object graph or list of objects to serialize.
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
 * ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
-* ``setSerializationContext($context)`` - Set the serialization context (JMSSerializerBundle only).
+* ``setSerializerVersion($version)`` - Set the version of the serialization format to use.
+* ``setSerializerGroups($groups)`` - Set the groups for serialization.
+* ``setSerializerCallback($callback)`` - Set a callback that receives the serializer for configuration purposes.
 * ``setTemplate($name)`` - Name of the template to use in case of HTML rendering.
 * ``setTemplateVar($name)`` - Name of the variable the data is in, when passed to HTML template. Defaults to ``'data'``.
 * ``setEngine($name)`` - Name of the engine to render HTML template. Can be autodetected.
@@ -144,12 +153,11 @@ custom handler for a specific format. The custom handler can either be
 registered by defining a custom service, via a compiler pass or it can even be
 registered from inside the controller action.
 
-The callable will receive 4 parameters:
+The callable will receive 3 parameters:
 
  * the instance of the ``ViewHandler``
  * the instance of the ``View``
  * the instance of the ``Request``
- * the request format
 
 Note there are several public methods on the ``ViewHandler`` which can be helpful:
 
@@ -157,7 +165,6 @@ Note there are several public methods on the ``ViewHandler`` which can be helpfu
  * ``createResponse()``
  * ``createRedirectResponse()``
  * ``renderTemplate()``
- * ``getSerializer()``
 
 There is an example inside LiipHelloBundle to show how to register a custom handler:
 https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
