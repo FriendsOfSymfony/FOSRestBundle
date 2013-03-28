@@ -30,11 +30,6 @@ class View
     private $data;
 
     /**
-     * @var int
-     */
-    private $statusCode;
-
-    /**
      * @var string|TemplateReference
      */
     private $template;
@@ -96,9 +91,9 @@ class View
      */
     public function __construct($data = null, $statusCode = null, array $headers = array())
     {
-        $this->data = $data;
-        $this->statusCode = $statusCode;
-        $this->templateVar = 'data';
+        $this->setData($data);
+        $this->setStatusCode($statusCode ?: 200);
+        $this->setTemplateVar('data');
         if (!empty($headers)) {
             $this->getResponse()->headers->replace($headers);
         }
@@ -153,7 +148,7 @@ class View
      */
     public function setStatusCode($code)
     {
-        $this->statusCode = $code;
+        $this->getResponse()->setStatusCode($code);
 
         return $this;
     }
@@ -283,7 +278,7 @@ class View
      */
     public function getStatusCode()
     {
-        return $this->statusCode;
+        return $this->getResponse()->getStatusCode();
     }
 
     /**
