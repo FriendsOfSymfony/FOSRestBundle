@@ -140,7 +140,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     protected function getStatusCode(View $view, $content = null)
     {
-        if (null !== ($code = $view->getStatusCode())) {
+        if (200 !== ($code = $view->getStatusCode())) {
             return $code;
         }
 
