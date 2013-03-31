@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * View annotation class.
  * @Annotation
+ * @Target("METHOD")
  */
 class View extends Template
 {

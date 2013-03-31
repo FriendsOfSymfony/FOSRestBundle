@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * Represents a parameter that must be present in POST data.
  *
  * @Annotation
+ * @Target("METHOD")
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry    <guery.b@gmail.com>
  */
