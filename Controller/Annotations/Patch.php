@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 /**
  * PATCH Route annotation class.
  * @Annotation
+ * @Target("METHOD")
  */
 class Patch extends Route
 {
