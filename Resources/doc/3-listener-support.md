@@ -369,9 +369,11 @@ fos_rest:
 
 By default it is the responsibility of firewall access points to deal with AccessDeniedExceptions.
 For example the ``form`` entry point will redirect to the login page. However for a RESTful application
-the proper thing to happen is to return a 403 HTTP status code. This listener is triggered before
-the normal exception listener and firewall entry points and forces returning a 403 for any of the
-formats configured.
+proper response HTTP status codes should be provided. This listener is triggered before the normal exception listener
+and firewall entry points and forces returning either a 403 or 401 status code for any of the formats configured.
+
+It will return 401 for `Symfony\Component\Security\Core\Exception\AuthenticationException` or 403 for
+`Symfony\Component\Security\Core\Exception\AccessDeniedException`.
 
 You need to enable this listener like this as it is disabled by default:
 

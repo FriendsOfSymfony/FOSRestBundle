@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * AccessDeniedListenerTest
@@ -92,6 +93,51 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new AccessDeniedListener($formats, 'foo');
         $listener->onKernelException($event);
         $this->assertSame($exception, $event->getException());
+    }
+
+    /**
+     * @dataProvider getFormatsDataProvider
+     * @param array $formats
+     * @param $format
+     */
+    public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
+    {
+        $request = new Request();
+        $request->setRequestFormat($format);
+
+        $this->doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest($request, $formats);
+    }
+
+    /**
+     * @dataProvider getContentTypesDataProvider
+     * @param array $formats
+     * @param $contentType
+     */
+    public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
+    {
+        $request = new Request();
+        $request->headers->set('Content-Type', $contentType);
+
+        $this->doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest($request, $formats);
+    }
+
+    /**
+     * @param Request $request
+     * @param array $formats
+     */
+    private function doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest(Request $request, array $formats)
+    {
+        $exception = new AuthenticationException();
+        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
+        $listener = new AccessDeniedListener($formats, 'foo');
+        // store the current error_log, and disable it temporarily
+        $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
+        $listener->onKernelException($event);
+        // restore the old error_log
+        ini_set('error_log', $errorLog);
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\HttpException', $event->getException());
+        $this->assertEquals(401, $event->getException()->getStatusCode());
+        $this->assertEquals('You are not authenticated', $event->getException()->getMessage());
     }
 
     public static function getFormatsDataProvider()
