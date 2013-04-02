@@ -14,9 +14,11 @@ namespace FOS\RestBundle\EventListener;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * This listener handles ensures that for specific formats AccessDeniedExceptions
@@ -63,6 +65,10 @@ class AccessDeniedListener extends ExceptionListener
 
         if ($exception instanceof AccessDeniedException) {
             $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
+            $event->setException($exception);
+            parent::onKernelException($event);
+        } elseif ($exception instanceof AuthenticationException) {
+            $exception = new HttpException(401, 'You are not authenticated', $exception);
             $event->setException($exception);
             parent::onKernelException($event);
         }
