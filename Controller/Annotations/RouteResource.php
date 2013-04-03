@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 /**
  * RouteResource annotation class.
  * @Annotation
+ * @Target("CLASS")
  */
 class RouteResource
 {
