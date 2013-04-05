@@ -44,8 +44,10 @@ class RestActionReader
      *
      * @param Reader           $annotationReader annotation reader
      * @param queryParamReader $queryParamReader query param reader
+     * @param InflectorInterface $inflector
+     * @param boolean $includeFormat
      */
-    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat = null)
+    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat)
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
@@ -189,7 +191,7 @@ class RestActionReader
             if (!isset($annoRequirements['_method'])) {
                 $annoRequirements['_method'] = $requirements['_method'];
             }
-
+            
             $pattern      = $annotation->getPattern() ?: $pattern;
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
