@@ -59,7 +59,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         $paramReader = new ParamReader($annotationReader);
         $inflector = new DoctrineInflector();
 
-        $ar = new RestActionReader($annotationReader, $paramReader, $inflector);
+        $ar = new RestActionReader($annotationReader, $paramReader, $inflector, true);
         $cr = new RestControllerReader($ar, $annotationReader);
 
         return new RestRouteLoader($c, $l, $p, $cr, 'html');

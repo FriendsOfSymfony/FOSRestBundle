@@ -253,7 +253,19 @@ the standard *PATCH* or *PUT* endpoint.
 Of course it's possible and common to have sub or child resources. They are easily defined within the same controller by
 following the naming convention ``ResourceController::actionResourceSubResource()`` - as seen in the example above with
 ``UsersController::getUserCommentsAction()``. This is a good strategy to follow when the child resource needs the parent
-resource's ID in order to look up itself. 
+resource's ID in order to look up itself.
+
+### Optional {_format} in route
+
+By default, routes are generated with {_format} string. If you want to get clean urls (``/orders`` instead ``/orders.{_format}``)
+then all you have to do is add some configuration:
+
+```yml
+# app/config/config.yml
+fos_rest:
+    routing_loader:
+        include_format:       false
+```
 
 ## That was it!
 [Return to the index](index.md) or continue reading about [Automatic route generation: multiple RESTful controllers](6-automatic-route-generation_multiple-restful-controllers.md).
