@@ -187,7 +187,7 @@ class RestActionReader
                 $annoRequirements['_method'] = $requirements['_method'];
             }
 
-            $format = !empty($annoRequirements['_format']) ? '.{_format}' : '';
+            $format       = !empty($annoRequirements['_format']) ? '.{_format}' : '';
             $pattern      = $annotation->getPattern() ?: $pattern;
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
