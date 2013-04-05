@@ -12,6 +12,7 @@ fos_rest:
     allowed_methods_listener:  false
     routing_loader:
         default_format:       ~
+        include_format:       ~
     service:
         router:               router
         templating:           templating
