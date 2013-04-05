@@ -57,7 +57,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('default_format')->defaultNull()->end()
-                        ->scalarNode('include_format')->defaultFalse()->end()
+                        ->scalarNode('include_format')->defaultTrue()->end()
                     ->end()
                 ->end()
                 ->arrayNode('service')
