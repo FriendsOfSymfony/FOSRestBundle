@@ -30,6 +30,8 @@ class RestActionReader
     private $paramReader;
     private $inflector;
 
+    private $includeFormat;
+
     private $routePrefix;
     private $namePrefix;
     private $parents = array();
@@ -43,11 +45,12 @@ class RestActionReader
      * @param Reader           $annotationReader annotation reader
      * @param queryParamReader $queryParamReader query param reader
      */
-    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector)
+    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat = null)
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
         $this->inflector = $inflector;
+        $this->includeFormat = $includeFormat;
     }
 
     /**
@@ -174,10 +177,10 @@ class RestActionReader
         // generated parameters
         $routeName    = $this->namePrefix.strtolower($routeName);
         $pattern      = implode('/', $urlParts);
+        $pattern     .= $this->includeFormat === true ? '.{_format}' : null;
         $defaults     = array('_controller' => $method->getName());
         $requirements = array('_method' => strtoupper($httpMethod));
         $options      = array();
-        $format       = '';
 
         $annotation = $this->readRouteAnnotation($method);
         if ($annotation) {
@@ -187,7 +190,6 @@ class RestActionReader
                 $annoRequirements['_method'] = $requirements['_method'];
             }
 
-            $format       = !empty($annoRequirements['_format']) ? '.{_format}' : '';
             $pattern      = $annotation->getPattern() ?: $pattern;
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
@@ -196,7 +198,7 @@ class RestActionReader
 
         // add route to collection
         $collection->add($routeName, new Route(
-            $pattern.$format, $defaults, $requirements, $options
+            $pattern, $defaults, $requirements, $options
         ));
     }
 
