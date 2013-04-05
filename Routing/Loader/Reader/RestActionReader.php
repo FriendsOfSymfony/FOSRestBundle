@@ -191,7 +191,7 @@ class RestActionReader
             if (!isset($annoRequirements['_method'])) {
                 $annoRequirements['_method'] = $requirements['_method'];
             }
-            
+
             $pattern      = $annotation->getPattern() ?: $pattern;
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
