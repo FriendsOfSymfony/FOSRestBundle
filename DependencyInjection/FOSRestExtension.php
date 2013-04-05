@@ -92,6 +92,7 @@ class FOSRestExtension extends Extension
         }
 
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
+        $container->setParameter($this->getAlias().'.routing.loader.include_format', $config['routing_loader']['include_format']);
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
