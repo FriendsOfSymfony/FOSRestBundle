@@ -29,7 +29,7 @@ rate_user:
   requirements: {_method: POST, slug: '[a-z]+'}
 
 rate_user_comment:
-  pattern:      /users/{slug}/rate_comment/{id}.{_format}
+  pattern:      /users/{slug}/rate_comment/{id}
   controller:   ::rateUserCommentAction
   requirements: {_method: PATCH, slug: '[a-z]+', id: '\d+'}
 
