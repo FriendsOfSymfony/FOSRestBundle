@@ -177,6 +177,7 @@ class RestActionReader
         $defaults     = array('_controller' => $method->getName());
         $requirements = array('_method' => strtoupper($httpMethod));
         $options      = array();
+        $format       = '';
 
         $annotation = $this->readRouteAnnotation($method);
         if ($annotation) {
@@ -186,6 +187,7 @@ class RestActionReader
                 $annoRequirements['_method'] = $requirements['_method'];
             }
 
+            $format = !empty($annoRequirements['_format']) ? '.{_format}' : '';
             $pattern      = $annotation->getPattern() ?: $pattern;
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
@@ -194,7 +196,7 @@ class RestActionReader
 
         // add route to collection
         $collection->add($routeName, new Route(
-            $pattern.'.{_format}', $defaults, $requirements, $options
+            $pattern.$format, $defaults, $requirements, $options
         ));
     }
 
