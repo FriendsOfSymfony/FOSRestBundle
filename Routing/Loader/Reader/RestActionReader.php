@@ -192,7 +192,7 @@ class RestActionReader
                 $annoRequirements['_method'] = $requirements['_method'];
             }
 
-            $pattern      = $annotation->getPattern() ? $this->routePrefix . $annotation->getPattern() : $pattern;
+            $pattern      = $annotation->getPattern() !== null ? $this->routePrefix . $annotation->getPattern() : $pattern;
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
             $defaults     = array_merge($defaults, $annotation->getDefaults());
