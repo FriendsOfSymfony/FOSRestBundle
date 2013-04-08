@@ -179,7 +179,6 @@ class RestActionReader
         // generated parameters
         $routeName    = $this->namePrefix.strtolower($routeName);
         $pattern      = implode('/', $urlParts);
-        $pattern     .= $this->includeFormat === true ? '.{_format}' : null;
         $defaults     = array('_controller' => $method->getName());
         $requirements = array('_method' => strtoupper($httpMethod));
         $options      = array();
@@ -196,6 +195,10 @@ class RestActionReader
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
             $defaults     = array_merge($defaults, $annotation->getDefaults());
+        }
+
+        if ($this->includeFormat === true) {
+            $pattern .= '.{_format}';
         }
 
         // add route to collection
