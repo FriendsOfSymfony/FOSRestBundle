@@ -130,7 +130,11 @@ class ParamFetcher implements ParamFetcherInterface
         if (!is_scalar($param)) {
             if (!$nullable) {
                 if ($strict) {
-                    throw new HttpException(Codes::HTTP_BAD_REQUEST, sprintf("Query parameter value '%s' is not a scalar", $param));
+                    $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
+                    $problem = empty($param) ? 'empty' : 'not a scalar';
+
+                    throw new HttpException(Codes::HTTP_BAD_REQUEST,
+                        sprintf('%s parameter "%s" is %s', $paramType, $name, $problem));
                 }
 
                 return $this->cleanParamWithRequirements($config, $param, $strict);
