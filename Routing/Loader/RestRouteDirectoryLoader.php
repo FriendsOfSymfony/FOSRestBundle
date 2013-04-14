@@ -14,9 +14,6 @@ namespace FOS\RestBundle\Routing\Loader;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Routing\RouteCollection;
 
-use FOS\RestBundle\Routing\RestRouteCollection;
-use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
-
 /**
  * RestRouteDirectoryLoader Directory of REST-enabled controllers router loader.
  *
@@ -27,8 +24,8 @@ class RestRouteDirectoryLoader extends RestRouteLoader
     /**
      * Loads a Routes collection by parsing Controller method names from a directory of controllers.
      *
-     * @param string $controller Some identifier for the controller
-     * @param string $type       The resource type
+     * @param string $path   The path/resource where the controllers are located
+     * @param string $type   The resource type
      *
      * @return RouteCollection A RouteCollection instance
      */
