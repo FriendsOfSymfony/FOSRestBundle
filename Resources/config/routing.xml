@@ -59,7 +59,7 @@
             <argument type="service" id="annotation_reader" />
             <argument type="service" id="fos_rest.request.param_fetcher.reader" />
             <argument type="service" id="fos_rest.inflector" />
-            <argument>%fos_rest.routing.loader.include_format%</argument> 
+            <argument>%fos_rest.routing.loader.include_format%</argument>
         </service>
 
     </services>
