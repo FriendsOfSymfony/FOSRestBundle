@@ -15,7 +15,8 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * RestRouteDirectoryLoader Directory of REST-enabled controllers router loader.
+ * Directory of REST-enabled controllers router loader.
+ * Based mostly on: Symfony/Component/Routing/Loader/AnnotationDirectoryLoader.php
  *
  * @author Chad Sikorra <chad.sikorra@gmail.com>
  */
