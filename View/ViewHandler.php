@@ -274,11 +274,28 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        $response = $view->getResponse();
-        if ('html' === $format && isset($this->forceRedirects[$format])) {
-            $redirect = new RedirectResponse($location);
-            $content = $redirect->getContent();
-            $response->setContent($content);
+        
+        if ($view->getStatusCode() == Codes::HTTP_CREATED && $view->getData() != null) {
+	        if ($this->isFormatTemplating($format)) {
+	        	$content = $this->renderTemplate($view, $format);
+	        } elseif ($this->serializeNull || null !== $view->getData()) {
+	        	$serializer = $this->getSerializer($view);
+	        	$content = $serializer->serialize($view->getData(), $format);
+	        }        
+	        
+	        $response = $view->getResponse();
+	        $response->setStatusCode($this->getStatusCode($view, $content));
+	        
+	        if (null !== $content) {
+	        	$response->setContent($content);
+	        }	        
+        } else {
+	        $response = $view->getResponse();
+	        if ('html' === $format && isset($this->forceRedirects[$format])) {
+	            $redirect = new RedirectResponse($location);
+	            $content = $redirect->getContent();
+	            $response->setContent($content);
+	        }
         }
 
         $code = isset($this->forceRedirects[$format])
