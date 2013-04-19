@@ -29,6 +29,7 @@ class RestActionReader
     private $annotationReader;
     private $paramReader;
     private $inflector;
+    private $formats;
 
     private $includeFormat;
 
@@ -47,12 +48,13 @@ class RestActionReader
      * @param InflectorInterface $inflector
      * @param boolean $includeFormat
      */
-    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat)
+    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = array())
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
         $this->inflector = $inflector;
         $this->includeFormat = $includeFormat;
+        $this->formats = $formats;
     }
 
     /**
@@ -199,6 +201,10 @@ class RestActionReader
 
         if ($this->includeFormat === true) {
             $pattern .= '.{_format}';
+
+            if (!empty($this->formats)) {
+                $requirements['_format'] = implode('|', array_keys($this->formats));
+            }
         }
 
         // add route to collection
