@@ -93,10 +93,16 @@ class RestRouteLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
+        try {
+            $path = $this->locator->locate($resource);
+        } catch (\Exception $e) {
+            $path = null;
+        }
+
         return is_string($resource)
             && 'rest' === $type
-            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), array('xml', 'yml')
-        );
+            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), array('xml', 'yml'))
+            && !is_dir($path);
     }
 
     /**
@@ -106,7 +112,7 @@ class RestRouteLoader extends Loader
      *
      * @return array
      */
-    private function getControllerLocator($controller)
+    protected function getControllerLocator($controller)
     {
         $class  = null;
         $prefix = null;
