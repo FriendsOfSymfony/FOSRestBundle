@@ -150,3 +150,36 @@ With this configuration, route name would become:
 
 
 Say NO to name collisions!
+
+Directory of Annotated RESTful controllers
+==========================================
+
+If you have multiple controllers, it may often be convenient to import a whole directory rather
+than each individual controller. You can use the following syntax to import a whole directory:
+
+```yaml
+# app/config/routing.yml
+acme_hello:
+    type:        rest
+    resource:    "@AcmeHelloBundle/Controller/Api"
+    prefix:      /api/hello
+```
+
+You should use the `@NamePrefix` annotation on the controllers in the directory:
+
+```php
+<?php
+
+namespace Acme\HelloBundle\Controller\Api;
+
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+/**
+ * @Rest\NamePrefix("api_hello_")
+ */
+class FooController extends Controller
+{
+    ...
+}
+```
