@@ -160,6 +160,17 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * Test that it will support a controller but ignore a directory
+     */
+    public function testLoaderSupport()
+    {
+        $loader = $this->getControllerLoader();
+
+        $this->assertTrue($loader->supports('FOS\RestBundle\Tests\Fixtures\Controller\UsersController', 'rest'));
+        $this->assertFalse($loader->supports(__DIR__.'/../../Fixtures/Controller', 'rest'));
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param string $fixtureName name of the class fixture
