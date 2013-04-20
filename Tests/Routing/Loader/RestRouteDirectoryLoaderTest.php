@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
-use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
