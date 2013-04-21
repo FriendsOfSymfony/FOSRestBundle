@@ -94,7 +94,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(14, count($collection->all()));
+        $this->assertEquals(16, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
