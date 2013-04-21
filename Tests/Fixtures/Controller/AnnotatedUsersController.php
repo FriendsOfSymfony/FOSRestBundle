@@ -22,6 +22,8 @@ use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Head;
 use FOS\RestBundle\Controller\Annotations\Options;
+use FOS\RestBundle\Controller\Annotations\Link;
+use FOS\RestBundle\Controller\Annotations\Unlink;
 
 class AnnotatedUsersController extends Controller
 {
@@ -103,6 +105,18 @@ class AnnotatedUsersController extends Controller
      */
     public function bheadUserAction($slug)
     {} // [HEAD]    /users/{slug}/bhead
+
+    /**
+     * @Link
+     */
+    public function bLinkUserAction($slug)
+    {} // [LINK]    /users/{slug}/blink
+
+    /**
+     * @Unlink
+     */
+    public function bunlinkUserAction($slug)
+    {} // [UNLINK]    /users/{slug}/bunlink
 
     /**
      * @NoRoute
