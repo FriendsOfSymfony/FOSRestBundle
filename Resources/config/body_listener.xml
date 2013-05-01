@@ -8,6 +8,8 @@
 
         <service id="fos_rest.decoder.json" class="FOS\Rest\Decoder\JsonDecoder" />
 
+        <service id="fos_rest.decoder.jsontoform" class="FOS\Rest\Decoder\JsonToFormDecoder" />
+
         <service id="fos_rest.decoder.xml" class="FOS\Rest\Decoder\XmlDecoder" />
 
         <service id="fos_rest.decoder_provider" class="FOS\RestBundle\Decoder\ContainerDecoderProvider">

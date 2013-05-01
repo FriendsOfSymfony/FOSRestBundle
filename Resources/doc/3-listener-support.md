@@ -169,6 +169,8 @@ fos_rest:
 Your custom decoder service must use a class that implements the
 ``FOS\Rest\Decoder\DecoderInterface``.
 
+If you want to be able to use form with checkbox and have true and false value (without any issue) you have to use : fos_rest.decoder.jsontoform (available since fosrest 0.8.0)
+
 ### Format listener
 
 The Request format listener attempts to determine the best format for the
