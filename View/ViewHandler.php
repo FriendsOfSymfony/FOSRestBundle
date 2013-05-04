@@ -365,7 +365,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->createRedirectResponse($view, $location, $format);
         }
 
-        $response =  $this->initResponse($view, $format);
+        $response = $this->initResponse($view, $format);
         
         if (!$response->headers->has('Content-Type')) {
             $response->headers->set('Content-Type', $request->getMimeType($format));
@@ -382,7 +382,8 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return Response
      */
-    private function initResponse(View $view, $format) {
+    private function initResponse(View $view, $format) 
+    {
         $content = null;
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
