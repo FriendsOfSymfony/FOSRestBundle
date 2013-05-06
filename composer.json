@@ -36,13 +36,9 @@
         "jms/serializer-bundle": "0.12.*"
     },
 
-    "conflict": {
-        "jms/serializer-bundle": "<0.12-dev"
-    },
-
     "suggest": {
         "sensio/framework-extra-bundle":  "Add support for route annotations and the view response listener",
-        "jms/serializer-bundle":          "Add support for advanced serialization capabilities, recommended, requires 0.11.*",
+        "jms/serializer-bundle":          "Add support for advanced serialization capabilities, recommended, requires 0.12.*",
         "symfony/serializer":             "Add support for basic serialization capabilities, requires >=2.0,<2.3-dev"
     },
 
