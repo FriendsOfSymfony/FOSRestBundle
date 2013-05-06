@@ -274,11 +274,15 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        $response = $view->getResponse();
-        if ('html' === $format && isset($this->forceRedirects[$format])) {
-            $redirect = new RedirectResponse($location);
-            $content = $redirect->getContent();
-            $response->setContent($content);
+        if ($view->getStatusCode() == Codes::HTTP_CREATED && $view->getData() != null) {
+            $response = $this->initResponse($view, $format);
+        } else {
+            $response = $view->getResponse();
+            if ('html' === $format && isset($this->forceRedirects[$format])) {
+                $redirect = new RedirectResponse($location);
+                $content = $redirect->getContent();
+                $response->setContent($content);
+            }
         }
 
         $code = isset($this->forceRedirects[$format])
@@ -361,6 +365,25 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $this->createRedirectResponse($view, $location, $format);
         }
 
+        $response = $this->initResponse($view, $format);
+        
+        if (!$response->headers->has('Content-Type')) {
+            $response->headers->set('Content-Type', $request->getMimeType($format));
+        }
+
+        return $response;
+    }
+    
+    /**
+     * Initializes a response object that represents the view and holds the view's status code.
+     *
+     * @param View    $view
+     * @param string  $format
+     *
+     * @return Response
+     */
+    private function initResponse(View $view, $format) 
+    {
         $content = null;
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
@@ -373,18 +396,14 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
                 $content = $serializer->serialize($view->getData(), $format);
             }
         }
-
+        
         $response = $view->getResponse();
         $response->setStatusCode($this->getStatusCode($view, $content));
-
+        
         if (null !== $content) {
             $response->setContent($content);
-        }
-
-        if (!$response->headers->has('Content-Type')) {
-            $response->headers->set('Content-Type', $request->getMimeType($format));
-        }
+        }    
 
         return $response;
-    }
+    }    
 }
