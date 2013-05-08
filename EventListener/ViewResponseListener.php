@@ -22,6 +22,8 @@ use JMS\Serializer\SerializationContext;
 
 use FOS\RestBundle\View\View;
 
+use FOS\Rest\Util\Codes;
+
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
  *
@@ -85,7 +87,7 @@ class ViewResponseListener extends TemplateListener
             if ($configuration->getTemplateVar()) {
                 $view->setTemplateVar($configuration->getTemplateVar());
             }
-            if (null === $view->getStatusCode() && $configuration->getStatusCode()) {
+            if ((null === $view->getStatusCode() && $configuration->getStatusCode()) || ($view->getStatusCode() == Codes::HTTP_OK && $configuration->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
             if ($configuration->getSerializerGroups()) {

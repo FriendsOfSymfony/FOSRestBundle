@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use FOS\RestBundle\EventListener\ViewResponseListener;
+use FOS\Rest\Util\Codes;
 
 /**
  * View response listener test
@@ -187,5 +188,70 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame('output', $response->getContent());
+    }
+
+    public static function statusCodeProvider()
+    {
+        return array(
+            array(201, 200, 201),
+            array(201, 404, 404),
+            array(201, 500, 500),
+        );
+    }
+
+    /**
+     * @dataProvider statusCodeProvider
+     */
+    public function testStatusCode($annotationCode, $viewCode, $expectedCode)
+    {
+        $viewAnnotation = new \FOS\RestBundle\Controller\Annotations\View(array());
+        $viewAnnotation->setStatusCode($annotationCode);
+
+        $request = new Request();
+        $request->setRequestFormat('json');
+        $request->attributes->set('_view', $viewAnnotation);
+
+        $viewHandler = new \FOS\RestBundle\View\ViewHandler(array('json' => true));
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container');
+        $viewHandler->setContainer($container);
+        $container->expects($this->at(0))
+            ->method('get')
+            ->with($this->equalTo('fos_rest.view_handler'))
+            ->will($this->returnValue($viewHandler));
+
+        $templating = $this->getMock('\Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $container->expects($this->at(1))
+            ->method('get')
+            ->with($this->equalTo('fos_rest.templating'))
+            ->will($this->returnValue($templating));
+        $templating->expects($this->any())
+            ->method('render')
+            ->will($this->returnValue('foo'));
+
+        $listener = new ViewResponseListener($container);
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent')->disableOriginalConstructor()->getMock();
+        $event->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+       $view = new \FOS\RestBundle\View\View();
+       $view->setStatusCode($viewCode);
+       $view->setData('foo');
+
+       $event->expects($this->any())
+            ->method('getControllerResult')
+            ->will($this->returnValue($view));
+
+        $response = new Response();
+        $event->expects($this->any())
+            ->method('setResponse')
+            ->will($this->returnCallback(function ($r) use (&$response) {
+                $response = $r;
+            }));
+
+        $listener->onKernelView($event);
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertSame($expectedCode, $response->getStatusCode());
     }
 }
