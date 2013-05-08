@@ -140,10 +140,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     protected function getStatusCode(View $view, $content = null)
     {
-        if (200 !== ($code = $view->getStatusCode())) {
-            return $code;
-        }
-
         $data = $view->getData();
         if ($data instanceof FormInterface) {
             $form = $data;
@@ -155,6 +151,10 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         if ($form && $form->isBound() && !$form->isValid()) {
             return $this->failedValidationCode;
+        }
+
+        if (200 !== ($code = $view->getStatusCode())) {
+            return $code;
         }
 
         return null !== $content ? Codes::HTTP_OK : $this->emptyContentCode;
