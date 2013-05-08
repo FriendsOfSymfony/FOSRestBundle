@@ -193,9 +193,9 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     public static function statusCodeProvider()
     {
         return array(
-          array(201, 200, 201),
-          array(201, 404, 404),
-          array(201, 500, 500),
+            array(201, 200, 201),
+            array(201, 404, 404),
+            array(201, 500, 500),
         );
     }
 
