@@ -92,7 +92,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
 
                 $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
-            } elseif (isset($config['pattern'])) {
+            } elseif (isset($config['pattern']) || isset($config['path'])) {
                 $this->parseRoute($collection, $name, $config, $path);
             } else {
                 throw new \InvalidArgumentException(sprintf('Unable to parse the "%s" route.', $name));
