@@ -368,10 +368,14 @@ class View
     /**
      * get the serialization context
      *
-     * @return SerializationContext|null serialization context
+     * @return SerializationContext serialization context
      */
     public function getSerializationContext()
     {
+        if (null === $this->serializationContext) {
+            $this->serializationContext = new SerializationContext();
+        }
+
         return $this->serializationContext;
     }
 }
