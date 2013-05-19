@@ -59,6 +59,10 @@ class RestControllerReader
         $collection = new RestRouteCollection();
         $collection->addResource(new FileResource($reflection->getFileName()));
 
+        $originalRoutePrefix = $this->actionReader->getRoutePrefix();
+        $originalNamePrefix = $this->actionReader->getNamePrefix();
+        $originalParents = $this->actionReader->getParents();
+
         // read prefix annotation
         if ($annotation = $this->readClassAnnotation($reflection, 'Prefix')) {
             $this->actionReader->setRoutePrefix($annotation->value);
@@ -92,9 +96,9 @@ class RestControllerReader
             $this->actionReader->read($collection, $method, $resource);
         }
 
-        $this->actionReader->setRoutePrefix(null);
-        $this->actionReader->setNamePrefix(null);
-        $this->actionReader->setParents(array());
+        $this->actionReader->setRoutePrefix($originalRoutePrefix);
+        $this->actionReader->setNamePrefix($originalNamePrefix);
+        $this->actionReader->setParents($originalParents);
 
         return $collection;
     }
