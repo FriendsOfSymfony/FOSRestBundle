@@ -205,14 +205,15 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     public function getSerializationContext(View $view)
     {
         $context = $view->getSerializationContext();
-        if (null === $context) {
-            $context = new SerializationContext();
 
+        if ($context->attributes->get('groups')->isEmpty()) {
             $groups = $this->container->getParameter('fos_rest.serializer.exclusion_strategy.groups');
             if ($groups) {
                 $context->setGroups($groups);
             }
+        }
 
+        if ($context->attributes->get('version')->isEmpty()) {
             $version = $this->container->getParameter('fos_rest.serializer.exclusion_strategy.version');
             if ($version) {
                 $context->setVersion($version);
