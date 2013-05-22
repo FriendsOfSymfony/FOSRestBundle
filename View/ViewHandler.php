@@ -366,7 +366,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
 
         $response = $this->initResponse($view, $format);
-        
+
         if (!$response->headers->has('Content-Type')) {
             $response->headers->set('Content-Type', $request->getMimeType($format));
         }
@@ -396,13 +396,13 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
                 $content = $serializer->serialize($view->getData(), $format);
             }
         }
-        
+
         $response = $view->getResponse();
         $response->setStatusCode($this->getStatusCode($view, $content));
-        
+
         if (null !== $content) {
             $response->setContent($content);
-        }    
+        }
 
         return $response;
     }    
