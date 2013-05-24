@@ -42,6 +42,11 @@
         "symfony/serializer":             "Add support for basic serialization capabilities, requires >=2.0,<2.3-dev"
     },
 
+    "conflict": {
+        "jms/serializer": "<0.12",
+        "jms/serializer-bundle": "<0.11"
+    },
+
     "autoload": {
         "psr-0": { "FOS\\RestBundle": "" }
     },
