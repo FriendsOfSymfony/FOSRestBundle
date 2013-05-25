@@ -49,6 +49,9 @@ class RestRouteProcessor
 
         if ($loader instanceof FileLoader && null !== $currentDir) {
             $resource = $loader->getLocator()->locate($resource, $currentDir);
+        } elseif ($loader instanceof RestRouteDirectoryLoader) {
+            $loader->getControllerReader()->getActionReader()->setParents($parents);
+            $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
         } elseif ($loader instanceof RestRouteLoader) {
             $loader->getControllerReader()->getActionReader()->setParents($parents);
             $loader->getControllerReader()->getActionReader()->setRoutePrefix($routePrefix);
