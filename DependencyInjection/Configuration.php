@@ -60,6 +60,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('include_format')->defaultTrue()->end()
                     ->end()
                 ->end()
+                ->scalarNode('body_converter')->defaultFalse()->end()
                 ->arrayNode('service')
                     ->addDefaultsIfNotSet()
                     ->children()
