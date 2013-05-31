@@ -13,7 +13,7 @@
     <services>
 
         <service id="fos_rest.converter.request_body" class="%fos_rest.converter.request_body.class%">
-            <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="fos_rest.serializer"/>
             <tag name="request.param_converter" converter="fos_rest.request_body" />
         </service>
 
