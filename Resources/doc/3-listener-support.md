@@ -178,9 +178,6 @@ are a way to populate objects and inject them as controller method arguments.
 The Request body converter makes it possible to deserialize the request body
 into an object.
 
-This converter relies on [JMSSerializer](https://github.com/schmittjoh/serializer)
-for deserialization.
-
 This converter requires that you have installed [SensioFrameworkExtraBundle](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html)
 and have the converters enabled:
 ```yaml
