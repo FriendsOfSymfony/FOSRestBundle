@@ -14,9 +14,10 @@ namespace FOS\RestBundle\Request;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\SerializerInterface as SymfonySerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
-use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
 use JMS\Serializer\Exception\UnsupportedFormatException;
 use JMS\Serializer\Exception\Exception as SerializerException;
 
@@ -26,15 +27,23 @@ use JMS\Serializer\Exception\Exception as SerializerException;
 class RequestBodyParamConverter implements ParamConverterInterface
 {
     /**
-     * @var SerializerInterface
+     * @var JMSSerializerInterface|SymfonySerializerInterface
      */
     protected $serializer;
 
     /**
-     * @param SerializerInterface $serializer
+     * @param JMSSerializerInterface|SymfonySerializerInterface $serializer
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct($serializer)
     {
+        if (!$serializer instanceof JMSSerializerInterface && !$serializer instanceof SymfonySerializerInterface) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '$serializer must be an instance of either "JMS\Serializer\SerializerInterface" or "Symfony\Component\Serializer\SerializerInterface", "%s" given.',
+                    get_class($serializer)
+                )
+            );
+        }
         $this->serializer = $serializer;
     }
 
