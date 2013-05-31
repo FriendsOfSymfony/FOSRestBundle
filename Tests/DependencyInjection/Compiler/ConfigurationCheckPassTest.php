@@ -41,4 +41,25 @@ class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
         $compiler = new ConfigurationCheckPass();
         $compiler->process($container);
     }
+
+    public function testShouldThrowRuntimeExceptionWhenBodyConverterIsEnabledButParamConvertersAreNotEnabled()
+    {
+        $this->setExpectedException(
+            'RuntimeException',
+            'You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter'
+        );
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container->expects($this->at(1))
+            ->method('has')
+            ->with($this->equalTo('fos_rest.converter.request_body'))
+            ->will($this->returnValue(true));
+
+        $container->expects($this->at(2))
+            ->method('has')
+            ->with($this->equalTo('sensio_framework_extra.converter.listener'))
+            ->will($this->returnValue(false));
+
+        $compiler = new ConfigurationCheckPass();
+        $compiler->process($container);
+    }
 }
