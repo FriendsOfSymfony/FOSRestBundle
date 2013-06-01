@@ -30,26 +30,6 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $this->converter = new RequestBodyParamConverter($this->serializer);
     }
 
-    public function testConstructor()
-    {
-        try {
-            $converter = new RequestBodyParamConverter($this->serializer);
-            $converter = new RequestBodyParamConverter(
-                $this->getMock('Symfony\Component\Serializer\SerializerInterface')
-            );
-        } catch (\InvalidArgumentException $e) {
-            $this->fail(
-                'Failed asserting that RequestBodyParamConverter::__construct() allows either "JMS\Serializer\SerializerInterface" or "Symfony\Component\Serializer\SerializerInterface" as an argument'
-            );
-        }
-    }
-
-    public function testConstructorWithWrongSerializerType()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-        $converter = new RequestBodyParamConverter(new \stdClass());
-    }
-
     public function testSupports()
     {
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post');
