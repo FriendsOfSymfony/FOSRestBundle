@@ -171,6 +171,45 @@ Your custom decoder service must use a class that implements the
 
 If you want to be able to use form with checkbox and have true and false value (without any issue) you have to use : fos_rest.decoder.jsontoform (available since fosrest 0.8.0)
 
+### Request Body Converter Listener
+
+[Converters](http://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/converters.html)
+are a way to populate objects and inject them as controller method arguments.
+The Request body converter makes it possible to deserialize the request body
+into an object.
+
+This converter requires that you have installed [SensioFrameworkExtraBundle](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html)
+and have the converters enabled:
+```yaml
+# app/config/config.yml
+sensio_framework_extra:
+    request: { converters: true }
+```
+
+To enable the Request body converter, add the following configuration:
+```yaml
+# app/config/config.yml
+fos_rest:
+    body_converter: true
+```
+
+Now, in the following example, the request body will be deserialized into a
+new instance of `Post` and injected into the `$post` variable:
+```PHP
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
+// ...
+
+/**
+ * @ParamConverter("post", converter="fos_rest.body_converter")
+ */
+public function putPostAction(Post $post)
+{
+    // ...
+}
+```
+
+
 ### Format listener
 
 The Request format listener attempts to determine the best format for the

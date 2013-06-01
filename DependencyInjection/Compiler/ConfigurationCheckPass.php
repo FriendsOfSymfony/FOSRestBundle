@@ -26,5 +26,9 @@ class ConfigurationCheckPass implements CompilerPassInterface
         if ($container->has('sensio_framework_extra.view.listener') && $container->has('fos_rest.view_response_listener')) {
             throw new \RuntimeException('You need to disable the view annotations in SensioFrameworkExtraBundle when using the FOSRestBundle View Response listener.');
         }
+
+        if ($container->has('fos_rest.converter.request_body') && !$container->has('sensio_framework_extra.converter.listener')) {
+            throw new \RuntimeException('You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter');
+        }
     }
 }

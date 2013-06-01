@@ -149,6 +149,10 @@ class FOSRestExtension extends Extension
             $loader->load('access_denied_listener.xml');
             $container->setParameter($this->getAlias().'.access_denied_listener.formats', $config['access_denied_listener']);
         }
+
+        if (!empty($config['body_converter'])) {
+            $loader->load('request_body_param_converter.xml');
+        }
     }
 
     /**
