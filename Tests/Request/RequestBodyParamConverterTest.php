@@ -83,11 +83,11 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     {
         $this->serializer->expects($this->once())
             ->method('deserialize')
-            ->will($this->throwException(new UnsupportedFormatException()));
+            ->will($this->throwException(new UnsupportedFormatException('unsupported format')));
 
         $request = $this->createRequest('', 'text/html');
 
-        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
+        $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException', 'unsupported format');
 
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post');
         $this->converter->apply($request, $config);
@@ -102,7 +102,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $request = $this->createRequest();
 
         $this->setExpectedException(
-            'Symfony\Component\HttpKernel\Exception\BadRequestHttpException',
+            'Symfony\Component\HttpKernel\Exception\HttpException',
             'serializer exception'
         );
 
