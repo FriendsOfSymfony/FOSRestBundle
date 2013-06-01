@@ -57,6 +57,7 @@ fos_rest:
 
             # Prototype
             name:                 []
+    body_converter: false
     format_listener:
         default_priorities:
 
