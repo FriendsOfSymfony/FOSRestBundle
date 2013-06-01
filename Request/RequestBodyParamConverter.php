@@ -13,10 +13,11 @@ namespace FOS\RestBundle\Request;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\Serializer\Exception\UnsupportedFormatException;
-use JMS\Serializer\Exception\Exception as SerializerException;
+use JMS\Serializer\Exception\Exception as JMSSerializerException;
 use FOS\Rest\Util\Codes;
 
 /**
@@ -50,7 +51,9 @@ class RequestBodyParamConverter implements ParamConverterInterface
             );
         } catch (UnsupportedFormatException $e) {
             throw new HttpException(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, $e->getMessage());
-        } catch (SerializerException $e) {
+        } catch (JMSSerializerException $e) {
+            throw new HttpException(Codes::HTTP_BAD_REQUEST, $e->getMessage());
+        } catch (SymfonySerializerException $e) {
             throw new HttpException(Codes::HTTP_BAD_REQUEST, $e->getMessage());
         }
 
