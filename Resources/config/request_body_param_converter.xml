@@ -14,6 +14,8 @@
 
         <service id="fos_rest.converter.request_body" class="%fos_rest.converter.request_body.class%">
             <argument type="service" id="fos_rest.serializer"/>
+            <argument>%fos_rest.serializer.exclusion_strategy.groups%</argument>
+            <argument>%fos_rest.serializer.exclusion_strategy.version%</argument>
             <tag name="request.param_converter" converter="fos_rest.request_body" />
         </service>
 

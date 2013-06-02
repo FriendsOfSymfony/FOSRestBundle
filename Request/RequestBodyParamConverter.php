@@ -34,11 +34,25 @@ class RequestBodyParamConverter implements ParamConverterInterface
     protected $serializer;
 
     /**
-     * @param object $serializer
+     * @var array
      */
-    public function __construct($serializer)
+    protected $context = array();
+
+    /**
+     * @param object      $serializer
+     * @param array|null  $groups     An array of groups to be used in the serialization context
+     * @param string|null $version    A version string to be used in the serialization context
+     */
+    public function __construct($serializer, $groups = null, $version = null)
     {
         $this->serializer = $serializer;
+
+        if (!empty($groups)) {
+            $this->context['groups'] = (array) $groups;
+        }
+        if (!empty($version)) {
+            $this->context['version'] = $version;
+        }
     }
 
     /**
@@ -46,17 +60,16 @@ class RequestBodyParamConverter implements ParamConverterInterface
      */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
-        $context = null;
         $options = $configuration->getOptions();
+
         if (isset($options['serializationContext']) && is_array($options['serializationContext'])) {
-            if ($this->serializer instanceof SerializerInterface) {
-                $context = $this->configureDeserializationContext(
-                    $this->getDeserializationContext(),
-                    $options['serializationContext']
-                );
-            } elseif ($this->serializer instanceof SymfonySerializerInterface) {
-                $context = $options['serializationContext'];
-            }
+            $context = array_merge($this->context, $options['serializationContext']);
+        } else {
+            $context = $this->context;
+        }
+
+        if ($this->serializer instanceof SerializerInterface) {
+            $context = $this->configureDeserializationContext($this->getDeserializationContext(), $context);
         }
 
         try {

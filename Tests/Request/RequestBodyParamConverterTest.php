@@ -55,6 +55,10 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
             ->with($requestBody, 'FOS\RestBundle\Tests\Request\Post', 'json')
             ->will($this->returnValue($expectedPost));
 
+        $this->converter->expects($this->once())
+            ->method('getDeserializationContext')
+            ->will($this->returnValue($this->createDeserializationContext()));
+
         $request = $this->createRequest('{"name": "Post 1", "body": "This is a blog post"}', 'application/json');
 
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post');
@@ -69,6 +73,10 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
             ->method('deserialize')
             ->will($this->throwException(new UnsupportedFormatException('unsupported format')));
 
+        $this->converter->expects($this->once())
+            ->method('getDeserializationContext')
+            ->will($this->returnValue($this->createDeserializationContext()));
+
         $request = $this->createRequest('', 'text/html');
 
         $this->setExpectedException('Symfony\Component\HttpKernel\Exception\HttpException', 'unsupported format');
@@ -82,6 +90,10 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $this->serializer->expects($this->once())
             ->method('deserialize')
             ->will($this->throwException(new RuntimeException('serializer exception')));
+
+        $this->converter->expects($this->once())
+            ->method('getDeserializationContext')
+            ->will($this->returnValue($this->createDeserializationContext()));
 
         $request = $this->createRequest();
 
@@ -119,6 +131,29 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
         $request = $this->createRequest($requestBody, 'application/json');
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post', $options);
+
+        $this->converter->apply($request, $config);
+    }
+
+    public function testApplyWithDefaultSerializerContextExclusionPolicy()
+    {
+        $this->converter = $this->getMock(
+            'FOS\RestBundle\Request\RequestBodyParamConverter',
+            array('getDeserializationContext'),
+            array($this->serializer, array('group1'), '1.0')
+        );
+
+        $context = $this->createDeserializationContext(array('group1'), '1.0');
+        $request = $this->createRequest('', 'application/json');
+        $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post');
+
+        $this->converter->expects($this->once())
+            ->method('getDeserializationContext')
+            ->will($this->returnValue($context));
+
+        $this->serializer->expects($this->once())
+            ->method('deserialize')
+            ->with('', 'FOS\RestBundle\Tests\Request\Post', 'json', $context);
 
         $this->converter->apply($request, $config);
     }
@@ -189,15 +224,19 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
-    protected function createDeserializationContext($groups, $version)
+    protected function createDeserializationContext($groups = null, $version = null)
     {
         $context = $this->getMock('JMS\Serializer\DeserializationContext');
-        $context->expects($this->once())
-            ->method('setGroups')
-            ->with($groups);
-        $context->expects($this->once())
-            ->method('setVersion')
-            ->with($version);
+        if (null !== $groups) {
+            $context->expects($this->once())
+                ->method('setGroups')
+                ->with($groups);
+        }
+        if (null !== $version) {
+            $context->expects($this->once())
+                ->method('setVersion')
+                ->with($version);
+        }
 
         return $context;
     }
