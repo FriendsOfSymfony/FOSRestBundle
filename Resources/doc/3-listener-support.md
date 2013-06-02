@@ -209,6 +209,16 @@ public function putPostAction(Post $post)
 }
 ```
 
+You can configure the serialization context via the `serializationContext` option:
+```PHP
+/**
+ * @ParamConverter("post", converter="fos_rest.body_converter", options={"serializationContext"={"groups"={"group1", "group2"}, "version"="1.0"}})
+ */
+public function putPostAction(Post $post)
+{
+    // ...
+}
+```
 
 ### Format listener
 
