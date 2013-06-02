@@ -26,8 +26,12 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
-        $this->converter = new RequestBodyParamConverter($this->serializer);
+        $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
+        $this->converter = $this->getMock(
+            'FOS\RestBundle\Request\RequestBodyParamConverter',
+            array('getDeserializationContext'),
+            array($this->serializer)
+        );
     }
 
     public function testSupports()
@@ -90,7 +94,58 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $this->converter->apply($request, $config);
     }
 
-    protected function createConfiguration($class = null, $name = null)
+    public function testApplyWithSerializerContextOptionsForJMSSerializer()
+    {
+        $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
+        $options = array(
+            'serializationContext' => array(
+                'groups' => array('group1'),
+                'version' => '1.0'
+            )
+        );
+
+        $context = $this->createDeserializationContext(
+            $options['serializationContext']['groups'],
+            $options['serializationContext']['version']
+        );
+
+        $this->converter->expects($this->once())
+            ->method('getDeserializationContext')
+            ->will($this->returnValue($context));
+
+        $this->serializer->expects($this->once())
+            ->method('deserialize')
+            ->with($requestBody, 'FOS\RestBundle\Tests\Request\Post', 'json', $context);
+
+        $request = $this->createRequest($requestBody, 'application/json');
+        $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post', $options);
+
+        $this->converter->apply($request, $config);
+    }
+
+    public function testApplyWithSerializerContextOptionsForSymfonySerializer()
+    {
+        $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface', array('deserialize'));
+        $this->converter = new RequestBodyParamConverter($this->serializer);
+        $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
+
+        $options = array(
+            'serializationContext' => array(
+                'json_decode_options' => 2, // JSON_BIGINT_AS_STRING
+            )
+        );
+
+        $this->serializer->expects($this->once())
+            ->method('deserialize')
+            ->with($requestBody, 'FOS\RestBundle\Tests\Request\Post', 'json', $options['serializationContext']);
+
+        $request = $this->createRequest($requestBody, 'application/json');
+        $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post', $options);
+
+        $this->converter->apply($request, $config);
+    }
+
+    protected function createConfiguration($class = null, $name = null, array $options = null)
     {
         $config = $this->getMock(
             'Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface',
@@ -107,6 +162,12 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
             $config->expects($this->any())
                ->method('getClass')
                ->will($this->returnValue($class));
+        }
+
+        if ($options !== null) {
+            $config->expects($this->any())
+               ->method('getOptions')
+               ->will($this->returnValue($options));
         }
 
         return $config;
@@ -126,6 +187,19 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $request->headers->set('CONTENT_TYPE', $contentType);
 
         return $request;
+    }
+
+    protected function createDeserializationContext($groups, $version)
+    {
+        $context = $this->getMock('JMS\Serializer\DeserializationContext');
+        $context->expects($this->once())
+            ->method('setGroups')
+            ->with($groups);
+        $context->expects($this->once())
+            ->method('setVersion')
+            ->with($version);
+
+        return $context;
     }
 }
 
