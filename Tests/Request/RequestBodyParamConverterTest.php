@@ -110,15 +110,15 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     {
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
         $options = array(
-            'serializationContext' => array(
+            'deserializationContext' => array(
                 'groups' => array('group1'),
                 'version' => '1.0'
             )
         );
 
         $context = $this->createDeserializationContext(
-            $options['serializationContext']['groups'],
-            $options['serializationContext']['version']
+            $options['deserializationContext']['groups'],
+            $options['deserializationContext']['version']
         );
 
         $this->converter->expects($this->once())
@@ -165,14 +165,14 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
 
         $options = array(
-            'serializationContext' => array(
+            'deserializationContext' => array(
                 'json_decode_options' => 2, // JSON_BIGINT_AS_STRING
             )
         );
 
         $this->serializer->expects($this->once())
             ->method('deserialize')
-            ->with($requestBody, 'FOS\RestBundle\Tests\Request\Post', 'json', $options['serializationContext']);
+            ->with($requestBody, 'FOS\RestBundle\Tests\Request\Post', 'json', $options['deserializationContext']);
 
         $request = $this->createRequest($requestBody, 'application/json');
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post', $options);

@@ -209,10 +209,11 @@ public function putPostAction(Post $post)
 }
 ```
 
-You can configure the serialization context via the `serializationContext` option:
+You can configure the context used by the serializer during deserialization
+via the `deserializationContext` option:
 ```PHP
 /**
- * @ParamConverter("post", converter="fos_rest.body_converter", options={"serializationContext"={"groups"={"group1", "group2"}, "version"="1.0"}})
+ * @ParamConverter("post", converter="fos_rest.body_converter", options={"deserializationContext"={"groups"={"group1", "group2"}, "version"="1.0"}})
  */
 public function putPostAction(Post $post)
 {

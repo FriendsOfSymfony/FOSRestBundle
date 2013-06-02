@@ -62,8 +62,8 @@ class RequestBodyParamConverter implements ParamConverterInterface
     {
         $options = $configuration->getOptions();
 
-        if (isset($options['serializationContext']) && is_array($options['serializationContext'])) {
-            $context = array_merge($this->context, $options['serializationContext']);
+        if (isset($options['deserializationContext']) && is_array($options['deserializationContext'])) {
+            $context = array_merge($this->context, $options['deserializationContext']);
         } else {
             $context = $this->context;
         }
