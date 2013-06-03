@@ -201,7 +201,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 // ...
 
 /**
- * @ParamConverter("post", converter="fos_rest.body_converter")
+ * @ParamConverter("post", converter="fos_rest.request_body")
  */
 public function putPostAction(Post $post)
 {
