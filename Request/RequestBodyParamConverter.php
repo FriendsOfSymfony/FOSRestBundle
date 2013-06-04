@@ -87,7 +87,7 @@ class RequestBodyParamConverter implements ParamConverterInterface
      */
     public function apply(Request $request, ConfigurationInterface $configuration)
     {
-        $options = $configuration->getOptions();
+        $options = (array) $configuration->getOptions();
 
         if (isset($options['deserializationContext']) && is_array($options['deserializationContext'])) {
             $context = array_merge($this->context, $options['deserializationContext']);
@@ -117,7 +117,16 @@ class RequestBodyParamConverter implements ParamConverterInterface
         $request->attributes->set($configuration->getName(), $object);
 
         if (null !== $this->validator) {
-            $request->attributes->set($this->validationErrorsArgument, $this->validator->validate($object));
+            $validatorOptions = $this->getValidatorOptions($options);
+            $request->attributes->set(
+                $this->validationErrorsArgument,
+                $this->validator->validate(
+                    $object,
+                    $validatorOptions['groups'],
+                    $validatorOptions['traverse'],
+                    $validatorOptions['deep']
+                )
+            );
         }
 
         return true;
@@ -155,5 +164,24 @@ class RequestBodyParamConverter implements ParamConverterInterface
         }
 
         return $context;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return array
+     */
+    protected function getValidatorOptions(array $options)
+    {
+        $defaults = array(
+            'validator' => array(
+                'groups' => null,
+                'traverse' => false,
+                'deep' => false
+            )
+        );
+        $options = array_merge($defaults, $options);
+
+        return $options['validator'];
     }
 }
