@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
 use Symfony\Component\Serializer\SerializerInterface as SymfonySerializerInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 use JMS\Serializer\Exception\UnsupportedFormatException;
@@ -39,12 +40,32 @@ class RequestBodyParamConverter implements ParamConverterInterface
     protected $context = array();
 
     /**
-     * @param object      $serializer
-     * @param array|null  $groups     An array of groups to be used in the serialization context
-     * @param string|null $version    A version string to be used in the serialization context
+     * @var null|ValidatorInterface
      */
-    public function __construct($serializer, $groups = null, $version = null)
-    {
+    protected $validator;
+
+    /**
+     * @var null|string The name of the argument on which the ConstraintViolationList will be set
+     */
+    protected $validationErrorsArgument;
+
+    /**
+     * @param object             $serializer
+     * @param array|null         $groups     An array of groups to be used in the serialization context
+     * @param string|null        $version    A version string to be used in the serialization context
+     * @param object             $serializer
+     * @param ValidatorInterface $validator
+     * @param string|null        $validationErrorsArgument
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(
+        $serializer,
+        $groups = null,
+        $version = null,
+        ValidatorInterface $validator = null,
+        $validationErrorsArgument = null
+    ) {
         $this->serializer = $serializer;
 
         if (!empty($groups)) {
@@ -53,6 +74,12 @@ class RequestBodyParamConverter implements ParamConverterInterface
         if (!empty($version)) {
             $this->context['version'] = $version;
         }
+
+        if (null !== $validator && null === $validationErrorsArgument) {
+            throw new \InvalidArgumentException('"$validationErrorsArgument" cannot be null when using the validator');
+        }
+        $this->validator = $validator;
+        $this->validationErrorsArgument = $validationErrorsArgument;
     }
 
     /**
@@ -88,6 +115,10 @@ class RequestBodyParamConverter implements ParamConverterInterface
         }
 
         $request->attributes->set($configuration->getName(), $object);
+
+        if (null !== $this->validator) {
+            $request->attributes->set($this->validationErrorsArgument, $this->validator->validate($object));
+        }
 
         return true;
     }
