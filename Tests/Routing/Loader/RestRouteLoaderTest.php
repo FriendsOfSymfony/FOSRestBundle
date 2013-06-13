@@ -160,6 +160,29 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * Test that custom actions (new/edit/remove) are dumped earlier,
+     * and that developer routes order is kept
+     *
+     * @see https://github.com/FriendsOfSymfony/RestBundle/issues/379
+     */
+    public function testCustomActionRoutesInDeveloperOrder()
+    {
+        // without prefix
+
+        $collection = $this->loadFromControllerFixture('OrdersController');
+        $pos = array_flip(array_keys($collection->all()));
+
+        $this->assertLessThan($pos['get_bars'], $pos['get_bars_custom']);
+
+        // with prefix
+
+        $collection = $this->loadFromControllerFixture('OrdersController', 'prefix_');
+        $pos = array_flip(array_keys($collection->all()));
+
+        $this->assertLessThan($pos['prefix_get_bars'], $pos['prefix_get_bars_custom']);
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param string $fixtureName name of the class fixture

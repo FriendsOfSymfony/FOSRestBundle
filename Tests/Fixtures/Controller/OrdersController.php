@@ -29,6 +29,9 @@ class OrdersController extends Controller
     public function newBarsAction()
     {} // [GET] /bars/new
 
+    public function getBarsCustomAction()
+    {} // [GET] /bars/custom
+
     public function getBarsAction($slug)
     {} // [GET] /bars/{slug}
 }
