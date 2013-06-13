@@ -94,7 +94,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(16, count($collection->all()));
+        $this->assertEquals(17, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -104,6 +104,17 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
         }
+    }
+
+    /**
+     * Test that a custom format annotation is not overwritten
+     */
+    public function testCustomFormatRequirementIsKept()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedUsersController');
+        $route = $collection->get('custom_user');
+        
+        $this->assertEquals('custom', $route->getRequirement('_format'));
     }
 
     /**
