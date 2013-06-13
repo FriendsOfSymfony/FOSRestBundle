@@ -43,7 +43,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         return new AnnotationReader();
     }
 
-    protected function getControllerLoader()
+    protected function getControllerLoader(array $formats = array())
     {
         $c = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->disableOriginalConstructor()
@@ -59,7 +59,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         $paramReader = new ParamReader($annotationReader);
         $inflector = new DoctrineInflector();
 
-        $ar = new RestActionReader($annotationReader, $paramReader, $inflector, true);
+        $ar = new RestActionReader($annotationReader, $paramReader, $inflector, true, $formats);
         $cr = new RestControllerReader($ar, $annotationReader);
 
         return new RestRouteLoader($c, $l, $p, $cr, 'html');

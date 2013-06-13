@@ -111,10 +111,16 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testCustomFormatRequirementIsKept()
     {
-        $collection = $this->loadFromControllerFixture('AnnotatedUsersController');
-        $route = $collection->get('custom_user');
-        
-        $this->assertEquals('custom', $route->getRequirement('_format'));
+        $collection = $this->loadFromControllerFixture(
+            'AnnotatedUsersController',
+            null,
+            array('json' => true, 'xml' => true, 'html' => true)
+        );
+        $routeCustom            = $collection->get('custom_user');
+        $routeWithRequirements  = $collection->get('get_user');
+
+        $this->assertEquals('custom', $routeCustom->getRequirement('_format'));
+        $this->assertEquals('json|xml|html', $routeWithRequirements->getRequirement('_format'));
     }
 
     /**
@@ -201,9 +207,9 @@ class RestRouteLoaderTest extends LoaderTest
      *
      * @return RouteCollection
      */
-    protected function loadFromControllerFixture($fixtureName, $namePrefix = null)
+    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = array())
     {
-        $loader = $this->getControllerLoader();
+        $loader = $this->getControllerLoader($formats);
         $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
 
         return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'. $fixtureName, 'rest');
