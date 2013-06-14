@@ -44,7 +44,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Buils a RestRouteLoader using
+     * Buils a RestRouteLoader
      *
      * @param array $formats available resource formats
      */
