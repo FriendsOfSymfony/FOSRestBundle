@@ -204,6 +204,7 @@ class RestRouteLoaderTest extends LoaderTest
      *
      * @param string $fixtureName name of the class fixture
      * @param string $namePrefix  route name prefix
+     * @param array  $formats     resource formats available
      *
      * @return RouteCollection
      */

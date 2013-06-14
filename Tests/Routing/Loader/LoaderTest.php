@@ -43,6 +43,11 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         return new AnnotationReader();
     }
 
+    /**
+     * Buils a RestRouteLoader using
+     *
+     * @param array $formats available resource formats
+     */
     protected function getControllerLoader(array $formats = array())
     {
         $c = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
