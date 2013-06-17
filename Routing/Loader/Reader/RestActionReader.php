@@ -270,7 +270,7 @@ class RestActionReader
     }
 
     /**
-     * Returns readable arguments from method. Typehinted arguments are ignored.
+     * Returns readable arguments from method.
      *
      * @param \ReflectionMethod $method
      *
@@ -281,10 +281,27 @@ class RestActionReader
         // ignore all query params
         $params = $this->paramReader->getParamsFromMethod($method);
 
+        // ignore type hinted arguments that are or extend from:
+        // * Symfony\Component\HttpFoundation\Request
+        // * FOS\RestBundle\Request\QueryFetcher
+        $ignoreClasses = array(
+            'Symfony\Component\HttpFoundation\Request',
+            'FOS\RestBundle\Request\ParamFetcherInterface',
+        );
+
         $arguments = array();
         foreach ($method->getParameters() as $argument) {
-            if (isset($params[$argument->getName()]) || null !== $argument->getClass()) {
+            if (isset($params[$argument->getName()])) {
                 continue;
+            }
+
+            $argumentClass = $argument->getClass();
+            if ($argumentClass) {
+                foreach ($ignoreClasses as $class) {
+                    if ($argumentClass->getName() === $class || $argumentClass->isSubclassOf($class)) {
+                        continue 2;
+                    }
+                }
             }
 
             $arguments[] = $argument;
