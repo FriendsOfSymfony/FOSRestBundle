@@ -202,7 +202,7 @@ class RestActionReader
         if ($this->includeFormat === true) {
             $pattern .= '.{_format}';
 
-            if (!empty($this->formats)) {
+            if (!isset($requirements['_format']) && !empty($this->formats)) {
                 $requirements['_format'] = implode('|', array_keys($this->formats));
             }
         }
