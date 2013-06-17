@@ -268,8 +268,8 @@ fos_rest:
 ```
 
 The {_format} route requirement is automatically positionned using the available listeners. So by default, the  requirement will
-be {json|xml|html}. If you want to limit or add a custom format, you can do so by overriding it with the @Route annotation
-(or another one extending it):
+be {json|xml|html}. If you want to limit or add a custom format, you can do so by overriding it with the ``@Route`` annotation
+(or another one extending it, like ``@Get``, ``@Post``...):
 
 ```php
 <?php
@@ -279,7 +279,8 @@ use FOS\RestBundle\Controller\Annotations\Route;
     ..
 
     /**
-     * @Route(requirements={"_format"="xml"})
+     * @Route(requirements={"_format"="json|xml"})
+     */
     public function getAction($slug)
     {}
 
