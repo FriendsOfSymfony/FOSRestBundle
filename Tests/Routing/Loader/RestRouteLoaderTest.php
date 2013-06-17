@@ -94,7 +94,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(16, count($collection->all()));
+        $this->assertEquals(17, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -104,6 +104,23 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
         }
+    }
+
+    /**
+     * Test that a custom format annotation is not overwritten
+     */
+    public function testCustomFormatRequirementIsKept()
+    {
+        $collection = $this->loadFromControllerFixture(
+            'AnnotatedUsersController',
+            null,
+            array('json' => true, 'xml' => true, 'html' => true)
+        );
+        $routeCustom            = $collection->get('custom_user');
+        $routeWithRequirements  = $collection->get('get_user');
+
+        $this->assertEquals('custom', $routeCustom->getRequirement('_format'));
+        $this->assertEquals('json|xml|html', $routeWithRequirements->getRequirement('_format'));
     }
 
     /**
@@ -187,12 +204,13 @@ class RestRouteLoaderTest extends LoaderTest
      *
      * @param string $fixtureName name of the class fixture
      * @param string $namePrefix  route name prefix
+     * @param array  $formats     resource formats available
      *
      * @return RouteCollection
      */
-    protected function loadFromControllerFixture($fixtureName, $namePrefix = null)
+    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = array())
     {
-        $loader = $this->getControllerLoader();
+        $loader = $this->getControllerLoader($formats);
         $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
 
         return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'. $fixtureName, 'rest');

@@ -123,4 +123,10 @@ class AnnotatedUsersController extends Controller
      */
     public function splitUserAction($slug)
     {}
+
+    /**
+     * @Route(requirements={"_format"="custom"})
+     */
+    public function customUserAction($slug)
+    {}
 }
