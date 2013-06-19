@@ -63,6 +63,7 @@ class FOSRestExtension extends Extension
         if (!empty($config['serializer']['groups'])) {
             $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.groups', $config['serializer']['groups']);
         }
+        $container->setParameter($this->getAlias().'.serializer.serialize_null', $config['serializer']['serialize_null']);
 
         $container->setParameter($this->getAlias().'.formats', $formats);
         $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);

@@ -82,6 +82,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('groups')
                             ->prototype('scalar')->end()
                         ->end()
+                        ->booleanNode('serialize_null')->defaultFalse()->end()
                     ->end()
                 ->end()
             ->end()
