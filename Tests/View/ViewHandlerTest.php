@@ -141,6 +141,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->setMethods(array('render'))
                 ->disableOriginalConstructor()
                 ->getMock();
+
             $templating
                 ->expects($this->once())
                 ->method('render')
@@ -156,6 +157,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->setMethods(array('serialize'))
                 ->disableOriginalConstructor()
                 ->getMock();
+
             $serializer
                 ->expects($this->once())
                 ->method('serialize')
@@ -167,10 +169,16 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->with('fos_rest.serializer')
                 ->will($this->returnValue($serializer));
 
+            $map = array(
+                array('fos_rest.serializer.exclusion_strategy.groups', 'foo'),
+                array('fos_rest.serializer.exclusion_strategy.version', '1.0'),
+                array('fos_rest.serializer.serialize_null', false)
+            );
+
             $container
                 ->expects($this->any())
                 ->method('getParameter')
-                ->will($this->onConsecutiveCalls('foo', '1.0'));
+                ->will($this->returnValueMap($map));
         }
 
         $viewHandler->setContainer($container);
@@ -207,6 +215,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'not templating aware and invalid form' => array('json', array('data' => array(0 => 'error', 1 => 'error')), 0, false, true),
         );
     }
+
     /**
      * @dataProvider createSerializeNullDataProvider
      */
@@ -252,6 +261,40 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         return array(
             'should serialize null'     => array("null", true),
             'should not serialize null' => array("", false)
+        );
+    }
+
+    /**
+     * @dataProvider createSerializeNullDataValuesDataProvider
+     */
+    public function testSerializeNullDataValues($expected, $serializeNull)
+    {
+        $viewHandler = new ViewHandler(array('json' => false), 404, 200);
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+
+        $viewHandler->setContainer($container);
+
+        $map = array(
+            array('fos_rest.serializer.exclusion_strategy.groups', 'foo'),
+            array('fos_rest.serializer.exclusion_strategy.version', '1.0'),
+            array('fos_rest.serializer.serialize_null', $serializeNull)
+        );
+
+        $container
+            ->expects($this->any())
+            ->method('getParameter')
+            ->will($this->returnValueMap($map));
+
+        $view = new View();
+        $context = $viewHandler->getSerializationContext($view);
+        $this->assertEquals($expected, $context->shouldSerializeNull());
+    }
+
+    public static function createSerializeNullDataValuesDataProvider()
+    {
+        return array(
+            'should serialize null values'     => array(true, true),
+            'should not serialize null values' => array(false, false)
         );
     }
 

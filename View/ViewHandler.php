@@ -220,6 +220,9 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             }
         }
 
+        $serializeNull = $this->container->getParameter('fos_rest.serializer.serialize_null');
+        $context->setSerializeNull($serializeNull);
+
         return $context;
     }
 
@@ -374,7 +377,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
 
         return $response;
     }
-    
+
     /**
      * Initializes a response object that represents the view and holds the view's status code.
      *
@@ -383,7 +386,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return Response
      */
-    private function initResponse(View $view, $format) 
+    private function initResponse(View $view, $format)
     {
         $content = null;
         if ($this->isFormatTemplating($format)) {
@@ -406,5 +409,5 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
 
         return $response;
-    }    
+    }
 }
