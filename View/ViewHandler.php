@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
-use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -393,7 +393,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             $content = $this->renderTemplate($view, $format);
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $serializer = $this->getSerializer($view);
-            if ($serializer instanceof Serializer) {
+            if ($serializer instanceof SerializerInterface) {
                 $context = $this->getSerializationContext($view);
                 $content = $serializer->serialize($view->getData(), $format, $context);
             } else {
