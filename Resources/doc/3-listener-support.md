@@ -190,8 +190,14 @@ To enable the Request body converter, add the following configuration:
 ```yaml
 # app/config/config.yml
 fos_rest:
-    body_converter: true
+    body_converter:
+        enabled: true
 ```
+
+Note: You will probably want to disable the automatic route generation (`@NoRoute`)
+for routes using the body converter, and instead define the routes manually to 
+avoid having the deserialized, typehinted objects (`$post in this example`) appear
+in the route as a parameter.
 
 Now, in the following example, the request body will be deserialized into a
 new instance of `Post` and injected into the `$post` variable:
@@ -217,6 +223,33 @@ via the `deserializationContext` option:
  */
 public function putPostAction(Post $post)
 {
+    // ...
+}
+```
+
+#### Validation
+If you would like to validate the deserialized object, you can do so by
+enabling validation:
+```yaml
+# app/config/config.yml
+fos_rest:
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: validationErrors # This is the default value
+```
+The validation errors will be set on the `validationErrors` controller argument:
+
+```PHP
+/**
+ * @ParamConverter("post", converter="fos_rest.body_converter")
+ */
+public function putPostAction(Post $post, ConstraintViolationListInterface $validationErrors)
+{
+    if (count($validationErrors) > 0) {
+        // Handle validation errors
+    }
+
     // ...
 }
 ```

@@ -34,6 +34,17 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testConstructThrowsExceptionIfValidatorIsSetAndValidationArgumentIsNull()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+        $converter = new RequestBodyParamConverter(
+            $this->serializer,
+            null,
+            null,
+            $this->getMock('Symfony\Component\Validator\ValidatorInterface')
+        );
+    }
+
     public function testSupports()
     {
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post');
@@ -180,7 +191,58 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $this->converter->apply($request, $config);
     }
 
-    protected function createConfiguration($class = null, $name = null, array $options = null)
+    public function testApplyWithValidationErrors()
+    {
+        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface', array('validate'));
+        $validationErrors = $this->getMock('Symfony\Component\Validator\ConstraintViolationListInterface');
+
+        $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'validationErrors');
+
+        $expectedPost = new Post('Post 1', 'This is a blog post');
+        $this->serializer->expects($this->once())
+            ->method('deserialize')
+            ->with('', 'FOS\RestBundle\Tests\Request\Post', 'json')
+            ->will($this->returnValue($expectedPost));
+
+        $request = $this->createRequest('', 'application/json');
+        $options = array(
+            'validator' => array(
+                'groups' => array('group1'),
+                'traverse' => true,
+                'deep' => true
+            )
+        );
+
+        $validator->expects($this->once())
+            ->method('validate')
+            ->with($expectedPost, array('group1'), true, true)
+            ->will($this->returnValue($validationErrors));
+
+        $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post', $options);
+        $this->converter->apply($request, $config);
+
+        $this->assertSame($expectedPost, $request->attributes->get('post'));
+        $this->assertSame($validationErrors, $request->attributes->get('validationErrors'));
+    }
+
+    public function testDefaultValidatorOptions()
+    {
+        $this->converter = new RequestBodyParamConverter($this->serializer);
+        $reflClass = new \ReflectionClass($this->converter);
+        $method = $reflClass->getMethod('getValidatorOptions');
+        $method->setAccessible(true);
+        $options = $method->invoke($this->converter, array());
+
+        $expected = array(
+            'groups' => null,
+            'traverse' => false,
+            'deep' => false
+        );
+
+        $this->assertEquals($expected, $options);
+    }
+
+    protected function createConfiguration($class = null, $name = null, $options = null)
     {
         $config = $this->getMock(
             'Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface',

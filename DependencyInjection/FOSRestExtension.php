@@ -53,6 +53,10 @@ class FOSRestExtension extends Extension
             }
         }
 
+        // The validator service alias is only set if validation is enabled for the request body converter
+        $validator = $config['service']['validator'];
+        unset($config['service']['validator']);
+
         foreach ($config['service'] as $key => $service) {
             $container->setAlias($this->getAlias().'.'.$key, $config['service'][$key]);
         }
@@ -152,7 +156,16 @@ class FOSRestExtension extends Extension
         }
 
         if (!empty($config['body_converter'])) {
-            $loader->load('request_body_param_converter.xml');
+            if (!empty($config['body_converter']['enabled'])) {
+                $loader->load('request_body_param_converter.xml');
+            }
+            if (!empty($config['body_converter']['validate'])) {
+                $container->setAlias($this->getAlias().'.validator', $validator);
+                $container->setParameter(
+                    'fos_rest.converter.request_body.validation_errors_argument',
+                    $config['body_converter']['validation_errors_argument']
+                );
+            }
         }
     }
 

@@ -58,7 +58,10 @@ fos_rest:
 
             # Prototype
             name:               []
-    body_converter: false
+    body_converter:
+        enabled: false
+        validate: false
+        validation_errors_argument: validationErrors # The name of the argument on which the validation errors are set
     format_listener:
         default_priorities:
 
