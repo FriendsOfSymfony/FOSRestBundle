@@ -135,6 +135,20 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->getParameter('fos_rest.serialize_null'));
     }
 
+    public function testValidatorAliasWhenEnabled()
+    {
+        $config = array('fos_rest' => array('body_converter' => array('validate' => true)));
+        $this->extension->load($config, $this->container);
+        $this->assertAlias('validator', 'fos_rest.validator');
+    }
+
+    public function testValidatorAliasWhenDisabled()
+    {
+        $config = array('fos_rest' => array('body_converter' => array('validate' => false)));
+        $this->extension->load($config, $this->container);
+        $this->assertFalse($this->container->has('fos_rest.validator'));
+    }
+
     /**
      * Test that extension loads properly.
      */

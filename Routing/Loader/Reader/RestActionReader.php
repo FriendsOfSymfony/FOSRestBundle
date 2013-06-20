@@ -284,9 +284,11 @@ class RestActionReader
         // ignore type hinted arguments that are or extend from:
         // * Symfony\Component\HttpFoundation\Request
         // * FOS\RestBundle\Request\QueryFetcher
+        // * Symfony\Component\Validator\ConstraintViolationList
         $ignoreClasses = array(
             'Symfony\Component\HttpFoundation\Request',
             'FOS\RestBundle\Request\ParamFetcherInterface',
+            'Symfony\Component\Validator\ConstraintViolationListInterface',
         );
 
         $arguments = array();
