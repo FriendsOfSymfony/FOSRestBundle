@@ -183,6 +183,6 @@ class RequestBodyParamConverter implements ParamConverterInterface
             return $validatorDefaultOptions;
         }
 
-        return array_merge($validatorDefaultOptions, $options['validator']);
+        return array_merge($validatorDefaultOptions, (array) $options['validator']);
     }
 }
