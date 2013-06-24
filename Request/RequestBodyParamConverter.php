@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Request;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
 use Symfony\Component\Serializer\SerializerInterface as SymfonySerializerInterface;
 use Symfony\Component\Validator\ValidatorInterface;
@@ -173,15 +174,13 @@ class RequestBodyParamConverter implements ParamConverterInterface
      */
     protected function getValidatorOptions(array $options)
     {
-        $defaults = array(
-            'validator' => array(
-                'groups' => null,
-                'traverse' => false,
-                'deep' => false
-            )
-        );
-        $options = array_merge($defaults, $options);
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults(array(
+            'groups' => null,
+            'traverse' => false,
+            'deep' => false,
+        ));
 
-        return $options['validator'];
+        return $resolver->resolve(isset($options['validator']) ? $options['validator'] : array());
     }
 }
