@@ -242,6 +242,66 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $options);
     }
 
+    public function testDefaultValidatorOptionsMergedWithUserOptions()
+    {
+        // Annotation example
+        // @ParamConverter(
+        //   post,
+        //   class="AcmeBlogBundle:Post",
+        //   options={"validator"={"groups"={"Posting"}}
+        // )
+        $userOptions = array(
+            'validator' => array(
+                'groups' => array('Posting'),
+            )
+        );
+
+        $expectedOptions = array(
+            'validator' => array(
+                'groups' => array('Posting'),
+                'traverse' => false,
+                'deep' => false
+            )
+        );
+
+        $converterMock = $this->getMockBuilder('FOS\RestBundle\Request\RequestBodyParamConverter')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $reflClass = new \ReflectionClass($converterMock);
+        $method = $reflClass->getMethod('getValidatorOptions');
+        $method->setAccessible(true);
+        $mergedOptions = $method->invoke($converterMock, $userOptions);
+
+        $this->assertEquals($expectedOptions, $mergedOptions);
+    }
+
+    public function testValidatorOptionsStructureAfterMergeWithUserOptions()
+    {
+        // Annotation example
+        // @ParamConverter(
+        //   post,
+        //   class="AcmeBlogBundle:Post",
+        //   options={"validator"={"groups"={"Posting"}}
+        // )
+        $userOptions = array(
+            'validator' => array(
+                'groups' => array('Posting'),
+            )
+        );
+        $config = $this->createConfiguration(null, null, $userOptions);
+
+        $validatorMock = $this->getMockBuilder('Symfony\Component\Validator\ValidatorInterface')
+            ->setMethods(array('validate'))
+            ->getMock()
+        ;
+        $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validatorMock, 'validationErrors');
+        $request = $this->createRequest();
+
+        $this->converter->apply($request, $config);
+    }
+
     protected function createConfiguration($class = null, $name = null, $options = null)
     {
         $config = $this->getMock(
