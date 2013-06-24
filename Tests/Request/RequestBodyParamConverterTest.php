@@ -257,11 +257,9 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         );
 
         $expectedOptions = array(
-            'validator' => array(
-                'groups' => array('Posting'),
-                'traverse' => false,
-                'deep' => false
-            )
+            'groups' => array('Posting'),
+            'traverse' => false,
+            'deep' => false
         );
 
         $converterMock = $this->getMockBuilder('FOS\RestBundle\Request\RequestBodyParamConverter')
