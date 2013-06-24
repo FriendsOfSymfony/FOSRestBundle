@@ -173,15 +173,16 @@ class RequestBodyParamConverter implements ParamConverterInterface
      */
     protected function getValidatorOptions(array $options)
     {
-        $defaults = array(
-            'validator' => array(
-                'groups' => null,
-                'traverse' => false,
-                'deep' => false
-            )
+        $validatorDefaultOptions = array(
+            'groups' => null,
+            'traverse' => false,
+            'deep' => false,
         );
-        $options = array_merge($defaults, $options);
 
-        return $options['validator'];
+        if (!isset($options['validator'])) {
+            return $validatorDefaultOptions;
+        }
+
+        return array_merge($validatorDefaultOptions, $options['validator']);
     }
 }
