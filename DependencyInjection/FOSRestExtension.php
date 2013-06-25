@@ -161,6 +161,8 @@ class FOSRestExtension extends Extension
             }
             if (!empty($config['body_converter']['validate'])) {
                 $container->setAlias($this->getAlias().'.validator', $validator);
+            }
+            if (!empty($config['body_converter']['validation_errors_argument'])) {
                 $container->setParameter(
                     'fos_rest.converter.request_body.validation_errors_argument',
                     $config['body_converter']['validation_errors_argument']
