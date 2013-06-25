@@ -165,6 +165,8 @@ class FOSRestExtension extends Extension
                     'fos_rest.converter.request_body.validation_errors_argument',
                     $config['body_converter']['validation_errors_argument']
                 );
+            } else {
+                $container->setParameter('fos_rest.converter.request_body.validation_errors_argument', null);
             }
         }
     }
