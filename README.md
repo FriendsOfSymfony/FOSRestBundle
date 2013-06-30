@@ -10,7 +10,7 @@ applications with Symfony2. Features include:
 - RESTful decoding of HTTP request body and Accept headers
 - Exception controller for sending appropriate HTTP status codes
 
-[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=master)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle)
+[![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=master)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle) [![Total Downloads](https://poser.pugx.org/FriendsOfSymfony/Rest/downloads.png)](https://packagist.org/packages/FriendsOfSymfony/Rest) [![Latest Stable Version](https://poser.pugx.org/FriendsOfSymfony/Rest/v/stable.png)](https://packagist.org/packages/FriendsOfSymfony/Rest)
 
 State
 -----
