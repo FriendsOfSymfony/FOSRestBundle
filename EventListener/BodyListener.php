@@ -43,8 +43,6 @@ class BodyListener
     public function __construct(DecoderProviderInterface $decoderProvider)
     {
         $this->decoderProvider = $decoderProvider;
-
-
     }
 
     /**
