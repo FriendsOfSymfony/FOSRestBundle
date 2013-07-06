@@ -28,14 +28,23 @@ class BodyListener
      */
     private $decoderProvider;
 
+
+    /**
+     * @var $defaultFormat
+     */
+    private $defaultFormat;
+
     /**
      * Constructor.
      *
      * @param DecoderProviderInterface $decoderProvider Provider for fetching decoders
+     * @param string               $defaultFormat
      */
-    public function __construct(DecoderProviderInterface $decoderProvider)
+    public function __construct(DecoderProviderInterface $decoderProvider,$defaultFormat)
     {
         $this->decoderProvider = $decoderProvider;
+
+        $this->defaultFormat=$defaultFormat;
     }
 
     /**
@@ -56,9 +65,13 @@ class BodyListener
                 ? $request->getRequestFormat()
                 : $request->getFormat($contentType);
 
+            if(empty($format)){
+                $format=$this->defaultFormat;
+            }
             if (!$this->decoderProvider->supports($format)) {
                 return;
             }
+          
 
             $decoder = $this->decoderProvider->getDecoder($format);
 
