@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 
 <container xmlns="http://symfony.com/schema/dic/services"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
 
@@ -22,7 +22,10 @@
         <service id="fos_rest.body_listener" class="FOS\RestBundle\EventListener\BodyListener">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
             <argument type="service" id="fos_rest.decoder_provider" />
-            <argument>%fos_rest.routing.loader.default_format%</argument>
+            <call method="setDefaultFormat">
+                <argument>%fos_rest.routing.loader.default_format%</argument>
+            </call>
+
         </service>
 
     </services>
