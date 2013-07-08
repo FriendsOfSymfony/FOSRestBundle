@@ -80,7 +80,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
                     $this->collectionParents[$name] = $parents;
                 }
-				
+
                 $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
                 break;
