@@ -206,7 +206,7 @@ class ExceptionController extends ContainerAware
         $parameters  = array(
             'status' => 'error',
             'status_code' => $code,
-            'status_text' => Response::$statusTexts[$code],
+            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : "error",
             'currentContent' => $currentContent,
             'message' => $this->getExceptionMessage($exception),
         );
