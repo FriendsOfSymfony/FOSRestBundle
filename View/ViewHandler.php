@@ -175,7 +175,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Get the router service
      *
-     * @return Symfony\Component\Routing\RouterInterface
+     * @return \Symfony\Component\Routing\RouterInterface
      */
     protected function getRouter()
     {
@@ -229,7 +229,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     /**
      * Get the templating service
      *
-     * @return Symfony\Bundle\FrameworkBundle\Templating\EngineInterface
+     * @return \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface
      */
     protected function getTemplating()
     {
@@ -362,7 +362,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     {
         $route = $view->getRoute();
         $location = $route
-            ? $this->getRouter()->generate($route, (array) $view->getData(), true)
+            ? $this->getRouter()->generate($route, (array) $view->getRouteParameters(), true)
             : $view->getLocation();
 
         if ($location) {
