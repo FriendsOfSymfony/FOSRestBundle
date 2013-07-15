@@ -374,6 +374,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         if (!$response->headers->has('Content-Type')) {
             $response->headers->set('Content-Type', $request->getMimeType($format));
         }
+        $response->headers->set('Content-Length', strlen($content));
 
         return $response;
     }
