@@ -65,15 +65,15 @@ abstract class FOSRestController extends Controller
      * Convenience method to allow for a fluent interface.
      *
      * @param string  $route
-     * @param mixed   $data
+     * @param mixed   $parameters
      * @param integer $statusCode
      * @param array   $headers
      *
      * @return View
      */
-    protected function routeRedirectView($route, array $data = array(), $statusCode = Codes::HTTP_CREATED, array $headers = array())
+    protected function routeRedirectView($route, array $parameters = array(), $statusCode = Codes::HTTP_CREATED, array $headers = array())
     {
-        return RouteRedirectView::create($route, $data, $statusCode, $headers);
+        return RouteRedirectView::create($route, $parameters, $statusCode, $headers);
     }
 
     /**
