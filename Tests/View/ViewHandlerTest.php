@@ -128,6 +128,64 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testCreateResponseWithLocationAndData()
+    {
+        $testValue = array('naviter' => 'oudie');
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $this->setupMockedSerializer($container, $testValue);
+
+        $viewHandler = new ViewHandler(array('json' => false));
+        $viewHandler->setContainer($container);
+
+        $view = new View();
+        $view->setStatusCode(Codes::HTTP_CREATED);
+        $view->setLocation('foo');
+        $view->setData($testValue);
+        $returnedResponse = $viewHandler->createResponse($view, new Request(), 'json');
+
+        $this->assertEquals('foo', $returnedResponse->headers->get('location'));
+        $this->assertEquals(var_export($testValue, true), $returnedResponse->getContent());
+    }
+
+    public function testCreateResponseWithRoute()
+    {
+        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+
+        $doRoute = function ($name, $parameters) {
+            $route = '/';
+            foreach ($parameters as $name => $value) {
+                $route .= sprintf('%s/%s/', $name, $value);
+            }
+
+            return $route;
+        };
+
+        $router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')
+            ->getMock();
+
+        $router
+            ->expects($this->any())
+            ->method('generate')
+            ->will($this->returnCallback($doRoute));
+
+        $container
+            ->expects($this->any())
+            ->method('get')
+            ->with('fos_rest.router')
+            ->will($this->returnValue($router));
+
+        $viewHandler = new ViewHandler(array('json' => false));
+        $viewHandler->setContainer($container);
+
+        $view = new View();
+        $view->setStatusCode(Codes::HTTP_CREATED);
+        $view->setRoute('foo');
+        $view->setRouteParameters(array('id' => 2));
+        $returnedResponse = $viewHandler->createResponse($view, new Request(), 'json');
+
+        $this->assertEquals('/id/2/', $returnedResponse->headers->get('location'));
+    }
+
     /**
      * @dataProvider createResponseWithoutLocationDataProvider
      */
@@ -153,32 +211,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->with('fos_rest.templating')
                 ->will($this->returnValue($templating));
         } else {
-            $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
-                ->setMethods(array('serialize'))
-                ->disableOriginalConstructor()
-                ->getMock();
-
-            $serializer
-                ->expects($this->once())
-                ->method('serialize')
-                ->will($this->returnValue(var_export($expected, true)));
-
-            $container
-                ->expects($this->once())
-                ->method('get')
-                ->with('fos_rest.serializer')
-                ->will($this->returnValue($serializer));
-
-            $map = array(
-                array('fos_rest.serializer.exclusion_strategy.groups', 'foo'),
-                array('fos_rest.serializer.exclusion_strategy.version', '1.0'),
-                array('fos_rest.serializer.serialize_null', false)
-            );
-
-            $container
-                ->expects($this->any())
-                ->method('getParameter')
-                ->will($this->returnValueMap($map));
+            $this->setupMockedSerializer($container, $expected);
         }
 
         $viewHandler->setContainer($container);
@@ -204,6 +237,36 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $view = new View($data);
         $response = $viewHandler->createResponse($view, new Request, $format);
         $this->assertEquals(var_export($expected, true), $response->getContent());
+    }
+
+    private function setupMockedSerializer($container, $expected)
+    {
+        $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
+            ->setMethods(array('serialize'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->will($this->returnValue(var_export($expected, true)));
+
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with('fos_rest.serializer')
+            ->will($this->returnValue($serializer));
+
+        $map = array(
+            array('fos_rest.serializer.exclusion_strategy.groups', 'foo'),
+            array('fos_rest.serializer.exclusion_strategy.version', '1.0'),
+            array('fos_rest.serializer.serialize_null', false)
+        );
+
+        $container
+            ->expects($this->any())
+            ->method('getParameter')
+            ->will($this->returnValueMap($map));
     }
 
     public static function createResponseWithoutLocationDataProvider()
