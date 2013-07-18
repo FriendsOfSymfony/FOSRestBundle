@@ -85,6 +85,7 @@ the important ones for configuring the view:
 * ``setFormat($format)`` - The format the response is supposed to be rendered in. Can be autodetected using HTTP semantics.
 * ``setLocation($location)`` - The location to redirect to with a response.
 * ``setRoute($route)`` - The route to redirect to with a response.
+* ``setRouteParameters($parameters)`` - Set the parameters for the route.
 * ``setResponse(Response $response)`` - The response instance that is populated by the ``ViewHandler``.
 
 See the following example code for more details:

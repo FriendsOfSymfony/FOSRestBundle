@@ -4,6 +4,10 @@ Upgrading
 Note as FOSRestBundle is not yet declared stable, this document will be updated to
 list important BC breaks.
 
+### upgrading from 0.12.0
+
+* Route parameters cannot be set via setData anymore, please use a dedicated function `setRouteParametes` from now on
+
 ### upgrading from 0.11.0
 
 * now requires JMSSerializerBundle 0.12
