@@ -90,7 +90,6 @@ class RestYamlCollectionLoader extends YamlFileLoader
                     $this->collectionParents[$name] = $parents;
                 }
 
-                $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
             } elseif (isset($config['pattern']) || isset($config['path'])) {
                 $this->parseRoute($collection, $name, $config, $path);
