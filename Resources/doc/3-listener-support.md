@@ -362,7 +362,7 @@ class FooController extends Controller
      *
      * Will look for a firstname request parameters, ie. firstname=foo in POST data.
      * If not passed it will error out when read out of the ParamFetcher since RequestParam defaults to strict=true
-     * If passed but doesn't match the requirement "\d+" it will also error out (400 Bad Request)
+     * If passed but doesn't match the requirement "[a-z]+" it will also error out (400 Bad Request)
      * Note that if the value matches the default then no validation is run.
      * So make sure the default value really matches your expectations.
      *
