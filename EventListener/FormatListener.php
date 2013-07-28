@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use FOS\Rest\Util\Codes;
-use FOS\Rest\Util\FormatNegotiatorInterface;
+use FOS\RestBundle\Util\FormatNegotiatorInterface;
 
 /**
  * This listener handles Accept header format negotiations.
