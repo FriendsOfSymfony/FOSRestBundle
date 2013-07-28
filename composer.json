@@ -26,7 +26,7 @@
         "friendsofsymfony/rest":          ">=0.7.0,<0.9.0-dev",
         "symfony/framework-bundle":       "~2.1",
         "doctrine/inflector":             "1.0.*",
-        "willdurand/negotiation":         "@stable"
+        "willdurand/negotiation":         "1.0.*"
     },
 
     "require-dev": {
