@@ -36,12 +36,16 @@ class View extends Template
     protected $serializerGroups;
 
     /**
+<<<<<<< HEAD
      * @var Boolean
      */
     protected $populateDefaultVars = true;
 
     /**
      * @var array
+=======
+     * @var bool
+>>>>>>> Fixed doccoments
      */
     protected $serializerEnableMaxDepthChecks;
 
@@ -125,7 +129,7 @@ class View extends Template
     }
 
     /**
-     * @param array $serializerEnableMaxDepthChecks
+     * @param bool $serializerEnableMaxDepthChecks
      */
     public function setSerializerEnableMaxDepthChecks($serializerEnableMaxDepthChecks)
     {
@@ -133,7 +137,7 @@ class View extends Template
     }
 
     /**
-     * @return array
+     * @return bool
      */
     public function getSerializerEnableMaxDepthChecks()
     {
