@@ -41,6 +41,11 @@ class View extends Template
     protected $populateDefaultVars = true;
 
     /**
+     * @var array
+     */
+    protected $serializerEnableMaxDepthChecks;
+
+    /**
      * Returns the annotation alias name.
      *
      * @return string
@@ -117,5 +122,21 @@ class View extends Template
     public function isPopulateDefaultVars()
     {
         return $this->populateDefaultVars;
+    }
+
+    /**
+     * @param array $serializerEnableMaxDepthChecks
+     */
+    public function setSerializerEnableMaxDepthChecks($serializerEnableMaxDepthChecks)
+    {
+        $this->serializerEnableMaxDepthChecks = $serializerEnableMaxDepthChecks;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializerEnableMaxDepthChecks()
+    {
+        return $this->serializerEnableMaxDepthChecks;
     }
 }
