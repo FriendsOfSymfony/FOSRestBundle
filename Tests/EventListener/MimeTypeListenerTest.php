@@ -25,6 +25,10 @@ class MimeTypeListenerTest extends \PHPUnit_Framework_TestCase
     public function testOnKernelRequest()
     {
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
+        $formatNegotiator->expects($this->any())
+            ->method('registerFormat')
+            ->with('jsonp', array('application/javascript'), true)
+            ->will($this->returnValue(null));
 
         $listener = new MimeTypeListener(array('jsonp' => array('application/javascript')), $formatNegotiator);
 
