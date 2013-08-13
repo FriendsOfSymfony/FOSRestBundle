@@ -54,4 +54,29 @@ class FormatNegotiator implements FormatNegotiatorInterface
 
         return $this->formatNegotiator->getBestFormat($acceptHeader, $priorities);
     }
+
+    /**
+     * Register a new format with its mime types.
+     *
+     * @param string  $format
+     * @param array   $mimeTypes
+     * @param boolean $override
+     */
+    public function registerFormat($format, array $mimeTypes, $override = false)
+    {
+        $this->formatNegotiator->registerFormat($format, $mimeTypes, $override);
+    }
+
+    /**
+     * Returns the format for a given mime type, or null
+     * if not found.
+     *
+     * @param string $mimeType
+     *
+     * @return string|null
+     */
+    public function getFormat($mimeType)
+    {
+        $this->formatNegotiator->getFormat($mimeType);
+    }
 }
