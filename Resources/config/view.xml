@@ -7,6 +7,8 @@
     <parameters>
         <parameter key="fos_rest.serializer.exclusion_strategy.version" />
         <parameter key="fos_rest.serializer.exclusion_strategy.groups"/>
+        <parameter key="fos_rest.view_handler.jsonp.callback_param"/>
+        <parameter key="fos_rest.view_handler.jsonp.callback_filter"/>
     </parameters>
 
     <services>
@@ -21,6 +23,11 @@
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
+        </service>
+
+        <service id="fos_rest.view_handler.jsonp" class="FOS\RestBundle\View\JsonpHandler" public="false">
+            <argument>%fos_rest.view_handler.jsonp.callback_param%</argument>
+            <argument>%fos_rest.view_handler.jsonp.callback_filter%</argument>
         </service>
 
     </services>

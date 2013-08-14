@@ -15,6 +15,9 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
 
 use FOS\Rest\Util\Codes;
@@ -128,6 +131,21 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.default_priorities', array());
             $container->setParameter($this->getAlias().'.prefer_extension', true);
             $container->setParameter($this->getAlias().'.fallback_format', 'html');
+        }
+
+        if (!empty($config['view']['jsonp_handler'])) {
+            $handler = new DefinitionDecorator($config['service']['view_handler']);
+
+            $jsonpHandler = new Reference($this->getAlias().'.view_handler.jsonp');
+            $handler->addMethodCall('registerHandler', array('jsonp', array($jsonpHandler, 'createResponse')));
+            $container->setDefinition($this->getAlias().'.view_handler', $handler);
+
+            $container->setParameter($this->getAlias().'.view_handler.jsonp.callback_param', $config['view']['jsonp_handler']['callback_param']);
+            $container->setParameter($this->getAlias().'.view_handler.jsonp.callback_filter', $config['view']['jsonp_handler']['callback_filter']);
+
+            if (empty($config['view']['mime_types']['jsonp'])) {
+                $config['view']['mime_types']['jsonp'] = $config['view']['jsonp_handler']['mime_type'];
+            }
         }
 
         if (!empty($config['view']['mime_types'])) {
