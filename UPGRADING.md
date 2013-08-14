@@ -6,7 +6,7 @@ list important BC breaks.
 
 ### upgrading from 0.12.0
 
-* Route parameters cannot be set via setData anymore, please use a dedicated function `setRouteParametes` from now on
+* Route parameters cannot be set via setData anymore, please use a dedicated function `setRouteParameters` from now on
 
 ### upgrading from 0.11.0
 
