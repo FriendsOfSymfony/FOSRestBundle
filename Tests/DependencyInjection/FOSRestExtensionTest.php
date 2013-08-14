@@ -260,4 +260,14 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($value, $this->container->getParameter($key), sprintf('%s parameter is correct', $key));
     }
+
+    public function testCheckViewHandlerWithJsonp()
+    {
+        $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => null))), $this->container);
+
+        $this->assertTrue($this->container->has('fos_rest.view_handler'));
+
+        $viewHandler = $this->container->getDefinition('fos_rest.view_handler');
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $viewHandler);
+    }
 }
