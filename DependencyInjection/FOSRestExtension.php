@@ -135,6 +135,7 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['view']['jsonp_handler'])) {
             $handler = new DefinitionDecorator($config['service']['view_handler']);
+            $handler->setPublic(true);
 
             $jsonpHandler = new Reference($this->getAlias().'.view_handler.jsonp');
             $handler->addMethodCall('registerHandler', array('jsonp', array($jsonpHandler, 'createResponse')));
