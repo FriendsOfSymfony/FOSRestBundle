@@ -39,6 +39,12 @@ class FormatNegotiator implements FormatNegotiatorInterface
 
         if ($preferExtension) {
             $extension = $request->get('_format');
+
+            // Due to symfony/symfony#8778
+            if (empty($extension) && $request->attributes->has('exception')) {
+                $extension = $request->attributes->get('format');
+            }
+            
             if (null !== $extension && $request->getMimeType($extension)) {
                 if ($acceptHeader) {
                     $acceptHeader.= ',';
