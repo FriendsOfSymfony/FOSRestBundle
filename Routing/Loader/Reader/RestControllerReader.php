@@ -69,6 +69,12 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
+        // read hateoas annotation
+        if ($annotation = $this->readClassAnnotation($reflection, 'Hateoas')) {
+            $collection->setSubject($annotation->subject);
+            $collection->setIdentifier($annotation->identifier);
+        }
+
         $resource = array();
         // read route-resource annotation
         if ($annotation = $this->readClassAnnotation($reflection, 'RouteResource')) {

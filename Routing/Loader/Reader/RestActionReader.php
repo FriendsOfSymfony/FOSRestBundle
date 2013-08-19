@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Route;
 
 use FOS\RestBundle\Util\Inflector\InflectorInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Routing\RestRoute;
 use FOS\RestBundle\Request\ParamReader;
 
 /**
@@ -167,8 +168,18 @@ class RestActionReader
             $resources[] = null;
         }
 
+        $hateoas = $this->readMethodAnnotation($method, 'Hateoas');
+        if ($hateoas && $hateoas->relName) {
+            $relName = $hateoas->relName;
+        } elseif ('get' === $httpMethod) {
+            $relName = empty($arguments) ? 'collection' : 'entity';
+        } else {
+            $relName = false;
+        }
+
         $routeName = $httpMethod.$this->generateRouteName($resources);
-        $urlParts  = $this->generateUrlParts($resources, $arguments, $httpMethod);
+        $placeholders = array();
+        $urlParts  = $this->generateUrlParts($resources, $arguments, $httpMethod, $placeholders, $relName);
 
         // if passed method is not valid HTTP method then it's either
         // a hypertext driver, a custom object (PUT) or collection (GET)
@@ -208,9 +219,12 @@ class RestActionReader
         }
 
         // add route to collection
-        $collection->add($routeName, new Route(
-            $pattern, $defaults, $requirements, $options
-        ));
+        $route = new RestRoute($pattern, $defaults, $requirements, $options);
+        $route->setPlaceholders($placeholders);
+        if ($relName) {
+            $route->setRelName($relName);
+        }
+        $collection->add($routeName, $route);
     }
 
     /**
@@ -340,7 +354,7 @@ class RestActionReader
      *
      * @return array
      */
-    private function generateUrlParts(array $resources, array $arguments, $httpMethod)
+    private function generateUrlParts(array $resources, array $arguments, $httpMethod, array &$placeholders)
     {
         $urlParts = array();
         foreach ($resources as $i => $resource) {
@@ -360,6 +374,7 @@ class RestActionReader
                 } else {
                     $urlParts[] = '{'.$arguments[$i]->getName().'}';
                 }
+                $placeholders[] = $arguments[$i]->getName();
             } elseif (null !== $resource) {
                 if ((0 === count($arguments) && !in_array($httpMethod, $this->availableHTTPMethods))
                     || 'new' === $httpMethod

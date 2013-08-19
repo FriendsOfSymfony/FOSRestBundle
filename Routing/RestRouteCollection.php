@@ -21,6 +21,9 @@ use Symfony\Component\Routing\RouteCollection;
 class RestRouteCollection extends RouteCollection
 {
     private $singularName;
+    private $subject;
+    private $identifier;
+    private $isFormatInRoute = false;
 
     /**
      * Set collection singular name.
@@ -43,6 +46,56 @@ class RestRouteCollection extends RouteCollection
     }
 
     /**
+     * Set route subject class.
+     *
+     * @param string $subject route subject class
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+    }
+
+    /**
+     * Set route subject class.
+     *
+     * @return string
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * Set subject identifier.
+     *
+     * @param string $identifier route identifier class
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
+     * Set subject identifier.
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Check if the format should be set in the route
+     *
+     * @return Boolean
+     */
+    public function isFormatInRoute()
+    {
+        return $this->isFormatInRoute;
+    }
+
+    /**
      * Adds controller prefix to all collection routes.
      *
      * @param string $prefix
@@ -61,6 +114,7 @@ class RestRouteCollection extends RouteCollection
      */
     public function setDefaultFormat($format)
     {
+        $this->isFormatInRoute = true;
         foreach (parent::all() as $route) {
             $route->setDefault('_format', $format);
         }

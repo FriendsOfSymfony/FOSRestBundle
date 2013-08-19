@@ -80,6 +80,17 @@ class RestRouteLoader extends Loader
         $collection->prependRouteControllersWithPrefix($prefix);
         $collection->setDefaultFormat($this->defaultFormat);
 
+        if ($collection->getSubject()) {
+            $cacheDir = $this->container->getParameter('kernel.cache_dir');
+            $dir = $cacheDir.'/fos_rest/hateoas';
+            if (!is_dir($dir) && false === $this->container->get('filesystem')->mkdir($dir)) {
+                throw new \RuntimeException(sprintf(
+                    'Could not create hateoas cache directory %s', $dir
+                ));
+            }
+            file_put_contents($dir.'/'.str_replace('\\', '', $collection->getSubject()), serialize($collection));
+        }
+
         return $collection;
     }
 
