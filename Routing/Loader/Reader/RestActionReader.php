@@ -432,4 +432,13 @@ class RestActionReader
             return $annotation;
         }
     }
+    
+    /**
+     * Set the inflector for the reder.
+     * @param InflectorInterface $inflector
+     */
+    public function setInflector($inflector) 
+    {
+        $this->inflector = $inflector;
+    }
 }
