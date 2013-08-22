@@ -270,7 +270,7 @@ class ExceptionController extends ContainerAware
      * This code comes from Symfony and should be synchronized on a regular basis
      * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
      *
-     * @note to be removed when the minimum required version of Twig is >= 2.0
+     * To be removed when the minimum required version of Twig is >= 2.0
      */
     protected function templateExists($template)
     {
