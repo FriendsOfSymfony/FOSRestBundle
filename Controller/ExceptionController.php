@@ -91,6 +91,9 @@ class ExceptionController extends ContainerAware
     /**
      * Get and clean any content that was already outputted
      *
+     * This code comes from Symfony and should be synchronized on a regular basis
+     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
+     *
      * @return string
      */
     protected function getAndCleanOutputBuffering()
@@ -225,6 +228,9 @@ class ExceptionController extends ContainerAware
      * Note this method needs to be overridden in case another
      * engine than Twig should be supported;
      *
+     * This code comes from Symfony and should be synchronized on a regular basis
+     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
+     *
      * @param string  $format The format to use for rendering (html, xml, ...)
      * @param integer $code   An HTTP response code
      *
@@ -260,7 +266,12 @@ class ExceptionController extends ContainerAware
         return new TemplateReference('TwigBundle', 'Exception', $name, 'html', 'twig');
     }
 
-    // to be removed when the minimum required version of Twig is >= 2.0
+    /**
+     * This code comes from Symfony and should be synchronized on a regular basis
+     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
+     *
+     * @note to be removed when the minimum required version of Twig is >= 2.0
+     */
     protected function templateExists($template)
     {
         $loader = $this->twig->getLoader();
