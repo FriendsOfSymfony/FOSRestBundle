@@ -75,7 +75,7 @@ class ExceptionController extends ContainerAware
             $view->setFormat($format);
 
             if ($viewHandler->isFormatTemplating($format)) {
-                $view->setTemplate($this->findTemplate($format, $code));
+                $view->setTemplate($this->findTemplate($request, $format, $code, $this->container->get('kernel')->isDebug()));
             }
 
             $response = $viewHandler->handle($view);
@@ -233,16 +233,15 @@ class ExceptionController extends ContainerAware
      * This code comes from Symfony and should be synchronized on a regular basis
      * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
      *
-     * @param string  $format The format to use for rendering (html, xml, ...)
-     * @param integer $code   An HTTP response code
+     * @param Request $request
+     * @param string  $format
+     * @param integer $code       An HTTP response status code
+     * @param Boolean $debug
      *
      * @return TemplateReference
      */
-    protected function findTemplate($format, $code)
+    protected function findTemplate(Request $request, $format, $code, $debug)
     {
-        $templating = $this->container->get('templating');
-        $debug = $this->container->get('kernel')->isDebug();
-
         $name = $debug ? 'exception' : 'error';
         if ($debug && 'html' == $format) {
             $name = 'exception_full';
@@ -276,7 +275,8 @@ class ExceptionController extends ContainerAware
      */
     protected function templateExists($template)
     {
-        $loader = $this->twig->getLoader();
+        $templating = $this->container->get('templating');
+        $loader = $templating->getLoader();
         if ($loader instanceof \Twig_ExistsLoaderInterface) {
             return $loader->exists($template);
         }
