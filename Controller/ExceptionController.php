@@ -91,17 +91,20 @@ class ExceptionController extends ContainerAware
     /**
      * Get and clean any content that was already outputted
      *
+     * This code comes from Symfony and should be synchronized on a regular basis
+     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
+     *
      * @return string
      */
     protected function getAndCleanOutputBuffering()
     {
-        // the count variable avoids an infinite loop on
-        // some Windows configurations where ob_get_level()
-        // never reaches 0
-        $count = 100;
-        $startObLevel = $this->container->get('request')->headers->get('X-Php-Ob-Level', -1);;
+        // ob_get_level() never returns 0 on some Windows configurations, so if
+        // the level is the same two times in a row, the loop should be stopped.
+        $previousObLevel = null;
         $currentContent = '';
-        while (ob_get_level() > $startObLevel && --$count) {
+
+        while (($obLevel = ob_get_level()) > $startObLevel && $obLevel !== $previousObLevel) {
+            $previousObLevel = $obLevel;
             $currentContent .= ob_get_clean();
         }
 
@@ -225,6 +228,9 @@ class ExceptionController extends ContainerAware
      * Note this method needs to be overridden in case another
      * engine than Twig should be supported;
      *
+     * This code comes from Symfony and should be synchronized on a regular basis
+     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
+     *
      * @param string  $format The format to use for rendering (html, xml, ...)
      * @param integer $code   An HTTP response code
      *
@@ -243,17 +249,43 @@ class ExceptionController extends ContainerAware
         // when not in debug, try to find a template for the specific HTTP status code and format
         if (!$debug) {
             $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format, 'twig');
-            if ($templating->exists($template)) {
+            if ($this->templateExists($template)) {
                 return $template;
             }
         }
 
         // try to find a template for the given format
         $template = new TemplateReference('TwigBundle', 'Exception', $name, $format, 'twig');
-        if ($templating->exists($template)) {
+        if ($this->templateExists($template)) {
             return $template;
         }
 
+        // default to a generic HTML exception
+        $request->setRequestFormat('html');
+
         return new TemplateReference('TwigBundle', 'Exception', $name, 'html', 'twig');
+    }
+
+    /**
+     * This code comes from Symfony and should be synchronized on a regular basis
+     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
+     *
+     * @note to be removed when the minimum required version of Twig is >= 2.0
+     */
+    protected function templateExists($template)
+    {
+        $loader = $this->twig->getLoader();
+        if ($loader instanceof \Twig_ExistsLoaderInterface) {
+            return $loader->exists($template);
+        }
+
+        try {
+            $loader->getSource($template);
+
+            return true;
+        } catch (\Twig_Error_Loader $e) {
+        }
+
+        return false;
     }
 }
