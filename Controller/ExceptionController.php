@@ -98,6 +98,8 @@ class ExceptionController extends ContainerAware
      */
     protected function getAndCleanOutputBuffering()
     {
+        $startObLevel = $this->container->get('request')->headers->get('X-Php-Ob-Level', -1);
+
         // ob_get_level() never returns 0 on some Windows configurations, so if
         // the level is the same two times in a row, the loop should be stopped.
         $previousObLevel = null;
