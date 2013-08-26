@@ -230,7 +230,7 @@ class ExceptionController extends ContainerAware
      * Note this method needs to be overridden in case another
      * engine than Twig should be supported;
      *
-     * This code comes from Symfony and should be synchronized on a regular basis
+     * This code is inspired by TwigBundle and should be synchronized on a regular basis
      * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
      *
      * @param Request $request
@@ -250,14 +250,14 @@ class ExceptionController extends ContainerAware
         // when not in debug, try to find a template for the specific HTTP status code and format
         if (!$debug) {
             $template = new TemplateReference('TwigBundle', 'Exception', $name.$code, $format, 'twig');
-            if ($this->templateExists($template)) {
+            if ($this->container->get('templating')->exists($template)) {
                 return $template;
             }
         }
 
         // try to find a template for the given format
         $template = new TemplateReference('TwigBundle', 'Exception', $name, $format, 'twig');
-        if ($this->templateExists($template)) {
+        if ($this->container->get('templating')->exists($template)) {
             return $template;
         }
 
@@ -265,29 +265,5 @@ class ExceptionController extends ContainerAware
         $request->setRequestFormat('html');
 
         return new TemplateReference('TwigBundle', 'Exception', $name, 'html', 'twig');
-    }
-
-    /**
-     * This code comes from Symfony and should be synchronized on a regular basis
-     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
-     *
-     * To be removed when the minimum required version of Twig is >= 2.0
-     */
-    protected function templateExists($template)
-    {
-        $templating = $this->container->get('templating');
-        $loader = $templating->getLoader();
-        if ($loader instanceof \Twig_ExistsLoaderInterface) {
-            return $loader->exists($template);
-        }
-
-        try {
-            $loader->getSource($template);
-
-            return true;
-        } catch (\Twig_Error_Loader $e) {
-        }
-
-        return false;
     }
 }
