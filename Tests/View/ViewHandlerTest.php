@@ -217,7 +217,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         if ($form) {
-            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'getData', 'isValid'), array(), '', false);
+            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'getData', 'isValid', 'isBound'), array(), '', false);
             $data
                 ->expects($this->exactly($createViewCalls))
                 ->method('createView')
@@ -230,6 +230,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->expects($this->any())
                 ->method('isValid')
                 ->will($this->returnValue($formIsValid));
+            $data
+                ->expects($this->any())
+                ->method('isBound')
+                ->will($this->returnValue(true));
         } else {
             $data = array('foo' => 'bar');
         }

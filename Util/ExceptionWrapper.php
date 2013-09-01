@@ -18,6 +18,7 @@ class ExceptionWrapper
     private $statusText;
     private $currentContent;
     private $message;
+    private $errors;
 
     public function __construct($data)
     {
@@ -26,5 +27,8 @@ class ExceptionWrapper
         $this->statusText = $data['status_text'];
         $this->currentContent = $data['currentContent'];
         $this->message = $data['message'];
+        if (isset($data['errors'])) {
+            $this->errors = $data['errors'];
+        }
     }
 }
