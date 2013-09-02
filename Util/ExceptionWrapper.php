@@ -13,22 +13,17 @@ namespace FOS\RestBundle\Util;
 
 class ExceptionWrapper
 {
-    private $status;
-    private $statusCode;
-    private $statusText;
-    private $currentContent;
-    private $message;
-    private $errors;
+    /**
+     * @var array
+     */
+    private $error = array('code' => null, 'message' => null);
 
     public function __construct($data)
     {
-        $this->status = $data['status'];
-        $this->statusCode = $data['status_code'];
-        $this->statusText = $data['status_text'];
-        $this->currentContent = $data['currentContent'];
-        $this->message = $data['message'];
+        $this->error['code'] = $data['status_code'];
+        $this->error['message'] = $data['message'];
         if (isset($data['errors'])) {
-            $this->errors = $data['errors'];
+            $this->error['errors'] = $data['errors'];
         }
     }
 }
