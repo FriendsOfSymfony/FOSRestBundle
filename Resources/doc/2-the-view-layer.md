@@ -98,12 +98,32 @@ Symfony Forms have special handling inside the view layer. Whenever you
 - return a Form from the controller
 - Set the form as only data of the view
 - return an array with a 'form' key, containing a form
+- return a form with validation errors
 
 Then:
 
 - If the form is bound and no status code is set explicitly, an invalid form leads to a "validation failed" response.
 - In a rendered template, the form is passed as 'form' and ``createView()`` is called automatically.
 - ``$form->getData()`` is passed into the view as template as ``'data'`` if the form is the only view data.
+- An invalid form will be wrapped into an exception
+
+A response example of an invalid form:
+
+```javascript
+{
+  "code": 400,
+  "message": "Validation Failed";
+  "errors": {
+    "children": {
+      "username": {
+        "errors": [
+          "This value should not be blank."
+        ]
+      }
+    }
+  }
+}
+```
 
 ### Configuration
 
