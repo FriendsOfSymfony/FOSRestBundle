@@ -4,6 +4,10 @@ Upgrading
 Note as FOSRestBundle is not yet declared stable, this document will be updated to
 list important BC breaks.
 
+### Upgrading from 0.13.1
+
+* The response for non-valid Forms has changed. See https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/2-the-view-layer.md#forms-and-views
+
 ### upgrading from 0.12.0
 
 * Route parameters cannot be set via setData anymore, please use a dedicated function `setRouteParameters` from now on
