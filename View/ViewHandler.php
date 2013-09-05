@@ -448,7 +448,10 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
             return $form;
         }
 
-        return new ExceptionWrapper(
+        /** @var ExceptionWrapperHandlerInterface $exceptionWrapperHandler */
+        $exceptionWrapperHandler = $this->container->get('fos_rest.view_handler.exception_wrapper_handler');
+
+        return $exceptionWrapperHandler->wrap(
             array(
                  'status'         => 'error',
                  'status_code'    => $view->getResponse()->getStatusCode(),
@@ -458,5 +461,6 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
                  'errors'         => $form
             )
         );
+
     }
 }

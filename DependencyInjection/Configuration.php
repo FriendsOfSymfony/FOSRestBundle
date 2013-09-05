@@ -143,6 +143,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
                         ->scalarNode('empty_content')->defaultValue(Codes::HTTP_NO_CONTENT)->end()
+                        ->scalarNode('exception_wrapper_handler')->defaultValue('FOS\RestBundle\View\ExceptionWrapperHandler')->end()
                         ->booleanNode('serialize_null')->defaultFalse()->end()
                         ->arrayNode('jsonp_handler')
                             ->canBeUnset()
