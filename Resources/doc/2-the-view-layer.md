@@ -125,6 +125,38 @@ A response example of an invalid form:
 }
 ```
 
+If you don't like the default exception structure, you can provide your own implementation.
+
+1. Implement the ``ExceptionWrapperHandlerInterface``
+
+``` php
+namespace My\Bundle\Handler;
+
+class MyExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
+{
+
+    /**
+     * {@inheritdoc}
+     */
+    public function wrap($data)
+    {
+        return new MyExceptionWrapper($data);
+    }
+}
+```
+
+In the `wrap` method return any object or array
+
+2. Update the config.yml
+
+``` yaml
+fos_rest:
+    view:
+        ...
+        exception_handler_wrapper: My\Bundle\Handler\MyExceptionWrapperHandler
+        ...
+```
+
 ### Configuration
 
 The ``formats`` and ``templating_formats`` settings determine which formats are
