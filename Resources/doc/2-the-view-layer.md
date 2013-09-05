@@ -127,7 +127,7 @@ A response example of an invalid form:
 
 If you don't like the default exception structure, you can provide your own implementation.
 
-- Implement the ``ExceptionWrapperHandlerInterface``
+_Implement the ExceptionWrapperHandlerInterface_:
 
 ``` php
 namespace My\Bundle\Handler;
@@ -147,7 +147,7 @@ class MyExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
 
 In the `wrap` method return any object or array
 
-- Update the config.yml
+_Update the config.yml_:
 
 ``` yaml
 fos_rest:
