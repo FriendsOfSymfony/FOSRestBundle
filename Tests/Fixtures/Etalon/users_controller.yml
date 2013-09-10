@@ -65,7 +65,7 @@ ban_user:
 
 post_user_comment_vote:
   method:     POST
-  pattern:    /users/{slug}/comments/{id}/vote.{_format}
+  pattern:    /users/{slug}/comments/{id}/votes.{_format}
   controller: ::postUserCommentVoteAction
 
 check_username_users:
