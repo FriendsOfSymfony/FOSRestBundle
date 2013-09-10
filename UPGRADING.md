@@ -4,7 +4,7 @@ Upgrading
 Note as FOSRestBundle is not yet declared stable, this document will be updated to
 list important BC breaks.
 
-### upgrading from 0.13.0
+### upgrading from 0.13.1
 
 * POST routes now pluralize the resource name, ie. /users vs. /user
 
