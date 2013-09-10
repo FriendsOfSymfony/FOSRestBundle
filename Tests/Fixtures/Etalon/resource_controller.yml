@@ -65,7 +65,7 @@ ban_article:
 
 post_article_comment_vote:
   method:     POST
-  pattern:    /articles/{slug}/comments/{id}/vote.{_format}
+  pattern:    /articles/{slug}/comments/{id}/votes.{_format}
   controller: ::postCommentVoteAction
 
 check_articlename_article:
