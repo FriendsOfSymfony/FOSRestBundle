@@ -363,6 +363,7 @@ class RestActionReader
             } elseif (null !== $resource) {
                 if ((0 === count($arguments) && !in_array($httpMethod, $this->availableHTTPMethods))
                     || 'new' === $httpMethod
+                    || 'post' === $httpMethod
                 ) {
                     $urlParts[] = $this->inflector->pluralize(strtolower($resource));
                 } else {

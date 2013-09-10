@@ -4,6 +4,10 @@ Upgrading
 Note as FOSRestBundle is not yet declared stable, this document will be updated to
 list important BC breaks.
 
+### upgrading from 0.13.0
+
+* POST routes now pluralize the resource name, ie. /users vs. /user
+
 ### upgrading from 0.12.0
 
 * Route parameters cannot be set via setData anymore, please use a dedicated function `setRouteParameters` from now on
