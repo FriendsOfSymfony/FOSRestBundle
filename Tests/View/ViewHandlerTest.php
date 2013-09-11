@@ -261,7 +261,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with($this->logicalOr(
                   $this->equalTo('fos_rest.serializer'),
-                  $this->equalTo('fos_rest.view_handler.exception_wrapper_handler')
+                  $this->equalTo('fos_rest.view.exception_wrapper_handler')
               ))
             ->will(
                   $this->returnCallback(
@@ -269,7 +269,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                             switch ($method) {
                                 case 'fos_rest.serializer':
                                     return $serializer;
-                                case 'fos_rest.view_handler.exception_wrapper_handler':
+                                case 'fos_rest.view.exception_wrapper_handler':
                                     return new ExceptionWrapperHandler();
                             }
                       }

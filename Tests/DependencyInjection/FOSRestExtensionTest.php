@@ -275,9 +275,9 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->extension->load(array(), $this->container);
 
-        $this->assertTrue($this->container->has('fos_rest.view_handler.exception_wrapper_handler'));
+        $this->assertTrue($this->container->has('fos_rest.view.exception_wrapper_handler'));
 
-        $exceptionWrapperHandler = $this->container->getDefinition('fos_rest.view_handler.exception_wrapper_handler');
-        $this->assertEquals('%fos_rest.view_handler.exception_wrapper_handler%', $exceptionWrapperHandler->getClass());
+        $exceptionWrapperHandler = $this->container->getDefinition('fos_rest.view.exception_wrapper_handler');
+        $this->assertEquals('%fos_rest.view.exception_wrapper_handler%', $exceptionWrapperHandler->getClass());
     }
 }
