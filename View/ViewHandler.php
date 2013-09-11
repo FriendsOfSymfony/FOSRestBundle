@@ -387,7 +387,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
         } elseif ($this->serializeNull || null !== $view->getData()) {
-            $data = $this->getViewDataForResponse($view);
+            $data = $this->getDataFromView($view);
             $serializer = $this->getSerializer($view);
             if ($serializer instanceof SerializerInterface) {
                 $context = $this->getSerializationContext($view);
@@ -436,7 +436,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      *
      * @return mixed|null
      */
-    private function getViewDataForResponse(View $view)
+    private function getDataFromView(View $view)
     {
         $form = $this->getFormFromView($view);
 
