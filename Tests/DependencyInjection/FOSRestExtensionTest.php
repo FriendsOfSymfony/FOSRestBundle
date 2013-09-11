@@ -271,8 +271,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $viewHandler);
     }
 
-    public function testCheckExceptionWrapperHandler() {
-
+    public function testCheckExceptionWrapperHandler()
+    {
         $this->extension->load(array(), $this->container);
 
         $this->assertTrue($this->container->has('fos_rest.view_handler.exception_wrapper_handler'));

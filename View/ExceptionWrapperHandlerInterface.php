@@ -5,8 +5,8 @@ namespace FOS\RestBundle\View;
 /**
  * @author Toni Van de Voorde (toni [dot] vdv [AT] gmail [dot] com)
  */
-interface ExceptionWrapperHandlerInterface {
-
+interface ExceptionWrapperHandlerInterface
+{
     /**
      * @param array $data
      *
