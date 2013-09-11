@@ -4,8 +4,9 @@ Upgrading
 Note as FOSRestBundle is not yet declared stable, this document will be updated to
 list important BC breaks.
 
-### Upgrading from 0.13.1
+### upgrading from 0.13.1
 
+* POST routes now pluralize the resource name, ie. /users vs. /user
 * The response for non-valid Forms has changed. See https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/2-the-view-layer.md#forms-and-views
 
 ### upgrading from 0.12.0
