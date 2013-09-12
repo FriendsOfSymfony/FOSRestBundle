@@ -98,12 +98,64 @@ Symfony Forms have special handling inside the view layer. Whenever you
 - return a Form from the controller
 - Set the form as only data of the view
 - return an array with a 'form' key, containing a form
+- return a form with validation errors
 
 Then:
 
 - If the form is bound and no status code is set explicitly, an invalid form leads to a "validation failed" response.
 - In a rendered template, the form is passed as 'form' and ``createView()`` is called automatically.
 - ``$form->getData()`` is passed into the view as template as ``'data'`` if the form is the only view data.
+- An invalid form will be wrapped into an exception
+
+A response example of an invalid form:
+
+```javascript
+{
+  "code": 400,
+  "message": "Validation Failed";
+  "errors": {
+    "children": {
+      "username": {
+        "errors": [
+          "This value should not be blank."
+        ]
+      }
+    }
+  }
+}
+```
+
+If you don't like the default exception structure, you can provide your own implementation.
+
+_Implement the ExceptionWrapperHandlerInterface_:
+
+``` php
+namespace My\Bundle\Handler;
+
+class MyExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
+{
+
+    /**
+     * {@inheritdoc}
+     */
+    public function wrap($data)
+    {
+        return new MyExceptionWrapper($data);
+    }
+}
+```
+
+In the `wrap` method return any object or array
+
+_Update the config.yml_:
+
+``` yaml
+fos_rest:
+    view:
+        ...
+        exception_handler_wrapper: My\Bundle\Handler\MyExceptionWrapperHandler
+        ...
+```
 
 ### Configuration
 

@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
@@ -217,7 +218,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         if ($form) {
-            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'getData', 'isValid'), array(), '', false);
+            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'getData', 'isValid', 'isBound'), array(), '', false);
             $data
                 ->expects($this->exactly($createViewCalls))
                 ->method('createView')
@@ -230,6 +231,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->expects($this->any())
                 ->method('isValid')
                 ->will($this->returnValue($formIsValid));
+            $data
+                ->expects($this->any())
+                ->method('isBound')
+                ->will($this->returnValue(true));
         } else {
             $data = array('foo' => 'bar');
         }
@@ -252,10 +257,24 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(var_export($expected, true)));
 
         $container
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('get')
-            ->with('fos_rest.serializer')
-            ->will($this->returnValue($serializer));
+            ->with($this->logicalOr(
+                  $this->equalTo('fos_rest.serializer'),
+                  $this->equalTo('fos_rest.view.exception_wrapper_handler')
+              ))
+            ->will(
+                  $this->returnCallback(
+                      function ($method) use ($serializer) {
+                            switch ($method) {
+                                case 'fos_rest.serializer':
+                                    return $serializer;
+                                case 'fos_rest.view.exception_wrapper_handler':
+                                    return new ExceptionWrapperHandler();
+                            }
+                      }
+                  )
+              );
 
         $map = array(
             array('fos_rest.serializer.exclusion_strategy.groups', 'foo'),

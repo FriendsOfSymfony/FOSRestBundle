@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
@@ -38,7 +39,9 @@ class ExceptionController extends ContainerAware
      */
     protected function createExceptionWrapper(array $parameters)
     {
-        return new ExceptionWrapper($parameters);
+        /** @var ExceptionWrapperHandlerInterface $exceptionWrapperHandler */
+        $exceptionWrapperHandler = $this->container->get('fos_rest.view.exception_wrapper_handler');
+        return $exceptionWrapperHandler->wrap($parameters);
     }
 
     /**

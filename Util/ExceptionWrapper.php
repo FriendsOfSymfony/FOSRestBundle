@@ -11,20 +11,36 @@
 
 namespace FOS\RestBundle\Util;
 
+/**
+ * Wraps an exception into the FOSRest exception format
+ */
 class ExceptionWrapper
 {
-    private $status;
-    private $statusCode;
-    private $statusText;
-    private $currentContent;
+    /**
+     * @var string
+     */
+    private $code;
+
+    /**
+     * @var string
+     */
     private $message;
 
+    /**
+     * @var mixed
+     */
+    private $errors;
+
+    /**
+     * @param array $data
+     */
     public function __construct($data)
     {
-        $this->status = $data['status'];
-        $this->statusCode = $data['status_code'];
-        $this->statusText = $data['status_text'];
-        $this->currentContent = $data['currentContent'];
+        $this->code = $data['status_code'];
         $this->message = $data['message'];
+
+        if (isset($data['errors'])) {
+            $this->errors = $data['errors'];
+        }
     }
 }
