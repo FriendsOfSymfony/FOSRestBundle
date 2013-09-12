@@ -9,6 +9,7 @@
         <parameter key="fos_rest.serializer.exclusion_strategy.groups"/>
         <parameter key="fos_rest.view_handler.jsonp.callback_param"/>
         <parameter key="fos_rest.view_handler.jsonp.callback_filter"/>
+        <parameter key="fos_rest.view.exception_wrapper_handler" />
     </parameters>
 
     <services>
@@ -29,6 +30,8 @@
             <argument>%fos_rest.view_handler.jsonp.callback_param%</argument>
             <argument>%fos_rest.view_handler.jsonp.callback_filter%</argument>
         </service>
+
+        <service id="fos_rest.view.exception_wrapper_handler" class="%fos_rest.view.exception_wrapper_handler%" />
 
     </services>
 </container>

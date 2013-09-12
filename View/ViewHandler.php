@@ -24,6 +24,8 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 use FOS\Rest\Util\Codes;
 
+use FOS\RestBundle\Util\ExceptionWrapper;
+
 /**
  * View may be used in controllers to build up a response in a format agnostic way
  * The View class takes care of encoding your data in json, xml, or renders a
@@ -133,21 +135,14 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      * the key 'form' in the View's data it will return the failed_validation
      * configuration if the form instance has errors.
      *
-     * @param View $view view instance
+     * @param View  $view view instance
      * @param mixed $content
      *
      * @return int HTTP status code
      */
     protected function getStatusCode(View $view, $content = null)
     {
-        $data = $view->getData();
-        if ($data instanceof FormInterface) {
-            $form = $data;
-        } elseif (is_array($data) && isset($data['form'])  && $data['form'] instanceof FormInterface) {
-            $form = $data['form'];
-        } else {
-            $form = false;
-        }
+        $form = $this->getFormFromView($view);
 
         if ($form && $form->isBound() && !$form->isValid()) {
             return $this->failedValidationCode;
@@ -392,12 +387,13 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         if ($this->isFormatTemplating($format)) {
             $content = $this->renderTemplate($view, $format);
         } elseif ($this->serializeNull || null !== $view->getData()) {
+            $data = $this->getDataFromView($view);
             $serializer = $this->getSerializer($view);
             if ($serializer instanceof SerializerInterface) {
                 $context = $this->getSerializationContext($view);
-                $content = $serializer->serialize($view->getData(), $format, $context);
+                $content = $serializer->serialize($data, $format, $context);
             } else {
-                $content = $serializer->serialize($view->getData(), $format);
+                $content = $serializer->serialize($data, $format);
             }
         }
 
@@ -409,5 +405,62 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         }
 
         return $response;
+    }
+
+    /**
+     * Returns the form from the given view if present, false otherwise
+     *
+     * @param View $view
+     *
+     * @return bool|FormInterface
+     */
+    protected function getFormFromView(View $view)
+    {
+        $data = $view->getData();
+
+        if ($data instanceof FormInterface) {
+            return $data;
+        }
+
+        if (is_array($data) && isset($data['form']) && $data['form'] instanceof FormInterface) {
+            return $data['form'];
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the data from a view. If the data is form with errors, it will return it wrapped in an ExceptionWrapper
+     *
+     * @param View $view
+     *
+     * @return mixed|null
+     */
+    private function getDataFromView(View $view)
+    {
+        $form = $this->getFormFromView($view);
+
+        if (false === $form) {
+            return $view->getData();
+        }
+
+        if ($form->isValid() || !$form->isBound()) {
+            return $form;
+        }
+
+        /** @var ExceptionWrapperHandlerInterface $exceptionWrapperHandler */
+        $exceptionWrapperHandler = $this->container->get('fos_rest.view.exception_wrapper_handler');
+
+        return $exceptionWrapperHandler->wrap(
+            array(
+                 'status'         => 'error',
+                 'status_code'    => $view->getResponse()->getStatusCode(),
+                 'status_text'    => Response::$statusTexts[$view->getResponse()->getStatusCode()],
+                 'currentContent' => '',
+                 'message'        => 'Validation Failed',
+                 'errors'         => $form
+            )
+        );
+
     }
 }
