@@ -31,7 +31,8 @@ list important BC breaks.
 
     _Alternatively you can inject your own implementation. See https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/2-the-view-layer.md#forms-and-views_
 
- * The ``format_listener`` default setting for ``default_priorities`` is now only ``html`` for security reasons.
+ * The ``format_listener`` configuration has changed to allow different settings per host/path.
+   Finally the signature of FormatNegotiatorInterface::getBestFormat() changed.
 
 ### upgrading from 0.12.0
 

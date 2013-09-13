@@ -34,57 +34,15 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($request));
 
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
-
-        $listener = new FormatListener($formatNegotiator, 'xml', array());
-
-        $listener->onKernelController($event);
-
-        $this->assertEquals($request->getRequestFormat(), 'xml');
-    }
-
-    public function testOnKernelControllerDefault()
-    {
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterControllerEvent')->disableOriginalConstructor()->getMock();
-
-        $request = new Request();
-
-        $event->expects($this->once())
-            ->method('getRequest')
-            ->will($this->returnValue($request));
-
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
         $formatNegotiator->expects($this->once())
             ->method('getBestFormat')
             ->will($this->returnValue('xml'));
 
-        $listener = new FormatListener($formatNegotiator, null, array('json'));
+        $listener = new FormatListener($formatNegotiator);
 
         $listener->onKernelController($event);
 
         $this->assertEquals($request->getRequestFormat(), 'xml');
-    }
-
-    public function testOnKernelControllerNoFormat()
-    {
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterControllerEvent')->disableOriginalConstructor()->getMock();
-
-        $request = new Request();
-
-        $event->expects($this->once())
-            ->method('getRequest')
-            ->will($this->returnValue($request));
-
-        $event->expects($this->once())
-            ->method('getRequestType')
-            ->will($this->returnValue(HttpKernelInterface::SUB_REQUEST));
-
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
-
-        $listener = new FormatListener($formatNegotiator, null, array());
-
-        $listener->onKernelController($event);
-
-        $this->assertEquals('html', $request->getRequestFormat());
     }
 
     /**
@@ -106,7 +64,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
 
-        $listener = new FormatListener($formatNegotiator, null, array());
+        $listener = new FormatListener($formatNegotiator);
 
         $listener->onKernelController($event);
     }
