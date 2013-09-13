@@ -44,7 +44,7 @@ fos_rest:
         failed_validation:      400
         empty_content:          204
         serialize_null:         false
-        exception_handler_wrapper: FOS\RestBundle\View\ExceptionWrapperHandler
+        exception_wrapper_handler: FOS\RestBundle\View\ExceptionWrapperHandler
         jsonp_handler:
             callback_param:     callback
             callback_filter:    /(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i
