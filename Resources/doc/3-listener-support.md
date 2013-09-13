@@ -305,8 +305,41 @@ When calling:
 * ``/foo`` will lead to setting the request format to ``json``
 * ``/foo.html`` will lead to setting the request format to ``html``
 
+Note for security it may therefore be necessary to check the matched format
+in the controller or hard code the format in the View instance. For example
+if the output should only be html as the template implements important
+permission checks to decide what content to actually embed in the response.
+
+```php
+public function getAction(Request $request)
+{
+    $view = new View();
+    // hard code the output format of the controller action
+    $view->setFormat('html');
+
+    ..
+}
+```
+
+Furthermore it may simply be necessary to ensure that no html response
+is created because there is no template available as the output should only
+be XML/Json.
+
+```php
+public function getAction(Request $request)
+{
+    // prevent any format but xml and json to be handled by the controller action
+    if (!in_array($request->getRequestFormat(), array('xml', 'json')) {
+        throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
+    }
+
+    ..
+}
+```
+
 Note that the format needs to either be supported by the ``Request`` class
-natively or it needs to be added as documented here:
+natively or it needs to be added as documented here or using the mime type
+listener explained below:
 http://symfony.com/doc/current/cookbook/request/mime_type.html
 
 ### Mime type listener

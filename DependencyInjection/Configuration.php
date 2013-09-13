@@ -187,7 +187,7 @@ class Configuration implements ConfigurationInterface
                     ->canBeUnset()
                     ->children()
                         ->arrayNode('default_priorities')
-                            ->defaultValue(array('html', '*/*'))
+                            ->defaultValue(array('html'))
                             ->prototype('scalar')->end()
                         ->end()
                         ->booleanNode('prefer_extension')->defaultTrue()->end()

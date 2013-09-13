@@ -76,7 +76,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array(), $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
-        $this->assertParameter(array('html', '*/*'), 'fos_rest.default_priorities');
+        $this->assertParameter(array('html'), 'fos_rest.default_priorities');
         $this->assertParameter('html', 'fos_rest.fallback_format');
     }
 
