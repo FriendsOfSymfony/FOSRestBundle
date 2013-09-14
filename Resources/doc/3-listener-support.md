@@ -261,7 +261,7 @@ request based on the Request's Accept-Header and the format priority
 configuration. This way it becomes possible to leverage Accept-Headers to
 determine the request format, rather than a file extension (like foo.json).
 
-The ``default_priorities`` define the order of formats as the application
+The ``priorities`` define the order of formats as the application
 prefers.  The algorithm iteratively examines the provided Accept header first
 looking at all the options with the highest ``q``. The first priority that
 matches is returned. If none match the next lowest set of Accept headers with
@@ -273,18 +273,16 @@ header setting is added with a ``q`` setting one lower than the lowest Accept
 header, meaning that format is checked for a match in the priorities last. If
 ``prefer_extension`` is set to ``true`` then the virtual Accept header will be
 one higher than the highest ``q`` causing the extension to be checked first.
-
-Note that setting ``default_priorities`` to a non empty array enables Accept
-header negotiations, while adding '*/*' to the priorities will effectively
-cause any priority to match.
+Setting ``priorities`` to a non empty array enables Accept header negotiations.
 
 ```yaml
 # app/config/config.yml
 fos_rest:
     format_listener:
-        default_priorities: ['json', html, '*/*']
-        fallback_format: json
-        prefer_extension: true
+        rules:
+            - { path: '^/', host: 'api.%domain%', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+            - { path: '^/image', priorities: ['jpeg', 'gif'], fallback_format: jpeg, prefer_extension: true }
+            - { path: '^/', priorities: [ 'html', '*/*'], fallback_format: html, prefer_extension: true }
 ```
 
 For example using the above configuration and the following Accept header:
@@ -305,8 +303,26 @@ When calling:
 * ``/foo`` will lead to setting the request format to ``json``
 * ``/foo.html`` will lead to setting the request format to ``html``
 
+Note take care to configure the ``priorities`` carefully especially when the
+controller actions for specific routes only handle necessary security checks
+for specific formats. In such cases it might make sense to hard code the format
+in the controller action.
+
+
+```php
+public function getAction(Request $request)
+{
+    $view = new View();
+    // hard code the output format of the controller action
+    $view->setFormat('html');
+
+    ..
+}
+```
+
 Note that the format needs to either be supported by the ``Request`` class
-natively or it needs to be added as documented here:
+natively or it needs to be added as documented here or using the mime type
+listener explained below:
 http://symfony.com/doc/current/cookbook/request/mime_type.html
 
 ### Mime type listener

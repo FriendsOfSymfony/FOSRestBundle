@@ -15,5 +15,5 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface FormatNegotiatorInterface
 {
-    function getBestFormat(Request $request, array $availableTypes);
+    function getBestFormat(Request $request);
 }
