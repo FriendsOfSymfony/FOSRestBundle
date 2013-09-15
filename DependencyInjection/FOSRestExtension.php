@@ -121,16 +121,24 @@ class FOSRestExtension extends Extension
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
         }
 
-        if (!empty($config['format_listener'])) {
+        if (!empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
 
-            $container->setParameter($this->getAlias().'.default_priorities', $config['format_listener']['default_priorities']);
-            $container->setParameter($this->getAlias().'.prefer_extension', $config['format_listener']['prefer_extension']);
-            $container->setParameter($this->getAlias().'.fallback_format', $config['format_listener']['fallback_format']);
-        } else {
-            $container->setParameter($this->getAlias().'.default_priorities', array());
-            $container->setParameter($this->getAlias().'.prefer_extension', true);
-            $container->setParameter($this->getAlias().'.fallback_format', 'html');
+            foreach ($config['format_listener']['rules'] as $rule) {
+                $matcher = $this->createRequestMatcher(
+                    $container,
+                    $rule['path'],
+                    $rule['host']
+                );
+
+                unset($rule['path'], $rule['host']);
+                if (is_bool($rule['prefer_extension'])) {
+                    $rule['prefer_extension'] = '2.0';
+                }
+
+                $container->getDefinition($this->getAlias().'.format_negotiator')
+                    ->addMethodCall('add', array($matcher, $rule));
+            }
         }
 
         if (!empty($config['view']['exception_wrapper_handler'])) {
@@ -208,5 +216,23 @@ class FOSRestExtension extends Extension
         } catch (\ReflectionException $re) {
             throw new \InvalidArgumentException("FOSRestBundle exception mapper: Could not load class $exception. Most probably a problem with your configuration.");
         }
+    }
+
+    protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null)
+    {
+        $serialized = serialize(array($path));
+        $id = $this->getAlias().'.request_matcher.'.md5($serialized).sha1($serialized);
+
+        if (!$container->hasDefinition($id)) {
+            // only add arguments that are necessary
+            $arguments = array($path, $host);
+
+            $container
+                ->setDefinition($id, new DefinitionDecorator($this->getAlias().'.request_matcher'))
+                ->setArguments($arguments)
+            ;
+        }
+
+        return new Reference($id);
     }
 }

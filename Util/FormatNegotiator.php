@@ -12,13 +12,46 @@
 namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+
 use Negotiation\FormatNegotiator as BaseFormatNegotiator;
 
 class FormatNegotiator implements FormatNegotiatorInterface
 {
+    /**
+     * @var array
+     */
+    private $map = array();
+
     public function __construct()
     {
         $this->formatNegotiator = new BaseFormatNegotiator();
+    }
+
+    /**
+     * @param RequestMatcherInterface $requestMatcher A RequestMatcherInterface instance
+     * @param array                   $options        An array of options
+     */
+    public function add(RequestMatcherInterface $requestMatcher, array $options = array())
+    {
+        $this->map[] = array($requestMatcher, $options);
+    }
+
+    /**
+     * Return the cache options for the current request
+     *
+     * @param Request $request
+     * @return array of settings
+     */
+    protected function getOptions(Request $request)
+    {
+        foreach ($this->map as $elements) {
+            if (null === $elements[0] || $elements[0]->matches($request)) {
+                return $elements[1];
+            }
+        }
+
+        return array();
     }
 
     /**
@@ -27,32 +60,29 @@ class FormatNegotiator implements FormatNegotiatorInterface
      * Note: Request "_format" parameter is considered the preferred Accept header
      *
      * @param   Request         $request          The request
-     * @param   array           $priorities       Ordered array of formats (highest priority first)
-     * @param   Boolean|String  $preferExtension  If to consider the extension last or first, optionally
-     *                                            a q-value to use for the mimetype of the format (2.0 is the default)
-     *
      * @return  void|string                       The format string
      */
-    public function getBestFormat(Request $request, array $priorities, $preferExtension = false)
+    public function getBestFormat(Request $request)
     {
+        $options = $this->getOptions($request);
+        if (empty($options['priorities'])) {
+            return isset($options['fallback_format']) ? $options['fallback_format'] : null;
+        }
+
         $acceptHeader = $request->headers->get('Accept');
 
-        if ($preferExtension) {
+        if ($options['prefer_extension']) {
             $extension = $request->get('_format');
             if (null !== $extension && $request->getMimeType($extension)) {
                 if ($acceptHeader) {
                     $acceptHeader.= ',';
                 }
 
-                if (is_bool($preferExtension)) {
-                    $preferExtension = '2.0';
-                }
-
-                $acceptHeader.= $request->getMimeType($extension).'; q='.$preferExtension;
+                $acceptHeader.= $request->getMimeType($extension).'; q='.$options['prefer_extension'];
             }
         }
 
-        return $this->formatNegotiator->getBestFormat($acceptHeader, $priorities);
+        return $this->formatNegotiator->getBestFormat($acceptHeader, $options['priorities']);
     }
 
     /**
