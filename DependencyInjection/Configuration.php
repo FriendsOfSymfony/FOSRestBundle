@@ -150,7 +150,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('callback_param')->defaultValue('callback')->end()
                                 ->scalarNode('callback_filter')->defaultValue('/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i')->end()
-                                ->scalarNode('mime_type')->defaultValue('application/javascript')->end()
+                                ->scalarNode('mime_type')->defaultValue('application/javascript+jsonp')->end()
                             ->end()
                         ->end()
                     ->end()
