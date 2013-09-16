@@ -132,7 +132,7 @@ class FOSRestExtension extends Extension
                 );
 
                 unset($rule['path'], $rule['host']);
-                if (is_bool($rule['prefer_extension'])) {
+                if (is_bool($rule['prefer_extension']) && $rule['prefer_extension']) {
                     $rule['prefer_extension'] = '2.0';
                 }
 
