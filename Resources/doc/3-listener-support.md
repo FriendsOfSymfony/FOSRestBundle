@@ -336,7 +336,7 @@ http://symfony.com/doc/current/cookbook/request/mime_type.html
 # app/config/config.yml
 fos_rest:
     view:
-        mime_types: {'jsonp': ['application/javascript', 'application/javascript+jsonp']}
+        mime_types: {'jsonp': ['application/javascript+jsonp']}
 ```
 
 ### Param fetcher listener

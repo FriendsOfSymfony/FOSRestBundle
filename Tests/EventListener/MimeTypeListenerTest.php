@@ -27,10 +27,10 @@ class MimeTypeListenerTest extends \PHPUnit_Framework_TestCase
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')->disableOriginalConstructor()->getMock();
         $formatNegotiator->expects($this->any())
             ->method('registerFormat')
-            ->with('jsonp', array('application/javascript'), true)
+            ->with('jsonp', array('application/javascript+jsonp'), true)
             ->will($this->returnValue(null));
 
-        $listener = new MimeTypeListener(array('jsonp' => array('application/javascript')), $formatNegotiator);
+        $listener = new MimeTypeListener(array('jsonp' => array('application/javascript+jsonp')), $formatNegotiator);
 
         $request = new Request;
         $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')->disableOriginalConstructor()->getMock();
@@ -50,6 +50,6 @@ class MimeTypeListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener->onKernelRequest($event);
 
-        $this->assertEquals('application/javascript', $request->getMimeType('jsonp'));
+        $this->assertEquals('application/javascript+jsonp', $request->getMimeType('jsonp'));
     }
 }

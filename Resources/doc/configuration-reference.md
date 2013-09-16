@@ -54,7 +54,7 @@ fos_rest:
         jsonp_handler:
             callback_param:       callback
             callback_filter:      /(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i
-            mime_type:            application/javascript
+            mime_type:            application/javascript+jsonp
     exception:
         codes:
 
