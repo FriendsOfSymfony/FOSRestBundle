@@ -220,13 +220,12 @@ class FOSRestExtension extends Extension
 
     protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null)
     {
-        $serialized = serialize(array($path));
+        $arguments = array($path, $host);
+        $serialized = serialize($arguments);
         $id = $this->getAlias().'.request_matcher.'.md5($serialized).sha1($serialized);
 
         if (!$container->hasDefinition($id)) {
             // only add arguments that are necessary
-            $arguments = array($path, $host);
-
             $container
                 ->setDefinition($id, new DefinitionDecorator($this->getAlias().'.request_matcher'))
                 ->setArguments($arguments)
