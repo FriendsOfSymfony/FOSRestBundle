@@ -43,7 +43,7 @@ class FormatListener
     /**
      * Determines and sets the Request format
      *
-     * @param GetResponseEvent $event The event
+     * @param FilterControllerEvent $event The event
      */
     public function onKernelController(FilterControllerEvent $event)
     {
