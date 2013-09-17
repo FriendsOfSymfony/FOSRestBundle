@@ -38,51 +38,63 @@ class FormatNegotiator implements FormatNegotiatorInterface
     }
 
     /**
-     * Return the cache options for the current request
-     *
-     * @param Request $request
-     * @return array of settings
-     */
-    protected function getOptions(Request $request)
-    {
-        foreach ($this->map as $elements) {
-            if (null === $elements[0] || $elements[0]->matches($request)) {
-                return $elements[1];
-            }
-        }
-
-        return array();
-    }
-
-    /**
      * Detect the request format based on the priorities and the Accept header
-     *
-     * Note: Request "_format" parameter is considered the preferred Accept header
      *
      * @param   Request         $request          The request
      * @return  void|string                       The format string
      */
     public function getBestFormat(Request $request)
     {
-        $options = $this->getOptions($request);
-        if (empty($options['priorities'])) {
-            return isset($options['fallback_format']) ? $options['fallback_format'] : null;
-        }
+        foreach ($this->map as $elements) {
+            if (null === $elements[0] || $elements[0]->matches($request)) {
+                $options = $elements[1];
+            }
 
-        $acceptHeader = $request->headers->get('Accept');
-
-        if ($options['prefer_extension']) {
-            $extension = $request->get('_format');
-            if (null !== $extension && $request->getMimeType($extension)) {
-                if ($acceptHeader) {
-                    $acceptHeader.= ',';
+            if (empty($options['priorities'])) {
+                if (!empty($options['fallback_format'])) {
+                    return $options['fallback_format'];
                 }
 
-                $acceptHeader.= $request->getMimeType($extension).'; q='.$options['prefer_extension'];
+                continue;
+            }
+
+            $acceptHeader = $request->headers->get('Accept');
+
+            if ($options['prefer_extension']) {
+                // ensure we only need to compute $extensionHeader once
+                if (!isset($extensionHeader)) {
+                    if (preg_match('/.*\.([a-z0-9]+)$/', $request->getPathInfo(), $matches)) {
+                        $extension = $matches[1];
+                    }
+
+                    // $extensionHeader will now be either a non empty string or an empty string
+                    $extensionHeader = isset($extension) ? (string) $request->getMimeType($extension) : '';
+                    if ($acceptHeader && $extensionHeader) {
+                        $extensionHeader = ','.$extensionHeader;
+                    }
+                }
+                if ($extensionHeader) {
+                    $acceptHeader.= $extensionHeader.'; q='.$options['prefer_extension'];
+                }
+            }
+
+            $format = $this->formatNegotiator->getBestFormat($acceptHeader, $options['priorities']);
+            if (null !== $format) {
+                return $format;
+            }
+
+            if (isset($options['fallback_format'])) {
+                // if false === fallback_format then we fail here instead of considering more rules
+                if (false === $options['fallback_format']) {
+                    return null;
+                }
+
+                // stop looking at rules since we have a fallback defined
+                return $options['fallback_format'];
             }
         }
 
-        return $this->formatNegotiator->getBestFormat($acceptHeader, $options['priorities']);
+        return null;
     }
 
     /**
