@@ -100,6 +100,7 @@ class Configuration implements ConfigurationInterface
         $this->addExceptionSection($rootNode);
         $this->addBodyListenerSection($rootNode);
         $this->addFormatListenerSection($rootNode);
+        $this->addMediaTypeListenerSection($rootNode);
 
         return $treeBuilder;
     }
@@ -226,6 +227,14 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+            ->end();
+    }
+
+    private function addMediaTypeListenerSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->booleanNode('media_type_listener')->defaultFalse()
             ->end();
     }
 }

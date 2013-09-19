@@ -200,6 +200,10 @@ class FOSRestExtension extends Extension
                 );
             }
         }
+
+        if (!empty($config['media_type_listener'])) {
+            $loader->load('media_type_listener.xml');
+        }
     }
 
     /**
