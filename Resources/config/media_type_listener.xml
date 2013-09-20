@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="fos_rest.media_type_mapper" class="FOS\RestBundle\Util\MediaTypeMapper" />
+
+        <service id="fos_rest.media_type_listener" class="FOS\RestBundle\EventListener\MediaTypeListener">
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="-100" />
+            <argument type="service" id="fos_rest.media_type_mapper" />
+        </service>
+
+    </services>
+</container>

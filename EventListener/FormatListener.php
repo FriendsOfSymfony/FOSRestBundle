@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -45,7 +45,7 @@ class FormatListener
      *
      * @param FilterControllerEvent $event The event
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
         $format = $this->formatNegotiator->getBestFormat($request);

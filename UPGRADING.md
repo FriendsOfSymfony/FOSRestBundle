@@ -32,7 +32,8 @@ list important BC breaks.
     _Alternatively you can inject your own implementation. See https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/2-the-view-layer.md#forms-and-views_
 
  * The ``format_listener`` configuration has changed to allow different settings per host/path.
-   Finally the signature of FormatNegotiatorInterface::getBestFormat() changed.
+   Finally the signature of FormatNegotiatorInterface::getBestFormat() changed. Furthermore the
+   format listener now is triggered as a request listener at priority -10
 
 ### upgrading from 0.12.0
 
