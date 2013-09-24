@@ -25,7 +25,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 {
     public function testOnKernelControllerNegotiation()
     {
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterControllerEvent')->disableOriginalConstructor()->getMock();
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')->disableOriginalConstructor()->getMock();
 
         $request = new Request();
 
@@ -40,7 +40,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new FormatListener($formatNegotiator);
 
-        $listener->onKernelController($event);
+        $listener->onKernelRequest($event);
 
         $this->assertEquals($request->getRequestFormat(), 'xml');
     }
@@ -50,7 +50,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelControllerException()
     {
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\FilterControllerEvent')->disableOriginalConstructor()->getMock();
+        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')->disableOriginalConstructor()->getMock();
 
         $request = new Request();
 
@@ -66,6 +66,6 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener = new FormatListener($formatNegotiator);
 
-        $listener->onKernelController($event);
+        $listener->onKernelRequest($event);
     }
 }
