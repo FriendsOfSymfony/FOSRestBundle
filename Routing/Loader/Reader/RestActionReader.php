@@ -184,6 +184,8 @@ class RestActionReader
         $defaults     = array('_controller' => $method->getName());
         $requirements = array('_method' => strtoupper($httpMethod));
         $options      = array();
+        $host         = '';
+        $schemes      = array();
 
         $annotation = $this->readRouteAnnotation($method);
         if ($annotation) {
@@ -197,6 +199,13 @@ class RestActionReader
             $requirements = array_merge($requirements, $annoRequirements);
             $options      = array_merge($options, $annotation->getOptions());
             $defaults     = array_merge($defaults, $annotation->getDefaults());
+            //TODO remove checks after Symfony requirement is bumped to 2.2
+            if (method_exists($annotation, 'getHost')) {
+                $host = $annotation->getHost(); 
+            }
+            if (method_exists($annotation, 'getSchemes')) {
+                $schemes = $annotation->getSchemes();
+            }
         }
 
         if ($this->includeFormat === true) {
@@ -209,7 +218,7 @@ class RestActionReader
 
         // add route to collection
         $collection->add($routeName, new Route(
-            $pattern, $defaults, $requirements, $options
+            $pattern, $defaults, $requirements, $options, $host, $schemes
         ));
     }
 
