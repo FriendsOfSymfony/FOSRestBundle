@@ -6,6 +6,9 @@ list important BC breaks.
 
 ### upgrading from 0.13.1
 
+ * ExceptionController::showAction() doesn't have type hint on the $exception object anymore due to a BC change
+   in symfony/symfony 2.3.5, see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/565
+
  * POST routes now pluralize the resource name, ie. /users vs. /user
 
  * The response for non-valid Forms has changed. See https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/2-the-view-layer.md#forms-and-views
