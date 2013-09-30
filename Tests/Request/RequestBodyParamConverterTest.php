@@ -193,8 +193,8 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     public function testApplyWithValidationErrors()
     {
-        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface', array('validate'));
-        $validationErrors = $this->getMock('Symfony\Component\Validator\ConstraintViolationListInterface');
+        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        $validationErrors = $this->getMock('Symfony\Component\Validator\ConstraintViolationList');
 
         $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'validationErrors');
 
@@ -290,10 +290,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         );
         $config = $this->createConfiguration(null, null, $userOptions);
 
-        $validatorMock = $this->getMockBuilder('Symfony\Component\Validator\ValidatorInterface')
-            ->setMethods(array('validate'))
-            ->getMock()
-        ;
+        $validatorMock = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
         $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validatorMock, 'validationErrors');
         $request = $this->createRequest();
 
