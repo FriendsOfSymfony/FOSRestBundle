@@ -20,3 +20,7 @@ script: phpunit --coverage-text
 notifications:
   email:
     - friendsofsymfony-dev@googlegroups.com
+
+matrix:
+  allow_failures:
+    - env: SYMFONY_VERSION=dev-master
