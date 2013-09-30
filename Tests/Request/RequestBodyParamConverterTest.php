@@ -171,7 +171,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     public function testApplyWithSerializerContextOptionsForSymfonySerializer()
     {
-        $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface');
+        $this->serializer = $this->getMock('\Symfony\Component\Serializer\Serializer', array('deserialize'));
         $this->converter = new RequestBodyParamConverter($this->serializer);
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
 
@@ -193,7 +193,9 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     public function testApplyWithValidationErrors()
     {
-        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator')
+            ->disableOriginalConstructor()
+            ->getMock();
         $validationErrors = $this->getMock('Symfony\Component\Validator\ConstraintViolationList');
 
         $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'validationErrors');
@@ -290,8 +292,10 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         );
         $config = $this->createConfiguration(null, null, $userOptions);
 
-        $validatorMock = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
-        $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validatorMock, 'validationErrors');
+        $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'validationErrors');
         $request = $this->createRequest();
 
         $this->converter->apply($request, $config);
