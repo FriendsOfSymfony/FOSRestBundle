@@ -33,6 +33,7 @@
         "sensio/framework-extra-bundle":  "~2.1",
         "symfony/form": "~2.1",
         "symfony/validator": "~2.1",
+        "symfony/serializer": "~2.1",
         "symfony/yaml": "~2.1",
         "symfony/security": "~2.1",
         "jms/serializer-bundle": "0.12.*"
