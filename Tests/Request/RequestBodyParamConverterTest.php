@@ -171,7 +171,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     public function testApplyWithSerializerContextOptionsForSymfonySerializer()
     {
-        $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface', array('deserialize'));
+        $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface');
         $this->converter = new RequestBodyParamConverter($this->serializer);
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
 
