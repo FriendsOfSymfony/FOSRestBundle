@@ -390,7 +390,7 @@ class FooController extends Controller
      *
      * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337, use:
      *
-     * @QueryParam(array="true", name="ids", requirements="\d+", default="1", description="List of ids")
+     * @QueryParam(array=true, name="ids", requirements="\d+", default="1", description="List of ids")
      * (works with QueryParam and RequestParam)
      *
      * It will validate each entries of ids with your requirement, by this way, if an entry is invalid,
