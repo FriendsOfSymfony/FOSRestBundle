@@ -153,7 +153,7 @@ _Update the config.yml_:
 fos_rest:
     view:
         ...
-        exception_handler_wrapper: My\Bundle\Handler\MyExceptionWrapperHandler
+        exception_wrapper_handler: My\Bundle\Handler\MyExceptionWrapperHandler
         ...
 ```
 
