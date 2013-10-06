@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
+use FOS\Rest\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -73,6 +74,11 @@ class View
      * @var Response
      */
     private $response;
+
+    /**
+     * @var Boolean|null
+     */
+    private $redirectWithBody;
 
     /**
      * Convenience method to allow for a fluent interface.
@@ -406,5 +412,28 @@ class View
         }
 
         return $this->serializationContext;
+    }
+
+    /**
+     * @param Boolean|null $redirectWithBody
+     */
+    public function setRedirectWithBody($redirectWithBody)
+    {
+        $this->redirectWithBody = $redirectWithBody;
+    }
+
+    /**
+     * Checks if the redirection with a status code should be able to support
+     * a content body or not.
+     *
+     * @return Boolean|null
+     */
+    public function redirectWithBody()
+    {
+        if (null === $this->redirectWithBody) {
+            return Codes::canHaveBody($this->getStatusCode());
+        }
+
+        return $this->redirectWithBody;
     }
 }
