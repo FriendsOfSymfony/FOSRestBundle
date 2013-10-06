@@ -70,10 +70,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled, $noContentCode)
     {
-        $reflectionMethod = new \ReflectionMethod('\FOS\RestBundle\View\ViewHandler', 'getStatusCode');
+        $reflectionMethod = new \ReflectionMethod('FOS\RestBundle\View\ViewHandler', 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
-        $form = $this->getMock('\Symfony\Component\Form\Form', array('isBound', 'isValid'), array(), '', false);
+        $form = $this->getMock('Symfony\Component\Form\Form', array('isBound', 'isValid'), array(), '', false);
         $form
             ->expects($this->exactly($isBoundCalled))
             ->method('isBound')
@@ -132,7 +132,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponseWithLocationAndData()
     {
         $testValue = array('naviter' => 'oudie');
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
         $this->setupMockedSerializer($container, $testValue);
 
         $viewHandler = new ViewHandler(array('json' => false));
@@ -150,7 +150,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateResponseWithRoute()
     {
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
 
         $doRoute = function ($name, $parameters) {
             $route = '/';
@@ -194,9 +194,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $viewHandler = new ViewHandler(array('html' => true, 'json' => false));
 
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
         if ('html' === $format) {
-            $templating = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
+            $templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
                 ->setMethods(array('render'))
                 ->disableOriginalConstructor()
                 ->getMock();
@@ -218,7 +218,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         if ($form) {
-            $data = $this->getMock('\Symfony\Component\Form\Form', array('createView', 'getData', 'isValid', 'isBound'), array(), '', false);
+            $data = $this->getMock('Symfony\Component\Form\Form', array('createView', 'getData', 'isValid', 'isBound'), array(), '', false);
             $data
                 ->expects($this->exactly($createViewCalls))
                 ->method('createView')
@@ -246,7 +246,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
     private function setupMockedSerializer($container, $expected)
     {
-        $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
+        $serializer = $this->getMockBuilder('JMS\Serializer\Serializer')
             ->setMethods(array('serialize'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -304,11 +304,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSerializeNull($expected, $serializeNull)
     {
         $viewHandler = new ViewHandler(array('json' => false), 404, 200, $serializeNull);
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
 
         $viewHandler->setContainer($container);
 
-        $serializer = $this->getMockBuilder('\JMS\Serializer\Serializer')
+        $serializer = $this->getMockBuilder('JMS\Serializer\Serializer')
             ->setMethods(array('serialize', 'setExclusionStrategy'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -352,7 +352,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSerializeNullDataValues($expected, $serializeNull)
     {
         $viewHandler = new ViewHandler(array('json' => false), 404, 200);
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
 
         $viewHandler->setContainer($container);
 
@@ -405,7 +405,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $viewHandler = new ViewHandler(array('html' => true));
 
-        $templating = $this->getMockBuilder('\Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
+        $templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
             ->setMethods(array('render'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -414,7 +414,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('render')
             ->will($this->returnValue(''));
 
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container
             ->expects($this->exactly(2))
             ->method('get')
@@ -424,7 +424,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $data = array('foo' => 'bar');
 
         $view = new View($data);
-        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\Response', $viewHandler->handle($view));
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $viewHandler->handle($view));
     }
 
     public function testHandleCustom()
@@ -432,7 +432,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(array());
         $viewHandler->registerHandler('html', ($callback = function(){ return 'foo'; }));
 
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container
             ->expects($this->once())
             ->method('get')
@@ -453,7 +453,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $viewHandler = new ViewHandler(array());
 
-        $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container
             ->expects($this->once())
             ->method('get')
@@ -485,7 +485,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $object = new \stdClass();
 
         $formView = new FormView();
-        $form = $this->getMockBuilder('\Symfony\Component\Form\Form')
+        $form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->setMethods(array('createView', 'getData'))
             ->disableOriginalConstructor()
             ->getMock();

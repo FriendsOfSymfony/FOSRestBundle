@@ -29,7 +29,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $annotationReader = $this->getMock('\Doctrine\Common\Annotations\Reader');
+        $annotationReader = $this->getMock('Doctrine\Common\Annotations\Reader');
 
         $annotations = array();
         $foo = new QueryParam;

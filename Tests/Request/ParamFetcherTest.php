@@ -35,7 +35,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $this->controller = array(new \stdClass(), 'indexAction');
 
-        $this->paramReader = $this->getMockBuilder('\FOS\RestBundle\Request\ParamReader')
+        $this->paramReader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 

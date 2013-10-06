@@ -45,7 +45,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new BodyListener($decoderProvider);
 
         if ($decode) {
-            $container = $this->getMock('\Symfony\Component\DependencyInjection\Container', array('get'));
+            $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
             $container
                 ->expects($this->once())
                 ->method('get')
@@ -57,7 +57,9 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
 
         $request->setMethod($method);
         $request->headers = new HeaderBag(array('Content-Type' => $contentType));
-        $event = $this->getMockBuilder('\Symfony\Component\HttpKernel\Event\GetResponseEvent')->disableOriginalConstructor()->getMock();
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
         $event->expects($this->once())
             ->method('getRequest')
             ->will($this->returnValue($request));

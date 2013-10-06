@@ -193,7 +193,15 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadBadClassThrowsException()
     {
-        $this->extension->load(array('fos_rest' => array('exception' => array('messages'=> array('UnknownException' => true)))), $this->container);
+        $this->extension->load(array(
+            'fos_rest' => array(
+                'exception' => array(
+                    'messages'=> array(
+                        'UnknownException' => true
+                    )
+                )
+            )
+        ), $this->container);
     }
 
     /**
@@ -201,12 +209,28 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadBadMessagesClassThrowsException()
     {
-        $this->extension->load(array('fos_rest' => array('exception' => array('codes'=> array('UnknownException' => 404)))), $this->container);
+        $this->extension->load(array(
+            'fos_rest' => array(
+                'exception' => array(
+                    'codes'=> array(
+                        'UnknownException' => 404
+                    )
+                )
+            )
+        ), $this->container);
     }
 
     public function testLoadOkMessagesClass()
     {
-        $this->extension->load(array('fos_rest' => array('exception' => array('codes'=> array('\Exception' => 404)))), $this->container);
+        $this->extension->load(array(
+            'fos_rest' => array(
+                'exception' => array(
+                    'codes'=> array(
+                        'Exception' => 404
+                    )
+                )
+            )
+        ), $this->container);
         $this->assertFalse($this->container->hasDefinition('fos_rest.exception.codes'));
     }
 
