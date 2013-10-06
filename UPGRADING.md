@@ -4,6 +4,12 @@ Upgrading
 Note as FOSRestBundle is not yet declared stable, this document will be updated to
 list important BC breaks.
 
+### upgrading to 2.0.0 (unreleased)
+
+ * RedirectView and RouteRedirect view were removed. Use View::createRedirect and
+   View::createRouteRedirect instead. Note: the default status code for a route redirect
+   has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
+
 ### upgrading from 0.13.1
 
  * ExceptionController::showAction() doesn't have type hint on the $exception object anymore due to a BC change
