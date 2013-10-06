@@ -72,10 +72,11 @@ class ViewResponseListener extends TemplateListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
+        /** @var \FOS\RestBundle\Controller\Annotations\View $configuration */
         $configuration = $request->attributes->get('_view');
 
         $view = $event->getControllerResult();
-        if (!$view instanceOf View) {
+        if (!$view instanceof View) {
             if (!$configuration && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
                 return parent::onKernelView($event);
             }
