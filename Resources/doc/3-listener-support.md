@@ -144,6 +144,24 @@ public function getUsersAction()
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php
 
+The ViewResponse listener will automatically populate your view with request attributes if
+you do not provide any data when returning a view object. This behaviour comes from
+SensioFrameworkExtraBundle and will automatically add any variables listed in the
+`_template_default_vars` request attribute when no data is supplied. In some cases, this
+is not desirable and can be disabled by either supplying the data you want or disabling
+the automatic population of data with the @View annotation. :
+
+```php
+/**
+ * $user will no longer end up in the View's data.
+ *
+ * @View(populateDefaultVars=false)
+ */
+public function getUserDetails(User $user)
+{
+}
+```
+
 ### Body listener
 
 The Request body decoding listener makes it possible to decode the contents of
@@ -195,7 +213,7 @@ fos_rest:
 ```
 
 Note: You will probably want to disable the automatic route generation (`@NoRoute`)
-for routes using the body converter, and instead define the routes manually to 
+for routes using the body converter, and instead define the routes manually to
 avoid having the deserialized, typehinted objects (`$post in this example`) appear
 in the route as a parameter.
 

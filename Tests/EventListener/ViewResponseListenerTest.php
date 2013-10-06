@@ -232,13 +232,14 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->viewHandler->setContainer($this->container);
 
         // This is why we avoid container dependencies!
+        $that = $this;
         $this->container->expects($this->exactly(2))
             ->method('get')
             ->with($this->logicalOr('fos_rest.view_handler', 'fos_rest.templating'))
-            ->will($this->returnCallback(function ($service) {
+            ->will($this->returnCallback(function ($service) use ($that) {
                 return $service === 'fos_rest.view_handler' ?
-                    $this->viewHandler :
-                    $this->templating;
+                    $that->viewHandler :
+                    $that->templating;
             }));
 
         $this->templating->expects($this->any())
@@ -262,6 +263,58 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame($expectedCode, $response->getStatusCode());
+    }
+
+    public function getDataForDefaultVarsCopy()
+    {
+        return array(
+            array(true, false, false),
+            array(true, true, true),
+            array(false, null, true)
+        );
+    }
+
+    /**
+     * @dataProvider getDataForDefaultVarsCopy
+     */
+    public function testViewWithNoCopyDefaultVars($createAnnotation, $populateDefaultVars, $shouldCopy)
+    {
+        $request = new Request();
+        $request->attributes->set('_template_default_vars', array('customer'));
+        $request->attributes->set('customer', 'A person goes here');
+        $view = View::create();
+
+        if ($createAnnotation) {
+            $viewAnnotation = new ViewAnnotation(array());
+            $viewAnnotation->setPopulateDefaultVars($populateDefaultVars);
+            $request->attributes->set('_view', $viewAnnotation);
+        }
+
+        $event = $this->getResponseEvent($request, $view);
+
+        $this->viewHandler = new ViewHandler(array('html' => true));
+        $this->viewHandler->setContainer($this->container);
+
+        // This is why we avoid container dependencies!
+        $that = $this;
+        $this->container->expects($this->exactly(2))
+            ->method('get')
+            ->with($this->logicalOr('fos_rest.view_handler', 'fos_rest.templating'))
+            ->will($this->returnCallback(function ($service) use ($that) {
+                return $service === 'fos_rest.view_handler' ?
+                    $that->viewHandler :
+                    $that->templating;
+            }));
+
+        $this->listener->onKernelView($event);
+
+        $data = $view->getData();
+        if ($shouldCopy) {
+            $this->assertArrayHasKey('customer', $data);
+            $this->assertEquals('A person goes here', $data['customer']);
+        } else {
+            $this->assertNull($data);
+        }
     }
 
     protected function setUp()
