@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
+use FOS\Rest\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -85,6 +86,46 @@ class View
     public static function create($data = null, $statusCode = null, array $headers = array())
     {
         return new static($data, $statusCode, $headers);
+    }
+
+    /**
+     * Convenience method to allow for a fluent interface while creating a redirect to a
+     * given url.
+     *
+     * @param string $url
+     * @param int $statusCode
+     * @param array $headers
+     * @return View
+     */
+    public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
+    {
+        $view = static::create(null, $statusCode, $headers);
+        $view->setLocation($url);
+
+        return $view;
+    }
+
+    /**
+     * Convenience method to allow for a fluent interface while creating a redirect to a
+     * given route.
+     *
+     * @param string $route
+     * @param array $parameters
+     * @param int $statusCode
+     * @param array $headers
+     * @return View
+     */
+    public static function createRouteRedirect(
+        $route,
+        array $parameters = array(),
+        $statusCode = Codes::HTTP_FOUND,
+        array $headers = array()
+    ) {
+        $view = static::create(null, $statusCode, $headers);
+        $view->setRoute($route);
+        $view->setRouteParameters($parameters);
+
+        return $view;
     }
 
     /**

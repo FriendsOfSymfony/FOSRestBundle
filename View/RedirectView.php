@@ -27,9 +27,11 @@ class RedirectView
      * @param string  $url
      * @param integer $statusCode
      * @param array   $headers
+     *
+     * @deprecated To be removed in FOSRestBundle 2.0.0. Use View::createRedirect instead.
      */
     public static function create($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
     {
-        return View::create(null, $statusCode, $headers)->setLocation($url);
+        return View::createRedirect($url, $statusCode, $headers);
     }
 }
