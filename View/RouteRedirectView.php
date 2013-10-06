@@ -28,9 +28,11 @@ class RouteRedirectView
      * @param mixed   $parameters
      * @param integer $statusCode
      * @param array   $headers
+     *
+     * @deprecated To be removed in FOSRestBundle 2.0.0. Use View::createRouteRedirect instead.
      */
     public static function create($route, array $parameters = array(), $statusCode = Codes::HTTP_CREATED, array $headers = array())
     {
-        return View::create(null, $statusCode, $headers)->setRoute($route)->setRouteParameters($parameters);
+        return View::createRouteRedirect($route, $parameters, $statusCode, $headers);
     }
 }
