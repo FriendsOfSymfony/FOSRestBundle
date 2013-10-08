@@ -28,22 +28,22 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \FOS\RestBundle\EventListener\ViewResponseListener
      */
-    private $listener;
+    public $listener;
 
     /**
      * @var \Symfony\Component\DependencyInjection\Container|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $container;
+    public $container;
 
     /**
      * @var \FOS\RestBundle\View\ViewHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $viewHandler;
+    public $viewHandler;
 
     /**
      * @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $templating;
+    public $templating;
 
     /**
      * @param Request $request
