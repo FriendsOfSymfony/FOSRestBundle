@@ -305,7 +305,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         $data = $this->prepareTemplateParameters($view);
 
         $template = $view->getTemplate();
-        if ($template instanceOf TemplateReference) {
+        if ($template instanceof TemplateReference) {
             if (null === $template->get('format')) {
                 $template->set('format', $format);
             }

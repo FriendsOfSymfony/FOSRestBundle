@@ -64,7 +64,7 @@ class ExceptionController extends ContainerAware
          *
          * @see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/565
          */
-        if (!$exception instanceOf DebugFlattenException && !$exception instanceOf HttpFlattenException) {
+        if (!$exception instanceof DebugFlattenException && !$exception instanceof HttpFlattenException) {
             throw new \InvalidArgumentException(sprintf(
                 'ExceptionController::showAction can only accept some exceptions (%s, %s), "%s" given',
                 "Symfony\Component\HttpKernel\Exception\FlattenException",
