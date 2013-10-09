@@ -36,6 +36,11 @@ class View extends Template
     protected $serializerGroups;
 
     /**
+     * @var Boolean
+     */
+    protected $populateDefaultVars = true;
+
+    /**
      * Returns the annotation alias name.
      *
      * @return string
@@ -96,5 +101,21 @@ class View extends Template
     public function getSerializerGroups()
     {
         return $this->serializerGroups;
+    }
+
+    /**
+     * @param Boolean $populateDefaultVars
+     */
+    public function setPopulateDefaultVars($populateDefaultVars)
+    {
+        $this->populateDefaultVars = (Boolean) $populateDefaultVars;
+    }
+
+    /**
+     * @return Boolean
+     */
+    public function isPopulateDefaultVars()
+    {
+        return $this->populateDefaultVars;
     }
 }
