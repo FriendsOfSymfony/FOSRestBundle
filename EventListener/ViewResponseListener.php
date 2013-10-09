@@ -96,9 +96,9 @@ class ViewResponseListener extends TemplateListener
                 $context->setGroups($configuration->getSerializerGroups());
                 $view->setSerializationContext($context);
             }
-            $fillDefaultTemplateVars = $configuration->isPopulateDefaultVars();
+            $populateDefaultVars = $configuration->isPopulateDefaultVars();
         } else {
-            $fillDefaultTemplateVars = true;
+            $populateDefaultVars = true;
         }
 
         if (null === $view->getFormat()) {
@@ -106,7 +106,7 @@ class ViewResponseListener extends TemplateListener
         }
 
         $vars = $request->attributes->get('_template_vars');
-        if (!$vars && $fillDefaultTemplateVars) {
+        if (!$vars && $populateDefaultVars) {
             $vars = $request->attributes->get('_template_default_vars');
         }
 
