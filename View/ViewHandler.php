@@ -454,7 +454,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
         return $exceptionWrapperHandler->wrap(
             array(
                  'status'         => 'error',
-                 'status_code'    => $view->getResponse()->getStatusCode(),
+                 'status_code'    => $this->failedValidationCode,
                  'status_text'    => Response::$statusTexts[$view->getResponse()->getStatusCode()],
                  'currentContent' => '',
                  'message'        => 'Validation Failed',
