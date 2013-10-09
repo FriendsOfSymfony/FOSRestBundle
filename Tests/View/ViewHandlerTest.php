@@ -16,7 +16,6 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use FOS\Rest\Util\Codes;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormView;
@@ -287,58 +286,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getParameter')
             ->will($this->returnValueMap($map));
-    }
-
-    public function testShouldReturnErrorResponseWhenDataContainsFormAndFormIsNotValid()
-    {
-        $container = new Container();
-
-        $serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
-        $serializer
-        ->expects($this->once())
-        ->method('serialize')
-        ->will(
-              $this->returnCallback(
-                  function ($data) {
-                      return serialize($data);
-                  }
-              )
-          );
-
-        $container->set('fos_rest.serializer', $serializer);
-        $container->set('fos_rest.view.exception_wrapper_handler', new ExceptionWrapperHandler());
-        $container->setParameter('fos_rest.serializer.exclusion_strategy.groups', 'foo');
-        $container->setParameter('fos_rest.serializer.exclusion_strategy.version', '1.0');
-        $container->setParameter('fos_rest.serializer.serialize_null', false);
-
-        //test
-        $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Codes::HTTP_I_AM_A_TEAPOT);
-        $viewHandler->setContainer($container);
-
-        $form = $this->getMock(
-            'Symfony\\Component\\Form\\Form',
-            array('createView', 'getData', 'isValid', 'isBound'),
-            array(),
-            '',
-            false
-        );
-        $form
-        ->expects($this->any())
-        ->method('isValid')
-        ->will($this->returnValue(false));
-        $form
-        ->expects($this->any())
-        ->method('isBound')
-        ->will($this->returnValue(true));
-
-        $view = new View($form);
-        $response = $viewHandler->createResponse($view, new Request, 'json');
-
-        $data = unserialize($response->getContent());
-        $this->assertInstanceOf('FOS\\RestBundle\\Util\\ExceptionWrapper', $data);
-        $this->assertEquals('Validation Failed', $this->readAttribute($data, 'message'));
-        $this->assertInstanceOf('Symfony\\Component\\Form\\Form', $this->readAttribute($data, 'errors'));
-        $this->assertEquals($expectedFailedValidationCode, $this->readAttribute($data, 'code'));
     }
 
     public static function createResponseWithoutLocationDataProvider()
