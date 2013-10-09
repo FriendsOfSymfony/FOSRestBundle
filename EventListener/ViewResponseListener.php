@@ -72,6 +72,7 @@ class ViewResponseListener extends TemplateListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
+        /** @var \FOS\RestBundle\Controller\Annotations\View $configuration */
         $configuration = $request->attributes->get('_view');
 
         $view = $event->getControllerResult();
@@ -95,6 +96,9 @@ class ViewResponseListener extends TemplateListener
                 $context->setGroups($configuration->getSerializerGroups());
                 $view->setSerializationContext($context);
             }
+            $populateDefaultVars = $configuration->isPopulateDefaultVars();
+        } else {
+            $populateDefaultVars = true;
         }
 
         if (null === $view->getFormat()) {
@@ -102,7 +106,7 @@ class ViewResponseListener extends TemplateListener
         }
 
         $vars = $request->attributes->get('_template_vars');
-        if (!$vars) {
+        if (!$vars && $populateDefaultVars) {
             $vars = $request->attributes->get('_template_default_vars');
         }
 
