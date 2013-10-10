@@ -274,22 +274,27 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
      */
     public function createRedirectResponse(View $view, $location, $format)
     {
-        $content = null;
-        if (($view->getStatusCode() == Codes::HTTP_CREATED || $view->getStatusCode() == Codes::HTTP_ACCEPTED) && $view->getData() != null) {
+        if (null !== $view->getData() && $view->redirectWithBody()) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();
+
+            $content = null;
             if ('html' === $format && isset($this->forceRedirects[$format])) {
                 $redirect = new RedirectResponse($location);
                 $content = $redirect->getContent();
                 $response->setContent($content);
             }
+
+            $response->setStatusCode($this->getStatusCode($view, $content));
         }
 
-        $code = isset($this->forceRedirects[$format])
-            ? $this->forceRedirects[$format] : $this->getStatusCode($view, $content);
+        if (isset($this->forceRedirects[$format])) {
+            // Use the status code for a forced redirect.
 
-        $response->setStatusCode($code);
+            $response->setStatusCode($this->forceRedirects[$format]);
+        }
+
         $response->headers->set('Location', $location);
         return $response;
     }
