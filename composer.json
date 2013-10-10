@@ -23,7 +23,7 @@
 
     "require": {
         "php":                            ">=5.3.2",
-        "friendsofsymfony/rest":          ">=0.7.0,<0.9.0-dev",
+        "friendsofsymfony/rest":          "1.0.*",
         "symfony/framework-bundle":       "~2.1",
         "doctrine/inflector":             "1.0.*",
         "willdurand/negotiation":         "1.0.*"
