@@ -23,7 +23,7 @@ namespace FOS\RestBundle\Util;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Markus Lanthaler <markus.lanthaler@gmx.net>
  */
-class Codes
+final class Codes
 {
     const HTTP_CONTINUE = 100;
     const HTTP_SWITCHING_PROTOCOLS = 101;
