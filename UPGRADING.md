@@ -16,6 +16,7 @@ list important BC breaks.
    Specifically ``FOS\Rest\Util\Codes`` is now ``FOS\RestBundle\Util\Codes`` and also the sub-namespace for
    the decoders has changed from ``FOS\Rest\Decoder`` to ``FOS\RestBundle\Decoder``. In practice it should be
    sufficient to simply search replace ``FOS\Rest\`` with ``FOS\RestBundle\`.
+ * The XmlDecoder now has a dependency on "symfony/serializer"
 
 ### upgrading from 0.13.1
 
