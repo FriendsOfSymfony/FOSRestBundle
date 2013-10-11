@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Kernel;
 
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 
 use FOS\RestBundle\FOSRestBundle;
 
@@ -83,12 +83,12 @@ class FOSRestExtension extends Extension
         $container->setParameter($this->getAlias().'.force_redirects', $config['view']['force_redirects']);
 
         if (!is_numeric($config['view']['failed_validation'])) {
-            $config['view']['failed_validation'] = constant('\FOS\Rest\Util\Codes::'.$config['view']['failed_validation']);
+            $config['view']['failed_validation'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['failed_validation']);
         }
         $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
 
         if (!is_numeric($config['view']['empty_content'])) {
-            $config['view']['empty_content'] = constant('\FOS\Rest\Util\Codes::'.$config['view']['empty_content']);
+            $config['view']['empty_content'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['empty_content']);
         }
         $container->setParameter($this->getAlias().'.empty_content', $config['view']['empty_content']);
 
@@ -104,7 +104,7 @@ class FOSRestExtension extends Extension
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
-                $config['exception']['codes'][$exception] = constant("\FOS\Rest\Util\Codes::$code");
+                $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Util\Codes::$code");
             }
             $this->testExceptionExists($exception);
         }
