@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Decoder;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 
-use FOS\Rest\Decoder\DecoderProviderInterface;
+use FOS\RestBundle\Decoder\DecoderProviderInterface;
 
 /**
  * Provides encoders through the Symfony2 DIC
@@ -51,7 +51,7 @@ class ContainerDecoderProvider extends ContainerAware implements DecoderProvider
      * @param string $format format
      *
      * @throws \InvalidArgumentException
-     * @return FOS\Rest\Decoder\DecoderInterface
+     * @return FOS\RestBundle\Decoder\DecoderInterface
      */
     public function getDecoder($format)
     {

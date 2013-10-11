@@ -22,8 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
-use FOS\Rest\Util\Codes;
-
+use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Util\ExceptionWrapper;
 
 /**

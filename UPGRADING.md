@@ -10,6 +10,13 @@ list important BC breaks.
    View::createRouteRedirect instead. Note: the default status code for a route redirect
    has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
 
+### upgrading from 1.0.0-RC1
+
+ * The Bundle no longer depends on "friendsofsymfony/rest" and as a result several class names have changed.
+   Specifically ``FOS\Rest\Util\Codes`` is now ``FOS\RestBundle\Util\Codes`` and also the sub-namespace for
+   the decoders has changed from ``FOS\Rest\Decoder`` to ``FOS\RestBundle\Decoder``. In practice it should be
+   sufficient to simply search replace ``FOS\Rest\`` with ``FOS\RestBundle\`.
+
 ### upgrading from 0.13.1
 
  * ExceptionController::showAction() doesn't have type hint on the $exception object anymore due to a BC change

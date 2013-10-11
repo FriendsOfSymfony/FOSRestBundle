@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Util\ExceptionWrapper;

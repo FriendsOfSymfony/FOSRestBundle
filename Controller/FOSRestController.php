@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\RedirectView;
 use FOS\RestBundle\View\RouteRedirectView;
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 
 /**
  * Base Controller for Controllers using the View functionality of FOSRestBundle.

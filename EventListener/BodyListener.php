@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use FOS\Rest\Decoder\DecoderProviderInterface;
+use FOS\RestBundle\Decoder\DecoderProviderInterface;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;

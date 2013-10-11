@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 
