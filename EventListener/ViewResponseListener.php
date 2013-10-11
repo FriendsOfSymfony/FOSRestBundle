@@ -22,7 +22,7 @@ use JMS\Serializer\SerializationContext;
 
 use FOS\RestBundle\View\View;
 
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.

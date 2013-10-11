@@ -23,7 +23,7 @@ use JMS\Serializer\Exception\UnsupportedFormatException;
 use JMS\Serializer\Exception\Exception as JMSSerializerException;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
-use FOS\Rest\Util\Codes;
+use FOS\RestBundle\Util\Codes;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
