@@ -12,15 +12,6 @@ applications with Symfony2. Features include:
 
 [![Build Status](https://secure.travis-ci.org/FriendsOfSymfony/FOSRestBundle.png?branch=master)](http://travis-ci.org/FriendsOfSymfony/FOSRestBundle) [![Total Downloads](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/downloads.png)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle) [![Latest Stable Version](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/v/stable.png)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
 
-State
------
-
-While the provided feature set is certainly production ready, this Bundle is still under development.
-As a result users must expect BC breaks when using the master version. Such breaks will however be
-noted in the [UPGRADING.md](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING.md).
-A new version of the Bundle will be tagged in most cases before a BC break, however do not expect bug
-fixes for these tagged versions.
-
 Documentation
 -------------
 
@@ -28,6 +19,10 @@ The bulk of the documentation is stored in the `Resources/doc/index.md`
 file in this bundle:
 
 [Read the Documentation for master](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/index.md)
+
+Please see the [UPGRADING.md](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING.md) for any
+relevant instructions when upgrading to a newer version.
+
 
 Installation
 ------------
