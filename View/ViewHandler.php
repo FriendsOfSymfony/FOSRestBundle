@@ -274,7 +274,7 @@ class ViewHandler extends ContainerAware implements ViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        if (($view->getStatusCode() == Codes::HTTP_CREATED || $view->getStatusCode() == Codes::HTTP_ACCEPTED) && $view->getData() != null) {
+        if (substr($view->getStatusCode(), 0, 1) == 2 && $view->getData() != null) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();
