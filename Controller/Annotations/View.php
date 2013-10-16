@@ -36,16 +36,12 @@ class View extends Template
     protected $serializerGroups;
 
     /**
-<<<<<<< HEAD
      * @var Boolean
      */
     protected $populateDefaultVars = true;
 
     /**
-     * @var array
-=======
      * @var bool
->>>>>>> Fixed doccoments
      */
     protected $serializerEnableMaxDepthChecks;
 
