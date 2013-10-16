@@ -267,7 +267,7 @@ fos_rest:
         include_format:       false
 ```
 
-The {_format} route requirement is automatically positionned using the available listeners. So by default, the  requirement will
+The {_format} route requirement is automatically positioned using the available listeners. So by default, the  requirement will
 be {json|xml|html}. If you want to limit or add a custom format, you can do so by overriding it with the ``@Route`` annotation
 (or another one extending it, like ``@Get``, ``@Post``...):
 
