@@ -265,6 +265,56 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedCode, $response->getStatusCode());
     }
 
+    public static function  serializerEnableMaxDepthChecksProvider()
+    {
+        return array(
+            array(false, get_class(null)),
+            array(true, 'JMS\Serializer\Exclusion\DepthExclusionStrategy'),
+        );
+    }
+
+    /**
+     * @dataProvider serializerEnableMaxDepthChecksProvider
+     */
+    public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedClass)
+    {
+        $viewAnnotation = new ViewAnnotation(array());
+        $viewAnnotation->setSerializerEnableMaxDepthChecks($enableMaxDepthChecks);
+
+        $request = new Request();
+        $request->setRequestFormat('json');
+        $request->attributes->set('_view', $viewAnnotation);
+
+        $this->viewHandler = new ViewHandler(array('json' => true));
+        $this->viewHandler->setContainer($this->container);
+
+        // This is why we avoid container dependencies!
+        $that = $this;
+        $this->container->expects($this->exactly(2))
+            ->method('get')
+            ->with($this->logicalOr('fos_rest.view_handler', 'fos_rest.templating'))
+            ->will($this->returnCallback(function ($service) use ($that) {
+                        return $service === 'fos_rest.view_handler' ?
+                            $that->viewHandler :
+                            $that->templating;
+                    }));
+
+        $this->templating->expects($this->any())
+            ->method('render')
+            ->will($this->returnValue('foo'));
+
+        $view = new View();
+
+        $event = $this->getResponseEvent($request, $view);
+
+        $this->listener->onKernelView($event);
+
+        $context = $view->getSerializationContext();
+        $exclusionStrategy = $context->getExclusionStrategy();
+
+        $this->assertEquals($expectedClass, get_class($exclusionStrategy));
+    }
+
     public function getDataForDefaultVarsCopy()
     {
         return array(
