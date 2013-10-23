@@ -96,6 +96,11 @@ class ViewResponseListener extends TemplateListener
                 $context->setGroups($configuration->getSerializerGroups());
                 $view->setSerializationContext($context);
             }
+            if ($configuration->getSerializerEnableMaxDepthChecks()) {
+                $context = $view->getSerializationContext() ?: new SerializationContext();
+                $context->enableMaxDepthChecks();
+                $view->setSerializationContext($context);
+            }
             $populateDefaultVars = $configuration->isPopulateDefaultVars();
         } else {
             $populateDefaultVars = true;

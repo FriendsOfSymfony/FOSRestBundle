@@ -141,6 +141,20 @@ public function getUsersAction()
 }
 ```
 
+Enabling the MaxDepth exclusion strategy support for the serializer can be configured as follows:
+
+```php
+<?php
+
+/**
+ * @View(serializerEnableMaxDepthChecks=true)
+ */
+public function getUsersAction()
+{
+    //...
+}
+```
+
 See the following example code for more details:
 https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php
 
