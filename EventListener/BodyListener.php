@@ -15,7 +15,7 @@ use FOS\RestBundle\Decoder\DecoderProviderInterface;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Exception\BadRequestException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * This listener handles Request body decoding.
@@ -66,7 +66,7 @@ class BodyListener
             $data = $decoder->decode($request->getContent(), $format);
             if (is_array($data)) {
                 $request->request = new ParameterBag($data);
-            }else{
+            } else {
                 throw new BadRequestHttpException('Invalid ' . $format . ' message recieved');
             }
         }
