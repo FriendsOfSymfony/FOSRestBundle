@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Decoder;
 
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
  * Decodes XML data
@@ -34,6 +35,10 @@ class XmlDecoder implements DecoderInterface
      */
     public function decode($data)
     {
-        return $this->encoder->decode($data, 'xml');
+        try {
+            return $this->encoder->decode($data, 'xml');
+        } catch (UnexpectedValueException $e) {
+            return null;
+        }
     }
 }
