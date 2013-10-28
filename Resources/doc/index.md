@@ -40,3 +40,7 @@ guideline:
 
 - The FOSCommentBundle uses FOSRestBundle for its api:
   https://github.com/FriendsOfSymfony/FOSCommentBundle
+
+- The Symfony2 Rest Edition provides a complete example of how to build a 
+  controller that works for both HTML as well as JSON/XML:
+  https://github.com/gimler/symfony-rest-edition
