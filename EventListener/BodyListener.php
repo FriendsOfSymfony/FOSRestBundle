@@ -62,12 +62,13 @@ class BodyListener
             }
 
             $decoder = $this->decoderProvider->getDecoder($format);
-
-            $data = $decoder->decode($request->getContent(), $format);
-            if (is_array($data)) {
-                $request->request = new ParameterBag($data);
-            } else {
-                if (strlen($request->getContent())) {
+            $content = $request->getContent();
+            
+			if (strlen($content)) {
+				$data = $decoder->decode($content, $format);
+				if (is_array($data)) {
+					$request->request = new ParameterBag($data);
+				} else {                
                     throw new BadRequestHttpException('Invalid ' . $format . ' message recieved');
                 }
             }
