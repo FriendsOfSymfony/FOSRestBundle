@@ -13,6 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use FOS\RestBundle\Util\Codes;
@@ -65,7 +66,7 @@ class FormatListener
 
         if (null === $format) {
             if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
-                throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
+                throw new NotAcceptableHttpException("No matching accepted Response format could be determined");
             }
 
             return;

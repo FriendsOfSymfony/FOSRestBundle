@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -113,7 +114,7 @@ class ParamFetcher implements ParamFetcherInterface
 
             if (null !== $failMessage) {
                 if ($strict) {
-                    throw new HttpException(Codes::HTTP_BAD_REQUEST, $failMessage);
+                    throw new BadRequestHttpException($failMessage);
                 }
 
                 return $default;
@@ -133,8 +134,9 @@ class ParamFetcher implements ParamFetcherInterface
                     $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
                     $problem = empty($param) ? 'empty' : 'not a scalar';
 
-                    throw new HttpException(Codes::HTTP_BAD_REQUEST,
-                        sprintf('%s parameter "%s" is %s', $paramType, $name, $problem));
+                    throw new BadRequestHttpException(
+                        sprintf('%s parameter "%s" is %s', $paramType, $name, $problem)
+                    );
                 }
 
                 return $this->cleanParamWithRequirements($config, $param, $strict);
@@ -165,7 +167,7 @@ class ParamFetcher implements ParamFetcherInterface
             if ($strict) {
                 $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
-                throw new HttpException(Codes::HTTP_BAD_REQUEST, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
+                throw new BadRequestHttpException($paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
             }
 
             return null === $default ? '' : $default;
