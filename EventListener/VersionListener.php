@@ -23,11 +23,11 @@ use JMS\Serializer\Context;
 
 class VersionListener
 {
-    /** @var Context */
-    private $context;
-
     /** @var Reader */
     private $reader;
+
+    /** @var Context */
+    private $context;
 
     /** @var string */
     private $version = false;
@@ -37,9 +37,9 @@ class VersionListener
         return $this->version;
     }
 
-    public function __construct(Context $context, Reader $reader) {
-        $this->context = $context;
+    public function __construct(Reader $reader, Context $context = null) {
         $this->reader = $reader;
+        $this->context = $context;
     }
 
     public function onKernelRequest(GetResponseEvent $event) {
