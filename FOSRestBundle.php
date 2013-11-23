@@ -15,7 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
-use FOS\RestBundle\DependencyInjection\Compiler\VersionPass;
 
 /**
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
@@ -29,6 +28,5 @@ class FOSRestBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new ConfigurationCheckPass());
-        $container->addCompilerPass(new VersionPass());
     }
 }

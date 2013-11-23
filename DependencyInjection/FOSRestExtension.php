@@ -200,6 +200,28 @@ class FOSRestExtension extends Extension
                 );
             }
         }
+
+        if (class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
+            $container
+                ->register('fos_rest.version.serialisation_context', 'JMS\Serializer\SerializationContext');
+
+            $serialization_context = new Reference('fos_rest.version.serialisation_context');
+        }
+
+        $container
+            ->register('fos_rest.version.listener', 'FOS\RestBundle\EventListener\VersionListener')
+            ->addArgument(isset($serialization_context) ? new Reference('fos_rest.version.serialisation_context') : null)
+            ->addArgument(new Reference('annotation_reader'))
+            ->addTag('kernel.event_listener', array(
+                    'event' => 'kernel.request',
+                    'method' => 'onKernelRequest'
+                ))
+            ->addTag('kernel.event_listener', array(
+                    'event' => 'kernel.controller',
+                    'method' => 'onKernelController',
+                    'priority' => -255
+                ))
+        ;
     }
 
     /**
