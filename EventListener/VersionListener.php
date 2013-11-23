@@ -48,7 +48,10 @@ class VersionListener
 
         if (1 === preg_match("/(v|version)=(?P<version>[0-9\.]+)/", $acceptHeader, $matches)) {
             $this->version = $matches["version"];
-            $this->context->setVersion($this->version);
+
+            if (null !== $this->context) {
+                $this->context->setVersion($this->version);
+            }
         }
     }
 
