@@ -28,20 +28,22 @@ class VersionPass implements CompilerPassInterface
             $container
                 ->register('fos_rest.version.serialisation_context', 'JMS\Serializer\SerializationContext');
 
-            $container
-                ->register('fos_rest.version.listener', 'FOS\RestBundle\EventListener\VersionListener')
-                ->addArgument(new Reference('fos_rest.version.serialisation_context'))
-                ->addArgument(new Reference('annotation_reader'))
-                ->addTag('kernel.event_listener', array(
+            $serialization_context = new Reference('fos_rest.version.serialisation_context');
+        }
+
+        $container
+            ->register('fos_rest.version.listener', 'FOS\RestBundle\EventListener\VersionListener')
+            ->addArgument(isset($serialization_context) ? new Reference('fos_rest.version.serialisation_context') : null)
+            ->addArgument(new Reference('annotation_reader'))
+            ->addTag('kernel.event_listener', array(
                     'event' => 'kernel.request',
                     'method' => 'onKernelRequest'
                 ))
-                ->addTag('kernel.event_listener', array(
+            ->addTag('kernel.event_listener', array(
                     'event' => 'kernel.controller',
                     'method' => 'onKernelController',
                     'priority' => -255
                 ))
-            ;
-        }
+        ;
     }
 }
