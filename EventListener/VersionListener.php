@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Controller\Annotations\Since;
 use FOS\RestBundle\Controller\Annotations\Until;
 use FOS\RestBundle\Exceptions\SinceException;
@@ -66,7 +67,7 @@ class VersionListener
             return;
         }
 
-        $method = new \ReflectionMethod($controller[0], $controller[1]);
+        $method = new \ReflectionMethod(ClassUtils::getClass($controller[0]), $controller[1]);
 
         if (!$annotations = $this->reader->getMethodAnnotations($method)) {
             return;
