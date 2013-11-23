@@ -23,13 +23,13 @@ use JMS\Serializer\Context;
 class VersionListener
 {
     /** @var Context */
-    protected $context;
+    private $context;
 
     /** @var Reader */
-    protected $reader;
+    private $reader;
 
     /** @var string */
-    protected $version = false;
+    private $version = false;
 
     public function getVersion()
     {
