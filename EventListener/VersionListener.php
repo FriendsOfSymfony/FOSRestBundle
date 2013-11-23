@@ -58,8 +58,7 @@ class VersionListener
 
     public function onKernelController(FilterControllerEvent $event)
     {
-        if (!$this->version)
-        {
+        if (!$this->version) {
             return;
         }
 
