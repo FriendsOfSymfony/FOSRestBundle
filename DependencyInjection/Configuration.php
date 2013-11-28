@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('disable_csrf_role')->defaultNull()->end()
                 ->arrayNode('access_denied_listener')
                     ->useAttributeAsKey('name')
                     ->prototype('boolean')->end()
