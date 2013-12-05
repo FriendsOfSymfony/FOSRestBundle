@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\Decoder\DecoderProviderInterface;
-
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -64,7 +63,7 @@ class BodyListener
             $decoder = $this->decoderProvider->getDecoder($format);
             $content = $request->getContent();
 
-            if (strlen($content)) {
+            if (!empty($content)) {
                 $data = $decoder->decode($content, $format);
                 if (is_array($data)) {
                     $request->request = new ParameterBag($data);
