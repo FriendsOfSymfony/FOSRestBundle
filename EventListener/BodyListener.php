@@ -68,7 +68,7 @@ class BodyListener
                 if (is_array($data)) {
                     $request->request = new ParameterBag($data);
                 } else {
-                    throw new BadRequestHttpException('Invalid ' . $format . ' message recieved');
+                    throw new BadRequestHttpException('Invalid ' . $format . ' message received');
                 }
             }
         }
