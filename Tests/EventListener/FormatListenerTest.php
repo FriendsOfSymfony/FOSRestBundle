@@ -39,8 +39,8 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator->expects($this->once())
-            ->method('getBestFormat')
-            ->will($this->returnValue('xml'));
+            ->method('getBestMediaType')
+            ->will($this->returnValue('application/xml'));
 
         $listener = new FormatListener($formatNegotiator);
 
