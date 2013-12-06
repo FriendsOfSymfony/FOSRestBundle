@@ -119,6 +119,6 @@ class FormatNegotiator implements FormatNegotiatorInterface
      */
     public function getFormat($mimeType)
     {
-        $this->formatNegotiator->getFormat($mimeType);
+        return $this->formatNegotiator->getFormat($mimeType);
     }
 }
