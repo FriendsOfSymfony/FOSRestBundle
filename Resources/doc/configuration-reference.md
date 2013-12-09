@@ -3,6 +3,7 @@ Full default configuration
 
 ```yaml
 fos_rest:
+    disable_csrf_role:    ~
     access_denied_listener:
 
         # Prototype

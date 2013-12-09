@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="fos_rest.form.extension.csrf_disable.class">FOS\RestBundle\Form\Extension\DisableCSRFExtension</parameter>
+
+    </parameters>
+
+    <services>
+        <service id="fos_rest.form.extension.csrf_disable" class="%fos_rest.form.extension.csrf_disable.class%">
+            <tag name="form.type_extension" alias="form" />
+            <argument type="service" id="security.context" />
+            <argument>%fos_rest.disable_csrf_role%</argument>
+        </service>
+    </services>
+</container>

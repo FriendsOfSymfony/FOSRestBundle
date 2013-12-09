@@ -43,6 +43,11 @@ class FOSRestExtension extends Extension
         $loader->load('request.xml');
         $loader->load('version.xml');
 
+        if (!empty($config['disable_csrf_role'])) {
+            $loader->load('forms.xml');
+            $container->setParameter('fos_rest.disable_csrf_role', $config['disable_csrf_role']);
+        }
+
         $container->setParameter('fos_rest.cache_dir', $config['cache_dir']);
 
         $formats = array();

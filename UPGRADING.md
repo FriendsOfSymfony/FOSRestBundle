@@ -1,8 +1,7 @@
 Upgrading
 =========
 
-Note as FOSRestBundle is not yet declared stable, this document will be updated to
-list important BC breaks.
+This document will be updated to list important BC breaks and behavioral changes.
 
 ### upgrading to 2.0.0 (unreleased)
 

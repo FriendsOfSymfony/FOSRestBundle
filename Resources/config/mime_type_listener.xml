@@ -4,9 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+
+        <parameter key="fos_rest.mime_type_listener.class">FOS\RestBundle\EventListener\MimeTypeListener</parameter>
+
+    </parameters>
+
     <services>
 
-        <service id="fos_rest.mime_type_listener" class="FOS\RestBundle\EventListener\MimeTypeListener">
+        <service id="fos_rest.mime_type_listener" class="%fos_rest.mime_type_listener.class%">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="200" />
             <argument>%fos_rest.mime_types%</argument>
             <argument type="service" id="fos_rest.format_negotiator" />

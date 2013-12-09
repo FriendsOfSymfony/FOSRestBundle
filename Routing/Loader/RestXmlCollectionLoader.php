@@ -110,12 +110,26 @@ class RestXmlCollectionLoader extends XmlFileLoader
      */
     protected function validate(\DOMDocument $dom)
     {
-        $location = __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd';
+        $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
+        $routinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/routing-1.0.xsd');
+        $source = <<<EOF
+<?xml version="1.0" encoding="utf-8" ?>
+<xsd:schema xmlns="http://symfony.com/schema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://symfony.com/schema"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://friendsofsymfony.github.com/schema/rest" schemaLocation="$restRoutinglocation" />
+    <xsd:import namespace="http://symfony.com/schema/routing" schemaLocation="$routinglocation" />
+</xsd:schema>
+EOF
+        ;
 
         $current = libxml_use_internal_errors(true);
         libxml_clear_errors();
 
-        if (!$dom->schemaValidate($location)) {
+        if (!$dom->schemaValidateSource($source)) {
             throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors_($current)));
         }
         libxml_use_internal_errors($current);
@@ -127,7 +141,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
     protected function loadFile($file)
     {
         if (class_exists('Symfony\Component\Config\Util\XmlUtils')) {
-            return XmlUtils::loadFile($file, __DIR__ . '/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
+            $dom = XmlUtils::loadFile($file);
+            $this->validate($dom);
+            return $dom;
         }
  
         return parent::loadFile($file);
