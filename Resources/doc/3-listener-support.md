@@ -203,6 +203,9 @@ Your custom decoder service must use a class that implements the
 
 If you want to be able to use form with checkbox and have true and false value (without any issue) you have to use : fos_rest.decoder.jsontoform (available since fosrest 0.8.0)
 
+If the listener receives content that it tries to decode but the decode fails then a BadRequestHttpException will be thrown with the message:
+``'Invalid ' . $format . ' message received'``. When combined with the [exception controller support](4-exception-controller-support.md) this means your API will provide useful error messages to your API users if they are making invalid requests.
+
 ### Request Body Converter Listener
 
 [Converters](http://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/converters.html)
