@@ -29,7 +29,7 @@
             <call method="setExclusionStrategyVersion">
                 <argument>%fos_rest.serializer.exclusion_strategy.version%</argument>
             </call>
-            <call method="setSerializeNull">
+            <call method="setSerializeNullStrategy">
                 <argument>%fos_rest.serializer.serialize_null%</argument>
             </call>
             <call method="setContainer">
