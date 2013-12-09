@@ -40,13 +40,15 @@ class VersionListener
         return $this->version;
     }
 
-    public function __construct(Reader $reader, $regex, Context $context = null) {
+    public function __construct(Reader $reader, $regex, Context $context = null)
+    {
         $this->reader = $reader;
         $this->context = $context;
         $this->regex = $regex;
     }
 
-    public function onKernelRequest(GetResponseEvent $event) {
+    public function onKernelRequest(GetResponseEvent $event)
+    {
         $request = $event->getRequest();
 
         $mediaType = $request->attributes->get('media_type');
