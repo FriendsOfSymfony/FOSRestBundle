@@ -117,7 +117,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      */
     public function setExclusionStrategyGroups($groups)
     {
-        $this->exclusionStrategyGroups = (array) $groups;
+        $this->exclusionStrategyGroups = $groups;
     }
 
     /**
