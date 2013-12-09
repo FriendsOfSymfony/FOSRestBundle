@@ -30,6 +30,9 @@ class VersionListener
     private $context;
 
     /** @var string */
+    private $regex;
+
+    /** @var string */
     private $version = false;
 
     public function getVersion()
@@ -37,17 +40,18 @@ class VersionListener
         return $this->version;
     }
 
-    public function __construct(Reader $reader, Context $context = null) {
+    public function __construct(Reader $reader, $regex, Context $context = null) {
         $this->reader = $reader;
         $this->context = $context;
+        $this->regex = $regex;
     }
 
     public function onKernelRequest(GetResponseEvent $event) {
         $request = $event->getRequest();
 
-        $acceptHeader = $request->headers->get('Accept');
+        $mediaType = $request->attributes->get('media_type');
 
-        if (1 === preg_match("/(v|version)=(?P<version>[0-9\.]+)/", $acceptHeader, $matches)) {
+        if (1 === preg_match($this->regex, $mediaType, $matches)) {
             $this->version = $matches["version"];
 
             if (null !== $this->context) {
