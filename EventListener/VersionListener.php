@@ -17,6 +17,7 @@ use FOS\RestBundle\Controller\Annotations\Since;
 use FOS\RestBundle\Controller\Annotations\Until;
 use FOS\RestBundle\Exceptions\SinceException;
 use FOS\RestBundle\Exceptions\UntilException;
+use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -60,7 +61,7 @@ class VersionListener
         if (1 === preg_match($this->regex, $mediaType, $matches)) {
             $this->version = $matches["version"];
 
-            if ($this->viewHandler instanceof Format) {
+            if ($this->viewHandler instanceof ConfigurableViewHandlerInterface) {
                 $this->viewHandler->setExclusionStrategyVersion($this->version);
             }
         }
