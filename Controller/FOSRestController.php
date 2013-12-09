@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Controller;
 
-use JMS\Serializer\SerializationContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
