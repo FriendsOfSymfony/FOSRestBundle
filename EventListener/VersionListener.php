@@ -17,17 +17,17 @@ use FOS\RestBundle\Controller\Annotations\Since;
 use FOS\RestBundle\Controller\Annotations\Until;
 use FOS\RestBundle\Exceptions\SinceException;
 use FOS\RestBundle\Exceptions\UntilException;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use JMS\Serializer\Context;
 
 class VersionListener
 {
+    /** @var ViewHandlerInterface */
+    private $viewHandler;
+
     /** @var Reader */
     private $reader;
-
-    /** @var Context */
-    private $context;
 
     /** @var string */
     private $regex;
@@ -40,10 +40,14 @@ class VersionListener
         return $this->version;
     }
 
-    public function __construct(Reader $reader, $regex, Context $context = null)
+    public function __construct(ViewHandlerInterface $viewHandler, Reader $reader)
     {
+        $this->viewHandler = $viewHandler;
         $this->reader = $reader;
-        $this->context = $context;
+    }
+
+    public function setRegex($regex)
+    {
         $this->regex = $regex;
     }
 
@@ -56,8 +60,8 @@ class VersionListener
         if (1 === preg_match($this->regex, $mediaType, $matches)) {
             $this->version = $matches["version"];
 
-            if (null !== $this->context) {
-                $this->context->setVersion($this->version);
+            if ($this->viewHandler instanceof Format) {
+                $this->viewHandler->setExclusionStrategyVersion($this->version);
             }
         }
     }

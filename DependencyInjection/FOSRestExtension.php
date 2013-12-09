@@ -41,7 +41,6 @@ class FOSRestExtension extends Extension
         $loader->load('routing.xml');
         $loader->load('util.xml');
         $loader->load('request.xml');
-        $loader->load('version.xml');
 
         if (!empty($config['disable_csrf_role'])) {
             $loader->load('forms.xml');

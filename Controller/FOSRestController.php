@@ -88,11 +88,6 @@ abstract class FOSRestController extends Controller
      */
     protected function handleView(View $view)
     {
-        if ($this->container->has('fos_rest.version.serialisation_context')) {
-            /** @var SerializationContext $context */
-            $context = $this->get('fos_rest.version.serialisation_context');
-            $view->setSerializationContext($context);
-        }
         return $this->get('fos_rest.view_handler')->handle($view);
     }
 }

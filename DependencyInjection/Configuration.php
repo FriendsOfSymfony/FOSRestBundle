@@ -41,7 +41,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('disable_csrf_role')->defaultNull()->end()
                 ->arrayNode('access_denied_listener')
                     ->useAttributeAsKey('name')
                     ->prototype('boolean')->end()
@@ -200,6 +199,13 @@ class Configuration implements ConfigurationInterface
                                         ->useAttributeAsKey('name')
                                         ->prototype('scalar')->end()
                                     ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('media_type')
+                            ->children()
+                                ->scalarNode('version_regex')
+                                    ->defaultValue('/(v|version)=(?P<version>[0-9\.]+)/')
                                 ->end()
                             ->end()
                         ->end()
