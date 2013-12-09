@@ -23,6 +23,15 @@
             <argument>%fos_rest.serialize_null%</argument>
             <argument>%fos_rest.force_redirects%</argument>
             <argument>%fos_rest.default_engine%</argument>
+            <call method="setExclusionStrategyGroups">
+                <argument>%fos_rest.serializer.exclusion_strategy.groups%</argument>
+            </call>
+            <call method="setExclusionStrategyVersion">
+                <argument>%fos_rest.serializer.exclusion_strategy.version%</argument>
+            </call>
+            <call method="setSerializeNull">
+                <argument>%fos_rest.serializer.serialize_null%</argument>
+            </call>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>

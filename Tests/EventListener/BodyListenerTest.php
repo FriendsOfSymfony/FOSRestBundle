@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use FOS\RestBundle\Decoder\ContainerDecoderProvider;
 use FOS\RestBundle\EventListener\BodyListener;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Request listener test
@@ -79,9 +80,17 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', 'application/json', array()),
             'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), array('foo')), 'POST', 'application/json', array('bar')),
             'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', 'application/fooformat', array()),
-            'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', null, array('foo')),
-            'POST request malformed content' => array(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array()),
+            'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', null, array('foo'))
         );
+    }
+
+    /**
+     * Test that a malformed request will cause a BadRequestHttpException to be thrown
+     */
+    public function testBadRequestExceptionOnMalformedContent()
+    {
+        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
+        $this->testOnKernelRequest(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array());
     }
 
 }
