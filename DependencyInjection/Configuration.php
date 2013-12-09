@@ -203,6 +203,13 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                        ->arrayNode('media_type')
+                            ->children()
+                                ->scalarNode('version_regex')
+                                    ->defaultValue('/(v|version)=(?P<version>[0-9\.]+)/')
+                                ->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();
