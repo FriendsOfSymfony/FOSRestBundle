@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Util\FormatNegotiatorInterface;
+use FOS\RestBundle\Util\MediaTypeNegotiatorInterface;
 
 /**
  * This listener handles Accept header format negotiations.
@@ -50,7 +51,17 @@ class FormatListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        $format = $this->formatNegotiator->getBestFormat($request);
+
+        $format = null;
+        if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
+            $mediaType = $this->formatNegotiator->getBestMediaType($request);
+            if ($mediaType) {
+                $request->attributes->set('media_type', $mediaType);
+                $format = $request->getFormat($mediaType);
+            }
+        } else {
+            $format = $this->formatNegotiator->getBestFormat($request);
+        }
 
         if (null === $format) {
             if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {

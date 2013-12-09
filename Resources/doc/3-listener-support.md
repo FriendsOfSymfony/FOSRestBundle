@@ -293,8 +293,10 @@ request based on the Request's Accept-Header and the format priority
 configuration. This way it becomes possible to leverage Accept-Headers to
 determine the request format, rather than a file extension (like foo.json).
 
-The ``priorities`` define the order of formats as the application
-prefers.  The algorithm iteratively examines the provided Accept header first
+The ``priorities`` define the order of media types as the application
+prefers. Note that if a format is provided instead of a media type, the
+format is converted into a list of media types matching the format.
+The algorithm iteratively examines the provided Accept header first
 looking at all the options with the highest ``q``. The first priority that
 matches is returned. If none match the next lowest set of Accept headers with
 equal ``q`` is examined and so on until there are no more Accept headers to
@@ -318,7 +320,7 @@ fos_rest:
             - { path: '^/image', priorities: ['jpeg', 'gif'], fallback_format: false, prefer_extension: true }
             # setting fallback_format to null means that in case of a priority mismatch the next rule will be considered
             - { path: '^/admin', priorities: [ 'xml', 'html'], fallback_format: ~, prefer_extension: false }
-            - { path: '^/', priorities: [ 'html', '*/*'], fallback_format: html, prefer_extension: true }
+            - { path: '^/', priorities: [ 'text/html', '*/*'], fallback_format: html, prefer_extension: true }
 ```
 
 For example using the above configuration and the following Accept header:
@@ -336,8 +338,17 @@ hello:
 
 When calling:
 
-* ``/foo`` will lead to setting the request format to ``json``
-* ``/foo.html`` will lead to setting the request format to ``html``
+* ``/foo.json`` will lead to setting the request format to ``json``
+* ``/foo`` will lead to setting the request format to ``html``
+
+Furthermore the listener sets a ``media_type`` attribute on the request in
+case the listener is configured with a ``MediaTypeNegotiatorInterface`` instance,
+which is the case by default, with the matched media type.
+
+```php
+// f.e. text/html or ``application/vnd.custom_something+json etc.
+$mediaType = $request->attributes->get('media_type');
+```
 
 Note take care to configure the ``priorities`` carefully especially when the
 controller actions for specific routes only handle necessary security checks
