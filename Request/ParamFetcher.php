@@ -11,14 +11,12 @@
 
 namespace FOS\RestBundle\Request;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Helper to validate parameters of the active request.
@@ -153,7 +151,7 @@ class ParamFetcher implements ParamFetcherInterface
      * @param string  $param  param to clean
      * @param boolean $strict is strict
      *
-     * @throws \RuntimeException
+     * @throws BadRequestHttpException
      * @return string
      */
     public function cleanParamWithRequirements(Param $config, $param, $strict)
@@ -167,7 +165,9 @@ class ParamFetcher implements ParamFetcherInterface
             if ($strict) {
                 $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
-                throw new BadRequestHttpException($paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
+                throw new BadRequestHttpException(
+                    $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'"
+                );
             }
 
             return null === $default ? '' : $default;

@@ -13,7 +13,6 @@ namespace FOS\RestBundle\Request;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
@@ -25,7 +24,6 @@ use JMS\Serializer\Exception\UnsupportedFormatException;
 use JMS\Serializer\Exception\Exception as JMSSerializerException;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializerInterface;
-use FOS\RestBundle\Util\Codes;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>

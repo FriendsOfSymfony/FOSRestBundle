@@ -278,6 +278,8 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      * @param Request $request Request object
      *
      * @return Response
+     *
+     * @throws UnsupportedMediaTypeHttpException
      */
     public function handle(View $view, Request $request = null)
     {
