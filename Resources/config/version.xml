@@ -14,6 +14,7 @@
 
         <service id="fos_rest.version.listener" class="%fos_rest.version.listener.class%">
             <argument type="service" id="annotation_reader" />
+            <argument type="string"><![CDATA[/(v|version)=(?P<version>[0-9\.]+)/]]></argument>
             <argument type="service" id="fos_rest.version.serialisation_context" on-invalid="null" />
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
