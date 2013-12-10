@@ -18,6 +18,15 @@ namespace FOS\RestBundle\Controller\Annotations;
  */
 class RouteResource
 {
-    /** @var string required */
+    /**
+     * @var string required
+     */
     public $resource;
+
+    /**
+     * @var boolean
+     */
+    public $pluralize = false;
+
+
 }

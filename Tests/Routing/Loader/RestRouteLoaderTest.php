@@ -106,6 +106,21 @@ class RestRouteLoaderTest extends LoaderTest
         }
     }
 
+    public function testDisabledPluralization() 
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedNonPlurlizedArticleController');
+
+        foreach($collection as $name => $params) {
+            $route = $collection->get($name);
+            print $name . " " . $route->getPattern() . "\n";
+        }
+
+        $cget = $collection->get('get_article');
+        $this->assertEquals('/article/', $cget->getPattern());
+
+    }
+
+
     /**
      * Test that a custom format annotation is not overwritten
      */
