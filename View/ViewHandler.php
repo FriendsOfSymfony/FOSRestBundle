@@ -17,7 +17,7 @@ use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
@@ -278,6 +278,8 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      * @param Request $request Request object
      *
      * @return Response
+     *
+     * @throws UnsupportedMediaTypeHttpException
      */
     public function handle(View $view, Request $request = null)
     {
@@ -289,7 +291,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
 
         if (!$this->supports($format)) {
             $msg = "Format '$format' not supported, handler must be implemented";
-            throw new HttpException(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, $msg);
+            throw new UnsupportedMediaTypeHttpException($msg);
         }
 
         if (isset($this->customHandlers[$format])) {

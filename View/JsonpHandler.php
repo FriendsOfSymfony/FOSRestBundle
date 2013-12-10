@@ -13,9 +13,7 @@ namespace FOS\RestBundle\View;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Implements a custom handler for JSONP leveraging the ViewHandler
@@ -39,7 +37,7 @@ class JsonpHandler
 
         if ($this->callbackFilter && !preg_match($this->callbackFilter, $callback)) {
             $msg = "Callback '$callback' does not match '{$this->callbackFilter}'";
-            throw new HttpException(Codes::HTTP_BAD_REQUEST, $msg);
+            throw new BadRequestHttpException($msg);
         }
 
         return $callback;
