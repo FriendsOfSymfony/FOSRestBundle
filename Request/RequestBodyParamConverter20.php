@@ -12,17 +12,17 @@
 namespace FOS\RestBundle\Request;
 
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
  */
-class RequestBodyParamConverter extends AbstractRequestBodyParamConverter
+class RequestBodyParamConverter20 extends AbstractRequestBodyParamConverter
 {
     /**
      * {@inheritDoc}
      */
-    public function apply(Request $request, ParamConverter $configuration)
+    public function apply(Request $request, ConfigurationInterface $configuration)
     {
         return $this->execute($request, $configuration);
     }
@@ -30,7 +30,7 @@ class RequestBodyParamConverter extends AbstractRequestBodyParamConverter
     /**
      * {@inheritDoc}
      */
-    public function supports(ParamConverter $configuration)
+    public function supports(ConfigurationInterface $configuration)
     {
         return null !== $configuration->getClass();
     }

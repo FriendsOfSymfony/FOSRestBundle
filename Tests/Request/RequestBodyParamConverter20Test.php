@@ -11,14 +11,14 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use FOS\RestBundle\Request\RequestBodyParamConverter;
+use FOS\RestBundle\Request\RequestBodyParamConverter20;
 use JMS\Serializer\Exception\RuntimeException;
 use JMS\Serializer\Exception\UnsupportedFormatException;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
  */
-class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTest
+class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterTest
 {
     protected $serializer;
     protected $converter;
@@ -26,7 +26,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
     public function setUp()
     {
         // skip the test if the installed version of SensioFrameworkExtraBundle
-        // is not compatible with the RequestBodyParamConverter class
+        // is not compatible with the RequestBodyParamConverter20 class
         $parameter = new \ReflectionParameter(
             array(
                 'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
@@ -34,15 +34,15 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
             ),
             'configuration'
         );
-        if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' != $parameter->getClass()->getName()) {
+        if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface' != $parameter->getClass()->getName()) {
             $this->markTestSkipped(
-                'skipping RequestBodyParamConverterTest due to an incompatible version of the SensioFrameworkExtraBundle'
+                'skipping RequestBodyParamConverter20Test due to an incompatible version of the SensioFrameworkExtraBundle'
             );
         }
 
         $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
         $this->converter = $this->getMock(
-            'FOS\RestBundle\Request\RequestBodyParamConverter',
+            'FOS\RestBundle\Request\RequestBodyParamConverter20',
             array('getDeserializationContext'),
             array($this->serializer)
         );
@@ -51,7 +51,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
     public function testConstructThrowsExceptionIfValidatorIsSetAndValidationArgumentIsNull()
     {
         $this->setExpectedException('InvalidArgumentException');
-        $converter = new RequestBodyParamConverter(
+        $converter = new RequestBodyParamConverter20(
             $this->serializer,
             null,
             null,
@@ -163,7 +163,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
     public function testApplyWithDefaultSerializerContextExclusionPolicy()
     {
         $this->converter = $this->getMock(
-            'FOS\RestBundle\Request\RequestBodyParamConverter',
+            'FOS\RestBundle\Request\RequestBodyParamConverter20',
             array('getDeserializationContext'),
             array($this->serializer, array('group1'), '1.0')
         );
@@ -186,7 +186,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
     public function testApplyWithSerializerContextOptionsForSymfonySerializer()
     {
         $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface', array('serialize', 'deserialize'));
-        $this->converter = new RequestBodyParamConverter($this->serializer);
+        $this->converter = new RequestBodyParamConverter20($this->serializer);
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
 
         $options = array(
@@ -212,7 +212,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
             ->getMock();
         $validationErrors = $this->getMock('Symfony\Component\Validator\ConstraintViolationList');
 
-        $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'validationErrors');
+        $this->converter = new RequestBodyParamConverter20($this->serializer, null, null, $validator, 'validationErrors');
 
         $expectedPost = new Post('Post 1', 'This is a blog post');
         $this->serializer->expects($this->once())
@@ -243,7 +243,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
 
     public function testDefaultValidatorOptions()
     {
-        $this->converter = new RequestBodyParamConverter($this->serializer);
+        $this->converter = new RequestBodyParamConverter20($this->serializer);
         $reflClass = new \ReflectionClass($this->converter);
         $method = $reflClass->getMethod('getValidatorOptions');
         $method->setAccessible(true);
@@ -278,7 +278,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
             'deep' => false
         );
 
-        $converterMock = $this->getMockBuilder('FOS\RestBundle\Request\RequestBodyParamConverter')
+        $converterMock = $this->getMockBuilder('FOS\RestBundle\Request\RequestBodyParamConverter20')
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -309,7 +309,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
         $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator')
             ->disableOriginalConstructor()
             ->getMock();
-        $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'validationErrors');
+        $this->converter = new RequestBodyParamConverter20($this->serializer, null, null, $validator, 'validationErrors');
         $request = $this->createRequest();
 
         $this->converter->apply($request, $config);
