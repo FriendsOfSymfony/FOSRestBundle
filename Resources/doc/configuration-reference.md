@@ -73,16 +73,18 @@ fos_rest:
     format_listener:
         rules:
 
-            # URL path info
-            path:                 ~
-
-            # URL host name
-            host:                 ~
-            prefer_extension:     true
-            fallback_format:      html
-            priorities:
-
-                # Prototype
-                name:                 []
+            # Prototype array
+            -
+                # URL path info
+                path:                 ~
+    
+                # URL host name
+                host:                 ~
+                prefer_extension:     true
+                fallback_format:      html
+                priorities:
+    
+                    # Prototype
+                    name:                 []
 ```
 
