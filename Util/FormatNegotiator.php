@@ -97,7 +97,7 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
 
             $mimeTypes = $this->formatNegotiator->normalizePriorities($options['priorities']);
             $mediaType = $this->formatNegotiator->getBest($acceptHeader, $mimeTypes);
-            if (!$mediaType instanceof AcceptHeader || !$mediaType->isMediaRange()) {
+            if ($mediaType instanceof AcceptHeader && !$mediaType->isMediaRange()) {
                 return $mediaType->getValue();
             }
 
