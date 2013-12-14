@@ -15,7 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * Represents a parameter that must be present in GET data.
  *
  * @Annotation
- * @Target("METHOD")
+ * @Target({"CLASS", "METHOD"})
  * @author Alexander <iam.asm89@gmail.com>
  */
 class QueryParam extends Param
