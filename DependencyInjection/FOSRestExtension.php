@@ -144,6 +144,8 @@ class FOSRestExtension extends Extension
                 $container->getDefinition($this->getAlias().'.format_negotiator')
                     ->addMethodCall('add', array($matcher, $rule));
             }
+
+            $container->setParameter($this->getAlias().'.format_listener.media_type.version_regex', $config['format_listener']['media_type']['version_regex']);
         }
 
         if (!empty($config['view']['exception_wrapper_handler'])) {
