@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 use Negotiation\FormatNegotiator as BaseFormatNegotiator;
+use Negotiation\AcceptHeader;
 
 class FormatNegotiator implements MediaTypeNegotiatorInterface
 {
@@ -96,7 +97,7 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
 
             $mimeTypes = $this->formatNegotiator->normalizePriorities($options['priorities']);
             $mediaType = $this->formatNegotiator->getBest($acceptHeader, $mimeTypes);
-            if (null !== $mediaType) {
+            if (!$mediaType instanceof AcceptHeader || !$mediaType->isMediaRange()) {
                 return $mediaType->getValue();
             }
 
