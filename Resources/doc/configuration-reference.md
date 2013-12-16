@@ -86,5 +86,7 @@ fos_rest:
     
                     # Prototype
                     name:                 []
+        media_type:
+            version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
 ```
 

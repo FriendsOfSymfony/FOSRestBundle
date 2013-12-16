@@ -375,6 +375,23 @@ natively or it needs to be added as documented here or using the mime type
 listener explained below:
 http://symfony.com/doc/current/cookbook/request/mime_type.html
 
+The format listener can also determine the version of the selected media type
+based on a regular expression. The regular expression can be configured as
+follows. Setting it to an empty value will disable the behavior entirely.
+
+```
+fos_rest:
+    format_listener:
+        media_type:
+            version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
+```
+
+The matched version is set as a Request attribute with the name ``version``,
+and when using JMS serializer it is also set as an exclusion strategy
+automatically in the ``ViewHandler``. See the following documentation
+for details:
+http://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#versioning-objects
+
 ### Mime type listener
 
 This listener allows registering additional mime types in the ``Request``

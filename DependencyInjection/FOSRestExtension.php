@@ -144,6 +144,12 @@ class FOSRestExtension extends Extension
                 $container->getDefinition($this->getAlias().'.format_negotiator')
                     ->addMethodCall('add', array($matcher, $rule));
             }
+
+            if (!empty($config['format_listener']['media_type']['version_regex'])) {
+                $container->setParameter($this->getAlias().'.format_listener.media_type.version_regex', $config['format_listener']['media_type']['version_regex']);
+            } else {
+                $container->removeDefinition('fos_rest.version_listener');
+            }
         }
 
         if (!empty($config['view']['exception_wrapper_handler'])) {
