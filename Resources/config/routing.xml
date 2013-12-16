@@ -31,12 +31,18 @@
         <service id="fos_rest.routing.loader.yaml_collection" class="%fos_rest.routing.loader.yaml_collection.class%">
             <argument type="service" id="file_locator" />
             <argument type="service" id="fos_rest.routing.loader.processor" />
+            <argument>%fos_rest.routing.loader.include_format%</argument>
+            <argument>%fos_rest.formats%</argument>
+            <argument>%fos_rest.routing.loader.default_format%</argument>
             <tag name="routing.loader" />
         </service>
 
         <service id="fos_rest.routing.loader.xml_collection" class="%fos_rest.routing.loader.xml_collection.class%">
             <argument type="service" id="file_locator" />
             <argument type="service" id="fos_rest.routing.loader.processor" />
+            <argument>%fos_rest.routing.loader.include_format%</argument>
+            <argument>%fos_rest.formats%</argument>
+            <argument>%fos_rest.routing.loader.default_format%</argument>
             <tag name="routing.loader" />
         </service>
 
