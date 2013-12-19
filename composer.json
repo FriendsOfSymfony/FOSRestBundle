@@ -5,7 +5,6 @@
     "keywords": ["rest"],
     "homepage": "http://friendsofsymfony.github.com",
     "license": "MIT",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Lukas Kahwe Smith",
