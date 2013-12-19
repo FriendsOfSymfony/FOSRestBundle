@@ -16,9 +16,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 
 use FOS\RestBundle\Util\Codes;
 
@@ -165,7 +163,10 @@ class FOSRestExtension extends Extension
             $container->setDefinition($this->getAlias().'.view_handler', $handler);
 
             $container->setParameter($this->getAlias().'.view_handler.jsonp.callback_param', $config['view']['jsonp_handler']['callback_param']);
-            $container->setParameter($this->getAlias().'.view_handler.jsonp.callback_filter', $config['view']['jsonp_handler']['callback_filter']);
+
+            if ('/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i' !== $config['view']['jsonp_handler']['callback_filter']) {
+                throw new \LogicException('As of 1.2.0, the "callback_filter" parameter is deprecated, and is not used anymore. For more information, read: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/642.');
+            }
 
             if (empty($config['view']['mime_types']['jsonp'])) {
                 $config['view']['mime_types']['jsonp'] = $config['view']['jsonp_handler']['mime_type'];

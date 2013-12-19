@@ -54,7 +54,6 @@ fos_rest:
         serialize_null:       false
         jsonp_handler:
             callback_param:       callback
-            callback_filter:      /(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i
             mime_type:            application/javascript+jsonp
     exception:
         codes:
@@ -77,13 +76,13 @@ fos_rest:
             -
                 # URL path info
                 path:                 ~
-    
+
                 # URL host name
                 host:                 ~
                 prefer_extension:     true
                 fallback_format:      html
                 priorities:
-    
+
                     # Prototype
                     name:                 []
         media_type:
