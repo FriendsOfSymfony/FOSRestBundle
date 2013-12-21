@@ -190,6 +190,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('rules')
                             ->cannotBeOverwritten()
                             ->prototype('array')
+                                ->fixXmlConfig('priority', 'priorities')
                                 ->children()
                                     ->scalarNode('path')->defaultNull()->info('URL path info')->end()
                                     ->scalarNode('host')->defaultNull()->info('URL host name')->end()
