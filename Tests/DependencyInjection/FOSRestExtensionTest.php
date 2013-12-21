@@ -474,4 +474,12 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $exceptionWrapperHandler = $this->container->getDefinition('fos_rest.view.exception_wrapper_handler');
         $this->assertEquals('%fos_rest.view.exception_wrapper_handler%', $exceptionWrapperHandler->getClass());
     }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testExceptionThrownIfCallbackFilterIsUsed()
+    {
+        $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => array('callback_filter' => 'foo')))), $this->container);
+    }
 }

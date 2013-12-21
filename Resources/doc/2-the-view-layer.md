@@ -292,7 +292,6 @@ fos_rest:
     view:
         jsonp_handler:
            callback_param:       mycallback
-           callback_filter:      /^[a-z0-9_]+$/i
 ```
 
 Finally the filter can also be disabled by setting it to false.
