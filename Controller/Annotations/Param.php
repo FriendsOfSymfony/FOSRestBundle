@@ -22,6 +22,8 @@ abstract class Param
     /** @var string */
     public $name;
     /** @var string */
+    public $requestName = null;
+    /** @var string */
     public $requirements = '';
     /** @var mixed */
     public $default = null;
