@@ -23,6 +23,4 @@ class RequestParam extends Param
 {
     /** @var boolean */
     public $strict = true;
-    /** @var string */
-    public $default = null;
 }
