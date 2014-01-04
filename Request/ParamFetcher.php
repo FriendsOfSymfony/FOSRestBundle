@@ -94,11 +94,10 @@ class ParamFetcher implements ParamFetcherInterface
             $strict = $config->strict;
         }
 
-        $requestName = $config->requestName ? $config->requestName : $config->name;
         if ($config instanceof RequestParam) {
-            $param = $this->request->request->get($requestName, $default);
+            $param = $this->request->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
-            $param = $this->request->query->get($requestName, $default);
+            $param = $this->request->query->get($config->getKey(), $default);
         } else {
             $param = null;
         }

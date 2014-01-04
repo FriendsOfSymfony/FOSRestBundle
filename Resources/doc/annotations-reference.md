@@ -11,6 +11,7 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 /**
  * @QueryParam(
  *   name="",
+ *   key=null,
  *   requirements="",
  *   default=null,
  *   description="",
@@ -29,6 +30,7 @@ use FOS\RestBundle\Controller\Annotations\RequestParam;
 /**
  * @RequestParam(
  *   name="",
+ *   key=null,
  *   requirements="",
  *   default=null,
  *   description="",

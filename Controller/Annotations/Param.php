@@ -22,7 +22,7 @@ abstract class Param
     /** @var string */
     public $name;
     /** @var string */
-    public $requestName = null;
+    public $key = null;
     /** @var string */
     public $requirements = '';
     /** @var mixed */
@@ -35,4 +35,12 @@ abstract class Param
     public $array = false;
     /** @var boolean */
     public $nullable = false;
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key ?: $this->name;
+    }
 }
