@@ -23,8 +23,9 @@ FOSRestBundle provides several tools to assist in building REST applications:
 - [Manual definition of routes](7-manual-route-definition.md)
 
 ### Config reference
-Check out the [configuration reference](configuration-reference.md) for a reference on the available configuration options.
 
+- [Configuration reference](configuration-reference.md) for a reference on the available configuration options
+- [Annotations reference](annotations-reference.md) for a reference on on the available configurations through annotations
 
 ### Example application(s)
 
