@@ -81,6 +81,7 @@ class ParamFetcher implements ParamFetcherInterface
             throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
+        /** @var Param $config */
         $config   = $this->params[$name];
         $nullable = $config->nullable;
         $default  = $config->default;
@@ -94,9 +95,9 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config instanceof RequestParam) {
-            $param = $this->request->request->get($name, $default);
+            $param = $this->request->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
-            $param = $this->request->query->get($name, $default);
+            $param = $this->request->query->get($config->getKey(), $default);
         } else {
             $param = null;
         }
