@@ -173,9 +173,13 @@ class ExceptionController extends ContainerAware
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
         $showExceptionMessage = $this->isSubclassOf($exception, $exceptionMap);
 
-        return $showExceptionMessage || $this->container->get('kernel')->isDebug()
-            ? $exception->getMessage()
-            : Response::$statusTexts[$this->getStatusCode($exception)];
+        if ($showExceptionMessage || $this->container->get('kernel')->isDebug()) {
+            return $exception->getMessage();
+        }
+
+        $statusCode = $this->getStatusCode($exception);
+
+        return array_key_exists($statusCode, Response::$statusTexts) ? Response::$statusTexts[$statusCode] : 'error';
     }
 
     /**
