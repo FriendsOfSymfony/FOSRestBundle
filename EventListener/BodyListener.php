@@ -15,6 +15,7 @@ use FOS\RestBundle\Decoder\DecoderProviderInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 /**
  * This listener handles Request body decoding.
@@ -29,19 +30,28 @@ class BodyListener
     private $decoderProvider;
 
     /**
+     * @var boolean
+     */
+    private $throwExceptionOnUnsupportedContentType;
+
+    /**
      * Constructor.
      *
      * @param DecoderProviderInterface $decoderProvider Provider for fetching decoders
+     * @param boolean $throwExceptionOnUnsupportedContentType
      */
-    public function __construct(DecoderProviderInterface $decoderProvider)
+    public function __construct(DecoderProviderInterface $decoderProvider, $throwExceptionOnUnsupportedContentType = false)
     {
         $this->decoderProvider = $decoderProvider;
+        $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
     }
 
     /**
      * Core request handler
      *
      * @param GetResponseEvent $event The event
+     * @throws BadRequestHttpException
+     * @throws UnsupportedMediaTypeHttpException
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
@@ -57,6 +67,10 @@ class BodyListener
                 : $request->getFormat($contentType);
 
             if (!$this->decoderProvider->supports($format)) {
+                if ($this->throwExceptionOnUnsupportedContentType) {
+                    throw new UnsupportedMediaTypeHttpException("Request body format '$format' not supported");
+                }
+
                 return;
             }
 

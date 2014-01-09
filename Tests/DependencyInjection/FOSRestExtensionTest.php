@@ -88,6 +88,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
         $this->assertParameter($decoders, 'fos_rest.decoders');
+        $this->assertParameter(false, 'fos_rest.throw_exception_on_unsupported_content_type');
     }
 
     public function testDisableFormatListener()
