@@ -43,10 +43,11 @@ class RestActionReader
     /**
      * Initializes controller reader.
      *
-     * @param Reader           $annotationReader annotation reader
-     * @param queryParamReader $queryParamReader query param reader
+     * @param Reader $annotationReader annotation reader
+     * @param ParamReader $paramReader query param reader
      * @param InflectorInterface $inflector
      * @param boolean $includeFormat
+     * @param array $formats
      */
     public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = array())
     {
