@@ -134,7 +134,7 @@ there would be an overlap of method names there is a special convention to call 
 ``getAction`` and ``cgetAction``, where the ``c`` standard for collection. So the following
 would work as well.
 
-```
+```php
 <?php
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -164,7 +164,7 @@ Finally its possible to override the resource name derived from the Controller n
 ``@RouteResource`` annotation:
 
 
-```
+```php
 <?php
 
 use FOS\RestBundle\Controller\Annotations\RouteResource;
