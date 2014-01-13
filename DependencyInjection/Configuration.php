@@ -197,6 +197,7 @@ class Configuration implements ConfigurationInterface
                                     ->booleanNode('prefer_extension')->defaultTrue()->end()
                                     ->scalarNode('fallback_format')->defaultValue('html')->end()
                                     ->arrayNode('priorities')
+                                        ->useAttributeAsKey('name')
                                         ->beforeNormalization()->ifString()->then(function ($v) { return preg_split('/\s*,\s*/', $v); })->end()
                                         ->prototype('scalar')->end()
                                     ->end()
