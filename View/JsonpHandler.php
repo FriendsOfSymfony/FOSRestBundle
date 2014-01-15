@@ -34,7 +34,7 @@ class JsonpHandler
         $callback  = $request->query->get($this->callbackParam);
         $validator = new \JsonpCallbackValidator();
 
-        if (!$validator->validate($this->callbackParam)) {
+        if (!$validator->validate($callback)) {
             throw new BadRequestHttpException('Invalid JSONP callback value');
         }
 
