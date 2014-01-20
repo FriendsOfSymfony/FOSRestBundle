@@ -240,7 +240,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      *
      * @return SerializationContext
      */
-    public function getSerializationContext(View $view)
+    protected function getSerializationContext(View $view)
     {
         $context = $view->getSerializationContext();
 
