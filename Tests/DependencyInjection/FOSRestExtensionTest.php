@@ -25,13 +25,42 @@ use FOS\RestBundle\DependencyInjection\FOSRestExtension;
  */
 class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var ContainerBuilder
+     */
     private $container;
+
+    /**
+     * @var FOSRestExtension
+     */
     private $extension;
+
+    /**
+     * @var boolean
+     */
+    private $includeFormat;
+
+    /**
+     * @var array
+     */
+    private $formats;
+
+    /**
+     * @var string
+     */
+    private $defaultFormat;
 
     public function setUp()
     {
         $this->container = new ContainerBuilder();
         $this->extension = new FOSRestExtension();
+        $this->includeFormat = true;
+        $this->formats = array(
+            'json' => false,
+            'xml'  => false,
+            'html' => true,
+        );
+        $this->defaultFormat = null;
     }
 
     public function tearDown()
@@ -177,14 +206,131 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition($yamlCollectionLoaderDefinitionName));
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
-            $yamlCollectionLoaderClassParameter
+            $yamlCollectionLoaderClassParameter,
+            $this->includeFormat,
+            $this->formats,
+            $this->defaultFormat
         );
 
         $this->assertEquals($xmlCollectionLoaderClass, $this->container->getParameter($xmlCollectionLoaderClassParameter));
         $this->assertTrue($this->container->hasDefinition($xmlCollectionLoaderDefinitionName));
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
-            $xmlCollectionLoaderClassParameter
+            $xmlCollectionLoaderClassParameter,
+            $this->includeFormat,
+            $this->formats,
+            $this->defaultFormat
+        );
+    }
+
+    public function testIncludeFormatDisabled()
+    {
+        $this->extension->load(
+            array(
+                'fos_rest' => array(
+                    'routing_loader' => array(
+                        'include_format' => false,
+                    ),
+                ),
+            ),
+            $this->container
+        );
+
+        $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
+        $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
+            $yamlCollectionLoaderClassParameter,
+            false,
+            $this->formats,
+            $this->defaultFormat
+        );
+
+        $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
+        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
+            $xmlCollectionLoaderClassParameter,
+            false,
+            $this->formats,
+            $this->defaultFormat
+        );
+    }
+
+    public function testDefaultFormat()
+    {
+        $this->extension->load(
+            array(
+                'fos_rest' => array(
+                    'routing_loader' => array(
+                        'default_format' => 'xml',
+                    ),
+                ),
+            ),
+            $this->container
+        );
+
+        $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
+        $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
+            $yamlCollectionLoaderClassParameter,
+            $this->includeFormat,
+            $this->formats,
+            'xml'
+        );
+
+        $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
+        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
+            $xmlCollectionLoaderClassParameter,
+            $this->includeFormat,
+            $this->formats,
+            'xml'
+        );
+    }
+
+    public function testFormats()
+    {
+        $this->extension->load(
+            array(
+                'fos_rest' => array(
+                    'view' => array(
+                        'formats' => array(
+                            'json' => false,
+                            'xml'  => true,
+                        ),
+                    ),
+                ),
+            ),
+            $this->container
+        );
+
+        $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
+        $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
+            $yamlCollectionLoaderClassParameter,
+            $this->includeFormat,
+            array(
+                'xml'  => false,
+                'html' => true,
+            ),
+            $this->defaultFormat
+        );
+
+        $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
+        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
+            $xmlCollectionLoaderClassParameter,
+            $this->includeFormat,
+            array(
+                'xml'  => false,
+                'html' => true,
+            ),
+            $this->defaultFormat
         );
     }
 
@@ -259,17 +405,43 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @param Definition $loader               loader definition
      * @param string     $loaderClassParameter loader class parameter name
+     * @param boolean    $includeFormat        whether or not the requested view format must be included in the route path
+     * @param string[]   $formats              supported view formats
+     * @param string     $defaultFormat        default view format
      */
-    private function assertValidRestFileLoader(Definition $loader, $loaderClassParameter)
-    {
+    private function assertValidRestFileLoader(
+        Definition $loader,
+        $loaderClassParameter,
+        $includeFormat,
+        array $formats,
+        $defaultFormat
+    ) {
         $locatorRef = new Reference('file_locator');
         $processorRef = new Reference('fos_rest.routing.loader.processor');
         $arguments  = $loader->getArguments();
 
         $this->assertEquals('%' . $loaderClassParameter . '%', $loader->getClass());
-        $this->assertEquals(2, count($arguments));
+        $this->assertEquals(5, count($arguments));
         $this->assertEquals($locatorRef, $arguments[0]);
         $this->assertEquals($processorRef, $arguments[1]);
+        $this->assertEquals(
+            $includeFormat,
+            $this->container->getParameter(
+                strtr($arguments[2], array('%' => ''))
+            )
+        );
+        $this->assertEquals(
+            $formats,
+            $this->container->getParameter(
+                strtr($arguments[3], array('%' => ''))
+            )
+        );
+        $this->assertEquals(
+            $defaultFormat,
+            $this->container->getParameter(
+                strtr($arguments[4], array('%' => ''))
+            )
+        );
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
     }
 
@@ -301,5 +473,13 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
         $exceptionWrapperHandler = $this->container->getDefinition('fos_rest.view.exception_wrapper_handler');
         $this->assertEquals('%fos_rest.view.exception_wrapper_handler%', $exceptionWrapperHandler->getClass());
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testExceptionThrownIfCallbackFilterIsUsed()
+    {
+        $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => array('callback_filter' => 'foo')))), $this->container);
     }
 }

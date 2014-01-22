@@ -4,11 +4,24 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="fos_rest.format_listener.class">FOS\RestBundle\EventListener\FormatListener</parameter>
+        <parameter key="fos_rest.version_listener.class">FOS\RestBundle\EventListener\VersionListener</parameter>
+    </parameters>
+
     <services>
 
-        <service id="fos_rest.format_listener" class="FOS\RestBundle\EventListener\FormatListener">
+        <service id="fos_rest.format_listener" class="%fos_rest.format_listener.class%">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="20" />
             <argument type="service" id="fos_rest.format_negotiator" />
+        </service>
+
+        <service id="fos_rest.version_listener" class="%fos_rest.version_listener.class%">
+            <argument type="service" id="fos_rest.view_handler.default" />
+            <call method="setRegex">
+                <argument type="string">%fos_rest.format_listener.media_type.version_regex%</argument>
+            </call>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
         </service>
 
     </services>

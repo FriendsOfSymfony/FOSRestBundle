@@ -3,6 +3,7 @@ Full default configuration
 
 ```yaml
 fos_rest:
+    disable_csrf_role:    ~
     access_denied_listener:
 
         # Prototype
@@ -53,7 +54,6 @@ fos_rest:
         serialize_null:       false
         jsonp_handler:
             callback_param:       callback
-            callback_filter:      /(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i
             mime_type:            application/javascript+jsonp
     exception:
         codes:
@@ -72,16 +72,20 @@ fos_rest:
     format_listener:
         rules:
 
-            # URL path info
-            path:                 ~
+            # Prototype array
+            -
+                # URL path info
+                path:                 ~
 
-            # URL host name
-            host:                 ~
-            prefer_extension:     true
-            fallback_format:      html
-            priorities:
+                # URL host name
+                host:                 ~
+                prefer_extension:     true
+                fallback_format:      html
+                priorities:
 
-                # Prototype
-                name:                 []
+                    # Prototype
+                    name:                 []
+        media_type:
+            version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
 ```
 

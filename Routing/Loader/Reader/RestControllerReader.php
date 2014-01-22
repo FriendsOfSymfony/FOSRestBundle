@@ -100,7 +100,7 @@ class RestControllerReader
     }
 
     /**
-     * Reads
+     * Reads class annotations.
      *
      * @param ReflectionClass $reflection     controller class
      * @param string          $annotationName annotation name

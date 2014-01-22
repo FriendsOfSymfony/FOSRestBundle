@@ -15,8 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 use Negotiation\FormatNegotiator as BaseFormatNegotiator;
+use Negotiation\AcceptHeader;
 
-class FormatNegotiator implements FormatNegotiatorInterface
+class FormatNegotiator implements MediaTypeNegotiatorInterface
 {
     /**
      * @var array
@@ -45,6 +46,22 @@ class FormatNegotiator implements FormatNegotiatorInterface
      */
     public function getBestFormat(Request $request)
     {
+        $mediaType = $this->getBestMediaType($request);
+        if (null === $mediaType) {
+            return null;
+        }
+
+        return $this->getFormat($mediaType);
+    }
+
+    /**
+     * Detect the request format based on the priorities and the Accept header
+     *
+     * @param   Request         $request          The request
+     * @return  void|string                       The format string
+     */
+    public function getBestMediaType(Request $request)
+    {
         foreach ($this->map as $elements) {
             if (null === $elements[0] || $elements[0]->matches($request)) {
                 $options = $elements[1];
@@ -52,7 +69,7 @@ class FormatNegotiator implements FormatNegotiatorInterface
 
             if (empty($options['priorities'])) {
                 if (!empty($options['fallback_format'])) {
-                    return $options['fallback_format'];
+                    return $request->getMimeType($options['fallback_format']);
                 }
 
                 continue;
@@ -78,9 +95,10 @@ class FormatNegotiator implements FormatNegotiatorInterface
                 }
             }
 
-            $format = $this->formatNegotiator->getBestFormat($acceptHeader, $options['priorities']);
-            if (null !== $format) {
-                return $format;
+            $mimeTypes = $this->formatNegotiator->normalizePriorities($options['priorities']);
+            $mediaType = $this->formatNegotiator->getBest($acceptHeader, $mimeTypes);
+            if ($mediaType instanceof AcceptHeader && !$mediaType->isMediaRange()) {
+                return $mediaType->getValue();
             }
 
             if (isset($options['fallback_format'])) {
@@ -90,7 +108,7 @@ class FormatNegotiator implements FormatNegotiatorInterface
                 }
 
                 // stop looking at rules since we have a fallback defined
-                return $options['fallback_format'];
+                return $request->getMimeType($options['fallback_format']);
             }
         }
 
@@ -119,6 +137,6 @@ class FormatNegotiator implements FormatNegotiatorInterface
      */
     public function getFormat($mimeType)
     {
-        $this->formatNegotiator->getFormat($mimeType);
+        return $this->formatNegotiator->getFormat($mimeType);
     }
 }

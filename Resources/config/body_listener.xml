@@ -4,23 +4,33 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+
+        <parameter key="fos_rest.decoder.json.class">FOS\RestBundle\Decoder\JsonDecoder</parameter>
+        <parameter key="fos_rest.decoder.jsontoform.class">FOS\RestBundle\Decoder\JsonToFormDecoder</parameter>
+        <parameter key="fos_rest.decoder.xml.class">FOS\RestBundle\Decoder\XmlDecoder</parameter>
+        <parameter key="fos_rest.decoder_provider.class">FOS\RestBundle\Decoder\ContainerDecoderProvider</parameter>
+        <parameter key="fos_rest.body_listener.class">FOS\RestBundle\EventListener\BodyListener</parameter>
+
+    </parameters>
+
     <services>
 
-        <service id="fos_rest.decoder.json" class="FOS\RestBundle\Decoder\JsonDecoder" />
+        <service id="fos_rest.decoder.json" class="%fos_rest.decoder.json.class%" />
 
-        <service id="fos_rest.decoder.jsontoform" class="FOS\RestBundle\Decoder\JsonToFormDecoder" />
+        <service id="fos_rest.decoder.jsontoform" class="%fos_rest.decoder.jsontoform.class%" />
 
-        <service id="fos_rest.decoder.xml" class="FOS\RestBundle\Decoder\XmlDecoder" />
+        <service id="fos_rest.decoder.xml" class="%fos_rest.decoder.xml.class%" />
 
-        <service id="fos_rest.decoder_provider" class="FOS\RestBundle\Decoder\ContainerDecoderProvider">
+        <service id="fos_rest.decoder_provider" class="%fos_rest.decoder_provider.class%">
             <argument>%fos_rest.decoders%</argument>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
         </service>
 
-        <service id="fos_rest.body_listener" class="FOS\RestBundle\EventListener\BodyListener">
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
+        <service id="fos_rest.body_listener" class="%fos_rest.body_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="10" />
             <argument type="service" id="fos_rest.decoder_provider" />
         </service>
 

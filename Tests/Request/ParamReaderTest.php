@@ -31,26 +31,48 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
     {
         $annotationReader = $this->getMock('Doctrine\Common\Annotations\Reader');
 
-        $annotations = array();
+        $methodAnnotations = array();
         $foo = new QueryParam;
         $foo->name = 'foo';
         $foo->requirements = '\d+';
         $foo->description = 'The foo';
-        $annotations[] = $foo;
+        $methodAnnotations[] = $foo;
 
         $bar = new QueryParam;
         $bar->name = 'bar';
         $bar->requirements = '\d+';
         $bar->description = 'The bar';
-        $annotations[] = $bar;
+        $methodAnnotations[] = $bar;
 
-        $annotations[] = new NamePrefix(array());
+        $methodAnnotations[] = new NamePrefix(array());
 
         $annotationReader
             ->expects($this->any())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue($annotations));
+            ->will($this->returnValue($methodAnnotations));
 
+        $classAnnotations = array();
+        
+        $baz = new QueryParam;
+        $baz->name = 'baz';
+        $baz->requirements = '\d+';
+        $baz->description = 'The baz';
+        $classAnnotations[] = $baz;
+        
+        $mikz = new QueryParam;
+        $mikz->name = 'mikz';
+        $mikz->requirements = '\d+';
+        $mikz->description = 'The real mikz';
+        $classAnnotations[] = $mikz;
+        
+        $not = new NamePrefix(array());
+        $classAnnotations[] = $not;
+        
+        $annotationReader
+                ->expects($this->any())
+                ->method('getClassAnnotations')
+                ->will($this->returnValue($classAnnotations));
+        
         $this->paramReader = new ParamReader($annotationReader);
     }
 
@@ -61,7 +83,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
     {
         $annotations = $this->paramReader->read(new \ReflectionClass(__CLASS__), 'setup');
 
-        $this->assertCount(2, $annotations);
+        $this->assertCount(4, $annotations);
 
         foreach ($annotations as $name => $annotation) {
             $this->assertThat($annotation, $this->isInstanceOf('FOS\RestBundle\Controller\Annotations\Param'));

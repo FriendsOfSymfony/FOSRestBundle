@@ -28,12 +28,12 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider handleDataProvider
      */
-    public function testHandle($query, $callbackFilter = '/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i')
+    public function testHandle($query)
     {
         $data = array('foo' => 'bar');
 
         $viewHandler = new ViewHandler(array('jsonp' => false));
-        $jsonpHandler = new JsonpHandler(key($query), $callbackFilter);
+        $jsonpHandler = new JsonpHandler(key($query));
         $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
@@ -70,21 +70,21 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         return array(
             'jQuery callback syntax' => array(array('callback' => 'jQuery171065827149929257_1343950463342')),
             'YUI callback syntax' => array(array('callback' => 'YUI.Env.JSONP._12345')),
-            'custom callback param' => array(array('custom' => '1234')),
-            'custom callback filter' => array(array('custom' => '1234.asdas.122'), false),
+            'jQuery custom syntax' => array(array('custom' => 'jQuery171065827149929257_1343950463342')),
+            'YUI custom syntax' => array(array('custom' => 'YUI.Env.JSONP._12345')),
         );
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @dataProvider getCallbackFailureDataProvider
      */
-    public function testGetCallbackFailure(Request $request, $callbackFilter = '/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i')
+    public function testGetCallbackFailure(Request $request)
     {
         $data = array('foo' => 'bar');
 
         $viewHandler = new ViewHandler(array('jsonp' => false));
-        $jsonpHandler = new JsonpHandler('callback', $callbackFilter);
+        $jsonpHandler = new JsonpHandler('callback');
         $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
@@ -119,9 +119,6 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         return array(
             'no callback'   => array(new Request()),
             'incorrect callback param name'  => array(new Request(array('foo' => 'bar'))),
-            'incorrect callback param value' => array(new Request(array('callback' => 'ding.dong'))),
-            'incorrect callback param name and value' => array(new Request(array('foo' => 'bar'))),
-            'incorrect callback param value with a custom filter' => array(new Request(array('foo' => 'bar')), '/[0-9]+/'),
         );
     }
 }

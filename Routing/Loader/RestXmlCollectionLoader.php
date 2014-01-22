@@ -14,11 +14,7 @@ namespace FOS\RestBundle\Routing\Loader;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Routing\Loader\XmlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-
 use FOS\RestBundle\Routing\RestRouteCollection;
-use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
-
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
@@ -37,12 +33,23 @@ class RestXmlCollectionLoader extends XmlFileLoader
      *
      * @param FileLocatorInterface $locator   locator
      * @param RestRouteProcessor   $processor route processor
+     * @param boolean              $includeFormat whether or not the requested view format must be included in the route path
+     * @param string[]             $formats       supported view formats
+     * @param string               $defaultFormat default view format
      */
-    public function __construct(FileLocatorInterface $locator, RestRouteProcessor $processor)
-    {
+    public function __construct(
+        FileLocatorInterface $locator,
+        RestRouteProcessor $processor,
+        $includeFormat = true,
+        array $formats = array(),
+        $defaultFormat = null
+    ) {
         parent::__construct($locator);
 
         $this->processor = $processor;
+        $this->includeFormat = $includeFormat;
+        $this->formats = $formats;
+        $this->defaultFormat = $defaultFormat;
     }
 
     /**
@@ -90,6 +97,65 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
+    {
+        // the Symfony Routing component uses a path attribute since Symfony 2.2
+        // instead of the deprecated pattern attribute0
+        if (!$node->hasAttribute('path')) {
+            $node->setAttribute('path', $node->getAttribute('pattern'));
+            $node->removeAttribute('pattern');
+        }
+
+        if ($this->includeFormat) {
+            $path = $node->getAttribute('path');
+            // append format placeholder if not present
+            if (false === strpos($path, '{_format}')) {
+                $node->setAttribute('path', $path.'.{_format}');
+            }
+
+            // set format requirement if configured globally
+            $requirements = $node->getElementsByTagNameNS(self::NAMESPACE_URI, 'requirement');
+            $format = null;
+            for ($i = 0; $i < $requirements->length; $i++) {
+                $item = $requirements->item($i);
+                if ($item instanceof \DOMElement && $item->hasAttribute('_format')) {
+                    $format = $item->getAttribute('_format');
+                    break;
+                }
+            }
+            if (null === $format && !empty($this->formats)) {
+                $requirement = $node->ownerDocument->createElementNs(
+                    self::NAMESPACE_URI,
+                    'requirement',
+                    implode('|', array_keys($this->formats))
+                );
+                $requirement->setAttribute('key', '_format');
+                $node->appendChild($requirement);
+
+                /*$doc =new \DOMDocument();
+                $doc->appendChild($doc->importNode($node, true));
+                echo $doc->saveHTML();*/
+            }
+        }
+
+        // set the default format if configured
+        if (null !== $this->defaultFormat) {
+            $config['defaults']['_format'] = $this->defaultFormat;
+            $defaultFormatNode = $node->ownerDocument->createElementNS(
+                self::NAMESPACE_URI,
+                'default',
+                $this->defaultFormat
+            );
+            $defaultFormatNode->setAttribute('key', '_format');
+            $node->appendChild($defaultFormatNode);
+        }
+
+        parent::parseRoute($collection, $node, $path);
+    }
+
+    /**
      * Returns true if this class supports the given resource.
      *
      * @param mixed  $resource A resource
@@ -110,12 +176,26 @@ class RestXmlCollectionLoader extends XmlFileLoader
      */
     protected function validate(\DOMDocument $dom)
     {
-        $location = __DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd';
+        $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
+        $routinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/routing-1.0.xsd');
+        $source = <<<EOF
+<?xml version="1.0" encoding="utf-8" ?>
+<xsd:schema xmlns="http://symfony.com/schema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://symfony.com/schema"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://friendsofsymfony.github.com/schema/rest" schemaLocation="$restRoutinglocation" />
+    <xsd:import namespace="http://symfony.com/schema/routing" schemaLocation="$routinglocation" />
+</xsd:schema>
+EOF
+        ;
 
         $current = libxml_use_internal_errors(true);
         libxml_clear_errors();
 
-        if (!$dom->schemaValidate($location)) {
+        if (!$dom->schemaValidateSource($source)) {
             throw new \InvalidArgumentException(implode("\n", $this->getXmlErrors_($current)));
         }
         libxml_use_internal_errors($current);
@@ -127,7 +207,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
     protected function loadFile($file)
     {
         if (class_exists('Symfony\Component\Config\Util\XmlUtils')) {
-            return XmlUtils::loadFile($file, __DIR__ . '/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
+            $dom = XmlUtils::loadFile($file);
+            $this->validate($dom);
+            return $dom;
         }
  
         return parent::loadFile($file);

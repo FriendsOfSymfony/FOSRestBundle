@@ -32,10 +32,12 @@ class MimeTypeListener
      * @var FormatNegotiator
      */
     private $formatNegotiator;
+    
     /**
      * Constructor.
      *
-     * @param array $mimeTypes key format, value mime type
+     * @param array            $mimeTypes        key format, value mime type
+     * @param FormatNegotiator $formatNegotiator the format Negotiator
      */
     public function __construct(array $mimeTypes, FormatNegotiator $formatNegotiator)
     {

@@ -44,7 +44,27 @@ class ParamReader implements ParamReaderInterface
             throw new \InvalidArgumentException(sprintf("Class '%s' has no method '%s' method.", $reflection->getName(), $method));
         }
 
-        return $this->getParamsFromMethod($reflection->getMethod($method));
+        $methodParams = $this->getParamsFromMethod($reflection->getMethod($method));
+        $classParams = $this->getParamsFromClass($reflection);
+        return array_merge($methodParams, $classParams);
+    }
+    
+    /**
+     * Fetches parameters from provided annotation array (fetched from annotationReader)
+     * 
+     * @param array $annotations
+     * @return \FOS\RestBundle\Controller\Annotations\Param
+     */
+    private function getParamsFromAnnotationArray(array $annotations)
+    {
+        $params = array();
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof Param) {
+                $params[$annotation->name] = $annotation;
+            }
+        }
+
+        return $params;
     }
 
     /**
@@ -54,13 +74,17 @@ class ParamReader implements ParamReaderInterface
     {
         $annotations = $this->annotationReader->getMethodAnnotations($method);
 
-        $params = array();
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof Param) {
-                $params[$annotation->name] = $annotation;
-            }
-        }
-
-        return $params;
+        return $this->getParamsFromAnnotationArray($annotations);
+    }
+    
+    /**
+     * 
+     * {@inheritDoc}
+     */
+    public function getParamsFromClass(\ReflectionClass $class)
+    {
+        $annotations = $this->annotationReader->getClassAnnotations($class);
+        
+        return $this->getParamsFromAnnotationArray($annotations);
     }
 }

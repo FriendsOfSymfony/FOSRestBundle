@@ -1,5 +1,6 @@
 Step 2: The view layer
 ======================
+
 ### Introduction
 
 The view layer makes it possible to write `format` (html, json, xml, etc) agnostic
@@ -291,7 +292,6 @@ fos_rest:
     view:
         jsonp_handler:
            callback_param:       mycallback
-           callback_filter:      /^[a-z0-9_]+$/i
 ```
 
 Finally the filter can also be disabled by setting it to false.
@@ -302,6 +302,20 @@ fos_rest:
     view:
         jsonp_handler:
             callback_param:       false
+```
+
+#### CSRF validation
+
+When building a single application that should handle forms both via HTML forms as well
+as via a REST API, one runs into a problem with CSRF token validation. In most cases it
+is necessary to enable them for HTML forms, but it makes no sense to use them for a REST
+API. For this reason there is a form extension to disable CSRF validation for users
+with a specific role. This of course requires that REST API users authenticate themselves
+and get a special role assigned.
+
+```yaml
+fos_rest:
+    disable_csrf_role: ROLE_API
 ```
 
 ## That was it!

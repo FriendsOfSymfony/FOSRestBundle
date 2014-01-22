@@ -10,7 +10,7 @@ Installation is a quick (I promise!) 1 step process:
 ## Bundle usage
 
 Before you start using the bundle it is advised you run a quick look over the 5 sections listed below.
-This bundle contains many features that are loosly coupled so you may or may not need to use all of
+This bundle contains many features that are loosely coupled so you may or may not need to use all of
 them. This bundle is just a tool to help you in the job of creating a REST API with Symfony2.
 
 FOSRestBundle provides several tools to assist in building REST applications:
@@ -23,8 +23,9 @@ FOSRestBundle provides several tools to assist in building REST applications:
 - [Manual definition of routes](7-manual-route-definition.md)
 
 ### Config reference
-Check out the [configuration reference](configuration-reference.md) for a reference on the available configuration options.
 
+- [Configuration reference](configuration-reference.md) for a reference on the available configuration options
+- [Annotations reference](annotations-reference.md) for a reference on on the available configurations through annotations
 
 ### Example application(s)
 

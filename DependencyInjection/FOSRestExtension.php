@@ -16,9 +16,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 
 use FOS\RestBundle\Util\Codes;
 
@@ -41,6 +39,11 @@ class FOSRestExtension extends Extension
         $loader->load('routing.xml');
         $loader->load('util.xml');
         $loader->load('request.xml');
+
+        if (!empty($config['disable_csrf_role'])) {
+            $loader->load('forms.xml');
+            $container->setParameter('fos_rest.disable_csrf_role', $config['disable_csrf_role']);
+        }
 
         $container->setParameter('fos_rest.cache_dir', $config['cache_dir']);
 
@@ -139,6 +142,12 @@ class FOSRestExtension extends Extension
                 $container->getDefinition($this->getAlias().'.format_negotiator')
                     ->addMethodCall('add', array($matcher, $rule));
             }
+
+            if (!empty($config['format_listener']['media_type']['version_regex'])) {
+                $container->setParameter($this->getAlias().'.format_listener.media_type.version_regex', $config['format_listener']['media_type']['version_regex']);
+            } else {
+                $container->removeDefinition('fos_rest.version_listener');
+            }
         }
 
         if (!empty($config['view']['exception_wrapper_handler'])) {
@@ -154,7 +163,10 @@ class FOSRestExtension extends Extension
             $container->setDefinition($this->getAlias().'.view_handler', $handler);
 
             $container->setParameter($this->getAlias().'.view_handler.jsonp.callback_param', $config['view']['jsonp_handler']['callback_param']);
-            $container->setParameter($this->getAlias().'.view_handler.jsonp.callback_filter', $config['view']['jsonp_handler']['callback_filter']);
+
+            if ('/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i' !== $config['view']['jsonp_handler']['callback_filter']) {
+                throw new \LogicException('As of 1.2.0, the "callback_filter" parameter is deprecated, and is not used anymore. For more information, read: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/642.');
+            }
 
             if (empty($config['view']['mime_types']['jsonp'])) {
                 $config['view']['mime_types']['jsonp'] = $config['view']['jsonp_handler']['mime_type'];
@@ -188,6 +200,24 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['body_converter'])) {
             if (!empty($config['body_converter']['enabled'])) {
+                $parameter = new \ReflectionParameter(
+                    array(
+                        'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
+                        'supports',
+                    ),
+                    'configuration'
+                );
+                if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' == $parameter->getClass()->getName()) {
+                    $container->setParameter(
+                        'fos_rest.converter.request_body.class',
+                        'FOS\RestBundle\Request\RequestBodyParamConverter'
+                    );
+                } else {
+                    $container->setParameter(
+                        'fos_rest.converter.request_body.class',
+                        'FOS\RestBundle\Request\RequestBodyParamConverter20'
+                    );
+                }
                 $loader->load('request_body_param_converter.xml');
             }
             if (!empty($config['body_converter']['validate'])) {

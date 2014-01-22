@@ -8,27 +8,36 @@
         <parameter key="fos_rest.serializer.exclusion_strategy.version" />
         <parameter key="fos_rest.serializer.exclusion_strategy.groups"/>
         <parameter key="fos_rest.view_handler.jsonp.callback_param"/>
-        <parameter key="fos_rest.view_handler.jsonp.callback_filter"/>
         <parameter key="fos_rest.view.exception_wrapper_handler" />
+        <parameter key="fos_rest.view_handler.default.class">FOS\RestBundle\View\ViewHandler</parameter>
+        <parameter key="fos_rest.view_handler.jsonp.class">FOS\RestBundle\View\JsonpHandler</parameter>
     </parameters>
 
     <services>
 
-        <service id="fos_rest.view_handler.default" class="FOS\RestBundle\View\ViewHandler" public="false">
+        <service id="fos_rest.view_handler.default" class="%fos_rest.view_handler.default.class%" public="false">
             <argument>%fos_rest.formats%</argument>
             <argument>%fos_rest.failed_validation%</argument>
             <argument>%fos_rest.empty_content%</argument>
             <argument>%fos_rest.serialize_null%</argument>
             <argument>%fos_rest.force_redirects%</argument>
             <argument>%fos_rest.default_engine%</argument>
+            <call method="setExclusionStrategyGroups">
+                <argument>%fos_rest.serializer.exclusion_strategy.groups%</argument>
+            </call>
+            <call method="setExclusionStrategyVersion">
+                <argument>%fos_rest.serializer.exclusion_strategy.version%</argument>
+            </call>
+            <call method="setSerializeNullStrategy">
+                <argument>%fos_rest.serializer.serialize_null%</argument>
+            </call>
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
         </service>
 
-        <service id="fos_rest.view_handler.jsonp" class="FOS\RestBundle\View\JsonpHandler" public="false">
+        <service id="fos_rest.view_handler.jsonp" class="%fos_rest.view_handler.jsonp.class%" public="false">
             <argument>%fos_rest.view_handler.jsonp.callback_param%</argument>
-            <argument>%fos_rest.view_handler.jsonp.callback_filter%</argument>
         </service>
 
         <service id="fos_rest.view.exception_wrapper_handler" class="%fos_rest.view.exception_wrapper_handler%" />

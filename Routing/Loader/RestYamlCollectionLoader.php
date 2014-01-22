@@ -16,10 +16,7 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-
 use FOS\RestBundle\Routing\RestRouteCollection;
-use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 
 /**
  * RestYamlCollectionLoader YAML file collections loader.
@@ -30,17 +27,34 @@ class RestYamlCollectionLoader extends YamlFileLoader
 
     private $processor;
 
+    private $includeFormat;
+
+    private $formats;
+
+    private $defaultFormat;
+
     /**
      * Initializes yaml loader.
      *
-     * @param FileLocatorInterface $locator   locator
-     * @param RestRouteProcessor   $processor route processor
+     * @param FileLocatorInterface $locator       locator
+     * @param RestRouteProcessor   $processor     route processor
+     * @param boolean              $includeFormat whether or not the requested view format must be included in the route path
+     * @param string[]             $formats       supported view formats
+     * @param string               $defaultFormat default view format
      */
-    public function __construct(FileLocatorInterface $locator, RestRouteProcessor $processor)
-    {
+    public function __construct(
+        FileLocatorInterface $locator,
+        RestRouteProcessor $processor,
+        $includeFormat = true,
+        array $formats = array(),
+        $defaultFormat = null
+    ) {
         parent::__construct($locator);
 
         $this->processor = $processor;
+        $this->includeFormat = $includeFormat;
+        $this->formats = $formats;
+        $this->defaultFormat = $defaultFormat;
     }
 
     /**
@@ -93,6 +107,29 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
             } elseif (isset($config['pattern']) || isset($config['path'])) {
+                // the YamlFileLoader of the Routing component only checks for
+                // the path option
+                if (!isset($config['path'])) {
+                    $config['path'] = $config['pattern'];
+                }
+
+                if ($this->includeFormat) {
+                    // append format placeholder if not present
+                    if (false === strpos($config['path'], '{_format}')) {
+                        $config['path'].='.{_format}';
+                    }
+
+                    // set format requirement if configured globally
+                    if (!isset($config['requirements']['_format']) && !empty($this->formats)) {
+                        $config['requirements']['_format'] = implode('|', array_keys($this->formats));
+                    }
+                }
+
+                // set the default format if configured
+                if (null !== $this->defaultFormat) {
+                    $config['defaults']['_format'] = $this->defaultFormat;
+                }
+
                 $this->parseRoute($collection, $name, $config, $path);
             } else {
                 throw new \InvalidArgumentException(sprintf('Unable to parse the "%s" route.', $name));

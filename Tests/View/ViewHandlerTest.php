@@ -133,7 +133,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponseWithLocationAndData()
     {
         $testValue = array('naviter' => 'oudie');
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $this->setupMockedSerializer($container, $testValue);
 
         $viewHandler = new ViewHandler(array('json' => false));
@@ -203,9 +203,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $container->set('fos_rest.serializer', $serializer);
         $container->set('fos_rest.view.exception_wrapper_handler', new ExceptionWrapperHandler());
-        $container->setParameter('fos_rest.serializer.exclusion_strategy.groups', 'foo');
-        $container->setParameter('fos_rest.serializer.exclusion_strategy.version', '1.0');
-        $container->setParameter('fos_rest.serializer.serialize_null', false);
 
         //test
         $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Codes::HTTP_I_AM_A_TEAPOT);
@@ -238,7 +235,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $viewHandler = new ViewHandler(array('html' => true, 'json' => false));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         if ('html' === $format) {
             $templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
                 ->setMethods(array('render'))
@@ -319,17 +316,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                       }
                   )
               );
-
-        $map = array(
-            array('fos_rest.serializer.exclusion_strategy.groups', 'foo'),
-            array('fos_rest.serializer.exclusion_strategy.version', '1.0'),
-            array('fos_rest.serializer.serialize_null', false)
-        );
-
-        $container
-            ->expects($this->any())
-            ->method('getParameter')
-            ->will($this->returnValueMap($map));
     }
 
     public static function createResponseWithoutLocationDataProvider()
@@ -348,7 +334,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSerializeNull($expected, $serializeNull)
     {
         $viewHandler = new ViewHandler(array('json' => false), 404, 200, $serializeNull);
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
 
         $viewHandler->setContainer($container);
 
@@ -396,20 +382,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSerializeNullDataValues($expected, $serializeNull)
     {
         $viewHandler = new ViewHandler(array('json' => false), 404, 200);
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
+        $viewHandler->setSerializeNullStrategy($serializeNull);
+
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
 
         $viewHandler->setContainer($container);
-
-        $map = array(
-            array('fos_rest.serializer.exclusion_strategy.groups', 'foo'),
-            array('fos_rest.serializer.exclusion_strategy.version', '1.0'),
-            array('fos_rest.serializer.serialize_null', $serializeNull)
-        );
-
-        $container
-            ->expects($this->any())
-            ->method('getParameter')
-            ->will($this->returnValueMap($map));
 
         $view = new View();
         $context = $viewHandler->getSerializationContext($view);
@@ -548,5 +525,20 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'object is wrapped as data key' => array($object, array('data' => $object)),
             'form is wrapped as form key'   => array($form, array('form' => $formView, 'data' => $formView))
         );
+    }
+
+    public function testConfigurableViewHandlerInterface()
+    {
+        //test
+        $viewHandler = new ViewHandler();
+        $viewHandler->setExclusionStrategyGroups('bar');
+        $viewHandler->setExclusionStrategyVersion('1.1');
+        $viewHandler->setSerializeNullStrategy(true);
+
+        $view = new View();
+        $context = $viewHandler->getSerializationContext($view);
+        $this->assertEquals(array('bar'), $context->attributes->get('groups')->getOrThrow(new \Exception('Serialization groups not set as expected')));
+        $this->assertEquals('1.1', $context->attributes->get('version')->getOrThrow(new \Exception('Serialization version not set as expected')));
+        $this->assertTrue($context->shouldSerializeNull());
     }
 }

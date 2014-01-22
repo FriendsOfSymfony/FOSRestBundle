@@ -11,13 +11,12 @@
 
 namespace FOS\RestBundle\Request;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Helper to validate parameters of the active request.
@@ -82,6 +81,7 @@ class ParamFetcher implements ParamFetcherInterface
             throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
+        /** @var Param $config */
         $config   = $this->params[$name];
         $nullable = $config->nullable;
         $default  = $config->default;
@@ -95,9 +95,9 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config instanceof RequestParam) {
-            $param = $this->request->request->get($name, $default);
+            $param = $this->request->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
-            $param = $this->request->query->get($name, $default);
+            $param = $this->request->query->get($config->getKey(), $default);
         } else {
             $param = null;
         }
@@ -113,7 +113,7 @@ class ParamFetcher implements ParamFetcherInterface
 
             if (null !== $failMessage) {
                 if ($strict) {
-                    throw new HttpException(Codes::HTTP_BAD_REQUEST, $failMessage);
+                    throw new BadRequestHttpException($failMessage);
                 }
 
                 return $default;
@@ -133,8 +133,9 @@ class ParamFetcher implements ParamFetcherInterface
                     $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
                     $problem = empty($param) ? 'empty' : 'not a scalar';
 
-                    throw new HttpException(Codes::HTTP_BAD_REQUEST,
-                        sprintf('%s parameter "%s" is %s', $paramType, $name, $problem));
+                    throw new BadRequestHttpException(
+                        sprintf('%s parameter "%s" is %s', $paramType, $name, $problem)
+                    );
                 }
 
                 return $this->cleanParamWithRequirements($config, $param, $strict);
@@ -151,7 +152,7 @@ class ParamFetcher implements ParamFetcherInterface
      * @param string  $param  param to clean
      * @param boolean $strict is strict
      *
-     * @throws \RuntimeException
+     * @throws BadRequestHttpException
      * @return string
      */
     public function cleanParamWithRequirements(Param $config, $param, $strict)
@@ -165,7 +166,9 @@ class ParamFetcher implements ParamFetcherInterface
             if ($strict) {
                 $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
-                throw new HttpException(Codes::HTTP_BAD_REQUEST, $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'");
+                throw new BadRequestHttpException(
+                    $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'"
+                );
             }
 
             return null === $default ? '' : $default;

@@ -43,10 +43,11 @@ class RestActionReader
     /**
      * Initializes controller reader.
      *
-     * @param Reader           $annotationReader annotation reader
-     * @param queryParamReader $queryParamReader query param reader
+     * @param Reader $annotationReader annotation reader
+     * @param ParamReader $paramReader query param reader
      * @param InflectorInterface $inflector
      * @param boolean $includeFormat
+     * @param array $formats
      */
     public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = array())
     {
@@ -235,9 +236,16 @@ class RestActionReader
         if ('_' === substr($method->getName(), 0, 1)) {
             return false;
         }
-
-        // if method has NoRoute annotation - skip
-        if ($this->readMethodAnnotation($method, 'NoRoute')) {
+        
+        $hasNoRouteMethod = (bool) $this->readMethodAnnotation($method, 'NoRoute');
+        $hasNoRouteClass = (bool) $this->readClassAnnotation($method->getDeclaringClass(), 'NoRoute');
+        
+        $hasNoRoute = $hasNoRoute = $hasNoRouteMethod || $hasNoRouteClass;
+        // since NoRoute extends Route we need to exclude all the method NoRoute annotations
+        $hasRoute = (bool) $this->readMethodAnnotation($method, 'Route') && !$hasNoRouteMethod;
+        
+        // if method has NoRoute annotation and does not have Route annotation - skip
+        if ($hasNoRoute && !$hasRoute) {
             return false;
         }
 
@@ -423,6 +431,23 @@ class RestActionReader
             if ($annotation = $this->readMethodAnnotation($reflection, $annotationName)) {
                 return $annotation;
             }
+        }
+    }
+
+    /**
+     * Reads class annotations.
+     *
+     * @param ReflectionClass $reflection     controller class
+     * @param string          $annotationName annotation name
+     *
+     * @return Annotation|null
+     */
+    private function readClassAnnotation(\ReflectionClass $reflection, $annotationName)
+    {
+        $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
+
+        if ($annotation = $this->annotationReader->getClassAnnotation($reflection, $annotationClass)) {
+            return $annotation;
         }
     }
 

@@ -36,7 +36,7 @@ class JsonToFormDecoder implements DecoderInterface
                 // Checkbox-like behavior: remove false data
                 unset($data[$key]);
             } elseif (!is_string($value)) {
-                // Convert everyting to string
+                // Convert everything to string
                 // true values will be converted to '1', this is the default checkbox behavior
                 $value = strval($value);
             }

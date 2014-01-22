@@ -76,6 +76,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $annotations['biz'] = new QueryParam;
         $annotations['biz']->name = 'biz';
+        $annotations['biz']->key = 'business';
         $annotations['biz']->requirements = '\d+';
         $annotations['biz']->default = null;
         $annotations['biz']->nullable = true;
@@ -329,5 +330,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $queryFetcher = $this->getParamFetcher();
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('none', '42');
+    }
+
+    public function testKeyPrecedenceOverName()
+    {
+        $queryFetcher = $this->getParamFetcher(array('business' => 5));
+        $queryFetcher->setController($this->controller);
+        $this->assertEquals(5, $queryFetcher->get('biz'));
     }
 }

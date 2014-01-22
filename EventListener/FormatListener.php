@@ -12,11 +12,11 @@
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Util\FormatNegotiatorInterface;
+use FOS\RestBundle\Util\MediaTypeNegotiatorInterface;
 
 /**
  * This listener handles Accept header format negotiations.
@@ -45,16 +45,26 @@ class FormatListener
      *
      * @param GetResponseEvent $event The event
      *
-     * @throws HttpException
+     * @throws NotAcceptableHttpException
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        $format = $this->formatNegotiator->getBestFormat($request);
+
+        $format = null;
+        if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
+            $mediaType = $this->formatNegotiator->getBestMediaType($request);
+            if ($mediaType) {
+                $request->attributes->set('media_type', $mediaType);
+                $format = $request->getFormat($mediaType);
+            }
+        } else {
+            $format = $this->formatNegotiator->getBestFormat($request);
+        }
 
         if (null === $format) {
             if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
-                throw new HttpException(Codes::HTTP_NOT_ACCEPTABLE, "No matching accepted Response format could be determined");
+                throw new NotAcceptableHttpException("No matching accepted Response format could be determined");
             }
 
             return;

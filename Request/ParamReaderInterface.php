@@ -37,4 +37,12 @@ interface ParamReaderInterface
      * @return array Param annotation objects of the method. Indexed by parameter name.
      */
     public function getParamsFromMethod(\ReflectionMethod $method);
+    
+    /**
+     * 
+     * @param \ReflectionClass $class
+     * 
+     * @return array Param annotation objects of the class. Indexed by parameter name.
+     */
+    public function getParamsFromClass(\ReflectionClass $class);
 }
