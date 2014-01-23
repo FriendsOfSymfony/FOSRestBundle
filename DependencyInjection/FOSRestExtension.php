@@ -131,7 +131,8 @@ class FOSRestExtension extends Extension
                 $matcher = $this->createRequestMatcher(
                     $container,
                     $rule['path'],
-                    $rule['host']
+                    $rule['host'],
+                    $rule['methods']
                 );
 
                 unset($rule['path'], $rule['host']);
@@ -248,9 +249,9 @@ class FOSRestExtension extends Extension
         }
     }
 
-    protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null)
+    protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
     {
-        $arguments = array($path, $host);
+        $arguments = array($path, $host, $methods);
         $serialized = serialize($arguments);
         $id = $this->getAlias().'.request_matcher.'.md5($serialized).sha1($serialized);
 

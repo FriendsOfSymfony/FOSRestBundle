@@ -322,7 +322,7 @@ fos_rest:
             # setting fallback_format to false means that instead of considering the next rule in case of a priority mismatch, a 406 will be caused
             - { path: '^/image', priorities: ['jpeg', 'gif'], fallback_format: false, prefer_extension: true }
             # setting fallback_format to null means that in case of a priority mismatch the next rule will be considered
-            - { path: '^/admin', priorities: [ 'xml', 'html'], fallback_format: ~, prefer_extension: false }
+            - { path: '^/admin', methods: [ 'GET', 'POST'], priorities: [ 'xml', 'html'], fallback_format: ~, prefer_extension: false }
             - { path: '^/', priorities: [ 'text/html', '*/*'], fallback_format: html, prefer_extension: true }
 ```
 
