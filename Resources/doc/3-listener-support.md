@@ -31,9 +31,7 @@ The view response listener makes it possible to simply return a ``View``
 instance from action controllers. The final output will then automatically be
 processed via the listener by the ``fos_rest.view_handler`` service.
 
-This requires adding the SensioFrameworkExtraBundle to your vendors:
-
-http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
+This requires adding the [SensioFrameworkExtraBundle][sensio-extra-bundle] to your vendors.
 
 Now inside a controller its possible to simply return a ``View`` instance.
 
@@ -56,18 +54,18 @@ class UsersController
 }
 ```
 
-As this feature is heavily based on the SensioFrameworkBundle, the example can
-further be simplified by using the various annotations supported by that
-bundle. There is also one additional annotation called ``@View()`` which
-extends from the ``@Template()`` annotation.
+As this feature is heavily based on the [SensioFrameworkExtraBundle][sensio-extra-bundle],
+the example can further be simplified by using the various annotations supported by that
+bundle. There is also one additional annotation called ``@View()`` which extends
+from the ``@Template()`` annotation.
 
 The ``@View()`` and ``@Template()`` annotations behave essentially the same
 with a minor difference. When ``view_response_listener`` is set to ``true``
 instead of ``force`` and ``@View()`` is not used, then rendering
-will be delegated to SensioFrameworkExtraBundle.
+will be delegated to [SensioFrameworkExtraBundle][sensio-extra-bundle].
 
 Note that it is necessary to disable view annotations in
-SensioFrameworkExtraBundle so that FOSRestBundle can take over the handling.
+[SensioFrameworkExtraBundle][sensio-extra-bundle] so that FOSRestBundle can take over the handling.
 
 ```yaml
 # app/config/config.yml
@@ -155,15 +153,14 @@ public function getUsersAction()
 }
 ```
 
-See the following example code for more details:
-https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php
+See the [following example code](https://github.com/liip/LiipHelloBundle/blob/master/Controller/ExtraController.php) for more details.
 
 The ViewResponse listener will automatically populate your view with request attributes if
 you do not provide any data when returning a view object. This behaviour comes from
-SensioFrameworkExtraBundle and will automatically add any variables listed in the
-`_template_default_vars` request attribute when no data is supplied. In some cases, this
-is not desirable and can be disabled by either supplying the data you want or disabling
-the automatic population of data with the @View annotation. :
+[SensioFrameworkExtraBundle][sensio-extra-bundle] and will automatically add any variables
+listed in the `_template_default_vars` request attribute when no data is supplied.
+In some cases, this is not desirable and can be disabled by either supplying the data
+you want or disabling the automatic population of data with the @View annotation. :
 
 ```php
 /**
@@ -213,7 +210,7 @@ are a way to populate objects and inject them as controller method arguments.
 The Request body converter makes it possible to deserialize the request body
 into an object.
 
-This converter requires that you have installed [SensioFrameworkExtraBundle](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html)
+This converter requires that you have installed [SensioFrameworkExtraBundle][sensio-extra-bundle]
 and have the converters enabled:
 ```yaml
 # app/config/config.yml
@@ -372,8 +369,8 @@ public function getAction(Request $request)
 
 Note that the format needs to either be supported by the ``Request`` class
 natively or it needs to be added as documented here or using the mime type
-listener explained below:
-http://symfony.com/doc/current/cookbook/request/mime_type.html
+listener explained in
+[the Symfony Cookbook entry](http://symfony.com/doc/current/cookbook/request/mime_type.html).
 
 The format listener can also determine the version of the selected media type
 based on a regular expression. The regular expression can be configured as
@@ -388,15 +385,16 @@ fos_rest:
 
 The matched version is set as a Request attribute with the name ``version``,
 and when using JMS serializer it is also set as an exclusion strategy
-automatically in the ``ViewHandler``. See the following documentation
-for details:
-http://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#versioning-objects
+automatically in the ``ViewHandler``.
+See
+[the following documentation](http://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#versioning-objects)
+for details.
 
 ### Mime type listener
 
 This listener allows registering additional mime types in the ``Request``
-class.  It works similar to the following cookbook entry:
-http://symfony.com/doc/current/cookbook/request/mime_type.html
+class. It works similar to the
+[following Cookbook entry](http://symfony.com/doc/current/cookbook/request/mime_type.html).
 
 
 ```yaml
@@ -556,3 +554,5 @@ It is also recommended to enable the exception controller described in the next 
 
 ## That was it!
 [Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
+
+[sensio-extra-bundle]: http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
