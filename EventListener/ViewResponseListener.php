@@ -76,12 +76,14 @@ class ViewResponseListener extends TemplateListener
         $configuration = $request->attributes->get('_view');
 
         $view = $event->getControllerResult();
+        $customViewDefined = true;
         if (!$view instanceof View) {
             if (!$configuration && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
                 return parent::onKernelView($event);
             }
 
             $view = new View($view);
+            $customViewDefined = false;
         }
 
         if ($configuration) {
@@ -91,7 +93,7 @@ class ViewResponseListener extends TemplateListener
             if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Codes::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
-            if ($configuration->getSerializerGroups()) {
+            if ($configuration->getSerializerGroups() && !$customViewDefined) {
                 $context = $view->getSerializationContext() ?: new SerializationContext();
                 $context->setGroups($configuration->getSerializerGroups());
                 $view->setSerializationContext($context);
