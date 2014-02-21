@@ -76,14 +76,14 @@ class ViewResponseListener extends TemplateListener
         $configuration = $request->attributes->get('_view');
 
         $view = $event->getControllerResult();
-	    $customViewDefined = true;
+        $customViewDefined = true;
         if (!$view instanceof View) {
             if (!$configuration && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
                 return parent::onKernelView($event);
             }
 
             $view = new View($view);
-	        $customViewDefined = false;
+            $customViewDefined = false;
         }
 
         if ($configuration) {
