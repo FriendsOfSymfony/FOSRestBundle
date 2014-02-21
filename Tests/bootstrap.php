@@ -11,10 +11,6 @@
 
 $file = __DIR__.'/../vendor/autoload.php';
 if (!file_exists($file)) {
-    // thats for the vendor directory ()
-    $file = __DIR__.'/../../../../../../vendor/autoload.php';
-}
-if (!file_exists($file)) {
     throw new RuntimeException('Install dependencies to run test suite.');
 }
 
