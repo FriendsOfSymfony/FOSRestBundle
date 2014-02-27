@@ -70,13 +70,13 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         return array(
             'jQuery callback syntax' => array(array('callback' => 'jQuery171065827149929257_1343950463342')),
             'YUI callback syntax' => array(array('callback' => 'YUI.Env.JSONP._12345')),
-            'custom callback param' => array(array('custom' => '1234')),
-            'custom callback filter' => array(array('custom' => '1234.asdas.122'), false),
+            'jQuery custom syntax' => array(array('custom' => 'jQuery171065827149929257_1343950463342')),
+            'YUI custom syntax' => array(array('custom' => 'YUI.Env.JSONP._12345')),
         );
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @dataProvider getCallbackFailureDataProvider
      */
     public function testGetCallbackFailure(Request $request)
@@ -119,8 +119,6 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         return array(
             'no callback'   => array(new Request()),
             'incorrect callback param name'  => array(new Request(array('foo' => 'bar'))),
-            'incorrect callback param value' => array(new Request(array('callback' => 'ding.dong'))),
-            'incorrect callback param name and value' => array(new Request(array('foo' => 'bar'))),
         );
     }
 }

@@ -31,7 +31,7 @@ public function registerBundles()
         // ...
         new FOS\RestBundle\FOSRestBundle(),
         
-        // if you installed FOSRestBundle using composer you shoudn't forget
+        // if you installed FOSRestBundle using composer you shouldn't forget
         // also registering JMSSerializerBundle.
         
         // new JMS\SerializerBundle\JMSSerializerBundle(),
