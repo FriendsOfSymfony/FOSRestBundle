@@ -121,6 +121,7 @@ class FOSRestExtension extends Extension
         if (!empty($config['body_listener'])) {
             $loader->load('body_listener.xml');
 
+            $container->setParameter($this->getAlias().'.throw_exception_on_unsupported_content_type', $config['body_listener']['throw_exception_on_unsupported_content_type']);
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
         }
 

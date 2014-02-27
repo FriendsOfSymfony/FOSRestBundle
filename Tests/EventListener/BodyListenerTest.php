@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use FOS\RestBundle\Decoder\ContainerDecoderProvider;
 use FOS\RestBundle\EventListener\BodyListener;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Request listener test
@@ -31,10 +30,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      * @param string  $method             a http method (e.g. POST, GET, PUT, ...)
      * @param string  $contentType        the request header content type
      * @param array   $expectedParameters the http parameters of the updated request
+     * @param boolean $throwExceptionOnUnsupportedContentType
      *
      * @dataProvider testOnKernelRequestDataProvider
      */
-    public function testOnKernelRequest($decode, $request, $method, $contentType, $expectedParameters)
+    public function testOnKernelRequest($decode, $request, $method, $contentType, $expectedParameters, $throwExceptionOnUnsupportedContentType = false)
     {
         $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->disableOriginalConstructor()->getMock();
         $decoder->expects($this->any())
@@ -43,7 +43,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
 
         $decoderProvider = new ContainerDecoderProvider(array('json' => 'foo'));
 
-        $listener = new BodyListener($decoderProvider);
+        $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType);
 
         if ($decode) {
             $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
@@ -91,6 +91,15 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
         $this->testOnKernelRequest(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array());
+    }
+
+    /**
+     * Test that a unallowed format will cause a UnsupportedMediaTypeHttpException to be thrown
+     */
+    public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
+    {
+        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
+        $this->testOnKernelRequest(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/foo', array(), true);
     }
 
 }
