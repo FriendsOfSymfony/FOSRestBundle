@@ -421,6 +421,7 @@ fos_rest:
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use Acme\FooBundle\Validation\Constraints\MyComplexConstraint
 
 class FooController extends Controller
 {
@@ -461,7 +462,13 @@ class FooController extends Controller
      * If ids is not defined, array(1) will be given
      *
      * Array must have a single depth or it will return default value. It's difficult to validate with
-     * preg_match each deeps of array, if you want to deal with that, use another validation system.
+     * preg_match each deeps of array, if you want to deal with that, you can use a constraint:
+     *
+     * @QueryParam(array=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
+     *
+     * In this example, the ParamFetcher will validate each value of the array with the constraint, returning the
+     * default value if you are in safe mode or throw a BadRequestHttpResponse containing the constraint violation
+     * messages in the message.
      *
      * @param ParamFetcher $paramFetcher
      */

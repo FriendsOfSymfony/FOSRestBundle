@@ -23,8 +23,8 @@ abstract class Param
     public $name;
     /** @var string */
     public $key = null;
-    /** @var string */
-    public $requirements = '';
+    /** @var mixed */
+    public $requirements = null;
     /** @var mixed */
     public $default = null;
     /** @var string */

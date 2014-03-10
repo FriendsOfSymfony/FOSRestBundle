@@ -17,6 +17,8 @@ use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\ValidatorInterface;
 
 /**
  * Helper to validate parameters of the active request.
@@ -49,15 +51,22 @@ class ParamFetcher implements ParamFetcherInterface
     private $controller;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
      * Initializes fetcher.
      *
-     * @param ParamReader $paramReader Query param reader
-     * @param Request     $request     Active request
+     * @param ParamReader        $paramReader Query param reader
+     * @param Request            $request     Active request
+     * @param ValidatorInterface $validator   The validator service
      */
-    public function __construct(ParamReader $paramReader, Request $request)
+    public function __construct(ParamReader $paramReader, Request $request, ValidatorInterface $validator)
     {
         $this->paramReader = $paramReader;
-        $this->request = $request;
+        $this->request     = $request;
+        $this->validator   = $validator;
     }
 
     /**
@@ -103,17 +112,9 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config->array) {
-            $failMessage = null;
-
             if (!is_array($param)) {
-                $failMessage = sprintf("Query parameter value of '%s' is not an array", $name);
-            } elseif (count($param) !== count($param, COUNT_RECURSIVE)) {
-                $failMessage = sprintf("Query parameter value of '%s' must not have a depth of more than one", $name);
-            }
-
-            if (null !== $failMessage) {
                 if ($strict) {
-                    throw new BadRequestHttpException($failMessage);
+                    throw new BadRequestHttpException(sprintf("Query parameter value of '%s' is not an array", $name));
                 }
 
                 return $default;
@@ -159,16 +160,39 @@ class ParamFetcher implements ParamFetcherInterface
     {
         $default = $config->default;
 
-        if ('' !== $config->requirements
-            && ($param !== $default || null === $default)
-            && !preg_match('#^'.$config->requirements.'$#xsu', $param)
-        ) {
-            if ($strict) {
-                $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
+        if (null === $config->requirements || ($param === $default && null !== $default)) {
 
-                throw new BadRequestHttpException(
-                    $paramType . " parameter value '$param', does not match requirements '{$config->requirements}'"
-                );
+            return $param;
+        }
+
+        $constraint = $config->requirements;
+
+        if (is_scalar($constraint)) {
+            if (is_array($param)) {
+                if ($strict) {
+                    throw new BadRequestHttpException("Query parameter is an array");
+                }
+
+                return $default;
+            }
+
+            $constraint = new Regex(array(
+                'pattern' => '#^'.preg_quote($config->requirements).'$#xsu',
+                'message' => sprintf(
+                    "%s parameter value '%s', does not match requirements '%s'",
+                    $config instanceof QueryParam ? 'Query' : 'Request',
+                    $param,
+                    $config->requirements
+                )
+            ));
+        }
+
+        $errors = $this->validator->validateValue($param, $constraint);
+
+        if (0 !== count($errors)) {
+
+            if ($strict) {
+                throw new BadRequestHttpException((string) $errors);
             }
 
             return null === $default ? '' : $default;
