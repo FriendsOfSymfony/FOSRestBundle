@@ -9,7 +9,7 @@ env:
   - SYMFONY_VERSION=2.2.*
   - SYMFONY_VERSION=2.3.*
   - SYMFONY_VERSION=2.4.*
-  - SYMFONY_VERSION=dev-master
+  - SYMFONY_VERSION=dev-master "symfony/event-dispatcher:dev-master as 2.5"
 
 before_script:
   - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
@@ -23,4 +23,4 @@ notifications:
 
 matrix:
   allow_failures:
-    - env: SYMFONY_VERSION=dev-master
+    - env: SYMFONY_VERSION=dev-master "symfony/event-dispatcher:dev-master as 2.5"
