@@ -161,7 +161,7 @@ class ParamFetcher implements ParamFetcherInterface
 
         if ('' !== $config->requirements
             && ($param !== $default || null === $default)
-            && !preg_match('#^'.$config->requirements.'$#xs', $param)
+            && !preg_match('#^'.$config->requirements.'$#xsu', $param)
         ) {
             if ($strict) {
                 $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
