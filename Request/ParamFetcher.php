@@ -177,7 +177,7 @@ class ParamFetcher implements ParamFetcherInterface
             }
 
             $constraint = new Regex(array(
-                'pattern' => '#^'.preg_quote($config->requirements).'$#xsu',
+                'pattern' => '#^'.$config->requirements.'$#xsu',
                 'message' => sprintf(
                     "%s parameter value '%s', does not match requirements '%s'",
                     $config instanceof QueryParam ? 'Query' : 'Request',

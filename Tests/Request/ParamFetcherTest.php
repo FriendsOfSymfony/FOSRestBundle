@@ -192,11 +192,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('bar', new Regex(array('pattern' => '#^\\\d\+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
+                        ->with('bar', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('bar', new Regex(array('pattern' => '#^\\\d\+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
+                        ->with('bar', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                 }
@@ -236,12 +236,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('invaliddata', new Regex(array('pattern' => '#^\\\d\+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
+                        ->with('invaliddata', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(6))
                         ->method('validateValue')
-                        ->with('invaliddata', new Regex(array('pattern' => '#^\\\d\+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
+                        ->with('invaliddata', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                 }
             ),
@@ -285,6 +285,16 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     public function testValidatesConfiguredParamStrictly()
     {
+        $constraint = new Regex(array(
+            'pattern' => '#^\d+$#xsu',
+            'message' => "Query parameter value '354', does not match requirements '\\d+'"
+        ));
+
+        $this->validator->expects($this->once())
+            ->method('validateValue')
+            ->with('354', $constraint)
+        ;
+
         $queryFetcher = $this->getParamFetcher(array('boozz' => 354), array());
         $queryFetcher->setController($this->controller);
         $this->assertEquals(354, $queryFetcher->get('boozz', true));
@@ -355,12 +365,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('foo', new Regex(array('pattern' => '#^\\\d\+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
+                        ->with('foo', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('foo', new Regex(array('pattern' => '#^\\\d\+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
+                        ->with('foo', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                 }
             ),
@@ -375,7 +385,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('foo', new Regex(array('pattern' => '#^\\\d\?$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'")), null)
+                        ->with('foo', new Regex(array('pattern' => '#^\\d?$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'")), null)
                         ->will($self->returnValue($errors));
                 }
             ),
