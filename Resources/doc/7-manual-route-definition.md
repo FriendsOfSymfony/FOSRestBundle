@@ -53,4 +53,5 @@ For a full list of annotations check out FOS/RestBundle/Controller/Annotations
 	 * @Put("/likes/{type}/{typeId}")
 	 */
 
-
+## That was it!
+[Return to the index](index.md)
