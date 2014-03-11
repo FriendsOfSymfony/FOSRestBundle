@@ -84,3 +84,5 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 RestBundle extends the [@Route](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/routing.html) annotation from Symfony.
 
 @Delete @Get @Head @Link @Patch @Post @Put @Unlink have the same options as @Route
+
+[Return to the index](index.md).
