@@ -90,3 +90,4 @@ fos_rest:
             version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
 ```
 
+[Return to the index](index.md) or continue with the [Full default annotations](annotations-reference.md).
