@@ -150,3 +150,6 @@ With this configuration, route name would become:
 
 
 Say NO to name collisions!
+
+## That was it!
+[Return to the index](index.md) or continue reading about [Manual definition of routes](7-manual-route-definition.md).
