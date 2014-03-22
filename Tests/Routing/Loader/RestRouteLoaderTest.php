@@ -94,7 +94,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(17, count($collection->all()));
+        $this->assertEquals(18, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -103,6 +103,8 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertEquals($params['pattern'], $route->getPattern(), 'pattern failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
+             if(isset($params['condition']))
+          $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
         }
     }
 

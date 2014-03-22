@@ -129,4 +129,9 @@ class AnnotatedUsersController extends Controller
      */
     public function customUserAction($slug)
     {}
+    /**
+     * @Get(condition="route")
+     */
+    public function conditionalUserAction()
+    {}
 }
