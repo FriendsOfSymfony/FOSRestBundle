@@ -130,7 +130,7 @@ class AnnotatedConditionalUsersController extends Controller
     public function customUserAction($slug)
     {}
     /**
-     * @Get(condition="route")
+     * @Get(condition="context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'")
      */
     public function conditionalUserAction()
     {}

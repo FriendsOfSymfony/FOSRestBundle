@@ -12,7 +12,7 @@
     <services>
 
         <service id="fos_rest.format_listener" class="%fos_rest.format_listener.class%">
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="20" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="34" />
             <argument type="service" id="fos_rest.format_negotiator" />
         </service>
 
@@ -21,7 +21,7 @@
             <call method="setRegex">
                 <argument type="string">%fos_rest.format_listener.media_type.version_regex%</argument>
             </call>
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="33"  />
         </service>
 
     </services>

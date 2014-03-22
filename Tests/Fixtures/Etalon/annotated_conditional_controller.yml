@@ -62,4 +62,4 @@ conditional_user:
   pattern:      /users/conditional.{_format}
   controller:   ::conditionalUserAction
   requirements: {_method: GET}
-  condition: route
+  condition: "context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'"
