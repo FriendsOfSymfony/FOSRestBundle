@@ -57,3 +57,9 @@ bhead_user:
   pattern:      /users/{slug}/bhead.{_format}
   controller:   ::bheadUserAction
   requirements: {_method: HEAD}
+
+conditional_user:
+  pattern:      /users/conditional.{_format}
+  controller:   ::conditionalUserAction
+  requirements: {_method: GET}
+  condition: route

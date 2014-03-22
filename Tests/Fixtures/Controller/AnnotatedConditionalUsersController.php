@@ -25,7 +25,7 @@ use FOS\RestBundle\Controller\Annotations\Options;
 use FOS\RestBundle\Controller\Annotations\Link;
 use FOS\RestBundle\Controller\Annotations\Unlink;
 
-class AnnotatedUsersController extends Controller
+class AnnotatedConditionalUsersController extends Controller
 {
     public function optionsUsersAction()
     {} // [OPTIONS]     /users
@@ -128,5 +128,10 @@ class AnnotatedUsersController extends Controller
      * @Route(requirements={"_format"="custom"})
      */
     public function customUserAction($slug)
+    {}
+    /**
+     * @Get(condition="route")
+     */
+    public function conditionalUserAction()
     {}
 }
