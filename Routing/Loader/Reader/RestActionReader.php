@@ -233,8 +233,7 @@ class RestActionReader
                     $pattern, $defaults, $requirements, $options, $host, $schemes));
             }
 
-        }
-        else {
+        } else {
             if ($this->includeFormat === true) {
                 $pattern .= '.{_format}';
 
