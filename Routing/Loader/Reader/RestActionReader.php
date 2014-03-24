@@ -513,7 +513,6 @@ class RestActionReader
 
             foreach($annotations_new as $annotation) {
                 if ($annotation instanceof $annotationClass) {
-                    echo $annotationName.PHP_EOL;
                     $annotations[]= $annotation;
 
                 }
