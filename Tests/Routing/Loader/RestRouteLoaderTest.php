@@ -103,7 +103,7 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertEquals($params['pattern'], $route->getPattern(), 'pattern failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
-            if(isset($params['condition'])) {
+            if (isset($params['condition'])) {
                  $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
             }
 
@@ -133,10 +133,10 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertEquals($params['pattern'], $route->getPattern(), 'pattern failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
-            if(isset($params['condition'])) {
+            if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
             }
-            
+
         }
     }
 
