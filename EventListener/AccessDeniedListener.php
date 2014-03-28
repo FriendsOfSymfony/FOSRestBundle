@@ -13,6 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -30,15 +31,19 @@ class AccessDeniedListener extends ExceptionListener
 {
     private $formats;
 
+    private $challenge;
+
     /**
      * Constructor.
      *
-     * @param array $formats    key value pairs of format names and if for the given format
+     * @param array $formats key value pairs of format names and if for the given format
      *                          the exception should be intercepted to return a 403
+     * @param string $challenge
      */
-    public function __construct($formats, $controller, LoggerInterface $logger = null)
+    public function __construct($formats, $challenge, $controller, LoggerInterface $logger = null)
     {
         $this->formats = $formats;
+        $this->challenge = $challenge;
         parent::__construct($controller, $logger);
     }
 
@@ -68,7 +73,11 @@ class AccessDeniedListener extends ExceptionListener
             $event->setException($exception);
             parent::onKernelException($event);
         } elseif ($exception instanceof AuthenticationException) {
-            $exception = new HttpException(401, 'You are not authenticated', $exception);
+            if ($this->challenge) {
+                $exception = new UnauthorizedHttpException($this->challenge, 'You are not authenticated', $exception);
+            } else {
+                $exception = new HttpException(401, 'You are not authenticated', $exception);
+            }
             $event->setException($exception);
             parent::onKernelException($event);
         }

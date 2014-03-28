@@ -548,10 +548,17 @@ and firewall entry points and forces returning either a 403 or 401 status code f
 It will return 401 for `Symfony\Component\Security\Core\Exception\AuthenticationException` or 403 for
 `Symfony\Component\Security\Core\Exception\AccessDeniedException`.
 
+As a 401-response requires an authentication-challenge, you can set one using the configuration `unauthorized_challenge`
+or leave it blank if you don't want to send a challenge in the `WWW-Authenticate` header to the client.
+
+If you want to use an advanced value in this header, it's worth looking at this:
+[Test Cases for HTTP Test Cases for the HTTP WWW-Authenticate header field](http://greenbytes.de/tech/tc/httpauth/)
+
 You need to enable this listener like this as it is disabled by default:
 
 ```
 fos_rest:
+    unauthorized_challenge: "Basic realm=\"Restricted Area\""
     access_denied_listener:
         # all requests using the 'json' format will return a 403 on an access denied violation
         json: true
