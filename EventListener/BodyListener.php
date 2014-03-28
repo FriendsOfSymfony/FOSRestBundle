@@ -81,6 +81,9 @@ class BodyListener
                 $data = $decoder->decode($content, $format);
                 if (is_array($data)) {
                     $request->request = new ParameterBag($data);
+
+                    // Reset the method in the current request to support method-overriding
+                    $request->setMethod($request->getRealMethod());
                 } else {
                     throw new BadRequestHttpException('Invalid ' . $format . ' message received');
                 }
