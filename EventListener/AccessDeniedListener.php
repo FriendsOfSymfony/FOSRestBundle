@@ -79,7 +79,7 @@ class AccessDeniedListener extends ExceptionListener
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::EXCEPTION => array('onKernelException', 5),
+            KernelEvents::EXCEPTION => array('onKernelException', -16),
         );
     }
 }
