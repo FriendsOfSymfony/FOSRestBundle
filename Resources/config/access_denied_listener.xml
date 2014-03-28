@@ -8,6 +8,7 @@
 
         <parameter key="fos_rest.access_denied_listener.class">FOS\RestBundle\EventListener\AccessDeniedListener</parameter>
         <parameter key="fos_rest.access_denied_listener.formats" type="collection"/>
+        <parameter key="fos_rest.access_denied_listener.unauthorized_challenge" type="string" />
 
     </parameters>
 
@@ -17,6 +18,7 @@
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
             <argument>%fos_rest.access_denied_listener.formats%</argument>
+            <argument>%fos_rest.access_denied_listener.unauthorized_challenge%</argument>
             <argument>%twig.exception_listener.controller%</argument>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
