@@ -6,18 +6,11 @@
 
     <parameters>
 
-        <parameter key="fos_rest.request.param_fetcher.class">FOS\RestBundle\Request\ParamFetcher</parameter>
         <parameter key="fos_rest.request.param_fetcher.reader.class">FOS\RestBundle\Request\ParamReader</parameter>
 
     </parameters>
 
     <services>
-
-        <service id="fos_rest.request.param_fetcher" class="%fos_rest.request.param_fetcher.class%" scope="request">
-            <argument type="service" id="fos_rest.request.param_fetcher.reader"/>
-            <argument type="service" id="request"/>
-            <argument type="service" id="validator"/>
-        </service>
 
         <service id="fos_rest.request.param_fetcher.reader" class="%fos_rest.request.param_fetcher.reader.class%">
             <argument type="service" id="annotation_reader"/>

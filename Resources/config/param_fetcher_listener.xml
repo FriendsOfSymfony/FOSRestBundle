@@ -6,6 +6,7 @@
 
     <parameters>
 
+        <parameter key="fos_rest.request.param_fetcher.class">FOS\RestBundle\Request\ParamFetcher</parameter>
         <parameter key="fos_rest.param_fetcher_listener.class">FOS\RestBundle\EventListener\ParamFetcherListener</parameter>
         <parameter key="fos_rest.param_fetcher_listener.set_params_as_attributes">false</parameter>
 
@@ -13,9 +14,15 @@
 
     <services>
 
+        <service id="fos_rest.request.param_fetcher" class="%fos_rest.request.param_fetcher.class%" scope="request">
+            <argument type="service" id="fos_rest.request.param_fetcher.reader"/>
+            <argument type="service" id="request"/>
+            <argument type="service" id="validator"/>
+        </service>
+
         <service id="fos_rest.param_fetcher_listener" class="%fos_rest.param_fetcher_listener.class%">
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="5"/>
-            <argument type="service" id="service_container"/>
+            <argument type="service" id="fos_rest.request.param_fetcher"/>
             <argument>%fos_rest.param_fetcher_listener.set_params_as_attributes%</argument>
         </service>
 
