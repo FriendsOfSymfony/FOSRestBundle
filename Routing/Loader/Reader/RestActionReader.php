@@ -238,8 +238,7 @@ class RestActionReader
                     $pattern, $defaults, $requirements, $options, $host, $schemes));
             }
 
-        }
-        else {
+        } else {
             if ($this->includeFormat === true) {
                 $pattern .= '.{_format}';
 
@@ -519,7 +518,6 @@ class RestActionReader
 
             foreach($annotations_new as $annotation) {
                 if ($annotation instanceof $annotationClass) {
-                    echo $annotationName.PHP_EOL;
                     $annotations[]= $annotation;
 
                 }
