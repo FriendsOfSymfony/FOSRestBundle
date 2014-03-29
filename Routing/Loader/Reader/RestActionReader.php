@@ -202,6 +202,7 @@ class RestActionReader
                 $options      = array();
                 $host         = '';
                 $schemes      = array();
+                $condition    = null;
 
 
                 $annoRequirements = $annotation->getRequirements();
@@ -221,10 +222,10 @@ class RestActionReader
                 if (method_exists($annotation, 'getSchemes')) {
                     $schemes = $annotation->getSchemes();
                 }
-            //TODO remove checks after Symfony requirement is bumped to 2.4
-            if (method_exists($annotation, 'getCondition')) {
-                $condition = $annotation->getCondition(); 
-            }
+               //TODO remove checks after Symfony requirement is bumped to 2.4
+                if (method_exists($annotation, 'getCondition')) {
+                    $condition = $annotation->getCondition();
+                }
 
                 if ($this->includeFormat === true) {
                     $pattern .= '.{_format}';
@@ -235,7 +236,7 @@ class RestActionReader
                 }
                 // add route to collection
                 $collection->add($routeName.$annotation->getName(), new Route(
-                    $pattern, $defaults, $requirements, $options, $host, $schemes));
+                    $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition));
             }
 
         } else {
@@ -458,7 +459,7 @@ class RestActionReader
     {
         $annotations = array();
 
-        foreach ( array('route', 'get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options') as $annotationName) {
+        foreach ( array('Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options') as $annotationName) {
             if ($annotations_new = $this->readMethodAnnotations($reflection, $annotationName)) {
                 $annotations = array_merge($annotations, $annotations_new);
             }
