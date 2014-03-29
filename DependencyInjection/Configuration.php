@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->prototype('boolean')->end()
                 ->end()
+                ->scalarNode('unauthorized_challenge')->defaultNull()->end()
                 ->scalarNode('param_fetcher_listener')->defaultFalse()
                     ->validate()
                         ->ifNotInArray($this->forceOptionValues)

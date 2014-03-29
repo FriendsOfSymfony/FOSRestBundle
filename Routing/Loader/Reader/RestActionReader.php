@@ -187,6 +187,7 @@ class RestActionReader
         $options      = array();
         $host         = '';
         $schemes      = array();
+        $condition    = null;
 
 
 
@@ -220,6 +221,10 @@ class RestActionReader
                 if (method_exists($annotation, 'getSchemes')) {
                     $schemes = $annotation->getSchemes();
                 }
+            //TODO remove checks after Symfony requirement is bumped to 2.4
+            if (method_exists($annotation, 'getCondition')) {
+                $condition = $annotation->getCondition(); 
+            }
 
                 if ($this->includeFormat === true) {
                     $pattern .= '.{_format}';
@@ -244,7 +249,7 @@ class RestActionReader
             }
             // add route to collection
             $collection->add($routeName, new Route(
-                $pattern, $defaults, $requirements, $options, $host, $schemes));
+            $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition));
         }
     }
 

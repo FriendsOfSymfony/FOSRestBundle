@@ -1,0 +1,65 @@
+get_users:
+  pattern:      /users.{_format}
+  controller:   ::getUsersAction
+  requirements: {_method: GET}
+
+get_user:
+  pattern:      /users/{slug}.{_format}
+  controller:   ::getUserAction
+  requirements: {_method: GET, slug: '[a-z]+'}
+
+patch_users:
+  pattern:      /users.{_format}
+  controller:   ::patchUsersAction
+  requirements: {_method: PATCH}
+
+patch_user:
+  pattern:      /users/{slug}.{_format}
+  controller:   ::patchUserAction
+  requirements: {_method: PATCH, slug: '[a-z]+'}
+
+get_user_comment:
+  pattern:      /users/{slug}/comments/{id}.{_format}
+  controller:   ::getUserCommentAction
+  requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
+
+rate_user:
+  pattern:      /users/{slug}/rate.{_format}
+  controller:   ::rateUserAction
+  requirements: {_method: POST, slug: '[a-z]+'}
+
+rate_user_comment:
+  pattern:      /users/{slug}/rate_comment/{id}.{_format}
+  controller:   ::rateUserCommentAction
+  requirements: {_method: PATCH, slug: '[a-z]+', id: '\d+'}
+
+bget_user:
+  pattern:      /users/{slug}/bget.{_format}
+  controller:   ::bgetUserAction
+  requirements: {_method: GET}
+
+bpost_user:
+  pattern:      /users/{slug}/bpost.{_format}
+  controller:   ::bpostUserAction
+  requirements: {_method: POST}
+
+bput_user:
+  pattern:      /users/{slug}/bput.{_format}
+  controller:   ::bputUserAction
+  requirements: {_method: PUT}
+
+bdel_user:
+  pattern:      /users/{slug}/bdel.{_format}
+  controller:   ::bdelUserAction
+  requirements: {_method: DELETE}
+
+bhead_user:
+  pattern:      /users/{slug}/bhead.{_format}
+  controller:   ::bheadUserAction
+  requirements: {_method: HEAD}
+
+conditional_user:
+  pattern:      /users/conditional.{_format}
+  controller:   ::conditionalUserAction
+  requirements: {_method: GET}
+  condition: "context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'"

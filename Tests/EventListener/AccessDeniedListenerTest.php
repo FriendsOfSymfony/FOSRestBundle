@@ -70,7 +70,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
     {
         $exception = new AccessDeniedException();
         $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
-        $listener = new AccessDeniedListener($formats, 'foo');
+        $listener = new AccessDeniedListener($formats, null, 'foo');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);
@@ -90,7 +90,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
         $exception = new \Exception('foo');
         $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
 
-        $listener = new AccessDeniedListener($formats, 'foo');
+        $listener = new AccessDeniedListener($formats, null, 'foo');
         $listener->onKernelException($event);
         $this->assertSame($exception, $event->getException());
     }
@@ -129,7 +129,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
     {
         $exception = new AuthenticationException();
         $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
-        $listener = new AccessDeniedListener($formats, 'foo');
+        $listener = new AccessDeniedListener($formats, null, 'foo');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);
@@ -138,6 +138,28 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\HttpException', $event->getException());
         $this->assertEquals(401, $event->getException()->getStatusCode());
         $this->assertEquals('You are not authenticated', $event->getException()->getMessage());
+        $this->assertArrayNotHasKey('WWW-Authenticate', $event->getException()->getHeaders());
+    }
+
+    /**
+     * @param Request $request
+     * @param array $formats
+     */
+    private function doTestUnauthorizedHttpExceptionHasCorrectChallenge(Request $request, array $formats)
+    {
+        $exception = new AuthenticationException();
+        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
+        $listener = new AccessDeniedListener($formats, 'Basic realm="Restricted Area"', 'foo');
+        // store the current error_log, and disable it temporarily
+        $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
+        $listener->onKernelException($event);
+        // restore the old error_log
+        ini_set('error_log', $errorLog);
+        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException', $event->getException());
+        $this->assertEquals(401, $event->getException()->getStatusCode());
+        $this->assertEquals('You are not authenticated', $event->getException()->getMessage());
+        $headers = $event->getException()->getHeaders();
+        $this->assertEquals('Basic realm="Restricted Area"', $headers['WWW-Authenticate']);
     }
 
     public static function getFormatsDataProvider()

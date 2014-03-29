@@ -5,6 +5,7 @@ Full default configuration
 fos_rest:
     disable_csrf_role:    ~
     access_denied_listener:
+    unauthorized_challenge: ~
 
         # Prototype
         name:                 []
