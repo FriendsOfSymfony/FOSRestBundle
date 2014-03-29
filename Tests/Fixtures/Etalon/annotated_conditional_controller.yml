@@ -63,3 +63,24 @@ conditional_user:
   controller:   ::conditionalUserAction
   requirements: {_method: GET}
   condition: "context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'"
+
+
+multipleget_users_a_get_method:
+  pattern:      /users2.{_format}
+  controller:   ::multiplegetUsersAction
+  requirements: {_method: GET}
+  condition: "context.getMethod() in ['GET'] and request.headers.get('User-Agent') matches '/firefox/i'"
+multipleget_users_an_other_get_method:
+  pattern:      /users3.{_format}
+  controller:   ::multiplegetUsersAction
+  requirements: {_method: GET}
+multipleget_users_a_post_method:
+  pattern:      /users4.{_format}
+  controller:   ::multiplegetUsersAction
+  requirements: {_method: POST}
+  condition: "context.getMethod() in ['POST'] and request.headers.get('User-Agent') matches '/firefox/i'"
+multipleget_users_a_link_method:
+  pattern:      /users1.{_format}
+  controller:   ::multiplegetUsersAction
+  requirements: {_method: LINK}
+  condition: "context.getMethod() in ['LINK'] and request.headers.get('User-Agent') matches '/firefox/i'"
