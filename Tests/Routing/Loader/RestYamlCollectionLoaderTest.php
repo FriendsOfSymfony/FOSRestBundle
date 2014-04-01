@@ -62,9 +62,27 @@ class RestYamlCollectionLoaderTest extends LoaderTest
     }
 
     /**
-     * Test that collection with named prefixes has no duplicates.
+     * Test that YAML collection with named prefixes gets parsed correctly.
      */
     public function testNamedPrefixedReportsFixture()
+    {
+        $collection     = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
+        $etalonRoutes   = $this->loadEtalonRoutesInfo('named_prefixed_reports_collection.yml');
+
+        foreach ($etalonRoutes as $name => $params) {
+            $route = $collection->get($name);
+
+            $this->assertNotNull($route, $name);
+            $this->assertEquals($params['pattern'], $route->getPattern(), $name);
+            $this->assertEquals($params['method'], $route->getRequirement('_method'), $name);
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
+        }
+    }
+
+    /**
+     * Test that collection with named prefixes has no duplicates.
+     */
+    public function testNamedPrefixedReportsFixtureHasNoDuplicates()
     {
         $names = array();
         $collection = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');

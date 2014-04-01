@@ -1,0 +1,29 @@
+get_billing_spendings:
+  pattern:      /billing/spendings.{_format}
+  controller:   ::getBillingSpendingsAction
+  method: GET
+
+get_billing_spendings_by_campaign:
+  pattern:      /billing/spendings/{campaign}.{_format}
+  controller:   ::getBillingSpendingsByCampaignAction
+  method: GET
+
+get_billing_payments:
+  pattern:      /billing/payments.{_format}
+  controller:   ::getBillingPaymentsAction
+  method: GET
+
+get_billing_earnings:
+  pattern:      /billing/earnings.{_format}
+  controller:   ::getBillingEarningsAction
+  method: GET
+
+get_billing_earnings_by_platform:
+  pattern:      /billing/earnings/{platform}.{_format}
+  controller:   ::getBillingEarningsByPlatformAction
+  method: GET
+
+get_billing_withdrawals:
+  pattern:      /billing/withdrawals.{_format}
+  controller:   ::getBillingWithdrawalsAction
+  method: GET
