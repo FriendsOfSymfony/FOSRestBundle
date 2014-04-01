@@ -61,6 +61,20 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         }
     }
 
+    /**
+     * Test that collection with named prefixes has no duplicates.
+     */
+    public function testNamedPrefixedReportsFixture()
+    {
+        $names = array();
+        $collection = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
+        foreach ($collection as $route) {
+            $names[] = $route->getPattern();
+        }
+        $this->assertEquals(count($names), count(array_unique($names)));
+    }
+
+
     public function testManualRoutes()
     {
         $collection = $this->loadFromYamlCollectionFixture('routes.yml');
