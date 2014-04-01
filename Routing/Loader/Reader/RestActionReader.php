@@ -189,43 +189,68 @@ class RestActionReader
         $schemes      = array();
         $condition    = null;
 
-        $annotation = $this->readRouteAnnotation($method);
-        if ($annotation) {
-            $annoRequirements = $annotation->getRequirements();
 
-            if (!isset($annoRequirements['_method'])) {
-                $annoRequirements['_method'] = $requirements['_method'];
+
+        $annotations = $this->readRouteAnnotation($method);
+        if ($annotations) {
+            foreach ($annotations as $annotation) {
+
+                $routeName    = $this->namePrefix.strtolower($routeName);
+                $pattern      = implode('/', $urlParts);
+                $defaults     = array('_controller' => $method->getName());
+                $requirements = array('_method' => strtoupper($httpMethod));
+                $options      = array();
+                $host         = '';
+                $schemes      = array();
+                $condition    = null;
+
+
+                $annoRequirements = $annotation->getRequirements();
+
+                if (!isset($annoRequirements['_method'])) {
+                    $annoRequirements['_method'] = $requirements['_method'];
+                }
+
+                $pattern      = $annotation->getPattern() !== null ? $this->routePrefix . $annotation->getPattern() : $pattern;
+                $requirements = array_merge($requirements, $annoRequirements);
+                $options      = array_merge($options, $annotation->getOptions());
+                $defaults     = array_merge($defaults, $annotation->getDefaults());
+                //TODO remove checks after Symfony requirement is bumped to 2.2
+                if (method_exists($annotation, 'getHost')) {
+                    $host = $annotation->getHost();
+                }
+                if (method_exists($annotation, 'getSchemes')) {
+                    $schemes = $annotation->getSchemes();
+                }
+               //TODO remove checks after Symfony requirement is bumped to 2.4
+                if (method_exists($annotation, 'getCondition')) {
+                    $condition = $annotation->getCondition();
+                }
+
+                if ($this->includeFormat === true) {
+                    $pattern .= '.{_format}';
+
+                    if (!isset($requirements['_format']) && !empty($this->formats)) {
+                        $requirements['_format'] = implode('|', array_keys($this->formats));
+                    }
+                }
+                // add route to collection
+                $collection->add($routeName.$annotation->getName(), new Route(
+                    $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition));
             }
 
-            $pattern      = $annotation->getPattern() !== null ? $this->routePrefix . $annotation->getPattern() : $pattern;
-            $requirements = array_merge($requirements, $annoRequirements);
-            $options      = array_merge($options, $annotation->getOptions());
-            $defaults     = array_merge($defaults, $annotation->getDefaults());
-            //TODO remove checks after Symfony requirement is bumped to 2.2
-            if (method_exists($annotation, 'getHost')) {
-                $host = $annotation->getHost(); 
+        } else {
+            if ($this->includeFormat === true) {
+                $pattern .= '.{_format}';
+
+                if (!isset($requirements['_format']) && !empty($this->formats)) {
+                    $requirements['_format'] = implode('|', array_keys($this->formats));
+                }
             }
-            if (method_exists($annotation, 'getSchemes')) {
-                $schemes = $annotation->getSchemes();
-            }
-            //TODO remove checks after Symfony requirement is bumped to 2.4
-            if (method_exists($annotation, 'getCondition')) {
-                $condition = $annotation->getCondition(); 
-            }
+            // add route to collection
+            $collection->add($routeName, new Route(
+            $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition));
         }
-
-        if ($this->includeFormat === true) {
-            $pattern .= '.{_format}';
-
-            if (!isset($requirements['_format']) && !empty($this->formats)) {
-                $requirements['_format'] = implode('|', array_keys($this->formats));
-            }
-        }
-
-        // add route to collection
-        $collection->add($routeName, new Route(
-            $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition
-        ));
     }
 
     /**
@@ -428,16 +453,20 @@ class RestActionReader
      *
      * @param \ReflectionMethod $reflection
      *
-     * @return Annotation|null
+     * @return array|null
      */
     private function readRouteAnnotation(\ReflectionMethod $reflection)
     {
-        foreach (array('Route','Get','Post','Put','Patch','Delete','Head') as $annotationName) {
-            if ($annotation = $this->readMethodAnnotation($reflection, $annotationName)) {
-                return $annotation;
+        $annotations = array();
+
+        foreach ( array('Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options') as $annotationName) {
+            if ($annotations_new = $this->readMethodAnnotations($reflection, $annotationName)) {
+                $annotations = array_merge($annotations, $annotations_new);
             }
         }
+        return $annotations;
     }
+
 
     /**
      * Reads class annotations.
@@ -471,5 +500,32 @@ class RestActionReader
         if ($annotation = $this->annotationReader->getMethodAnnotation($reflection, $annotationClass)) {
             return $annotation;
         }
+    }
+    /**
+     * Reads method annotations.
+     *
+     * @param ReflectionMethod $reflection     controller action
+     * @param string           $annotationName annotation name
+     *
+     * @return array|null
+     */
+    private function readMethodAnnotations(\ReflectionMethod $reflection, $annotationName)
+    {
+
+        $annotations = array();
+        $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
+
+        if ($annotations_new = $this->annotationReader->getMethodAnnotations($reflection)) {
+
+            foreach($annotations_new as $annotation) {
+                if ($annotation instanceof $annotationClass) {
+                    $annotations[]= $annotation;
+
+                }
+            }
+
+
+        }
+        return $annotations;
     }
 }
