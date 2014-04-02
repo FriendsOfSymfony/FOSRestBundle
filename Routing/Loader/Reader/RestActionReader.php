@@ -195,7 +195,6 @@ class RestActionReader
         if ($annotations) {
             foreach ($annotations as $annotation) {
 
-                $routeName    = $this->namePrefix.strtolower($routeName);
                 $pattern      = implode('/', $urlParts);
                 $defaults     = array('_controller' => $method->getName());
                 $requirements = array('_method' => strtoupper($httpMethod));
@@ -266,14 +265,14 @@ class RestActionReader
         if ('_' === substr($method->getName(), 0, 1)) {
             return false;
         }
-        
+
         $hasNoRouteMethod = (bool) $this->readMethodAnnotation($method, 'NoRoute');
         $hasNoRouteClass = (bool) $this->readClassAnnotation($method->getDeclaringClass(), 'NoRoute');
-        
+
         $hasNoRoute = $hasNoRoute = $hasNoRouteMethod || $hasNoRouteClass;
         // since NoRoute extends Route we need to exclude all the method NoRoute annotations
         $hasRoute = (bool) $this->readMethodAnnotation($method, 'Route') && !$hasNoRouteMethod;
-        
+
         // if method has NoRoute annotation and does not have Route annotation - skip
         if ($hasNoRoute && !$hasRoute) {
             return false;
