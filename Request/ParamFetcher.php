@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Request;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
+use FOS\RestBundle\Util\ViolationFormatterInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -56,17 +57,24 @@ class ParamFetcher implements ParamFetcherInterface
     private $validator;
 
     /**
+     * @var ViolationFormatterInterface
+     */
+    private $violationFormatter;
+
+    /**
      * Initializes fetcher.
      *
-     * @param ParamReader        $paramReader Query param reader
-     * @param Request            $request     Active request
-     * @param ValidatorInterface $validator   The validator service
+     * @param ParamReader                 $paramReader Query    param reader
+     * @param Request                     $request              Active request
+     * @param ValidatorInterface          $validator            The validator service
+     * @param ViolationFormatterInterface $violationFormatter   The violation formatter service
      */
-    public function __construct(ParamReader $paramReader, Request $request, ValidatorInterface $validator)
+    public function __construct(ParamReader $paramReader, Request $request, ValidatorInterface $validator, ViolationFormatterInterface $violationFormatter)
     {
-        $this->paramReader = $paramReader;
-        $this->request     = $request;
-        $this->validator   = $validator;
+        $this->paramReader        = $paramReader;
+        $this->request            = $request;
+        $this->validator          = $validator;
+        $this->violationFormatter = $violationFormatter;
     }
 
     /**
@@ -192,7 +200,7 @@ class ParamFetcher implements ParamFetcherInterface
         if (0 !== count($errors)) {
 
             if ($strict) {
-                throw new BadRequestHttpException((string) $errors);
+                throw new BadRequestHttpException($this->violationFormatter->formatList($config, $errors));
             }
 
             return null === $default ? '' : $default;
