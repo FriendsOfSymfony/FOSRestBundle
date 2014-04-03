@@ -17,6 +17,7 @@
             <argument type="service" id="fos_rest.request.param_fetcher.reader"/>
             <argument type="service" id="request"/>
             <argument type="service" id="validator"/>
+            <argument type="service" id="fos_rest.violation_formatter"/>
         </service>
 
         <service id="fos_rest.request.param_fetcher.reader" class="%fos_rest.request.param_fetcher.reader.class%">

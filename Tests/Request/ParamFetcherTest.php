@@ -46,6 +46,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
+    private $violationFormatter;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
     private $constraint;
 
     /**
@@ -110,6 +115,9 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($annotations));
 
         $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        $this->violationFormatter = $this->getMock('FOS\RestBundle\Util\ViolationFormatterInterface');
+        
+        
     }
 
     /**
@@ -127,7 +135,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $req = new Request($query, $request, $attributes);
 
-        return new ParamFetcher($this->paramReader, $req, $this->validator);
+        return new ParamFetcher($this->paramReader, $req, $this->validator, $this->violationFormatter);
     }
 
     /**
@@ -398,7 +406,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnRequestWithoutController()
     {
-        $queryFetcher = new ParamFetcher($this->paramReader, new Request(), $this->validator);
+        $queryFetcher = new ParamFetcher($this->paramReader, new Request(), $this->validator, $this->violationFormatter);
         $queryFetcher->get('none', '42');
     }
 
@@ -472,12 +480,16 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
+        $this->violationFormatter->expects($this->once())
+            ->method('formatList')
+            ->will($this->returnValue('foobar'));
+            
         $this->setExpectedException(
             "\\Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException",
-            ":\n    expected message 1\n:\n    expected message 2\n"
+            "foobar"
         );
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
@@ -513,7 +525,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('expected', $queryFetcher->get('bizoo'));
     }
@@ -543,7 +555,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
@@ -573,7 +585,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $this->assertSame(array('foo' => array('b', 'a', 'r')), $queryFetcher->get('bizoo'));
     }
