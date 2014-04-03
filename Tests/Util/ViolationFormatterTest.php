@@ -23,26 +23,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
  * @author Loick Piera <pyrech@gmail.com>
  */
 class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
-{
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $validator;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $constraint;
-
-    /**
-     * Test setup.
-     */
-    public function setup()
-    {
-        $this->constraint = $this->getMockForAbstractClass('Symfony\Component\Validator\Constraint');
-        $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
-    }
-    
+{   
     public function testViolationIsWellFormatted()
     {
         $violation = $this->getMockBuilder('Symfony\Component\Validator\ConstraintViolation')
