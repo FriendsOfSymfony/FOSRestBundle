@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\Decoder\DecoderProviderInterface;
+use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
+use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -35,6 +37,11 @@ class BodyListener
     private $throwExceptionOnUnsupportedContentType;
 
     /**
+     * @var ArrayNormalizerInterface
+     */
+    private $arrayNormalizer;
+
+    /**
      * Constructor.
      *
      * @param DecoderProviderInterface $decoderProvider Provider for fetching decoders
@@ -44,6 +51,16 @@ class BodyListener
     {
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
+    }
+
+    /**
+     * Sets the array normalizer.
+     *
+     * @param ArrayNormalizerInterface $arrayNormalizer
+     */
+    public function setArrayNormalizer(ArrayNormalizerInterface $arrayNormalizer)
+    {
+        $this->arrayNormalizer = $arrayNormalizer;
     }
 
     /**
@@ -80,6 +97,13 @@ class BodyListener
             if (!empty($content)) {
                 $data = $decoder->decode($content, $format);
                 if (is_array($data)) {
+                    if (null !== $this->arrayNormalizer) {
+                        try {
+                            $data = $this->arrayNormalizer->normalize($data);
+                        } catch (NormalizationException $e) {
+                            throw new BadRequestHttpException($e->getMessage());
+                        }
+                    }
                     $request->request = new ParameterBag($data);
 
                     // Reset the method in the current request to support method-overriding

@@ -133,6 +133,12 @@ class FOSRestExtension extends Extension
 
             $container->setParameter($this->getAlias().'.throw_exception_on_unsupported_content_type', $config['body_listener']['throw_exception_on_unsupported_content_type']);
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
+
+            $arrayNormalizer = $config['body_listener']['array_normalizer'];
+            if (null !== $arrayNormalizer) {
+                $container->getDefinition($this->getAlias().'.body_listener')
+                    ->addMethodCall('setArrayNormalizer', array(new Reference($arrayNormalizer)));
+            }
         }
 
         if (!empty($config['format_listener']['rules'])) {
