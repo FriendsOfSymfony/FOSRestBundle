@@ -133,7 +133,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $req = new Request($query, $request, $attributes);
 
-        return new ParamFetcher($this->paramReader, $req, $this->validator, $this->violationFormatter);
+        return new ParamFetcher($this->paramReader, $req, $this->violationFormatter, $this->validator);
     }
 
     /**
@@ -404,7 +404,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnRequestWithoutController()
     {
-        $queryFetcher = new ParamFetcher($this->paramReader, new Request(), $this->validator, $this->violationFormatter);
+        $queryFetcher = new ParamFetcher($this->paramReader, new Request(), $this->violationFormatter, $this->validator);
         $queryFetcher->get('none', '42');
     }
 
@@ -487,7 +487,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             "foobar"
         );
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
@@ -523,7 +523,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('expected', $queryFetcher->get('bizoo'));
     }
@@ -553,7 +553,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
@@ -583,8 +583,55 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->validator, $this->violationFormatter);
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertSame(array('foo' => array('b', 'a', 'r')), $queryFetcher->get('bizoo'));
+    }
+
+    /**
+     * @expectedException        \RuntimeException
+     * @expectedExceptionMessage The ParamFetcher requirements feature requires the symfony/validator component.
+     */
+    public function testNullValidatorWithRequirements()
+    {
+        $param = new QueryParam();
+        $param->name = 'bizoo';
+        $param->requirements = '\d+';
+        $param->default = 'not expected';
+        $param->description = 'A requirements param';
+
+        $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
+        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $reader->expects($this->any())
+            ->method('read')
+            ->will($this->returnValue(array('bizoo' => $param)));
+
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter);
+        $queryFetcher->setController($this->controller);
+        $queryFetcher->get('bizoo');
+    }
+
+    public function testNullValidatorWithoutRequirements()
+    {
+        $param = new QueryParam();
+        $param->name = 'bizoo';
+        $param->default = 'not expected';
+        $param->description = 'A param without requirement nor validator';
+
+        $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
+        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $reader->expects($this->any())
+            ->method('read')
+            ->will($this->returnValue(array('bizoo' => $param)));
+
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter);
+        $queryFetcher->setController($this->controller);
+        $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
 }

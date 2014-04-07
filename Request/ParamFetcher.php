@@ -69,12 +69,12 @@ class ParamFetcher implements ParamFetcherInterface
      * @param ValidatorInterface          $validator            The validator service
      * @param ViolationFormatterInterface $violationFormatter   The violation formatter service
      */
-    public function __construct(ParamReader $paramReader, Request $request, ValidatorInterface $validator, ViolationFormatterInterface $violationFormatter)
+    public function __construct(ParamReader $paramReader, Request $request, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
     {
         $this->paramReader        = $paramReader;
         $this->request            = $request;
-        $this->validator          = $validator;
         $this->violationFormatter = $violationFormatter;
+        $this->validator          = $validator;
     }
 
     /**
@@ -167,6 +167,10 @@ class ParamFetcher implements ParamFetcherInterface
     public function cleanParamWithRequirements(Param $config, $param, $strict)
     {
         $default = $config->default;
+
+        if (null !== $config->requirements && null === $this->validator) {
+            throw new \RuntimeException('The ParamFetcher requirements feature requires the symfony/validator component.');
+        }
 
         if (null === $config->requirements || ($param === $default && null !== $default)) {
 
