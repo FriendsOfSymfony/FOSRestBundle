@@ -116,7 +116,14 @@ class RestRouteLoader extends Loader
             $controller = $this->findClass($file);
         }
 
-        if (class_exists($controller)) {
+        if ($this->container->has($controller)) {
+            // service_id
+            $prefix = $controller . ':';
+            $this->container->enterScope('request');
+            $this->container->set('request', new Request);
+            $class = get_class($this->container->get($controller));
+            $this->container->leaveScope('request');
+        } elseif (class_exists($controller)) {
             // full class name
             $class  = $controller;
             $prefix = $class . '::';
@@ -131,13 +138,6 @@ class RestRouteLoader extends Loader
                     sprintf('Can\'t locate "%s" controller.', $controller)
                 );
             }
-        } elseif ($this->container->has($controller)) {
-            // service_id
-            $prefix = $controller . ':';
-            $this->container->enterScope('request');
-            $this->container->set('request', new Request);
-            $class = get_class($this->container->get($controller));
-            $this->container->leaveScope('request');
         }
 
         if (empty($class)) {

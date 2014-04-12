@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
+use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\RouteCollection;
@@ -139,6 +140,41 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $route = $collection->get('get_users');
 
         $this->assertEquals('xml', $route->getDefault('_format'));
+    }
+
+    /**
+     * Tests that we can use "controller as service" even if the controller is registered in the
+     * container by its class name.
+     *
+     * @link https://github.com/FriendsOfSymfony/FOSRestBundle/issues/604#issuecomment-40284026
+     */
+    public function testControllerAsServiceWithClassName()
+    {
+        $controller = new UsersController();
+
+        // We register the controller in the fake container by its class name
+        $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->containerMock->expects($this->any())
+            ->method('has')
+            ->will($this->returnCallback(function ($serviceId) use ($controller) {
+                return $serviceId == get_class($controller);
+            }));
+        $this->containerMock->expects($this->once())
+            ->method('get')
+            ->with(get_class($controller))
+            ->will($this->returnValue($controller));
+
+        $collection = $this->loadFromYamlCollectionFixture('users_collection.yml');
+
+        $route = $collection->get('get_users');
+
+        // We check that it's "controller:method" (controller as service) and not "controller::method"
+        $this->assertEquals(
+            'FOS\RestBundle\Tests\Fixtures\Controller\UsersController:getUsersAction',
+            $route->getDefault('_controller')
+        );
     }
 
     /**

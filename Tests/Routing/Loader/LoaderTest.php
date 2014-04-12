@@ -29,6 +29,11 @@ use FOS\RestBundle\Util\Inflector\DoctrineInflector;
 abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    protected $containerMock;
+
+    /**
      * Load routes etalon from yml fixture file under Tests\Fixtures directory.
      *
      * @param string $etalonName name of the YML fixture
@@ -50,9 +55,12 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function getControllerLoader(array $formats = array())
     {
-        $c = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
+        // This check allows to override the container
+        if ($this->containerMock === null) {
+            $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+                ->disableOriginalConstructor()
+                ->getMock();
+        }
         $l = $this->getMockBuilder('Symfony\Component\Config\FileLocator')
             ->disableOriginalConstructor()
             ->getMock();
@@ -67,6 +75,6 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         $ar = new RestActionReader($annotationReader, $paramReader, $inflector, true, $formats);
         $cr = new RestControllerReader($ar, $annotationReader);
 
-        return new RestRouteLoader($c, $l, $p, $cr, 'html');
+        return new RestRouteLoader($this->containerMock, $l, $p, $cr, 'html');
     }
 }
