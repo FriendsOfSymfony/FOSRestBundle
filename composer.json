@@ -42,7 +42,8 @@
     "suggest": {
         "sensio/framework-extra-bundle":  "Add support for route annotations and the view response listener",
         "jms/serializer-bundle":          "Add support for advanced serialization capabilities, recommended, requires 0.12.*",
-        "symfony/serializer":             "Add support for basic serialization capabilities and xml decoding, requires ~2.2"
+        "symfony/serializer":             "Add support for basic serialization capabilities and xml decoding, requires ~2.2",
+        "symfony/validator":              "Add support for validation capabilities in the ParamFetcher, requires ~2.2"
     },
 
     "conflict": {

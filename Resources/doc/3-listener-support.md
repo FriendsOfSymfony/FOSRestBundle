@@ -485,6 +485,8 @@ Note: There is also ``$paramFetcher->all()`` to fetch all configured query param
 both ``$paramFetcher->get()`` and ``$paramFetcher->all()`` support and optional ``$strict`` parameter
 to throw a ``\RuntimeException`` on a validation error.
 
+Note: The ParamFetcher requirements feature requires the symfony/validator component.
+
 Optionally the listener can also already set all configured query parameters as request attributes
 
 ```yaml
