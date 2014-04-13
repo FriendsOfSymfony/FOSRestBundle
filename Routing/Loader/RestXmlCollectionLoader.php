@@ -177,9 +177,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
     protected function validate(\DOMDocument $dom)
     {
         $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
-	$restRoutinglocation =  str_replace('\\', '/', $restRoutinglocation);
+        $restRoutinglocation =  str_replace('\\', '/', $restRoutinglocation);
         $routinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing-1.0.xsd');
-	$routinglocation =  str_replace('\\', '/', $routinglocation);
+        $routinglocation =  str_replace('\\', '/', $routinglocation);
         $source = <<<EOF
 <?xml version="1.0" encoding="utf-8" ?>
 <xsd:schema xmlns="http://symfony.com/schema"
