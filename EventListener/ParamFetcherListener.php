@@ -54,7 +54,8 @@ class ParamFetcherListener
         $paramFetcher = $this->container->get('fos_rest.request.param_fetcher');
 
         $paramFetcher->setController($event->getController());
-        $request->attributes->set('paramFetcher', $paramFetcher);
+        $attributeName = $this->getAttributeName($event->getController());
+        $request->attributes->set($attributeName, $paramFetcher);
 
         if ($this->setParamsAsAttributes) {
             $params = $paramFetcher->all();
@@ -67,5 +68,42 @@ class ParamFetcherListener
                 $request->attributes->set($name, $param);
             }
         }
+    }
+
+    /**
+     * Determines which attribute the ParamFetcher should be injected as.
+     *
+     * @param array $controller The controller action an an "array" callable.
+     * @return string The name of the ParamFetcher attribute.
+     */
+    private function getAttributeName(array $controller)
+    {
+        list($object, $name) = $controller;
+        $method = new \ReflectionMethod($object, $name);
+        foreach ( $method->getParameters() as $param ) {
+            if ( $this->isParamFetcherType($param) ) {
+                return $param->getName();
+            }
+        }
+
+        // If there is no typehint, inject the ParamFetcher using a default name.
+        return 'paramFetcher';
+    }
+
+    /**
+     * Returns true if the given controller parameter is type-hinted as
+     * an instance of ParamFetcher.
+     *
+     * @param \ReflectionParameter $controllerParam A parameter of the
+     *   controller action.
+     * @return boolean
+     */
+    private function isParamFetcherType(\ReflectionParameter $controllerParam)
+    {
+        $type = $controllerParam->getClass();
+        if ( null === $type ) {
+            return false;
+        }
+        return 'FOS\\RestBundle\\Request\\ParamFetcher' === $type->getName();
     }
 }

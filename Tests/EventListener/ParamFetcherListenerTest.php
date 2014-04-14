@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\ParamFetcherListener;
+use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
@@ -76,7 +77,45 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->paramFetcher, $request->attributes->get('paramFetcher'));
     }
 
-    protected function getEvent(Request $request)
+    /**
+     * Tests that the ParamFetcher can be injected by the default name
+     * ($paramFetcher) or by a different name if type-hinted.
+     *
+     * @dataProvider setParamFetcherByTypehintProvider
+     */
+    public function testSettingParamFetcherByTypehint($actionName, $expectedAttribute)
+    {
+        $request = new Request;
+
+        $event = $this->getEvent($request, $actionName);
+
+        $this->paramFetcher->expects($this->once())
+            ->method('all')
+            ->will($this->returnValue(array()));
+
+        $this->paramFetcherListener->onKernelController($event);
+
+        $this->assertSame($this->paramFetcher, $request->attributes->get($expectedAttribute));
+    }
+
+    public function setParamFetcherByTypehintProvider()
+    {
+        return array(
+            // Without a typehint, the ParamFetcher should be injected as
+            // $paramFetcher.
+            array('byNameAction', 'paramFetcher'),
+
+            // With a typehint, the ParamFetcher should be injected as whatever
+            // the parameter name is.
+            array('byTypeAction', 'pf'),
+
+            // If there is no controller argument for the ParamFetcher, it
+            // should be injected as the default name.
+            array('notProvidedAction', 'paramFetcher'),
+        );
+    }
+
+    protected function getEvent(Request $request, $actionMethod = 'byNameAction')
     {
         $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
             ->disableOriginalConstructor()
@@ -86,13 +125,11 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $controller = $this->getMockBuilder('Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $controller = new ParamFetcherController;
 
         $event->expects($this->atLeastOnce())
             ->method('getController')
-            ->will($this->returnValue(array($controller, 'somethingAction')));
+            ->will($this->returnValue(array($controller, $actionMethod)));
 
         return $event;
     }
