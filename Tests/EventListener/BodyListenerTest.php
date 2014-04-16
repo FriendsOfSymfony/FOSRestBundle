@@ -29,14 +29,14 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      * @param boolean $decode             use decoder provider
      * @param Request $request            the original request
      * @param string  $method             a http method (e.g. POST, GET, PUT, ...)
-     * @param string  $contentType        the request header content type
      * @param array   $expectedParameters the http parameters of the updated request
+     * @param string  $contentType        the request header content type
      * @param boolean $throwExceptionOnUnsupportedContentType
      * @param string  $expectedRequestMethod
      *
      * @dataProvider testOnKernelRequestDataProvider
      */
-    public function testOnKernelRequest($decode, Request $request, $method, $contentType, $expectedParameters, $throwExceptionOnUnsupportedContentType = false, $expectedRequestMethod = null)
+    public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false, $expectedRequestMethod = null)
     {
         if (!$expectedRequestMethod) {
             $expectedRequestMethod = $method;
@@ -65,7 +65,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         }
 
         $request->setMethod($method);
-        $request->headers = new HeaderBag(array('Content-Type' => $contentType));
+
+        if ($contentType) {
+            $request->headers = new HeaderBag(array('Content-Type' => $contentType));
+        }
+
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
@@ -82,17 +86,17 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public static function testOnKernelRequestDataProvider()
     {
         return array(
-            'Empty POST request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', 'application/json', array('foo')),
-            'Empty PUT request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PUT', 'application/json', array('foo')),
-            'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PATCH', 'application/json', array('foo')),
-            'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'DELETE', 'application/json', array('foo')),
-            'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', 'application/json', array()),
-            'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), array('foo')), 'POST', 'application/json', array('bar')),
-            'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', 'application/fooformat', array()),
-            'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', null, array('foo')),
-            'POST request with _method parameter and disabled method-override' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array("_method" => "PUT")), 'POST', 'application/json', array('_method' => 'PUT')),
+            'Empty POST request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array('foo'), 'application/json'),
+            'Empty PUT request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PUT', array('foo'), 'application/json'),
+            'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PATCH', array('foo'), 'application/json'),
+            'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'DELETE', array('foo'), 'application/json'),
+            'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', array(), 'application/json'),
+            'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), array('foo')), 'POST', array('bar'), 'application/json'),
+            'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array(), 'application/fooformat'),
+            'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', array('foo')),
+            'POST request with _method parameter and disabled method-override' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array("_method" => "PUT")), 'POST', array('_method' => 'PUT'), 'application/json'),
             // This test is the last one, because you can't disable the http-method-override once it's enabled
-            'POST request with _method parameter' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array("_method" => "PUT")), 'POST', 'application/json', array('_method' => 'PUT'), false, "PUT"),
+            'POST request with _method parameter' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array("_method" => "PUT")), 'POST', array('_method' => 'PUT'), 'application/json', false, "PUT"),
         );
     }
 
@@ -193,7 +197,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public function testBadRequestExceptionOnMalformedContent()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
-        $this->testOnKernelRequest(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/json', array());
+        $this->testOnKernelRequest(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/json');
     }
 
     /**
@@ -202,7 +206,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
-        $this->testOnKernelRequest(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/foo', array(), true);
+        $this->testOnKernelRequest(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/foo', true);
     }
 
+    public function testShouldNotThrowUnsupportedMediaTypeHttpExceptionWhenIsAnEmptyDeleteRequest()
+    {
+        $this->testOnKernelRequest(false, new Request(), 'DELETE', array(), null, true);
+    }
 }
