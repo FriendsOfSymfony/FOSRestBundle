@@ -74,7 +74,7 @@ class FOSRestExtension extends Extension
         }
 
         foreach ($config['service'] as $key => $service) {
-            $container->setAlias($this->getAlias().'.'.$key, $config['service'][$key]);
+            $container->setAlias($this->getAlias().'.'.$key, $service);
         }
 
         if (!empty($config['serializer']['version'])) {
