@@ -53,6 +53,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = new ContainerBuilder();
+        $this->container->setParameter('kernel.bundles', array('JMSSerializerBundle' => true));
         $this->extension = new FOSRestExtension();
         $this->includeFormat = true;
         $this->formats = array(
@@ -482,5 +483,22 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownIfCallbackFilterIsUsed()
     {
         $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => array('callback_filter' => 'foo')))), $this->container);
+    }
+
+    public function testSerializerDefaultWhenJMSIsAvailable()
+    {
+        $this->extension->load(array(), $this->container);
+
+        $this->assertEquals('jms_serializer.serializer', $this->container->getAlias('fos_rest.serializer'));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSerializerRequiredWhenJMSIsNotAvailable()
+    {
+        $this->container->setParameter('kernel.bundles', array());
+
+        $this->extension->load(array(), $this->container);
     }
 }
