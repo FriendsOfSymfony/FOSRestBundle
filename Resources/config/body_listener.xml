@@ -6,6 +6,7 @@
 
     <parameters>
 
+        <parameter key="fos_rest.normalizer.camel_keys.class">FOS\RestBundle\Normalizer\CamelKeysNormalizer</parameter>
         <parameter key="fos_rest.decoder.json.class">FOS\RestBundle\Decoder\JsonDecoder</parameter>
         <parameter key="fos_rest.decoder.jsontoform.class">FOS\RestBundle\Decoder\JsonToFormDecoder</parameter>
         <parameter key="fos_rest.decoder.xml.class">FOS\RestBundle\Decoder\XmlDecoder</parameter>
@@ -15,6 +16,8 @@
     </parameters>
 
     <services>
+
+        <service id="fos_rest.normalizer.camel_keys" class="%fos_rest.normalizer.camel_keys.class%" />
 
         <service id="fos_rest.decoder.json" class="%fos_rest.decoder.json.class%" />
 

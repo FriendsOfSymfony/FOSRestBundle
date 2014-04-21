@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use FOS\RestBundle\Decoder\ContainerDecoderProvider;
@@ -93,6 +94,97 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             // This test is the last one, because you can't disable the http-method-override once it's enabled
             'POST request with _method parameter' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array("_method" => "PUT")), 'POST', 'application/json', array('_method' => 'PUT'), false, "PUT"),
         );
+    }
+
+    public function testOnKernelRequestWithNormalizer()
+    {
+        $data = array('foo_bar' => 'foo_bar');
+        $normalizedData = array('fooBar' => 'foo_bar');
+
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
+        $decoder
+            ->expects($this->any())
+            ->method('decode')
+            ->will($this->returnValue($data));
+
+        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $decoderProvider
+            ->expects($this->any())
+            ->method('getDecoder')
+            ->will($this->returnValue($decoder));
+
+        $decoderProvider
+            ->expects($this->any())
+            ->method('supports')
+            ->will($this->returnValue(true));
+
+        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer
+            ->expects($this->once())
+            ->method('normalize')
+            ->with($data)
+            ->will($this->returnValue($normalizedData));
+
+        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request->setMethod('POST');
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $listener = new BodyListener($decoderProvider, false);
+        $listener->setArrayNormalizer($normalizer);
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($normalizedData, $request->request->all());
+    }
+
+    /**
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     */
+    public function testOnKernelRequestNormalizationException()
+    {
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
+        $decoder
+            ->expects($this->any())
+            ->method('decode')
+            ->will($this->returnValue(array()));
+
+        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $decoderProvider
+            ->expects($this->any())
+            ->method('getDecoder')
+            ->will($this->returnValue($decoder));
+
+        $decoderProvider
+            ->expects($this->any())
+            ->method('supports')
+            ->will($this->returnValue(true));
+
+        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer
+            ->expects($this->once())
+            ->method('normalize')
+            ->will($this->throwException(new NormalizationException()));
+
+        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request->setMethod('POST');
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $listener = new BodyListener($decoderProvider, false);
+        $listener->setArrayNormalizer($normalizer);
+        $listener->onKernelRequest($event);
     }
 
     /**

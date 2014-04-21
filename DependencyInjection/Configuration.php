@@ -177,6 +177,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(array('json' => 'fos_rest.decoder.json', 'xml' => 'fos_rest.decoder.xml'))
                             ->prototype('scalar')->end()
                         ->end()
+                        ->scalarNode('array_normalizer')->defaultNull()->end()
                     ->end()
                 ->end()
             ->end();
