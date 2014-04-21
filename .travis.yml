@@ -8,9 +8,9 @@ php:
 env:
   - SYMFONY_VERSION=2.2.*
   - SYMFONY_VERSION=2.3.*
-  - SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.*  symfony/routing:2.4.*'
+  - SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.* symfony/routing:2.4.*'
   - SYMFONY_VERSION=2.4.*
-  - SYMFONY_VERSION='dev-master symfony/event-dispatcher:~2.5@dev'
+  - SYMFONY_VERSION='dev-master symfony/event-dispatcher:~2.5@dev symfony/http-kernel:~2.5@dev'
 
 before_script:
   - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
