@@ -8,7 +8,7 @@ controllers, by placing a layer between the Controller and the generation of the
 final output via the templating or a serializer.
 
 The Bundle works with both the Symfony2 core serializer:
-http://symfony.com/doc/2.0/components/serializer.html
+http://symfony.com/doc/current/components/serializer.html
 
 But also with the more sophisticated serializer by Johannes Schmitt:
 https://github.com/schmittjoh/serializer
@@ -34,7 +34,7 @@ class UsersController extends FOSRestController
 {
     public function getUsersAction()
     {
-        $data = // get data, in this case list of users.
+        $data = ...; // get data, in this case list of users.
         $view = $this->view($data, 200)
             ->setTemplate("MyBundle:Users:getUsers.html.twig")
             ->setTemplateVar('users')
