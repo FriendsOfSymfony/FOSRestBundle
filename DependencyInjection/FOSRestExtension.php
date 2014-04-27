@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
+use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -143,26 +144,13 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
-
-            foreach ($config['format_listener']['rules'] as $rule) {
-                $matcher = $this->createRequestMatcher(
-                    $container,
-                    $rule['path'],
-                    $rule['host'],
-                    $rule['methods']
-                );
-
-                unset($rule['path'], $rule['host']);
-                if (is_bool($rule['prefer_extension']) && $rule['prefer_extension']) {
-                    $rule['prefer_extension'] = '2.0';
-                }
-
-                $container->getDefinition($this->getAlias().'.format_negotiator')
-                    ->addMethodCall('add', array($matcher, $rule));
-            }
+            $container->addCompilerPass(new FormatListenerRulesPass($this->getAlias()));
 
             if (!empty($config['format_listener']['media_type']['version_regex'])) {
-                $container->setParameter($this->getAlias().'.format_listener.media_type.version_regex', $config['format_listener']['media_type']['version_regex']);
+                $container->setParameter(
+                    $this->getAlias().'.format_listener.media_type.version_regex',
+                    $config['format_listener']['media_type']['version_regex']
+                );
             } else {
                 $container->removeDefinition('fos_rest.version_listener');
             }
@@ -265,22 +253,5 @@ class FOSRestExtension extends Extension
         } catch (\ReflectionException $re) {
             throw new \InvalidArgumentException("FOSRestBundle exception mapper: Could not load class $exception. Most probably a problem with your configuration.");
         }
-    }
-
-    protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
-    {
-        $arguments = array($path, $host, $methods);
-        $serialized = serialize($arguments);
-        $id = $this->getAlias().'.request_matcher.'.md5($serialized).sha1($serialized);
-
-        if (!$container->hasDefinition($id)) {
-            // only add arguments that are necessary
-            $container
-                ->setDefinition($id, new DefinitionDecorator($this->getAlias().'.request_matcher'))
-                ->setArguments($arguments)
-            ;
-        }
-
-        return new Reference($id);
     }
 }
