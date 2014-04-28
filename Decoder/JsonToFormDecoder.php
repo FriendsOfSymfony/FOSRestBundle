@@ -26,12 +26,12 @@ class JsonToFormDecoder implements DecoderInterface
      * 
      * @param array $data
      */
-    private function xWwwFormEncodedLike(&$data)
+    private static function xWwwFormEncodedLike(&$data)
     {
         foreach ($data as $key => &$value) {
             if (is_array($value)) {
                 // Encode recursively
-                $this->xWwwFormEncodedLike($value);
+                self::xWwwFormEncodedLike($value);
             } elseif (false === $value) {
                 // Checkbox-like behavior: remove false data
                 unset($data[$key]);
@@ -50,7 +50,7 @@ class JsonToFormDecoder implements DecoderInterface
     {
         $decodedData = @json_decode($data, true);
         if ($decodedData) {
-            $this->xWwwFormEncodedLike($decodedData);
+            self::xWwwFormEncodedLike($decodedData);
         }
 
         return $decodedData;
