@@ -23,7 +23,7 @@ must always be processed by a ``ViewHandler`` (see the below section on the
 "view response listener" for how to get this processing applied automatically)
 
 FOSRestBundle ships with a controller extending the default Symfony controller,
-which adds several convenience methods:
+which adds several convenient methods:
 
 ```php
 <?php
