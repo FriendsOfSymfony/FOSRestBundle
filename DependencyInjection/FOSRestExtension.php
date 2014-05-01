@@ -11,14 +11,12 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
-
 use FOS\RestBundle\Util\Codes;
 
 use FOS\RestBundle\FOSRestBundle;
@@ -144,7 +142,6 @@ class FOSRestExtension extends Extension
 
         if (!empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
-            $container->addCompilerPass(new FormatListenerRulesPass($this->getAlias()));
 
             if (!empty($config['format_listener']['media_type']['version_regex'])) {
                 $container->setParameter(

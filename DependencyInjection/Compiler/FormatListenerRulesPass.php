@@ -24,19 +24,27 @@ class FormatListenerRulesPass implements CompilerPassInterface
 {
     private $alias;
 
-    public function __construct($alias)
+    public function __construct($alias = 'fos_rest')
     {
         $this->alias = $alias;
     }
 
     public function process(ContainerBuilder $container)
     {
-        $fosRestConfig = $container->getExtensionConfig('fos_rest');
+        if (!$container->hasDefinition($this->alias.'.format_listener')) {
+            return;
+        }
+
+        $fosRestConfig = $container->getExtensionConfig($this->alias);
         $profilerConfig = $container->getExtensionConfig('web_profiler');
 
         $devRules = $this->getDevelopmentRules($fosRestConfig, $profilerConfig);
-        $fosRestConfig['format_listener']['rules'] = array_merge($fosRestConfig['format_listener']['rules'], $devRules);
-        foreach ($fosRestConfig['format_listener']['rules'] as $rule) {
+        $fosRestConfig[0]['format_listener']['rules'] = array_merge(
+            $fosRestConfig[0]['format_listener']['rules'],
+            $devRules
+        );
+
+        foreach ($fosRestConfig[0]['format_listener']['rules'] as $rule) {
             $this->addRule($rule, $container);
         }
     }

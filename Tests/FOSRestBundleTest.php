@@ -23,7 +23,7 @@ class FOSRestBundleTest extends \PHPUnit_Framework_TestCase
     public function testBuild()
     {
         $container = $this->getMock('\Symfony\Component\DependencyInjection\ContainerBuilder');
-        $container->expects($this->once())
+        $container->expects($this->exactly(2))
             ->method('addCompilerPass')
             ->with($this->isInstanceOf('\Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface'));
 

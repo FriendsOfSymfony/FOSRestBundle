@@ -19,25 +19,24 @@ use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
  */
 class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
 {
-    const EXTENSION_ALIAS = 'test';
+    const EXTENSION_ALIAS = 'fos_rest_test';
 
     public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
     {
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition');
-        $definition->method('addMethodCall');
+        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', array('addMethod'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-        $container->expects($this->at(0))
-            ->method('getExtensionConfig')
-            ->with('fos_rest')
-            ->will($this->returnValue(array('format_listener' => array('rules' => array()))));
-
         $container->expects($this->at(1))
+            ->method('getExtensionConfig')
+            ->with(self::EXTENSION_ALIAS)
+            ->will($this->returnValue(array(array('format_listener' => array('rules' => array())))));
+
+        $container->expects($this->at(2))
             ->method('getExtensionConfig')
             ->with('web_profiler')
             ->will($this->returnValue(array(array('toolbar' => true, 'intercept_redirects' => false))));
 
-        $container->expects($this->exactly(2))
+        $container->expects($this->exactly(3))
             ->method('hasDefinition')
             ->will($this->returnValue(true));
 
@@ -56,17 +55,17 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
         $definition->method('addMethodCall');
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
-        $container->expects($this->at(0))
-            ->method('getExtensionConfig')
-            ->with('fos_rest')
-            ->will($this->returnValue(array('format_listener' => array('rules' => array()))));
 
+        $container->expects($this->once())->method('hasDefinition')->will($this->returnValue(true));
         $container->expects($this->at(1))
+            ->method('getExtensionConfig')
+            ->with(self::EXTENSION_ALIAS)
+            ->will($this->returnValue(array(array('format_listener' => array('rules' => array())))));
+
+        $container->expects($this->at(2))
             ->method('getExtensionConfig')
             ->with('web_profiler')
             ->will($this->returnValue(array(array('toolbar' => false, 'intercept_redirects' => false))));
-
-        $container->expects($this->never())->method('hasDefinition');
 
         $container->expects($this->never())->method('getDefinition');
 
