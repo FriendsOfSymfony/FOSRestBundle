@@ -1,11 +1,12 @@
 <?php
+
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of the FOSRestBundle package.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
  *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
