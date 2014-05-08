@@ -233,6 +233,13 @@ class RestRouteLoaderTest extends LoaderTest
         $this->assertLessThan($pos['prefix_get_bars'], $pos['prefix_get_bars_custom']);
     }
 
+    public function testMediaFixture()
+    {
+        $collection = $this->loadFromControllerFixture('MediaController');
+
+        $this->assertCount(2, $collection->all());
+    }
+
     /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
