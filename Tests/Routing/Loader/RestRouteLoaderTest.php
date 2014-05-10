@@ -233,11 +233,33 @@ class RestRouteLoaderTest extends LoaderTest
         $this->assertLessThan($pos['prefix_get_bars'], $pos['prefix_get_bars_custom']);
     }
 
+    /**
+     * Test if the routes are also working with uninflected words
+     *
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/761
+     */
     public function testMediaFixture()
     {
+        $expectedMethod = 'GET';
         $collection = $this->loadFromControllerFixture('MediaController');
 
         $this->assertCount(2, $collection->all());
+        $this->assertEquals($expectedMethod, $collection->get('get_media')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('cget_media')->getRequirement('_method'));
+
+    }
+
+    /**
+     * Test if the routes are also working with uninflected words
+     *
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/761
+     */
+    public function testInformationFixture()
+    {
+        $collection = $this->loadFromControllerFixture('InformationController');
+
+        $this->assertCount(2, $collection->all());
+        $this->assertSame($collection->get('get_information'), $collection->get('cget_information'));
     }
 
     /**
