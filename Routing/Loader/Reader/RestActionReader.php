@@ -26,6 +26,8 @@ use FOS\RestBundle\Request\ParamReader;
  */
 class RestActionReader
 {
+    const COLLECTION_ROUTE_PREFIX = 'c';
+
     private $annotationReader;
     private $paramReader;
     private $inflector;
@@ -39,7 +41,6 @@ class RestActionReader
 
     private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options');
     private $availableConventionalActions = array('new', 'edit', 'remove');
-    const collectionRoutePrefix = 'c';
 
     /**
      * Initializes controller reader.
@@ -151,8 +152,8 @@ class RestActionReader
             return;
         }
 
-        list($httpMethod, $resources, $isCollection) = $httpMethodAndResources;
-        $arguments                                   = $this->getMethodArguments($method);
+        list($httpMethod, $resources, $isCollection, $isInflectable) = $httpMethodAndResources;
+        $arguments                                                   = $this->getMethodArguments($method);
 
         // if we have only 1 resource & 1 argument passed, then it's object call, so
         // we can set collection singular name
@@ -238,7 +239,7 @@ class RestActionReader
                 $route = new Route(
                     $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition
                 );
-                $this->addRoute($collection, $routeName, $route, $isCollection, $annotation);
+                $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
 
         } else {
@@ -253,7 +254,7 @@ class RestActionReader
             $route = new Route(
                 $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition
             );
-            $this->addRoute($collection, $routeName, $route, $isCollection);
+            $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable);
         }
     }
 
@@ -306,20 +307,23 @@ class RestActionReader
             '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
         $isCollection = false;
+        $isInflectable = true;
 
-        if (0 === strpos($httpMethod, self::collectionRoutePrefix)
+        if (0 === strpos($httpMethod, self::COLLECTION_ROUTE_PREFIX)
             && in_array(substr($httpMethod, 1), $this->availableHTTPMethods)
         ) {
             $isCollection = true;
             $httpMethod = substr($httpMethod, 1);
             if (!empty($resource)) {
-                $resource[count($resource)-1] = $this->inflector->pluralize(end($resource));
+                $resourcePluralized = $this->inflector->pluralize(end($resource));
+                $isInflectable = ($resourcePluralized != $resource[count($resource) - 1]);
+                $resource[count($resource)-1] = $resourcePluralized;
             }
         }
 
         $resources = array_merge($resource, $resources);
 
-        return array($httpMethod, $resources, $isCollection);
+        return array($httpMethod, $resources, $isCollection, $isInflectable);
     }
 
     /**
@@ -539,15 +543,17 @@ class RestActionReader
      * @param RestRouteCollection $collection
      * @param $routeName
      * @param $route
+     * @param $isCollection
+     * @param null $annotation
      */
-    private function addRoute(RestRouteCollection $collection, $routeName, $route, $isCollection, $annotation = null)
+    private function addRoute(RestRouteCollection $collection, $routeName, $route, $isCollection, $isInflectable, $annotation = null)
     {
         if ($annotation) {
             $routeName = $routeName.$annotation->getName();
         }
 
-        if ($isCollection) {
-            $collection->add(self::collectionRoutePrefix.$routeName, $route);
+        if ($isCollection && !$isInflectable) {
+            $collection->add(self::COLLECTION_ROUTE_PREFIX.$routeName, $route);
             if (!$collection->get($routeName)) {
                 $collection->add($routeName, $route);
             }
