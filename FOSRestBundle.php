@@ -29,6 +29,6 @@ class FOSRestBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new ConfigurationCheckPass());
-        $container->addCompilerPass(new FormatListenerRulesPass('fos_rest'));
+        $container->addCompilerPass(new FormatListenerRulesPass());
     }
 }

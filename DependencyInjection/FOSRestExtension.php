@@ -143,6 +143,11 @@ class FOSRestExtension extends Extension
         if (!empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
 
+            $container->setParameter(
+                $this->getAlias().'.format_listener.rules',
+                $config['format_listener']['rules']
+            );
+
             if (!empty($config['format_listener']['media_type']['version_regex'])) {
                 $container->setParameter(
                     $this->getAlias().'.format_listener.media_type.version_regex',
