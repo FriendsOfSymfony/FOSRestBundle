@@ -23,32 +23,32 @@ class FormatListenerRulesPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('fos_rest.format_listener')
-            || !$container->hasParameter('web_profiler.debug_toolbar.mode')
-        ) {
+        if (!$container->hasDefinition('fos_rest.format_listener')) {
             return;
+        }
+
+        if ($container->hasParameter('web_profiler.debug_toolbar.mode')) {
+            $path = '_profiler';
+            if (2 === $container->getParameter('web_profiler.debug_toolbar.mode')) {
+                $path.= '|_wdt';
+            }
+
+            $profilerRule = array(
+                'host' => null,
+                'methods' => null,
+                'path' => "^/$path/",
+                'priorities' => array('html', 'json'),
+                'fallback_format' => 'html',
+                'prefer_extension' => true
+            );
+
+            $this->addRule($profilerRule, $container);
         }
 
         $rules = $container->getParameter('fos_rest.format_listener.rules');
         foreach ($rules as $rule) {
             $this->addRule($rule, $container);
         }
-
-        $path = '_profiler';
-        if (2 === $container->getParameter('web_profiler.debug_toolbar.mode')) {
-            $path.= '|_wdt';
-        }
-
-        $profilerRule = array(
-            'host' => null,
-            'methods' => null,
-            'path' => "^/$path/",
-            'priorities' => array('html', 'json'),
-            'fallback_format' => 'html',
-            'prefer_extension' => true
-        );
-
-        $this->addRule($profilerRule, $container);
     }
 
     protected function addRule($rule, $container)
