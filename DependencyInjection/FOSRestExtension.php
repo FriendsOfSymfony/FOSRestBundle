@@ -131,6 +131,7 @@ class FOSRestExtension extends Extension
             $loader->load('body_listener.xml');
 
             $container->setParameter($this->getAlias().'.throw_exception_on_unsupported_content_type', $config['body_listener']['throw_exception_on_unsupported_content_type']);
+            $container->setParameter($this->getAlias().'.disabled_routes', $config['body_listener']['disabled_routes']);
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
 
             $arrayNormalizer = $config['body_listener']['array_normalizer'];

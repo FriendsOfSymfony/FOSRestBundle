@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\Routing\Router;
 
 /**
  * This listener handles Request body decoding.
@@ -42,15 +43,35 @@ class BodyListener
     private $arrayNormalizer;
 
     /**
+     * @var array
+     */
+    private $disabledRoutes;
+
+    /**
+     * @var Router
+     */
+    private $router;
+
+    /**
      * Constructor.
      *
      * @param DecoderProviderInterface $decoderProvider Provider for fetching decoders
      * @param boolean $throwExceptionOnUnsupportedContentType
+     * @param array $disabledRoutes
      */
-    public function __construct(DecoderProviderInterface $decoderProvider, $throwExceptionOnUnsupportedContentType = false)
+    public function __construct(DecoderProviderInterface $decoderProvider, $throwExceptionOnUnsupportedContentType = false, $disabledRoutes = array())
     {
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
+        $this->disabledRoutes = $disabledRoutes;
+    }
+
+    /**
+     * TODO: this is just for testing purposes since "$request->attributes->get('_route')" wont work for some reasons
+     * @param Router $router
+     */
+    public function setRouter(Router $router){
+        $this->router = $router;
     }
 
     /**
@@ -97,11 +118,14 @@ class BodyListener
                 return;
             }
 
+            // Now the listener is after the routing layer, "_route" is available
+            $route = $this->router->match('/oauth/v2/token')['_route']; //TODO: replace with current route
+
             if (!empty($content)) {
                 $decoder = $this->decoderProvider->getDecoder($format);
                 $data = $decoder->decode($content, $format);
                 if (is_array($data)) {
-                    if (null !== $this->arrayNormalizer) {
+                    if (null !== $this->arrayNormalizer && !in_array($route, $this->disabledRoutes)) {
                         try {
                             $data = $this->arrayNormalizer->normalize($data);
                         } catch (NormalizationException $e) {

@@ -178,6 +178,9 @@ class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->end()
                         ->end()
                         ->scalarNode('array_normalizer')->defaultNull()->end()
+                        ->arrayNode('disabled_routes')
+                            ->prototype('scalar')->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();
