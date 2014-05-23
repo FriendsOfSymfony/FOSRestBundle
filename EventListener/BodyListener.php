@@ -47,10 +47,6 @@ class BodyListener
      */
     private $disabledRoutes;
 
-    /**
-     * @var Router
-     */
-    private $router;
 
     /**
      * Constructor.
@@ -64,14 +60,6 @@ class BodyListener
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
         $this->disabledRoutes = $disabledRoutes;
-    }
-
-    /**
-     * TODO: this is just for testing purposes since "$request->attributes->get('_route')" wont work for some reasons
-     * @param Router $router
-     */
-    public function setRouter(Router $router){
-        $this->router = $router;
     }
 
     /**
@@ -118,14 +106,13 @@ class BodyListener
                 return;
             }
 
-            // Now the listener is after the routing layer, "_route" is available
-            $route = $this->router->match('/oauth/v2/token')['_route']; //TODO: replace with current route
+            $route = $request->attributes->get('_route');
 
             if (!empty($content)) {
                 $decoder = $this->decoderProvider->getDecoder($format);
                 $data = $decoder->decode($content, $format);
                 if (is_array($data)) {
-                    if (null !== $this->arrayNormalizer && !in_array($route, $this->disabledRoutes)) {
+                    if (null !== $this->arrayNormalizer && !$this->isDisabledRoute($route)) {
                         try {
                             $data = $this->arrayNormalizer->normalize($data);
                         } catch (NormalizationException $e) {
@@ -143,5 +130,15 @@ class BodyListener
     private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
     {
         return false === ('DELETE' === $method && empty($content) && null === $contentType);
+    }
+
+    /**
+     * Checks if the given route name is excluded in the configuration.
+     *
+     * @param $route
+     * @return bool
+     */
+    private function isDisabledRoute($route){
+        return in_array($route, $this->disabledRoutes);
     }
 }

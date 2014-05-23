@@ -37,9 +37,6 @@
             <argument type="service" id="fos_rest.decoder_provider" />
             <argument>%fos_rest.throw_exception_on_unsupported_content_type%</argument>
             <argument>%fos_rest.disabled_routes%</argument>
-            <call method="setRouter">
-                <argument type="service" id="router" />
-            </call>
         </service>
 
     </services>
