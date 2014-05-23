@@ -47,7 +47,6 @@ class BodyListener
      */
     private $disabledRoutes;
 
-
     /**
      * Constructor.
      *
@@ -138,7 +137,8 @@ class BodyListener
      * @param $route
      * @return bool
      */
-    private function isDisabledRoute($route){
+    private function isDisabledRoute($route)
+    {
         return in_array($route, $this->disabledRoutes);
     }
 }
