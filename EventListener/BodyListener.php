@@ -82,6 +82,11 @@ class BodyListener
     {
         $request = $event->getRequest();
         $method = $request->getMethod();
+        $route = $request->attributes->get('_route');
+
+        if($this->isDisabledRoute($route)) {
+            return;
+        }
 
         if (!count($request->request->all())
             && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))
@@ -105,13 +110,11 @@ class BodyListener
                 return;
             }
 
-            $route = $request->attributes->get('_route');
-
             if (!empty($content)) {
                 $decoder = $this->decoderProvider->getDecoder($format);
                 $data = $decoder->decode($content, $format);
                 if (is_array($data)) {
-                    if (null !== $this->arrayNormalizer && !$this->isDisabledRoute($route)) {
+                    if (null !== $this->arrayNormalizer) {
                         try {
                             $data = $this->arrayNormalizer->normalize($data);
                         } catch (NormalizationException $e) {
