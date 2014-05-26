@@ -262,11 +262,7 @@ class RestRouteLoaderTest extends LoaderTest
         $getRoute = $collection->get('get_information');
         $cgetRoute = $collection->get('cget_information');
 
-        $this->assertEquals($getRoute->getRequirement('_method'), $cgetRoute->getRequirement('_method'));
-        $this->assertEquals($getRoute->getDefaults(), $cgetRoute->getDefaults());
-        $this->assertEquals($getRoute->getMethods(), $cgetRoute->getMethods());
-        $this->assertEquals($getRoute->getOptions(), $cgetRoute->getOptions());
-
+        $this->assertEquals($getRoute, $cgetRoute);
         $this->assertNotSame($getRoute, $cgetRoute);
     }
 
