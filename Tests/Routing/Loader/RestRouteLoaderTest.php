@@ -246,7 +246,6 @@ class RestRouteLoaderTest extends LoaderTest
         $this->assertCount(2, $collection->all());
         $this->assertEquals($expectedMethod, $collection->get('get_media')->getRequirement('_method'));
         $this->assertEquals($expectedMethod, $collection->get('cget_media')->getRequirement('_method'));
-
     }
 
     /**
@@ -259,7 +258,12 @@ class RestRouteLoaderTest extends LoaderTest
         $collection = $this->loadFromControllerFixture('InformationController');
 
         $this->assertCount(2, $collection->all());
-        $this->assertSame($collection->get('get_information'), $collection->get('cget_information'));
+
+        $getRoute = $collection->get('get_information');
+        $cgetRoute = $collection->get('cget_information');
+
+        $this->assertEquals($getRoute, $cgetRoute);
+        $this->assertNotSame($getRoute, $cgetRoute);
     }
 
     /**

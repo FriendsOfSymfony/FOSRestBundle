@@ -555,7 +555,7 @@ class RestActionReader
         if ($isCollection && !$isInflectable) {
             $collection->add(self::COLLECTION_ROUTE_PREFIX.$routeName, $route);
             if (!$collection->get($routeName)) {
-                $collection->add($routeName, $route);
+                $collection->add($routeName, clone $route);
             }
         } else {
             $collection->add($routeName, $route);
