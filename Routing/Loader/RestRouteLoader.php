@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\FileLocatorInterface;
-
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 
 /**
@@ -33,7 +32,7 @@ class RestRouteLoader extends Loader
     protected $defaultFormat;
     protected $locator;
 
-        /**
+    /**
      * Initializes loader.
      *
      * @param ContainerInterface   $container        service container
@@ -105,6 +104,8 @@ class RestRouteLoader extends Loader
      * @param string $controller
      *
      * @return array
+     *
+     * @throws \InvalidArgumentException
      */
     private function getControllerLocator($controller)
     {

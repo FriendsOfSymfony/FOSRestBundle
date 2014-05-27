@@ -50,7 +50,7 @@ class RestControllerReader
     /**
      * Reads controller routes.
      *
-     * @param ReflectionClass $reflection
+     * @param \ReflectionClass $reflection
      *
      * @return RestRouteCollection
      */
@@ -102,8 +102,8 @@ class RestControllerReader
     /**
      * Reads class annotations.
      *
-     * @param ReflectionClass $reflection     controller class
-     * @param string          $annotationName annotation name
+     * @param \ReflectionClass $reflection     controller class
+     * @param string           $annotationName annotation name
      *
      * @return Annotation|null
      */

@@ -25,15 +25,15 @@ interface ViolationFormatterInterface
      *
      * @return string
      */
-    function format(Param $param, ConstraintViolationInterface $violation);
-    
+    public function format(Param $param, ConstraintViolationInterface $violation);
+
     /**
      * Format a Param's ConstraintViolationList into a string message
      *
-     * @param Param                        $param
-     * @param ConstraintViolationListInterface $violation
+     * @param Param                            $param
+     * @param ConstraintViolationListInterface $violationList
      *
      * @return string
      */
-    function formatList(Param $param, ConstraintViolationListInterface $violationList);
+    public function formatList(Param $param, ConstraintViolationListInterface $violationList);
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the FOSRestBundle package.
  *
@@ -11,7 +12,6 @@
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-
 use FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsLoaderInterface;
 
 /**

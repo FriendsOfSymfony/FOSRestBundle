@@ -47,6 +47,7 @@ class ParamFetcherListener
      * Core controller handler
      *
      * @param FilterControllerEvent $event The event
+     * @throws \InvalidArgumentException
      */
     public function onKernelController(FilterControllerEvent $event)
     {

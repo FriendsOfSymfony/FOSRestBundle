@@ -161,8 +161,10 @@ class ParamFetcher implements ParamFetcherInterface
      * @param string  $param  param to clean
      * @param boolean $strict is strict
      *
-     * @throws BadRequestHttpException
      * @return string
+     *
+     * @throws BadRequestHttpException
+     * @throws \RuntimeException
      */
     public function cleanParamWithRequirements(Param $config, $param, $strict)
     {

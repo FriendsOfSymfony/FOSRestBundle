@@ -205,7 +205,6 @@ class RestActionReader
                 $schemes      = array();
                 $condition    = null;
 
-
                 $annoRequirements = $annotation->getRequirements();
 
                 if (!isset($annoRequirements['_method'])) {
@@ -481,8 +480,8 @@ class RestActionReader
     /**
      * Reads class annotations.
      *
-     * @param ReflectionClass $reflection     controller class
-     * @param string          $annotationName annotation name
+     * @param \ReflectionClass $reflection     controller class
+     * @param string           $annotationName annotation name
      *
      * @return Annotation|null
      */
@@ -498,8 +497,8 @@ class RestActionReader
     /**
      * Reads method annotations.
      *
-     * @param ReflectionMethod $reflection     controller action
-     * @param string           $annotationName annotation name
+     * @param \ReflectionMethod $reflection     controller action
+     * @param string            $annotationName annotation name
      *
      * @return Annotation|null
      */
@@ -514,8 +513,8 @@ class RestActionReader
     /**
      * Reads method annotations.
      *
-     * @param ReflectionMethod $reflection     controller action
-     * @param string           $annotationName annotation name
+     * @param \ReflectionMethod $reflection     controller action
+     * @param string            $annotationName annotation name
      *
      * @return array|null
      */

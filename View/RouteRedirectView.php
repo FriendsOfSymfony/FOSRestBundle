@@ -25,7 +25,7 @@ class RouteRedirectView
      * Convenience method to allow for a fluent interface.
      *
      * @param string  $route
-     * @param mixed   $parameters
+     * @param array   $parameters
      * @param integer $statusCode
      * @param array   $headers
      *
