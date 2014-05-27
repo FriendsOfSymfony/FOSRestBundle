@@ -22,15 +22,17 @@ interface DecoderProviderInterface
      * Check if a certain format is supported.
      *
      * @param string $format Format for the requested decoder.
-     * @return Boolean
+     *
+     * @return boolean
      */
-    function supports($format);
+    public function supports($format);
 
     /**
      * Provides decoders, possibly lazily.
      *
      * @param string $format Format for the requested decoder.
-     * @return FOS\RestBundle\Decoder\DecoderInterface
+     *
+     * @return \FOS\RestBundle\Decoder\DecoderInterface
      */
-    function getDecoder($format);
+    public function getDecoder($format);
 }

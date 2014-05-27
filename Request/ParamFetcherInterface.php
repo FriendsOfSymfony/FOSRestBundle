@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Request;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Helper interface to validate query parameters from the active request.
  *

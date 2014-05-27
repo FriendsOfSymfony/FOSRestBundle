@@ -90,4 +90,3 @@ abstract class FOSRestController extends Controller
         return $this->get('fos_rest.view_handler')->handle($view);
     }
 }
-

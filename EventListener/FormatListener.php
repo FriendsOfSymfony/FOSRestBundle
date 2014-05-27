@@ -14,7 +14,6 @@ namespace FOS\RestBundle\EventListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-
 use FOS\RestBundle\Util\FormatNegotiatorInterface;
 use FOS\RestBundle\Util\MediaTypeNegotiatorInterface;
 

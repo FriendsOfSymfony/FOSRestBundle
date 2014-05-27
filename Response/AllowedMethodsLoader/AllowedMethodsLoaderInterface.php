@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the FOSRestBundle package.
  *
@@ -27,5 +28,5 @@ interface AllowedMethodsLoaderInterface
      *
      * @return array
      */
-    function getAllowedMethods();
+    public function getAllowedMethods();
 }

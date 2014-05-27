@@ -13,7 +13,6 @@ namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
-
 use Negotiation\FormatNegotiator as BaseFormatNegotiator;
 use Negotiation\AcceptHeader;
 

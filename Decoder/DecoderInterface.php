@@ -22,7 +22,8 @@ interface DecoderInterface
      * Decodes a string into PHP data
      *
      * @param string $data data to decode
+     *
      * @return array|Boolean false in case the content could not be decoded, else an array
      */
-    function decode($data);
+    public function decode($data);
 }

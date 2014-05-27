@@ -19,8 +19,6 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use FOS\RestBundle\Util\Codes;
 
-use FOS\RestBundle\FOSRestBundle;
-
 class FOSRestExtension extends Extension
 {
     /**
@@ -28,6 +26,8 @@ class FOSRestExtension extends Extension
      *
      * @param array            $configs
      * @param ContainerBuilder $container
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -245,7 +245,7 @@ class FOSRestExtension extends Extension
      * Check if an exception is loadable.
      *
      * @param  string                   $exception class to test
-     * @throws InvalidArgumentException if the class was not found.
+     * @throws \InvalidArgumentException if the class was not found.
      */
     private function testExceptionExists($exception)
     {

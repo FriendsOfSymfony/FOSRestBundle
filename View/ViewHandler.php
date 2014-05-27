@@ -13,7 +13,6 @@ namespace FOS\RestBundle\View;
 
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +20,6 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-
 use FOS\RestBundle\Util\Codes;
 
 /**
@@ -45,17 +43,17 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     protected $formats;
 
     /**
-     * @param int HTTP response status code for a failed validation
+     * @var int HTTP response status code for a failed validation
      */
     protected $failedValidationCode;
 
     /**
-     * @param int HTTP response status code when the view data is null
+     * @var int HTTP response status code when the view data is null
      */
     protected $emptyContentCode;
 
     /**
-     * @param int Whether or not to serialize null view data
+     * @var int Whether or not to serialize null view data
      */
     protected $serializeNull;
 
@@ -161,6 +159,8 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      *
      * @param string   $format   the format that is handled
      * @param callable $callable callable that can handle the given format
+     *
+     * @throws \InvalidArgumentException
      */
     public function registerHandler($format, $callable)
     {
@@ -493,11 +493,10 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
 
         return $exceptionWrapperHandler->wrap(
             array(
-                 'status_code'    => $this->failedValidationCode,
-                 'message'        => 'Validation Failed',
-                 'errors'         => $form
+                 'status_code' => $this->failedValidationCode,
+                 'message'     => 'Validation Failed',
+                 'errors'      => $form
             )
         );
-
     }
 }

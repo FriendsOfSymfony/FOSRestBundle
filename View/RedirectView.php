@@ -28,6 +28,8 @@ class RedirectView
      * @param integer $statusCode
      * @param array   $headers
      *
+     * @return View
+     *
      * @deprecated To be removed in FOSRestBundle 2.0.0. Use View::createRedirect instead.
      */
     public static function create($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())

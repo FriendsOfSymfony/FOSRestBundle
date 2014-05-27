@@ -19,7 +19,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class ViolationFormatter implements ViolationFormatterInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function format(Param $param, ConstraintViolationInterface $violation)
     {
@@ -31,9 +31,9 @@ class ViolationFormatter implements ViolationFormatterInterface
             $violation->getMessage()
         );
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function formatList(Param $param, ConstraintViolationListInterface $violationList)
     {
@@ -44,5 +44,4 @@ class ViolationFormatter implements ViolationFormatterInterface
         }
         return $str;
     }
-    
 }
