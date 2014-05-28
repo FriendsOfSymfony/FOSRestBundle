@@ -8,6 +8,9 @@ This document will be updated to list important BC breaks and behavioral changes
  * RedirectView and RouteRedirect view were removed. Use View::createRedirect and
    View::createRouteRedirect instead. Note: the default status code for a route redirect
    has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
+
+### upgrading from 1.3.*
+
  * [`ViewHandler::getSerializationContext`](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/View/ViewHandler.php) is now a `protected` method instead of `public`.
 
 ### upgrading from 1.0.0-RC1
