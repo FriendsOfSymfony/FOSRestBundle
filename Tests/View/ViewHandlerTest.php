@@ -387,9 +387,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
 
         $viewHandler->setContainer($container);
+        $contextMethod = new \ReflectionMethod($viewHandler, 'getSerializationContext');
+        $contextMethod->setAccessible(true);
 
         $view = new View();
-        $context = $viewHandler->getSerializationContext($view);
+        $context = $contextMethod->invoke($viewHandler, $view);
         $this->assertEquals($expected, $context->shouldSerializeNull());
     }
 
@@ -535,8 +537,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setExclusionStrategyVersion('1.1');
         $viewHandler->setSerializeNullStrategy(true);
 
+        $contextMethod = new \ReflectionMethod($viewHandler, 'getSerializationContext');
+        $contextMethod->setAccessible(true);
+
         $view = new View();
-        $context = $viewHandler->getSerializationContext($view);
+        $context = $contextMethod->invoke($viewHandler, $view);
         $this->assertEquals(array('bar'), $context->attributes->get('groups')->getOrThrow(new \Exception('Serialization groups not set as expected')));
         $this->assertEquals('1.1', $context->attributes->get('version')->getOrThrow(new \Exception('Serialization version not set as expected')));
         $this->assertTrue($context->shouldSerializeNull());
