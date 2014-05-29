@@ -205,4 +205,9 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $this->testOnKernelRequest(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', 'application/foo', array(), true);
     }
 
+    public function testDoNotThrowUnsupportedMediaTypeHttpExceptionOnEmptyContentRequest()
+    {
+        $this->testOnKernelRequest(false, new Request(), 'DELETE', 'application/x-www-form-urlencoded', array(), true);
+    }
+
 }

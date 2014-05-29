@@ -77,24 +77,20 @@ class BodyListener
         if (!count($request->request->all())
             && in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))
         ) {
-            $contentType = $request->headers->get('Content-Type');
-
-            $format = null === $contentType
-                ? $request->getRequestFormat()
-                : $request->getFormat($contentType);
-
-            if (!$this->decoderProvider->supports($format)) {
-                if ($this->throwExceptionOnUnsupportedContentType) {
-                    throw new UnsupportedMediaTypeHttpException("Request body format '$format' not supported");
-                }
-
-                return;
-            }
-
-            $decoder = $this->decoderProvider->getDecoder($format);
             $content = $request->getContent();
 
             if (!empty($content)) {
+                $format = $this->getFormatFromRequest($request);
+
+                if (!$this->decoderProvider->supports($format) && !empty($content)) {
+                    if ($this->throwExceptionOnUnsupportedContentType) {
+                        throw new UnsupportedMediaTypeHttpException("Request body format '$format' not supported");
+                    }
+
+                    return;
+                }
+
+                $decoder = $this->decoderProvider->getDecoder($format);
                 $data = $decoder->decode($content, $format);
                 if (is_array($data)) {
                     if (null !== $this->arrayNormalizer) {
@@ -113,5 +109,14 @@ class BodyListener
                 }
             }
         }
+    }
+
+    private function getFormatFromRequest($request)
+    {
+        $contentType = $request->headers->get('Content-Type');
+
+        $format = (null === $contentType) ? $request->getRequestFormat() : $request->getFormat($contentType);
+
+        return $format;
     }
 }
