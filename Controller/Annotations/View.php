@@ -36,7 +36,7 @@ class View extends Template
     protected $serializerGroups;
 
     /**
-     * @var Boolean
+     * @var bool
      */
     protected $populateDefaultVars = true;
 
@@ -109,15 +109,15 @@ class View extends Template
     }
 
     /**
-     * @param Boolean $populateDefaultVars
+     * @param bool $populateDefaultVars
      */
     public function setPopulateDefaultVars($populateDefaultVars)
     {
-        $this->populateDefaultVars = (Boolean) $populateDefaultVars;
+        $this->populateDefaultVars = (bool) $populateDefaultVars;
     }
 
     /**
-     * @return Boolean
+     * @return bool
      */
     public function isPopulateDefaultVars()
     {

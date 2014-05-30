@@ -26,6 +26,7 @@ class FOSRestExtension extends Extension
      *
      * @param array            $configs
      * @param ContainerBuilder $container
+     *
      * @throws \InvalidArgumentException
      * @throws \LogicException
      */
@@ -242,9 +243,10 @@ class FOSRestExtension extends Extension
     }
 
     /**
-     * Check if an exception is loadable.
+     * Checks if an exception is loadable.
      *
-     * @param  string                   $exception class to test
+     * @param string $exception Class to test
+     *
      * @throws \InvalidArgumentException if the class was not found.
      */
     private function testExceptionExists($exception)

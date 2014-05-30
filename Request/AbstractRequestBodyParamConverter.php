@@ -29,23 +29,14 @@ use JMS\Serializer\SerializerInterface;
  */
 abstract class AbstractRequestBodyParamConverter implements ParamConverterInterface
 {
-    /**
-     * @var object
-     */
     protected $serializer;
-
-    /**
-     * @var array
-     */
     protected $context = array();
-
-    /**
-     * @var null|ValidatorInterface
-     */
     protected $validator;
 
     /**
-     * @var null|string The name of the argument on which the ConstraintViolationList will be set
+     * The name of the argument on which the ConstraintViolationList will be set.
+     *
+     * @var null|string
      */
     protected $validationErrorsArgument;
 
@@ -71,6 +62,7 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         if (!empty($groups)) {
             $this->context['groups'] = (array) $groups;
         }
+
         if (!empty($version)) {
             $this->context['version'] = $version;
         }
@@ -78,6 +70,7 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         if (null !== $validator && null === $validationErrorsArgument) {
             throw new \InvalidArgumentException('"$validationErrorsArgument" cannot be null when using the validator');
         }
+
         $this->validator = $validator;
         $this->validationErrorsArgument = $validationErrorsArgument;
     }
@@ -88,7 +81,7 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
      * @param Request        $request       The request
      * @param ParamConverter $configuration Contains the name, class and options of the object
      *
-     * @return boolean True if the object has been successfully set, else false
+     * @return bool True if the object has been successfully set, else false
      *
      * @throws UnsupportedMediaTypeHttpException
      * @throws BadRequestHttpException

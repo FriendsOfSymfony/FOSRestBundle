@@ -21,9 +21,6 @@ use FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsLoaderInterface;
  */
 class AllowedMethodsListener
 {
-    /**
-     * @var AllowedMethodsLoaderInterface
-     */
     private $loader;
 
     /**

@@ -13,7 +13,6 @@ namespace FOS\RestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\RedirectView;
 use FOS\RestBundle\View\RouteRedirectView;
@@ -27,13 +26,13 @@ use FOS\RestBundle\Util\Codes;
 abstract class FOSRestController extends Controller
 {
     /**
-     * Create a view
+     * Creates a view.
      *
      * Convenience method to allow for a fluent interface.
      *
-     * @param mixed   $data
-     * @param integer $statusCode
-     * @param array   $headers
+     * @param mixed $data
+     * @param int   $statusCode
+     * @param array $headers
      *
      * @return View
      */
@@ -43,13 +42,13 @@ abstract class FOSRestController extends Controller
     }
 
     /**
-     * Create a Redirect view
+     * Creates a Redirect view.
      *
      * Convenience method to allow for a fluent interface.
      *
-     * @param string  $url
-     * @param integer $statusCode
-     * @param array   $headers
+     * @param string $url
+     * @param int    $statusCode
+     * @param array  $headers
      *
      * @return View
      */
@@ -59,14 +58,14 @@ abstract class FOSRestController extends Controller
     }
 
     /**
-     * Create a Route Redirect View
+     * Creates a Route Redirect View.
      *
      * Convenience method to allow for a fluent interface.
      *
-     * @param string  $route
-     * @param mixed   $parameters
-     * @param integer $statusCode
-     * @param array   $headers
+     * @param string $route
+     * @param mixed  $parameters
+     * @param int    $statusCode
+     * @param array  $headers
      *
      * @return View
      */
@@ -76,7 +75,7 @@ abstract class FOSRestController extends Controller
     }
 
     /**
-     * Convert view into a response object.
+     * Converts view into a response object.
      *
      * Not necessary to use, if you are using the "ViewResponseListener", which
      * does this conversion automatically in kernel event "onKernelView".

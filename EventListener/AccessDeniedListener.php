@@ -30,15 +30,16 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 class AccessDeniedListener extends ExceptionListener
 {
     private $formats;
-
     private $challenge;
 
     /**
      * Constructor.
      *
-     * @param array $formats key value pairs of format names and if for the given format
-     *                          the exception should be intercepted to return a 403
-     * @param string $challenge
+     * @param array           $formats   An array with keys corresponding to request formats or content types
+     *                                   that must be processed by this listener
+     * @param string          $challenge
+     * @param string          $controller
+     * @param LoggerInterface $logger
      */
     public function __construct($formats, $challenge, $controller, LoggerInterface $logger = null)
     {
@@ -47,9 +48,6 @@ class AccessDeniedListener extends ExceptionListener
         parent::__construct($controller, $logger);
     }
 
-    /**
-     * @param GetResponseForExceptionEvent $event The event
-     */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         static $handling;

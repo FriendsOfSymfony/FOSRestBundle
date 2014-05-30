@@ -35,7 +35,7 @@ interface ConfigurableViewHandlerInterface extends ViewHandlerInterface
     /**
      * If nulls should be serialized
      *
-     * @param Boolean $isEnabled
+     * @param bool $isEnabled
      */
     public function setSerializeNullStrategy($isEnabled);
 }

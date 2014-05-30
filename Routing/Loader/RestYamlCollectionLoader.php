@@ -24,23 +24,19 @@ use FOS\RestBundle\Routing\RestRouteCollection;
 class RestYamlCollectionLoader extends YamlFileLoader
 {
     protected $collectionParents = array();
-
     private $processor;
-
     private $includeFormat;
-
     private $formats;
-
     private $defaultFormat;
 
     /**
      * Initializes yaml loader.
      *
-     * @param FileLocatorInterface $locator       locator
-     * @param RestRouteProcessor   $processor     route processor
-     * @param boolean              $includeFormat whether or not the requested view format must be included in the route path
-     * @param string[]             $formats       supported view formats
-     * @param string               $defaultFormat default view format
+     * @param FileLocatorInterface $locator
+     * @param RestRouteProcessor   $processor
+     * @param bool                 $includeFormat
+     * @param string[]             $formats
+     * @param string               $defaultFormat
      */
     public function __construct(
         FileLocatorInterface $locator,
@@ -58,14 +54,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
     }
 
     /**
-     * Loads a Yaml collection file.
-     *
-     * @param string $file A Yaml file path
-     * @param string $type The resource type
-     *
-     * @return RouteCollection A RouteCollection instance
-     *
-     * @throws \InvalidArgumentException When route can't be parsed
+     * {@inheritdoc}
      */
     public function load($file, $type = null)
     {
@@ -140,12 +129,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
     }
 
     /**
-     * Returns true if this class supports the given resource.
-     *
-     * @param mixed  $resource A resource
-     * @param string $type     The resource type
-     *
-     * @return Boolean true if this class supports the given resource, false otherwise
+     * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {

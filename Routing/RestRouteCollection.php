@@ -23,7 +23,7 @@ class RestRouteCollection extends RouteCollection
     private $singularName;
 
     /**
-     * Set collection singular name.
+     * Sets collection singular name.
      *
      * @param string $name Singular name
      */

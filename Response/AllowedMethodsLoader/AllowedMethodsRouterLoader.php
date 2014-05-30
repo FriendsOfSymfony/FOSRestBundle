@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the FOSRestBundle package.
  *
@@ -22,14 +23,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  */
 class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, CacheWarmerInterface
 {
-    /**
-     * @var RouterInterface
-     */
     private $router;
-
-    /**
-     * @var ConfigCache
-     */
     private $cache;
 
     /**
@@ -37,7 +31,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
      *
      * @param RouterInterface $router
      * @param string          $cacheDir
-     * @param boolean         $isDebug Kernel debug flag
+     * @param bool            $isDebug Kernel debug flag
      */
     public function __construct(RouterInterface $router, $cacheDir, $isDebug)
     {

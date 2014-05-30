@@ -43,8 +43,8 @@ class RestRouteProcessor
         $routePrefix = null,
         $namePrefix = null,
         $type = null,
-        $currentDir = null)
-    {
+        $currentDir = null
+    ) {
         $loader = $loader->resolve($resource, $type);
 
         if ($loader instanceof FileLoader && null !== $currentDir) {

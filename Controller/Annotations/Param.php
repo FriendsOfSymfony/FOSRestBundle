@@ -29,11 +29,11 @@ abstract class Param
     public $default = null;
     /** @var string */
     public $description;
-    /** @var boolean */
+    /** @var bool */
     public $strict = false;
-    /** @var boolean */
+    /** @var bool */
     public $array = false;
-    /** @var boolean */
+    /** @var bool */
     public $nullable = false;
 
     /**

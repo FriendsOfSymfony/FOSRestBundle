@@ -26,14 +26,7 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
  */
 class BodyListener
 {
-    /**
-     * @var DecoderProviderInterface
-     */
     private $decoderProvider;
-
-    /**
-     * @var boolean
-     */
     private $throwExceptionOnUnsupportedContentType;
 
     /**
@@ -44,8 +37,8 @@ class BodyListener
     /**
      * Constructor.
      *
-     * @param DecoderProviderInterface $decoderProvider Provider for fetching decoders
-     * @param boolean $throwExceptionOnUnsupportedContentType
+     * @param DecoderProviderInterface $decoderProvider
+     * @param bool                     $throwExceptionOnUnsupportedContentType
      */
     public function __construct(DecoderProviderInterface $decoderProvider, $throwExceptionOnUnsupportedContentType = false)
     {
@@ -64,9 +57,10 @@ class BodyListener
     }
 
     /**
-     * Core request handler
+     * Core request handler.
      *
-     * @param GetResponseEvent $event The event
+     * @param GetResponseEvent $event
+     *
      * @throws BadRequestHttpException
      * @throws UnsupportedMediaTypeHttpException
      */

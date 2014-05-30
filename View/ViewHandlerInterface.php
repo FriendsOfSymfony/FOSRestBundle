@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * ViewInterface
+ * ViewHandlerInterface.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
@@ -23,11 +23,11 @@ use Symfony\Component\HttpFoundation\Request;
 interface ViewHandlerInterface
 {
     /**
-     * Verifies whether the given format is supported by this view
+     * Verifies whether the given format is supported by this view.
      *
-     * @param string $format format name
+     * @param string $format
      *
-     * @return Boolean
+     * @return bool
      */
     public function supports($format);
 
@@ -38,27 +38,27 @@ interface ViewHandlerInterface
      * It can use the methods of this class to retrieve the needed data and return a
      * Response object ready to be sent.
      *
-     * @param string   $format   the format that is handled
-     * @param callable $callable callable that can handle the given format
+     * @param string   $format
+     * @param callable $callable
      */
     public function registerHandler($format, $callable);
 
     /**
-     * If the given format uses the templating system for rendering
+     * If the given format uses the templating system for rendering.
      *
      * @param string $format
      *
-     * @return Boolean
+     * @return bool
      */
     public function isFormatTemplating($format);
 
     /**
-     * Handles a request with the proper handler
+     * Handles a request with the proper handler.
      *
      * Decides on which handler to use based on the request format
      *
      * @param View    $view
-     * @param Request $request Request object
+     * @param Request $request
      *
      * @return Response
      */

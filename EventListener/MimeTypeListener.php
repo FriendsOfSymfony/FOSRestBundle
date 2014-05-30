@@ -22,21 +22,15 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class MimeTypeListener
 {
-    /**
-     * @var array
-     */
     private $mimeTypes;
-
-    /**
-     * @var FormatNegotiator
-     */
     private $formatNegotiator;
 
     /**
      * Constructor.
      *
-     * @param array            $mimeTypes        key format, value mime type
-     * @param FormatNegotiator $formatNegotiator the format Negotiator
+     * @param array            $mimeTypes        An array with the format as key and
+     *                                           the corresponding mime type as value
+     * @param FormatNegotiator $formatNegotiator
      */
     public function __construct(array $mimeTypes, FormatNegotiator $formatNegotiator)
     {

@@ -36,7 +36,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     private $extension;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $includeFormat;
 
@@ -424,7 +424,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      *
      * @param Definition $loader               loader definition
      * @param string     $loaderClassParameter loader class parameter name
-     * @param boolean    $includeFormat        whether or not the requested view format must be included in the route path
+     * @param bool       $includeFormat        whether or not the requested view format must be included in the route path
      * @param string[]   $formats              supported view formats
      * @param string     $defaultFormat        default view format
      */

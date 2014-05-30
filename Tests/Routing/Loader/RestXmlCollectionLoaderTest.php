@@ -112,7 +112,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      * Load routes collection from XML fixture routes under Tests\Fixtures directory.
      *
      * @param string   $fixtureName   name of the class fixture
-     * @param boolean  $includeFormat whether or not the requested view format must be included in the route path
+     * @param bool     $includeFormat whether or not the requested view format must be included in the route path
      * @param string[] $formats       supported view formats
      * @param string   $defaultFormat default view format
      * @return RouteCollection
