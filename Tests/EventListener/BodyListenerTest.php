@@ -180,6 +180,47 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelRequest($event);
     }
 
+    public function testOnKernelRequestDisabledRoutes()
+    {
+        $data = array('foo_bar' => 'foo_bar');
+
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
+        $decoder
+            ->expects($this->any())
+            ->method('decode')
+            ->will($this->returnValue($data));
+
+        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $decoderProvider
+            ->expects($this->any())
+            ->method('getDecoder')
+            ->will($this->returnValue($decoder));
+
+        $decoderProvider
+            ->expects($this->any())
+            ->method('supports')
+            ->will($this->returnValue(true));
+
+        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request->setMethod('POST');
+        $request->attributes->set('_route', 'some_disabled_route');
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $disabledRoutes = array('some_disabled_route', 'some_other_disabled_route');
+        $listener = new BodyListener($decoderProvider, false, $disabledRoutes);
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals('foo', $request->getContent());
+        $this->assertEquals(array(), $request->request->all());
+    }
+
     /**
      * Test that a malformed request will cause a BadRequestHttpException to be thrown
      */
