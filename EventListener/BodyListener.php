@@ -84,7 +84,7 @@ class BodyListener
         $method = $request->getMethod();
         $route = $request->attributes->get('_route');
 
-        if($this->isDisabledRoute($route)) {
+        if ($this->isDisabledRoute($route)) {
             return;
         }
 
