@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\Routing\Router;
 
 /**
  * This listener handles Request body decoding.
@@ -42,15 +43,22 @@ class BodyListener
     private $arrayNormalizer;
 
     /**
+     * @var array
+     */
+    private $disabledRoutes;
+
+    /**
      * Constructor.
      *
      * @param DecoderProviderInterface $decoderProvider Provider for fetching decoders
      * @param boolean $throwExceptionOnUnsupportedContentType
+     * @param array $disabledRoutes
      */
-    public function __construct(DecoderProviderInterface $decoderProvider, $throwExceptionOnUnsupportedContentType = false)
+    public function __construct(DecoderProviderInterface $decoderProvider, $throwExceptionOnUnsupportedContentType = false, $disabledRoutes = array())
     {
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
+        $this->disabledRoutes = $disabledRoutes;
     }
 
     /**
@@ -74,6 +82,11 @@ class BodyListener
     {
         $request = $event->getRequest();
         $method = $request->getMethod();
+        $route = $request->attributes->get('_route');
+
+        if ($this->isDisabledRoute($route)) {
+            return;
+        }
 
         if (!count($request->request->all())
             && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))
@@ -119,5 +132,16 @@ class BodyListener
     private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
     {
         return false === ('DELETE' === $method && empty($content) && null === $contentType);
+    }
+
+    /**
+     * Checks if the given route name is excluded in the configuration.
+     *
+     * @param $route
+     * @return bool
+     */
+    private function isDisabledRoute($route)
+    {
+        return in_array($route, $this->disabledRoutes);
     }
 }
