@@ -12,6 +12,7 @@ This document will be updated to list important BC breaks and behavioral changes
 ### upgrading from 1.3.*
 
  * [`ViewHandler::getSerializationContext`](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/View/ViewHandler.php) is now a `protected` method instead of `public`.
+ * BodyListener priority has been reverted back to 10 (see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/763)
 
 ### upgrading from 1.0.0-RC1
 
