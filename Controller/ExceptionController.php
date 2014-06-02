@@ -237,10 +237,10 @@ class ExceptionController extends ContainerAware
             'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : "error",
             'currentContent' => $currentContent,
             'message' => $this->getExceptionMessage($exception),
+            'exception' => $exception,
         );
 
         if ($viewHandler->isFormatTemplating($format)) {
-            $parameters['exception'] = $exception;
             $parameters['logger'] = $logger;
         }
 
