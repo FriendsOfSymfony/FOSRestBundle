@@ -32,18 +32,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      * @param array   $expectedParameters the http parameters of the updated request
      * @param string  $contentType        the request header content type
      * @param boolean $throwExceptionOnUnsupportedContentType
-     * @param string  $expectedRequestMethod
      *
      * @dataProvider testOnKernelRequestDataProvider
      */
-    public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false, $expectedRequestMethod = null)
+    public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false)
     {
-        if (!$expectedRequestMethod) {
-            $expectedRequestMethod = $method;
-        } else {
-            $request->enableHttpMethodParameterOverride();
-        }
-
         $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->disableOriginalConstructor()->getMock();
         $decoder->expects($this->any())
             ->method('decode')
@@ -80,7 +73,6 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals($request->request->all(), $expectedParameters);
-        $this->assertEquals($request->getMethod(), $expectedRequestMethod);
     }
 
     public static function testOnKernelRequestDataProvider()
@@ -94,9 +86,6 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), array('foo')), 'POST', array('bar'), 'application/json'),
             'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array(), 'application/fooformat'),
             'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', array('foo')),
-            'POST request with _method parameter and disabled method-override' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array("_method" => "PUT")), 'POST', array('_method' => 'PUT'), 'application/json'),
-            // This test is the last one, because you can't disable the http-method-override once it's enabled
-            'POST request with _method parameter' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array("_method" => "PUT")), 'POST', array('_method' => 'PUT'), 'application/json', false, "PUT"),
         );
     }
 

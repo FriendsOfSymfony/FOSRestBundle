@@ -109,9 +109,6 @@ class BodyListener
                         }
                     }
                     $request->request = new ParameterBag($data);
-
-                    // Reset the method in the current request to support method-overriding
-                    $request->setMethod($request->getRealMethod());
                 } else {
                     throw new BadRequestHttpException('Invalid ' . $format . ' message received');
                 }
