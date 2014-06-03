@@ -28,7 +28,7 @@ class ParamReader implements ParamReaderInterface
     /**
      * Initializes controller reader.
      *
-     * @param Reader $annotationReader annotation reader
+     * @param Reader $annotationReader
      */
     public function __construct(Reader $annotationReader)
     {
@@ -48,11 +48,12 @@ class ParamReader implements ParamReaderInterface
         $classParams = $this->getParamsFromClass($reflection);
         return array_merge($methodParams, $classParams);
     }
-    
+
     /**
      * Fetches parameters from provided annotation array (fetched from annotationReader)
-     * 
+     *
      * @param array $annotations
+     *
      * @return \FOS\RestBundle\Controller\Annotations\Param
      */
     private function getParamsFromAnnotationArray(array $annotations)
@@ -76,15 +77,15 @@ class ParamReader implements ParamReaderInterface
 
         return $this->getParamsFromAnnotationArray($annotations);
     }
-    
+
     /**
-     * 
+     *
      * {@inheritDoc}
      */
     public function getParamsFromClass(\ReflectionClass $class)
     {
         $annotations = $this->annotationReader->getClassAnnotations($class);
-        
+
         return $this->getParamsFromAnnotationArray($annotations);
     }
 }

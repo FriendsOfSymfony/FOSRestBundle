@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Routing;
 
 /**
  * Implement interface to define that missing resources in the methods should
- * use the class name to identify the resource
+ * use the class name to identify the resource.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */

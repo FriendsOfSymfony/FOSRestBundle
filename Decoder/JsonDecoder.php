@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Decoder;
 
 /**
- * Decodes JSON data
+ * Decodes JSON data.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */

@@ -24,9 +24,9 @@ class RedirectView
     /**
      * Convenience method to allow for a fluent interface.
      *
-     * @param string  $url
-     * @param integer $statusCode
-     * @param array   $headers
+     * @param string $url
+     * @param int    $statusCode
+     * @param array  $headers
      *
      * @return View
      *

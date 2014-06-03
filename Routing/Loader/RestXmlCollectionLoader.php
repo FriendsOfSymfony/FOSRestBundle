@@ -25,17 +25,16 @@ use Symfony\Component\Config\Util\XmlUtils;
 class RestXmlCollectionLoader extends XmlFileLoader
 {
     protected $collectionParents = array();
-
     private $processor;
 
     /**
      * Initializes xml loader.
      *
-     * @param FileLocatorInterface $locator   locator
-     * @param RestRouteProcessor   $processor route processor
-     * @param boolean              $includeFormat whether or not the requested view format must be included in the route path
-     * @param string[]             $formats       supported view formats
-     * @param string               $defaultFormat default view format
+     * @param FileLocatorInterface $locator
+     * @param RestRouteProcessor   $processor
+     * @param bool                 $includeFormat
+     * @param string[]             $formats
+     * @param string               $defaultFormat
      */
     public function __construct(
         FileLocatorInterface $locator,
@@ -125,6 +124,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                     break;
                 }
             }
+
             if (null === $format && !empty($this->formats)) {
                 $requirement = $node->ownerDocument->createElementNs(
                     self::NAMESPACE_URI,
@@ -133,10 +133,6 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 );
                 $requirement->setAttribute('key', '_format');
                 $node->appendChild($requirement);
-
-                /*$doc =new \DOMDocument();
-                $doc->appendChild($doc->importNode($node, true));
-                echo $doc->saveHTML();*/
             }
         }
 
@@ -156,12 +152,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * Returns true if this class supports the given resource.
-     *
-     * @param mixed  $resource A resource
-     * @param string $type     The resource type
-     *
-     * @return Boolean true if this class supports the given resource, false otherwise
+     * {@inheritDoc}
      */
     public function supports($resource, $type = null)
     {
@@ -213,7 +204,7 @@ EOF
             $this->validate($dom);
             return $dom;
         }
- 
+
         return parent::loadFile($file);
     }
 
@@ -244,5 +235,4 @@ EOF
 
         return $errors;
     }
-
 }

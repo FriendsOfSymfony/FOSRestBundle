@@ -50,35 +50,37 @@ class RestControllerReader
     /**
      * Reads controller routes.
      *
-     * @param \ReflectionClass $reflection
+     * @param \ReflectionClass $reflectionClass
      *
      * @return RestRouteCollection
+     *
+     * @throws \InvalidArgumentException
      */
-    public function read(\ReflectionClass $reflection)
+    public function read(\ReflectionClass $reflectionClass)
     {
         $collection = new RestRouteCollection();
-        $collection->addResource(new FileResource($reflection->getFileName()));
+        $collection->addResource(new FileResource($reflectionClass->getFileName()));
 
         // read prefix annotation
-        if ($annotation = $this->readClassAnnotation($reflection, 'Prefix')) {
+        if ($annotation = $this->readClassAnnotation($reflectionClass, 'Prefix')) {
             $this->actionReader->setRoutePrefix($annotation->value);
         }
 
         // read name-prefix annotation
-        if ($annotation = $this->readClassAnnotation($reflection, 'NamePrefix')) {
+        if ($annotation = $this->readClassAnnotation($reflectionClass, 'NamePrefix')) {
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
         $resource = array();
         // read route-resource annotation
-        if ($annotation = $this->readClassAnnotation($reflection, 'RouteResource')) {
+        if ($annotation = $this->readClassAnnotation($reflectionClass, 'RouteResource')) {
             $resource = explode('_', $annotation->resource);
-        } elseif ($reflection->implementsInterface('FOS\RestBundle\Routing\ClassResourceInterface')) {
+        } elseif ($reflectionClass->implementsInterface('FOS\RestBundle\Routing\ClassResourceInterface')) {
             $resource  = preg_split(
-                '/([A-Z][^A-Z]*)Controller/', $reflection->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+                '/([A-Z][^A-Z]*)Controller/', $reflectionClass->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
             );
             if (empty($resource)) {
-                throw new \InvalidArgumentException("Controller '{$reflection->name}' does not identify a resource");
+                throw new \InvalidArgumentException("Controller '{$reflectionClass->name}' does not identify a resource");
             }
         }
 
@@ -88,7 +90,7 @@ class RestControllerReader
         }
 
         // read action routes into collection
-        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             $this->actionReader->read($collection, $method, $resource);
         }
 
@@ -102,16 +104,16 @@ class RestControllerReader
     /**
      * Reads class annotations.
      *
-     * @param \ReflectionClass $reflection     controller class
-     * @param string           $annotationName annotation name
+     * @param \ReflectionClass $reflectionClass
+     * @param string           $annotationName
      *
-     * @return Annotation|null
+     * @return object|null
      */
-    private function readClassAnnotation(\ReflectionClass $reflection, $annotationName)
+    private function readClassAnnotation(\ReflectionClass $reflectionClass, $annotationName)
     {
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
-        if ($annotation = $this->annotationReader->getClassAnnotation($reflection, $annotationClass)) {
+        if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, $annotationClass)) {
             return $annotation;
         }
     }

@@ -42,6 +42,7 @@ class ViolationFormatter implements ViolationFormatterInterface
             if ($key > 0) $str .= "\n";
             $str .= $this->format($param, $violation);
         }
+
         return $str;
     }
 }

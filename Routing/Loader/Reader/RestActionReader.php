@@ -12,9 +12,7 @@
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
 use Doctrine\Common\Annotations\Reader;
-
 use Symfony\Component\Routing\Route;
-
 use FOS\RestBundle\Util\Inflector\InflectorInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Request\ParamReader;
@@ -32,24 +30,21 @@ class RestActionReader
     private $paramReader;
     private $inflector;
     private $formats;
-
     private $includeFormat;
-
     private $routePrefix;
     private $namePrefix;
     private $parents = array();
-
     private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options');
     private $availableConventionalActions = array('new', 'edit', 'remove');
 
     /**
      * Initializes controller reader.
      *
-     * @param Reader $annotationReader annotation reader
-     * @param ParamReader $paramReader query param reader
+     * @param Reader             $annotationReader
+     * @param ParamReader        $paramReader
      * @param InflectorInterface $inflector
-     * @param boolean $includeFormat
-     * @param array $formats
+     * @param bool               $includeFormat
+     * @param array              $formats
      */
     public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = array())
     {
@@ -61,7 +56,7 @@ class RestActionReader
     }
 
     /**
-     * Set routes prefix.
+     * Sets routes prefix.
      *
      * @param string $prefix Routes prefix
      */
@@ -81,7 +76,7 @@ class RestActionReader
     }
 
     /**
-     * Set route names prefix.
+     * Sets route names prefix.
      *
      * @param string $prefix Route names prefix
      */
@@ -123,11 +118,13 @@ class RestActionReader
     /**
      * Reads action route.
      *
-     * @param RestRouteCollection $collection route collection to read into
-     * @param \ReflectionMethod   $method     method reflection
-     * @param array $resource
+     * @param RestRouteCollection $collection
+     * @param \ReflectionMethod   $method
+     * @param array               $resource
      *
      * @return Route
+     *
+     * @throws \InvalidArgumentException
      */
     public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource)
     {
@@ -262,7 +259,7 @@ class RestActionReader
      *
      * @param \ReflectionMethod $method
      *
-     * @return Boolean
+     * @return bool
      */
     private function isMethodReadable(\ReflectionMethod $method)
     {
@@ -290,9 +287,9 @@ class RestActionReader
      * Returns HTTP method and resources list from method signature.
      *
      * @param \ReflectionMethod $method
-     * @param array $resource
+     * @param array             $resource
      *
-     * @return Boolean|array
+     * @return bool|array
      */
     private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource)
     {
@@ -390,8 +387,8 @@ class RestActionReader
     /**
      * Generates URL parts for route from resources list.
      *
-     * @param array $resources
-     * @param array $arguments
+     * @param array  $resources
+     * @param array  $arguments
      * @param string $httpMethod
      *
      * @return array
@@ -460,36 +457,35 @@ class RestActionReader
     /**
      * Returns first route annotation for method.
      *
-     * @param \ReflectionMethod $reflection
+     * @param \ReflectionMethod $reflectionMethod
      *
      * @return array|null
      */
-    private function readRouteAnnotation(\ReflectionMethod $reflection)
+    private function readRouteAnnotation(\ReflectionMethod $reflectionMethod)
     {
         $annotations = array();
 
         foreach ( array('Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options') as $annotationName) {
-            if ($annotations_new = $this->readMethodAnnotations($reflection, $annotationName)) {
+            if ($annotations_new = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
                 $annotations = array_merge($annotations, $annotations_new);
             }
         }
         return $annotations;
     }
 
-
     /**
      * Reads class annotations.
      *
-     * @param \ReflectionClass $reflection     controller class
-     * @param string           $annotationName annotation name
+     * @param \ReflectionClass $reflectionClass
+     * @param string           $annotationName
      *
-     * @return Annotation|null
+     * @return object|null
      */
-    private function readClassAnnotation(\ReflectionClass $reflection, $annotationName)
+    private function readClassAnnotation(\ReflectionClass $reflectionClass, $annotationName)
     {
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
-        if ($annotation = $this->annotationReader->getClassAnnotation($reflection, $annotationClass)) {
+        if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, $annotationClass)) {
             return $annotation;
         }
     }
@@ -497,53 +493,52 @@ class RestActionReader
     /**
      * Reads method annotations.
      *
-     * @param \ReflectionMethod $reflection     controller action
-     * @param string            $annotationName annotation name
+     * @param \ReflectionMethod $reflectionMethod
+     * @param string            $annotationName
      *
-     * @return Annotation|null
+     * @return object|null
      */
-    private function readMethodAnnotation(\ReflectionMethod $reflection, $annotationName)
+    private function readMethodAnnotation(\ReflectionMethod $reflectionMethod, $annotationName)
     {
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
-        if ($annotation = $this->annotationReader->getMethodAnnotation($reflection, $annotationClass)) {
+        if ($annotation = $this->annotationReader->getMethodAnnotation($reflectionMethod, $annotationClass)) {
             return $annotation;
         }
     }
+
     /**
      * Reads method annotations.
      *
-     * @param \ReflectionMethod $reflection     controller action
-     * @param string            $annotationName annotation name
+     * @param \ReflectionMethod $reflectionMethod
+     * @param string            $annotationName
      *
      * @return array|null
      */
-    private function readMethodAnnotations(\ReflectionMethod $reflection, $annotationName)
+    private function readMethodAnnotations(\ReflectionMethod $reflectionMethod, $annotationName)
     {
-
         $annotations = array();
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
-        if ($annotations_new = $this->annotationReader->getMethodAnnotations($reflection)) {
+        if ($annotations_new = $this->annotationReader->getMethodAnnotations($reflectionMethod)) {
 
             foreach($annotations_new as $annotation) {
                 if ($annotation instanceof $annotationClass) {
                     $annotations[]= $annotation;
-
                 }
             }
-
-
         }
+
         return $annotations;
     }
 
     /**
      * @param RestRouteCollection $collection
-     * @param $routeName
-     * @param $route
-     * @param $isCollection
-     * @param null $annotation
+     * @param string              $routeName
+     * @param Route               $route
+     * @param bool                $isCollection
+     * @param bool                $isInflectable
+     * @param object              $annotation
      */
     private function addRoute(RestRouteCollection $collection, $routeName, $route, $isCollection, $isInflectable, $annotation = null)
     {

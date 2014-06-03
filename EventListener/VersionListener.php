@@ -17,25 +17,30 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class VersionListener
 {
-    /** @var ViewHandlerInterface */
     private $viewHandler;
-
-    /** @var string */
     private $regex;
-
-    /** @var string */
     private $version = false;
-
-    public function getVersion()
-    {
-        return $this->version;
-    }
 
     public function __construct(ViewHandlerInterface $viewHandler)
     {
         $this->viewHandler = $viewHandler;
     }
 
+    /**
+     * Gets the version.
+     *
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Sets the regex.
+     *
+     * @param string $regex
+     */
     public function setRegex($regex)
     {
         $this->regex = $regex;

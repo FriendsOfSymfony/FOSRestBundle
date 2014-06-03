@@ -24,10 +24,12 @@ class RouteRedirectView
     /**
      * Convenience method to allow for a fluent interface.
      *
-     * @param string  $route
-     * @param array   $parameters
-     * @param integer $statusCode
-     * @param array   $headers
+     * @param string $route
+     * @param array  $parameters
+     * @param int    $statusCode
+     * @param array  $headers
+     *
+     * @return View
      *
      * @deprecated To be removed in FOSRestBundle 2.0.0. Use View::createRouteRedirect instead.
      */

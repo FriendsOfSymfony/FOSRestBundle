@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * This listener handles various setup tasks related to the query fetcher
+ * This listener handles various setup tasks related to the query fetcher.
  *
  * Setting the controller callable on the query fetcher
  * Setting the query fetcher as a request attribute
@@ -24,18 +24,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ParamFetcherListener
 {
-    /**
-     * @var ContainerInterface
-     */
     private $container;
-
     private $setParamsAsAttributes;
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container             container
-     * @param boolean            $setParamsAsAttributes params as attributes
+     * @param ContainerInterface $container
+     * @param bool               $setParamsAsAttributes
      */
     public function __construct(ContainerInterface $container, $setParamsAsAttributes = false)
     {
@@ -44,9 +40,10 @@ class ParamFetcherListener
     }
 
     /**
-     * Core controller handler
+     * Core controller handler.
      *
-     * @param FilterControllerEvent $event The event
+     * @param FilterControllerEvent $event
+     *
      * @throws \InvalidArgumentException
      */
     public function onKernelController(FilterControllerEvent $event)
@@ -75,14 +72,15 @@ class ParamFetcherListener
      * Determines which attribute the ParamFetcher should be injected as.
      *
      * @param array $controller The controller action an an "array" callable.
-     * @return string The name of the ParamFetcher attribute.
+     *
+     * @return string
      */
     private function getAttributeName(array $controller)
     {
         list($object, $name) = $controller;
         $method = new \ReflectionMethod($object, $name);
-        foreach ( $method->getParameters() as $param ) {
-            if ( $this->isParamFetcherType($param) ) {
+        foreach ($method->getParameters() as $param) {
+            if ($this->isParamFetcherType($param)) {
                 return $param->getName();
             }
         }
@@ -95,16 +93,17 @@ class ParamFetcherListener
      * Returns true if the given controller parameter is type-hinted as
      * an instance of ParamFetcher.
      *
-     * @param \ReflectionParameter $controllerParam A parameter of the
-     *   controller action.
-     * @return boolean
+     * @param \ReflectionParameter $controllerParam A parameter of the controller action.
+     *
+     * @return bool
      */
     private function isParamFetcherType(\ReflectionParameter $controllerParam)
     {
         $type = $controllerParam->getClass();
-        if ( null === $type ) {
+        if (null === $type) {
             return false;
         }
+
         return 'FOS\\RestBundle\\Request\\ParamFetcher' === $type->getName();
     }
 }

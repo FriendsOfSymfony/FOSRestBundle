@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Decoder;
 
 /**
- * Decodes JSON data and make it compliant with application/x-www-form-encoded style
+ * Decodes JSON data and make it compliant with application/x-www-form-encoded style.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */

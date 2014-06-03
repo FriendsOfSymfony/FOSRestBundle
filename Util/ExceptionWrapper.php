@@ -12,23 +12,12 @@
 namespace FOS\RestBundle\Util;
 
 /**
- * Wraps an exception into the FOSRest exception format
+ * Wraps an exception into the FOSRest exception format.
  */
 class ExceptionWrapper
 {
-    /**
-     * @var string
-     */
     private $code;
-
-    /**
-     * @var string
-     */
     private $message;
-
-    /**
-     * @var mixed
-     */
     private $errors;
 
     /**

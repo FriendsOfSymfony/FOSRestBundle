@@ -19,18 +19,18 @@ namespace FOS\RestBundle\Decoder;
 interface DecoderProviderInterface
 {
     /**
-     * Check if a certain format is supported.
+     * Checks if a certain format is supported.
      *
-     * @param string $format Format for the requested decoder.
+     * @param string $format
      *
-     * @return boolean
+     * @return bool
      */
     public function supports($format);
 
     /**
      * Provides decoders, possibly lazily.
      *
-     * @param string $format Format for the requested decoder.
+     * @param string $format
      *
      * @return \FOS\RestBundle\Decoder\DecoderInterface
      */

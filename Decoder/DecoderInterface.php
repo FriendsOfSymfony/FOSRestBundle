@@ -19,11 +19,11 @@ namespace FOS\RestBundle\Decoder;
 interface DecoderInterface
 {
     /**
-     * Decodes a string into PHP data
+     * Decodes a string into PHP data.
      *
-     * @param string $data data to decode
+     * @param string $data
      *
-     * @return array|Boolean false in case the content could not be decoded, else an array
+     * @return array|bool False in case the content could not be decoded, else an array
      */
     public function decode($data);
 }
