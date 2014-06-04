@@ -3,17 +3,17 @@ Full default configuration
 
 ```yaml
 fos_rest:
-    disable_csrf_role:    ~
+    disable_csrf_role:    null
     access_denied_listener:
-    unauthorized_challenge: ~
 
         # Prototype
-        name:                 []
+        name:                 ~
+    unauthorized_challenge:  null
     param_fetcher_listener:  false
-    cache_dir:            %kernel.cache_dir%/fos_rest
+    cache_dir:            '%kernel.cache_dir%/fos_rest'
     allowed_methods_listener:  false
     routing_loader:
-        default_format:       ~
+        default_format:       null
         include_format:       true
     body_converter:
         enabled:              false
@@ -22,12 +22,12 @@ fos_rest:
     service:
         router:               router
         templating:           templating
-        serializer:           jms_serializer.serializer
+        serializer:           null
         view_handler:         fos_rest.view_handler.default
         inflector:            fos_rest.inflector.doctrine
         validator:            validator
     serializer:
-        version:              ~
+        version:              null
         groups:               []
         serialize_null:       false
     view:
@@ -35,19 +35,19 @@ fos_rest:
         force_redirects:
 
             # Prototype
-            name:                 []
+            name:                 ~
         mime_types:
 
             # Prototype
-            name:                 []
+            name:                 ~
         formats:
 
             # Prototype
-            name:                 []
+            name:                 ~
         templating_formats:
 
             # Prototype
-            name:                 []
+            name:                 ~
         view_response_listener:  false
         failed_validation:    400
         empty_content:        204
@@ -55,38 +55,40 @@ fos_rest:
         serialize_null:       false
         jsonp_handler:
             callback_param:       callback
+            callback_filter:      '/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i'
             mime_type:            application/javascript+jsonp
     exception:
         codes:
 
             # Prototype
-            name:                 []
+            name:                 ~
         messages:
 
             # Prototype
-            name:                 []
+            name:                 ~
     body_listener:
-        throw_exception_on_unsupported_content_type: false
+        throw_exception_on_unsupported_content_type:  false
         decoders:
 
             # Prototype
-            name:                 []
+            name:                 ~
+        array_normalizer:     null
     format_listener:
         rules:
 
             # Prototype array
             -
                 # URL path info
-                path:                 ~
+                path:                 null
 
                 # URL host name
-                host:                 ~
+                host:                 null
+
+                # Method for URL
+                methods:              null
                 prefer_extension:     true
                 fallback_format:      html
-                priorities:
-
-                    # Prototype
-                    name:                 []
+                priorities:           []
         media_type:
             version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
 ```
