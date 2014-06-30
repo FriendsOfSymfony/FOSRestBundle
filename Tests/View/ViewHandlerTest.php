@@ -202,7 +202,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $container->set('fos_rest.serializer', $serializer);
-        $container->set('fos_rest.view.exception_wrapper_handler', new ExceptionWrapperHandler());
+        $container->set('fos_rest.exception_handler', new ExceptionWrapperHandler());
 
         //test
         $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Codes::HTTP_I_AM_A_TEAPOT);
@@ -302,7 +302,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with($this->logicalOr(
                   $this->equalTo('fos_rest.serializer'),
-                  $this->equalTo('fos_rest.view.exception_wrapper_handler')
+                  $this->equalTo('fos_rest.exception_handler')
               ))
             ->will(
                   $this->returnCallback(
@@ -310,7 +310,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                             switch ($method) {
                                 case 'fos_rest.serializer':
                                     return $serializer;
-                                case 'fos_rest.view.exception_wrapper_handler':
+                                case 'fos_rest.exception_handler':
                                     return new ExceptionWrapperHandler();
                             }
                       }

@@ -8,7 +8,7 @@
         <parameter key="fos_rest.serializer.exclusion_strategy.version" />
         <parameter key="fos_rest.serializer.exclusion_strategy.groups"/>
         <parameter key="fos_rest.view_handler.jsonp.callback_param"/>
-        <parameter key="fos_rest.view.exception_wrapper_handler" />
+        <parameter key="fos_rest.exception_handler.default.class">FOS\RestBundle\View\ExceptionWrapperHandler</parameter>
         <parameter key="fos_rest.view_handler.default.class">FOS\RestBundle\View\ViewHandler</parameter>
         <parameter key="fos_rest.view_handler.jsonp.class">FOS\RestBundle\View\JsonpHandler</parameter>
     </parameters>
@@ -40,7 +40,8 @@
             <argument>%fos_rest.view_handler.jsonp.callback_param%</argument>
         </service>
 
-        <service id="fos_rest.view.exception_wrapper_handler" class="%fos_rest.view.exception_wrapper_handler%" />
+        <service id="fos_rest.exception_handler.default" class="%fos_rest.exception_handler.default.class%" public="false">
+        </service>
 
     </services>
 </container>
