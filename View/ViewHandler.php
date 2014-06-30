@@ -500,7 +500,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
         }
 
         /** @var ExceptionWrapperHandlerInterface $exceptionWrapperHandler */
-        $exceptionWrapperHandler = $this->container->get('fos_rest.view.exception_wrapper_handler');
+        $exceptionWrapperHandler = $this->container->get('fos_rest.exception_handler');
 
         return $exceptionWrapperHandler->wrap(
             array(

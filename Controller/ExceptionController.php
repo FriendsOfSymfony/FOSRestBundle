@@ -41,7 +41,7 @@ class ExceptionController extends ContainerAware
     protected function createExceptionWrapper(array $parameters)
     {
         /** @var ExceptionWrapperHandlerInterface $exceptionWrapperHandler */
-        $exceptionWrapperHandler = $this->container->get('fos_rest.view.exception_wrapper_handler');
+        $exceptionWrapperHandler = $this->container->get('fos_rest.exception_handler');
 
         return $exceptionWrapperHandler->wrap($parameters);
     }
