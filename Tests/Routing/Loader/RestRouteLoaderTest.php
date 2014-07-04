@@ -267,6 +267,18 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/770
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/792
+     */
+    public function testNamePrefixIsPrependingCorrectly()
+    {
+        $collection = $this->loadFromControllerFixture('InformationController', 'prefix_');
+
+        $this->assertNotNull($collection->get('prefix_get_information'));
+        $this->assertNotNull($collection->get('prefix_cget_information'));
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param string $fixtureName name of the class fixture

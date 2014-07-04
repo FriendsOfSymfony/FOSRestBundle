@@ -179,7 +179,7 @@ class RestActionReader
         }
 
         // generated parameters
-        $routeName    = $this->namePrefix.strtolower($routeName);
+        $routeName    = strtolower($routeName);
         $pattern      = implode('/', $urlParts);
         $defaults     = array('_controller' => $method->getName());
         $requirements = array('_method' => strtoupper($httpMethod));
@@ -546,13 +546,15 @@ class RestActionReader
             $routeName = $routeName.$annotation->getName();
         }
 
+        $fullRouteName = $this->namePrefix.$routeName;
+
         if ($isCollection && !$isInflectable) {
-            $collection->add(self::COLLECTION_ROUTE_PREFIX.$routeName, $route);
-            if (!$collection->get($routeName)) {
-                $collection->add($routeName, clone $route);
+            $collection->add($this->namePrefix.self::COLLECTION_ROUTE_PREFIX.$routeName, $route);
+            if (!$collection->get($fullRouteName)) {
+                $collection->add($fullRouteName, clone $route);
             }
         } else {
-            $collection->add($routeName, $route);
+            $collection->add($fullRouteName, $route);
         }
     }
 }
