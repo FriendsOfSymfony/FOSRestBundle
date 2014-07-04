@@ -6,13 +6,21 @@ php:
   - 5.5
 
 env:
-  - SYMFONY_VERSION=2.2.*
-  - SYMFONY_VERSION=2.3.*
-  - SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.* symfony/routing:2.4.*'
-  - SYMFONY_VERSION=2.4.*
-  - SYMFONY_VERSION='dev-master symfony/event-dispatcher:~2.5@dev symfony/http-kernel:~2.5@dev'
+  - SYMFONY_VERSION=2.5.*
+
+matrix:
+  allow_failures:
+    - env: SYMFONY_VERSION=dev-master
+  include:
+    - php: 5.5
+      env: SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.* symfony/routing:2.4.*'
+    - php: 5.5
+      env: SYMFONY_VERSION=2.4.*
+    - php: 5.5
+      env: SYMFONY_VERSION='dev-master symfony/debug:~2.6@dev symfony/http-kernel:~2.6@dev'
 
 before_script:
+  - composer self-update
   - composer require symfony/framework-bundle:${SYMFONY_VERSION} --no-update
   - composer update --prefer-source
 
