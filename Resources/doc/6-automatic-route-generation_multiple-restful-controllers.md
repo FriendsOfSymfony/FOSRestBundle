@@ -58,7 +58,7 @@ class UsersController extends Controller
 }
 ```
 
-It's used to determine the parent collection name. Controller name itself not used in routes
+It's used to determine the parent collection name. Controller name itself is not used in routes
 auto-generation process and can be any name you like.
 
 ## Define child resource controller
