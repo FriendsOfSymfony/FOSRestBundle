@@ -73,6 +73,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $namePrefix = isset($config['name_prefix']) ? $config['name_prefix']    : null;
                 $parent     = isset($config['parent'])      ? $config['parent']         : null;
                 $type       = isset($config['type'])        ? $config['type']           : null;
+                $options    = isset($config['options'])     ? $config['options']        : null;
                 $currentDir = dirname($path);
 
                 $parents = array();
@@ -91,6 +92,10 @@ class RestYamlCollectionLoader extends YamlFileLoader
                     $prefix     = null;
 
                     $this->collectionParents[$name] = $parents;
+                }
+
+                if ($options) {
+                    $this->addOptionsToRoutes($options, $imported);
                 }
 
                 $imported->addPrefix($prefix);
@@ -136,5 +141,12 @@ class RestYamlCollectionLoader extends YamlFileLoader
         return is_string($resource) &&
             'yml' === pathinfo($resource, PATHINFO_EXTENSION) &&
             'rest' === $type;
+    }
+
+    protected function addOptionsToRoutes($options, RouteCollection $routesCollection)
+    {
+        foreach ($routesCollection as $route) {
+            $route->addOptions($options);
+        }
     }
 }
