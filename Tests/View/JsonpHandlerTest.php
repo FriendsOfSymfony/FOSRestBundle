@@ -62,7 +62,7 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
 
         $response = $viewHandler->handle($view, $request);
 
-        $this->assertEquals(reset($query).'('.var_export($data, true).')', $response->getContent());
+        $this->assertEquals('/**/'.reset($query).'('.var_export($data, true).')', $response->getContent());
     }
 
     public static function handleDataProvider()

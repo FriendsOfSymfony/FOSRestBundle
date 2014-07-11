@@ -304,6 +304,15 @@ fos_rest:
             callback_param:       false
 ```
 
+When working with JSONP, be aware of
+[CVE-2014-4671](http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2014-4671)
+(full explanation can be found here: [Abusing JSONP with Rosetta
+Flash](http://miki.it/blog/2014/7/8/abusing-jsonp-with-rosetta-flash/)). You
+SHOULD use
+[NelmioSecurityBundle](https://github.com/nelmio/NelmioSecurityBundle) and
+[disable the content type sniffing for script
+resources](https://github.com/nelmio/NelmioSecurityBundle#content-type-sniffing).
+
 #### CSRF validation
 
 When building a single application that should handle forms both via HTML forms as well
