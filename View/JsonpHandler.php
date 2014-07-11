@@ -57,7 +57,7 @@ class JsonpHandler
 
         if ($response->isSuccessful()) {
             $callback = $this->getCallback($request);
-            $response->setContent($callback.'('.$response->getContent().')');
+            $response->setContent(sprintf('/**/%s(%s)', $callback, $response->getContent()));
             $response->headers->set('Content-Type', $request->getMimeType($format));
         }
 
