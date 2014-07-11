@@ -92,6 +92,15 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $this->assertEquals(count($names), count(array_unique($names)));
     }
 
+    public function testForwardOptions()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('routes_with_options.yml');
+
+        foreach ($collection as $route) {
+            $this->assertTrue($route->getOption('expose'));
+        }
+    }
+
     public function testManualRoutes()
     {
         $collection = $this->loadFromYamlCollectionFixture('routes.yml');
