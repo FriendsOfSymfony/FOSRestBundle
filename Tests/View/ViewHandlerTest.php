@@ -17,6 +17,7 @@ use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
+use JMS\Serializer\Exclusion\GroupsExclusionStrategy;
 use JMS\Serializer\Handler\FormErrorHandler;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\SerializerBuilder;
@@ -557,13 +558,18 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($context->shouldSerializeNull());
     }
 
-    public function testCreateResponseWithFormErrorsAndSerializationGroups()
+    /**
+     * @dataProvider exceptionWrapperSerializeResponseContentProvider
+     * @param string $format
+     */
+    public function testCreateResponseWithFormErrorsAndSerializationGroups($format)
     {
-        $builder = Forms::createFormFactory()->createBuilder();
-        $form = $builder
+        $form = Forms::createFormFactory()->createBuilder()
             ->add('name', 'text')
             ->add('description', 'text')
             ->getForm();
+
+        $form->get('name')->addError(new FormError('Invalid name'));
 
         $exceptionWrapper = new ExceptionWrapper(
             array(
@@ -576,43 +582,22 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $view = new View($exceptionWrapper);
         $view->getSerializationContext()->setGroups(array('Custom'));
 
-        $handler = new ExceptionWrapperSerializeHandler();
-        $formErrorHandlerMock = $this->getMock(
-            'JMS\Serializer\Handler\FormErrorHandler',
-            array('serializeFormToJson'),
-            array(),
-            '',
-            false
+        $wrapperHandler = new ExceptionWrapperSerializeHandler();
+        $translatorMock = $this->getMock(
+            'Symfony\\Component\\Translation\\TranslatorInterface',
+            array('trans', 'transChoice', 'setLocale', 'getLocale')
         );
-        $formErrorHandlerMock
-            ->expects($this->once())
-            ->method('serializeFormToJson')
-            ->with(
-                $this->isInstanceOf('JMS\\Serializer\\JsonSerializationVisitor'),
-                $form,
-                array(
-                    'name' => 'Symfony\Component\Form\Form',
-                    'params' => array()
-                )
-            )
-            ->will(
-                $this->returnValue(
-                    array(
-                        'children' => array(
-                            'name' => array(
-                                'errors' => array(
-                                    'Invalid name'
-                                )
-                            ),
-                        )
-                    )
-                )
-            );
+        $translatorMock
+            ->expects($this->any())
+            ->method('trans')
+            ->will($this->returnArgument(0));
+
+        $formErrorHandler = new FormErrorHandler($translatorMock);
 
         $serializer = SerializerBuilder::create()
-            ->configureHandlers(function (HandlerRegistry $handlerRegistry) use ($handler, $formErrorHandlerMock) {
-                $handlerRegistry->registerSubscribingHandler($handler);
-                $handlerRegistry->registerSubscribingHandler($formErrorHandlerMock);
+            ->configureHandlers(function (HandlerRegistry $handlerRegistry) use ($wrapperHandler, $formErrorHandler) {
+                $handlerRegistry->registerSubscribingHandler($wrapperHandler);
+                $handlerRegistry->registerSubscribingHandler($formErrorHandler);
             })
             ->build();
 
@@ -626,22 +611,38 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(array());
         $viewHandler->setContainer($container);
 
-        $response = $viewHandler->createResponse($view, new Request(), 'json');
+        $response = $viewHandler->createResponse($view, new Request(), $format);
 
-        $expected = array(
-            'code' => 400,
-            'message' => 'Validation Failed',
-            'errors' => array(
-                'children' => array(
-                    'name' => array(
-                        'errors' => array(
-                            'Invalid name'
-                        )
-                    )
-                )
-            )
+        $serializer2 = SerializerBuilder::create()
+            ->configureHandlers(function (HandlerRegistry $handlerRegistry) use ($wrapperHandler, $formErrorHandler) {
+                $handlerRegistry->registerSubscribingHandler($formErrorHandler);
+            })
+            ->build();
+
+        $container2 = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
+        $container2
+            ->expects($this->once())
+            ->method('get')
+            ->with('fos_rest.serializer')
+            ->will($this->returnValue($serializer2));
+
+        $viewHandler = new ViewHandler(array());
+        $viewHandler->setContainer($container2);
+
+        $view2 = new View($exceptionWrapper);
+        $response2 = $viewHandler->createResponse($view2, new Request(), $format);
+
+        $this->assertEquals($response->getContent(), $response2->getContent());
+    }
+
+    /**
+     * @return array
+     */
+    public function exceptionWrapperSerializeResponseContentProvider()
+    {
+        return array(
+            'json' => array('json'),
+            'xml' => array('xml')
         );
-
-        $this->assertEquals($expected, json_decode($response->getContent(), true));
     }
 }
