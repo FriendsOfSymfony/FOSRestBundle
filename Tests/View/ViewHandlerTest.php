@@ -11,12 +11,22 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler;
+use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
+use JMS\Serializer\Handler\FormErrorHandler;
+use JMS\Serializer\Handler\HandlerRegistry;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use FOS\RestBundle\Util\Codes;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormView;
@@ -545,5 +555,93 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('bar'), $context->attributes->get('groups')->getOrThrow(new \Exception('Serialization groups not set as expected')));
         $this->assertEquals('1.1', $context->attributes->get('version')->getOrThrow(new \Exception('Serialization version not set as expected')));
         $this->assertTrue($context->shouldSerializeNull());
+    }
+
+    public function testCreateResponseWithFormErrorsAndSerializationGroups()
+    {
+        $builder = Forms::createFormFactory()->createBuilder();
+        $form = $builder
+            ->add('name', 'text')
+            ->add('description', 'text')
+            ->getForm();
+
+        $exceptionWrapper = new ExceptionWrapper(
+            array(
+                'status_code' => 400,
+                'message' => 'Validation Failed',
+                'errors' => $form
+            )
+        );
+
+        $view = new View($exceptionWrapper);
+        $view->getSerializationContext()->setGroups(array('Custom'));
+
+        $handler = new ExceptionWrapperSerializeHandler();
+        $formErrorHandlerMock = $this->getMock(
+            'JMS\Serializer\Handler\FormErrorHandler',
+            array('serializeFormToJson'),
+            array(),
+            '',
+            false
+        );
+        $formErrorHandlerMock
+            ->expects($this->once())
+            ->method('serializeFormToJson')
+            ->with(
+                $this->isInstanceOf('JMS\\Serializer\\JsonSerializationVisitor'),
+                $form,
+                array(
+                    'name' => 'Symfony\Component\Form\Form',
+                    'params' => array()
+                )
+            )
+            ->will(
+                $this->returnValue(
+                    array(
+                        'children' => array(
+                            'name' => array(
+                                'errors' => array(
+                                    'Invalid name'
+                                )
+                            ),
+                        )
+                    )
+                )
+            );
+
+        $serializer = SerializerBuilder::create()
+            ->configureHandlers(function (HandlerRegistry $handlerRegistry) use ($handler, $formErrorHandlerMock) {
+                $handlerRegistry->registerSubscribingHandler($handler);
+                $handlerRegistry->registerSubscribingHandler($formErrorHandlerMock);
+            })
+            ->build();
+
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with('fos_rest.serializer')
+            ->will($this->returnValue($serializer));
+
+        $viewHandler = new ViewHandler(array());
+        $viewHandler->setContainer($container);
+
+        $response = $viewHandler->createResponse($view, new Request(), 'json');
+
+        $expected = array(
+            'code' => 400,
+            'message' => 'Validation Failed',
+            'errors' => array(
+                'children' => array(
+                    'name' => array(
+                        'errors' => array(
+                            'Invalid name'
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->assertEquals($expected, json_decode($response->getContent(), true));
     }
 }
