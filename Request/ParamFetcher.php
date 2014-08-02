@@ -83,6 +83,7 @@ class ParamFetcher implements ParamFetcherInterface
         $config   = $this->params[$name];
         $nullable = $config->nullable;
         $default  = $config->default;
+        $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
         if ($config->array) {
             $default = (array) $default;
@@ -103,7 +104,9 @@ class ParamFetcher implements ParamFetcherInterface
         if ($config->array) {
             if (!is_array($param)) {
                 if ($strict) {
-                    throw new BadRequestHttpException(sprintf("Query parameter value of '%s' is not an array", $name));
+                    throw new BadRequestHttpException(
+                        sprintf("% parameter value of '%s' is not an array", $paramType, $name)
+                    );
                 }
 
                 return $default;
@@ -120,7 +123,6 @@ class ParamFetcher implements ParamFetcherInterface
         if (!is_scalar($param)) {
             if (!$nullable) {
                 if ($strict) {
-                    $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
                     $problem = empty($param) ? 'empty' : 'not a scalar';
 
                     throw new BadRequestHttpException(
@@ -150,6 +152,7 @@ class ParamFetcher implements ParamFetcherInterface
     public function cleanParamWithRequirements(Param $config, $param, $strict)
     {
         $default = $config->default;
+        $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
         if (null !== $config->requirements && null === $this->validator) {
             throw new \RuntimeException(
@@ -166,7 +169,9 @@ class ParamFetcher implements ParamFetcherInterface
         if (is_scalar($constraint)) {
             if (is_array($param)) {
                 if ($strict) {
-                    throw new BadRequestHttpException("Query parameter is an array");
+                    throw new BadRequestHttpException(
+                        sprintf("%s parameter is an array", $paramType)
+                    );
                 }
 
                 return $default;
@@ -176,7 +181,7 @@ class ParamFetcher implements ParamFetcherInterface
                 'pattern' => '#^'.$config->requirements.'$#xsu',
                 'message' => sprintf(
                     "%s parameter value '%s', does not match requirements '%s'",
-                    $config instanceof QueryParam ? 'Query' : 'Request',
+                    $paramType,
                     $param,
                     $config->requirements
                 )
