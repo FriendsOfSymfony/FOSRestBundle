@@ -93,7 +93,6 @@ class RestYamlCollectionLoader extends YamlFileLoader
                     $this->collectionParents[$name] = $parents;
                 }
 
-                $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
             } elseif (isset($config['pattern']) || isset($config['path'])) {
                 // the YamlFileLoader of the Routing component only checks for
