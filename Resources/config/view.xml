@@ -11,6 +11,7 @@
         <parameter key="fos_rest.view.exception_wrapper_handler" />
         <parameter key="fos_rest.view_handler.default.class">FOS\RestBundle\View\ViewHandler</parameter>
         <parameter key="fos_rest.view_handler.jsonp.class">FOS\RestBundle\View\JsonpHandler</parameter>
+        <parameter key="fos_rest.serializer.exception_wrapper_serialize_handler.class">FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler</parameter>
     </parameters>
 
     <services>
@@ -41,6 +42,10 @@
         </service>
 
         <service id="fos_rest.view.exception_wrapper_handler" class="%fos_rest.view.exception_wrapper_handler%" />
+
+        <service id="fos_rest.serializer.exception_wrapper_serialize_handler" class="%fos_rest.serializer.exception_wrapper_serialize_handler.class%">
+            <tag name="jms_serializer.subscribing_handler" />
+        </service>
 
     </services>
 </container>
