@@ -85,12 +85,8 @@ RestBundle extends the [@Route](http://symfony.com/doc/current/bundles/SensioFra
 
 @Delete @Get @Head @Link @Patch @Post @Put @Unlink have the same options as @Route
 
-With ```json
-"symfony/routing": "~2.4"
-``` or with   ```json
-              "symfony/symfony": "~2.4"
-              ```
-you have a expression-language components and have condition capability with annotation (see: [Routing Conditions](http://symfony.com/doc/current/book/routing.html#book-routing-conditions))
+When using `symfony/routing:>=2.4` (or the full framework) you have access to the expression language component and can
+add conditions to your routing configuration with annotations (see: [Routing Conditions](http://symfony.com/doc/current/book/routing.html#book-routing-conditions)).
 
 example syntax:
 
