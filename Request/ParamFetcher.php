@@ -97,6 +97,9 @@ class ParamFetcher implements ParamFetcherInterface
             $param = $this->request->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
             $param = $this->request->query->get($config->getKey(), $default);
+            if (is_null($param)) {
+                $param = $this->request->get($config->name, $default);
+            }
         } else {
             $param = null;
         }
