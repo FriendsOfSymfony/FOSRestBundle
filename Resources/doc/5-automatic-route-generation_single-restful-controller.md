@@ -117,7 +117,7 @@ class UsersController
     {} // "link_user_friend"     [LINK] /users/{slug}
 
     public function unlinkUserAction($slug)
-    {} // "link_user_friend"     [UNLINK] /users/{slug}
+    {} // "unlink_user_friend"     [UNLINK] /users/{slug}
 }
 ```
 
