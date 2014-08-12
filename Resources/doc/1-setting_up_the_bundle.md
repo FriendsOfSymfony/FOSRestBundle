@@ -8,8 +8,8 @@ Step 1: Setting up the bundle
 > This bundle recommends using [JMSSerializer](https://github.com/schmittjoh/serializer) which is 
 > integrated into Symfony2 via [JMSSerializerBundle](https://github.com/schmittjoh/JMSSerializerBundle).
 > If you want to use JMSSerializer, take a look into the instructions of the bundle to
-> install it and set it up. You can also use [Symfony Serializer](https://github.com/symfony/Serializer),
-> but if this case, you need to manually set it up and configure FOSRestBundle to use it
+> install it and set it up. You can also use [Symfony Serializer](https://github.com/symfony/Serializer).
+> But in this case, you need to manually set it up and configure FOSRestBundle to use it
 > via the ``service`` section in the app config
 
 Simply run assuming you have installed composer.phar or composer binary:
