@@ -66,6 +66,8 @@ will be delegated to [SensioFrameworkExtraBundle][sensio-extra-bundle].
 
 Note that it is necessary to disable view annotations in
 [SensioFrameworkExtraBundle][sensio-extra-bundle] so that FOSRestBundle can take over the handling.
+However FOSRestBundle will do this automatically but it does not override any explicit
+configuration. So make sure to remove or disable the following setting:
 
 ```yaml
 # app/config/config.yml
@@ -75,7 +77,6 @@ fos_rest:
 
 sensio_framework_extra:
     view:    { annotations: false }
-    router:  { annotations: true }
 ```
 
 ```php
