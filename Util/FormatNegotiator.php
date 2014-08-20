@@ -65,6 +65,10 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
                 $options = $elements[1];
             }
 
+            if (!empty($options['stop'])) {
+                throw new StopFormatListenerException('Stopped format listener');
+            }
+
             if (empty($options['priorities'])) {
                 if (!empty($options['fallback_format'])) {
                     return $request->getMimeType($options['fallback_format']);

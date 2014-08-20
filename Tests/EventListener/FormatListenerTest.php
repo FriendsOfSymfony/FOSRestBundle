@@ -11,6 +11,9 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\Util\FormatNegotiator;
+use FOS\RestBundle\Util\StopFormatListenerException;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,6 +44,30 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
         $formatNegotiator->expects($this->once())
             ->method('getBestMediaType')
             ->will($this->returnValue('application/xml'));
+
+        $listener = new FormatListener($formatNegotiator);
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($request->getRequestFormat(), 'xml');
+    }
+
+    public function testOnKernelControllerNegotiationStopped()
+    {
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request = new Request();
+        $request->setRequestFormat('xml');
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $formatNegotiator = new FormatNegotiator();
+        $formatNegotiator->add(new RequestMatcher('/'), array('stop' => true));
+        $formatNegotiator->add(new RequestMatcher('/'), array('fallback_format' => 'json'));
 
         $listener = new FormatListener($formatNegotiator);
 

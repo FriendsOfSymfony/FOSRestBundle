@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\Util\StopFormatListenerException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -45,27 +46,32 @@ class FormatListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $request = $event->getRequest();
+        try {
+            $request = $event->getRequest();
 
-        $format = null;
-        if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
-            $mediaType = $this->formatNegotiator->getBestMediaType($request);
-            if ($mediaType) {
-                $request->attributes->set('media_type', $mediaType);
-                $format = $request->getFormat($mediaType);
-            }
-        } else {
-            $format = $this->formatNegotiator->getBestFormat($request);
-        }
-
-        if (null === $format) {
-            if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
-                throw new NotAcceptableHttpException("No matching accepted Response format could be determined");
+            $format = null;
+            if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
+                $mediaType = $this->formatNegotiator->getBestMediaType($request);
+                if ($mediaType) {
+                    $request->attributes->set('media_type', $mediaType);
+                    $format = $request->getFormat($mediaType);
+                }
+            } else {
+                $format = $this->formatNegotiator->getBestFormat($request);
             }
 
-            return;
+            if (null === $format) {
+                if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
+                    throw new NotAcceptableHttpException("No matching accepted Response format could be determined");
+                }
+
+                return;
+            }
+
+            $request->setRequestFormat($format);
+        } catch (StopFormatListenerException $e) {
+            // nothing to do
         }
 
-        $request->setRequestFormat($format);
     }
 }
