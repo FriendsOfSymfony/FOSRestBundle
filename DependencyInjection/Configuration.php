@@ -200,6 +200,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('path')->defaultNull()->info('URL path info')->end()
                                     ->scalarNode('host')->defaultNull()->info('URL host name')->end()
                                     ->variableNode('methods')->defaultNull()->info('Method for URL')->end()
+                                    ->booleanNode('stop')->defaultFalse()->end()
                                     ->booleanNode('prefer_extension')->defaultTrue()->end()
                                     ->scalarNode('fallback_format')->defaultValue('html')->end()
                                     ->arrayNode('priorities')

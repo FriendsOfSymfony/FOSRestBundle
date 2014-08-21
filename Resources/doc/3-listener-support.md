@@ -405,6 +405,25 @@ natively or it needs to be added as documented here or using the mime type
 listener explained in
 [the Symfony Cookbook entry](http://symfony.com/doc/current/cookbook/request/mime_type.html).
 
+#### Disabling the Format Listener via Rules
+
+Often when integrating this Bundle with existing applications, it might be useful
+to disable the format listener for some routes. In this case it is possible to define
+a rule that will stop the format listener from determining a format by setting
+``stop`` to ``true`` as a rule option. Any rule containing this setting and any rule
+following will not be considered and the Request format will remain unchanged.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    format_listener:
+        rules:
+            - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+            - { path: '^/', stop: true }
+```
+
+#### Media Type Version Extraction
+
 The format listener can also determine the version of the selected media type
 based on a regular expression. The regular expression can be configured as
 follows. Setting it to an empty value will disable the behavior entirely.
