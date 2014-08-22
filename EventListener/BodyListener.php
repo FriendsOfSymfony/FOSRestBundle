@@ -93,7 +93,7 @@ class BodyListener
 
             if (!empty($content)) {
                 $decoder = $this->decoderProvider->getDecoder($format);
-                $data = $decoder->decode($content, $format);
+                $data = $decoder->decode($content);
                 if (is_array($data)) {
                     if (null !== $this->arrayNormalizer) {
                         try {
