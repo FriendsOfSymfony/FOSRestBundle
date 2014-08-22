@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
 
 /**
+ * This code is needed for SensioFrameworkExtraBundle 2.x compatibility
+ * https://github.com/FriendsOfSymfony/FOSRestBundle/issues/622
+ *
  * @author Tyler Stroud <tyler@tylerstroud.com>
  */
 class RequestBodyParamConverter20 extends AbstractRequestBodyParamConverter
