@@ -21,7 +21,7 @@
     ],
 
     "require": {
-        "php":                            ">=5.3.3",
+        "php":                            ">=5.3.9",
         "psr/log":                        "~1.0",
         "symfony/framework-bundle":       "~2.2",
         "doctrine/inflector":             "~1.0",
