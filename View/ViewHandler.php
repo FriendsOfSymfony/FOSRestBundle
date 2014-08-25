@@ -92,6 +92,11 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     protected $exclusionStrategyVersion;
 
     /**
+     * @var string
+     */
+    protected $exclusionStrategyMaxDepth;
+
+    /**
      * @var bool
      */
     protected $serializeNullStrategy;
@@ -140,6 +145,16 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     public function setExclusionStrategyVersion($version)
     {
         $this->exclusionStrategyVersion = $version;
+    }
+
+    /**
+     * If true should enable the max depth strategy
+     *
+     * @param bool $isEnabled
+     */
+    public function setExclusionStrategyMaxDepth($isEnabled)
+    {
+        $this->exclusionStrategyMaxDepth = $isEnabled;
     }
 
     /**
@@ -264,6 +279,10 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
 
         if (null === $context->shouldSerializeNull() && null !== $this->serializeNullStrategy) {
             $context->setSerializeNull($this->serializeNullStrategy);
+        }
+
+        if (true === $this->exclusionStrategyMaxDepth) {
+            $context->enableMaxDepthChecks();
         }
 
         return $context;
