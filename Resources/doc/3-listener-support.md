@@ -526,6 +526,17 @@ class FooController extends Controller
      */
     public function getArticlesAction(ParamFetcher $paramFetcher)
     {
+        // ParamFetcher params can be dynamically added during runtime instead of only compile time annotations.
+        $dynamicRequestParam = new RequestParam();
+        $dynamicRequestParam->name = "dynamic_request";
+        $dynamicRequestParam->requirements = "\d+";
+        $paramFetcher->addParam($dynamicRequestParam);
+
+        $dynamicQueryParam = new QueryParam();
+        $dynamicQueryParam->name = "dynamic_query";
+        $dynamicQueryParam->requirements="[a-z]+";
+        $paramFetcher->addParam($dynamicQueryParam);
+
         $page = $paramFetcher->get('page');
         $articles = array('bim', 'bam', 'bingo');
 

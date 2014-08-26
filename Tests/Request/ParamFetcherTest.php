@@ -289,6 +289,22 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testValidatesAddParam()
+    {
+        $queryFetcher = $this->getParamFetcher(array(), array('bar' => '2', 'baz' => '4','bub' => '10'));
+        $queryFetcher->setController($this->controller);
+
+        $runtimeParam = new RequestParam();
+        $runtimeParam->name = "bub";
+        $runtimeParam->requirements = '\d+';
+        $runtimeParam->description = 'The bub';
+        $queryFetcher->addParam($runtimeParam);
+
+        $this->assertEquals(10, $queryFetcher->get('bub'));
+        $this->assertEquals(array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null,'bub' => 10), $queryFetcher->all());
+    }
+
+
     public function testValidatesConfiguredParamStrictly()
     {
         $constraint = new Regex(array(

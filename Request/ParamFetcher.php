@@ -67,20 +67,43 @@ class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Add additional params to the ParamFetcher during runtime.
+     *
+     * Note that adding a param that has the same name as an existing param will override that param.
+     *
+     * @param Param                       $param
      */
-    public function get($name, $strict = null)
+    public function addParam(Param $param)
+    {
+        $this->getParams(); // init params
+        $this->params[$param->name] = $param;
+    }
+
+    /**
+     * @return Param[]
+     */
+    public function getParams()
     {
         if (null === $this->params) {
             $this->initParams();
         }
 
-        if (!array_key_exists($name, $this->params)) {
+        return $this->params;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function get($name, $strict = null)
+    {
+        $params = $this->getParams();
+
+        if (!array_key_exists($name, $params)) {
             throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
         }
 
         /** @var Param $config */
-        $config   = $this->params[$name];
+        $config   = $params[$name];
         $nullable = $config->nullable;
         $default  = $config->default;
         $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
@@ -206,12 +229,10 @@ class ParamFetcher implements ParamFetcherInterface
      */
     public function all($strict = null)
     {
-        if (null === $this->params) {
-            $this->initParams();
-        }
+        $configuredParams = $this->getParams();
 
         $params = array();
-        foreach ($this->params as $name => $config) {
+        foreach ($configuredParams as $name => $config) {
             $params[$name] = $this->get($name, $strict);
         }
 
