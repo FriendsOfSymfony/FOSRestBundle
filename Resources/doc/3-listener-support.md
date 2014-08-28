@@ -21,8 +21,9 @@ being sent from the client, the *Request*, or the data being returned from the s
        * Validation
      * Param Fetcher Listener
  * Response Listeners
-   * Format Listener
    * MIME Type Listener
+   * Format Listener
+   * View Response Listener
    * Allowed HTTP Methods Listener
 
 # Listeners
@@ -50,6 +51,456 @@ fos_rest:
     view:
         view_response_listener: 'force'
 ```
+
+## Request Listeners
+
+### Body listener
+
+The Request body listener makes it possible to decode the contents of
+a request in order to populate the "request" parameter bag of the Request. This
+for example allows to receive data that normally would be sent via POST as
+``application/x-www-form-urlencode`` in a different format (for example
+application/json) in a PUT.
+
+#### Decoders
+
+You can add a decoder for a custom format. You can also replace the default
+decoder services provided by the bundle for the ``json`` and ``xml`` formats.
+Below you can see how to override the decoder for the json format (the xml
+decoder is explicitly kept to its default service):
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    body_listener:
+        decoders:
+            json: acme.decoder.json
+            xml: fos_rest.decoder.xml
+```
+
+Your custom decoder service must use a class that implements the
+``FOS\RestBundle\Decoder\DecoderInterface``.
+
+If you want to be able to use form with checkbox and have true and false value (without any issue) you have to use : fos_rest.decoder.jsontoform (available since fosrest 0.8.0)
+
+If the listener receives content that it tries to decode but the decode fails then a BadRequestHttpException will be thrown with the message:
+``'Invalid ' . $format . ' message received'``. When combined with the [exception controller support](4-exception-controller-support.md) this means your API will provide useful error messages to your API users if they are making invalid requests.
+
+#### Array Normalizer
+
+Array Normalizers allow to transform the data after it has been decoded in order to facilitate its processing.
+
+For example, you may want your API's clients to be able to send requests with underscored keys but if you use a decoder
+without a normalizer, you will receive the data as it is and it can lead to incorrect mapping if you submit the request directly to a Form.
+If you wish the body listener to transform underscored keys to camel cased ones, you can use the ``camel_keys`` array normalizer:
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    body_listener:
+        array_normalizer: fos_rest.normalizer.camel_keys
+```
+
+Sometimes an array contains a key, which once normalized, will override an existing array key. For example ``foo_bar`` and ``foo_Bar`` will both lead to ``fooBar``.
+If the normalizer receives this data, the listener will throw a BadRequestHttpException with the message
+``The key "foo_Bar" is invalid as it will override the existing key "fooBar"``.
+
+NB: If you use the ``camel_keys`` normalizer, you must be careful when choosing your Form name.
+
+You can also create your own array normalizer by implementing the ``FOS\RestBundle\Normalizer\ArrayNormalizerInterface``.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    body_listener:
+        array_normalizer: acme.normalizer.custom
+```
+
+### Request Body Converter Listener
+
+[Converters](http://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/converters.html)
+are a way to populate objects and inject them as controller method arguments.
+The Request body converter makes it possible to deserialize the request body
+into an object.
+
+This converter requires that you have installed [SensioFrameworkExtraBundle][sensio-extra-bundle]
+and have the converters enabled:
+```yaml
+# app/config/config.yml
+sensio_framework_extra:
+    request: { converters: true }
+```
+
+To enable the Request body converter, add the following configuration:
+```yaml
+# app/config/config.yml
+fos_rest:
+    body_converter:
+        enabled: true
+```
+
+Note: You will probably want to disable the automatic route generation (`@NoRoute`)
+for routes using the body converter, and instead define the routes manually to
+avoid having the deserialized, typehinted objects (`$post in this example`) appear
+in the route as a parameter.
+
+Now, in the following example, the request body will be deserialized into a
+new instance of `Post` and injected into the `$post` variable:
+```PHP
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
+// ...
+
+/**
+ * @ParamConverter("post", converter="fos_rest.request_body")
+ */
+public function putPostAction(Post $post)
+{
+    // ...
+}
+```
+
+You can configure the context used by the serializer during deserialization
+via the `deserializationContext` option:
+```PHP
+/**
+ * @ParamConverter("post", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"group1", "group2"}, "version"="1.0"}})
+ */
+public function putPostAction(Post $post)
+{
+    // ...
+}
+```
+
+#### Validation
+If you would like to validate the deserialized object, you can do so by
+enabling validation:
+```yaml
+# app/config/config.yml
+fos_rest:
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: validationErrors # This is the default value
+```
+The validation errors will be set on the `validationErrors` controller argument:
+
+```PHP
+/**
+ * @ParamConverter("post", converter="fos_rest.request_body")
+ */
+public function putPostAction(Post $post, ConstraintViolationListInterface $validationErrors)
+{
+    if (count($validationErrors) > 0) {
+        // Handle validation errors
+    }
+
+    // ...
+}
+```
+
+
+### Param fetcher listener
+
+The param fetcher listener simply sets the ParamFetcher instance as a request attribute
+configured for the matched controller so that the user does not need to do this manually.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    param_fetcher_listener: true
+```
+
+```php
+<?php
+
+use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use Acme\FooBundle\Validation\Constraints\MyComplexConstraint
+
+class FooController extends Controller
+{
+    /**
+     * Will look for a page query parameter, ie. ?page=XX
+     * If not passed it will be automatically be set to the default of "1"
+     * If passed but doesn't match the requirement "\d+" it will be also be set to the default of "1"
+     * Note that if the value matches the default then no validation is run.
+     * So make sure the default value really matches your expectations.
+     *
+     * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
+     *
+     * In some case you also want to have a strict requirements but accept a null value, this is possible
+     * thanks to the nullable option.
+     * If ?count= parameter is set, the requirements will be checked strictly, if not, the null value will be used.
+     * If you set the strict parameter without a nullable option, this will result in an error if the parameter is
+     * missing from the query.
+     *
+     * @QueryParam(name="count", requirements="\d+", strict=true, nullable=true, description="Item count limit")
+     *
+     * Will look for a firstname request parameters, ie. firstname=foo in POST data.
+     * If not passed it will error out when read out of the ParamFetcher since RequestParam defaults to strict=true
+     * If passed but doesn't match the requirement "[a-z]+" it will also error out (400 Bad Request)
+     * Note that if the value matches the default then no validation is run.
+     * So make sure the default value really matches your expectations.
+     *
+     * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
+     *
+     * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337, use:
+     *
+     * @QueryParam(array=true, name="ids", requirements="\d+", default="1", description="List of ids")
+     * (works with QueryParam and RequestParam)
+     *
+     * It will validate each entries of ids with your requirement, by this way, if an entry is invalid,
+     * this one will be replaced by default value.
+     *
+     * ie: ?ids[]=1337&ids[]=notinteger will return array(1337, 1);
+     * If ids is not defined, array(1) will be given
+     *
+     * Array must have a single depth or it will return default value. It's difficult to validate with
+     * preg_match each deeps of array, if you want to deal with that, you can use a constraint:
+     *
+     * @QueryParam(array=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
+     *
+     * In this example, the ParamFetcher will validate each value of the array with the constraint, returning the
+     * default value if you are in safe mode or throw a BadRequestHttpResponse containing the constraint violation
+     * messages in the message.
+     *
+     * @param ParamFetcher $paramFetcher
+     */
+    public function getArticlesAction(ParamFetcher $paramFetcher)
+    {
+        // ParamFetcher params can be dynamically added during runtime instead of only compile time annotations.
+        $dynamicRequestParam = new RequestParam();
+        $dynamicRequestParam->name = "dynamic_request";
+        $dynamicRequestParam->requirements = "\d+";
+        $paramFetcher->addParam($dynamicRequestParam);
+
+        $dynamicQueryParam = new QueryParam();
+        $dynamicQueryParam->name = "dynamic_query";
+        $dynamicQueryParam->requirements="[a-z]+";
+        $paramFetcher->addParam($dynamicQueryParam);
+
+        $page = $paramFetcher->get('page');
+        $articles = array('bim', 'bam', 'bingo');
+
+        return array('articles' => $articles, 'page' => $page);
+    }
+```
+
+Note: There is also ``$paramFetcher->all()`` to fetch all configured query parameters at once. And also
+both ``$paramFetcher->get()`` and ``$paramFetcher->all()`` support and optional ``$strict`` parameter
+to throw a ``\RuntimeException`` on a validation error.
+
+Note: The ParamFetcher requirements feature requires the symfony/validator component.
+
+Optionally the listener can also already set all configured query parameters as request attributes
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    param_fetcher_listener: force
+```
+
+```php
+<?php
+
+class FooController extends Controller
+{
+    /**
+     * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
+     *
+     * @param string $page
+     */
+    public function getArticlesAction($page)
+    {
+        $articles = array('bim', 'bam', 'bingo');
+
+        return array('articles' => $articles, 'page' => $page);
+    }
+```
+
+### Allowed Http Methods Listener
+
+This listener add the ``Allow`` HTTP header to each request appending all allowed methods for a given resource.
+
+Let's say we have the following routes:
+```
+api_get_users
+api_post_users
+api_get_user
+```
+
+A ``GET`` request to ``api_get_users`` will response in:
+
+```
+< HTTP/1.0 200 OK
+< Date: Sat, 16 Jun 2012 15:17:22 GMT
+< Server: Apache/2.2.22 (Ubuntu)
+< allow: GET, POST
+```
+
+You need to enable this listener like this as it is disabled by default:
+
+```
+fos_rest:
+    allowed_methods_listener: true
+```
+
+
+## Response Listeners
+
+Symfony manages the response type that is returned by the application via the
+`\Symfony\Component\HttpFoundation\Request $request->getRequestFormat()`. The response type is used to determine what
+the HTTP Response `Content-Type` and the actual content of the Response Body should be such as `html`,`json`, or `xml`.
+By default, Symfony utilizes the _format parameter to set this field typically associated with the file extension
+(`/route/endpoint.{_format}`). With the Format listener, you can utilize the HTTP request `Accept` field to determine
+the format.
+
+The MIME Type listener allows you to assign custom MIME types to different Symfony Request formats.
+
+
+### Format listener
+
+The Request format listener attempts to determine the best format for the
+request based on the Request's Accept-Header and the format priority
+configuration. This way it becomes possible to leverage Accept-Headers to
+determine the request format, rather than a file extension (like foo.json).
+
+The ``priorities`` define the order of media types as the application
+prefers. Note that if a format is provided instead of a media type, the
+format is converted into a list of media types matching the format.
+The algorithm iteratively examines the provided Accept header first
+looking at all the options with the highest ``q``. The first priority that
+matches is returned. If none match the next lowest set of Accept headers with
+equal ``q`` is examined and so on until there are no more Accept headers to
+check. In this case ``fallback_format`` is used.
+
+Note that if ``_format`` is matched inside the route, then a virtual Accept
+header setting is added with a ``q`` setting one lower than the lowest Accept
+header, meaning that format is checked for a match in the priorities last. If
+``prefer_extension`` is set to ``true`` then the virtual Accept header will be
+one higher than the highest ``q`` causing the extension to be checked first.
+Setting ``priorities`` to a non empty array enables Accept header negotiations.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    format_listener:
+        rules:
+            # setting fallback_format to json means that instead of considering the next rule in case of a priority mismatch, json will be used
+            - { path: '^/', host: 'api.%domain%', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+            # setting fallback_format to false means that instead of considering the next rule in case of a priority mismatch, a 406 will be caused
+            - { path: '^/image', priorities: ['jpeg', 'gif'], fallback_format: false, prefer_extension: true }
+            # setting fallback_format to null means that in case of a priority mismatch the next rule will be considered
+            - { path: '^/admin', methods: [ 'GET', 'POST'], priorities: [ 'xml', 'html'], fallback_format: ~, prefer_extension: false }
+            - { path: '^/', priorities: [ 'text/html', '*/*'], fallback_format: html, prefer_extension: true }
+```
+
+For example using the above configuration and the following Accept header:
+```
+text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,application/json
+```
+
+And the following route:
+
+```yaml
+hello:
+    pattern:  /foo.{_format}
+    defaults: { _controller: foo.controller:indexAction, _format: ~ }
+```
+
+When calling:
+
+* ``/foo.json`` will lead to setting the request format to ``json``
+* ``/foo`` will lead to setting the request format to ``html``
+
+Furthermore the listener sets a ``media_type`` attribute on the request in
+case the listener is configured with a ``MediaTypeNegotiatorInterface`` instance,
+which is the case by default, with the matched media type.
+
+```php
+// f.e. text/html or ``application/vnd.custom_something+json etc.
+$mediaType = $request->attributes->get('media_type');
+```
+
+Note take care to configure the ``priorities`` carefully especially when the
+controller actions for specific routes only handle necessary security checks
+for specific formats. In such cases it might make sense to hard code the format
+in the controller action.
+
+
+```php
+public function getAction(Request $request)
+{
+    $view = new View();
+    // hard code the output format of the controller action
+    $view->setFormat('html');
+
+    ..
+}
+```
+
+Note that the format needs to either be supported by the ``Request`` class
+natively or it needs to be added as documented here or using the mime type
+listener explained in
+[the Symfony Cookbook entry](http://symfony.com/doc/current/cookbook/request/mime_type.html).
+
+#### Disabling the Format Listener via Rules
+
+Often when integrating this Bundle with existing applications, it might be useful
+to disable the format listener for some routes. In this case it is possible to define
+a rule that will stop the format listener from determining a format by setting
+``stop`` to ``true`` as a rule option. Any rule containing this setting and any rule
+following will not be considered and the Request format will remain unchanged.
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    format_listener:
+        rules:
+            - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+            - { path: '^/', stop: true }
+```
+
+#### Media Type Version Extraction
+
+The format listener can also determine the version of the selected media type
+based on a regular expression. The regular expression can be configured as
+follows. Setting it to an empty value will disable the behavior entirely.
+
+```
+fos_rest:
+    format_listener:
+        media_type:
+            version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
+```
+
+The matched version is set as a Request attribute with the name ``version``,
+and when using JMS serializer it is also set as an exclusion strategy
+automatically in the ``ViewHandler``.
+See
+[the following documentation](http://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#versioning-objects)
+for details.
+
+### Mime type listener
+
+This listener allows registering additional mime types in the ``Request``
+class. It works similar to the
+[following Cookbook entry](http://symfony.com/doc/current/cookbook/request/mime_type.html).
+There are several default MIME type mappings already defined in
+`\Symfony\Component\HttpFoundation\Request::initializeFormats()`.
+
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    view:
+        mime_types: {'jsonp': ['application/javascript+jsonp']}
+```
+
+
+
 
 ### View Response listener
 
@@ -200,434 +651,7 @@ public function getUserDetails(User $user)
 }
 ```
 
-### Body listener
 
-The Request body listener makes it possible to decode the contents of
-a request in order to populate the "request" parameter bag of the Request. This
-for example allows to receive data that normally would be sent via POST as
-``application/x-www-form-urlencode`` in a different format (for example
-application/json) in a PUT.
-
-#### Decoders
-
-You can add a decoder for a custom format. You can also replace the default
-decoder services provided by the bundle for the ``json`` and ``xml`` formats.
-Below you can see how to override the decoder for the json format (the xml
-decoder is explicitly kept to its default service):
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    body_listener:
-        decoders:
-            json: acme.decoder.json
-            xml: fos_rest.decoder.xml
-```
-
-Your custom decoder service must use a class that implements the
-``FOS\RestBundle\Decoder\DecoderInterface``.
-
-If you want to be able to use form with checkbox and have true and false value (without any issue) you have to use : fos_rest.decoder.jsontoform (available since fosrest 0.8.0)
-
-If the listener receives content that it tries to decode but the decode fails then a BadRequestHttpException will be thrown with the message:
-``'Invalid ' . $format . ' message received'``. When combined with the [exception controller support](4-exception-controller-support.md) this means your API will provide useful error messages to your API users if they are making invalid requests.
-
-#### Array Normalizer
-
-Array Normalizers allow to transform the data after it has been decoded in order to facilitate its processing.
-
-For example, you may want your API's clients to be able to send requests with underscored keys but if you use a decoder
-without a normalizer, you will receive the data as it is and it can lead to incorrect mapping if you submit the request directly to a Form.
-If you wish the body listener to transform underscored keys to camel cased ones, you can use the ``camel_keys`` array normalizer:
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    body_listener:
-        array_normalizer: fos_rest.normalizer.camel_keys
-```
-
-Sometimes an array contains a key, which once normalized, will override an existing array key. For example ``foo_bar`` and ``foo_Bar`` will both lead to ``fooBar``.
-If the normalizer receives this data, the listener will throw a BadRequestHttpException with the message
-``The key "foo_Bar" is invalid as it will override the existing key "fooBar"``.
-
-NB: If you use the ``camel_keys`` normalizer, you must be careful when choosing your Form name.
-
-You can also create your own array normalizer by implementing the ``FOS\RestBundle\Normalizer\ArrayNormalizerInterface``.
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    body_listener:
-        array_normalizer: acme.normalizer.custom
-```
-
-### Request Body Converter Listener
-
-[Converters](http://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/converters.html)
-are a way to populate objects and inject them as controller method arguments.
-The Request body converter makes it possible to deserialize the request body
-into an object.
-
-This converter requires that you have installed [SensioFrameworkExtraBundle][sensio-extra-bundle]
-and have the converters enabled:
-```yaml
-# app/config/config.yml
-sensio_framework_extra:
-    request: { converters: true }
-```
-
-To enable the Request body converter, add the following configuration:
-```yaml
-# app/config/config.yml
-fos_rest:
-    body_converter:
-        enabled: true
-```
-
-Note: You will probably want to disable the automatic route generation (`@NoRoute`)
-for routes using the body converter, and instead define the routes manually to
-avoid having the deserialized, typehinted objects (`$post in this example`) appear
-in the route as a parameter.
-
-Now, in the following example, the request body will be deserialized into a
-new instance of `Post` and injected into the `$post` variable:
-```PHP
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
-// ...
-
-/**
- * @ParamConverter("post", converter="fos_rest.request_body")
- */
-public function putPostAction(Post $post)
-{
-    // ...
-}
-```
-
-You can configure the context used by the serializer during deserialization
-via the `deserializationContext` option:
-```PHP
-/**
- * @ParamConverter("post", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"group1", "group2"}, "version"="1.0"}})
- */
-public function putPostAction(Post $post)
-{
-    // ...
-}
-```
-
-#### Validation
-If you would like to validate the deserialized object, you can do so by
-enabling validation:
-```yaml
-# app/config/config.yml
-fos_rest:
-    body_converter:
-        enabled: true
-        validate: true
-        validation_errors_argument: validationErrors # This is the default value
-```
-The validation errors will be set on the `validationErrors` controller argument:
-
-```PHP
-/**
- * @ParamConverter("post", converter="fos_rest.request_body")
- */
-public function putPostAction(Post $post, ConstraintViolationListInterface $validationErrors)
-{
-    if (count($validationErrors) > 0) {
-        // Handle validation errors
-    }
-
-    // ...
-}
-```
-
-### Format listener
-
-The Request format listener attempts to determine the best format for the
-request based on the Request's Accept-Header and the format priority
-configuration. This way it becomes possible to leverage Accept-Headers to
-determine the request format, rather than a file extension (like foo.json).
-
-The ``priorities`` define the order of media types as the application
-prefers. Note that if a format is provided instead of a media type, the
-format is converted into a list of media types matching the format.
-The algorithm iteratively examines the provided Accept header first
-looking at all the options with the highest ``q``. The first priority that
-matches is returned. If none match the next lowest set of Accept headers with
-equal ``q`` is examined and so on until there are no more Accept headers to
-check. In this case ``fallback_format`` is used.
-
-Note that if ``_format`` is matched inside the route, then a virtual Accept
-header setting is added with a ``q`` setting one lower than the lowest Accept
-header, meaning that format is checked for a match in the priorities last. If
-``prefer_extension`` is set to ``true`` then the virtual Accept header will be
-one higher than the highest ``q`` causing the extension to be checked first.
-Setting ``priorities`` to a non empty array enables Accept header negotiations.
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    format_listener:
-        rules:
-            # setting fallback_format to json means that instead of considering the next rule in case of a priority mismatch, json will be used
-            - { path: '^/', host: 'api.%domain%', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
-            # setting fallback_format to false means that instead of considering the next rule in case of a priority mismatch, a 406 will be caused
-            - { path: '^/image', priorities: ['jpeg', 'gif'], fallback_format: false, prefer_extension: true }
-            # setting fallback_format to null means that in case of a priority mismatch the next rule will be considered
-            - { path: '^/admin', methods: [ 'GET', 'POST'], priorities: [ 'xml', 'html'], fallback_format: ~, prefer_extension: false }
-            - { path: '^/', priorities: [ 'text/html', '*/*'], fallback_format: html, prefer_extension: true }
-```
-
-For example using the above configuration and the following Accept header:
-```
-text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,application/json
-```
-
-And the following route:
-
-```yaml
-hello:
-    pattern:  /foo.{_format}
-    defaults: { _controller: foo.controller:indexAction, _format: ~ }
-```
-
-When calling:
-
-* ``/foo.json`` will lead to setting the request format to ``json``
-* ``/foo`` will lead to setting the request format to ``html``
-
-Furthermore the listener sets a ``media_type`` attribute on the request in
-case the listener is configured with a ``MediaTypeNegotiatorInterface`` instance,
-which is the case by default, with the matched media type.
-
-```php
-// f.e. text/html or ``application/vnd.custom_something+json etc.
-$mediaType = $request->attributes->get('media_type');
-```
-
-Note take care to configure the ``priorities`` carefully especially when the
-controller actions for specific routes only handle necessary security checks
-for specific formats. In such cases it might make sense to hard code the format
-in the controller action.
-
-
-```php
-public function getAction(Request $request)
-{
-    $view = new View();
-    // hard code the output format of the controller action
-    $view->setFormat('html');
-
-    ..
-}
-```
-
-Note that the format needs to either be supported by the ``Request`` class
-natively or it needs to be added as documented here or using the mime type
-listener explained in
-[the Symfony Cookbook entry](http://symfony.com/doc/current/cookbook/request/mime_type.html).
-
-#### Disabling the Format Listener via Rules
-
-Often when integrating this Bundle with existing applications, it might be useful
-to disable the format listener for some routes. In this case it is possible to define
-a rule that will stop the format listener from determining a format by setting
-``stop`` to ``true`` as a rule option. Any rule containing this setting and any rule
-following will not be considered and the Request format will remain unchanged.
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    format_listener:
-        rules:
-            - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
-            - { path: '^/', stop: true }
-```
-
-#### Media Type Version Extraction
-
-The format listener can also determine the version of the selected media type
-based on a regular expression. The regular expression can be configured as
-follows. Setting it to an empty value will disable the behavior entirely.
-
-```
-fos_rest:
-    format_listener:
-        media_type:
-            version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
-```
-
-The matched version is set as a Request attribute with the name ``version``,
-and when using JMS serializer it is also set as an exclusion strategy
-automatically in the ``ViewHandler``.
-See
-[the following documentation](http://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#versioning-objects)
-for details.
-
-### Mime type listener
-
-This listener allows registering additional mime types in the ``Request``
-class. It works similar to the
-[following Cookbook entry](http://symfony.com/doc/current/cookbook/request/mime_type.html).
-
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    view:
-        mime_types: {'jsonp': ['application/javascript+jsonp']}
-```
-
-### Param fetcher listener
-
-The param fetcher listener simply sets the ParamFetcher instance as a request attribute
-configured for the matched controller so that the user does not need to do this manually.
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    param_fetcher_listener: true
-```
-
-```php
-<?php
-
-use FOS\RestBundle\Request\ParamFetcher;
-use FOS\RestBundle\Controller\Annotations\RequestParam;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
-use Acme\FooBundle\Validation\Constraints\MyComplexConstraint
-
-class FooController extends Controller
-{
-    /**
-     * Will look for a page query parameter, ie. ?page=XX
-     * If not passed it will be automatically be set to the default of "1"
-     * If passed but doesn't match the requirement "\d+" it will be also be set to the default of "1"
-     * Note that if the value matches the default then no validation is run.
-     * So make sure the default value really matches your expectations.
-     *
-     * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
-     *
-     * In some case you also want to have a strict requirements but accept a null value, this is possible
-     * thanks to the nullable option.
-     * If ?count= parameter is set, the requirements will be checked strictly, if not, the null value will be used.
-     * If you set the strict parameter without a nullable option, this will result in an error if the parameter is
-     * missing from the query.
-     *
-     * @QueryParam(name="count", requirements="\d+", strict=true, nullable=true, description="Item count limit")
-     *
-     * Will look for a firstname request parameters, ie. firstname=foo in POST data.
-     * If not passed it will error out when read out of the ParamFetcher since RequestParam defaults to strict=true
-     * If passed but doesn't match the requirement "[a-z]+" it will also error out (400 Bad Request)
-     * Note that if the value matches the default then no validation is run.
-     * So make sure the default value really matches your expectations.
-     *
-     * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
-     *
-     * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337, use:
-     *
-     * @QueryParam(array=true, name="ids", requirements="\d+", default="1", description="List of ids")
-     * (works with QueryParam and RequestParam)
-     *
-     * It will validate each entries of ids with your requirement, by this way, if an entry is invalid,
-     * this one will be replaced by default value.
-     *
-     * ie: ?ids[]=1337&ids[]=notinteger will return array(1337, 1);
-     * If ids is not defined, array(1) will be given
-     *
-     * Array must have a single depth or it will return default value. It's difficult to validate with
-     * preg_match each deeps of array, if you want to deal with that, you can use a constraint:
-     *
-     * @QueryParam(array=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
-     *
-     * In this example, the ParamFetcher will validate each value of the array with the constraint, returning the
-     * default value if you are in safe mode or throw a BadRequestHttpResponse containing the constraint violation
-     * messages in the message.
-     *
-     * @param ParamFetcher $paramFetcher
-     */
-    public function getArticlesAction(ParamFetcher $paramFetcher)
-    {
-        // ParamFetcher params can be dynamically added during runtime instead of only compile time annotations.
-        $dynamicRequestParam = new RequestParam();
-        $dynamicRequestParam->name = "dynamic_request";
-        $dynamicRequestParam->requirements = "\d+";
-        $paramFetcher->addParam($dynamicRequestParam);
-
-        $dynamicQueryParam = new QueryParam();
-        $dynamicQueryParam->name = "dynamic_query";
-        $dynamicQueryParam->requirements="[a-z]+";
-        $paramFetcher->addParam($dynamicQueryParam);
-
-        $page = $paramFetcher->get('page');
-        $articles = array('bim', 'bam', 'bingo');
-
-        return array('articles' => $articles, 'page' => $page);
-    }
-```
-
-Note: There is also ``$paramFetcher->all()`` to fetch all configured query parameters at once. And also
-both ``$paramFetcher->get()`` and ``$paramFetcher->all()`` support and optional ``$strict`` parameter
-to throw a ``\RuntimeException`` on a validation error.
-
-Note: The ParamFetcher requirements feature requires the symfony/validator component.
-
-Optionally the listener can also already set all configured query parameters as request attributes
-
-```yaml
-# app/config/config.yml
-fos_rest:
-    param_fetcher_listener: force
-```
-
-```php
-<?php
-
-class FooController extends Controller
-{
-    /**
-     * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
-     *
-     * @param string $page
-     */
-    public function getArticlesAction($page)
-    {
-        $articles = array('bim', 'bam', 'bingo');
-
-        return array('articles' => $articles, 'page' => $page);
-    }
-```
-
-### Allowed Http Methods Listener
-
-This listener add the ``Allow`` HTTP header to each request appending all allowed methods for a given resource.
-
-Let's say we have the following routes:
-```
-api_get_users
-api_post_users
-api_get_user
-```
-
-A ``GET`` request to ``api_get_users`` will response in:
-
-```
-< HTTP/1.0 200 OK
-< Date: Sat, 16 Jun 2012 15:17:22 GMT
-< Server: Apache/2.2.22 (Ubuntu)
-< allow: GET, POST
-```
-
-You need to enable this listener like this as it is disabled by default:
-
-```
-fos_rest:
-    allowed_methods_listener: true
-```
 
 ### Security Exception Listener
 
