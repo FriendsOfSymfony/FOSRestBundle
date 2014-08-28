@@ -1,8 +1,34 @@
 Step 3: Listener support
 ========================
 
+# Background
+
+
+
+
 [Listeners](http://symfony.com/doc/master/cookbook/service_container/event_listener.html)
-are a way to hook into the request handling. This Bundle provides various events
+are a way to hook into the request handling. During an HTTP session, the client and the  
+server can communicate using different formats. Listeners allow you to manipulate the data
+being sent from the client, the *Request*, or the data being returned from the server, the
+*Response*.
+
+ * Request Listeners
+   * Body Listener
+     * Decoders
+     * Array Normalizer
+   * Data Binding Listeners
+     * Request Body Converter Listener
+       * Validation
+     * Param Fetcher Listener
+ * Response Listeners
+   * Format Listener
+   * MIME Type Listener
+   * Allowed HTTP Methods Listener
+
+# Listeners
+
+
+This Bundle provides various events
 from decoding the request content in the request (body listener), determining the
 correct response format (format listener), reading parameters from the request
 (parameter fetcher listener), to formatting the response either with a template engine
