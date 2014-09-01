@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Routing\Loader\Reader;
 
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\Routing\Route;
+use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
 use FOS\RestBundle\Util\Inflector\InflectorInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Request\ParamReader;
@@ -120,7 +121,7 @@ class RestActionReader
      *
      * @param RestRouteCollection $collection
      * @param \ReflectionMethod   $method
-     * @param array               $resource
+     * @param string[]            $resource
      *
      * @return Route
      *
@@ -285,7 +286,7 @@ class RestActionReader
      * Returns HTTP method and resources list from method signature.
      *
      * @param \ReflectionMethod $method
-     * @param array             $resource
+     * @param string[]          $resource
      *
      * @return bool|array
      */
@@ -325,7 +326,7 @@ class RestActionReader
      *
      * @param \ReflectionMethod $method
      *
-     * @return array
+     * @return \ReflectionParameter[]
      */
     private function getMethodArguments(\ReflectionMethod $method)
     {
@@ -366,7 +367,7 @@ class RestActionReader
     /**
      * Generates route name from resources list.
      *
-     * @param array $resources
+     * @param string[] $resources
      *
      * @return string
      */
@@ -385,9 +386,9 @@ class RestActionReader
     /**
      * Generates URL parts for route from resources list.
      *
-     * @param array  $resources
-     * @param array  $arguments
-     * @param string $httpMethod
+     * @param string[]               $resources
+     * @param \ReflectionParameter[] $arguments
+     * @param string                 $httpMethod
      *
      * @return array
      */
@@ -429,9 +430,9 @@ class RestActionReader
     /**
      * Returns custom HTTP method for provided list of resources, arguments, method.
      *
-     * @param string $httpMethod current HTTP method
-     * @param array  $resources  resources list
-     * @param array  $arguments  list of method arguments
+     * @param string                 $httpMethod current HTTP method
+     * @param string[]               $resources  resources list
+     * @param \ReflectionParameter[] $arguments  list of method arguments
      *
      * @return string
      */
@@ -457,7 +458,7 @@ class RestActionReader
      *
      * @param \ReflectionMethod $reflectionMethod
      *
-     * @return array|null
+     * @return RouteAnnotation[]
      */
     private function readRouteAnnotation(\ReflectionMethod $reflectionMethod)
     {
@@ -478,7 +479,7 @@ class RestActionReader
      * @param \ReflectionClass $reflectionClass
      * @param string           $annotationName
      *
-     * @return object|null
+     * @return RouteAnnotation|null
      */
     private function readClassAnnotation(\ReflectionClass $reflectionClass, $annotationName)
     {
@@ -495,7 +496,7 @@ class RestActionReader
      * @param \ReflectionMethod $reflectionMethod
      * @param string            $annotationName
      *
-     * @return object|null
+     * @return RouteAnnotation|null
      */
     private function readMethodAnnotation(\ReflectionMethod $reflectionMethod, $annotationName)
     {
@@ -512,7 +513,7 @@ class RestActionReader
      * @param \ReflectionMethod $reflectionMethod
      * @param string            $annotationName
      *
-     * @return array|null
+     * @return RouteAnnotation[]
      */
     private function readMethodAnnotations(\ReflectionMethod $reflectionMethod, $annotationName)
     {
@@ -537,9 +538,9 @@ class RestActionReader
      * @param Route               $route
      * @param bool                $isCollection
      * @param bool                $isInflectable
-     * @param object              $annotation
+     * @param RouteAnnotation     $annotation
      */
-    private function addRoute(RestRouteCollection $collection, $routeName, $route, $isCollection, $isInflectable, $annotation = null)
+    private function addRoute(RestRouteCollection $collection, $routeName, $route, $isCollection, $isInflectable, RouteAnnotation $annotation = null)
     {
         if ($annotation) {
             $routeName = $routeName.$annotation->getName();

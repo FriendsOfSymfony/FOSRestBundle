@@ -55,7 +55,7 @@ class ParamReader implements ParamReaderInterface
      *
      * @param array $annotations
      *
-     * @return \FOS\RestBundle\Controller\Annotations\Param
+     * @return Param[]
      */
     private function getParamsFromAnnotationArray(array $annotations)
     {
