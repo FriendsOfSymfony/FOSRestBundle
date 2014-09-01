@@ -420,9 +420,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponse($expected, $format, $formats)
     {
         $viewHandler = new ViewHandler($formats);
-        $viewHandler->registerHandler('html', function($handler, $view, $request){return $view;});
+        $viewHandler->registerHandler('html', function ($handler, $view) { return $view; });
 
-        $response = $viewHandler->handle(new View(null, $expected), new Request(), $format);
+        $response = $viewHandler->handle(new View(null, $expected), new Request());
         $this->assertEquals($expected, $response->getStatusCode());
     }
 

@@ -123,7 +123,7 @@ class RestRouteLoader extends Loader
             // bundle:controller notation
             try {
                 $notation             = $this->controllerParser->parse($controller . ':method');
-                list($class, $method) = explode('::', $notation);
+                list($class, ) = explode('::', $notation);
                 $prefix               = $class . '::';
             } catch (\Exception $e) {
                 throw new \InvalidArgumentException(

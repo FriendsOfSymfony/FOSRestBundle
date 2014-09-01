@@ -138,7 +138,6 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
         // set the default format if configured
         if (null !== $this->defaultFormat) {
-            $config['defaults']['_format'] = $this->defaultFormat;
             $defaultFormatNode = $node->ownerDocument->createElementNS(
                 self::NAMESPACE_URI,
                 'default',
