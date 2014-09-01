@@ -47,7 +47,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $url = 'users';
         $code = 500;
 
-        $view = RedirectView::create($url, $code);
+        $view = View::createRedirect($url, $code);
         $this->assertAttributeEquals($url, 'location', $view);
         $this->assertAttributeEquals(null, 'route', $view);
         $this->assertEquals($code, $view->getResponse()->getStatusCode());
@@ -62,7 +62,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         $routeName = 'users';
 
-        $view = RouteRedirectView::create($routeName);
+        $view = View::createRouteRedirect($routeName, array(), Codes::HTTP_CREATED);
         $this->assertAttributeEquals($routeName, 'route', $view);
         $this->assertAttributeEquals(null, 'location', $view);
         $this->assertEquals(Codes::HTTP_CREATED, $view->getResponse()->getStatusCode());

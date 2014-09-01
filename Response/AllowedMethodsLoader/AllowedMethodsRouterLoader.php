@@ -70,20 +70,20 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
 
         foreach ($routeCollection->all() as $name => $route) {
 
-            if (!isset($processedRoutes[$route->getPattern()])) {
-                $processedRoutes[$route->getPattern()] = array(
+            if (!isset($processedRoutes[$route->getPath()])) {
+                $processedRoutes[$route->getPath()] = array(
                     'methods' => array(),
                     'names'   => array(),
                 );
             }
 
-            $processedRoutes[$route->getPattern()]['names'][] = $name;
+            $processedRoutes[$route->getPath()]['names'][] = $name;
 
             $requirements = $route->getRequirements();
             if (isset($requirements['_method'])) {
                 $methods = explode('|', $requirements['_method']);
-                $processedRoutes[$route->getPattern()]['methods'] = array_merge(
-                    $processedRoutes[$route->getPattern()]['methods'],
+                $processedRoutes[$route->getPath()]['methods'] = array_merge(
+                    $processedRoutes[$route->getPath()]['methods'],
                     $methods
                 );
             }

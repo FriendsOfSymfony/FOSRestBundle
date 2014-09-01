@@ -54,7 +54,7 @@ abstract class FOSRestController extends Controller
      */
     protected function redirectView($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
     {
-        return RedirectView::create($url, $statusCode, $headers);
+        return View::createRedirect($url, $statusCode, $headers);
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class FOSRestController extends Controller
      */
     protected function routeRedirectView($route, array $parameters = array(), $statusCode = Codes::HTTP_CREATED, array $headers = array())
     {
-        return RouteRedirectView::create($route, $parameters, $statusCode, $headers);
+        return View::createRouteRedirect($route, $parameters, $statusCode, $headers);
     }
 
     /**
