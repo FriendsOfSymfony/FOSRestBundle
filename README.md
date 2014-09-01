@@ -15,6 +15,7 @@ applications with Symfony2. Features include:
 [![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/?branch=master)
 [![Total Downloads](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/downloads.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
 [![Latest Stable Version](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/v/stable.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0be23389-2e85-49cf-b333-caaa36d11c62/mini.png)](https://insight.sensiolabs.com/projects/0be23389-2e85-49cf-b333-caaa36d11c62)
 
 Documentation
 -------------
