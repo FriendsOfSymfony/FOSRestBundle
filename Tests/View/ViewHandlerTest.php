@@ -413,7 +413,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider createResponseDataProvider
      */
-    public function testCreateResponse($expected, $format, $formats)
+    public function testCreateResponse($expected, $formats)
     {
         $viewHandler = new ViewHandler($formats);
         $viewHandler->registerHandler('html', function ($handler, $view) { return $view; });
@@ -425,9 +425,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseDataProvider()
     {
         return array(
-            'no handler' => array(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, 'xml', array()),
-            'custom handler' => array(200, 'html', array()),
-            'transform called' => array(200, 'json', array('json' => false)),
+            'no handler' => array(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, array()),
+            'custom handler' => array(200, array()),
+            'transform called' => array(200, array('json' => false)),
         );
     }
 
