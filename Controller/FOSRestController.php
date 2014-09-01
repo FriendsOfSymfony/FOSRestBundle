@@ -14,8 +14,6 @@ namespace FOS\RestBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\RedirectView;
-use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\Util\Codes;
 
 /**

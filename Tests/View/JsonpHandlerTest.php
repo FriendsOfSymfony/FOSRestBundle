@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Tests\View;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\JsonpHandler;
-
 use Symfony\Component\HttpFoundation\Request;
 
 /**

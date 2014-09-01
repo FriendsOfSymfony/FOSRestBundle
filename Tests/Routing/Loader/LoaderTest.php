@@ -12,9 +12,7 @@
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-
 use Symfony\Component\Yaml\Yaml;
-
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;

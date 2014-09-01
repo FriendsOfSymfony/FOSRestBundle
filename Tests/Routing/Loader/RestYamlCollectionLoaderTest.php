@@ -15,7 +15,6 @@ use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\RouteCollection;
-
 use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 use FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader;
 

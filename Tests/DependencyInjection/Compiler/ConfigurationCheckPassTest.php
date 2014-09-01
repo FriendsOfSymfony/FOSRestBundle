@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
 
 /**
