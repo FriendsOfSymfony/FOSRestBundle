@@ -205,7 +205,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         );
         $controllerLoader = $this->getControllerLoader();
 
-        $resolver = new LoaderResolver(array($collectionLoader, $controllerLoader));
+        // LoaderResolver sets the resolvers on the loaders passed to it
+        new LoaderResolver(array($collectionLoader, $controllerLoader));
 
         return $collectionLoader->load($fixtureName, 'rest');
     }

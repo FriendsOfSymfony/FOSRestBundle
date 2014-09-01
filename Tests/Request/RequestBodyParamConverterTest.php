@@ -51,7 +51,7 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
     public function testConstructThrowsExceptionIfValidatorIsSetAndValidationArgumentIsNull()
     {
         $this->setExpectedException('InvalidArgumentException');
-        $converter = new RequestBodyParamConverter(
+        new RequestBodyParamConverter(
             $this->serializer,
             null,
             null,
