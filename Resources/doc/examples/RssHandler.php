@@ -111,4 +111,3 @@ class RssHandler
         return $feed->export($format);
     }
 }
-

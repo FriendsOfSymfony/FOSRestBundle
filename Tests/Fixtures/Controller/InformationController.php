@@ -18,4 +18,4 @@ class InformationController extends FOSRestController implements ClassResourceIn
 {
     public function cgetAction()
     {} // [GET] /information
-} 
+}

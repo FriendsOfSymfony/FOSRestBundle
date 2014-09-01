@@ -83,7 +83,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
             'routes.xml',
             true,
             array(
-                'json' => false
+                'json' => false,
             )
         );
         $route = $collection->get('get_users');
@@ -115,6 +115,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      * @param bool     $includeFormat whether or not the requested view format must be included in the route path
      * @param string[] $formats       supported view formats
      * @param string   $defaultFormat default view format
+     *
      * @return RouteCollection
      */
     protected function loadFromXmlCollectionFixture(
@@ -128,7 +129,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         $defaultFormat = null
     ) {
         $collectionLoader = new RestXmlCollectionLoader(
-            new FileLocator(array(__DIR__ . '/../../Fixtures/Routes')),
+            new FileLocator(array(__DIR__.'/../../Fixtures/Routes')),
             new RestRouteProcessor(),
             $includeFormat,
             $formats,

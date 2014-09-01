@@ -21,22 +21,23 @@ class ExceptionWrapperSerializeHandler implements SubscribingHandlerInterface
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
-                'method' => 'serializeToJson'
+                'method' => 'serializeToJson',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'xml',
                 'type' => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
-                'method' => 'serializeToXml'
-            )
+                'method' => 'serializeToXml',
+            ),
         );
     }
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param ExceptionWrapper $wrapper
-     * @param array $type
-     * @param Context $context
+     * @param ExceptionWrapper         $wrapper
+     * @param array                    $type
+     * @param Context                  $context
+     *
      * @return array
      */
     public function serializeToJson(
@@ -46,14 +47,15 @@ class ExceptionWrapperSerializeHandler implements SubscribingHandlerInterface
         Context $context
     ) {
         $data = $this->convertToArray($wrapper);
+
         return $visitor->visitArray($data, $type, $context);
     }
 
     /**
      * @param XmlSerializationVisitor $visitor
-     * @param ExceptionWrapper $wrapper
-     * @param array $type
-     * @param Context $context
+     * @param ExceptionWrapper        $wrapper
+     * @param array                   $type
+     * @param Context                 $context
      */
     public function serializeToXml(
         XmlSerializationVisitor $visitor,
@@ -83,6 +85,7 @@ class ExceptionWrapperSerializeHandler implements SubscribingHandlerInterface
 
     /**
      * @param ExceptionWrapper $exceptionWrapper
+     *
      * @return array
      */
     protected function convertToArray(ExceptionWrapper $exceptionWrapper)

@@ -72,7 +72,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testDisableBodyListener()
     {
         $config = array(
-            'fos_rest' => array('body_listener' => false)
+            'fos_rest' => array('body_listener' => false),
         );
         $this->extension->load($config, $this->container);
 
@@ -84,7 +84,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array(), $this->container);
         $decoders = array(
             'json' => 'fos_rest.decoder.json',
-            'xml' => 'fos_rest.decoder.xml'
+            'xml' => 'fos_rest.decoder.xml',
         );
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
@@ -97,8 +97,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $config = array(
             'fos_rest' => array('body_listener' => array(
-                'array_normalizer' => 'fos_rest.normalizer.camel_keys'
-            ))
+                'array_normalizer' => 'fos_rest.normalizer.camel_keys',
+            )),
         );
         $this->extension->load($config, $this->container);
 
@@ -112,7 +112,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testDisableFormatListener()
     {
         $config = array(
-            'fos_rest' => array('format_listener' => false)
+            'fos_rest' => array('format_listener' => false),
         );
         $this->extension->load($config, $this->container);
 
@@ -139,7 +139,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $formats = array(
             'json' => false,
             'xml' => false,
-            'html' => true
+            'html' => true,
         );
 
         $this->assertEquals($formats, $this->container->getParameter('fos_rest.formats'));
@@ -148,7 +148,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testDisableViewResponseListener()
     {
         $config = array(
-            'fos_rest' => array('view' => array('view_response_listener' => false))
+            'fos_rest' => array('view' => array('view_response_listener' => false)),
         );
         $this->extension->load($config, $this->container);
 
@@ -361,11 +361,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array(
             'fos_rest' => array(
                 'exception' => array(
-                    'messages'=> array(
-                        'UnknownException' => true
-                    )
-                )
-            )
+                    'messages' => array(
+                        'UnknownException' => true,
+                    ),
+                ),
+            ),
         ), $this->container);
     }
 
@@ -377,11 +377,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array(
             'fos_rest' => array(
                 'exception' => array(
-                    'codes'=> array(
-                        'UnknownException' => 404
-                    )
-                )
-            )
+                    'codes' => array(
+                        'UnknownException' => 404,
+                    ),
+                ),
+            ),
         ), $this->container);
     }
 
@@ -390,11 +390,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array(
             'fos_rest' => array(
                 'exception' => array(
-                    'codes'=> array(
-                        'Exception' => 404
-                    )
-                )
-            )
+                    'codes' => array(
+                        'Exception' => 404,
+                    ),
+                ),
+            ),
         ), $this->container);
         $this->assertFalse($this->container->hasDefinition('fos_rest.exception.codes'));
     }
@@ -409,7 +409,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $arguments = $loader->getArguments();
 
-        $this->assertEquals('%' . $loaderClassParameter . '%', $loader->getClass());
+        $this->assertEquals('%'.$loaderClassParameter.'%', $loader->getClass());
         $this->assertEquals(5, count($arguments));
         $this->assertEquals('service_container', (string) $arguments[0]);
         $this->assertEquals('file_locator', (string) $arguments[1]);
@@ -439,7 +439,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $processorRef = new Reference('fos_rest.routing.loader.processor');
         $arguments  = $loader->getArguments();
 
-        $this->assertEquals('%' . $loaderClassParameter . '%', $loader->getClass());
+        $this->assertEquals('%'.$loaderClassParameter.'%', $loader->getClass());
         $this->assertEquals(5, count($arguments));
         $this->assertEquals($locatorRef, $arguments[0]);
         $this->assertEquals($processorRef, $arguments[1]);
@@ -532,6 +532,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         foreach ($this->container->getDefinition($serviceId)->getMethodCalls() as $methodCall) {
             if ($methodCall[0] === $methodName) {
                 $this->assertEquals($arguments, $methodCall[1], $message);
+
                 return;
             }
         }

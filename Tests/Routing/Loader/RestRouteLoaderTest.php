@@ -117,6 +117,7 @@ class RestRouteLoaderTest extends LoaderTest
 
         if (!method_exists('Symfony\Component\Routing\Annotation\Route','setCondition')) {
             $this->markTestSkipped('The "Routing" component have a version <2.4');
+
             return;
         }
 
@@ -292,6 +293,6 @@ class RestRouteLoaderTest extends LoaderTest
         $loader = $this->getControllerLoader($formats);
         $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
 
-        return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'. $fixtureName, 'rest');
+        return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'.$fixtureName, 'rest');
     }
 }

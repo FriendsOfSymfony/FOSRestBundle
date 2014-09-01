@@ -47,6 +47,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpKernel\Event\FilterControllerEvent|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getFilterEvent(Request $request)
@@ -64,7 +65,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Request $request
-     * @param mixed $result
+     * @param mixed   $result
      *
      * @return \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent|\PHPUnit_Framework_MockObject_MockObject
      */
@@ -265,7 +266,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedCode, $response->getStatusCode());
     }
 
-    public static function  serializerEnableMaxDepthChecksProvider()
+    public static function serializerEnableMaxDepthChecksProvider()
     {
         return array(
             array(false, get_class(null)),
@@ -320,7 +321,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         return array(
             array(true, false, false),
             array(true, true, true),
-            array(false, null, true)
+            array(false, null, true),
         );
     }
 

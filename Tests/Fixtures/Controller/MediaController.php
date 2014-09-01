@@ -21,4 +21,4 @@ class MediaController extends FOSRestController implements ClassResourceInterfac
 
     public function getAction($slug)
     {} // [GET] /media/{slug}
-} 
+}

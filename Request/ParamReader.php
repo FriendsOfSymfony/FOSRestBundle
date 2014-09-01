@@ -46,6 +46,7 @@ class ParamReader implements ParamReaderInterface
 
         $methodParams = $this->getParamsFromMethod($reflection->getMethod($method));
         $classParams = $this->getParamsFromClass($reflection);
+
         return array_merge($methodParams, $classParams);
     }
 

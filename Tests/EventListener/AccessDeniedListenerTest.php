@@ -64,7 +64,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Request $request
-     * @param array $formats
+     * @param array   $formats
      */
     private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats)
     {
@@ -123,7 +123,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Request $request
-     * @param array $formats
+     * @param array   $formats
      */
     private function doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest(Request $request, array $formats)
     {
@@ -143,7 +143,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Request $request
-     * @param array $formats
+     * @param array   $formats
      */
     private function doTestUnauthorizedHttpExceptionHasCorrectChallenge(Request $request, array $formats)
     {

@@ -31,7 +31,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
      *
      * @param RouterInterface $router
      * @param string          $cacheDir
-     * @param bool            $isDebug Kernel debug flag
+     * @param bool            $isDebug  Kernel debug flag
      */
     public function __construct(RouterInterface $router, $cacheDir, $isDebug)
     {

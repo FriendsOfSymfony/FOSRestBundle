@@ -71,14 +71,14 @@ class ExceptionController extends ContainerAware
                 'ExceptionController::showAction can only accept some exceptions (%s, %s), "%s" given',
                 "Symfony\Component\HttpKernel\Exception\FlattenException",
                 "Symfony\Component\Debug\Exception\FlattenException",
-                get_class($exception)
+                get_class($exception),
             ));
         }
 
         $format = $this->getFormat($request, $format);
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined, while handling: ';
-            $message.= $this->getExceptionMessage($exception);
+            $message .= $this->getExceptionMessage($exception);
 
             return new Response($message, Codes::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
         }
@@ -103,7 +103,7 @@ class ExceptionController extends ContainerAware
             $response = $viewHandler->handle($view);
         } catch (\Exception $e) {
             $message = 'An Exception was thrown while handling: ';
-            $message.= $this->getExceptionMessage($exception);
+            $message .= $this->getExceptionMessage($exception);
             $response = new Response($message, Codes::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
         }
 
@@ -157,7 +157,7 @@ class ExceptionController extends ContainerAware
             }
         } catch (\ReflectionException $re) {
             return "FOSUserBundle: Invalid class in  fos_res.exception.messages: "
-                    . $re->getMessage();
+                    .$re->getMessage();
         }
 
         return false;

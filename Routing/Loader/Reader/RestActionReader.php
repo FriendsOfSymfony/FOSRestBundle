@@ -188,8 +188,6 @@ class RestActionReader
         $schemes      = array();
         $condition    = null;
 
-
-
         $annotations = $this->readRouteAnnotation($method);
         if ($annotations) {
             foreach ($annotations as $annotation) {
@@ -208,7 +206,7 @@ class RestActionReader
                     $annoRequirements['_method'] = $requirements['_method'];
                 }
 
-                $pattern      = $annotation->getPattern() !== null ? $this->routePrefix . $annotation->getPattern() : $pattern;
+                $pattern      = $annotation->getPattern() !== null ? $this->routePrefix.$annotation->getPattern() : $pattern;
                 $requirements = array_merge($requirements, $annoRequirements);
                 $options      = array_merge($options, $annotation->getOptions());
                 $defaults     = array_merge($defaults, $annotation->getDefaults());
@@ -377,7 +375,7 @@ class RestActionReader
         $routeName = '';
         foreach ($resources as $resource) {
             if (null !== $resource) {
-                $routeName .= '_' . basename($resource);
+                $routeName .= '_'.basename($resource);
             }
         }
 
@@ -470,6 +468,7 @@ class RestActionReader
                 $annotations = array_merge($annotations, $annotations_new);
             }
         }
+
         return $annotations;
     }
 
@@ -522,9 +521,9 @@ class RestActionReader
 
         if ($annotations_new = $this->annotationReader->getMethodAnnotations($reflectionMethod)) {
 
-            foreach($annotations_new as $annotation) {
+            foreach ($annotations_new as $annotation) {
                 if ($annotation instanceof $annotationClass) {
-                    $annotations[]= $annotation;
+                    $annotations[] = $annotation;
                 }
             }
         }

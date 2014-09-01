@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\Util\FormatNegotiator;
-use FOS\RestBundle\Util\StopFormatListenerException;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -44,8 +44,8 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'path' => '^/',
                         'priorities' => array('html', 'json'),
                         'fallback_format' => 'html',
-                        'prefer_extension' => true
-                )
+                        'prefer_extension' => true,
+                ),
             ) )
         );
 
@@ -84,8 +84,8 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'path' => '^/',
                         'priorities' => array('html', 'json'),
                         'fallback_format' => 'html',
-                        'prefer_extension' => true
-                    )
+                        'prefer_extension' => true,
+                    ),
                 ) )
             );
 

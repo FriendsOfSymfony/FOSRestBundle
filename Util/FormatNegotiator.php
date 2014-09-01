@@ -93,7 +93,7 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
                     }
                 }
                 if ($extensionHeader) {
-                    $acceptHeader.= $extensionHeader.'; q='.$options['prefer_extension'];
+                    $acceptHeader .= $extensionHeader.'; q='.$options['prefer_extension'];
                 }
             }
 

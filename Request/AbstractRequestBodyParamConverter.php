@@ -42,8 +42,8 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
 
     /**
      * @param object             $serializer
-     * @param array|null         $groups     An array of groups to be used in the serialization context
-     * @param string|null        $version    A version string to be used in the serialization context
+     * @param array|null         $groups                   An array of groups to be used in the serialization context
+     * @param string|null        $version                  A version string to be used in the serialization context
      * @param object             $serializer
      * @param ValidatorInterface $validator
      * @param string|null        $validationErrorsArgument

@@ -26,11 +26,11 @@ use FOS\RestBundle\EventListener\BodyListener;
 class BodyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param boolean $decode             use decoder provider
-     * @param Request $request            the original request
-     * @param string  $method             a http method (e.g. POST, GET, PUT, ...)
-     * @param array   $expectedParameters the http parameters of the updated request
-     * @param string  $contentType        the request header content type
+     * @param boolean $decode                                 use decoder provider
+     * @param Request $request                                the original request
+     * @param string  $method                                 a http method (e.g. POST, GET, PUT, ...)
+     * @param array   $expectedParameters                     the http parameters of the updated request
+     * @param string  $contentType                            the request header content type
      * @param boolean $throwExceptionOnUnsupportedContentType
      *
      * @dataProvider testOnKernelRequestDataProvider

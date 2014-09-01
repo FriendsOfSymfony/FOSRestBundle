@@ -87,7 +87,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type, $currentDir);
 
                 if ($imported instanceof RestRouteCollection) {
-                    $parents[]  = ($prefix ? $prefix . '/' : '') . $imported->getSingularName();
+                    $parents[]  = ($prefix ? $prefix.'/' : '').$imported->getSingularName();
                     $prefix     = null;
 
                     $this->collectionParents[$name] = $parents;
@@ -105,7 +105,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 if ($this->includeFormat) {
                     // append format placeholder if not present
                     if (false === strpos($config['path'], '{_format}')) {
-                        $config['path'].='.{_format}';
+                        $config['path'] .= '.{_format}';
                     }
 
                     // set format requirement if configured globally

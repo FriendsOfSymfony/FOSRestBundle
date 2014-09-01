@@ -32,13 +32,13 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
         $annotationReader = $this->getMock('Doctrine\Common\Annotations\Reader');
 
         $methodAnnotations = array();
-        $foo = new QueryParam;
+        $foo = new QueryParam();
         $foo->name = 'foo';
         $foo->requirements = '\d+';
         $foo->description = 'The foo';
         $methodAnnotations[] = $foo;
 
-        $bar = new QueryParam;
+        $bar = new QueryParam();
         $bar->name = 'bar';
         $bar->requirements = '\d+';
         $bar->description = 'The bar';
@@ -52,27 +52,27 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($methodAnnotations));
 
         $classAnnotations = array();
-        
-        $baz = new QueryParam;
+
+        $baz = new QueryParam();
         $baz->name = 'baz';
         $baz->requirements = '\d+';
         $baz->description = 'The baz';
         $classAnnotations[] = $baz;
-        
-        $mikz = new QueryParam;
+
+        $mikz = new QueryParam();
         $mikz->name = 'mikz';
         $mikz->requirements = '\d+';
         $mikz->description = 'The real mikz';
         $classAnnotations[] = $mikz;
-        
+
         $not = new NamePrefix(array());
         $classAnnotations[] = $not;
-        
+
         $annotationReader
                 ->expects($this->any())
                 ->method('getClassAnnotations')
                 ->will($this->returnValue($classAnnotations));
-        
+
         $this->paramReader = new ParamReader($annotationReader);
     }
 

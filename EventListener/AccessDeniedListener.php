@@ -35,8 +35,8 @@ class AccessDeniedListener extends ExceptionListener
     /**
      * Constructor.
      *
-     * @param array           $formats   An array with keys corresponding to request formats or content types
-     *                                   that must be processed by this listener
+     * @param array           $formats    An array with keys corresponding to request formats or content types
+     *                                    that must be processed by this listener
      * @param string          $challenge
      * @param string          $controller
      * @param LoggerInterface $logger

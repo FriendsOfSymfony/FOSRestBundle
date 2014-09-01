@@ -16,16 +16,12 @@ use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use JMS\Serializer\EventDispatcher\EventDispatcher;
-use JMS\Serializer\Exclusion\GroupsExclusionStrategy;
 use JMS\Serializer\Handler\FormErrorHandler;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\SerializerBuilder;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use FOS\RestBundle\Util\Codes;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +41,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSupportsFormat($expected, $formats, $customFormatName)
     {
         $viewHandler = new ViewHandler($formats);
-        $viewHandler->registerHandler($customFormatName, function(){});
+        $viewHandler->registerHandler($customFormatName, function () {});
 
         $this->assertEquals($expected, $viewHandler->supports('html'));
     }
@@ -63,7 +59,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testRegisterHandle()
     {
         $viewHandler = new ViewHandler();
-        $viewHandler->registerHandler('html', ($callback = function(){}));
+        $viewHandler->registerHandler('html', ($callback = function () {}));
         $this->assertAttributeEquals(array('html' => $callback), 'customHandlers', $viewHandler);
     }
 
@@ -112,7 +108,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0, Codes::HTTP_OK),
             'form key form is bound and invalid' => array(403, true, true, false, 1, 1, Codes::HTTP_OK),
             'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK),
-            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK)
+            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK),
         );
     }
 
@@ -207,7 +203,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $serializer
             ->expects($this->once())
             ->method('serialize')
-            ->will($this->returnCallback(function($data) {
+            ->will($this->returnCallback(function ($data) {
                 return serialize($data);
             }))
         ;
@@ -230,7 +226,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $view = new View($form);
-        $response = $viewHandler->createResponse($view, new Request, 'json');
+        $response = $viewHandler->createResponse($view, new Request(), 'json');
 
         $data = unserialize($response->getContent());
         $this->assertInstanceOf('FOS\\RestBundle\\Util\\ExceptionWrapper', $data);
@@ -292,7 +288,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         }
 
         $view = new View($data);
-        $response = $viewHandler->createResponse($view, new Request, $format);
+        $response = $viewHandler->createResponse($view, new Request(), $format);
         $this->assertEquals(var_export($expected, true), $response->getContent());
     }
 
@@ -383,7 +379,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'should serialize null'     => array("null", true),
-            'should not serialize null' => array("", false)
+            'should not serialize null' => array("", false),
         );
     }
 
@@ -410,7 +406,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'should serialize null values'     => array(true, true),
-            'should not serialize null values' => array(false, false)
+            'should not serialize null values' => array(false, false),
         );
     }
 
@@ -464,7 +460,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandleCustom()
     {
         $viewHandler = new ViewHandler(array());
-        $viewHandler->registerHandler('html', ($callback = function(){ return 'foo'; }));
+        $viewHandler->registerHandler('html', ($callback = function () { return 'foo'; }));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container
@@ -536,7 +532,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'assoc array does not change'   => array(array('foo' => 'bar'), array('foo' => 'bar')),
             'ordered array is wrapped as data key'  => array(array('foo', 'bar'), array('data' => array('foo', 'bar'))),
             'object is wrapped as data key' => array($object, array('data' => $object)),
-            'form is wrapped as form key'   => array($form, array('form' => $formView, 'data' => $formView))
+            'form is wrapped as form key'   => array($form, array('form' => $formView, 'data' => $formView)),
         );
     }
 
@@ -575,7 +571,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             array(
                 'status_code' => 400,
                 'message' => 'Validation Failed',
-                'errors' => $form
+                'errors' => $form,
             )
         );
 
@@ -642,7 +638,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'json' => array('json'),
-            'xml' => array('xml')
+            'xml' => array('xml'),
         );
     }
 }

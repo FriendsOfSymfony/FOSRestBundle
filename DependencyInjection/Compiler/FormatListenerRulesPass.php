@@ -30,7 +30,7 @@ class FormatListenerRulesPass implements CompilerPassInterface
         if ($container->hasParameter('web_profiler.debug_toolbar.mode')) {
             $path = '_profiler';
             if (2 === $container->getParameter('web_profiler.debug_toolbar.mode')) {
-                $path.= '|_wdt';
+                $path .= '|_wdt';
             }
 
             $profilerRule = array(
@@ -39,7 +39,7 @@ class FormatListenerRulesPass implements CompilerPassInterface
                 'path' => "^/$path/",
                 'priorities' => array('html', 'json'),
                 'fallback_format' => 'html',
-                'prefer_extension' => true
+                'prefer_extension' => true,
             );
 
             $this->addRule($profilerRule, $container);

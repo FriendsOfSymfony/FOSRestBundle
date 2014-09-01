@@ -104,7 +104,7 @@ class BodyListener
                     }
                     $request->request = new ParameterBag($data);
                 } else {
-                    throw new BadRequestHttpException('Invalid ' . $format . ' message received');
+                    throw new BadRequestHttpException('Invalid '.$format.' message received');
                 }
             }
         }

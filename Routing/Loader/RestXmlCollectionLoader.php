@@ -81,7 +81,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type, $currentDir);
 
                 if (!empty($name) && $imported instanceof RestRouteCollection) {
-                    $parents[]  = (!empty($prefix) ? $prefix . '/' : '') . $imported->getSingularName();
+                    $parents[]  = (!empty($prefix) ? $prefix.'/' : '').$imported->getSingularName();
                     $prefix     = null;
 
                     $this->collectionParents[$name] = $parents;
@@ -201,6 +201,7 @@ EOF
         if (class_exists('Symfony\Component\Config\Util\XmlUtils')) {
             $dom = XmlUtils::loadFile($file);
             $this->validate($dom);
+
             return $dom;
         }
 

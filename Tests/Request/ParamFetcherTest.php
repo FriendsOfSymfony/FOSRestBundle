@@ -67,23 +67,23 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->constraint = $this->getMockForAbstractClass('Symfony\Component\Validator\Constraint');
 
         $annotations = array();
-        $annotations['foo'] = new QueryParam;
+        $annotations['foo'] = new QueryParam();
         $annotations['foo']->name = 'foo';
         $annotations['foo']->requirements = '\d+';
         $annotations['foo']->default = '1';
         $annotations['foo']->description = 'The foo';
         $annotations['foo']->nullable = false;
 
-        $annotations['bar'] = new RequestParam;
+        $annotations['bar'] = new RequestParam();
         $annotations['bar']->name = 'bar';
         $annotations['bar']->requirements = '\d+';
         $annotations['bar']->description = 'The bar';
 
-        $annotations['baz'] = new RequestParam;
+        $annotations['baz'] = new RequestParam();
         $annotations['baz']->name = 'baz';
         $annotations['baz']->requirements = '\d?';
 
-        $annotations['buzz'] = new QueryParam;
+        $annotations['buzz'] = new QueryParam();
         $annotations['buzz']->array = true;
         $annotations['buzz']->name = 'buzz';
         $annotations['buzz']->requirements = '\d+';
@@ -91,17 +91,17 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['buzz']->nullable = false;
         $annotations['buzz']->description = 'An array';
 
-        $annotations['boo'] = new QueryParam;
+        $annotations['boo'] = new QueryParam();
         $annotations['boo']->array = true;
         $annotations['boo']->name = 'boo';
         $annotations['boo']->description = 'An array with no default value';
 
-        $annotations['boozz'] = new QueryParam;
+        $annotations['boozz'] = new QueryParam();
         $annotations['boozz']->name = 'boozz';
         $annotations['boozz']->requirements = '\d+';
         $annotations['boozz']->description = 'A scalar param with no default value (an optional limit param for example)';
 
-        $annotations['biz'] = new QueryParam;
+        $annotations['biz'] = new QueryParam();
         $annotations['biz']->name = 'biz';
         $annotations['biz']->key = 'business';
         $annotations['biz']->requirements = '\d+';
@@ -191,9 +191,9 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null),
                 array('foo' => 'bar'),
                 array('bar' => '1', 'baz' => '4'),
-                function(\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null)
+                        new ConstraintViolation("expected error", null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
@@ -205,7 +205,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                         ->with('bar', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
-                }
+                },
             ),
             array( // invalid array
                 'buzz',
@@ -235,9 +235,9 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array(), 'boozz' => null, 'biz' => null),
                 array('buzz' => array(2, 'invaliddata', 4)),
                 array('bar' => '1', 'baz' => '4'),
-                function(\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null)
+                        new ConstraintViolation("expected error", null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(1))
@@ -249,7 +249,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                         ->method('validateValue')
                         ->with('invaliddata', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
-                }
+                },
             ),
             array(  // Array not provided in GET query
                 'boo',
@@ -285,7 +285,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5),
                 array('bar' => '1', 'baz' => '4', 'boozz' => 5),
-            )
+            ),
         );
     }
 
@@ -304,12 +304,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null,'bub' => 10), $queryFetcher->all());
     }
 
-
     public function testValidatesConfiguredParamStrictly()
     {
         $constraint = new Regex(array(
             'pattern' => '#^\d+$#xsu',
-            'message' => "Query parameter value '354', does not match requirements '\\d+'"
+            'message' => "Query parameter value '354', does not match requirements '\\d+'",
         ));
 
         $this->validator->expects($this->once())
@@ -380,9 +379,9 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array(),
                 array('bar' => 'foo'),
                 'bar',
-                function(\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null)
+                        new ConstraintViolation("expected error", null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
@@ -394,22 +393,22 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                         ->method('validateValue')
                         ->with('foo', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
-                }
+                },
             ),
             array( // test missing strict param with lax requirement
                 array(),
                 array('baz' => 'foo'),
                 'baz',
-                function(\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null)
+                        new ConstraintViolation("expected error", null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
                         ->with('foo', new Regex(array('pattern' => '#^\\d?$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'")), null)
                         ->will($self->returnValue($errors));
-                }
+                },
             ),
         );
     }
@@ -497,7 +496,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->violationFormatter->expects($this->once())
             ->method('formatList')
             ->will($this->returnValue('foobar'));
-            
+
         $this->setExpectedException(
             "\\Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException",
             "foobar"

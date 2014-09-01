@@ -93,7 +93,6 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $this->assertEquals(count($names), count(array_unique($names)));
     }
 
-
     public function testManualRoutes()
     {
         $collection = $this->loadFromYamlCollectionFixture('routes.yml');
@@ -117,7 +116,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             'routes.yml',
             true,
             array(
-                'json' => false
+                'json' => false,
             )
         );
         $route = $collection->get('get_users');
@@ -184,6 +183,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      * @param bool     $includeFormat whether or not the requested view format must be included in the route path
      * @param string[] $formats       supported view formats
      * @param string   $defaultFormat default view format
+     *
      * @return RouteCollection
      */
     protected function loadFromYamlCollectionFixture(
@@ -197,7 +197,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $defaultFormat = null
     ) {
         $collectionLoader = new RestYamlCollectionLoader(
-            new FileLocator(array(__DIR__ . '/../../Fixtures/Routes')),
+            new FileLocator(array(__DIR__.'/../../Fixtures/Routes')),
             new RestRouteProcessor(),
             $includeFormat,
             $formats,

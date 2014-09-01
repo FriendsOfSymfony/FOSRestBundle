@@ -43,14 +43,14 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSettingAttributes()
     {
-        $request = new Request;
+        $request = new Request();
         $request->attributes->set('customer', null);
         $event = $this->getEvent($request);
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
             ->will($this->returnValue(array(
-                'customer' => 5
+                'customer' => 5,
             )));
 
         $this->paramFetcherListener->onKernelController($event);
@@ -65,7 +65,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSettingParamFetcherOnRequest()
     {
-        $request = new Request;
+        $request = new Request();
         $event = $this->getEvent($request);
 
         $this->paramFetcher->expects($this->once())
@@ -85,7 +85,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSettingParamFetcherByTypehint($actionName, $expectedAttribute)
     {
-        $request = new Request;
+        $request = new Request();
 
         $event = $this->getEvent($request, $actionName);
 
@@ -125,7 +125,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $controller = new ParamFetcherController;
+        $controller = new ParamFetcherController();
 
         $event->expects($this->atLeastOnce())
             ->method('getController')

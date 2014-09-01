@@ -25,7 +25,7 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
             'foo' => array(
                 'foo_bar' => 'foo',
                 'foo_Bar' => 'foo',
-            )
+            ),
         ));
     }
 
@@ -44,11 +44,11 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
             array(array(), array()),
             array(
                 array('foo' => array('Foo_bar_baz' => array('foo_Bar' => array('foo_bar' => 'foo_bar'))),
-                    'foo_1ar' => array('foo_bar')
+                    'foo_1ar' => array('foo_bar'),
                 ),
                 array('foo' => array('FooBarBaz' => array('fooBar' => array('fooBar' => 'foo_bar'))),
-                    'foo1ar' => array('foo_bar')
-                )
+                    'foo1ar' => array('foo_bar'),
+                ),
             ),
         );
     }

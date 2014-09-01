@@ -23,7 +23,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
  * @author Loick Piera <pyrech@gmail.com>
  */
 class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
-{   
+{
     public function testViolationIsWellFormatted()
     {
         $violation = $this->getMockBuilder('Symfony\Component\Validator\ConstraintViolation')
@@ -33,21 +33,21 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
         $violation->expects($this->once())
             ->method('getInvalidValue')
             ->will($this->returnValue('bar'));
-            
+
         $violation->expects($this->once())
             ->method('getMessage')
             ->will($this->returnValue('expected message'));
 
         $param = new QueryParam();
         $param->name = 'foo';
-    
+
         $formatter = new ViolationFormatter();
         $this->assertEquals(
             "Query parameter foo value 'bar' violated a constraint (expected message)",
             $formatter->format($param, $violation)
         );
     }
-    
+
     public function testViolationListIsWellFormatted()
     {
         $errors = new ConstraintViolationList(array(
@@ -57,7 +57,7 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
 
         $param = new RequestParam();
         $param->name = 'foo';
-    
+
         $formatter = new ViolationFormatter();
         $this->assertEquals(
             "Request parameter foo value 'bar' violated a constraint (expected message 1)"

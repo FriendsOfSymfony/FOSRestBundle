@@ -137,8 +137,8 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $options = array(
             'deserializationContext' => array(
                 'groups' => array('group1'),
-                'version' => '1.0'
-            )
+                'version' => '1.0',
+            ),
         );
 
         $context = $this->createDeserializationContext(
@@ -192,7 +192,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $options = array(
             'deserializationContext' => array(
                 'json_decode_options' => 2, // JSON_BIGINT_AS_STRING
-            )
+            ),
         );
 
         $this->serializer->expects($this->once())
@@ -225,8 +225,8 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
             'validator' => array(
                 'groups' => array('group1'),
                 'traverse' => true,
-                'deep' => true
-            )
+                'deep' => true,
+            ),
         );
 
         $validator->expects($this->once())
@@ -252,7 +252,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $expected = array(
             'groups' => null,
             'traverse' => false,
-            'deep' => false
+            'deep' => false,
         );
 
         $this->assertEquals($expected, $options);
@@ -269,13 +269,13 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $userOptions = array(
             'validator' => array(
                 'groups' => array('Posting'),
-            )
+            ),
         );
 
         $expectedOptions = array(
             'groups' => array('Posting'),
             'traverse' => false,
-            'deep' => false
+            'deep' => false,
         );
 
         $converterMock = $this->getMockBuilder('FOS\RestBundle\Request\RequestBodyParamConverter20')
@@ -302,7 +302,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $userOptions = array(
             'validator' => array(
                 'groups' => array('Posting'),
-            )
+            ),
         );
         $config = $this->createConfiguration(null, null, $userOptions);
 

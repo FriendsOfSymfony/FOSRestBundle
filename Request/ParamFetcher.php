@@ -71,7 +71,7 @@ class ParamFetcher implements ParamFetcherInterface
      *
      * Note that adding a param that has the same name as an existing param will override that param.
      *
-     * @param Param                       $param
+     * @param Param $param
      */
     public function addParam(Param $param)
     {
@@ -207,7 +207,7 @@ class ParamFetcher implements ParamFetcherInterface
                     $paramType,
                     $param,
                     $config->requirements
-                )
+                ),
             ));
         }
 
