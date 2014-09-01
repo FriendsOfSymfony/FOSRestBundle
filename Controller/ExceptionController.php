@@ -71,7 +71,7 @@ class ExceptionController extends ContainerAware
                 'ExceptionController::showAction can only accept some exceptions (%s, %s), "%s" given',
                 "Symfony\Component\HttpKernel\Exception\FlattenException",
                 "Symfony\Component\Debug\Exception\FlattenException",
-                get_class($exception),
+                get_class($exception)
             ));
         }
 
