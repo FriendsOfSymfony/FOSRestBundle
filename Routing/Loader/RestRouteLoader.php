@@ -105,7 +105,13 @@ class RestRouteLoader extends Loader
 
         if (0 === strpos($controller, '@')) {
             $file = $this->locator->locate($controller);
-            $controller = $this->findClass($file);
+            $controllerClass = $this->findClass($file);
+
+            if (false === $controllerClass) {
+                throw new \InvalidArgumentException(sprintf('Can\'t find class for controller "%s"', $controller));
+            }
+
+            $controller = $controllerClass;
         }
 
         if ($this->container->has($controller)) {
