@@ -18,6 +18,7 @@ use Negotiation\AcceptHeader;
 
 class FormatNegotiator implements MediaTypeNegotiatorInterface
 {
+    private $formatNegotiator;
     private $map = array();
 
     public function __construct()

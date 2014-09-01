@@ -64,7 +64,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     /**
      * Whether or not to serialize null view data.
      *
-     * @var int
+     * @var bool
      */
     protected $serializeNull;
 

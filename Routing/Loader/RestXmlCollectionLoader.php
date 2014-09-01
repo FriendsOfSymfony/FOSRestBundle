@@ -26,6 +26,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
 {
     protected $collectionParents = array();
     private $processor;
+    private $includeFormat;
+    private $formats;
+    private $defaultFormat;
 
     /**
      * Initializes xml loader.
