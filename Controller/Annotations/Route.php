@@ -27,6 +27,9 @@ class Route extends BaseRoute
         $this->setRequirements($requirements);
     }
 
+    /**
+     * @return string|null
+     */
     public function getMethod()
     {
         return null;

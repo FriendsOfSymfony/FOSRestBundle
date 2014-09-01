@@ -35,6 +35,8 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
      * Load routes etalon from yml fixture file under Tests\Fixtures directory.
      *
      * @param string $etalonName name of the YML fixture
+     *
+     * @return array
      */
     protected function loadEtalonRoutesInfo($etalonName)
     {
@@ -47,9 +49,11 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Buils a RestRouteLoader
+     * Builds a RestRouteLoader
      *
      * @param array $formats available resource formats
+     *
+     * @return RestRouteLoader
      */
     protected function getControllerLoader(array $formats = array())
     {

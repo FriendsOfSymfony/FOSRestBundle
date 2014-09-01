@@ -330,7 +330,7 @@ class View
     /**
      * Gets the headers.
      *
-     * @return array|null
+     * @return array
      */
     public function getHeaders()
     {
