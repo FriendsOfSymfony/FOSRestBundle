@@ -69,9 +69,9 @@ class ExceptionController extends ContainerAware
         if (!$exception instanceof DebugFlattenException && !$exception instanceof HttpFlattenException) {
             throw new \InvalidArgumentException(sprintf(
                 'ExceptionController::showAction can only accept some exceptions (%s, %s), "%s" given',
-                "Symfony\Component\HttpKernel\Exception\FlattenException",
-                "Symfony\Component\Debug\Exception\FlattenException",
-                get_class($exception),
+                'Symfony\Component\HttpKernel\Exception\FlattenException',
+                'Symfony\Component\Debug\Exception\FlattenException',
+                get_class($exception)
             ));
         }
 
