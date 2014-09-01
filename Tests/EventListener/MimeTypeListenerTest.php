@@ -13,8 +13,8 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-
 use FOS\RestBundle\EventListener\MimeTypeListener;
+
 /**
  * Request listener test
  *

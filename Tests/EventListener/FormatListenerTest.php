@@ -15,7 +15,6 @@ use FOS\RestBundle\Util\FormatNegotiator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 use FOS\RestBundle\EventListener\FormatListener;
 
 /**

@@ -5,8 +5,6 @@ namespace FOS\RestBundle\Examples;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\Util\Codes;
-
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
