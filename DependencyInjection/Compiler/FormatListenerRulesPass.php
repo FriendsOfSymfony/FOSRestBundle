@@ -51,7 +51,7 @@ class FormatListenerRulesPass implements CompilerPassInterface
         }
     }
 
-    protected function addRule($rule, $container)
+    protected function addRule(array $rule, ContainerBuilder $container)
     {
         $matcher = $this->createRequestMatcher(
             $container,

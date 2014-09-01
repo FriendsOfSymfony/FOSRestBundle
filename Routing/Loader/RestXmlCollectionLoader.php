@@ -161,7 +161,8 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * @param  \DOMDocument              $dom
+     * @param \DOMDocument $dom
+     *
      * @throws \InvalidArgumentException When xml doesn't validate its xsd schema
      */
     protected function validate(\DOMDocument $dom)
@@ -213,6 +214,8 @@ EOF
      *
      * Note: The underscore postfix on the method name is to ensure compatibility with versions
      *       before 2.0.16 while working around a bug in PHP https://bugs.php.net/bug.php?id=62956
+     *
+     * @param bool $internalErrors The previous state of internal errors to reset it
      *
      * @return array An array of libxml error strings
      */

@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\View;
 
+use FOS\RestBundle\Util\ExceptionWrapper;
+
 /**
  * @author Toni Van de Voorde (toni [dot] vdv [AT] gmail [dot] com)
  */
@@ -19,7 +21,7 @@ interface ExceptionWrapperHandlerInterface
     /**
      * @param array $data
      *
-     * @return mixed
+     * @return ExceptionWrapper
      */
     public function wrap($data);
 }

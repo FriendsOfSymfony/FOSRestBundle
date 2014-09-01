@@ -210,7 +210,7 @@ class View
     /**
      * Sets template variable name to be used in templating formats.
      *
-     * @param string
+     * @param string $templateVar
      *
      * @return View
      */
@@ -224,7 +224,7 @@ class View
     /**
      * Sets the engine.
      *
-     * @param $engine
+     * @param string $engine
      *
      * @return View
      */
@@ -238,7 +238,7 @@ class View
     /**
      * Sets the format.
      *
-     * @param $format
+     * @param string $format
      *
      * @return View
      */
@@ -252,7 +252,7 @@ class View
     /**
      * Sets the location (implicitly removes the route).
      *
-     * @param $location
+     * @param string $location
      *
      * @return View
      */
@@ -267,7 +267,7 @@ class View
     /**
      * Sets the route (implicitly removes the location).
      *
-     * @param $route
+     * @param string $route
      *
      * @return View
      */
@@ -282,7 +282,7 @@ class View
     /**
      * Sets route data.
      *
-     * @param mixed $parameters
+     * @param array $parameters
      *
      * @return View
      */
@@ -400,7 +400,7 @@ class View
     /**
      * Gets route parameters.
      *
-     * @return string|null
+     * @return array|null
      */
     public function getRouteParameters()
     {

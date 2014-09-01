@@ -40,7 +40,8 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getFormatsDataProvider
      *
-     * @param array $formats
+     * @param array  $formats
+     * @param string $format
      */
     public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
     {
@@ -52,7 +53,9 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getContentTypesDataProvider
-     * @param array $contentTypes
+     *
+     * @param array  $formats
+     * @param string $contentType
      */
     public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
     {
@@ -97,8 +100,8 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getFormatsDataProvider
-     * @param array $formats
-     * @param $format
+     * @param array  $formats
+     * @param string $format
      */
     public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
     {
@@ -110,8 +113,8 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getContentTypesDataProvider
-     * @param array $formats
-     * @param $contentType
+     * @param array  $formats
+     * @param string $contentType
      */
     public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
     {

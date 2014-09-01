@@ -125,7 +125,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     /**
      * Sets the default serialization groups.
      *
-     * @param array $groups
+     * @param array|string $groups
      */
     public function setExclusionStrategyGroups($groups)
     {
