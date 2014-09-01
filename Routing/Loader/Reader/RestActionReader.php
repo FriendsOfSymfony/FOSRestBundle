@@ -197,8 +197,6 @@ class RestActionReader
                 $defaults     = array('_controller' => $method->getName());
                 $requirements = array('_method' => strtoupper($httpMethod));
                 $options      = array();
-                $host         = '';
-                $schemes      = array();
                 $condition    = null;
 
                 $annoRequirements = $annotation->getRequirements();
@@ -207,17 +205,12 @@ class RestActionReader
                     $annoRequirements['_method'] = $requirements['_method'];
                 }
 
-                $pattern      = $annotation->getPattern() !== null ? $this->routePrefix.$annotation->getPattern() : $pattern;
+                $pattern      = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $pattern;
                 $requirements = array_merge($requirements, $annoRequirements);
                 $options      = array_merge($options, $annotation->getOptions());
                 $defaults     = array_merge($defaults, $annotation->getDefaults());
-                //TODO remove checks after Symfony requirement is bumped to 2.2
-                if (method_exists($annotation, 'getHost')) {
-                    $host = $annotation->getHost();
-                }
-                if (method_exists($annotation, 'getSchemes')) {
-                    $schemes = $annotation->getSchemes();
-                }
+                $host = $annotation->getHost();
+                $schemes = $annotation->getSchemes();
                //TODO remove checks after Symfony requirement is bumped to 2.4
                 if (method_exists($annotation, 'getCondition')) {
                     $condition = $annotation->getCondition();
