@@ -101,4 +101,46 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $listener->onKernelRequest($event);
     }
+
+    /**
+     * Test FormatListener won't overwrite request format when it was already specified
+     *
+     * @dataProvider useSpecifiedFormatDataProvider
+     */
+    public function testUseSpecifiedFormat($format, $result)
+    {
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request = new Request();
+        if ($format) {
+            $request->setRequestFormat($format);
+        }
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $formatNegotiator->expects($this->any())
+            ->method('getBestMediaType')
+            ->will($this->returnValue('application/xml'));
+
+        $listener = new FormatListener($formatNegotiator);
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($request->getRequestFormat(), $result);
+    }
+
+    public function useSpecifiedFormatDataProvider()
+    {
+        return array(
+            array(null, 'xml'),
+            array('json', 'json'),
+        );
+    }
 }
