@@ -13,7 +13,6 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\FOSRestController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 class ArticleController extends FosRestController implements ClassResourceInterface

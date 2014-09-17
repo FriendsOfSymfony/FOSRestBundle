@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Tests\EventListener;
 use FOS\RestBundle\EventListener\ParamFetcherListener;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * Param Fetcher Listener Tests

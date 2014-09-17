@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 
 class OrdersController extends Controller
 {
