@@ -283,46 +283,49 @@ use FOS\RestBundle\Controller\Annotations\Route;
 }
 ```
 
-### Change pluralization in generated routes
+### Changing pluralization in generated routes
 
-For everyone who wants to change pluralization in generated routes, you can do this by replacing "fos_rest.service.inflector" service with your implementation of "fos_rest.inflector.doctrine" service by creating new class that implements "FOS\RestBundle\Util\Inflector\InflectorInterface", than define service of this class with name e.g. "my_fos_rest.inflector.doctrine" and simply set parameter in config.yml.
+If you want to change pluralization in generated routes, you can do this by replacing
+"fos_rest.service.inflector" service with your own implementation of "fos_rest.inflector".
+Create a new class that implements "FOS\RestBundle\Util\Inflector\InflectorInterface" and  define a service of this
+class with name e.g. "my_fos_rest.inflector" and set the parameter in config.yml.
 
-The example below will remove pluralization by implementing the interface and returning the "$word" instead of executing method ```Inflector::pluralize($word);```
+The example below will remove pluralization by implementing the interface and returning the "$word"
+instead of executing method ```Inflector::pluralize($word);```
 
-Define your service in config.yml
-```
-services:
-    yournamespace.yourbundle.util.inflector.doctrine:
-      class: YourNamespace\YourBundle\Util\Inflector
-```
-
-Tell fos_rest to use your own service as inflector, also in config.yml
-```
-fos_rest:
-    service:
-        inflector: yournamespace.yourbundle.util.inflector.doctrine
-```
-
-Example class implementing InflectorInterface
+**Example class implementing InflectorInterface**
 ```php
 <?php
-namespace YourNamespace\YourBundle\Util\Inflector;
+namespace Acme\HelloBundle\Util\Inflector;
 
-use Doctrine\Common\Inflector\Inflector;
 use FOS\RestBundle\Util\Inflector\InflectorInterface;
 
 /**
- * Inflector object using the Doctrine/Inflector
+ * Inflector class
  *
  */
-class DoctrineInflector implements InflectorInterface
+class NoopInflector implements InflectorInterface
 {
     public function pluralize($word)
     {
-    	// Don't pluralize <-- By default this is: Inflector::pluralize($word);
+    	// Don't pluralize
         return $word;
     }
 }
+```
+
+**Define your service in config.yml**
+```
+services:
+    acme.hellobundle.util.inflector:
+      class: Acme\HelloBundle\Util\NoopInflector
+```
+
+**Tell fos_rest to use your own service as inflector, also in config.yml**
+```
+fos_rest:
+    service:
+        inflector: acme.hellobundle.util.inflector
 ```
 
 ## That was it!
