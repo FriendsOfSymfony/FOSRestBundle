@@ -283,5 +283,49 @@ use FOS\RestBundle\Controller\Annotations\Route;
 }
 ```
 
+### Changing pluralization in generated routes
+
+If you want to change pluralization in generated routes, you can do this by replacing
+"fos_rest.inflector.doctrine" service with your own implementation.
+Create a new class that implements "FOS\RestBundle\Util\Inflector\InflectorInterface".
+
+The example below will remove pluralization by implementing the interface and returning the "$word"
+instead of executing method ```Inflector::pluralize($word);```
+
+**Example class implementing InflectorInterface**
+```php
+<?php
+namespace Acme\HelloBundle\Util\Inflector;
+
+use FOS\RestBundle\Util\Inflector\InflectorInterface;
+
+/**
+ * Inflector class
+ *
+ */
+class NoopInflector implements InflectorInterface
+{
+    public function pluralize($word)
+    {
+    	// Don't pluralize
+        return $word;
+    }
+}
+```
+
+**Define your service in config.yml**
+```
+services:
+    acme.hellobundle.util.inflector:
+      class: Acme\HelloBundle\Util\NoopInflector
+```
+
+**Tell fos_rest to use your own service as inflector, also in config.yml**
+```
+fos_rest:
+    service:
+        inflector: acme.hellobundle.util.inflector
+```
+
 ## That was it!
 [Return to the index](index.md) or continue reading about [Automatic route generation: multiple RESTful controllers](6-automatic-route-generation_multiple-restful-controllers.md).
