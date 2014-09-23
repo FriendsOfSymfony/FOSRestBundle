@@ -286,9 +286,8 @@ use FOS\RestBundle\Controller\Annotations\Route;
 ### Changing pluralization in generated routes
 
 If you want to change pluralization in generated routes, you can do this by replacing
-"fos_rest.service.inflector" service with your own implementation of "fos_rest.inflector".
-Create a new class that implements "FOS\RestBundle\Util\Inflector\InflectorInterface" and  define a service of this
-class with name e.g. "my_fos_rest.inflector" and set the parameter in config.yml.
+"fos_rest.inflector.doctrine" service with your own implementation.
+Create a new class that implements "FOS\RestBundle\Util\Inflector\InflectorInterface".
 
 The example below will remove pluralization by implementing the interface and returning the "$word"
 instead of executing method ```Inflector::pluralize($word);```
