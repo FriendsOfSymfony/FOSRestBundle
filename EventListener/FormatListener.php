@@ -50,14 +50,16 @@ class FormatListener
             $request = $event->getRequest();
 
             $format = null;
-            if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
-                $mediaType = $this->formatNegotiator->getBestMediaType($request);
-                if ($mediaType) {
-                    $request->attributes->set('media_type', $mediaType);
-                    $format = $request->getFormat($mediaType);
+            if (null === $request->getRequestFormat(null)) {
+                if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
+                    $mediaType = $this->formatNegotiator->getBestMediaType($request);
+                    if ($mediaType) {
+                        $request->attributes->set('media_type', $mediaType);
+                        $format = $request->getFormat($mediaType);
+                    }
+                } else {
+                    $format = $this->formatNegotiator->getBestFormat($request);
                 }
-            } else {
-                $format = $this->formatNegotiator->getBestFormat($request);
             }
 
             if (null === $format) {
