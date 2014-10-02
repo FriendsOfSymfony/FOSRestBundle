@@ -131,10 +131,10 @@ class AnnotatedUsersController extends Controller
     {}
 
     /**
-     * @Link("/users1", name="_a_link_method")
-     * @Get("/users2",  name="_a_get_method")
-     * @Get("/users3",  name="_an_other_get_method")
-     * @Post("/users4",  name="_a_post_method")
+     * @Link("/users1", name="multipleget_users_a_link_method")
+     * @Get("/users2",  name="multipleget_users_a_get_method")
+     * @Get("/users3",  name="multipleget_users_an_other_get_method")
+     * @Post("/users4",  name="multipleget_users_a_post_method")
      *
      */
     public function multiplegetUsersAction()

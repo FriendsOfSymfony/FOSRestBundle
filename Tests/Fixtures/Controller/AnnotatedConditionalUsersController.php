@@ -136,10 +136,10 @@ class AnnotatedConditionalUsersController extends Controller
     {}
 
     /**
-     * @Link("/users1", name="_a_link_method", condition="context.getMethod() in ['LINK'] and request.headers.get('User-Agent') matches '/firefox/i'")
-     * @Get("/users2",  name="_a_get_method", condition="context.getMethod() in ['GET'] and request.headers.get('User-Agent') matches '/firefox/i'")
-     * @Get("/users3",  name="_an_other_get_method")
-     * @Post("/users4",  name="_a_post_method", condition="context.getMethod() in ['POST'] and request.headers.get('User-Agent') matches '/firefox/i'")
+     * @Link("/users1", name="multipleget_users_a_link_method", condition="context.getMethod() in ['LINK'] and request.headers.get('User-Agent') matches '/firefox/i'")
+     * @Get("/users2",  name="multipleget_users_a_get_method", condition="context.getMethod() in ['GET'] and request.headers.get('User-Agent') matches '/firefox/i'")
+     * @Get("/users3",  name="multipleget_users_an_other_get_method")
+     * @Post("/users4",  name="multipleget_users_a_post_method", condition="context.getMethod() in ['POST'] and request.headers.get('User-Agent') matches '/firefox/i'")
      *
      */
     public function multiplegetUsersAction()
