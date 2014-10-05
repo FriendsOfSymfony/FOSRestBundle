@@ -536,7 +536,8 @@ class RestActionReader
     private function addRoute(RestRouteCollection $collection, $routeName, $route, $isCollection, $isInflectable, RouteAnnotation $annotation = null)
     {
         if ($annotation && null !== $annotation->getName()) {
-            $routeName = $annotation->getName();
+            $options = $annotation->getOptions();
+            $routeName = empty($options['method_prefix']) ? $annotation->getName() : $routeName.$annotation->getName();
         }
 
         $fullRouteName = $this->namePrefix.$routeName;

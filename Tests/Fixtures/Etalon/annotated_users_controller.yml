@@ -75,3 +75,12 @@ multipleget_users_a_link_method:
   pattern:      /users1.{_format}
   controller:   ::multiplegetUsersAction
   requirements: {_method: LINK}
+
+multiplepost_users_foo:
+  pattern:      /users1/{foo}.{_format}
+  controller:   ::multiplepostUsersAction
+  requirements: {_method: POST}
+multiplepost_users_bar:
+  pattern:      /users2/{foo}.{_format}
+  controller:   ::multiplepostUsersAction
+  requirements: {_method: POST}
