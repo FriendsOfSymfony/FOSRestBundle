@@ -286,8 +286,8 @@ class RestRouteLoaderTest extends LoaderTest
     {
         $collection     = $this->loadFromControllerFixture('AnnotatedUsersController');
 
-        $this->assertNotNull($collection->get('multiplepost_users_foo'));
-        $this->assertNotNull($collection->get('multiplepost_users_bar'));
+        $this->assertNotNull($collection->get('post_users_foo'), 'route for "post_users_foo" does not exist');
+        $this->assertNotNull($collection->get('post_users_bar'), 'route for "post_users_bar" does not exist');
     }
 
     /**
