@@ -139,4 +139,12 @@ class AnnotatedUsersController extends Controller
      */
     public function multiplegetUsersAction()
     {}
+
+    /**
+     * @POST("/users1/{foo}", name="post_users_foo", options={ "method_prefix" = false })
+     * @POST("/users2/{foo}", name="post_users_bar", options={ "method_prefix" = false })
+     *
+     */
+    public function multiplepostUsersAction()
+    {}
 }

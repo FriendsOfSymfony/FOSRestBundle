@@ -94,7 +94,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(21, count($collection->all()));
+        $this->assertEquals(23, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -277,6 +277,17 @@ class RestRouteLoaderTest extends LoaderTest
 
         $this->assertNotNull($collection->get('prefix_get_information'));
         $this->assertNotNull($collection->get('prefix_cget_information'));
+    }
+
+    /**
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/879
+     */
+    public function testNameMethodPrefixIsPrependingCorrectly()
+    {
+        $collection     = $this->loadFromControllerFixture('AnnotatedUsersController');
+
+        $this->assertNotNull($collection->get('post_users_foo'), 'route for "post_users_foo" does not exist');
+        $this->assertNotNull($collection->get('post_users_bar'), 'route for "post_users_bar" does not exist');
     }
 
     /**
