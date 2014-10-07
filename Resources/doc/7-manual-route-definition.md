@@ -52,5 +52,48 @@ For a full list of annotations check out FOS/RestBundle/Controller/Annotations
 	 * PUT Route annotation.
 	 * @Put("/likes/{type}/{typeId}")
 	 */
+	 
+## Method Name Prefix
+
+By default, the routing name defined by the annotation is appended to the generated routing name.
+
+Example:
+```php
+use FOS\RestBundle\Controller\Annotations\Get
+
+/**
+* @Get("/users/foo", name="_foo")
+* @Get("/users/bar", name="_bar")
+*/
+public function getUsers() { /** */ }
+```
+
+Result:
+```
+Name                            Method   Scheme Host Path
+get_users_foo                   GET      ANY    ANY  /users/foo.{_format}
+get_users_bar                   GET      ANY    ANY  /users/bar.{_format}
+```
+   
+   
+You can add the "method_prefix" option to change this behavior.
+
+Example:
+```php
+use FOS\RestBundle\Controller\Annotations\Get
+
+/**
+* @Get("/users/foo", name="get_foo", options={ "method_prefix" = false })
+* @Get("/users/bar", name="get_bar", options={ "method_prefix" = false })
+*/
+public function getUsers() { /** */ }
+```
+
+Result:
+```
+Name                      Method   Scheme Host Path
+get_foo                   GET      ANY    ANY  /users/foo.{_format}
+get_bar                   GET      ANY    ANY  /users/bar.{_format}
+```	 
 
 [Return to the index](index.md) or continue with the [Full default configuration](configuration-reference.md).
