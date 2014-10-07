@@ -45,6 +45,8 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * Initializes fetcher.
      *
+     * For symfony 2.5 or higher use 2.5-bc validation API https://github.com/symfony/symfony/blob/master/UPGRADE-2.5.md#validator
+     *
      * @param ParamReader                 $paramReader
      * @param Request                     $request
      * @param ValidatorInterface          $validator
