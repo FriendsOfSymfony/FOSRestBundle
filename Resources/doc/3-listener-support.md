@@ -201,13 +201,8 @@ fos_rest:
 Your custom decoder service must use a class that implements the
 ``FOS\RestBundle\Decoder\DecoderInterface``.
 
-If you want to be able to use form with checkbox (more than just one checkbox) and have true and false value (without any issue) you have to use: `fos_rest.decoder.jsontoform` (available since fosrest 0.8.0)
+If you want to be able to use form with checkbox and have true and false value (without any issue) you have to use: `fos_rest.decoder.jsontoform` (available since fosrest 0.8.0)
 
-`fos_rest.decoder.jsontoform` removes false values. In the case you have a form with just one checkbox or need to patch one checkbox it does not work. Instead of remove false value you can transform it to null. For this you need to override a parameter:
-```yaml
-parameters:
-    fos_rest.decoder.jsontoform.remove_false_data: false
-```
 If the listener receives content that it tries to decode but the decode fails then a BadRequestHttpException will be thrown with the message:
 ``'Invalid ' . $format . ' message received'``. When combined with the [exception controller support](4-exception-controller-support.md) this means your API will provide useful error messages to your API users if they are making invalid requests.
 

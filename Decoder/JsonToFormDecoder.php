@@ -19,19 +19,6 @@ namespace FOS\RestBundle\Decoder;
 class JsonToFormDecoder implements DecoderInterface
 {
     /**
-     * @var bool
-     */
-    private $removeFalseData;
-
-    /**
-     * @param bool $removeFalseData
-     */
-    public function __construct($removeFalseData = true)
-    {
-        $this->removeFalseData = $removeFalseData;
-    }
-
-    /**
      * Makes data decoded from JSON application/x-www-form-encoded compliant
      *
      * @param array $data
@@ -43,12 +30,10 @@ class JsonToFormDecoder implements DecoderInterface
                 // Encode recursively
                 $this->xWwwFormEncodedLike($value);
             } elseif (false === $value) {
-                if ($this->removeFalseData) {
-                    // Checkbox-like behavior: remove false data
-                    unset($data[$key]);
-                } else {
-                    $value = null;
-                }
+                // Checkbox-like behavior removes false data but PATCH HTTP method with just checkboxes does not work
+                // To fix this issue we prefer transform false data to null
+                // See https://github.com/FriendsOfSymfony/FOSRestBundle/pull/883
+                $value = null;
             } elseif (!is_string($value)) {
                 // Convert everything to string
                 // true values will be converted to '1', this is the default checkbox behavior

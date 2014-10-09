@@ -9,7 +9,6 @@
         <parameter key="fos_rest.normalizer.camel_keys.class">FOS\RestBundle\Normalizer\CamelKeysNormalizer</parameter>
         <parameter key="fos_rest.decoder.json.class">FOS\RestBundle\Decoder\JsonDecoder</parameter>
         <parameter key="fos_rest.decoder.jsontoform.class">FOS\RestBundle\Decoder\JsonToFormDecoder</parameter>
-        <parameter key="fos_rest.decoder.jsontoform.remove_false_data">true</parameter>
         <parameter key="fos_rest.decoder.xml.class">FOS\RestBundle\Decoder\XmlDecoder</parameter>
         <parameter key="fos_rest.decoder_provider.class">FOS\RestBundle\Decoder\ContainerDecoderProvider</parameter>
         <parameter key="fos_rest.body_listener.class">FOS\RestBundle\EventListener\BodyListener</parameter>
@@ -22,9 +21,7 @@
 
         <service id="fos_rest.decoder.json" class="%fos_rest.decoder.json.class%" />
 
-        <service id="fos_rest.decoder.jsontoform" class="%fos_rest.decoder.jsontoform.class%">
-            <argument>%fos_rest.decoder.jsontoform.remove_false_data%</argument>
-        </service>
+        <service id="fos_rest.decoder.jsontoform" class="%fos_rest.decoder.jsontoform.class%" />
 
         <service id="fos_rest.decoder.xml" class="%fos_rest.decoder.xml.class%" />
 
