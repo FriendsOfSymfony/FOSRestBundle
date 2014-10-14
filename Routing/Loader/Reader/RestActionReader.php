@@ -334,6 +334,7 @@ class RestActionReader
             'Symfony\Component\HttpFoundation\Request',
             'FOS\RestBundle\Request\ParamFetcherInterface',
             'Symfony\Component\Validator\ConstraintViolationListInterface',
+            'Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter'
         );
 
         $arguments = array();
