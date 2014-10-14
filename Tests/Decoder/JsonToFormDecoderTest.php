@@ -20,8 +20,7 @@ use FOS\RestBundle\Decoder\JsonToFormDecoder;
  */
 class JsonToFormDecoderTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testDecode()
+    public function testDecodeWithRemovingFalseData()
     {
         $data = array(
             'arrayKey' => array(
@@ -39,13 +38,12 @@ class JsonToFormDecoderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(is_array($decoded));
         $this->assertTrue(is_array($decoded['arrayKey']));
-        $this->assertArrayNotHasKey('falseKey', $decoded['arrayKey']);
+        $this->assertNull($decoded['arrayKey']['falseKey']);
         $this->assertEquals('foo', $decoded['arrayKey']['stringKey']);
-        $this->assertArrayNotHasKey('falseKey', $decoded);
+        $this->assertNull($decoded['falseKey']);
         $this->assertEquals('1', $decoded['trueKey']);
         $this->assertEquals('69', $decoded['intKey']);
         $this->assertEquals('3.14', $decoded['floatKey']);
         $this->assertEquals('bar', $decoded['stringKey']);
     }
-
 }
