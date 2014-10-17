@@ -15,7 +15,7 @@ Step 1: Setting up the bundle
 Simply run assuming you have installed composer.phar or composer binary:
 
 ``` bash
-$ php composer.phar require friendsofsymfony/rest-bundle 1.3.*
+$ php composer.phar require friendsofsymfony/rest-bundle ~1.4
 ```
 
 ### B) Enable the bundle
