@@ -67,6 +67,18 @@ class RestRouteCollection extends RouteCollection
     }
 
     /**
+     * Adds condition to all collection routes.
+     *
+     * @param string $condition
+     */
+    public function setExpressionLanguageCondition($condition)
+    {
+        foreach (parent::all() as $route) {
+            $route->setCondition($condition);
+        }
+    }
+
+    /**
      * Returns routes sorted by custom HTTP methods first.
      *
      * @return array

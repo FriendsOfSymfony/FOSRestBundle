@@ -73,6 +73,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $namePrefix = isset($config['name_prefix']) ? $config['name_prefix']    : null;
                 $parent     = isset($config['parent'])      ? $config['parent']         : null;
                 $type       = isset($config['type'])        ? $config['type']           : null;
+                $condition  = isset($config['condition'])   ? $config['condition']      : null;
                 $currentDir = dirname($path);
 
                 $parents = array();
@@ -93,6 +94,9 @@ class RestYamlCollectionLoader extends YamlFileLoader
                     $this->collectionParents[$name] = $parents;
                 }
 
+                if (null !== $condition) {
+                    $imported->setExpressionLanguageCondition($condition);
+                }
                 $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
             } elseif (isset($config['pattern']) || isset($config['path'])) {
