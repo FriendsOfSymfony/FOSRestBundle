@@ -419,7 +419,7 @@ fos_rest:
     format_listener:
         rules:
             - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
-            - { path: '^/', stop: true }
+            - { path: '^/', stop: true } # Available for version >= 1.5
 ```
 
 #### Media Type Version Extraction
