@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpKernel\Exception\FlattenException as HttpFlattenException;
@@ -75,7 +76,25 @@ class ExceptionController extends ContainerAware
             ));
         }
 
-        $format = $this->getFormat($request, $format);
+        try {
+            $format = $this->getFormat($request, $format);
+        } catch (StopFormatListenerException $e) {
+            $currentContent = $this->getAndCleanOutputBuffering();
+
+            $code = $exception->getStatusCode();
+
+            return new Response($this->container->get('templating')->render(
+                (string) $this->findTemplate($request, $request->getRequestFormat(), $code, $this->container->getParameter('kernel.debug')),
+                array(
+                    'status_code'    => $code,
+                    'status_text'    => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+                    'exception'      => $exception,
+                    'logger'         => $logger,
+                    'currentContent' => $currentContent,
+                )
+            ));
+        }
+
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined, while handling: ';
             $message .= $this->getExceptionMessage($exception);
