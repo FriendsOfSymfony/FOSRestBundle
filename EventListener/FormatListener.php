@@ -49,8 +49,8 @@ class FormatListener
         try {
             $request = $event->getRequest();
 
-            $format = null;
-            if (null === $request->getRequestFormat(null)) {
+            $format = $request->getRequestFormat(null);
+            if (null === $format) {
                 if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
                     $mediaType = $this->formatNegotiator->getBestMediaType($request);
                     if ($mediaType) {
