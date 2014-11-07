@@ -20,6 +20,8 @@ matrix:
     - php: 5.5
       env: SYMFONY_VERSION='dev-master'
 
+before_install: echo -e '\nhhvm.libxml.ext_entity_whitelist = "file"' | sudo tee -a /etc/hhvm/php.ini
+
 before_script:
   - composer self-update
   - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --dev --no-update symfony/symfony=$SYMFONY_VERSION; fi;'
