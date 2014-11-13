@@ -89,23 +89,65 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
         $this->assertParameter($decoders, 'fos_rest.decoders');
         $this->assertParameter(false, 'fos_rest.throw_exception_on_unsupported_content_type');
-        $this->assertFalse($this->container->getDefinition('fos_rest.body_listener')->hasMethodCall('setArrayNormalizer'));
+        $this->assertCount(2, $this->container->getDefinition('fos_rest.body_listener')->getArguments());
     }
 
-    public function testLoadBodyListenerWithNormalizer()
+    public function testLoadBodyListenerWithNormalizerString()
     {
         $config = array(
             'fos_rest' => array('body_listener' => array(
                 'array_normalizer' => 'fos_rest.normalizer.camel_keys',
             )),
         );
-        $this->extension->load($config, $this->container);
 
-        $this->assertServiceHasMethodCall(
-            'fos_rest.body_listener',
-            'setArrayNormalizer',
-            array(new Reference('fos_rest.normalizer.camel_keys'))
+        $this->extension->load($config, $this->container);
+        $normalizerArgument = $this->container->getDefinition('fos_rest.body_listener')->getArgument(2);
+
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $normalizerArgument);
+        $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
+    }
+
+    public function testLoadBodyListenerWithNormalizerArray()
+    {
+        $config = array(
+            'fos_rest' => array('body_listener' => array(
+                'array_normalizer' => array(
+                    'service' => 'fos_rest.normalizer.camel_keys',
+                )
+            )),
         );
+
+        $this->extension->load($config, $this->container);
+        $bodyListener = $this->container->getDefinition('fos_rest.body_listener');
+        $normalizerArgument = $bodyListener->getArgument(2);
+        $normalizeForms = $bodyListener->getArgument(3);
+
+        $this->assertCount(4, $bodyListener->getArguments());
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $normalizerArgument);
+        $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
+        $this->assertEquals(false, $normalizeForms);
+    }
+
+    public function testLoadBodyListenerWithNormalizerArrayAndForms()
+    {
+        $config = array(
+            'fos_rest' => array('body_listener' => array(
+                'array_normalizer' => array(
+                    'service' => 'fos_rest.normalizer.camel_keys',
+                    'forms' => true,
+                )
+            )),
+        );
+
+        $this->extension->load($config, $this->container);
+        $bodyListener = $this->container->getDefinition('fos_rest.body_listener');
+        $normalizerArgument = $bodyListener->getArgument(2);
+        $normalizeForms = $bodyListener->getArgument(3);
+
+        $this->assertCount(4, $bodyListener->getArguments());
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $normalizerArgument);
+        $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
+        $this->assertEquals(true, $normalizeForms);
     }
 
     public function testDisableFormatListener()
@@ -533,26 +575,5 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testExceptionThrownIfCallbackFilterIsUsed()
     {
         $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => array('callback_filter' => 'foo')))), $this->container);
-    }
-
-    /**
-     * Asserts the service definition has the method call with the specified arguments.
-     *
-     * @param string $serviceId  The service id
-     * @param string $methodName The name of the method
-     * @param array  $arguments  The arguments of the method
-     */
-    private function assertServiceHasMethodCall($serviceId, $methodName, array $arguments = array())
-    {
-        $message = sprintf('The service "%s" has the method call "%s"', $serviceId, $methodName);
-        foreach ($this->container->getDefinition($serviceId)->getMethodCalls() as $methodCall) {
-            if ($methodCall[0] === $methodName) {
-                $this->assertEquals($arguments, $methodCall[1], $message);
-
-                return;
-            }
-        }
-
-        $this->assertTrue(false, $message);
     }
 }

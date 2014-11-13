@@ -29,28 +29,35 @@ class BodyListener
     private $decoderProvider;
     private $throwExceptionOnUnsupportedContentType;
     private $defaultFormat;
-
-    /**
-     * @var ArrayNormalizerInterface
-     */
     private $arrayNormalizer;
+    private $normalizeForms;
 
     /**
      * Constructor.
      *
      * @param DecoderProviderInterface $decoderProvider
      * @param bool                     $throwExceptionOnUnsupportedContentType
+     * @param ArrayNormalizerInterface $arrayNormalizer
+     * @param bool                     $normalizeForms
      */
-    public function __construct(DecoderProviderInterface $decoderProvider, $throwExceptionOnUnsupportedContentType = false)
-    {
+    public function __construct(
+        DecoderProviderInterface $decoderProvider,
+        $throwExceptionOnUnsupportedContentType = false,
+        ArrayNormalizerInterface $arrayNormalizer = null,
+        $normalizeForms = false
+    ) {
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
+        $this->arrayNormalizer = $arrayNormalizer;
+        $this->normalizeForms = $normalizeForms;
     }
 
     /**
      * Sets the array normalizer.
      *
      * @param ArrayNormalizerInterface $arrayNormalizer
+     *
+     * @deprecated To be removed in FOSRestBundle 2.0.0 (constructor injection is used instead).
      */
     public function setArrayNormalizer(ArrayNormalizerInterface $arrayNormalizer)
     {
@@ -79,12 +86,11 @@ class BodyListener
     {
         $request = $event->getRequest();
         $method = $request->getMethod();
+        $contentType = $request->headers->get('Content-Type');
+        $isFormPostRequest = in_array($contentType, array('multipart/form-data', 'application/x-www-form-urlencoded'), true) && 'POST' === $method;
+        $normalizeRequest = $this->normalizeForms && $isFormPostRequest;
 
-        if (!count($request->request->all())
-            && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))
-        ) {
-            $contentType = $request->headers->get('Content-Type');
-
+        if (!$isFormPostRequest && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))) {
             $format = null === $contentType
                 ? $request->getRequestFormat()
                 : $request->getFormat($contentType);
@@ -108,18 +114,24 @@ class BodyListener
                 $decoder = $this->decoderProvider->getDecoder($format);
                 $data = $decoder->decode($content);
                 if (is_array($data)) {
-                    if (null !== $this->arrayNormalizer) {
-                        try {
-                            $data = $this->arrayNormalizer->normalize($data);
-                        } catch (NormalizationException $e) {
-                            throw new BadRequestHttpException($e->getMessage());
-                        }
-                    }
                     $request->request = new ParameterBag($data);
+                    $normalizeRequest = true;
                 } else {
                     throw new BadRequestHttpException('Invalid '.$format.' message received');
                 }
             }
+        }
+
+        if (null !== $this->arrayNormalizer && $normalizeRequest) {
+            $data = $request->request->all();
+
+            try {
+                $data = $this->arrayNormalizer->normalize($data);
+            } catch (NormalizationException $e) {
+                throw new BadRequestHttpException($e->getMessage());
+            }
+
+            $request->request = new ParameterBag($data);
         }
     }
 
