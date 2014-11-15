@@ -5,7 +5,7 @@ php:
   - 5.4
   - 5.5
   - hhvm
-  
+
 branches:
   only:
     - master
@@ -18,7 +18,9 @@ matrix:
     - php: 5.5
       env: SYMFONY_VERSION=2.4.*
     - php: 5.5
-      env: SYMFONY_VERSION='dev-master'
+      env: SYMFONY_VERSION='2.6.*@dev'
+    - php: 5.5
+      env: SYMFONY_VERSION='2.7.*@dev'
 
 before_script:
   - composer self-update
