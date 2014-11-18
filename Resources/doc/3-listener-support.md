@@ -631,7 +631,21 @@ fos_rest:
 
 It is also recommended to enable the exception controller described in the next chapter.
 
+### Priorities
+
+| Listener               | Event             | Priority |
+|------------------------|-------------------|----------|
+| MimeTypeListener       | kernel.request    | 200      |
+| FormatListener         | kernel.request    | 34       |
+| VersionListener        | kernel.request    | 33       |
+| BodyListener           | kernel.request    | 10       |
+| ParamFetcherListener   | kernel.controller | 5        |
+| ViewResponseListener   | kernel.controller | -10      |
+| ViewResponseListener   | kernel.view       | 100      |
+| AllowedMethodsListener | kernel.response   | 0        |
+
 ## That was it!
+
 [Return to the index](index.md) or continue reading about [ExceptionController support](4-exception-controller-support.md).
 
 [sensio-extra-bundle]: http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
