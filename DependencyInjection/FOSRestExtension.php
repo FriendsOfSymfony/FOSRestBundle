@@ -132,6 +132,13 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
         $container->setParameter($this->getAlias().'.routing.loader.include_format', $config['routing_loader']['include_format']);
 
+        if ($config['exception']['enabled']) {
+            $loader->load('exception_listener.xml');
+            if ($config['exception']['exception_controller']) {
+                $container->setParameter('fos_rest.exception_listener.controller', $config['exception']['exception_controller']);
+            }
+        }
+
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
                 $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Util\Codes::$code");

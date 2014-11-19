@@ -7,14 +7,27 @@ provides an extra controller for that job. Using this custom ExceptionController
 it is possible to leverage the View layer when building responses for uncaught
 Exceptions.
 
-To enable the RestBundle view-layer-aware ExceptionController update the twig
-section of your config as follows:
+The ExceptionController can be enabled either via the FOSRestBundle configuration
+and optionally an explicit controller action can be configured as well:
+
+```yaml
+# app/config/config.yml
+fos_rest:
+    exception:
+        enabled: true
+        exception_controller: 'Acme\DemoBundle\Controller\ExceptionController::showAction'
+```
+
+Alternatively the TwigBundle configuration can be used to enable the ExceptionController:
 
 ```yaml
 # app/config/config.yml
 twig:
     exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 ```
+
+When enabling the RestBundle view-layer-aware ExceptionController it automatically
+disables the TwigBundle exception listener and subsequent configuration.
 
 To map Exception classes to HTTP response status codes an “exception map” may
 be configured, where the keys match a fully qualified class name and the values
