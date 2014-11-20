@@ -143,4 +143,41 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             array('json', 'json'),
         );
     }
+
+    /**
+     * Generates a request like a symfony fragment listener does.
+     * Set request type to master
+     */
+    public function testSfFragmentFormat()
+    {
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request = new Request();
+        $attributes = array ( '_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured', );
+        $request->attributes->add($attributes);
+        $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', array()), $attributes));
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $event->expects($this->any())
+            ->method('getRequestType')
+            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $formatNegotiator->expects($this->any())
+            ->method('getBestMediaType')
+            ->will($this->returnValue('application/json'));
+
+        $listener = new FormatListener($formatNegotiator);
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($request->getRequestFormat(), 'json');
+    }
 }
