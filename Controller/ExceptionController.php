@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpKernel\Exception\FlattenException as HttpFlattenException;
@@ -209,9 +210,13 @@ class ExceptionController extends ContainerAware
      */
     protected function getFormat(Request $request, $format)
     {
-        $formatNegotiator = $this->container->get('fos_rest.format_negotiator');
-        $format = $formatNegotiator->getBestFormat($request) ?: $format;
-        $request->attributes->set('_format', $format);
+        try {
+            $formatNegotiator = $this->container->get('fos_rest.format_negotiator');
+            $format = $formatNegotiator->getBestFormat($request) ?: $format;
+            $request->attributes->set('_format', $format);
+        } catch (StopFormatListenerException $e) {
+            $format = $request->getRequestFormat();
+        }
 
         return $format;
     }
