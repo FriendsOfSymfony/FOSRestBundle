@@ -103,6 +103,18 @@ class RestXmlCollectionLoader extends XmlFileLoader
      */
     protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
     {
+        foreach ($node->childNodes as $child) {
+            if ($child instanceof \DOMElement && $child->tagName === 'option') {
+                $option = $node->ownerDocument->createElementNs(
+                    self::NAMESPACE_URI,
+                    'option',
+                    $child->nodeValue
+                );
+                $option->setAttribute('key', $child->getAttribute('key'));
+                $node->appendChild($option);
+            }
+        }
+
         // the Symfony Routing component uses a path attribute since Symfony 2.2
         // instead of the deprecated pattern attribute0
         if (!$node->hasAttribute('path')) {

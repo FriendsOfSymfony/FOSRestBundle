@@ -108,6 +108,23 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         $this->assertEquals('xml', $route->getDefault('_format'));
     }
 
+    public function testForwardOptions()
+    {
+        $collection = $this->loadFromXmlCollectionFixture(
+            'routes_with_options.xml',
+            true,
+            array(
+                'json' => false,
+                'xml'  => false,
+                'html' => true,
+            ),
+            'xml'
+        );
+
+        foreach ($collection as $route) {
+            $this->assertTrue($route->getOption('expose'));
+        }
+    }
     /**
      * Load routes collection from XML fixture routes under Tests\Fixtures directory.
      *
