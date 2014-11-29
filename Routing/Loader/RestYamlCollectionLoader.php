@@ -95,7 +95,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 }
 
                 if ($options) {
-                    $this->addOptionsToRoutes($options, $imported);
+                    $imported->addOptions($options);
                 }
 
                 $imported->addPrefix($prefix);
@@ -141,12 +141,5 @@ class RestYamlCollectionLoader extends YamlFileLoader
         return is_string($resource) &&
             'yml' === pathinfo($resource, PATHINFO_EXTENSION) &&
             'rest' === $type;
-    }
-
-    protected function addOptionsToRoutes($options, RouteCollection $routesCollection)
-    {
-        foreach ($routesCollection as $route) {
-            $route->addOptions($options);
-        }
     }
 }
