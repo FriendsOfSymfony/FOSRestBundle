@@ -61,6 +61,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         if ($this->containerMock === null) {
             $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
                 ->disableOriginalConstructor()
+                ->setMethods(array('get', 'has'))
                 ->getMock();
         }
         $l = $this->getMockBuilder('Symfony\Component\Config\FileLocator')

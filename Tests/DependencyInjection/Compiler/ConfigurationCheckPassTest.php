@@ -25,7 +25,9 @@ class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldThrowRuntimeExceptionWhenFOSRestBundleAnnotations()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            ->setMethods(array('has'))
+            ->getMock();
         $container->expects($this->at(0))
             ->method('has')
             ->with($this->equalTo('sensio_framework_extra.view.listener'))
@@ -46,7 +48,9 @@ class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
             'RuntimeException',
             'You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter'
         );
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            ->setMethods(array('has'))
+            ->getMock();
         $container->expects($this->at(1))
             ->method('has')
             ->with($this->equalTo('fos_rest.converter.request_body'))
