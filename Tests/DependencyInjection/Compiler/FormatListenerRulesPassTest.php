@@ -22,7 +22,9 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
     {
         $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', array('addMethod'));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            ->setMethods(array('hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'))
+            ->getMock();
 
         $container->expects($this->exactly(3))
             ->method('hasDefinition')
@@ -62,7 +64,9 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
     {
         $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', array('addMethod'));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            ->setMethods(array('hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'))
+            ->getMock();
 
         $container->expects($this->exactly(2))
             ->method('hasDefinition')

@@ -153,6 +153,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         // We register the controller in the fake container by its class name
         $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->disableOriginalConstructor()
+            ->setMethods(array('has', 'get', 'enterScope', 'leaveScope'))
             ->getMock();
         $this->containerMock->expects($this->any())
             ->method('has')
