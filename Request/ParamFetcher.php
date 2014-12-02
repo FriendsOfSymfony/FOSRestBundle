@@ -110,12 +110,12 @@ class ParamFetcher implements ParamFetcherInterface
         $default  = $config->default;
         $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
-        if ($config->array) {
-            $default = (array) $default;
-        }
-
         if (null === $strict) {
             $strict = $config->strict;
+        }
+
+        if ($config->array && (null !== $default || !$strict)) {
+            $default = (array) $default;
         }
 
         if ($config instanceof RequestParam) {
@@ -130,7 +130,7 @@ class ParamFetcher implements ParamFetcherInterface
             if (!is_array($param)) {
                 if ($strict) {
                     throw new BadRequestHttpException(
-                        sprintf("% parameter value of '%s' is not an array", $paramType, $name)
+                        sprintf("%s parameter value of '%s' is not an array", $paramType, $name)
                     );
                 }
 
