@@ -109,6 +109,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['biz']->nullable = true;
         $annotations['biz']->description = 'A scalar param with an explicitly defined null default';
 
+        $annotations['arr'] = new RequestParam();
+        $annotations['arr']->name = 'arr';
+        $annotations['arr']->array = true;
+
         $this->paramReader
             ->expects($this->any())
             ->method('read')
@@ -174,23 +178,23 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array( // check that non-strict missing params take default value
                 'foo',
                 '1',
-                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array(),
-                array('bar' => '2', 'baz' => '4'),
+                array('bar' => '2', 'baz' => '4', 'arr' => array()),
             ),
             array( // pass Param in GET
                 'foo',
                 '42',
-                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('foo' => '42'),
-                array('bar' => '2', 'baz' => '4'),
+                array('bar' => '2', 'baz' => '4', 'arr' => array()),
             ),
             array( // check that invalid non-strict params take default value
                 'foo',
                 '1',
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('foo' => 'bar'),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
                         new ConstraintViolation("expected error", null, array(), null, null, null),
@@ -210,31 +214,31 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array( // invalid array
                 'buzz',
                 array(1),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => 'invaliddata'),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array( // invalid array (multiple depth)
                 'buzz',
                 array(1),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(array(1))),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
 
             array( // multiple array
                 'buzz',
                 array(2, 3, 4),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(2, 3, 4)),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array( // multiple array with one invalid value
                 'buzz',
                 array(2, 1, 4),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(2, 'invaliddata', 4)),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
                         new ConstraintViolation("expected error", null, array(), null, null, null),
@@ -254,44 +258,44 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array(  // Array not provided in GET query
                 'boo',
                 array(),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(2, 3, 4)),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query but as a scalar
                 'boo',
                 array(),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(2, 3, 4), 'boo' => 'scalar'),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'boo',
                 array('1', 'foo', 5),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'boozz',
                 null,
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
-                array('bar' => '1', 'baz' => '4'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'boozz',
                 5,
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array()),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5),
-                array('bar' => '1', 'baz' => '4', 'boozz' => 5),
+                array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
             ),
         );
     }
 
     public function testValidatesAddParam()
     {
-        $queryFetcher = $this->getParamFetcher(array(), array('bar' => '2', 'baz' => '4','bub' => '10'));
+        $queryFetcher = $this->getParamFetcher(array(), array('bar' => '2', 'baz' => '4','bub' => '10', 'arr' => array()));
         $queryFetcher->setController($this->controller);
 
         $runtimeParam = new RequestParam();
@@ -301,7 +305,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $queryFetcher->addParam($runtimeParam);
 
         $this->assertEquals(10, $queryFetcher->get('bub'));
-        $this->assertEquals(array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null,'bub' => 10), $queryFetcher->all());
+        $this->assertEquals(array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'bub' => 10, 'arr' => array()), $queryFetcher->all());
     }
 
     public function testValidatesConfiguredParamStrictly()
@@ -370,10 +374,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     public static function exceptionOnValidatesFailureDataProvider()
     {
         return array(
-            array( // test missing strict param
-                array(),
-                array(),
-                'bar',
+            array( // test missing 'arr' request param of array type
+                array('boozz' => 'foo'),
+                array('bar' => 'foo', 'baz' => 'foo'),
+                'arr',
             ),
             array( // test invalid strict param
                 array(),
