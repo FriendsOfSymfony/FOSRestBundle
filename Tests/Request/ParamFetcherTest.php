@@ -379,6 +379,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('bar' => 'foo', 'baz' => 'foo'),
                 'arr',
             ),
+            array( // test missing strict param
+                array(),
+                array(),
+                'bar',
+            ),
             array( // test invalid strict param
                 array(),
                 array('bar' => 'foo'),
