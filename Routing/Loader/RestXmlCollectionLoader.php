@@ -157,6 +157,26 @@ class RestXmlCollectionLoader extends XmlFileLoader
             $node->appendChild($option);
         }
 
+        $length = $node->childNodes->length;
+        for ($i = 0; $i < $length; $i++) {
+            $loopNode = $node->childNodes->item($i);
+            if ($loopNode->nodeType == XML_TEXT_NODE) {
+                continue;
+            }
+
+            $newNode = $node->ownerDocument->createElementNS(
+                self::NAMESPACE_URI,
+                $loopNode->nodeName,
+                $loopNode->nodeValue
+            );
+
+            foreach ($loopNode->attributes as $value) {
+                $newNode->setAttribute($value->name, $value->value);
+            }
+
+            $node->appendChild($newNode);
+        }
+
         parent::parseRoute($collection, $node, $path);
     }
 

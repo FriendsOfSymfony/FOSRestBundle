@@ -67,6 +67,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
 
         $this->assertEquals('/users.{_format}', $route->getPath());
         $this->assertEquals('json|xml|html', $route->getRequirement('_format'));
+        $this->assertEquals('FOSRestBundle:UsersController:getUsers', $route->getDefault('_controller'));
     }
 
     public function testManualRoutesWithoutIncludeFormat()

@@ -14,15 +14,24 @@
     </xsd:choice>
   </xsd:complexType>
 
-  <xsd:complexType name="route">
-    <xsd:sequence>
-      <xsd:element name="default" type="element" minOccurs="0" maxOccurs="unbounded" />
-      <xsd:element name="requirement" type="element" minOccurs="0" maxOccurs="unbounded" />
-      <xsd:element name="option" type="element" minOccurs="0" maxOccurs="unbounded" />
-    </xsd:sequence>
+  <!-- configs and route should be kept in sync with symfony schema -->
+  <xsd:group name="configs">
+    <xsd:choice>
+        <xsd:element name="default" nillable="true" type="element" />
+        <xsd:element name="requirement" type="element" />
+        <xsd:element name="option" type="element" />
+    </xsd:choice>
+  </xsd:group>
 
-    <xsd:attribute name="id" type="xsd:string" />
+  <xsd:complexType name="route">
+    <xsd:group ref="configs" minOccurs="0" maxOccurs="unbounded" />
+
+    <xsd:attribute name="id" type="xsd:string" use="required" />
+    <xsd:attribute name="path" type="xsd:string" />
     <xsd:attribute name="pattern" type="xsd:string" />
+    <xsd:attribute name="host" type="xsd:string" />
+    <xsd:attribute name="schemes" type="xsd:string" />
+    <xsd:attribute name="methods" type="xsd:string" />
   </xsd:complexType>
 
   <xsd:complexType name="import">
