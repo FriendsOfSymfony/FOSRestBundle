@@ -156,6 +156,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $loader->load('body_listener.xml');
 
             $container->setParameter($this->getAlias().'.throw_exception_on_unsupported_content_type', $config['body_listener']['throw_exception_on_unsupported_content_type']);
+            $container->setParameter($this->getAlias().'.body_default_format', $config['body_listener']['default_format']);
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
 
             $arrayNormalizer = $config['body_listener']['array_normalizer'];
