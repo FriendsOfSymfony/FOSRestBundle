@@ -19,6 +19,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ValidatorInterface;
 
 /**
@@ -211,6 +212,10 @@ class ParamFetcher implements ParamFetcherInterface
                     $config->requirements
                 ),
             ));
+
+            if (false === $config->allowBlank) {
+                $constraint = array(new NotBlank(), $constraint);
+            }
         }
 
         $errors = $this->validator->validateValue($param, $constraint);

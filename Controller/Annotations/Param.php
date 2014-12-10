@@ -35,6 +35,8 @@ abstract class Param
     public $array = false;
     /** @var bool */
     public $nullable = false;
+    /** @var bool */
+    public $allowBlank = true;
 
     /**
      * @return string
