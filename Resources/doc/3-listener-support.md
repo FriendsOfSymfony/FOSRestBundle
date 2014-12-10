@@ -500,6 +500,10 @@ class FooController extends Controller
      * Note that if the value matches the default then no validation is run.
      * So make sure the default value really matches your expectations.
      *
+     * @QueryParam(name="sort", requirements="(asc|desc)+", allowBlank=false, default="asc" description="Sort direction")
+     *
+     * Will check if a blank value, e.g an empty string is passed and if so, it will set to the default of asc.
+     *
      * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
      *
      * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337, use:
