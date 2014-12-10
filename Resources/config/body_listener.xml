@@ -37,7 +37,7 @@
             <argument type="service" id="fos_rest.decoder_provider" />
             <argument>%fos_rest.throw_exception_on_unsupported_content_type%</argument>
             <call method="setDefaultFormat">
-                <argument>%fos_rest.routing.loader.default_format%</argument>
+                <argument>%fos_rest.body_listener.default_format%</argument>
             </call>
         </service>
 
