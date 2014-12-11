@@ -36,6 +36,9 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="10" />
             <argument type="service" id="fos_rest.decoder_provider" />
             <argument>%fos_rest.throw_exception_on_unsupported_content_type%</argument>
+            <call method="setDefaultFormat">
+                <argument>%fos_rest.body_default_format%</argument>
+            </call>
         </service>
 
     </services>

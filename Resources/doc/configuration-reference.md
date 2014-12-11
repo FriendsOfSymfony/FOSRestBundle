@@ -67,6 +67,7 @@ fos_rest:
             # Prototype
             name:                 ~
     body_listener:
+        default_format: null     
         throw_exception_on_unsupported_content_type:  false
         decoders:
 

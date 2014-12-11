@@ -28,6 +28,7 @@ class BodyListener
 {
     private $decoderProvider;
     private $throwExceptionOnUnsupportedContentType;
+    private $defaultFormat;
 
     /**
      * @var ArrayNormalizerInterface
@@ -57,6 +58,16 @@ class BodyListener
     }
 
     /**
+     * Sets the fallback format if there's no Content-Type in the request.
+     *
+     * @param string $defaultFormat
+     */
+    public function setDefaultFormat($defaultFormat)
+    {
+        $this->defaultFormat = $defaultFormat;
+    }
+
+    /**
      * Core request handler.
      *
      * @param GetResponseEvent $event
@@ -77,6 +88,8 @@ class BodyListener
             $format = null === $contentType
                 ? $request->getRequestFormat()
                 : $request->getFormat($contentType);
+
+            $format = $format ?: $this->defaultFormat;
 
             $content = $request->getContent();
 

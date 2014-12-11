@@ -168,6 +168,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()
                     ->children()
+                        ->scalarNode('default_format')->defaultNull()->end()
                         ->booleanNode('throw_exception_on_unsupported_content_type')
                             ->defaultFalse()
                         ->end()
