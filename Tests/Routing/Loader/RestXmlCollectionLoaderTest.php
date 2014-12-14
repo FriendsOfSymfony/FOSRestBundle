@@ -122,7 +122,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         );
 
         foreach ($collection as $route) {
-            $this->assertTrue($route->getOption('expose'));
+            $this->assertTrue('true' === $route->getOption('expose'));
         }
     }
     /**
