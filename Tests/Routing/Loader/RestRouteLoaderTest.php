@@ -94,7 +94,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(23, count($collection->all()));
+        $this->assertEquals(24, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -107,8 +107,14 @@ class RestRouteLoaderTest extends LoaderTest
                  $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
             }
 
+            if (isset($params['options'])) {
+                foreach ($params['options'] as $option => $value) {
+                    $this->assertEquals($value, $route->getOption($option));
+                }
+            }
         }
     }
+
     /**
      * Test that annotated UsersController RESTful class gets parsed correctly with condition option (expression-language).
      */

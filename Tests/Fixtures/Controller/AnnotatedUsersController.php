@@ -47,6 +47,12 @@ class AnnotatedUsersController extends Controller
     {} // [GET]     /users/{slug}
 
     /**
+     * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"}, options={"expose"=true})
+     */
+    public function getUserPostAction($slug, $id)
+    {} // [GET]     /users/{slug}/posts/{id}
+
+    /**
      * @Patch
      */
     public function patchUsersAction()
