@@ -97,6 +97,36 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->paramFetcher, $request->attributes->get($expectedAttribute));
     }
 
+    /**
+     * Tests that the ParamFetcher can be injected in a invokable controller.
+     */
+    public function testSettingParamFetcherForInvokable()
+    {
+        $request = new Request();
+
+        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->atLeastOnce())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $controller = new ParamFetcherController();
+
+        $event->expects($this->atLeastOnce())
+            ->method('getController')
+            ->will($this->returnValue($controller));
+
+        $this->paramFetcher->expects($this->once())
+            ->method('all')
+            ->will($this->returnValue(array()));
+
+        $this->paramFetcherListener->onKernelController($event);
+
+        $this->assertSame($this->paramFetcher, $request->attributes->get('pfInvokable'));
+    }
+
     public function setParamFetcherByTypehintProvider()
     {
         return array(
