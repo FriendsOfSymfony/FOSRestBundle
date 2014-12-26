@@ -28,4 +28,10 @@ class ParamFetcherController
      */
     public function notProvidedAction()
     {}
+
+    /**
+     * Make sure the ParamFetcher can be set for controller which are used as invokable
+     */
+    public function __invoke(ParamFetcher $pfInvokable)
+    {}
 }

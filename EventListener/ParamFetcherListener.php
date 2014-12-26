@@ -51,8 +51,14 @@ class ParamFetcherListener
         $request = $event->getRequest();
         $paramFetcher = $this->container->get('fos_rest.request.param_fetcher');
 
-        $paramFetcher->setController($event->getController());
-        $attributeName = $this->getAttributeName($event->getController());
+        $controller = $event->getController();
+
+        if (is_callable($controller) && method_exists($controller, '__invoke')) {
+            $controller = array($controller, '__invoke');
+        }
+
+        $paramFetcher->setController($controller);
+        $attributeName = $this->getAttributeName($controller);
         $request->attributes->set($attributeName, $paramFetcher);
 
         if ($this->setParamsAsAttributes) {
