@@ -23,6 +23,13 @@ get_user_comment:
   controller:   ::getUserCommentAction
   requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
 
+get_user_post:
+  pattern:      /users/{slug}/posts/{id}.{_format}
+  controller:   ::getUserPostAction
+  options:
+    expose: true
+  requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
+
 rate_user:
   pattern:      /users/{slug}/rate.{_format}
   controller:   ::rateUserAction

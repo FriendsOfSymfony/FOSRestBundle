@@ -103,6 +103,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
      */
     protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
     {
+
         // the Symfony Routing component uses a path attribute since Symfony 2.2
         // instead of the deprecated pattern attribute0
         if (!$node->hasAttribute('path')) {
@@ -150,7 +151,31 @@ class RestXmlCollectionLoader extends XmlFileLoader
             $node->appendChild($defaultFormatNode);
         }
 
+        $options = $this->getOptions($node);
+
+        foreach ($options as $option) {
+            $node->appendChild($option);
+        }
+
         parent::parseRoute($collection, $node, $path);
+    }
+
+    private function getOptions(\DOMElement $node)
+    {
+        $options = array();
+        foreach ($node->childNodes as $child) {
+            if ($child instanceof \DOMElement && $child->tagName === 'option') {
+                $option = $node->ownerDocument->createElementNs(
+                    self::NAMESPACE_URI,
+                    'option',
+                    $child->nodeValue
+                );
+                $option->setAttribute('key', $child->getAttribute('key'));
+                $options[] = $option;
+            }
+        }
+
+        return $options;
     }
 
     /**

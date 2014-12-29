@@ -1,0 +1,5 @@
+users:
+  type:     rest
+  resource: FOS\RestBundle\Tests\Fixtures\Controller\UsersController
+  options:
+    expose: true
