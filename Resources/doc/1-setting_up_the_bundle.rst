@@ -44,6 +44,6 @@ Finally, enable the bundle in the kernel:
 
 That was it!
 
-.. _``JMSSerializer``: https://github.com/schmittjoh/serializer
-.. _``JMSSerializerBundle``: https://github.com/schmittjoh/JMSSerializerBundle
-.. _``Symfony Serializer``: https://github.com/symfony/Serializer
+.. _`JMSSerializer`: https://github.com/schmittjoh/serializer
+.. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
+.. _`Symfony Serializer`: https://github.com/symfony/Serializer

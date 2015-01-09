@@ -106,6 +106,5 @@ Example syntax:
     * @Route("", condition="context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'")
     */
 
-.. _`@Route Symfony annotation`: http://symfony.com/doc/current/bundles/SensioFra
-meworkExtraBundle/annotations/routing.html
+.. _`@Route Symfony annotation`: http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/routing.html
 .. _`Routing Conditions`: http://symfony.com/doc/current/book/routing.html#book-routing-conditions
