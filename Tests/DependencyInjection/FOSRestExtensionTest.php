@@ -370,6 +370,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Could not load class 'UnknownException' or the class does not extend from '\Exception'
      */
     public function testLoadBadMessagesClassThrowsException()
     {
@@ -396,6 +397,39 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             ),
         ), $this->container);
         $this->assertFalse($this->container->hasDefinition('fos_rest.exception.codes'));
+    }
+
+    /**
+     * @dataProvider getLoadBadCodeValueThrowsExceptionData
+     *
+     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Invalid HTTP code in fos_rest.exception.codes
+     */
+    public function testLoadBadCodeValueThrowsException($value)
+    {
+        $this->extension->load(array(
+            'fos_rest' => array(
+                'exception' => array(
+                    'codes' => array(
+                        'Exception' => $value,
+                    ),
+                ),
+            ),
+        ), $this->container);
+    }
+
+    public function getLoadBadCodeValueThrowsExceptionData()
+    {
+        $data = array(
+            null,
+            'HTTP_NOT_EXISTS',
+            'some random string',
+            true,
+        );
+
+        return array_map(function ($i) {
+            return array($i);
+        }, $data);
     }
 
     /**
