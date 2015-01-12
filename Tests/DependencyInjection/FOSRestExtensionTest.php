@@ -535,23 +535,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => array('callback_filter' => 'foo')))), $this->container);
     }
 
-    public function testSerializerDefaultWhenJMSIsAvailable()
-    {
-        $this->extension->load(array(), $this->container);
-
-        $this->assertEquals('jms_serializer.serializer', $this->container->getAlias('fos_rest.serializer'));
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testSerializerRequiredWhenJMSIsNotAvailable()
-    {
-        $this->container->setParameter('kernel.bundles', array());
-
-        $this->extension->load(array(), $this->container);
-    }
-
     /**
      * Asserts the service definition has the method call with the specified arguments.
      *

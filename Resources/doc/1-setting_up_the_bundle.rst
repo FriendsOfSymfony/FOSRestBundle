@@ -14,16 +14,6 @@ following command to download the latest stable version of this bundle:
 This command requires you to have Composer installed globally, as explained
 in the `installation chapter`_ of the Composer documentation.
 
-.. note::
-
-    This bundle recommends using `JMSSerializer`_ which is integrated into Symfony
-    via `JMSSerializerBundle`_.
-
-    If you want to use JMSSerializer, take a look into the instructions of the
-    bundle to install it and set it up. You can also use `Symfony Serializer`_.
-    But in this case, you need to manually set it up and configure FOSRestBundle
-    to use it via the ``service`` section in the app config
-
 B) Enable the Bundle
 --------------------
 
@@ -41,10 +31,21 @@ file of your project:
                 // ...
                 new FOS\RestBundle\FOSRestBundle(),
             );
-        
+
             // ...
         }
     }
+
+C) Enable a Serializer
+----------------------
+
+This bundle needs a serializer to work correctly. In most cases,
+you'll need to enable a serializer or install one. This bundle tries
+the following this (in this order) to determine the serializer to use:
+
+#. The one you configured using ``fos_rest.services.serializer`` (if you did).
+#. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
+#. The `Symfony Serializer`_ if it's enabled (or any service called ``serializer``).
 
 That was it!
 
@@ -52,3 +53,4 @@ That was it!
 .. _`JMSSerializer`: https://github.com/schmittjoh/serializer
 .. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
 .. _`Symfony Serializer`: https://github.com/symfony/Serializer
+.. _`enable the core Serializer`: http://symfony.com/doc/current/cookbook/serializer.html
