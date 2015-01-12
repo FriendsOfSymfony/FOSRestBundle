@@ -80,18 +80,10 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $validator = $config['service']['validator'];
         unset($config['service']['validator']);
 
-        if (null === $config['service']['serializer']) {
-            $bundles = $container->getParameter('kernel.bundles');
-
-            if (isset($bundles['JMSSerializerBundle'])) {
-                $config['service']['serializer'] = 'jms_serializer.serializer';
-            } else {
-                throw new \InvalidArgumentException('JMSSerializerBundle is not available and no other serializer is configured. You must either enable the JMSSerializerBundle or configure a custom serializer.');
-            }
-        }
-
         foreach ($config['service'] as $key => $service) {
-            $container->setAlias($this->getAlias().'.'.$key, $service);
+            if (null !== $service) {
+                $container->setAlias($this->getAlias().'.'.$key, $service);
+            }
         }
 
         if (!empty($config['serializer']['version'])) {
