@@ -83,7 +83,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PATCH', array('foo'), 'application/json'),
             'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'DELETE', array('foo'), 'application/json'),
             'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', array(), 'application/json'),
-            'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array(), array('foo')), 'POST', array('bar'), 'application/json'),
+            'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array('CONTENT_TYPE' => 'application/x-www-form-urlencoded'), array('foo')), 'POST', array('bar'), 'application/x-www-form-urlencoded'),
             'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array(), 'application/fooformat'),
             'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', array('foo')),
         );
@@ -129,8 +129,38 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false);
-        $listener->setArrayNormalizer($normalizer);
+        $listener = new BodyListener($decoderProvider, false, $normalizer);
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($normalizedData, $request->request->all());
+    }
+
+    public function testOnKernelRequestNormalizationWithForms()
+    {
+        $data = array('foo_bar' => 'foo_bar');
+        $normalizedData = array('fooBar' => 'foo_bar');
+        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+
+        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer
+            ->expects($this->once())
+            ->method('normalize')
+            ->with($data)
+            ->will($this->returnValue($normalizedData));
+
+        $request = new Request(array(), $data, array(), array(), array(), array(), 'foo');
+        $request->headers->set('Content-Type', 'multipart/form-data');
+        $request->setMethod('POST');
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $listener = new BodyListener($decoderProvider, false, $normalizer, true);
         $listener->onKernelRequest($event);
 
         $this->assertEquals($normalizedData, $request->request->all());
@@ -175,8 +205,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false);
-        $listener->setArrayNormalizer($normalizer);
+        $listener = new BodyListener($decoderProvider, false, $normalizer);
         $listener->onKernelRequest($event);
     }
 

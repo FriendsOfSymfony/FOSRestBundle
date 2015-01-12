@@ -255,6 +255,18 @@ You can also create your own array normalizer by implementing the
         body_listener:
             array_normalizer: acme.normalizer.custom
 
+By default, the array normalizer is only applied to requests with a decodable format.
+If you want form data to be normalized, you can use the ``forms`` flag:
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_rest:
+        body_listener:
+            array_normalizer:
+                service: fos_rest.normalizer.camel_keys
+                forms: true
+
 Request Body Converter Listener
 -------------------------------
 

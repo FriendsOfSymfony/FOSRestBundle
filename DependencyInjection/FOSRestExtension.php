@@ -152,9 +152,11 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
 
             $arrayNormalizer = $config['body_listener']['array_normalizer'];
-            if (null !== $arrayNormalizer) {
-                $container->getDefinition($this->getAlias().'.body_listener')
-                    ->addMethodCall('setArrayNormalizer', array(new Reference($arrayNormalizer)));
+
+            if (null !== $arrayNormalizer['service']) {
+                $bodyListener = $container->getDefinition($this->getAlias().'.body_listener');
+                $bodyListener->addArgument(new Reference($arrayNormalizer['service']));
+                $bodyListener->addArgument($arrayNormalizer['forms']);
             }
         }
 
