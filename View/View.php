@@ -25,6 +25,7 @@ use JMS\Serializer\SerializationContext;
 class View
 {
     private $data;
+    private $templateData;
     private $template;
     private $templateVar;
     private $engine;
@@ -127,6 +128,21 @@ class View
     public function setData($data)
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Set template variable
+     *
+     * @param $variableName
+     * @param $data
+     *
+     * @return View
+     */
+    public function setTemplateData($variableName, $data)
+    {
+        $this->templateData[$variableName] = $data;
 
         return $this;
     }
@@ -315,6 +331,16 @@ class View
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Gets the template data.
+     *
+     * @return mixed|null
+     */
+    public function getTemplateData()
+    {
+        return $this->templateData;
     }
 
     /**
