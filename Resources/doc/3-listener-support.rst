@@ -538,15 +538,15 @@ configured for the matched controller so that the user does not need to do this 
          *
          * @QueryParam(name="count", requirements="\d+", strict=true, nullable=true, description="Item count limit")
          *
+         * Will check if a blank value, e.g an empty string is passed and if so, it will set to the default of asc.
+         *
+         * @QueryParam(name="sort", requirements="(asc|desc)+", allowBlank=false, default="asc" description="Sort direction")
+         *
          * Will look for a firstname request parameters, ie. firstname=foo in POST data.
          * If not passed it will error out when read out of the ParamFetcher since RequestParam defaults to strict=true
          * If passed but doesn't match the requirement "[a-z]+" it will also error out (400 Bad Request)
          * Note that if the value matches the default then no validation is run.
          * So make sure the default value really matches your expectations.
-         *
-         * @QueryParam(name="sort", requirements="(asc|desc)+", allowBlank=false, default="asc" description="Sort direction")
-         *
-         * Will check if a blank value, e.g an empty string is passed and if so, it will set to the default of asc.
          *
          * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
          *
