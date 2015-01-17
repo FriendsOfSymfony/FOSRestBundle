@@ -172,6 +172,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array(), $this->container);
 
         $this->assertAlias('fos_rest.view_handler.default', 'fos_rest.view_handler');
+        $this->assertAlias('fos_rest.exception_handler.default', 'fos_rest.exception_handler');
     }
 
     public function testLoadFormatsWithDefaults()
@@ -557,16 +558,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
         $viewHandler = $this->container->getDefinition('fos_rest.view_handler');
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $viewHandler);
-    }
-
-    public function testCheckExceptionWrapperHandler()
-    {
-        $this->extension->load(array(), $this->container);
-
-        $this->assertTrue($this->container->has('fos_rest.view.exception_wrapper_handler'));
-
-        $exceptionWrapperHandler = $this->container->getDefinition('fos_rest.view.exception_wrapper_handler');
-        $this->assertEquals('%fos_rest.view.exception_wrapper_handler%', $exceptionWrapperHandler->getClass());
     }
 
     /**
