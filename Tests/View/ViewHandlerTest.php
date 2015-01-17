@@ -76,16 +76,12 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatusCodeDataProvider
      */
-    public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled, $noContentCode)
+    public function testGetStatusCode($expected, $data, $isValid, $isValidCalled, $noContentCode)
     {
         $reflectionMethod = new \ReflectionMethod('FOS\RestBundle\View\ViewHandler', 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
         $form = $this->getMock('Symfony\Component\Form\Form', array('isBound', 'isValid'), array(), '', false);
-        $form
-            ->expects($this->exactly($isBoundCalled))
-            ->method('isBound')
-            ->will($this->returnValue($isBound));
         $form
             ->expects($this->exactly($isValidCalled))
             ->method('isValid')
@@ -103,12 +99,12 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function getStatusCodeDataProvider()
     {
         return array(
-            'no data' => array(Codes::HTTP_OK, false, false, false, 0, 0, Codes::HTTP_OK),
-            'no data with 204' => array(Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, Codes::HTTP_NO_CONTENT),
-            'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0, Codes::HTTP_OK),
-            'form key form is bound and invalid' => array(403, true, true, false, 1, 1, Codes::HTTP_OK),
-            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK),
-            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK),
+            'no data' => array(Codes::HTTP_OK, false, false, 0, Codes::HTTP_OK),
+            'no data with 204' => array(Codes::HTTP_NO_CONTENT, false, false, 0, Codes::HTTP_NO_CONTENT),
+            'form key form not bound' => array(Codes::HTTP_OK, true, true, 1, Codes::HTTP_OK),
+            'form key form is bound and invalid' => array(403, true, false,  1, Codes::HTTP_OK),
+            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, 1,  Codes::HTTP_OK),
+            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, 1, Codes::HTTP_OK),
         );
     }
 
