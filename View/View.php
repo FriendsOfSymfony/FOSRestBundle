@@ -25,7 +25,7 @@ use JMS\Serializer\SerializationContext;
 class View
 {
     private $data;
-    private $templateData;
+    private $templateData = array();
     private $template;
     private $templateVar;
     private $engine;
