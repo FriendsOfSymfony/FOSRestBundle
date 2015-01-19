@@ -6,7 +6,7 @@ various events from decoding the request content in the request (body listener),
 determining the correct response format (format listener), reading parameters
 from the request (parameter fetcher listener), to formatting the response either
 with a template engine like twig or to f.e. xml or json using a serializer (view
-response listener)) as well as automatically setting the accepted http methods
+response listener)) as well as automatically setting the accepted HTTP methods
 in the response (accept listener).
 
 With this in mind we now turn to explain each one of them.
