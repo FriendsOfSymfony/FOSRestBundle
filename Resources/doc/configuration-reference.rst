@@ -25,6 +25,7 @@ Full default configuration
             templating:           templating
             serializer:           null
             view_handler:         fos_rest.view_handler.default
+            exception_handler:    fos_rest.view.exception_wrapper_handler
             inflector:            fos_rest.inflector.doctrine
             validator:            validator
         serializer:
@@ -59,6 +60,8 @@ Full default configuration
                 callback_filter:      '/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i'
                 mime_type:            application/javascript+jsonp
         exception:
+            enabled:              false
+            exception_controller:  null
             codes:
 
                 # Prototype
@@ -68,29 +71,31 @@ Full default configuration
                 # Prototype
                 name:                 ~
         body_listener:
-            default_format: null
+            default_format:       null
             throw_exception_on_unsupported_content_type:  false
             decoders:
 
                 # Prototype
                 name:                 ~
-            array_normalizer:     null
+            array_normalizer:
+                service:              null
+                forms:                false
         format_listener:
             rules:
 
-                # Prototype array
-                -
-                    # URL path info
-                    path:                 null
+                # URL path info
+                path:                 null
 
-                    # URL host name
-                    host:                 null
+                # URL host name
+                host:                 null
 
-                    # Method for URL
-                    methods:              null
-                    prefer_extension:     true
-                    fallback_format:      html
-                    exception_fallback_format: ~
-                    priorities:           []
+                # Method for URL
+                methods:              null
+                stop:                 false
+                prefer_extension:     true
+                fallback_format:      html
+                exception_fallback_format:  null
+                priorities:           []
             media_type:
                 version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
+
