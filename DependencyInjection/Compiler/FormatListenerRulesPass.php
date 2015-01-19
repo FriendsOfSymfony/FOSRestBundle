@@ -39,6 +39,7 @@ class FormatListenerRulesPass implements CompilerPassInterface
                 'path' => "^/$path/",
                 'priorities' => array('html', 'json'),
                 'fallback_format' => 'html',
+                'exception_fallback_format' => 'html',
                 'prefer_extension' => true,
             );
 
@@ -65,7 +66,13 @@ class FormatListenerRulesPass implements CompilerPassInterface
             $rule['prefer_extension'] = '2.0';
         }
 
+        $exceptionFallbackFormat = $rule['exception_fallback_format'];
+        unset($rule['exception_fallback_format']);
         $container->getDefinition('fos_rest.format_negotiator')
+            ->addMethodCall('add', array($matcher, $rule));
+
+        $rule['fallback_format'] = $exceptionFallbackFormat;
+        $container->getDefinition('fos_rest.exception_format_negotiator')
             ->addMethodCall('add', array($matcher, $rule));
     }
 

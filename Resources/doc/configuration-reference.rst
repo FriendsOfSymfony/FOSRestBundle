@@ -90,6 +90,7 @@ Full default configuration
                     methods:              null
                     prefer_extension:     true
                     fallback_format:      html
+                    exception_fallback_format: ~
                     priorities:           []
             media_type:
                 version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'

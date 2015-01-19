@@ -46,14 +46,18 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'path' => '^/',
                         'priorities' => array('html', 'json'),
                         'fallback_format' => 'html',
+                        'exception_fallback_format' => 'html',
                         'prefer_extension' => true,
                 ),
             ) )
         );
 
-        $container->expects($this->exactly(2))
+        $container->expects($this->exactly(4))
             ->method('getDefinition')
-            ->with('fos_rest.format_negotiator')
+            ->with($this->logicalOr(
+                $this->equalTo('fos_rest.format_negotiator'),
+                $this->equalTo('fos_rest.exception_format_negotiator')
+            ))
             ->will($this->returnValue($definition));
 
         $compiler = new FormatListenerRulesPass();
@@ -88,14 +92,18 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'path' => '^/',
                         'priorities' => array('html', 'json'),
                         'fallback_format' => 'html',
+                        'exception_fallback_format' => 'html',
                         'prefer_extension' => true,
                     ),
                 ) )
             );
 
-        $container->expects($this->exactly(1))
+        $container->expects($this->exactly(2))
             ->method('getDefinition')
-            ->with('fos_rest.format_negotiator')
+            ->with($this->logicalOr(
+                $this->equalTo('fos_rest.format_negotiator'),
+                $this->equalTo('fos_rest.exception_format_negotiator')
+            ))
             ->will($this->returnValue($definition));
 
         $compiler = new FormatListenerRulesPass();

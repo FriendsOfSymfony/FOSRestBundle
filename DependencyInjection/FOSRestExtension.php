@@ -163,6 +163,12 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         if (!empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
 
+            foreach ($config['format_listener']['rules'] as $key => $rule) {
+                if (!isset($rule['exception_fallback_format'])) {
+                    $config['format_listener']['rules'][$key]['exception_fallback_format'] = $rule['fallback_format'];
+                }
+            }
+
             $container->setParameter(
                 $this->getAlias().'.format_listener.rules',
                 $config['format_listener']['rules']

@@ -396,6 +396,9 @@ Setting ``priorities`` to a non empty array enables Accept header negotiations.
                 - { path: '^/image', priorities: ['jpeg', 'gif'], fallback_format: false, prefer_extension: true }
                 # setting fallback_format to null means that in case of a priority mismatch the next rule will be considered
                 - { path: '^/admin', methods: [ 'GET', 'POST'], priorities: [ 'xml', 'html'], fallback_format: ~, prefer_extension: false }
+                # setting fallback_format to null, while setting exception_fallback_format to xml, will mean that in case of an exception, xml will be used
+                - { path: '^/api', priorities: [ 'xml', 'json'], fallback_format: ~, exception_fallback_format: xml, prefer_extension: false }
+                # setting a priority to */* basically means any format will be matched
                 - { path: '^/', priorities: [ 'text/html', '*/*'], fallback_format: html, prefer_extension: true }
 
 For example using the above configuration and the following Accept header:

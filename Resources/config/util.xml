@@ -13,6 +13,7 @@
 
     <services>
         <service id="fos_rest.format_negotiator" class="%fos_rest.format_negotiator.class%" />
+        <service id="fos_rest.exception_format_negotiator" class="%fos_rest.format_negotiator.class%" />
         <service id="fos_rest.inflector.doctrine" class="%fos_rest.inflector.class%" />
         <service id="fos_rest.request_matcher" class="%fos_rest.request_matcher.class%" public="false" />
         <service id="fos_rest.violation_formatter" class="%fos_rest.violation_formatter.class%" />
