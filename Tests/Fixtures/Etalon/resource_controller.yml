@@ -1,3 +1,8 @@
+options_articles:
+  method:     OPTIONS
+  pattern:    /articles.{_format}
+  controller: ::optionsAction
+
 get_articles:
   method:     GET
   pattern:    /articles.{_format}

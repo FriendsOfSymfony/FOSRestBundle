@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ArticleController extends FosRestController implements ClassResourceInterface
 {
-    public function optionsAction()
-    {} // [OPTION] /articles
+    public function optionsActions()
+    {} // [OPTIONS] /articles
 
     public function cgetAction()
     {} // [GET] /articles
