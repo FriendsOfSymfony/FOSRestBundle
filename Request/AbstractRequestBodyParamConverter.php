@@ -16,7 +16,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
-use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\Serializer\Exception\UnsupportedFormatException;
@@ -45,7 +46,7 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
      * @param array|null         $groups                   An array of groups to be used in the serialization context
      * @param string|null        $version                  A version string to be used in the serialization context
      * @param object             $serializer
-     * @param ValidatorInterface $validator
+     * @param LegacyValidatorInterface|ValidatorInterface $validator
      * @param string|null        $validationErrorsArgument
      *
      * @throws \InvalidArgumentException
@@ -54,7 +55,7 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         $serializer,
         $groups = null,
         $version = null,
-        ValidatorInterface $validator = null,
+        $validator = null,
         $validationErrorsArgument = null
     ) {
         $this->serializer = $serializer;
@@ -65,6 +66,15 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
 
         if (!empty($version)) {
             $this->context['version'] = $version;
+        }
+
+        if ($validator !== null && !$validator instanceof LegacyValidatorInterface && !$validator instanceof ValidatorInterface) {
+            throw new \InvalidArgumentException(sprintf(
+                'Validator has expected to be an instance of %s or %s, "%s" given',
+                'Symfony\Component\Validator\ValidatorInterface',
+                'Symfony\Component\Validator\Validator\ValidatorInterface',
+                get_class($validator)
+            ));
         }
 
         if (null !== $validator && null === $validationErrorsArgument) {
@@ -119,14 +129,21 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
 
         if (null !== $this->validator) {
             $validatorOptions = $this->getValidatorOptions($options);
-            $request->attributes->set(
-                $this->validationErrorsArgument,
-                $this->validator->validate(
+
+            if ($this->validator instanceof ValidatorInterface) {
+                $errors = $this->validator->validate($object, null, $validatorOptions['groups']);
+            } else {
+                $errors = $this->validator->validate(
                     $object,
                     $validatorOptions['groups'],
                     $validatorOptions['traverse'],
                     $validatorOptions['deep']
-                )
+                );
+            }
+
+            $request->attributes->set(
+                $this->validationErrorsArgument,
+                $errors
             );
         }
 
@@ -176,3 +193,4 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         return $resolver->resolve(isset($options['validator']) ? $options['validator'] : array());
     }
 }
+
