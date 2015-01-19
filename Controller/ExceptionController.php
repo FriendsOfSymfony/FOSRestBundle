@@ -211,7 +211,7 @@ class ExceptionController extends ContainerAware
     protected function getFormat(Request $request, $format)
     {
         try {
-            $formatNegotiator = $this->container->get('fos_rest.format_negotiator');
+            $formatNegotiator = $this->container->get('fos_rest.exception_format_negotiator');
             $format = $formatNegotiator->getBestFormat($request) ?: $format;
             $request->attributes->set('_format', $format);
         } catch (StopFormatListenerException $e) {
