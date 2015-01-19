@@ -184,6 +184,10 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             }
         }
 
+        if (!empty($config['view']['exception_wrapper_handler'])) {
+            $container->setParameter($this->getAlias().'.view.exception_wrapper_handler', $config['view']['exception_wrapper_handler']);
+        }
+
         if (!empty($config['view']['jsonp_handler'])) {
             $handler = new DefinitionDecorator($config['service']['view_handler']);
             $handler->setPublic(true);

@@ -52,7 +52,7 @@ Full default configuration
             view_response_listener:  false
             failed_validation:    400
             empty_content:        204
-            exception_wrapper_handler:  FOS\RestBundle\View\ExceptionWrapperHandler
+            exception_wrapper_handler:  null
             serialize_null:       false
             jsonp_handler:
                 callback_param:       callback
