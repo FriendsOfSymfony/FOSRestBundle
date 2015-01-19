@@ -307,6 +307,8 @@ class RestActionReader
                 $isInflectable = ($resourcePluralized != $resource[count($resource) - 1]);
                 $resource[count($resource)-1] = $resourcePluralized;
             }
+        } elseif ('options' === $httpMethod && !empty($resource) && 's' === substr($method->getName(), -1)) {
+            $resource[count($resource)-1] = $this->inflector->pluralize(end($resource));
         }
 
         $resources = array_merge($resource, $resources);
