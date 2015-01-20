@@ -98,7 +98,7 @@ class RestRouteLoader extends Loader
      *
      * @throws \InvalidArgumentException
      */
-    private function getControllerLocator($controller)
+    protected function getControllerLocator($controller)
     {
         $class  = null;
         $prefix = null;
