@@ -60,7 +60,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
     {
         $path = $this->locator->locate($file);
 
-        $config = Yaml::parse($path);
+        $config = Yaml::parse(file_get_contents($path));
 
         $collection = new RouteCollection();
         $collection->addResource(new FileResource($path));

@@ -40,7 +40,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function loadEtalonRoutesInfo($etalonName)
     {
-        return Yaml::parse(__DIR__.'/../../Fixtures/Etalon/'.$etalonName);
+        return Yaml::parse(file_get_contents(__DIR__.'/../../Fixtures/Etalon/'.$etalonName));
     }
 
     private function getAnnotationReader()
