@@ -20,7 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Helper to validate parameters of the active request.
@@ -46,19 +47,26 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * Initializes fetcher.
      *
-     * For symfony 2.5 or higher use 2.5-bc validation API https://github.com/symfony/symfony/blob/master/UPGRADE-2.5.md#validator
-     *
      * @param ParamReader                 $paramReader
      * @param Request                     $request
-     * @param ValidatorInterface          $validator
+     * @param ValidatorInterface|LegacyValidatorInterface $validator
      * @param ViolationFormatterInterface $violationFormatter
      */
-    public function __construct(ParamReader $paramReader, Request $request, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
+    public function __construct(ParamReader $paramReader, Request $request, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
         $this->paramReader        = $paramReader;
         $this->request            = $request;
         $this->violationFormatter = $violationFormatter;
         $this->validator          = $validator;
+
+        if ($validator !== null && !$validator instanceof LegacyValidatorInterface && !$validator instanceof ValidatorInterface) {
+            throw new \InvalidArgumentException(sprintf(
+                'Validator has expected to be an instance of %s or %s, "%s" given',
+                'Symfony\Component\Validator\ValidatorInterface',
+                'Symfony\Component\Validator\Validator\ValidatorInterface',
+                get_class($validator)
+            ));
+        }
     }
 
     /**
@@ -218,7 +226,11 @@ class ParamFetcher implements ParamFetcherInterface
             }
         }
 
-        $errors = $this->validator->validateValue($param, $constraint);
+        if ($this->validator instanceof ValidatorInterface) {
+            $errors = $this->validator->validate($param, $constraint);
+        } else {
+            $errors = $this->validator->validateValue($param, $constraint);
+        }
 
         if (0 !== count($errors)) {
             if ($strict) {
