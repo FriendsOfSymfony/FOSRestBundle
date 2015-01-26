@@ -541,7 +541,7 @@ class RestActionReader
         if ($annotation && null !== $annotation->getName()) {
             $options = $annotation->getOptions();
 
-            if(isset($options['method_prefix']) && false === $options['method_prefix']) {
+            if (isset($options['method_prefix']) && false === $options['method_prefix']) {
                 $routeName = $annotation->getName();
             } else {
                 $routeName = $routeName.$annotation->getName();
