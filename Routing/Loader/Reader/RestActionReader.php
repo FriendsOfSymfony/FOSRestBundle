@@ -302,13 +302,14 @@ class RestActionReader
         ) {
             $isCollection = true;
             $httpMethod = substr($httpMethod, 1);
-            if (!empty($resource)) {
-                $resourcePluralized = $this->inflector->pluralize(end($resource));
-                $isInflectable = ($resourcePluralized != $resource[count($resource) - 1]);
-                $resource[count($resource)-1] = $resourcePluralized;
-            }
-        } elseif ('options' === $httpMethod && !empty($resource) && 's' === substr($method->getName(), -1)) {
-            $resource[count($resource)-1] = $this->inflector->pluralize(end($resource));
+        } elseif ('options' === $httpMethod) {
+            $isCollection = true;
+        }
+
+        if ($isCollection && !empty($resource)) {
+            $resourcePluralized = $this->inflector->pluralize(end($resource));
+            $isInflectable = ($resourcePluralized != $resource[count($resource) - 1]);
+            $resource[count($resource)-1] = $resourcePluralized;
         }
 
         $resources = array_merge($resource, $resources);
