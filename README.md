@@ -20,14 +20,10 @@ applications with Symfony2. Features include:
 Documentation
 -------------
 
-The bulk of the documentation is stored in the `Resources/doc/index.md`
-file in this bundle:
-
-[Read the Documentation for master](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/index.rst)
+[Read the Documentation for master](http://symfony.com/doc/master/bundles/FOSRestBundle/index.html)
 
 Please see the [UPGRADING.md](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING.md) for any
 relevant instructions when upgrading to a newer version.
-
 
 Installation
 ------------
