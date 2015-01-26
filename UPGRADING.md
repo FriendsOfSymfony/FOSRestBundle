@@ -9,6 +9,10 @@ This document will be updated to list important BC breaks and behavioral changes
    View::createRouteRedirect instead. Note: the default status code for a route redirect
    has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
 
+### upgrading from 1.4.*
+
+  * In JsonToFormDecoder prefer to transform false data to null, see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/883
+
 ### upgrading from 1.3.*
 
  * [`ViewHandler::getSerializationContext`](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/View/ViewHandler.php) is now a `protected` method instead of `public`.
