@@ -12,6 +12,7 @@ This document will be updated to list important BC breaks and behavioral changes
 ### upgrading from 1.4.*
 
   * In JsonToFormDecoder prefer to transform false data to null, see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/883
+  * Routing name is no longer appended to generic route name, see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/879
 
 ### upgrading from 1.3.*
 
