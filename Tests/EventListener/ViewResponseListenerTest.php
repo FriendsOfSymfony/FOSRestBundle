@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\EventListener\ViewResponseListener;
+use FOS\RestBundle\Tests\FOSRestRequest;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +88,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelController()
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->attributes->set('_view', 'foo');
         $event = $this->getFilterEvent($request);
 
@@ -98,7 +99,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelControllerNoView()
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $event = $this->getFilterEvent($request);
 
         $this->listener->onKernelController($event);
@@ -115,7 +116,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
             ->method('set')
             ->with('format', null);
 
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->attributes->set('_template_default_vars', array('foo', 'halli'));
         $request->attributes->set('foo', 'baz');
         $request->attributes->set('halli', 'galli');
@@ -152,7 +153,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelViewWhenControllerResultIsNotViewObject()
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
 
         $event = $this->getResponseEvent($request, array());
         $event->expects($this->never())
@@ -176,7 +177,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->attributes->set('_template', $template);
 
         $this->templating->expects($this->any())
@@ -225,7 +226,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $viewAnnotation = new ViewAnnotation(array());
         $viewAnnotation->setStatusCode($annotationCode);
 
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->setRequestFormat('json');
         $request->attributes->set('_view', $viewAnnotation);
 
@@ -282,7 +283,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $viewAnnotation = new ViewAnnotation(array());
         $viewAnnotation->setSerializerEnableMaxDepthChecks($enableMaxDepthChecks);
 
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->setRequestFormat('json');
         $request->attributes->set('_view', $viewAnnotation);
 
@@ -330,7 +331,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testViewWithNoCopyDefaultVars($createAnnotation, $populateDefaultVars, $shouldCopy)
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->attributes->set('_template_default_vars', array('customer'));
         $request->attributes->set('customer', 'A person goes here');
         $view = View::create();

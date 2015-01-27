@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\ParamFetcherListener;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
+use FOS\RestBundle\Tests\FOSRestRequest;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -42,7 +43,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSettingAttributes()
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->attributes->set('customer', null);
         $event = $this->getEvent($request);
 
@@ -64,7 +65,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSettingParamFetcherOnRequest()
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $event = $this->getEvent($request);
 
         $this->paramFetcher->expects($this->once())
@@ -84,7 +85,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSettingParamFetcherByTypehint($actionName, $expectedAttribute)
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
 
         $event = $this->getEvent($request, $actionName);
 
@@ -102,7 +103,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSettingParamFetcherForInvokable()
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
 
         $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
             ->disableOriginalConstructor()

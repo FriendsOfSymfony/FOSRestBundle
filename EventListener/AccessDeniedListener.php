@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -57,6 +58,10 @@ class AccessDeniedListener extends ExceptionListener
         }
 
         $request = $event->getRequest();
+
+        if (!$request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE)) {
+            return false;
+        }
 
         if (empty($this->formats[$request->getRequestFormat()]) && empty($this->formats[$request->getContentType()])) {
             return false;

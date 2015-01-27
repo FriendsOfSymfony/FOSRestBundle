@@ -696,12 +696,27 @@ You need to enable this listener like this as it is disabled by default:
 
 It is also recommended to enable the exception controller described in the next chapter.
 
+Enabling Zone
+=============
+
+As you can see, FOSRestBundle provides multiple event listeners to enable REST-related features.
+By default, these listeners will be registered to all requests and may conflict with other parts of your application.
+Using the ``zone`` configuration, you can specify where the event listeners will be enabled.
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_rest:
+        zone:
+            - { path: ^/api/* }
+
 Priorities
 ----------
 
 ==========================  =====================  ========
 Listener                    Event                  Priority
 ==========================  =====================  ========
+``ZoneMatcherListener``     ``kernel.request``     248
 ``MimeTypeListener``        ``kernel.request``     200
 ``FormatListener``          ``kernel.request``     34
 ``VersionListener``         ``kernel.request``     33

@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -49,6 +50,11 @@ class ParamFetcherListener
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE)) {
+            return;
+        }
+
         $paramFetcher = $this->container->get('fos_rest.request.param_fetcher');
 
         $controller = $event->getController();

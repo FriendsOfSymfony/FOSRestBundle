@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
+use FOS\RestBundle\Tests\FOSRestRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use FOS\RestBundle\Decoder\ContainerDecoderProvider;
@@ -78,14 +79,14 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public static function testOnKernelRequestDataProvider()
     {
         return array(
-            'Empty POST request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array('foo'), 'application/json'),
-            'Empty PUT request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PUT', array('foo'), 'application/json'),
-            'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PATCH', array('foo'), 'application/json'),
-            'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'DELETE', array('foo'), 'application/json'),
-            'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', array(), 'application/json'),
-            'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array('CONTENT_TYPE' => 'application/x-www-form-urlencoded'), array('foo')), 'POST', array('bar'), 'application/x-www-form-urlencoded'),
-            'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array(), 'application/fooformat'),
-            'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', array('foo')),
+            'Empty POST request' => array(true, new FOSRestRequest(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array('foo'), 'application/json'),
+            'Empty PUT request' => array(true, new FOSRestRequest(array(), array(), array(), array(), array(), array(), array('foo')), 'PUT', array('foo'), 'application/json'),
+            'Empty PATCH request' => array(true, new FOSRestRequest(array(), array(), array(), array(), array(), array(), array('foo')), 'PATCH', array('foo'), 'application/json'),
+            'Empty DELETE request' => array(true, new FOSRestRequest(array(), array(), array(), array(), array(), array(), array('foo')), 'DELETE', array('foo'), 'application/json'),
+            'Empty GET request' => array(false, new FOSRestRequest(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', array(), 'application/json'),
+            'POST request with parameters' => array(false, new FOSRestRequest(array(), array('bar'), array(), array(), array(), array('CONTENT_TYPE' => 'application/x-www-form-urlencoded'), array('foo')), 'POST', array('bar'), 'application/x-www-form-urlencoded'),
+            'POST request with unallowed format' => array(false, new FOSRestRequest(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array(), 'application/fooformat'),
+            'POST request with no Content-Type' => array(true, new FOSRestRequest(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', array('foo')),
         );
     }
 
@@ -118,7 +119,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->with($data)
             ->will($this->returnValue($normalizedData));
 
-        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request = new FOSRestRequest(array(), array(), array(), array(), array(), array(), 'foo');
         $request->setMethod('POST');
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
@@ -148,7 +149,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->with($data)
             ->will($this->returnValue($normalizedData));
 
-        $request = new Request(array(), $data, array(), array(), array(), array(), 'foo');
+        $request = new FOSRestRequest(array(), $data, array(), array(), array(), array(), 'foo');
         $request->headers->set('Content-Type', 'multipart/form-data');
         $request->setMethod('POST');
 
@@ -194,7 +195,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('normalize')
             ->will($this->throwException(new NormalizationException()));
 
-        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request = new FOSRestRequest(array(), array(), array(), array(), array(), array(), 'foo');
         $request->setMethod('POST');
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
@@ -215,7 +216,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public function testBadRequestExceptionOnMalformedContent()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
-        $this->testOnKernelRequest(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/json');
+        $this->testOnKernelRequest(true, new FOSRestRequest(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/json');
     }
 
     /**
@@ -224,11 +225,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
-        $this->testOnKernelRequest(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/foo', true);
+        $this->testOnKernelRequest(false, new FOSRestRequest(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/foo', true);
     }
 
     public function testShouldNotThrowUnsupportedMediaTypeHttpExceptionWhenIsAnEmptyDeleteRequest()
     {
-        $this->testOnKernelRequest(false, new Request(), 'DELETE', array(), null, true);
+        $this->testOnKernelRequest(false, new FOSRestRequest(), 'DELETE', array(), null, true);
     }
 }

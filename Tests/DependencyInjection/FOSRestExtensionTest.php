@@ -577,4 +577,46 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => array('callback_filter' => 'foo')))), $this->container);
     }
+
+    public function testZoneMatcherListenerDefault()
+    {
+        $this->extension->load(array('fos_rest' => array()), $this->container);
+        $zoneMatcherListener = $this->container->getDefinition('fos_rest.zone_matcher_listener');
+
+        $this->assertTrue($this->container->has('fos_rest.zone_matcher_listener'));
+        $this->assertEquals('%fos_rest.zone_matcher_listener.class%', $zoneMatcherListener->getClass());
+    }
+
+    public function testZoneMatcherListener()
+    {
+        $config = array('fos_rest' => array(
+            'zone' => array(
+                'first' => array('path' => '/api/*'),
+                'second' => array('path' => '/^second', 'ips' => '127.0.0.1')
+            )
+        ));
+
+        $this->extension->load($config, $this->container);
+        $zoneMatcherListener = $this->container->getDefinition('fos_rest.zone_matcher_listener');
+        $addRequestMatcherCalls = $zoneMatcherListener->getMethodCalls();
+
+        $this->assertTrue($this->container->has('fos_rest.zone_matcher_listener'));
+        $this->assertEquals('%fos_rest.zone_matcher_listener.class%', $zoneMatcherListener->getClass());
+        $this->assertCount(2, $addRequestMatcherCalls);
+
+        // First zone
+        $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[0][0]);
+        $requestMatcherFirstId = (string) $addRequestMatcherCalls[0][1][0];
+        $requestMatcherFirst = $this->container->getDefinition($requestMatcherFirstId);
+        $this->assertEquals('%fos_rest.zone_request_matcher.class%', $requestMatcherFirst->getClass());
+        $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0));
+
+        // Second zone
+        $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[1][0]);
+        $requestMatcherSecondId = (string) $addRequestMatcherCalls[1][1][0];
+        $requestMatcherSecond = $this->container->getDefinition($requestMatcherSecondId);
+        $this->assertEquals('%fos_rest.zone_request_matcher.class%', $requestMatcherSecond->getClass());
+        $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
+        $this->assertEquals(array('127.0.0.1'), $requestMatcherSecond->getArgument(3));
+    }
 }
