@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\VersionListener;
 use FOS\RestBundle\FOSRestBundle;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Version listener test.
@@ -45,5 +46,42 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
     public function testDefaultVersion()
     {
         $this->assertEquals(false, $this->listener->getVersion());
+    }
+
+    public function testMatch()
+    {
+        $this->listener->setRegex('/(v|version)=(?P<version>[0-9\.]+)/');
+
+        $request = new Request();
+        $request->attributes->set('media_type', 'application/json;v=1.2');
+
+        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request);
+
+        $this->listener->onKernelRequest($event);
+
+        $this->assertEquals('1.2', $this->listener->getVersion());
+    }
+
+    public function testMatchNoZone()
+    {
+        $this->listener->setRegex('/(v|version)=(?P<version>[0-9\.]+)/');
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->attributes->set('media_type', 'application/json;v=1.2');
+
+        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request);
+
+        $this->listener->onKernelRequest($event);
+
+        $this->assertFalse($this->listener->getVersion());
     }
 }

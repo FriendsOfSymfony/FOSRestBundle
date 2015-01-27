@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Util\FormatNegotiator;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -48,6 +49,10 @@ class MimeTypeListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return;
+        }
 
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
             foreach ($this->mimeTypes['formats'] as $format => $mimeType) {

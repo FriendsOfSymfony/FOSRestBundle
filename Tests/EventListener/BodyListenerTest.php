@@ -11,11 +11,12 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\Decoder\ContainerDecoderProvider;
+use FOS\RestBundle\EventListener\BodyListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\HeaderBag;
-use FOS\RestBundle\Decoder\ContainerDecoderProvider;
-use FOS\RestBundle\EventListener\BodyListener;
 
 /**
  * Request listener test.
@@ -87,6 +88,48 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array(), 'application/fooformat'),
             'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', array('foo')),
         );
+    }
+
+    public function testOnKernelRequestNoZone()
+    {
+        $data = array('foo_bar' => 'foo_bar');
+        $normalizedData = array('fooBar' => 'foo_bar');
+
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
+        $decoder
+            ->expects($this->never())
+            ->method('decode')
+            ->will($this->returnValue($data));
+
+        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $decoderProvider
+            ->expects($this->never())
+            ->method('getDecoder')
+            ->will($this->returnValue($decoder));
+
+        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer
+            ->expects($this->never())
+            ->method('normalize')
+            ->with($data)
+            ->will($this->returnValue($normalizedData));
+
+        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->setMethod('POST');
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $listener = new BodyListener($decoderProvider, false, $normalizer);
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals(array(), $request->request->all());
     }
 
     public function testOnKernelRequestWithNormalizer()

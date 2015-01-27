@@ -11,11 +11,12 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\EventListener\FormatListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\EventListener\FormatListener;
 
 /**
  * Request listener test.
@@ -48,6 +49,34 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals($request->getRequestFormat(), 'xml');
+    }
+
+    public function testOnKernelControllerNoZone()
+    {
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiatorInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $formatNegotiator
+            ->expects($this->never())
+            ->method('getBestMediaType')
+        ;
+
+        $listener = new FormatListener($formatNegotiator);
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($request->getRequestFormat(), 'html');
     }
 
     public function testOnKernelControllerNegotiationStopped()

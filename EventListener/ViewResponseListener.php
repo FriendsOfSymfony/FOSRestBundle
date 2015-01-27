@@ -12,14 +12,15 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Util\ContextHelper;
 use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
-use FOS\RestBundle\View\ViewHandlerInterface;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -40,6 +41,10 @@ class ViewResponseListener extends TemplateListener
     {
         $request = $event->getRequest();
 
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return;
+        }
+
         if ($configuration = $request->attributes->get('_view')) {
             $request->attributes->set('_template', $configuration);
         }
@@ -56,6 +61,11 @@ class ViewResponseListener extends TemplateListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return false;
+        }
+
         /** @var \FOS\RestBundle\Controller\Annotations\View $configuration */
         $configuration = $request->attributes->get('_view');
 
