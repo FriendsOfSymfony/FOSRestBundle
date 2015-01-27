@@ -1,93 +1,93 @@
 get_users:
-  pattern:      /users.{_format}
+  path:      /users.{_format}
   controller:   ::getUsersAction
   requirements: {_method: GET}
 
 get_user:
-  pattern:      /users/{slug}.{_format}
+  path:      /users/{slug}.{_format}
   controller:   ::getUserAction
   requirements: {_method: GET, slug: '[a-z]+'}
 
 patch_users:
-  pattern:      /users.{_format}
+  path:      /users.{_format}
   controller:   ::patchUsersAction
   requirements: {_method: PATCH}
 
 patch_user:
-  pattern:      /users/{slug}.{_format}
+  path:      /users/{slug}.{_format}
   controller:   ::patchUserAction
   requirements: {_method: PATCH, slug: '[a-z]+'}
 
 get_user_comment:
-  pattern:      /users/{slug}/comments/{id}.{_format}
+  path:      /users/{slug}/comments/{id}.{_format}
   controller:   ::getUserCommentAction
   requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
 
 get_user_post:
-  pattern:      /users/{slug}/posts/{id}.{_format}
+  path:      /users/{slug}/posts/{id}.{_format}
   controller:   ::getUserPostAction
   options:
     expose: true
   requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
 
 rate_user:
-  pattern:      /users/{slug}/rate.{_format}
+  path:      /users/{slug}/rate.{_format}
   controller:   ::rateUserAction
   requirements: {_method: POST, slug: '[a-z]+'}
 
 rate_user_comment:
-  pattern:      /users/{slug}/rate_comment/{id}.{_format}
+  path:      /users/{slug}/rate_comment/{id}.{_format}
   controller:   ::rateUserCommentAction
   requirements: {_method: PATCH, slug: '[a-z]+', id: '\d+'}
 
 bget_user:
-  pattern:      /users/{slug}/bget.{_format}
+  path:      /users/{slug}/bget.{_format}
   controller:   ::bgetUserAction
   requirements: {_method: GET}
 
 bpost_user:
-  pattern:      /users/{slug}/bpost.{_format}
+  path:      /users/{slug}/bpost.{_format}
   controller:   ::bpostUserAction
   requirements: {_method: POST}
 
 bput_user:
-  pattern:      /users/{slug}/bput.{_format}
+  path:      /users/{slug}/bput.{_format}
   controller:   ::bputUserAction
   requirements: {_method: PUT}
 
 bdel_user:
-  pattern:      /users/{slug}/bdel.{_format}
+  path:      /users/{slug}/bdel.{_format}
   controller:   ::bdelUserAction
   requirements: {_method: DELETE}
 
 bhead_user:
-  pattern:      /users/{slug}/bhead.{_format}
+  path:      /users/{slug}/bhead.{_format}
   controller:   ::bheadUserAction
   requirements: {_method: HEAD}
 
 
 multipleget_users_a_get_method:
-  pattern:      /users2.{_format}
+  path:      /users2.{_format}
   controller:   ::multiplegetUsersAction
   requirements: {_method: GET}
 multipleget_users_an_other_get_method:
-  pattern:      /users3.{_format}
+  path:      /users3.{_format}
   controller:   ::multiplegetUsersAction
   requirements: {_method: GET}
 multipleget_users_a_post_method:
-  pattern:      /users4.{_format}
+  path:      /users4.{_format}
   controller:   ::multiplegetUsersAction
   requirements: {_method: POST}
 multipleget_users_a_link_method:
-  pattern:      /users1.{_format}
+  path:      /users1.{_format}
   controller:   ::multiplegetUsersAction
   requirements: {_method: LINK}
 
 post_users_foo:
-  pattern:      /users1/{foo}.{_format}
+  path:      /users1/{foo}.{_format}
   controller:   ::multiplepostUsersAction
   requirements: {_method: POST}
 post_users_bar:
-  pattern:      /users2/{foo}.{_format}
+  path:      /users2/{foo}.{_format}
   controller:   ::multiplepostUsersAction
   requirements: {_method: POST}

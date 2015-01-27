@@ -37,7 +37,7 @@ class RestRouteLoaderTest extends LoaderTest
             $methods = $route->getMethods();
 
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
-            $this->assertEquals($params['pattern'], $route->getPath(), 'Pattern does not match for route: '.$name);
+            $this->assertEquals($params['path'], $route->getPath(), 'Path does not match for route: '.$name);
             $this->assertEquals($params['method'], $methods[0], 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
@@ -59,7 +59,7 @@ class RestRouteLoaderTest extends LoaderTest
             $methods = $route->getMethods();
 
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
-            $this->assertEquals($params['pattern'], $route->getPath(), 'Pattern does not match for route: '.$name);
+            $this->assertEquals($params['path'], $route->getPath(), 'Path does not match for route: '.$name);
             $this->assertEquals($params['method'], $methods[0], 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
@@ -106,7 +106,7 @@ class RestRouteLoaderTest extends LoaderTest
             }
 
             $this->assertNotNull($route, "no route found for '$name'");
-            $this->assertEquals($params['pattern'], $route->getPath(), 'pattern failed to match for '.$name);
+            $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
@@ -147,7 +147,7 @@ class RestRouteLoaderTest extends LoaderTest
             }
 
             $this->assertNotNull($route, "no route found for '$name'");
-            $this->assertEquals($params['pattern'], $route->getPath(), 'pattern failed to match for '.$name);
+            $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
@@ -183,12 +183,12 @@ class RestRouteLoaderTest extends LoaderTest
         // is reset when using the same ControllerLoader for both Controllers.
         $loader = $this->getControllerLoader();
 
-        // get the pattern for the prefixed controller, and verify it is prefixed
+        // get the path for the prefixed controller, and verify it is prefixed
         $collection = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\AnnotatedPrefixedController', 'rest');
         $prefixedRoute = $collection->get('get_something');
         $this->assertEquals('/aprefix/', substr($prefixedRoute->getPath(), 0, 9));
 
-        // get the pattern for the non-prefixed controller, and verify it's not prefixed
+        // get the path for the non-prefixed controller, and verify it's not prefixed
         $collection2 = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\UsersController', 'rest');
         $nonPrefixedRoute = $collection2->get('get_users');
         $this->assertNotEquals('/aprefix/', substr($nonPrefixedRoute->getPath(), 0, 9));

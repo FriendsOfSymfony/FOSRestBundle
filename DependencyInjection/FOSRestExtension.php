@@ -170,26 +170,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
     {
         if (!empty($config['body_converter'])) {
             if (!empty($config['body_converter']['enabled'])) {
-                $parameter = new \ReflectionParameter(
-                    array(
-                        'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
-                        'supports',
-                    ),
-                    'configuration'
-                );
-
-                if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' == $parameter->getClass()->getName()) {
-                    $container->setParameter(
-                        'fos_rest.converter.request_body.class',
-                        'FOS\RestBundle\Request\RequestBodyParamConverter'
-                    );
-                } else {
-                    $container->setParameter(
-                        'fos_rest.converter.request_body.class',
-                        'FOS\RestBundle\Request\RequestBodyParamConverter20'
-                    );
-                }
-
                 $loader->load('request_body_param_converter.xml');
             }
 

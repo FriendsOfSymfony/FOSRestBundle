@@ -412,7 +412,7 @@ And the following route:
 .. code-block:: yaml
 
     hello:
-        pattern:  /foo.{_format}
+        path:  /foo.{_format}
         defaults: { _controller: foo.controller:indexAction, _format: ~ }
 
 When calling:

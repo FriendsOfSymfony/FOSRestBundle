@@ -38,7 +38,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             $methods = $route->getMethods();
 
             $this->assertNotNull($route, $name);
-            $this->assertEquals($params['pattern'], $route->getPath(), $name);
+            $this->assertEquals($params['path'], $route->getPath(), $name);
             $this->assertEquals($params['method'], $methods[0], $name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
         }
@@ -57,7 +57,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             $methods = $route->getMethods();
 
             $this->assertNotNull($route, $name);
-            $this->assertEquals($params['pattern'], $route->getPath(), $name);
+            $this->assertEquals($params['path'], $route->getPath(), $name);
             $this->assertEquals($params['method'], $methods[0], $name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
         }
@@ -76,7 +76,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             $methods = $route->getMethods();
 
             $this->assertNotNull($route, $name);
-            $this->assertEquals($params['pattern'], $route->getPath(), $name);
+            $this->assertEquals($params['path'], $route->getPath(), $name);
             $this->assertEquals($params['method'], $methods[0], $name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
         }
