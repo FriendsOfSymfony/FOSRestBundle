@@ -35,10 +35,11 @@ class RestYamlCollectionLoaderTest extends LoaderTest
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
+            $methods = $route->getMethods();
 
             $this->assertNotNull($route, $name);
-            $this->assertEquals($params['pattern'], $route->getPattern(), $name);
-            $this->assertEquals($params['method'], $route->getRequirement('_method'), $name);
+            $this->assertEquals($params['pattern'], $route->getPath(), $name);
+            $this->assertEquals($params['method'], $methods[0], $name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
         }
     }
@@ -53,10 +54,11 @@ class RestYamlCollectionLoaderTest extends LoaderTest
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
+            $methods = $route->getMethods();
 
             $this->assertNotNull($route, $name);
-            $this->assertEquals($params['pattern'], $route->getPattern(), $name);
-            $this->assertEquals($params['method'], $route->getRequirement('_method'), $name);
+            $this->assertEquals($params['pattern'], $route->getPath(), $name);
+            $this->assertEquals($params['method'], $methods[0], $name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
         }
     }
@@ -71,10 +73,11 @@ class RestYamlCollectionLoaderTest extends LoaderTest
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
+            $methods = $route->getMethods();
 
             $this->assertNotNull($route, $name);
-            $this->assertEquals($params['pattern'], $route->getPattern(), $name);
-            $this->assertEquals($params['method'], $route->getRequirement('_method'), $name);
+            $this->assertEquals($params['pattern'], $route->getPath(), $name);
+            $this->assertEquals($params['method'], $methods[0], $name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
         }
     }
@@ -87,7 +90,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $names = array();
         $collection = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
         foreach ($collection as $route) {
-            $names[] = $route->getPattern();
+            $names[] = $route->getPath();
         }
         $this->assertEquals(count($names), count(array_unique($names)));
     }

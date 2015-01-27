@@ -34,10 +34,11 @@ class RestRouteLoaderTest extends LoaderTest
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
+            $methods = $route->getMethods();
 
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
-            $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
-            $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
+            $this->assertEquals($params['pattern'], $route->getPath(), 'Pattern does not match for route: '.$name);
+            $this->assertEquals($params['method'], $methods[0], 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
     }
@@ -55,10 +56,11 @@ class RestRouteLoaderTest extends LoaderTest
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
+            $methods = $route->getMethods();
 
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
-            $this->assertEquals($params['pattern'], $route->getPattern(), 'Pattern does not match for route: '.$name);
-            $this->assertEquals($params['method'], $route->getRequirement('_method'), 'Method does not match for route: '.$name);
+            $this->assertEquals($params['pattern'], $route->getPath(), 'Pattern does not match for route: '.$name);
+            $this->assertEquals($params['method'], $methods[0], 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
     }
@@ -99,8 +101,12 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
+            if (!array_key_exists('_method', $route->getRequirements())) {
+                unset($params['requirements']['_method']);
+            }
+
             $this->assertNotNull($route, "no route found for '$name'");
-            $this->assertEquals($params['pattern'], $route->getPattern(), 'pattern failed to match for '.$name);
+            $this->assertEquals($params['pattern'], $route->getPath(), 'pattern failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
@@ -136,8 +142,12 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
+            if (!array_key_exists('_method', $route->getRequirements())) {
+                unset($params['requirements']['_method']);
+            }
+
             $this->assertNotNull($route, "no route found for '$name'");
-            $this->assertEquals($params['pattern'], $route->getPattern(), 'pattern failed to match for '.$name);
+            $this->assertEquals($params['pattern'], $route->getPath(), 'pattern failed to match for '.$name);
             $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
@@ -176,12 +186,12 @@ class RestRouteLoaderTest extends LoaderTest
         // get the pattern for the prefixed controller, and verify it is prefixed
         $collection = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\AnnotatedPrefixedController', 'rest');
         $prefixedRoute = $collection->get('get_something');
-        $this->assertEquals('/aprefix/', substr($prefixedRoute->getPattern(), 0, 9));
+        $this->assertEquals('/aprefix/', substr($prefixedRoute->getPath(), 0, 9));
 
         // get the pattern for the non-prefixed controller, and verify it's not prefixed
         $collection2 = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\UsersController', 'rest');
         $nonPrefixedRoute = $collection2->get('get_users');
-        $this->assertNotEquals('/aprefix/', substr($nonPrefixedRoute->getPattern(), 0, 9));
+        $this->assertNotEquals('/aprefix/', substr($nonPrefixedRoute->getPath(), 0, 9));
     }
 
     /**
@@ -191,30 +201,30 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testConventionalActions()
     {
-        $expectedMethod = 'GET';
+        $expectedMethod = array('GET');
         $collection = $this->loadFromControllerFixture('UsersController');
         $subcollection = $this->loadFromControllerFixture('UserTopicsController');
         $subsubcollection = $this->loadFromControllerFixture('UserTopicCommentsController');
 
         // resource actions
-        $this->assertEquals($expectedMethod, $collection->get('new_users')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $collection->get('edit_user')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $collection->get('remove_user')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('new_users')->getMethods());
+        $this->assertEquals($expectedMethod, $collection->get('edit_user')->getMethods());
+        $this->assertEquals($expectedMethod, $collection->get('remove_user')->getMethods());
 
         // subresource actions
-        $this->assertEquals($expectedMethod, $collection->get('new_user_comments')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $collection->get('edit_user_comment')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $collection->get('remove_user_comment')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('new_user_comments')->getMethods());
+        $this->assertEquals($expectedMethod, $collection->get('edit_user_comment')->getMethods());
+        $this->assertEquals($expectedMethod, $collection->get('remove_user_comment')->getMethods());
 
         // resource collection actions
-        $this->assertEquals($expectedMethod, $subcollection->get('new_topics')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $subcollection->get('edit_topic')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $subcollection->get('remove_topic')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $subcollection->get('new_topics')->getMethods());
+        $this->assertEquals($expectedMethod, $subcollection->get('edit_topic')->getMethods());
+        $this->assertEquals($expectedMethod, $subcollection->get('remove_topic')->getMethods());
 
         // resource collection's resource collection actions
-        $this->assertEquals($expectedMethod, $subsubcollection->get('new_comments')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $subsubcollection->get('edit_comment')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $subsubcollection->get('remove_comment')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $subsubcollection->get('new_comments')->getMethods());
+        $this->assertEquals($expectedMethod, $subsubcollection->get('edit_comment')->getMethods());
+        $this->assertEquals($expectedMethod, $subsubcollection->get('remove_comment')->getMethods());
     }
 
     /**
@@ -247,12 +257,12 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testMediaFixture()
     {
-        $expectedMethod = 'GET';
+        $expectedMethod = array('GET');
         $collection = $this->loadFromControllerFixture('MediaController');
 
         $this->assertCount(2, $collection->all());
-        $this->assertEquals($expectedMethod, $collection->get('get_media')->getRequirement('_method'));
-        $this->assertEquals($expectedMethod, $collection->get('cget_media')->getRequirement('_method'));
+        $this->assertEquals($expectedMethod, $collection->get('get_media')->getMethods());
+        $this->assertEquals($expectedMethod, $collection->get('cget_media')->getMethods());
     }
 
     /**

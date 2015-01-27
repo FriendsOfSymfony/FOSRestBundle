@@ -186,7 +186,6 @@ class RestActionReader
         $requirements = array('_method' => strtoupper($httpMethod));
         $options      = array();
         $host         = '';
-        $schemes      = array();
         $condition    = null;
 
         $annotations = $this->readRouteAnnotation($method);
@@ -195,15 +194,18 @@ class RestActionReader
 
                 $pattern      = implode('/', $urlParts);
                 $defaults     = array('_controller' => $method->getName());
-                $requirements = array('_method' => strtoupper($httpMethod));
+                $requirements = array();
                 $options      = array();
+                $methods      = explode('|', $httpMethod);
                 $condition    = null;
 
                 $annoRequirements = $annotation->getRequirements();
 
-                if (!isset($annoRequirements['_method'])) {
-                    $annoRequirements['_method'] = $requirements['_method'];
+                if (isset($annoRequirements['_method'])) {
+                    $methods = explode('|', strtoupper($annoRequirements['_method']));
                 }
+
+                unset($annoRequirements['_method']);
 
                 $pattern      = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $pattern;
                 $requirements = array_merge($requirements, $annoRequirements);
@@ -225,7 +227,7 @@ class RestActionReader
                 }
                 // add route to collection
                 $route = new Route(
-                    $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition
+                    $pattern, $defaults, $requirements, $options, $host, $schemes, $methods, $condition
                 );
                 $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
@@ -238,9 +240,17 @@ class RestActionReader
                     $requirements['_format'] = implode('|', array_keys($this->formats));
                 }
             }
+
+            if (isset($requirements['_method'])) {
+                $methods = explode('|', $requirements['_method']);
+                unset($requirements['_method']);
+            } else {
+                $methods = array();
+            }
+
             // add route to collection
             $route = new Route(
-                $pattern, $defaults, $requirements, $options, $host, $schemes, null, $condition
+                $pattern, $defaults, $requirements, $options, $host, array(), $methods, $condition
             );
             $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable);
         }
