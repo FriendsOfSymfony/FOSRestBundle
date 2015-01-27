@@ -20,7 +20,7 @@ applications with Symfony2. Features include:
 Documentation
 -------------
 
-[Read the Documentation for master](http://symfony.com/doc/master/bundles/FOSRestBundle/index.html)
+[Read the Documentation](http://symfony.com/doc/master/bundles/FOSRestBundle/index.html)
 
 Please see the [UPGRADING.md](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING.md) for any
 relevant instructions when upgrading to a newer version.
@@ -28,7 +28,7 @@ relevant instructions when upgrading to a newer version.
 Installation
 ------------
 
-All the installation instructions are located in the [documentation](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/index.rst).
+All the installation instructions are located in the [documentation](http://symfony.com/doc/master/bundles/FOSRestBundle/1-setting_up_the_bundle.html).
 
 License
 -------
