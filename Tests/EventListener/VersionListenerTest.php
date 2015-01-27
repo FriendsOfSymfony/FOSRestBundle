@@ -11,6 +11,10 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\EventListener\VersionListener;
+use FOS\RestBundle\FOSRestBundle;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Version listener test.
  *
@@ -31,7 +35,7 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->viewHandler = $this->getMock('FOS\RestBundle\View\ConfigurableViewHandlerInterface');
 
-        $this->listener = $this->getMock('FOS\RestBundle\EventListener\VersionListener', null, [$this->viewHandler]);
+        $this->listener = new VersionListener($this->viewHandler);
     }
 
     public function testDefaultVersion()
@@ -43,16 +47,8 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->listener->setRegex('/(v|version)=(?P<version>[0-9\.]+)/');
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-
-        $attributesBag = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
-        $attributesBag
-            ->expects($this->once())
-            ->method('get')
-            ->with('media_type')
-            ->willReturn('application/json/v=1.2');
-
-        $request->attributes = $attributesBag;
+        $request = new Request();
+        $request->attributes->set('media_type', 'application/json;v=1.2');
 
         $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', [], [], '', false);
         $event
@@ -63,5 +59,24 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener->onKernelRequest($event);
 
         $this->assertEquals('1.2', $this->listener->getVersion());
+    }
+
+    public function testMatchNoZone()
+    {
+        $this->listener->setRegex('/(v|version)=(?P<version>[0-9\.]+)/');
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->attributes->set('media_type', 'application/json;v=1.2');
+
+        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', [], [], '', false);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request);
+
+        $this->listener->onKernelRequest($event);
+
+        $this->assertFalse($this->listener->getVersion());
     }
 }

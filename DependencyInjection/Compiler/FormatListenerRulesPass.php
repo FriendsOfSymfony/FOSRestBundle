@@ -89,7 +89,7 @@ class FormatListenerRulesPass implements CompilerPassInterface
         if (!$container->hasDefinition($id)) {
             // only add arguments that are necessary
             $container
-                ->setDefinition($id, new DefinitionDecorator('fos_rest.request_matcher'))
+                ->setDefinition($id, new DefinitionDecorator('fos_rest.format_request_matcher'))
                 ->setArguments($arguments);
         }
 

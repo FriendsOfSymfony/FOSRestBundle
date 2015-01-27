@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -45,9 +46,13 @@ class FormatListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        try {
-            $request = $event->getRequest();
+        $request = $event->getRequest();
 
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return;
+        }
+
+        try {
             $format = $request->getRequestFormat(null);
             if (null === $format) {
                 $accept = $this->formatNegotiator->getBest('');

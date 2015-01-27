@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\ParamFetcherListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -74,6 +75,28 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
         $this->paramFetcherListener->onKernelController($event);
 
         $this->assertSame($this->paramFetcher, $request->attributes->get('paramFetcher'));
+    }
+
+    public function testParamFetcherOnRequestNoZone()
+    {
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+
+        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->atLeastOnce())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $this->paramFetcher->expects($this->never())
+            ->method('all')
+            ->will($this->returnValue([]));
+
+        $this->paramFetcherListener->onKernelController($event);
+
+        $this->assertNull($request->attributes->get('paramFetcher'));
     }
 
     /**
@@ -175,7 +198,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->container->expects($this->once())
+        $this->container->expects($this->any())
             ->method('get')
             ->with('fos_rest.request.param_fetcher')
             ->will($this->returnValue($this->paramFetcher));

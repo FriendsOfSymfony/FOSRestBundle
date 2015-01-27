@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\Decoder\ContainerDecoderProvider;
 use FOS\RestBundle\EventListener\BodyListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,6 +88,48 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             'POST request with unallowed format' => [false, new Request([], [], [], [], [], [], ['foo']), 'POST', [], 'application/fooformat'],
             'POST request with no Content-Type' => [true, new Request([], [], ['_format' => 'json'], [], [], [], ['foo']), 'POST', ['foo']],
         ];
+    }
+
+    public function testOnKernelRequestNoZone()
+    {
+        $data = ['foo_bar' => 'foo_bar'];
+        $normalizedData = ['fooBar' => 'foo_bar'];
+
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
+        $decoder
+            ->expects($this->never())
+            ->method('decode')
+            ->will($this->returnValue($data));
+
+        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $decoderProvider
+            ->expects($this->never())
+            ->method('getDecoder')
+            ->will($this->returnValue($decoder));
+
+        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer
+            ->expects($this->never())
+            ->method('normalize')
+            ->with($data)
+            ->will($this->returnValue($normalizedData));
+
+        $request = new Request([], [], [], [], [], [], 'foo');
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->setMethod('POST');
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $listener = new BodyListener($decoderProvider, false, $normalizer);
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals([], $request->request->all());
     }
 
     public function testOnKernelRequestWithNormalizer()
