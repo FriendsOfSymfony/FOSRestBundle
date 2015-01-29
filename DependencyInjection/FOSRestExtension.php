@@ -38,6 +38,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig('sensio_framework_extra', array('view' => array('annotations' => false)));
         }
     }
+
     /**
      * Loads the services based on your application configuration.
      *
@@ -57,24 +58,9 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $loader->load('util.xml');
         $loader->load('request.xml');
 
-        if (!empty($config['disable_csrf_role'])) {
-            $loader->load('forms.xml');
-            $container->setParameter('fos_rest.disable_csrf_role', $config['disable_csrf_role']);
-        }
-
         $container->setParameter('fos_rest.cache_dir', $config['cache_dir']);
-
-        $formats = array();
-        foreach ($config['view']['formats'] as $format => $enabled) {
-            if ($enabled) {
-                $formats[$format] = false;
-            }
-        }
-        foreach ($config['view']['templating_formats'] as $format => $enabled) {
-            if ($enabled) {
-                $formats[$format] = true;
-            }
-        }
+        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
+        $container->setParameter($this->getAlias().'.routing.loader.include_format', $config['routing_loader']['include_format']);
 
         // The validator service alias is only set if validation is enabled for the request body converter
         $validator = $config['service']['validator'];
@@ -86,64 +72,45 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             }
         }
 
-        if (!empty($config['serializer']['version'])) {
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.version', $config['serializer']['version']);
+        $this->loadForm($config, $loader, $container);
+        $this->loadSerializer($config, $container);
+        $this->loadException($config, $loader, $container);
+        $this->loadBodyConverter($config, $validator, $loader, $container);
+        $this->loadView($config, $loader, $container);
+
+        $this->loadBodyListener($config, $loader, $container);
+        $this->loadFormatListener($config, $loader, $container);
+        $this->loadParamFetcherListener($config, $loader, $container);
+        $this->loadAllowedMethodsListener($config, $loader);
+        $this->loadAccessDeniedListener($config, $loader, $container);
+    }
+
+    private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if (!empty($config['disable_csrf_role'])) {
+            $loader->load('forms.xml');
+            $container->setParameter('fos_rest.disable_csrf_role', $config['disable_csrf_role']);
         }
-        if (!empty($config['serializer']['groups'])) {
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.groups', $config['serializer']['groups']);
+    }
+
+    private function loadAccessDeniedListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if (!empty($config['access_denied_listener'])) {
+            $loader->load('access_denied_listener.xml');
+            $container->setParameter($this->getAlias().'.access_denied_listener.formats', $config['access_denied_listener']);
+            $container->setParameter($this->getAlias().'.access_denied_listener.unauthorized_challenge', $config['unauthorized_challenge']);
         }
-        $container->setParameter($this->getAlias().'.serializer.serialize_null', $config['serializer']['serialize_null']);
+    }
 
-        $container->setParameter($this->getAlias().'.formats', $formats);
-        $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);
-
-        foreach ($config['view']['force_redirects'] as $format => $code) {
-            if (true === $code) {
-                $config['view']['force_redirects'][$format] = Codes::HTTP_FOUND;
-            }
+    public function loadAllowedMethodsListener(array $config, XmlFileLoader $loader)
+    {
+        if (!empty($config['allowed_methods_listener'])) {
+            $loader->load('allowed_methods_listener.xml');
         }
-        $container->setParameter($this->getAlias().'.force_redirects', $config['view']['force_redirects']);
+    }
 
-        if (!is_numeric($config['view']['failed_validation'])) {
-            $config['view']['failed_validation'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['failed_validation']);
-        }
-        $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
-
-        if (!is_numeric($config['view']['empty_content'])) {
-            $config['view']['empty_content'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['empty_content']);
-        }
-        $container->setParameter($this->getAlias().'.empty_content', $config['view']['empty_content']);
-
-        $container->setParameter($this->getAlias().'.serialize_null', $config['view']['serialize_null']);
-
-        if (!empty($config['view']['view_response_listener'])) {
-            $loader->load('view_response_listener.xml');
-            $container->setParameter($this->getAlias().'.view_response_listener.force_view', 'force' === $config['view']['view_response_listener']);
-        }
-
-        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
-        $container->setParameter($this->getAlias().'.routing.loader.include_format', $config['routing_loader']['include_format']);
-
-        if ($config['exception']['enabled']) {
-            $loader->load('exception_listener.xml');
-            if ($config['exception']['exception_controller']) {
-                $container->setParameter('fos_rest.exception_listener.controller', $config['exception']['exception_controller']);
-            }
-        }
-
-        foreach ($config['exception']['codes'] as $exception => $code) {
-            if (!is_numeric($code)) {
-                $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Util\Codes::$code");
-            }
-            $this->testExceptionExists($exception);
-        }
-        foreach ($config['exception']['messages'] as $exception => $message) {
-            $this->testExceptionExists($exception);
-        }
-
-        $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
-        $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
-
+    private function loadBodyListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
         if (!empty($config['body_listener'])) {
             $loader->load('body_listener.xml');
 
@@ -159,7 +126,10 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $bodyListener->addArgument($arrayNormalizer['forms']);
             }
         }
+    }
 
+    private function loadFormatListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
         if (!empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
 
@@ -183,7 +153,61 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $container->removeDefinition('fos_rest.version_listener');
             }
         }
+    }
 
+    private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if (!empty($config['param_fetcher_listener'])) {
+            $loader->load('param_fetcher_listener.xml');
+
+            if ('force' === $config['param_fetcher_listener']) {
+                $container->setParameter($this->getAlias().'.param_fetcher_listener.set_params_as_attributes', true);
+            }
+        }
+    }
+
+    private function loadBodyConverter(array $config, $validator, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if (!empty($config['body_converter'])) {
+            if (!empty($config['body_converter']['enabled'])) {
+                $parameter = new \ReflectionParameter(
+                    array(
+                        'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
+                        'supports',
+                    ),
+                    'configuration'
+                );
+
+                if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' == $parameter->getClass()->getName()) {
+                    $container->setParameter(
+                        'fos_rest.converter.request_body.class',
+                        'FOS\RestBundle\Request\RequestBodyParamConverter'
+                    );
+                } else {
+                    $container->setParameter(
+                        'fos_rest.converter.request_body.class',
+                        'FOS\RestBundle\Request\RequestBodyParamConverter20'
+                    );
+                }
+
+                $loader->load('request_body_param_converter.xml');
+            }
+
+            if (!empty($config['body_converter']['validate'])) {
+                $container->setAlias($this->getAlias().'.validator', $validator);
+            }
+
+            if (!empty($config['body_converter']['validation_errors_argument'])) {
+                $container->setParameter(
+                    'fos_rest.converter.request_body.validation_errors_argument',
+                    $config['body_converter']['validation_errors_argument']
+                );
+            }
+        }
+    }
+
+    private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
         if (!empty($config['view']['exception_wrapper_handler'])) {
             $container->setParameter($this->getAlias().'.view.exception_wrapper_handler', $config['view']['exception_wrapper_handler']);
         }
@@ -215,56 +239,85 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $container->setParameter($this->getAlias().'.mime_types', array());
         }
 
-        if (!empty($config['param_fetcher_listener'])) {
-            $loader->load('param_fetcher_listener.xml');
+        if (!empty($config['view']['view_response_listener'])) {
+            $loader->load('view_response_listener.xml');
+            $container->setParameter($this->getAlias().'.view_response_listener.force_view', 'force' === $config['view']['view_response_listener']);
+        }
 
-            if ('force' === $config['param_fetcher_listener']) {
-                $container->setParameter($this->getAlias().'.param_fetcher_listener.set_params_as_attributes', true);
+        $formats = array();
+        foreach ($config['view']['formats'] as $format => $enabled) {
+            if ($enabled) {
+                $formats[$format] = false;
+            }
+        }
+        foreach ($config['view']['templating_formats'] as $format => $enabled) {
+            if ($enabled) {
+                $formats[$format] = true;
             }
         }
 
-        if (!empty($config['allowed_methods_listener'])) {
-            $loader->load('allowed_methods_listener.xml');
+        $container->setParameter($this->getAlias().'.formats', $formats);
+
+        foreach ($config['view']['force_redirects'] as $format => $code) {
+            if (true === $code) {
+                $config['view']['force_redirects'][$format] = Codes::HTTP_FOUND;
+            }
         }
 
-        if (!empty($config['access_denied_listener'])) {
-            $loader->load('access_denied_listener.xml');
-            $container->setParameter($this->getAlias().'.access_denied_listener.formats', $config['access_denied_listener']);
-            $container->setParameter($this->getAlias().'.access_denied_listener.unauthorized_challenge', $config['unauthorized_challenge']);
+        $container->setParameter($this->getAlias().'.force_redirects', $config['view']['force_redirects']);
+
+        if (!is_numeric($config['view']['failed_validation'])) {
+            $config['view']['failed_validation'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['failed_validation']);
         }
 
-        if (!empty($config['body_converter'])) {
-            if (!empty($config['body_converter']['enabled'])) {
-                $parameter = new \ReflectionParameter(
-                    array(
-                        'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
-                        'supports',
-                    ),
-                    'configuration'
-                );
-                if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' == $parameter->getClass()->getName()) {
-                    $container->setParameter(
-                        'fos_rest.converter.request_body.class',
-                        'FOS\RestBundle\Request\RequestBodyParamConverter'
-                    );
-                } else {
-                    $container->setParameter(
-                        'fos_rest.converter.request_body.class',
-                        'FOS\RestBundle\Request\RequestBodyParamConverter20'
-                    );
-                }
-                $loader->load('request_body_param_converter.xml');
-            }
-            if (!empty($config['body_converter']['validate'])) {
-                $container->setAlias($this->getAlias().'.validator', $validator);
-            }
-            if (!empty($config['body_converter']['validation_errors_argument'])) {
-                $container->setParameter(
-                    'fos_rest.converter.request_body.validation_errors_argument',
-                    $config['body_converter']['validation_errors_argument']
-                );
+        $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
+
+        if (!is_numeric($config['view']['empty_content'])) {
+            $config['view']['empty_content'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['empty_content']);
+        }
+
+        $container->setParameter($this->getAlias().'.empty_content', $config['view']['empty_content']);
+        $container->setParameter($this->getAlias().'.serialize_null', $config['view']['serialize_null']);
+        $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);
+    }
+
+    private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if ($config['exception']['enabled']) {
+            $loader->load('exception_listener.xml');
+
+            if ($config['exception']['exception_controller']) {
+                $container->setParameter('fos_rest.exception_listener.controller', $config['exception']['exception_controller']);
             }
         }
+
+        foreach ($config['exception']['codes'] as $exception => $code) {
+            if (!is_numeric($code)) {
+                $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Util\Codes::$code");
+            }
+
+            $this->testExceptionExists($exception);
+        }
+
+        foreach ($config['exception']['messages'] as $exception => $message) {
+            $this->testExceptionExists($exception);
+        }
+
+        $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
+        $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
+    }
+
+    private function loadSerializer(array $config, ContainerBuilder $container)
+    {
+        if (!empty($config['serializer']['version'])) {
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.version', $config['serializer']['version']);
+        }
+
+        if (!empty($config['serializer']['groups'])) {
+            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.groups', $config['serializer']['groups']);
+        }
+
+        $container->setParameter($this->getAlias().'.serializer.serialize_null', $config['serializer']['serialize_null']);
     }
 
     /**
