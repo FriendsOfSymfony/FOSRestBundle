@@ -52,13 +52,12 @@ class ExceptionController extends ContainerAware
      * @param Request                                    $request
      * @param HttpFlattenException|DebugFlattenException $exception
      * @param DebugLoggerInterface                       $logger
-     * @param string                                     $format
      *
      * @return Response
      *
      * @throws \InvalidArgumentException
      */
-    public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null, $format = 'html')
+    public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
         /**
          * Validates that the exception that is handled by the Exception controller is either a DebugFlattenException
@@ -76,7 +75,7 @@ class ExceptionController extends ContainerAware
             ));
         }
 
-        $format = $this->getFormat($request, $format);
+        $format = $this->getFormat($request, $request->getRequestFormat());
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined, while handling: ';
             $message .= $this->getExceptionMessage($exception);
