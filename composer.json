@@ -23,19 +23,19 @@
     "require": {
         "php":                            ">=5.3.9",
         "psr/log":                        "~1.0",
-        "symfony/framework-bundle":       "~2.2",
+        "symfony/framework-bundle":       "~2.3",
         "doctrine/inflector":             "~1.0",
         "willdurand/negotiation":         "~1.2",
         "willdurand/jsonp-callback-validator": "~1.0"
     },
 
     "require-dev": {
-        "sensio/framework-extra-bundle":  "~2.2",
-        "symfony/form":                   "~2.2",
-        "symfony/validator":              "~2.2",
-        "symfony/serializer":             "~2.2",
-        "symfony/yaml":                   "~2.2",
-        "symfony/security":               "~2.2",
+        "sensio/framework-extra-bundle":  "~3.0",
+        "symfony/form":                   "~2.3",
+        "symfony/validator":              "~2.3",
+        "symfony/serializer":             "~2.3",
+        "symfony/yaml":                   "~2.3",
+        "symfony/security":               "~2.3",
         "jms/serializer-bundle":          "~0.12"
     },
 
