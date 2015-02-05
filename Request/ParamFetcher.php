@@ -137,7 +137,7 @@ class ParamFetcher implements ParamFetcherInterface
 
         if ($config->array) {
             if (!is_array($param)) {
-                if ($strict) {
+                if (!$nullable) {
                     throw new BadRequestHttpException(
                         sprintf("%s parameter value of '%s' is not an array", $paramType, $name)
                     );
