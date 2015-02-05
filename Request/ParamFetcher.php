@@ -133,8 +133,7 @@ class ParamFetcher implements ParamFetcherInterface
 
         if ($config->array) {
 
-            if (($default !== null || !$strict) || $nullable)
-            {
+            if (($default !== null || !$strict) || $nullable) {
                 $default = (array) $default;
             }
 
