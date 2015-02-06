@@ -355,7 +355,7 @@ Define your service in ``config.yml``:
 
     services:
         acme.hellobundle.util.inflector:
-          class: Acme\HelloBundle\Util\NoopInflector
+          class: Acme\HelloBundle\Util\Inflector\NoopInflector
 
 Tell ``fos_rest`` to use your own service as inflector, also in ``config.yml``:
 
