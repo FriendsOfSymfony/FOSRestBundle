@@ -3,6 +3,7 @@
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 
 /**
  * Fixture for testing whether the ParamFetcher can be injected into
@@ -20,6 +21,13 @@ class ParamFetcherController
      * Make sure the ParamFetcher can be injected according to the typehint.
      */
     public function byTypeAction(ParamFetcher $pf)
+    {}
+
+    /**
+     * Make sure the ParamFetcher can be injected if the typehint is for
+     * the interface.
+     */
+    public function byInterfaceAction(ParamFetcherInterface $pfi)
     {}
 
     /**
