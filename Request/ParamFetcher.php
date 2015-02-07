@@ -123,10 +123,6 @@ class ParamFetcher implements ParamFetcherInterface
             $strict = $config->strict;
         }
 
-        if ($config->array && (null !== $default || !$strict)) {
-            $default = (array) $default;
-        }
-
         if ($config instanceof RequestParam) {
             $param = $this->request->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
@@ -136,8 +132,13 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config->array) {
+
+            if (($default !== null || !$strict) || $nullable) {
+                $default = (array) $default;
+            }
+
             if (!is_array($param)) {
-                if ($strict) {
+                if ($strict && !$nullable) {
                     throw new BadRequestHttpException(
                         sprintf("%s parameter value of '%s' is not an array", $paramType, $name)
                     );
