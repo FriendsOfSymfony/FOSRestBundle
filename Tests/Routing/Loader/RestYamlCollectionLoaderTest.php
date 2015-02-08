@@ -95,12 +95,14 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $this->assertEquals(count($names), count(array_unique($names)));
     }
 
-    public function testForwardOptions()
+    public function testForwardOptionsRequirementsAndDefaults()
     {
-        $collection = $this->loadFromYamlCollectionFixture('routes_with_options.yml');
+        $collection = $this->loadFromYamlCollectionFixture('routes_with_options_requirements_and_defaults.yml');
 
         foreach ($collection as $route) {
             $this->assertTrue($route->getOption('expose'));
+            $this->assertEquals('[a-z]+', $route->getRequirement('slug'));
+            $this->assertEquals('home', $route->getDefault('slug'));
         }
     }
 

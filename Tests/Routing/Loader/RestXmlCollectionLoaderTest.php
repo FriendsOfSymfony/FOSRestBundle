@@ -111,21 +111,14 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         $this->assertEquals('xml', $route->getDefault('_format'));
     }
 
-    public function testForwardOptions()
+    public function testForwardOptionsRequirementsAndDefaults()
     {
-        $collection = $this->loadFromXmlCollectionFixture(
-            'routes_with_options.xml',
-            true,
-            array(
-                'json' => false,
-                'xml'  => false,
-                'html' => true,
-            ),
-            'xml'
-        );
+        $collection = $this->loadFromXmlCollectionFixture('routes_with_options_requirements_and_defaults.xml');
 
         foreach ($collection as $route) {
             $this->assertTrue('true' === $route->getOption('expose'));
+            $this->assertEquals('[a-z]+', $route->getRequirement('slug'));
+            $this->assertEquals('home', $route->getDefault('slug'));
         }
     }
     /**
