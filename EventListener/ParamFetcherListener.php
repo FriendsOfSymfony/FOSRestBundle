@@ -77,7 +77,7 @@ class ParamFetcherListener
     /**
      * Determines which attribute the ParamFetcher should be injected as.
      *
-     * @param array $controller The controller action an an "array" callable.
+     * @param array $controller The controller action as an "array" callable.
      *
      * @return string
      */
@@ -109,7 +109,7 @@ class ParamFetcherListener
         if (null === $type) {
             return false;
         }
-
-        return 'FOS\\RestBundle\\Request\\ParamFetcher' === $type->getName();
+        $fetcherInterface = 'FOS\\RestBundle\\Request\\ParamFetcherInterface';
+        return $type->implementsInterface($fetcherInterface);
     }
 }

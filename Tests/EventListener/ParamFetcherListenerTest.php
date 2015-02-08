@@ -138,6 +138,9 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
             // the parameter name is.
             array('byTypeAction', 'pf'),
 
+            // The user can typehint using ParamFetcherInterface, too.
+            array('byInterfaceAction', 'pfi'),
+
             // If there is no controller argument for the ParamFetcher, it
             // should be injected as the default name.
             array('notProvidedAction', 'paramFetcher'),
