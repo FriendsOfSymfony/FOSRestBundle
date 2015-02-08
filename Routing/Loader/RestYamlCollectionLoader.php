@@ -68,13 +68,15 @@ class RestYamlCollectionLoader extends YamlFileLoader
         // process routes and imports
         foreach ($config as $name => $config) {
             if (isset($config['resource'])) {
-                $resource   = $config['resource'];
-                $prefix     = isset($config['prefix'])      ? $config['prefix']         : null;
-                $namePrefix = isset($config['name_prefix']) ? $config['name_prefix']    : null;
-                $parent     = isset($config['parent'])      ? $config['parent']         : null;
-                $type       = isset($config['type'])        ? $config['type']           : null;
-                $options    = isset($config['options'])     ? $config['options']        : null;
-                $currentDir = dirname($path);
+                $resource     = $config['resource'];
+                $prefix       = isset($config['prefix'])       ? $config['prefix']         : null;
+                $namePrefix   = isset($config['name_prefix'])  ? $config['name_prefix']    : null;
+                $parent       = isset($config['parent'])       ? $config['parent']         : null;
+                $type         = isset($config['type'])         ? $config['type']           : null;
+                $requirements = isset($config['requirements']) ? $config['requirements']   : array();
+                $defaults     = isset($config['defaults'])     ? $config['defaults']       : array();
+                $options      = isset($config['options'])      ? $config['options']        : array();
+                $currentDir   = dirname($path);
 
                 $parents = array();
                 if (!empty($parent)) {
@@ -94,9 +96,9 @@ class RestYamlCollectionLoader extends YamlFileLoader
                     $this->collectionParents[$name] = $parents;
                 }
 
-                if ($options) {
-                    $imported->addOptions($options);
-                }
+                $imported->addRequirements($requirements);
+                $imported->addDefaults($defaults);
+                $imported->addOptions($options);
 
                 $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
