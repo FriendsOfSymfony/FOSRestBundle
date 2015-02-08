@@ -7,5 +7,7 @@
     <route id="get_users" pattern="/users">
         <default key="_controller">FOSRestBundle:UsersController:getUsers</default>
         <option key="expose">true</option>
+        <requirement key="slug">[a-z]+</requirement>
+        <default key="slug">home</default>
     </route>
 </routes>
