@@ -52,6 +52,63 @@ which adds several convenience methods:
         }
     }
 
+If you need to pass more data in template, not for serialization, you can use ``setTemplateData`` method:
+
+.. code-block:: php
+
+    <?php
+
+    use FOS\RestBundle\Controller\FOSRestController;
+
+    class UsersController extends FOSRestController
+    {
+        public function getCategoryAction($categorySlug)
+        {
+            $category = $this->get('category_manager')->getBySlug($categorySlug);
+            $products = ...; // get data, in this case list of products.
+
+            $templateData = array('category' => $category);
+
+            $view = $this->view($products, 200)
+                ->setTemplate("MyBundle:Category:show.html.twig")
+                ->setTemplateVar('products')
+                ->setTemplateData($templateData);
+            ;
+
+            return $this->handleView($view);
+        }
+    }
+
+or it is possible to use lazy-loading:
+
+.. code-block:: php
+
+    <?php
+
+    use FOS\RestBundle\Controller\FOSRestController;
+
+    class UsersController extends FOSRestController
+    {
+        public function getProductsAction($categorySlug)
+        {
+            $products = ...; // get data, in this case list of products.
+            $categoryManager = $this->get('category_manager');
+
+            $view = $this->view($products, 200)
+                ->setTemplate("MyBundle:Category:show.html.twig")
+                ->setTemplateVar('products')
+                ->setTemplateData(function(ViewHandlerInterface $viewHandler, ViewInterface $view) use ($categoryManager, $categorySlug) {
+                    $category = $categoryManager->getBySlug($categorySlug);
+                    return array(
+                        'category' => $category
+                    )
+                });
+            ;
+
+            return $this->handleView($view);
+        }
+    }
+
 To simplify this even more: If you rely on the ``ViewResponseListener`` in
 combination with SensioFrameworkExtraBundle you can even omit the calls to
 ``$this->handleView($view)`` and directly return the view objects. See chapter
@@ -75,6 +132,7 @@ There are several more methods on the ``View`` class, here is a list of all
 the important ones for configuring the view:
 
 * ``setData($data)`` - Set the object graph or list of objects to serialize.
+* ``setTemplateData($templateData)`` - Set the template data array or anonymous function. Closure should return array.
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
 * ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
 * ``setSerializationContext($context)`` - Set the serialization context to use.

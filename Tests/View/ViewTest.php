@@ -91,6 +91,25 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @dataProvider setTemplateDataDataProvider
+     */
+    public function testSetTemplateData($templateData)
+    {
+        $view = new View();
+        $view->setTemplateData($templateData);
+        $this->assertEquals($templateData, $view->getTemplateData());
+    }
+
+    public static function setTemplateDataDataProvider()
+    {
+        return array(
+            'null as data' => array(null),
+            'array as data' => array(array('foo' => 'bar')),
+            'function as data' => array(function() {})
+        );
+    }
+
     public function testSetEngine()
     {
         $view = new View();
