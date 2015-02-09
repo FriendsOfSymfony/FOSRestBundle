@@ -135,14 +135,13 @@ class View
     /**
      * Set template variable
      *
-     * @param $variableName
-     * @param $data
+     * @param  array|callable $data
      *
      * @return View
      */
-    public function setTemplateData($variableName, $data)
+    public function setTemplateData($data = array())
     {
-        $this->templateData[$variableName] = $data;
+        $this->templateData = $data;
 
         return $this;
     }

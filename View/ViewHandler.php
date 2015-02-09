@@ -380,29 +380,24 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     public function prepareTemplateParameters(View $view)
     {
         $data = $view->getData();
-        $templateData = $view->getTemplateData();
-        if ($data instanceof FormInterface) {
-            $preparedData = array_merge(
-                array($view->getTemplateVar() => $data->getData(), 'form' => $data->createView()),
-                $templateData
-            );
-            return $preparedData;
-        }
 
-        if (empty($data) || !is_array($data) || is_numeric((key($data)))) {
-            $preparedData = array_merge(
-                array($view->getTemplateVar() => $data),
-                $templateData
-            );
-            return $preparedData;
+        if ($data instanceof FormInterface) {
+            $data = array($view->getTemplateVar() => $data->getData(), 'form' => $data);
+
+        } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
+            $data = array($view->getTemplateVar() => $data);
         }
 
         if (isset($data['form']) && $data['form'] instanceof FormInterface) {
             $data['form'] = $data['form']->createView();
-            $data = array_merge($data, $templateData);
         }
 
-        return $data;
+        $templateData = $view->getTemplateData();
+        if (is_callable($templateData)) {
+            $templateData = call_user_func($templateData, $this, $view);
+        }
+
+        return array_merge($data, $templateData);
     }
 
     /**

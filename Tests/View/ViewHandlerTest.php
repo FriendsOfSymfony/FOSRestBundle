@@ -500,12 +500,16 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider prepareTemplateParametersDataProvider
      */
-    public function testPrepareTemplateParametersWithProvider($viewData, $expected)
+    public function testPrepareTemplateParametersWithProvider($viewData, $templateData, $expected)
     {
-        $handler = new ViewHandler();
+        $handler = new ViewHandler(array('html' => true));
 
         $view = new View();
+        $view->setFormat('html');
         $view->setData($viewData);
+
+        if (null !== $templateData)
+            $view->setTemplateData($templateData);
 
         $this->assertEquals($expected, $handler->prepareTemplateParameters($view));
     }
@@ -528,11 +532,29 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('getData')
             ->will($this->returnValue($formView));
 
+        $self = $this;
+
         return array(
-            'assoc array does not change'   => array(array('foo' => 'bar'), array('foo' => 'bar')),
-            'ordered array is wrapped as data key'  => array(array('foo', 'bar'), array('data' => array('foo', 'bar'))),
-            'object is wrapped as data key' => array($object, array('data' => $object)),
-            'form is wrapped as form key'   => array($form, array('form' => $formView, 'data' => $formView)),
+            'assoc array does not change'   => array(array('foo' => 'bar'), null, array('foo' => 'bar')),
+            'ordered array is wrapped as data key'  => array(array('foo', 'bar'), null, array('data' => array('foo', 'bar'))),
+            'object is wrapped as data key' => array($object, null, array('data' => $object)),
+            'form is wrapped as form key'   => array($form, null, array('form' => $formView, 'data' => $formView)),
+            'template data is added to data'   => array(array('foo' => 'bar'), array('baz' => 'qux'), array('foo' => 'bar', 'baz' => 'qux')),
+            'lazy template data is added to data'   => array(
+                array('foo' => 'bar'),
+                function() { return array('baz' => 'qux'); },
+                array('foo' => 'bar', 'baz' => 'qux')
+            ),
+            'lazy template data have reference to viewhandler and view'   => array(
+                array('foo' => 'bar'),
+                function ($handler, $view) use ($self) {
+                    $self->assertInstanceOf('FOS\\RestBundle\\View\\ViewHandlerInterface', $handler);
+                    $self->assertInstanceOf('FOS\\RestBundle\\View\\View', $view);
+                    $self->assertTrue($handler->isFormatTemplating($view->getFormat()));
+                    return array('format' => $view->getFormat());
+                },
+                array('foo' => 'bar', 'format' => 'html')
+            ),
         );
     }
 
