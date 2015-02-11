@@ -459,4 +459,22 @@ class View
 
         return $this->serializationContext;
     }
+
+    /**
+     * Useful method for configure serialization context without losing fluent interface.
+     * Usage:
+     *      $view->configSerializationContext(function(SerializationContext $context) {
+     *          $context->setGroups('group1');
+     *      })
+     *
+     * @param callable $configurator
+     *
+     * @return View
+     */
+    public function configSerializationContext(\Closure $configurator)
+    {
+        $configurator($this->getSerializationContext());
+
+        return $this;
+    }
 }
