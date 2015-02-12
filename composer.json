@@ -26,7 +26,8 @@
         "symfony/framework-bundle":       "~2.3",
         "doctrine/inflector":             "~1.0",
         "willdurand/negotiation":         "~1.2",
-        "willdurand/jsonp-callback-validator": "~1.0"
+        "willdurand/jsonp-callback-validator": "~1.0",
+        "jms/serializer":                 "~0.12"
     },
 
     "require-dev": {
