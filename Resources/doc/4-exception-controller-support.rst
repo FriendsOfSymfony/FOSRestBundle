@@ -66,6 +66,21 @@ mapping, you can do this in your controller:
         }
     }
 
+In order to make the serialization format of exceptions customizable it is possible to
+configure a ``exception_handler``. Users of JMS serializer can further customize the output
+by setting a custom ``exception_wrapper_handler``.
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_rest:
+        service:
+            exception_handler:    fos_rest.view.exception_wrapper_handler
+        view:
+            # only relevant when using the JMS serializer for serialization
+            exception_wrapper_handler:  null
+
+
 See `this example configuration`_ for more details.
 
 That was it!
