@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+use FOS\RestBundle\DependencyInjection\Compiler\ExceptionWrapperHandlerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use FOS\RestBundle\DependencyInjection\Compiler\TwigExceptionPass;
 
@@ -33,5 +34,6 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new ConfigurationCheckPass());
         $container->addCompilerPass(new FormatListenerRulesPass());
         $container->addCompilerPass(new TwigExceptionPass());
+        $container->addCompilerPass(new ExceptionWrapperHandlerPass());
     }
 }
