@@ -1,0 +1,12 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+
+fos_rest:
+    view:
+        view_response_listener: 'force'
+    exception:
+        enabled: true

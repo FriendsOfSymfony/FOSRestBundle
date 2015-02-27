@@ -58,7 +58,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
     public function testShouldConfigureJMSSerializer()
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has', 'setAlias'))
+            ->setMethods(array('has', 'setAlias', 'removeDefinition'))
             ->getMock();
 
         $container->method('has')
@@ -72,6 +72,10 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
             ->method('setAlias')
             ->with($this->equalTo('fos_rest.serializer'), $this->equalTo('jms_serializer.serializer'));
 
+        $container->expects($this->once())
+            ->method('removeDefinition')
+            ->with('fos_rest.serializer.exception_wrapper_normalizer');
+
         $compiler = new SerializerConfigurationPass();
         $compiler->process($container);
     }
@@ -79,7 +83,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
     public function testShouldConfigureCoreSerializer()
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has', 'setAlias'))
+            ->setMethods(array('has', 'setAlias', 'removeDefinition'))
             ->getMock();
 
         $container->method('has')
@@ -92,6 +96,10 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
         $container->expects($this->once())
             ->method('setAlias')
             ->with($this->equalTo('fos_rest.serializer'), $this->equalTo('serializer'));
+
+        $container->expects($this->once())
+            ->method('removeDefinition')
+            ->with('fos_rest.serializer.exception_wrapper_serialize_handler');
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($container);
