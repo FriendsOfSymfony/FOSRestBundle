@@ -34,6 +34,5 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new ConfigurationCheckPass());
         $container->addCompilerPass(new FormatListenerRulesPass());
         $container->addCompilerPass(new TwigExceptionPass());
-        $container->addCompilerPass(new ExceptionWrapperHandlerPass());
     }
 }

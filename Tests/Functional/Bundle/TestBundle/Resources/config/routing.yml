@@ -1,0 +1,7 @@
+test_serializer_error_exception:
+    path:     /serializer-error/exception.{_format}
+    defaults: { _controller: TestBundle:SerializerError:exception }
+
+test_serializer_error_invalid_form:
+    path:     /serializer-error/invalid-form.{_format}
+    defaults: { _controller: TestBundle:SerializerError:invalidForm }

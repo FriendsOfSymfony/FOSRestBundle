@@ -1,0 +1,11 @@
+framework:
+    secret: test
+    router: { resource: "%kernel.root_dir%/config/routing.yml" }
+    test: ~
+    form: ~
+    csrf_protection: ~
+    session:
+        storage_id: session.storage.mock_file
+    default_locale: en
+    templating:
+        engines: ['php']
