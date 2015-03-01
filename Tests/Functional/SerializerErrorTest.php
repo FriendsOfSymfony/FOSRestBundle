@@ -71,8 +71,6 @@ XML;
      */
     public function testSerializeInvalidFormJson($testCase, $expectedContent)
     {
-        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
-
         $client = $this->createClient(array('test_case' => $testCase));
         $client->request('GET', '/serializer-error/invalid-form.json');
 
@@ -92,8 +90,6 @@ XML;
      */
     public function testSerializeInvalidFormXml($testCase, $expectedContent)
     {
-        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
-
         $client = $this->createClient(array('test_case' => $testCase));
         $client->request('GET', '/serializer-error/invalid-form.xml');
 
