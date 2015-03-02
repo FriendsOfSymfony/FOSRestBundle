@@ -11,10 +11,10 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\Tests\FOSRestRequest;
 use FOS\RestBundle\Util\FormatNegotiator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\EventListener\FormatListener;
 
 /**
@@ -30,7 +30,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $request = new Request();
+        $request = new FOSRestRequest();
 
         $event->expects($this->once())
             ->method('getRequest')
@@ -56,7 +56,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->setRequestFormat('xml');
 
         $event->expects($this->once())
@@ -83,7 +83,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $request = new Request();
+        $request = new FOSRestRequest();
 
         $event->expects($this->once())
             ->method('getRequest')
@@ -113,7 +113,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $request = new Request();
+        $request = new FOSRestRequest();
         if ($format) {
             $request->setRequestFormat($format);
         }
@@ -154,7 +154,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $request = new Request();
+        $request = new FOSRestRequest();
         $attributes = array ( '_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured', );
         $request->attributes->add($attributes);
         $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', array()), $attributes));

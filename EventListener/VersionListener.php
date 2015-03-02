@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -49,6 +50,10 @@ class VersionListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE)) {
+            return;
+        }
 
         $mediaType = $request->attributes->get('media_type');
 

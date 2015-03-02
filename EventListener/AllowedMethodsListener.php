@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsLoaderInterface;
 
@@ -38,6 +39,10 @@ class AllowedMethodsListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
+        if (!$event->getRequest()->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE)) {
+            return;
+        }
+
         $allowedMethods = $this->loader->getAllowedMethods();
 
         if (isset($allowedMethods[$event->getRequest()->get('_route')])) {

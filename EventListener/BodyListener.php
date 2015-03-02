@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\Decoder\DecoderProviderInterface;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -85,6 +86,11 @@ class BodyListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE)) {
+            return;
+        }
+
         $method = $request->getMethod();
         $contentType = $request->headers->get('Content-Type');
         $isFormPostRequest = in_array($contentType, array('multipart/form-data', 'application/x-www-form-urlencoded'), true) && 'POST' === $method;

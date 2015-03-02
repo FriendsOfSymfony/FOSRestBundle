@@ -25,6 +25,8 @@ use FOS\RestBundle\DependencyInjection\Compiler\TwigExceptionPass;
  */
 class FOSRestBundle extends Bundle
 {
+    const ZONE_ATTRIBUTE = '_fos_rest_zone';
+
     /**
      * {@inheritdoc}
      */

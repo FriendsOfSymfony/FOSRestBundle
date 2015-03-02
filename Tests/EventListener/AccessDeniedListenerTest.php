@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\AccessDeniedListener;
+use FOS\RestBundle\Tests\FOSRestRequest;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->setRequestFormat($format);
 
         $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats);
@@ -59,7 +60,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->headers->set('Content-Type', $contentType);
 
         $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats);
@@ -88,7 +89,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCommonExceptionsAreBypassed($formats)
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->setRequestFormat(key($formats));
         $exception = new \Exception('foo');
         $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
@@ -105,7 +106,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->setRequestFormat($format);
 
         $this->doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest($request, $formats);
@@ -118,7 +119,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
     {
-        $request = new Request();
+        $request = new FOSRestRequest();
         $request->headers->set('Content-Type', $contentType);
 
         $this->doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest($request, $formats);

@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -49,6 +50,10 @@ class ViewResponseListener extends TemplateListener
     {
         $request = $event->getRequest();
 
+        if (!$request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE)) {
+            return;
+        }
+
         if ($configuration = $request->attributes->get('_view')) {
             $request->attributes->set('_template', $configuration);
         }
@@ -65,6 +70,11 @@ class ViewResponseListener extends TemplateListener
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE)) {
+            return;
+        }
+
         /** @var \FOS\RestBundle\Controller\Annotations\View $configuration */
         $configuration = $request->attributes->get('_view');
 
