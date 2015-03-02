@@ -570,6 +570,16 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('%fos_rest.view.exception_wrapper_handler%', $exceptionWrapperHandler->getClass());
     }
 
+    public function testSerializerExceptionNormalizer()
+    {
+        $this->extension->load(array('fos_rest' => array('view' => true)), $this->container);
+
+        $this->assertTrue($this->container->has('fos_rest.serializer.exception_wrapper_normalizer'));
+
+        $definition = $this->container->getDefinition('fos_rest.serializer.exception_wrapper_normalizer');
+        $this->assertEquals('FOS\RestBundle\Serializer\ExceptionWrapperNormalizer', $definition->getClass());
+    }
+
     /**
      * @expectedException \LogicException
      */
