@@ -15,6 +15,7 @@ use FOS\RestBundle\Decoder\DecoderProviderInterface;
 use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
@@ -87,10 +88,10 @@ class BodyListener
         $request = $event->getRequest();
         $method = $request->getMethod();
         $contentType = $request->headers->get('Content-Type');
-        $isFormPostRequest = in_array($contentType, array('multipart/form-data', 'application/x-www-form-urlencoded'), true) && 'POST' === $method;
-        $normalizeRequest = $this->normalizeForms && $isFormPostRequest;
+        $isFormRequest = $this->isFormRequest($request);
+        $normalizeRequest = $this->normalizeForms && $isFormRequest;
 
-        if (!$isFormPostRequest && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))) {
+        if (!$isFormRequest && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))) {
             $format = null === $contentType
                 ? $request->getRequestFormat()
                 : $request->getFormat($contentType);
@@ -138,5 +139,20 @@ class BodyListener
     private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
     {
         return false === ('DELETE' === $method && empty($content) && null === $contentType);
+    }
+
+    private function isFormRequest(Request $request)
+    {
+        if (!in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))) {
+            return false;
+        }
+
+        $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
+
+        if (isset($contentTypeParts[0])) {
+            return in_array($contentTypeParts[0], array('multipart/form-data', 'application/x-www-form-urlencoded'));
+        }
+
+        return false;
     }
 }
