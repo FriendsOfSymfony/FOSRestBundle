@@ -6,7 +6,7 @@ various events from decoding the request content in the request (body listener),
 determining the correct response format (format listener), reading parameters
 from the request (parameter fetcher listener), to formatting the response either
 with a template engine like twig or to f.e. xml or json using a serializer (view
-response listener)) as well as automatically setting the accepted HTTP methods
+response listener) as well as automatically setting the accepted HTTP methods
 in the response (accept listener).
 
 With this in mind we now turn to explain each one of them.
@@ -48,7 +48,7 @@ Now inside a controller its possible to simply return a ``View`` instance.
         {
             $view = View::create();
 
-            ...
+            // ...
 
             $view->setData($data);
             return $view;
@@ -93,7 +93,7 @@ explicit configuration. So make sure to remove or disable the following setting:
          */
         public function getUsersAction()
         {
-            ...
+            // ...
 
             return $data;
         }
@@ -111,7 +111,7 @@ formats can be configured (default  ``'data'``):
      */
     public function getUsersAction()
     {
-        //...
+        // ...
     }
 
 The status code of the view can also be configured:
@@ -125,7 +125,7 @@ The status code of the view can also be configured:
      */
     public function deleteUserAction()
     {
-        //...
+        // ...
     }
 
 The groups for the serializer can be configured as follows:
@@ -139,7 +139,7 @@ The groups for the serializer can be configured as follows:
      */
     public function getUsersAction()
     {
-        //...
+        // ...
     }
 
 Enabling the MaxDepth exclusion strategy support for the serializer can be
@@ -154,7 +154,7 @@ configured as follows:
      */
     public function getUsersAction()
     {
-        //...
+        // ...
     }
 
 See `this example code`_ for more details.
