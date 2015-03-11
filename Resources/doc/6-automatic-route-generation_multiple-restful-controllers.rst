@@ -58,7 +58,7 @@ In this case, your ``UsersController`` MUST always have a single resource
         public function getUserAction($slug)
         {} // "get_user"   [GET] /users/{slug}
 
-        ...
+        // ...
     }
 
 It's used to determine the parent collection name. Controller name itself is not

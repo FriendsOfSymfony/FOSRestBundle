@@ -72,7 +72,7 @@ If you need to pass more data in template, not for serialization, you can use ``
             $view = $this->view($products, 200)
                 ->setTemplate("MyBundle:Category:show.html.twig")
                 ->setTemplateVar('products')
-                ->setTemplateData($templateData);
+                ->setTemplateData($templateData)
             ;
 
             return $this->handleView($view);
@@ -97,12 +97,13 @@ or it is possible to use lazy-loading:
             $view = $this->view($products, 200)
                 ->setTemplate("MyBundle:Category:show.html.twig")
                 ->setTemplateVar('products')
-                ->setTemplateData(function(ViewHandlerInterface $viewHandler, ViewInterface $view) use ($categoryManager, $categorySlug) {
+                ->setTemplateData(function (ViewHandlerInterface $viewHandler, ViewInterface $view) use ($categoryManager, $categorySlug) {
                     $category = $categoryManager->getBySlug($categorySlug);
+                    
                     return array(
-                        'category' => $category
-                    )
-                });
+                        'category' => $category,
+                    );
+                })
             ;
 
             return $this->handleView($view);
@@ -154,12 +155,12 @@ See `this example code`_ for more details.
 Forms and Views
 ---------------
 
-Symfony Forms have special handling inside the view layer. Whenever you
+Symfony Forms have special handling inside the view layer. Whenever you:
 
-- return a Form from the controller
-- Set the form as only data of the view
-- return an array with a 'form' key, containing a form
-- return a form with validation errors
+- return a Form from the controller.
+- Set the form as only data of the view.
+- return an array with a 'form' key, containing a form.
+- return a form with validation errors.
 
 Then:
 
@@ -169,7 +170,7 @@ Then:
   is called automatically.
 - ``$form->getData()`` is passed into the view as template as ``'data'`` if the
   form is the only view data.
-- An invalid form will be wrapped into an exception
+- An invalid form will be wrapped into an exception.
 
 A response example of an invalid form:
 
@@ -200,7 +201,6 @@ Implement the ``ExceptionWrapperHandlerInterface``:
 
     class MyExceptionWrapperHandler implements ExceptionWrapperHandlerInterface
     {
-
         /**
          * {@inheritdoc}
          */
@@ -210,7 +210,7 @@ Implement the ``ExceptionWrapperHandlerInterface``:
         }
     }
 
-In the ``wrap`` method return any object or array
+In the ``wrap`` method return any object or array.
 
 Update the ``config.yml``:
 
@@ -218,9 +218,9 @@ Update the ``config.yml``:
 
     fos_rest:
         view:
-            ...
+            # ...
             exception_wrapper_handler: My\Bundle\Handler\MyExceptionWrapperHandler
-            ...
+            # ...
 
 Configuration
 -------------
@@ -305,29 +305,35 @@ Here is an example using a closure registered inside a Controller action:
         {
             $view = View::create();
 
-            ...
+            // ...
 
             $handler = $this->get('fos_rest.view_handler');
             if (!$handler->isFormatTemplating($view->getFormat())) {
-                $templatingHandler = function($handler, $view, $request) {
-                    // if a template is set, render it using the 'params' and place the content into the data
+                $templatingHandler = function ($handler, $view, $request) {
+                    // if a template is set, render it using the 'params'
+                    // and place the content into the data
                     if ($view->getTemplate()) {
                         $data = $view->getData();
+                        
                         if (empty($data['params'])) {
                             $params = array();
                         } else {
                             $params = $data['params'];
                             unset($data['params']);
                         }
+                        
                         $view->setData($params);
                         $data['html'] = $handler->renderTemplate($view, 'html');
 
                         $view->setData($data);
                     }
+                    
                     return $handler->createResponse($view, $request, $format);
                 };
+                
                 $handler->registerHandler($view->getFormat(), $templatingHandler);
             }
+            
             return $handler->handle($view);
         }
     }
