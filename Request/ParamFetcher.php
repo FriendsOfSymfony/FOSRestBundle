@@ -195,6 +195,8 @@ class ParamFetcher implements ParamFetcherInterface
             );
         }
 
+        $this->checkNotIncompatibleParams($config);
+
         if (null === $config->requirements || ($param === $default && null !== $default)) {
             return $param;
         }
@@ -280,5 +282,38 @@ class ParamFetcher implements ParamFetcherInterface
             new \ReflectionClass(ClassUtils::getClass($this->controller[0])),
             $this->controller[1]
         );
+    }
+
+    /**
+     * Check if current param is not in conflict with other parameters
+     * according to the "incompatibles" field
+     *
+     * @param Param $config the configuration for the param fetcher
+     *
+     * @throws BadRequestHttpException
+     */
+    private function checkNotIncompatibleParams(Param $config)
+    {
+
+        if (!$config instanceof QueryParam) {
+            return;
+        };
+
+        foreach ($config->incompatibles as $incompatibleParam) {
+            $isIncompatiblePresent = $this->request->query->get(
+                $incompatibleParam,
+                null
+            ) !== null;
+
+            if ($isIncompatiblePresent) {
+                $exceptionMessage = sprintf(
+                    "'%s' param is incompatible with %s param",
+                    $config->name,
+                    $incompatibleParam
+                );
+
+                throw new BadRequestHttpException($exceptionMessage);
+            }
+        }
     }
 }

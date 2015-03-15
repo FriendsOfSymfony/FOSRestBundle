@@ -553,6 +553,17 @@ configured for the matched controller so that the user does not need to do this 
          *
          * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
          *
+         * Imagine you have an api for a blog with to get Articles with two ways of filtering
+         *   1 by filtering the text
+         *   2 by filtering the author
+         * and you don't have yet implemented the possibility to filter by both at the same time.
+         * In order to prevent clients from doing a request with both (which will produce not the expected
+         * resut and is likely to be considered as a bug) you can precise the parameters can't be present
+         * at the same time by doing
+         *
+         * @RequestParam(name="search", requirements="[a-z]+", description="search")
+         * @RequestParam(name="byauthor", requirements="[a-z]+", description="by author", incompatibles={"search"})
+         *
          * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337, use:
          *
          * @QueryParam(array=true, name="ids", requirements="\d+", default="1", description="List of ids")
