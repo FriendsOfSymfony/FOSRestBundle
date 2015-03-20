@@ -520,7 +520,7 @@ configured for the matched controller so that the user does not need to do this 
     use FOS\RestBundle\Request\ParamFetcher;
     use FOS\RestBundle\Controller\Annotations\RequestParam;
     use FOS\RestBundle\Controller\Annotations\QueryParam;
-    use Acme\FooBundle\Validation\Constraints\MyComplexConstraint
+    use Acme\FooBundle\Validation\Constraints\MyComplexConstraint;
 
     class FooController extends Controller
     {
