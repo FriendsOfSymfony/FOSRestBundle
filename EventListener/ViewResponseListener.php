@@ -86,7 +86,7 @@ class ViewResponseListener extends TemplateListener
             if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Codes::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
-            if ($configuration->getSerializerGroups() && !$customViewDefined) {
+            if ($configuration->getSerializerGroups() && $customViewDefined) {
                 $context = $view->getSerializationContext() ?: new SerializationContext();
                 $context->setGroups($configuration->getSerializerGroups());
                 $view->setSerializationContext($context);
