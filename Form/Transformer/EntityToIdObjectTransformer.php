@@ -45,7 +45,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
      * Do nothing.
      *
      * @param  Object|null $object
-     * @return Object
+     * @return string
      */
     public function transform($object)
     {
@@ -67,7 +67,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
      */
     public function reverseTransform($idObject)
     {
-        if (!$idObject || !$idObject['id']) {
+        if (!is_array($idObject) || !array_key_exists("id", $idObject) || !$idObject['id']) {
             return null;
         }
 
@@ -87,4 +87,4 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
 
         return $object;
     }
-} 
+}
