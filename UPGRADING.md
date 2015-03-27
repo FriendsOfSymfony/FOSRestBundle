@@ -39,7 +39,7 @@ This document will be updated to list important BC breaks and behavioral changes
 
  * POST routes now pluralize the resource name, ie. /users vs. /user
 
- * The response for non-valid Forms has changed. See https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/2-the-view-layer.md#forms-and-views
+ * The response for non-valid Forms has changed. See http://symfony.com/doc/master/bundles/FOSRestBundle/2-the-view-layer.html#forms-and-views
 
  * The default error message structure has changed.
 
@@ -60,7 +60,7 @@ This document will be updated to list important BC breaks and behavioral changes
           "message": "New comment is not valid.";
         }
 
-    _Alternatively you can inject your own implementation. See https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/2-the-view-layer.md#forms-and-views_
+    _Alternatively you can inject your own implementation. See http://symfony.com/doc/master/bundles/FOSRestBundle/2-the-view-layer.html#forms-and-views_
 
  * The ``format_listener`` configuration has changed to allow different settings per host/path.
    Finally the signature of FormatNegotiatorInterface::getBestFormat() changed.
@@ -81,7 +81,7 @@ This document will be updated to list important BC breaks and behavioral changes
 
 ### upgrading from 0.9.0
 
- * the view response listener is now disabled by default. See [enable view listener](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/3-listener-support.md#view-response-listener) for how to enable it.
+ * the view response listener is now disabled by default. See [enable view listener](http://symfony.com/doc/master/bundles/FOSRestBundle/3-listener-support.html#view-response-listener) for how to enable it.
  * JMSSerializerBundle is now an optional dependency and therefore needs to be added explicitly
 
 ### upgrading from 0.7.0
