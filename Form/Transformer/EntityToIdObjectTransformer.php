@@ -34,6 +34,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
 
     /**
      * @param ObjectManager $om
+     * @param String $entityName
      */
     public function __construct(ObjectManager $om, $entityName)
     {

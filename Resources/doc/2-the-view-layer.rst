@@ -222,6 +222,77 @@ Update the ``config.yml``:
             exception_wrapper_handler: My\Bundle\Handler\MyExceptionWrapperHandler
             ...
 
+Data Transformation
+-------------------
+
+As we have seen in the section before, the FOSRestBundle relies on the form
+component (http://symfony.com/doc/current/components/form/introduction.html) to
+handle submission of view data. In fact, the fom builder
+(http://symfony.com/doc/current/book/forms.html#building-the-form) basically
+defines the structure of the expected view data which shall be used for further
+processing - which most of the time relates to a PUT or POST request. This
+brings a lot of flexibility and allows to exactly define the structure of data
+to be received by the api.
+
+Most of the time the requirements regarding a PUT/POST request are, in
+terms of data structure, fairly simple. The payload within a PUT or POST request
+oftentimes will have the exact same structure as received by a previous GET
+request, but only with modified value fields. Thus, the fields to be defined
+within the form builder process will be the same as the fields marked to be
+serialized within an entity.
+
+However, there is a common use case where straightforward updating of data,
+received by a serialized object (GET request), will not work out of the box using
+the given implementation of the form component: Simple assignment of a reference
+using an object.
+
+Let's take an entity ``Task`` that holds a reference to a ``Person`` as
+an example. The serialized Task object will looks as follows:
+
+.. code-block:: json
+    
+    {"task_form":{name:"Task1", "person":{"id":1, "name":"Fabien"}}}
+
+In a traditional Symfony2 application the related form builder would look as
+follows, where we simply define the property of the related class and it would
+perfectly assign the person to our task - in this case based on the id:
+
+.. code-block:: php
+
+    $builder
+        ->add('name', 'text')
+        ...
+        ->add('person', 'entity', array(
+            'class' => 'Acme\DemoBundle\Entity\Person',
+            'property' => 'id'
+        ))
+
+Unfortunately, this form builder does not accept our serialized object as it is
+- even though it contains the necessary id. In fact, the object would have to be
+  serialized as follows to be accepted by the form validtion process:
+
+.. code-block:: json
+    
+    {"task_form":{name:"Task1", "person":1}}
+
+Well, this is somewhat useless since we not only want to display the name of the
+person but also do not want to do some client side trick to extract the id
+before updating the data, right? Instead, we rather update the data the same way
+as we received it in our GET request and thus, extend the form builder with a
+data transformer. Furtunately the FOSRestBundle comes with an
+``EntityToIdObjectTransformer``, which can be applied as follows:
+
+.. code-block:: php
+
+    $personTransformer = new EntityToIdObjectTransformer($this->om, "AcmeDemoBundle:Person");
+    $builder
+        ->add('name', 'text')
+        ...
+        ->add($builder->create('person', 'text')->addModelTransformer($personTransformer))
+
+This way, the data structure remains untouched and the person can be assigned to
+the task without any client modifications.
+
 Configuration
 -------------
 
