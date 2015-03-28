@@ -5,7 +5,7 @@ Step 3: Listener support
 various events from decoding the request content in the request (body listener),
 determining the correct response format (format listener), reading parameters
 from the request (parameter fetcher listener), to formatting the response either
-with a template engine like twig or to f.e. xml or json using a serializer (view
+with a template engine like twig or to e.g. xml or json using a serializer (view
 response listener) as well as automatically setting the accepted HTTP methods
 in the response (accept listener).
 
@@ -34,7 +34,7 @@ processed via the listener by the ``fos_rest.view_handler`` service.
 
 This requires adding the `SensioFrameworkExtraBundle`_ to your vendors.
 
-Now inside a controller its possible to simply return a ``View`` instance.
+Now inside a controller it's possible to simply return a ``View`` instance.
 
 .. code-block:: php
 
@@ -67,7 +67,7 @@ of ``force`` and ``@View()`` is not used, then rendering will be delegated to
 
 Note that it is necessary to disable view annotations in
 `SensioFrameworkExtraBundle`_ so that FOSRestBundle can take over the handling.
-However FOSRestBundle will do this automatically but it does not override any
+However, FOSRestBundle will do this automatically but it does not override any
 explicit configuration. So make sure to remove or disable the following setting:
 
 .. code-block:: yaml
@@ -207,9 +207,9 @@ decoder is explicitly kept to its default service):
 Your custom decoder service must use a class that implements the
 ``FOS\RestBundle\Decoder\DecoderInterface``.
 
-If you want to be able to use form with checkbox and have true and false value
-(without any issue) you have to use: ``fos_rest.decoder.jsontoform`` (available
-since fosrest 0.8.0)
+If you want to be able to use a checkbox within a form and have true and false
+values (without any issue) you have to use: ``fos_rest.decoder.jsontoform``
+(available since FosRestBundle 0.8.0)
 
 If the listener receives content that it tries to decode but the decode fails
 then a BadRequestHttpException will be thrown with the message: ``'Invalid ' .
@@ -220,13 +220,13 @@ useful error messages to your API users if they are making invalid requests.
 Array Normalizer
 ~~~~~~~~~~~~~~~~
 
-Array Normalizers allow to transform the data after it has been decoded in order
+Array normalizers allow to transform the data after it has been decoded in order
 to facilitate its processing.
 
 For example, you may want your API's clients to be able to send requests with
 underscored keys but if you use a decoder without a normalizer, you will receive
 the data as it is and it can lead to incorrect mapping if you submit the request
-directly to a Form. If you wish the body listener to transform underscored keys
+directly to a form. If you wish the body listener to transform underscored keys
 to camel cased ones, you can use the ``camel_keys`` array normalizer:
 
 .. code-block:: yaml
@@ -243,7 +243,7 @@ BadRequestHttpException with the message ``The key "foo_Bar" is invalid as it
 will override the existing key "fooBar"``.
 
 NB: If you use the ``camel_keys`` normalizer, you must be careful when choosing
-your Form name.
+your form name.
 
 You can also create your own array normalizer by implementing the
 ``FOS\RestBundle\Normalizer\ArrayNormalizerInterface``.
@@ -296,7 +296,7 @@ To enable the Request body converter, add the following configuration:
 
     You will probably want to disable the automatic route generation
     (``@NoRoute``) for routes using the body converter, and instead define the
-    routes manually to avoid having the deserialized, typehinted objects
+    routes manually to avoid having the deserialized, type hinted objects
     (``$post`` in this example) appear in the route as a parameter.
 
 Now, in the following example, the request body will be deserialized into a new
@@ -382,7 +382,7 @@ header setting is added with a ``q`` setting one lower than the lowest Accept
 header, meaning that format is checked for a match in the priorities last. If
 ``prefer_extension`` is set to ``true`` then the virtual Accept header will be
 one higher than the highest ``q`` causing the extension to be checked first.
-Setting ``priorities`` to a non empty array enables Accept header negotiations.
+Setting ``priorities`` to a non-empty array enables Accept header negotiations.
 
 .. code-block:: yaml
 
@@ -429,9 +429,9 @@ which is the case by default, with the matched media type.
     // f.e. text/html or application/vnd.custom_something+json etc.
     $mediaType = $request->attributes->get('media_type');
 
-Note take care to configure the ``priorities`` carefully especially when the
+The ``priorities`` should be configured carefully, especially when the
 controller actions for specific routes only handle necessary security checks
-for specific formats. In such cases it might make sense to hard code the format
+for specific formats. In such cases it might makes sense to hard code the format
 in the controller action.
 
 .. code-block:: php
@@ -647,7 +647,7 @@ request attributes
 Allowed Http Methods Listener
 -----------------------------
 
-This listener add the ``Allow`` HTTP header to each request appending all
+This listener adds the ``Allow`` HTTP header to each request appending all
 allowed methods for a given resource.
 
 Let's say we have the following routes:
@@ -658,16 +658,16 @@ Let's say we have the following routes:
     api_post_users
     api_get_user
 
-A ``GET`` request to ``api_get_users`` will response in:
+A ``GET`` request to ``api_get_users`` will respond with:
 
 .. code-block:: text
 
     HTTP/1.0 200 OK
     Date: Sat, 16 Jun 2012 15:17:22 GMT
     Server: Apache/2.2.22 (Ubuntu)
-    allow: GET, POST
+    Allow: GET, POST
 
-You need to enable this listener like this as it is disabled by default:
+You need to enable this listener as follows, as it is disabled by default:
 
 .. code-block:: yaml
 
@@ -679,7 +679,7 @@ Security Exception Listener
 
 By default it is the responsibility of firewall access points to deal with
 AccessDeniedExceptions. For example the ``form`` entry point will redirect to
-the login page. However for a RESTful application proper response HTTP status
+the login page. However, for a RESTful application proper response HTTP status
 codes should be provided. This listener is triggered before the normal exception
 listener and firewall entry points and forces returning either a 403 or 401
 status code for any of the formats configured.
@@ -695,7 +695,7 @@ to send a challenge in the ``WWW-Authenticate`` header to the client.
 If you want to use an advanced value in this header, it's worth looking at this:
 `Test Cases for HTTP Test Cases for the HTTP WWW-Authenticate header field`_.
 
-You need to enable this listener like this as it is disabled by default:
+You need to enable this listener as follows, as it is disabled by default:
 
 .. code-block: yaml
 
