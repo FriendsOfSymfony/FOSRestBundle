@@ -251,14 +251,14 @@ an example. The serialized Task object will looks as follows:
 
 .. code-block:: json
     
-    {"task_form":{name:"Task1", "person":{"id":1, "name":"Fabien"}}}
+    {"task_form":{"name":"Task1", "person":{"id":1, "name":"Fabien"}}}
 
 In a traditional Symfony2 application the related form builder would look as
 follows, where we simply define the property of the related class and it would
 perfectly assign the person to our task - in this case based on the id:
 
 .. code-block:: php
-
+    
     $builder
         ->add('name', 'text')
         ...
@@ -269,11 +269,11 @@ perfectly assign the person to our task - in this case based on the id:
 
 Unfortunately, this form builder does not accept our serialized object as it is
 - even though it contains the necessary id. In fact, the object would have to be
-  serialized as follows to be accepted by the form validtion process:
+serialized as follows to be accepted by the form validtion process:
 
 .. code-block:: json
     
-    {"task_form":{name:"Task1", "person":1}}
+    {"task_form":{"name":"Task1", "person":1}}
 
 Well, this is somewhat useless since we not only want to display the name of the
 person but also do not want to do some client side trick to extract the id
@@ -283,7 +283,7 @@ data transformer. Furtunately the FOSRestBundle comes with an
 ``EntityToIdObjectTransformer``, which can be applied as follows:
 
 .. code-block:: php
-
+    
     $personTransformer = new EntityToIdObjectTransformer($this->om, "AcmeDemoBundle:Person");
     $builder
         ->add('name', 'text')
