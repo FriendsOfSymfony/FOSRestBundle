@@ -431,7 +431,7 @@ which is the case by default, with the matched media type.
 
 The ``priorities`` should be configured carefully, especially when the
 controller actions for specific routes only handle necessary security checks
-for specific formats. In such cases it might makes sense to hard code the format
+for specific formats. In such cases it might make sense to hard code the format
 in the controller action.
 
 .. code-block:: php
