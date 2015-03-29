@@ -253,9 +253,9 @@ an example. The serialized Task object will looks as follows:
     
     {"task_form":{"name":"Task1", "person":{"id":1, "name":"Fabien"}}}
 
-In a traditional Symfony2 application the related form builder would look as
-follows, where we simply define the property of the related class and it would
-perfectly assign the person to our task - in this case based on the id:
+In a traditional Symfony2 application we simply define the property of the
+related class and it would perfectly assign the person to our task - in this
+case based on the id:
 
 .. code-block:: php
     
@@ -268,8 +268,9 @@ perfectly assign the person to our task - in this case based on the id:
         ))
 
 Unfortunately, this form builder does not accept our serialized object as it is
-- even though it contains the necessary id. In fact, the object would have to be
-serialized as follows to be accepted by the form validtion process:
+- even though it contains the necessary id. In fact, the object would have to
+contain the id directly assigned to the person field to be be accepted by the
+form validtion process:
 
 .. code-block:: json
     
@@ -280,7 +281,7 @@ person but also do not want to do some client side trick to extract the id
 before updating the data, right? Instead, we rather update the data the same way
 as we received it in our GET request and thus, extend the form builder with a
 data transformer. Furtunately the FOSRestBundle comes with an
-``EntityToIdObjectTransformer``, which can be applied as follows:
+``EntityToIdObjectTransformer``, which can be applied to any form builder:
 
 .. code-block:: php
     
