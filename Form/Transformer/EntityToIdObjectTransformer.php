@@ -54,11 +54,11 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
             return "";
         }
 
-        return $object->getId();
+        return array_values($this->om->getClassMetadata($this->entityName)->getIdentifierValues($object))[0];
     }
 
     /**
-     * Transforms an array including an id to an object.
+     * Transforms an array including an identifier to an object.
      *
      * @param  array $idObject
      *
@@ -68,21 +68,22 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
      */
     public function reverseTransform($idObject)
     {
-        if (!is_array($idObject) || !array_key_exists("id", $idObject) || !$idObject['id']) {
+        if (!is_array($idObject)) {
             return null;
         }
 
-        $id = $idObject['id'];
+        $identifier = array_values($this->om->getClassMetadata($this->entityName)->getIdentifier())[0];
+        $id = $idObject[$identifier];
 
         $object = $this->om
             ->getRepository($this->entityName)
-            ->findOneBy(array('id' => $id))
+            ->findOneBy(array($identifier => $id))
         ;
 
         if (null === $object) {
             throw new TransformationFailedException(sprintf(
-                'An object with id "%s" does not exist!',
-                $id
+                'An object with identifier key "%s" and value "%d" does not exist!',
+                $identifier, $id
             ));
         }
 
