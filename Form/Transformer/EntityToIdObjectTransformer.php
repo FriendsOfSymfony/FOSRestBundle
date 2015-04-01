@@ -54,7 +54,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
             return "";
         }
 
-        return array_values($this->om->getClassMetadata($this->entityName)->getIdentifierValues($object))[0];
+        return current(array_values($this->om->getClassMetadata($this->entityName)->getIdentifierValues($object)));
     }
 
     /**
@@ -72,7 +72,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
             return null;
         }
 
-        $identifier = array_values($this->om->getClassMetadata($this->entityName)->getIdentifier())[0];
+        $identifier = current(array_values($this->om->getClassMetadata($this->entityName)->getIdentifier()));
         $id = $idObject[$identifier];
 
         $object = $this->om
