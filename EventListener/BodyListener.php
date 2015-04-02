@@ -89,7 +89,12 @@ class BodyListener
         $method = $request->getMethod();
         $contentType = $request->headers->get('Content-Type');
         $isFormRequest = $this->isFormRequest($request);
+        $isSoapRequest = $this->isSoapRequest($request);
         $normalizeRequest = $this->normalizeForms && $isFormRequest;
+
+        if ($isSoapRequest) {
+            return;
+        }
 
         if (!$isFormRequest && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))) {
             $format = null === $contentType
@@ -151,6 +156,26 @@ class BodyListener
 
         if (isset($contentTypeParts[0])) {
             return in_array($contentTypeParts[0], array('multipart/form-data', 'application/x-www-form-urlencoded'));
+        }
+
+        return false;
+    }
+
+    private function isSoapRequest(Request $request)
+    {
+        $soapAction = $request->headers->get('SoapAction');
+
+        $isSoap11 = $soapAction !== '';
+        $isSoap12 = false;
+
+        $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
+
+        if (isset($contentTypeParts[0])) {
+            $isSoap12 = in_array($contentTypeParts[0], array('application/soap+xml'));
+        }
+
+        if ($isSoap11 || $isSoap12){
+            return true;
         }
 
         return false;
