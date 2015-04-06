@@ -52,6 +52,9 @@ which adds several convenience methods:
         }
     }
 
+.. versionadded:: 1.6
+  The ``setTemplateData`` method was added in 1.6.
+
 If you need to pass more data in template, not for serialization, you can use ``setTemplateData`` method:
 
 .. code-block:: php
