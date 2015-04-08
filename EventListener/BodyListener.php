@@ -163,9 +163,7 @@ class BodyListener
 
     private function isSoapRequest(Request $request)
     {
-        $soapAction = $request->headers->get('SoapAction');
-
-        $isSoap11 = $soapAction !== '';
+        $isSoap11 = $request->headers->has('SoapAction');
         $isSoap12 = false;
 
         $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
