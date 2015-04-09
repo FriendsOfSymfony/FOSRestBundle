@@ -230,7 +230,7 @@ Data Transformation
 
 As we have seen in the section before, the FOSRestBundle relies on the form
 component (http://symfony.com/doc/current/components/form/introduction.html) to
-handle submission of view data. In fact, the fom builder
+handle submission of view data. In fact, the form builder
 (http://symfony.com/doc/current/book/forms.html#building-the-form) basically
 defines the structure of the expected view data which shall be used for further
 processing - which most of the time relates to a PUT or POST request. This
