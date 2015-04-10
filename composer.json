@@ -48,7 +48,7 @@
     },
 
     "conflict": {
-        "symfony/framework-bundle": ">=2.5,<2.5.5",
+        "symfony/validator": ">=2.5.0,<2.5.5",
         "jms/serializer": "<0.12",
         "jms/serializer-bundle": "<0.11"
     },
