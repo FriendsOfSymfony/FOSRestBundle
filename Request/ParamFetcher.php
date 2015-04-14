@@ -195,6 +195,8 @@ class ParamFetcher implements ParamFetcherInterface
             );
         }
 
+        $this->checkNotIncompatibleParams($config);
+
         if (null === $config->requirements || ($param === $default && null !== $default)) {
             return $param;
         }
