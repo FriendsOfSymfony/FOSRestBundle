@@ -173,7 +173,7 @@ class ParamFetcher implements ParamFetcherInterface
 
         return $this->cleanParamWithRequirements($config, $param, $strict);
     }
-    
+
     /**
      * @param Param  $config
      * @param string $param
@@ -223,7 +223,7 @@ class ParamFetcher implements ParamFetcherInterface
         }else{
             $constraint = new Regex(array(
                 'pattern' => '#^'.$config->requirements["rule"].'$#xsu',
-                'message' => $config->requirements["message"]
+                'message' => $config->requirements["error_message"]
             ));
         }
 
@@ -239,8 +239,8 @@ class ParamFetcher implements ParamFetcherInterface
 
         if (0 !== count($errors)) {
             if ($strict) {
-                if(isset($config->requirements["message"])){
-                    $errorMessage = $config->requirements["message"];
+                if(isset($config->requirements["error_message"])){
+                    $errorMessage = $config->requirements["error_message"];
                 }else{
                     $errorMessage = $this->violationFormatter->formatList($config, $errors);
                 }
