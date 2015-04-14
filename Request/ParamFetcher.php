@@ -174,16 +174,7 @@ class ParamFetcher implements ParamFetcherInterface
         return $this->cleanParamWithRequirements($config, $param, $strict);
     }
 
-    /**
-     * @param Param  $config
-     * @param string $param
-     * @param bool   $strict
-     *
-     * @return string
-     *
-     * @throws BadRequestHttpException
-     * @throws \RuntimeException
-     */
+    
     /**
      * @param Param  $config
      * @param string $param
