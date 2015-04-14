@@ -184,6 +184,16 @@ class ParamFetcher implements ParamFetcherInterface
      * @throws BadRequestHttpException
      * @throws \RuntimeException
      */
+    /**
+     * @param Param  $config
+     * @param string $param
+     * @param bool   $strict
+     *
+     * @return string
+     *
+     * @throws BadRequestHttpException
+     * @throws \RuntimeException
+     */
     public function cleanParamWithRequirements(Param $config, $param, $strict)
     {
         $default = $config->default;
@@ -195,25 +205,22 @@ class ParamFetcher implements ParamFetcherInterface
             );
         }
 
-        $this->checkNotIncompatibleParams($config);
-
         if (null === $config->requirements || ($param === $default && null !== $default)) {
             return $param;
         }
 
         $constraint = $config->requirements;
 
-        if (is_scalar($constraint)) {
-            if (is_array($param)) {
-                if ($strict) {
-                    throw new BadRequestHttpException(
-                        sprintf("%s parameter is an array", $paramType)
-                    );
-                }
-
-                return $default;
+        if (is_array($param)) {
+            if ($strict) {
+                throw new BadRequestHttpException(
+                    sprintf("%s parameter is an array", $paramType)
+                );
             }
+            return $default;
+        }
 
+        if (is_scalar($constraint)) {
             $constraint = new Regex(array(
                 'pattern' => '#^'.$config->requirements.'$#xsu',
                 'message' => sprintf(
@@ -223,10 +230,15 @@ class ParamFetcher implements ParamFetcherInterface
                     $config->requirements
                 ),
             ));
+        }else{
+            $constraint = new Regex(array(
+                'pattern' => '#^'.$config->requirements["rule"].'$#xsu',
+                'message' => $config->requirements["message"]
+            ));
+        }
 
-            if (false === $config->allowBlank) {
-                $constraint = array(new NotBlank(), $constraint);
-            }
+        if (false === $config->allowBlank) {
+            $constraint = array(new NotBlank(), $constraint);
         }
 
         if ($this->validator instanceof ValidatorInterface) {
@@ -237,9 +249,13 @@ class ParamFetcher implements ParamFetcherInterface
 
         if (0 !== count($errors)) {
             if ($strict) {
-                throw new BadRequestHttpException($this->violationFormatter->formatList($config, $errors));
+                if(isset($config->requirements["message"])){
+                    $errorMessage = $config->requirements["message"];
+                }else{
+                    $errorMessage = $this->violationFormatter->formatList($config, $errors);
+                }
+                throw new BadRequestHttpException($errorMessage);
             }
-
             return null === $default ? '' : $default;
         }
 
