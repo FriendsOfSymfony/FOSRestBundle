@@ -197,7 +197,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     {
         $form = $this->getFormFromView($view);
 
-        if ($form && $form->isBound() && !$form->isValid()) {
+        if ($form && $form->isSubmitted() && !$form->isValid()) {
             return $this->failedValidationCode;
         }
 
@@ -500,7 +500,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
             return $view->getData();
         }
 
-        if ($form->isValid() || !$form->isBound()) {
+        if ($form->isValid() || !$form->isSubmitted()) {
             return $form;
         }
 

@@ -76,16 +76,16 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatusCodeDataProvider
      */
-    public function testGetStatusCode($expected, $data, $isBound, $isValid, $isBoundCalled, $isValidCalled, $noContentCode)
+    public function testGetStatusCode($expected, $data, $isSubmitted, $isValid, $isSubmittedCalled, $isValidCalled, $noContentCode)
     {
         $reflectionMethod = new \ReflectionMethod('FOS\RestBundle\View\ViewHandler', 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
-        $form = $this->getMock('Symfony\Component\Form\Form', array('isBound', 'isValid'), array(), '', false);
+        $form = $this->getMock('Symfony\Component\Form\Form', array('isSubmitted', 'isValid'), array(), '', false);
         $form
-            ->expects($this->exactly($isBoundCalled))
-            ->method('isBound')
-            ->will($this->returnValue($isBound));
+            ->expects($this->exactly($isSubmittedCalled))
+            ->method('isSubmitted')
+            ->will($this->returnValue($isSubmitted));
         $form
             ->expects($this->exactly($isValidCalled))
             ->method('isValid')
@@ -215,14 +215,14 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Codes::HTTP_I_AM_A_TEAPOT);
         $viewHandler->setContainer($container);
 
-        $form = $this->getMock('Symfony\\Component\\Form\\Form', array('createView', 'getData', 'isValid', 'isBound'), array(), '', false);
+        $form = $this->getMock('Symfony\\Component\\Form\\Form', array('createView', 'getData', 'isValid', 'isSubmitted'), array(), '', false);
         $form
             ->expects($this->any())
             ->method('isValid')
             ->will($this->returnValue(false));
         $form
             ->expects($this->any())
-            ->method('isBound')
+            ->method('isSubmitted')
             ->will($this->returnValue(true));
 
         $view = new View($form);
@@ -266,7 +266,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         if ($form) {
-            $data = $this->getMock('Symfony\Component\Form\Form', array('createView', 'getData', 'isValid', 'isBound'), array(), '', false);
+            $data = $this->getMock('Symfony\Component\Form\Form', array('createView', 'getData', 'isValid', 'isSubmitted'), array(), '', false);
             $data
                 ->expects($this->exactly($createViewCalls))
                 ->method('createView')
@@ -281,7 +281,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue($formIsValid));
             $data
                 ->expects($this->any())
-                ->method('isBound')
+                ->method('isSubmitted')
                 ->will($this->returnValue(true));
         } else {
             $data = array('foo' => 'bar');
