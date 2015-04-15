@@ -203,16 +203,17 @@ class ParamFetcher implements ParamFetcherInterface
 
         $constraint = $config->requirements;
 
-        if (is_array($param)) {
-            if ($strict) {
-                throw new BadRequestHttpException(
-                    sprintf("%s parameter is an array", $paramType)
-                );
-            }
-            return $default;
-        }
-
         if (is_scalar($constraint)) {
+
+            if (is_array($param)) {
+                if ($strict) {
+                    throw new BadRequestHttpException(
+                        sprintf("%s parameter is an array", $paramType)
+                    );
+                }
+                return $default;
+            }
+
             $constraint = new Regex(array(
                 'pattern' => '#^'.$config->requirements.'$#xsu',
                 'message' => sprintf(
