@@ -210,21 +210,15 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
         $expectedPost = new Post('Post 1', 'This is a blog post');
         $validationErrors = $this->getMock('Symfony\Component\Validator\ConstraintViolationList');
 
-        if (class_exists('Symfony\Component\Validator\Validator\RecursiveValidator')) {
-            $validator = $this
-                ->getMockBuilder('Symfony\Component\Validator\Validator\RecursiveValidator')
-                ->disableOriginalConstructor()
-                ->getMock();
+        if (interface_exists('Symfony\Component\Validator\Validator\ValidatorInterface')) {
+            $validator = $this->getMock('Symfony\Component\Validator\Validator\ValidatorInterface');
             $validator
                 ->expects($this->once())
                 ->method('validate')
                 ->with($expectedPost, null, array('group1'))
                 ->will($this->returnValue($validationErrors));
         } else {
-            $validator = $this
-                ->getMockBuilder('Symfony\Component\Validator\Validator')
-                ->disableOriginalConstructor()
-                ->getMock();
+            $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
             $validator
                 ->expects($this->once())
                 ->method('validate')
@@ -320,15 +314,10 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
         );
         $config = $this->createConfiguration(null, null, $userOptions);
 
-        if (class_exists('Symfony\Component\Validator\Validator\RecursiveValidator')) {
-            $validator = $this
-                ->getMockBuilder('Symfony\Component\Validator\Validator\RecursiveValidator')
-                ->disableOriginalConstructor()
-                ->getMock();
+        if (interface_exists('Symfony\Component\Validator\Validator\ValidatorInterface')) {
+            $validator = $this->getMock('Symfony\Component\Validator\Validator\ValidatorInterface');
         } else {
-            $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator')
-                ->disableOriginalConstructor()
-                ->getMock();
+            $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
         }
 
         $this->converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'validationErrors');
