@@ -204,7 +204,6 @@ class ParamFetcher implements ParamFetcherInterface
         $constraint = $config->requirements;
 
         if (is_scalar($constraint)) {
-
             if (is_array($param)) {
                 if ($strict) {
                     throw new BadRequestHttpException(
@@ -223,7 +222,7 @@ class ParamFetcher implements ParamFetcherInterface
                     $config->requirements
                 ),
             ));
-        } elseif(is_array($config->requirements) && isset($config->requirements["rule"]) && $config->requirements["error_message"]) {
+        } elseif (is_array($config->requirements) && isset($config->requirements["rule"]) && $config->requirements["error_message"]) {
             $constraint = new Regex(array(
                 'pattern' => '#^'.$config->requirements["rule"].'$#xsu',
                 'message' => $config->requirements["error_message"]
