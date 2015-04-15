@@ -222,7 +222,7 @@ class ParamFetcher implements ParamFetcherInterface
                     $config->requirements
                 ),
             ));
-        }else{
+        } else {
             $constraint = new Regex(array(
                 'pattern' => '#^'.$config->requirements["rule"].'$#xsu',
                 'message' => $config->requirements["error_message"]
@@ -241,9 +241,9 @@ class ParamFetcher implements ParamFetcherInterface
 
         if (0 !== count($errors)) {
             if ($strict) {
-                if(isset($config->requirements["error_message"])){
+                if (isset($config->requirements["error_message"])) {
                     $errorMessage = $config->requirements["error_message"];
-                }else{
+                } else {
                     $errorMessage = $this->violationFormatter->formatList($config, $errors);
                 }
                 throw new BadRequestHttpException($errorMessage);
