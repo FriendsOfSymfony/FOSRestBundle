@@ -222,7 +222,7 @@ class ParamFetcher implements ParamFetcherInterface
                     $config->requirements
                 ),
             ));
-        } elseif (is_array($config->requirements) && isset($config->requirements["rule"]) && $config->requirements["error_message"]) {
+        } elseif (is_array($constraint) && isset($constraint["rule"]) && $constraint["error_message"]) {
             $constraint = new Regex(array(
                 'pattern' => '#^'.$config->requirements["rule"].'$#xsu',
                 'message' => $config->requirements["error_message"]
