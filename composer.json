@@ -24,6 +24,7 @@
         "php":                            ">=5.3.9",
         "psr/log":                        "~1.0",
         "symfony/framework-bundle":       "~2.3",
+        "symfony/http-kernel":            "~2.3,>=2.3.24",
         "doctrine/inflector":             "~1.0",
         "willdurand/negotiation":         "~1.2",
         "willdurand/jsonp-callback-validator": "~1.0"
@@ -37,6 +38,9 @@
         "symfony/yaml":                   "~2.3",
         "symfony/security":               "~2.3",
         "symfony/browser-kit":            "~2.3",
+        "symfony/dependency-injection":   "~2.3",
+        "phpoption/phpoption":            "~1.1.0",
+        "jms/serializer":                 "~0.13",
         "jms/serializer-bundle":          "~0.12"
     },
 
