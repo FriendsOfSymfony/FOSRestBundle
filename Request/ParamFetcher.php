@@ -212,7 +212,6 @@ class ParamFetcher implements ParamFetcherInterface
                 }
                 return $default;
             }
-
             $constraint = new Regex(array(
                 'pattern' => '#^'.$config->requirements.'$#xsu',
                 'message' => sprintf(
