@@ -384,6 +384,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Throw exception on invalid parameters.
+     *
      * @dataProvider exceptionOnValidatesFailureDataProvider
      */
     public function testExceptionOnValidatesFailure($query, $request, $param, \Closure $callback = null)

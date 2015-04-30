@@ -53,6 +53,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('context_adapters.xml');
         $loader->load('view.xml');
         $loader->load('routing.xml');
         $loader->load('util.xml');

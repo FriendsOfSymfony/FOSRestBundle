@@ -11,8 +11,12 @@
 
 namespace FOS\RestBundle\View;
 
-use JMS\Serializer\SerializerInterface;
-use JMS\Serializer\SerializationContext;
+use FOS\RestBundle\Context\GroupableContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
+use FOS\RestBundle\Context\SerializeNullContextInterface;
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
+use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,7 +101,12 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     protected $serializeNullStrategy;
 
     /**
-     * Constructor
+     * @var SerializationContextAdapterInterface
+     */
+    protected $contextAdapter;
+
+    /**
+     * Constructor.
      *
      * @param array  $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
      * @param int    $failedValidationCode The HTTP response status code for a failed validation
@@ -153,6 +162,16 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     }
 
     /**
+     * Sets context adapter.
+     *
+     * @param SerializationContextAdapterInterface $contextAdapter
+     */
+    public function setSerializationContextAdapter(SerializationContextAdapterInterface $contextAdapter)
+    {
+        $this->contextAdapter = $contextAdapter;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function supports($format)
@@ -182,7 +201,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     }
 
     /**
-     * Gets a response HTTP status code from a View instance
+     * Gets a response HTTP status code from a View instance.
      *
      * By default it will return 200. However if there is a FormInterface stored for
      * the key 'form' in the View's data it will return the failed_validation
@@ -248,21 +267,24 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      *
      * @param View $view
      *
-     * @return SerializationContext
+     * @return ContextInterface
      */
     protected function getSerializationContext(View $view)
     {
         $context = $view->getSerializationContext();
 
-        if ($context->attributes->get('groups')->isEmpty() && $this->exclusionStrategyGroups) {
-            $context->setGroups($this->exclusionStrategyGroups);
+        if ($context instanceof GroupableContextInterface) {
+            $groups = $context->getGroups();
+            if (empty($groups) && $this->exclusionStrategyGroups) {
+                $context->addGroups((array) $this->exclusionStrategyGroups);
+            }
         }
 
-        if ($context->attributes->get('version')->isEmpty() && $this->exclusionStrategyVersion) {
+        if ($context instanceof VersionableContextInterface && null === $context->getVersion() && $this->exclusionStrategyVersion) {
             $context->setVersion($this->exclusionStrategyVersion);
         }
 
-        if (null === $context->shouldSerializeNull() && null !== $this->serializeNullStrategy) {
+        if ($context instanceof SerializeNullContextInterface && null === $context->getSerializeNull()) {
             $context->setSerializeNull($this->serializeNullStrategy);
         }
 
@@ -383,7 +405,6 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
 
         if ($data instanceof FormInterface) {
             $data = array($view->getTemplateVar() => $data->getData(), 'form' => $data);
-
         } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
             $data = array($view->getTemplateVar() => $data);
         }
@@ -445,12 +466,13 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $data = $this->getDataFromView($view);
             $serializer = $this->getSerializer($view);
-            if ($serializer instanceof SerializerInterface) {
-                $context = $this->getSerializationContext($view);
-                $content = $serializer->serialize($data, $format, $context);
-            } else {
-                $content = $serializer->serialize($data, $format);
+
+            $standardContext = $this->getSerializationContext($view);
+            if ($this->contextAdapter instanceof SerializerAwareInterface) {
+                $this->contextAdapter->setSerializer($serializer);
             }
+            $context = $this->contextAdapter->convertSerializationContext($standardContext);
+            $content = $serializer->serialize($data, $format, $context);
         }
 
         $response = $view->getResponse();

@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="fos_rest.context.adapter.jms_context_adapter.class">FOS\RestBundle\Context\Adapter\JMSContextAdapter</parameter>
+        <parameter key="fos_rest.context.adapter.array_context_adapter.class">FOS\RestBundle\Context\Adapter\ArrayContextAdapter</parameter>
+        <parameter key="fos_rest.context.adapter.chain_context_adapter.class">FOS\RestBundle\Context\Adapter\ChainContextAdapter</parameter>
+
+    </parameters>
+
+    <services>
+        <service id="fos_rest.context.adapter.array_context_adapter" class="%fos_rest.context.adapter.array_context_adapter.class%">
+        </service>
+        <service id="fos_rest.context.adapter.jms_context_adapter" class="%fos_rest.context.adapter.jms_context_adapter.class%">
+        </service>
+        <service id="fos_rest.context.adapter.chain_context_adapter" class="%fos_rest.context.adapter.chain_context_adapter.class%">
+            <argument type="collection">
+            <argument type="service" id="fos_rest.context.adapter.jms_context_adapter" />
+                <argument type="service" id="fos_rest.context.adapter.array_context_adapter" />
+            </argument>
+        </service>
+    </services>
+</container>
