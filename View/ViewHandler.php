@@ -13,6 +13,7 @@ namespace FOS\RestBundle\View;
 
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
+use Symfony\Component\Serializer\SerializerInterface as SymfonySerializerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -448,6 +449,15 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
             if ($serializer instanceof SerializerInterface) {
                 $context = $this->getSerializationContext($view);
                 $content = $serializer->serialize($data, $format, $context);
+            } elseif ($serializer instanceof SymfonySerializerInterface) {
+                $context = $this->getSerializationContext($view);
+
+                $newContext = array();
+
+                if(!$context->attributes->get('groups')->isEmpty()) 
+                    $newContext['groups'] = $context->attributes->get('groups')->get();
+
+                $content = $serializer->serialize($data, $format, $newContext);
             } else {
                 $content = $serializer->serialize($data, $format);
             }
