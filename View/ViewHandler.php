@@ -449,13 +449,16 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
             if ($serializer instanceof SerializerInterface) {
                 $context = $this->getSerializationContext($view);
                 $content = $serializer->serialize($data, $format, $context);
-            } elseif ($serializer instanceof SymfonySerializerInterface) {
+            //       test for symfony 2.7 version 
+            } elseif (class_exists('\Symfony\Component\Serializer\Normalizer\ObjectNormalizer') && $serializer instanceof SymfonySerializerInterface) {
+                    
                 $context = $this->getSerializationContext($view);
 
                 $newContext = array();
 
-                if(!$context->attributes->get('groups')->isEmpty()) 
+                if (!$context->attributes->get('groups')->isEmpty()) {
                     $newContext['groups'] = $context->attributes->get('groups')->get();
+                }
 
                 $content = $serializer->serialize($data, $format, $newContext);
             } else {
