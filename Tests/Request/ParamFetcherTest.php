@@ -709,4 +709,47 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
+
+    public function testCustomErrorMessage()
+    {
+        $param = new QueryParam();
+        $param->name = 'fero';
+        $errorMessage = "variable must be an integer";
+        $param->requirements = array('rule' => '\d+', 'error_message' => $errorMessage);
+        $param->description = 'integer value';
+        $param->strict = true;
+
+        $request = new Request(array('fero' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
+        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $reader->expects($this->any())
+            ->method('read')
+            ->will($this->returnValue(array('fero' => $param)));
+
+        $constraint = new Regex(array(
+            'pattern' => '#^\d+$#xsu',
+            'message' => $errorMessage,
+        ));
+
+        $errors = new ConstraintViolationList(array(
+            new ConstraintViolation($errorMessage, null, array(), null, null, null),
+        ));
+
+        $this->validator->expects($this->once())
+            ->method('validateValue')
+            ->with('foobar', $constraint)
+            ->will($this->returnValue($errors));
+
+        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $queryFetcher->setController($this->controller);
+
+        try {
+            $queryFetcher->get('fero');
+            $this->fail('Fetching get() in strict mode with no default value did not throw an exception');
+        } catch (HttpException $httpException) {
+            $this->assertEquals($errorMessage, $httpException->getMessage());
+        }
+    }
 }
