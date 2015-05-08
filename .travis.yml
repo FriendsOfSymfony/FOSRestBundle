@@ -15,7 +15,10 @@ branches:
     - /^\d+\.\d+$/
 
 matrix:
+  fast_finish: true
   include:
+    - php: 5.3
+      env: deps="low"
     - php: 5.5
       env: SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.*'
     - php: 5.5
@@ -30,8 +33,9 @@ matrix:
 
 before_script:
   - composer self-update
-  - sh -c 'if [ "$SYMFONY_VERSION" != "" ]; then composer require --dev --no-update symfony/symfony=$SYMFONY_VERSION; fi;'
-  - composer update --prefer-source
+  - if [ "$SYMFONY_VERSION" != "" ]; then composer require --dev --no-update symfony/symfony=$SYMFONY_VERSION; fi
+  - if [ "$deps" = "low" ]; then composer update --prefer-lowest; fi
+  - if [ "$deps" != "low" ]; then composer update --prefer-source; fi
 
 script: phpunit --coverage-clover=coverage.clover
 
