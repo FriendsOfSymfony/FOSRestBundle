@@ -87,6 +87,7 @@ class ExceptionController extends ContainerAware
         $code = $this->getStatusCode($exception);
         $viewHandler = $this->container->get('fos_rest.view_handler');
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
+        $showException = $request->attributes->get('showException', $this->container->get('kernel')->isDebug());
 
         try {
             if (!$viewHandler->isFormatTemplating($format)) {
@@ -97,7 +98,7 @@ class ExceptionController extends ContainerAware
             $view->setFormat($format);
 
             if ($viewHandler->isFormatTemplating($format)) {
-                $view->setTemplate($this->findTemplate($request, $format, $code, $this->container->get('kernel')->isDebug()));
+                $view->setTemplate($this->findTemplate($request, $format, $code, $showException));
             }
 
             $response = $viewHandler->handle($view);
@@ -265,19 +266,19 @@ class ExceptionController extends ContainerAware
      * @param Request $request
      * @param string  $format
      * @param int     $statusCode
-     * @param bool    $debug
+     * @param bool    $showException
      *
      * @return TemplateReference
      */
-    protected function findTemplate(Request $request, $format, $statusCode, $debug)
+    protected function findTemplate(Request $request, $format, $statusCode, $showException)
     {
-        $name = $debug ? 'exception' : 'error';
-        if ($debug && 'html' == $format) {
+        $name = $showException ? 'exception' : 'error';
+        if ($showException && 'html' == $format) {
             $name = 'exception_full';
         }
 
         // when not in debug, try to find a template for the specific HTTP status code and format
-        if (!$debug) {
+        if (!$showException) {
             $template = new TemplateReference('TwigBundle', 'Exception', $name.$statusCode, $format, 'twig');
             if ($this->container->get('templating')->exists($template)) {
                 return $template;
@@ -293,6 +294,6 @@ class ExceptionController extends ContainerAware
         // default to a generic HTML exception
         $request->setRequestFormat('html');
 
-        return new TemplateReference('TwigBundle', 'Exception', $name, 'html', 'twig');
+        return new TemplateReference('TwigBundle', 'Exception', $showException ? 'exception_full' : $name, 'html', 'twig');
     }
 }
