@@ -167,6 +167,33 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->container->hasDefinition('fos_rest.format_listener'));
     }
 
+    public function testLoadFormatListenerWithSingleRule()
+    {
+        $config = array(
+            'fos_rest' => array('format_listener' => array(
+                'rules' => array('path' => '/')
+            )),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
+    }
+
+    public function testLoadFormatListenerWithMultipleRule()
+    {
+        $config = array(
+            'fos_rest' => array('format_listener' => array(
+                'rules' => array(
+                    array('path' => '/foo'),
+                    array('path' => '/')
+                )
+            )),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
+    }
+
     public function testLoadServicesWithDefaults()
     {
         $this->extension->load(array(), $this->container);
