@@ -201,6 +201,18 @@ class Configuration implements ConfigurationInterface
                     ->fixXmlConfig('rule', 'rules')
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()
+                    ->beforeNormalization()
+                        ->ifTrue(function ($v) {
+                            // check if we got an assoc array in rules
+                            return isset($v['rules'])
+                                && is_array($v['rules'])
+                                && array_keys($v['rules']) !== range(0, count($v['rules']) - 1);
+                        })
+                        ->then(function($v) {
+                            $v['rules'] = array($v['rules']);
+                            return $v;
+                        })
+                    ->end()                    
                     ->children()
                         ->arrayNode('rules')
                             ->cannotBeOverwritten()
