@@ -1,5 +1,5 @@
-3.6 Param Fetcher listener
-==========================
+Param Fetcher Listener
+======================
 
 The param fetcher listener simply sets the ParamFetcher instance as a request attribute
 configured for the matched controller so that the user does not need to do this manually.

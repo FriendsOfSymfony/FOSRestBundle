@@ -1,5 +1,5 @@
-3.4 Format listener
-===================
+Format Listener
+===============
 
 The Request format listener attempts to determine the best format for the
 request based on the Request's Accept-Header and the format priority

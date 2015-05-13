@@ -1,5 +1,5 @@
-3.3 Request Body Converter Listener
-===================================
+Request Body Converter Listener
+===============================
 
 `ParamConverters`_ are a way to populate objects and inject them as controller
 method arguments. The Request body converter makes it possible to deserialize

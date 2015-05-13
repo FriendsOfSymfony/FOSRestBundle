@@ -1,5 +1,5 @@
-3.2 Body listener
-=================
+Body Listener
+=============
 
 The Request body listener makes it possible to decode the contents of a request
 in order to populate the "request" parameter bag of the Request. This for
@@ -62,8 +62,10 @@ existing array key. For example ``foo_bar`` and ``foo_Bar`` will both lead to
 BadRequestHttpException with the message ``The key "foo_Bar" is invalid as it
 will override the existing key "fooBar"``.
 
-NB: If you use the ``camel_keys`` normalizer, you must be careful when choosing
-your form name.
+.. note::
+
+    If you use the ``camel_keys`` normalizer, you must be careful when choosing
+    your form name.
 
 You can also create your own array normalizer by implementing the
 ``FOS\RestBundle\Normalizer\ArrayNormalizerInterface``.

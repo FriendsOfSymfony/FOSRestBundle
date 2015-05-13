@@ -11,9 +11,9 @@ in the response (accept listener).
 
 With this in mind we now turn to explain each one of them.
 
-All listeners except the ``mime_type`` one are disabled by default. You can
-enable one or more of these listeners.  For example, below you can see how to
-enable all listeners:
+All listeners except the ``mime_type`` listener are disabled by default. You
+can enable one or more of these listeners. For example, below you can see how
+to enable a few additional listeners:
 
 .. code-block:: yaml
 
@@ -25,8 +25,8 @@ enable all listeners:
         view:
             view_response_listener: 'force'
 
-3.1 View Response listener
---------------------------
+View Response Listener
+----------------------
 
 The view response listener makes it possible to simply return a ``View``
 instance from action controllers. The final output will then automatically be
@@ -36,19 +36,19 @@ This requires adding the `SensioFrameworkExtraBundle`_ to your vendors.
 
 For details see :doc:`View Response Listener <view_response_listener>`.
 
-3.2 Body listener
------------------
+Body Listener
+-------------
 
 The Request body listener makes it possible to decode the contents of a request
-in order to populate the "request" parameter bag of the Request. This for
-example allows to receive data that normally would be sent via POST as
+in order to populate the "request" parameter bag of the Request. This, for
+example, allows to receive data that normally would be sent via POST as
 ``application/x-www-form-urlencode`` in a different format (for example
 application/json) in a PUT.
 
 For details see :doc:`Body Listener <body_listener>`.
 
-3.3 Request Body Converter Listener
------------------------------------
+Request Body Converter Listener
+-------------------------------
 
 `ParamConverters`_ are a way to populate objects and inject them as controller
 method arguments. The Request body converter makes it possible to deserialize
@@ -59,18 +59,18 @@ and have the converters enabled.
 
 For details see :doc:`Request Body Converter Listener <request_body_converter_listener>`.
 
-3.4 Format listener
--------------------
+Format Listener
+---------------
 
 The Request format listener attempts to determine the best format for the
-request based on the Request's Accept-Header and the format priority
+for the request based on the HTTP Accept header and the format priority
 configuration. This way it becomes possible to leverage Accept-Headers to
 determine the request format, rather than a file extension (like foo.json).
 
 For details see :doc:`Format Listener <format_listener>`.
 
-3.5 Mime type listener
-----------------------
+Mime Type Listener
+------------------
 
 This listener allows registering additional mime types in the ``Request``
 class. It works similar to the `mime type listener`_ available in Symfony
@@ -83,16 +83,16 @@ since 2.5.
         view:
             mime_types: {'jsonp': ['application/javascript+jsonp']}
 
-3.6 Param Fetcher listener
---------------------------
+Param Fetcher Listener
+----------------------
 
 The param fetcher listener simply sets the ParamFetcher instance as a request attribute
 configured for the matched controller so that the user does not need to do this manually.
 
-For details see :doc:`Param Fetcher <param_fetcher_listener>`.
+For details see :doc:`Param Fetcher Listener <param_fetcher_listener>`.
 
-3.7 Allowed Http Methods Listener
----------------------------------
+Allowed Http Methods Listener
+-----------------------------
 
 This listener adds the ``Allow`` HTTP header to each request appending all
 allowed methods for a given resource.
@@ -121,8 +121,8 @@ You need to enable this listener as follows, as it is disabled by default:
     fos_rest:
         allowed_methods_listener: true
 
-3.8 Security Exception Listener
--------------------------------
+Security Exception Listener
+---------------------------
 
 By default it is the responsibility of firewall access points to deal with
 AccessDeniedExceptions. For example the ``form`` entry point will redirect to
