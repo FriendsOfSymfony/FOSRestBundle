@@ -7,6 +7,11 @@ Getting Started With FOSRestBundle
     1-setting_up_the_bundle
     2-the-view-layer
     3-listener-support
+    view_response_listener
+    body_listener
+    request_body_converter_listener
+    format_listener
+    param_fetcher_listener
     4-exception-controller-support
     5-automatic-route-generation_single-restful-controller
     6-automatic-route-generation_multiple-restful-controllers
