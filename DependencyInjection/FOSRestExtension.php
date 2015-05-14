@@ -34,7 +34,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        if (!empty($config['view']['view_response_listener'])) {
+        if ($config['view']['view_response_listener']['enabled']) {
             $container->prependExtensionConfig('sensio_framework_extra', array('view' => array('annotations' => false)));
         }
     }
@@ -59,8 +59,8 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $loader->load('request.xml');
 
         $container->setParameter('fos_rest.cache_dir', $config['cache_dir']);
-        $container->setParameter($this->getAlias().'.routing.loader.default_format', $config['routing_loader']['default_format']);
-        $container->setParameter($this->getAlias().'.routing.loader.include_format', $config['routing_loader']['include_format']);
+        $container->setParameter('fos_rest.routing.loader.default_format', $config['routing_loader']['default_format']);
+        $container->setParameter('fos_rest.routing.loader.include_format', $config['routing_loader']['include_format']);
 
         // The validator service alias is only set if validation is enabled for the request body converter
         $validator = $config['service']['validator'];
@@ -68,7 +68,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
         foreach ($config['service'] as $key => $service) {
             if (null !== $service) {
-                $container->setAlias($this->getAlias().'.'.$key, $service);
+                $container->setAlias('fos_rest.'.$key, $service);
             }
         }
 
@@ -81,7 +81,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $this->loadBodyListener($config, $loader, $container);
         $this->loadFormatListener($config, $loader, $container);
         $this->loadParamFetcherListener($config, $loader, $container);
-        $this->loadAllowedMethodsListener($config, $loader);
+        $this->loadAllowedMethodsListener($config, $loader, $container);
         $this->loadAccessDeniedListener($config, $loader, $container);
     }
 
@@ -95,33 +95,50 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
     private function loadAccessDeniedListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (!empty($config['access_denied_listener'])) {
+        if ($config['access_denied_listener']['enabled'] && !empty($config['access_denied_listener']['formats'])) {
             $loader->load('access_denied_listener.xml');
-            $container->setParameter($this->getAlias().'.access_denied_listener.formats', $config['access_denied_listener']);
-            $container->setParameter($this->getAlias().'.access_denied_listener.unauthorized_challenge', $config['unauthorized_challenge']);
+
+            if (!empty($config['access_denied_listener']['service'])) {
+                $service = $container->getDefinition('fos_rest.allowed_methods_listener');
+                $service->clearTag('kernel.event_listener');
+            }
+
+            $container->setParameter('fos_rest.access_denied_listener.formats', $config['access_denied_listener']['formats']);
+            $container->setParameter('fos_rest.access_denied_listener.unauthorized_challenge', $config['unauthorized_challenge']);
         }
     }
 
-    public function loadAllowedMethodsListener(array $config, XmlFileLoader $loader)
+    public function loadAllowedMethodsListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (!empty($config['allowed_methods_listener'])) {
+        if ($config['allowed_methods_listener']['enabled']) {
+
+            if (!empty($config['allowed_methods_listener']['service'])) {
+                $service = $container->getDefinition('fos_rest.allowed_methods_listener');
+                $service->clearTag('kernel.event_listener');
+            }
+
             $loader->load('allowed_methods_listener.xml');
         }
     }
 
     private function loadBodyListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (!empty($config['body_listener'])) {
+        if ($config['body_listener']['enabled']) {
             $loader->load('body_listener.xml');
 
-            $container->setParameter($this->getAlias().'.throw_exception_on_unsupported_content_type', $config['body_listener']['throw_exception_on_unsupported_content_type']);
-            $container->setParameter($this->getAlias().'.body_default_format', $config['body_listener']['default_format']);
-            $container->setParameter($this->getAlias().'.decoders', $config['body_listener']['decoders']);
+            if (!empty($config['body_listener']['service'])) {
+                $service = $container->getDefinition('fos_rest.body_listener');
+                $service->clearTag('kernel.event_listener');
+            }
+
+            $container->setParameter('fos_rest.throw_exception_on_unsupported_content_type', $config['body_listener']['throw_exception_on_unsupported_content_type']);
+            $container->setParameter('fos_rest.body_default_format', $config['body_listener']['default_format']);
+            $container->setParameter('fos_rest.decoders', $config['body_listener']['decoders']);
 
             $arrayNormalizer = $config['body_listener']['array_normalizer'];
 
             if (null !== $arrayNormalizer['service']) {
-                $bodyListener = $container->getDefinition($this->getAlias().'.body_listener');
+                $bodyListener = $container->getDefinition('fos_rest.body_listener');
                 $bodyListener->addArgument(new Reference($arrayNormalizer['service']));
                 $bodyListener->addArgument($arrayNormalizer['forms']);
             }
@@ -130,8 +147,13 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
     private function loadFormatListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (!empty($config['format_listener']['rules'])) {
+        if ($config['format_listener']['enabled'] && !empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
+
+            if (!empty($config['format_listener']['service'])) {
+                $service = $container->getDefinition('fos_rest.format_listener');
+                $service->clearTag('kernel.event_listener');
+            }
 
             foreach ($config['format_listener']['rules'] as $key => $rule) {
                 if (!isset($rule['exception_fallback_format'])) {
@@ -140,15 +162,20 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             }
 
             $container->setParameter(
-                $this->getAlias().'.format_listener.rules',
+                'fos_rest.format_listener.rules',
                 $config['format_listener']['rules']
             );
 
-            if (!empty($config['format_listener']['media_type']['version_regex'])) {
+            if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
                 $container->setParameter(
-                    $this->getAlias().'.format_listener.media_type.version_regex',
+                    'fos_rest.format_listener.media_type.version_regex',
                     $config['format_listener']['media_type']['version_regex']
                 );
+
+                if (!empty($config['format_listener']['media_type']['service'])) {
+                    $service = $container->getDefinition('fos_rest.version_listener');
+                    $service->clearTag('kernel.event_listener');
+                }
             } else {
                 $container->removeDefinition('fos_rest.version_listener');
             }
@@ -157,11 +184,16 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
     private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (!empty($config['param_fetcher_listener'])) {
+        if ($config['param_fetcher_listener']['enabled']) {
             $loader->load('param_fetcher_listener.xml');
 
+            if (!empty($config['param_fetcher_listener']['service'])) {
+                $service = $container->getDefinition('fos_rest.param_fetcher_listener');
+                $service->clearTag('kernel.event_listener');
+            }
+
             if ('force' === $config['param_fetcher_listener']) {
-                $container->setParameter($this->getAlias().'.param_fetcher_listener.set_params_as_attributes', true);
+                $container->setParameter('fos_rest.param_fetcher_listener.set_params_as_attributes', true);
             }
         }
     }
@@ -174,7 +206,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             }
 
             if (!empty($config['body_converter']['validate'])) {
-                $container->setAlias($this->getAlias().'.validator', $validator);
+                $container->setAlias('fos_rest.validator', $validator);
             }
 
             if (!empty($config['body_converter']['validation_errors_argument'])) {
@@ -189,18 +221,18 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if (!empty($config['view']['exception_wrapper_handler'])) {
-            $container->setParameter($this->getAlias().'.view.exception_wrapper_handler', $config['view']['exception_wrapper_handler']);
+            $container->setParameter('fos_rest.view.exception_wrapper_handler', $config['view']['exception_wrapper_handler']);
         }
 
         if (!empty($config['view']['jsonp_handler'])) {
             $handler = new DefinitionDecorator($config['service']['view_handler']);
             $handler->setPublic(true);
 
-            $jsonpHandler = new Reference($this->getAlias().'.view_handler.jsonp');
+            $jsonpHandler = new Reference('fos_rest.view_handler.jsonp');
             $handler->addMethodCall('registerHandler', array('jsonp', array($jsonpHandler, 'createResponse')));
-            $container->setDefinition($this->getAlias().'.view_handler', $handler);
+            $container->setDefinition('fos_rest.view_handler', $handler);
 
-            $container->setParameter($this->getAlias().'.view_handler.jsonp.callback_param', $config['view']['jsonp_handler']['callback_param']);
+            $container->setParameter('fos_rest.view_handler.jsonp.callback_param', $config['view']['jsonp_handler']['callback_param']);
 
             if ('/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i' !== $config['view']['jsonp_handler']['callback_filter']) {
                 throw new \LogicException('As of 1.2.0, the "callback_filter" parameter is deprecated, and is not used anymore. For more information, read: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/642.');
@@ -211,17 +243,28 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             }
         }
 
-        if (!empty($config['view']['mime_types'])) {
+        if ($config['view']['mime_types']['enabled']) {
             $loader->load('mime_type_listener.xml');
 
-            $container->setParameter($this->getAlias().'.mime_types', $config['view']['mime_types']);
+            if (!empty($config['mime_type_listener']['service'])) {
+                $service = $container->getDefinition('fos_rest.mime_type_listener');
+                $service->clearTag('kernel.event_listener');
+            }
+
+            $container->setParameter('fos_rest.mime_types', $config['view']['mime_types']);
         } else {
-            $container->setParameter($this->getAlias().'.mime_types', array());
+            $container->setParameter('fos_rest.mime_types', array());
         }
 
-        if (!empty($config['view']['view_response_listener'])) {
+        if ($config['view']['view_response_listener']['enabled']) {
             $loader->load('view_response_listener.xml');
-            $container->setParameter($this->getAlias().'.view_response_listener.force_view', 'force' === $config['view']['view_response_listener']);
+
+            if (!empty($config['view_response_listener']['service'])) {
+                $service = $container->getDefinition('fos_rest.view_response_listener');
+                $service->clearTag('kernel.event_listener');
+            }
+
+            $container->setParameter('fos_rest.view_response_listener.force_view', 'force' === $config['view']['view_response_listener']['mode']);
         }
 
         $formats = array();
@@ -236,7 +279,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             }
         }
 
-        $container->setParameter($this->getAlias().'.formats', $formats);
+        $container->setParameter('fos_rest.formats', $formats);
 
         foreach ($config['view']['force_redirects'] as $format => $code) {
             if (true === $code) {
@@ -244,27 +287,32 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             }
         }
 
-        $container->setParameter($this->getAlias().'.force_redirects', $config['view']['force_redirects']);
+        $container->setParameter('fos_rest.force_redirects', $config['view']['force_redirects']);
 
         if (!is_numeric($config['view']['failed_validation'])) {
             $config['view']['failed_validation'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['failed_validation']);
         }
 
-        $container->setParameter($this->getAlias().'.failed_validation', $config['view']['failed_validation']);
+        $container->setParameter('fos_rest.failed_validation', $config['view']['failed_validation']);
 
         if (!is_numeric($config['view']['empty_content'])) {
             $config['view']['empty_content'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['empty_content']);
         }
 
-        $container->setParameter($this->getAlias().'.empty_content', $config['view']['empty_content']);
-        $container->setParameter($this->getAlias().'.serialize_null', $config['view']['serialize_null']);
-        $container->setParameter($this->getAlias().'.default_engine', $config['view']['default_engine']);
+        $container->setParameter('fos_rest.empty_content', $config['view']['empty_content']);
+        $container->setParameter('fos_rest.serialize_null', $config['view']['serialize_null']);
+        $container->setParameter('fos_rest.default_engine', $config['view']['default_engine']);
     }
 
     private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if ($config['exception']['enabled']) {
             $loader->load('exception_listener.xml');
+
+            if (!empty($config['exception']['service'])) {
+                $service = $container->getDefinition('fos_rest.exception_listener');
+                $service->clearTag('kernel.event_listener');
+            }
 
             if ($config['exception']['exception_controller']) {
                 $container->setParameter('fos_rest.exception_listener.controller', $config['exception']['exception_controller']);
@@ -283,21 +331,21 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $this->testExceptionExists($exception);
         }
 
-        $container->setParameter($this->getAlias().'.exception.codes', $config['exception']['codes']);
-        $container->setParameter($this->getAlias().'.exception.messages', $config['exception']['messages']);
+        $container->setParameter('fos_rest.exception.codes', $config['exception']['codes']);
+        $container->setParameter('fos_rest.exception.messages', $config['exception']['messages']);
     }
 
     private function loadSerializer(array $config, ContainerBuilder $container)
     {
         if (!empty($config['serializer']['version'])) {
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.version', $config['serializer']['version']);
+            $container->setParameter('fos_rest.serializer.exclusion_strategy.version', $config['serializer']['version']);
         }
 
         if (!empty($config['serializer']['groups'])) {
-            $container->setParameter($this->getAlias().'.serializer.exclusion_strategy.groups', $config['serializer']['groups']);
+            $container->setParameter('fos_rest.serializer.exclusion_strategy.groups', $config['serializer']['groups']);
         }
 
-        $container->setParameter($this->getAlias().'.serializer.serialize_null', $config['serializer']['serialize_null']);
+        $container->setParameter('fos_rest.serializer.serialize_null', $config['serializer']['serialize_null']);
     }
 
     /**

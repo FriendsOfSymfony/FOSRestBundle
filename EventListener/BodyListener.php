@@ -88,10 +88,9 @@ class BodyListener
         $request = $event->getRequest();
         $method = $request->getMethod();
         $contentType = $request->headers->get('Content-Type');
-        $isFormRequest = $this->isFormRequest($request);
-        $normalizeRequest = $this->normalizeForms && $isFormRequest;
+        $normalizeRequest = $this->normalizeForms && $this->isFormRequest($request);
 
-        if (!$isFormRequest && in_array($method, array('POST', 'PUT', 'PATCH', 'DELETE'))) {
+        if ($this->isDecodeable($request)) {
             $format = null === $contentType
                 ? $request->getRequestFormat()
                 : $request->getFormat($contentType);
@@ -101,9 +100,8 @@ class BodyListener
             $content = $request->getContent();
 
             if (!$this->decoderProvider->supports($format)) {
-                if (
-                    $this->throwExceptionOnUnsupportedContentType &&
-                    $this->isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
+                if ($this->throwExceptionOnUnsupportedContentType
+                    && $this->isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
                 ) {
                     throw new UnsupportedMediaTypeHttpException("Request body format '$format' not supported");
                 }
@@ -136,17 +134,42 @@ class BodyListener
         }
     }
 
+    /**
+     * Check if the Request is a not a DELETE with no content and no Content-Type
+     *
+     * @param $method
+     * @param $content
+     * @param $contentType
+     * @return bool
+     */
     private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
     {
         return false === ('DELETE' === $method && empty($content) && null === $contentType);
     }
 
-    private function isFormRequest(Request $request)
+    /**
+     * Check if we should try to decode the body
+     *
+     * @param Request $request
+     * @return bool
+     */
+    protected function isDecodeable(Request $request)
     {
         if (!in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))) {
             return false;
         }
 
+        return !$this->isFormRequest($request);
+    }
+
+    /**
+     * Check if the content type indicates a form submission
+     *
+     * @param Request $request
+     * @return bool
+     */
+    protected function isFormRequest(Request $request)
+    {
         $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
 
         if (isset($contentTypeParts[0])) {

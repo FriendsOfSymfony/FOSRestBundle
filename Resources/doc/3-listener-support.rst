@@ -25,6 +25,28 @@ to enable a few additional listeners:
         view:
             view_response_listener: 'force'
 
+It is possible to replace the service used for each of the listener if needed.
+In this case, the Bundle listener will still be configured, however it will
+not be registered in the kernel. The custom service listener will however not
+be registered in the kernel, so it is up to the user to register it for the
+appropriate event:
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_rest:
+        body_listener:
+            service: my_body_listener
+
+    my.body_listener:
+        class: Acme\BodyListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 10 }
+        arguments: ['@fos_rest.decoder_provider', '%fos_rest.throw_exception_on_unsupported_content_type%']
+        calls:
+            - [setDefaultFormat, ['%fos_rest.body_default_format%']]
+
+
 View Response Listener
 ----------------------
 
