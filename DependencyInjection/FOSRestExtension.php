@@ -192,7 +192,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $service->clearTag('kernel.event_listener');
             }
 
-            if ('force' === $config['param_fetcher_listener']) {
+            if ('force' === $config['param_fetcher_listener']['enabled']) {
                 $container->setParameter('fos_rest.param_fetcher_listener.set_params_as_attributes', true);
             }
         }
