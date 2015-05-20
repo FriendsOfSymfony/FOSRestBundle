@@ -2,8 +2,8 @@ Full default configuration
 ==========================
 
 .. code-block:: yaml
-
-# Default configuration for extension with alias: "fos_rest"
+   
+   # Default configuration for extension with alias: "fos_rest"
 
     fos_rest:
         disable_csrf_role:    null
