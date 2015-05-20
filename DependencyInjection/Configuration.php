@@ -64,7 +64,7 @@ class Configuration implements ConfigurationInterface
                     ->canBeEnabled()
                     ->children()
                         ->booleanNode('enabled')->defaultFalse()->end()
-                        ->scalarNode('force')->defaultFalse()->end()
+                        ->booleanNode('force')->defaultFalse()->end()
                         ->scalarNode('service')->defaultNull()->end()
                     ->end()
                 ->end()
