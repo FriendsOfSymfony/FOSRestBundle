@@ -2,8 +2,8 @@ Full default configuration
 ==========================
 
 .. code-block:: yaml
-   
-   # Default configuration for extension with alias: "fos_rest"
+
+    # Default configuration for extension with alias: "fos_rest"
 
     fos_rest:
         disable_csrf_role:    null
@@ -17,6 +17,7 @@ Full default configuration
         unauthorized_challenge:  null
         param_fetcher_listener:
             enabled:              false
+            force:                false
             service:              null
         cache_dir:            '%kernel.cache_dir%/fos_rest'
         allowed_methods_listener:
@@ -64,8 +65,8 @@ Full default configuration
                 name:                 ~
             view_response_listener:
                 enabled:              false
+                force:                false
                 service:              null
-                mode:                 false
             failed_validation:    400
             empty_content:        204
             exception_wrapper_handler:  null
