@@ -166,7 +166,7 @@ If you want to use an advanced value in this header, it's worth looking at this:
 
 You need to enable this listener as follows, as it is disabled by default:
 
-.. code-block: yaml
+.. code-block:: yaml
 
     fos_rest:
         unauthorized_challenge: "Basic realm=\"Restricted Area\""
