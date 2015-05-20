@@ -264,7 +264,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $service->clearTag('kernel.event_listener');
             }
 
-            $container->setParameter('fos_rest.view_response_listener.force_view', 'force' === $config['view']['view_response_listener']['mode']);
+            $container->setParameter('fos_rest.view_response_listener.force_view', $config['view']['view_response_listener']['force']);
         }
 
         $formats = array();

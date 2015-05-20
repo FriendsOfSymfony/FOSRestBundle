@@ -179,6 +179,28 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
     }
 
+    public function testLoadParamFetcherListener()
+    {
+        $config = array(
+            'fos_rest' => array('param_fetcher_listener' => true),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.param_fetcher_listener'));
+        $this->assertFalse($this->container->getParameter('fos_rest.param_fetcher_listener.set_params_as_attributes'));
+    }
+
+    public function testLoadParamFetcherListenerForce()
+    {
+        $config = array(
+            'fos_rest' => array('param_fetcher_listener' => 'force'),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.param_fetcher_listener'));
+        $this->assertTrue($this->container->getParameter('fos_rest.param_fetcher_listener.set_params_as_attributes'));
+    }
+
     public function testLoadFormatListenerWithMultipleRule()
     {
         $config = array(
@@ -222,6 +244,28 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertFalse($this->container->hasDefinition('fos_rest.view_response_listener'));
+    }
+
+    public function testLoadViewResponseListener()
+    {
+        $config = array(
+            'fos_rest' => array('view' => array('view_response_listener' => true)),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.view_response_listener'));
+        $this->assertFalse($this->container->getParameter('fos_rest.view_response_listener.force_view'));
+    }
+
+    public function testLoadViewResponseListenerForce()
+    {
+        $config = array(
+            'fos_rest' => array('view' => array('view_response_listener' => 'force')),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.view_response_listener'));
+        $this->assertTrue($this->container->getParameter('fos_rest.view_response_listener.force_view'));
     }
 
     public function testForceEmptyContentDefault()

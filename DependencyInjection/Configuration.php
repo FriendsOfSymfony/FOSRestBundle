@@ -26,8 +26,6 @@ use FOS\RestBundle\Util\Codes;
  */
 class Configuration implements ConfigurationInterface
 {
-    public static $forceOptionValues = array(false, true, 'force');
-
     /**
      * Generates the configuration tree.
      *
@@ -170,16 +168,14 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('view_response_listener')
                             ->beforeNormalization()
-                                ->ifString()->then(function($v) { return array('enabled' => true, 'mode' => $v); })
-                            ->end()
-                            ->validate()
-                                ->ifTrue(function ($v) { return !in_array($v['mode'], Configuration::$forceOptionValues); })
-                                ->thenInvalid('The view_response_listener "mode" does not support %s. Please choose one of '.json_encode(Configuration::$forceOptionValues))
+                                ->ifString()
+                                ->then(function ($v) { return array('enabled' => in_array($v, array('force', 'true')), 'force' => 'force' === $v); })
                             ->end()
                             ->canBeEnabled()
                             ->children()
+                                ->booleanNode('enabled')->defaultFalse()->end()
+                                ->booleanNode('force')->defaultFalse()->end()
                                 ->scalarNode('service')->defaultNull()->end()
-                                ->scalarNode('mode')->defaultFalse()->end()
                             ->end()
                         ->end()
                         ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
