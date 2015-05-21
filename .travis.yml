@@ -42,7 +42,3 @@ script: phpunit --coverage-clover=coverage.clover
 after_script:
   - if [ "$TRAVIS_PHP_VERSION" != "nightly" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
   - if [ "$TRAVIS_PHP_VERSION" != "nightly" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
-
-notifications:
-  email:
-    - friendsofsymfony-dev@googlegroups.com
