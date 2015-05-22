@@ -124,6 +124,35 @@ The matched version is set as a Request attribute with the name ``version``,
 and when using JMS serializer it is also set as an exclusion strategy
 automatically in the ``ViewHandler``.
 
-See `this JMS Serializer article`_ for details.
+To make the version mechanism working :
+
+1 - The client must pass the requested version in his header like this :
+
+.. code-block:: yaml
+
+    Accept:application/json;version=1.0
+
+2 - You must have declared the version value in your config, otherwise it won't be catched :
+
+.. code-block:: yaml
+
+    fos_rest:
+        view:
+            mime_types:
+                json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
+                
+3 - You should have tagged your entities with version information (@Since, @Until ...)
+
+See `this JMS Serializer article`_ for details about versioning objects.
 
 .. _`this JMS Serializer article`: http://jmsyst.com/libs/serializer/master/cookbook/exclusion_strategies#versioning-objects
+
+That's it, it should work now.
+
+If you have to verify if the version is correctly catched you can use something like :
+
+.. code-block:: php
+
+        if($this->container->get('fos_rest.version_listener')) {
+            print $this->container->get('fos_rest.version_listener')->getVersion();
+        }
