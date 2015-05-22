@@ -153,6 +153,10 @@ If you have to verify if the version is correctly catched you can use something 
 
 .. code-block:: php
 
-        if($this->container->get('fos_rest.version_listener')) {
+        if ($this->container->get('fos_rest.version_listener')) {
             print $this->container->get('fos_rest.version_listener')->getVersion();
         }
+
+Note that this version mechanism is configurable by your own by changing the regular expression in the `media type version regex configuration`_.
+
+.. _`media type version regex configuration`: http://symfony.com/doc/master/bundles/FOSRestBundle/format_listener.html#media-type-version-extraction
