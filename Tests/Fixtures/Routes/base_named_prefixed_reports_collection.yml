@@ -1,0 +1,5 @@
+report:
+    type: rest
+    resource: named_prefixed_reports_collection.yml
+    prefix:   /base
+    name_prefix: base_
