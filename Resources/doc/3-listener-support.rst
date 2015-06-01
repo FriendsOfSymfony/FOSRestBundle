@@ -85,7 +85,7 @@ Format Listener
 ---------------
 
 The Request format listener attempts to determine the best format for the
-for the request based on the HTTP Accept header and the format priority
+request based on the HTTP Accept header and the format priority
 configuration. This way it becomes possible to leverage Accept-Headers to
 determine the request format, rather than a file extension (like foo.json).
 
