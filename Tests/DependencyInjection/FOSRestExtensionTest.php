@@ -171,7 +171,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $config = array(
             'fos_rest' => array('format_listener' => array(
-                'rules' => array('path' => '/')
+                'rules' => array('path' => '/'),
             )),
         );
         $this->extension->load($config, $this->container);
@@ -207,13 +207,39 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             'fos_rest' => array('format_listener' => array(
                 'rules' => array(
                     array('path' => '/foo'),
-                    array('path' => '/')
+                    array('path' => '/'),
                 )
             )),
         );
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
+    }
+
+    public function testLoadFormatListenerMediaType()
+    {
+        $config = array(
+            'fos_rest' => array('format_listener' => array(
+                'rules' => array('path' => '/'),
+                'media_type' => true,
+            )),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.version_listener'));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     */
+    public function testLoadFormatListenerMediaTypeNoRules()
+    {
+        $config = array(
+            'fos_rest' => array('format_listener' => array(
+                'media_type' => true,
+            )),
+        );
+        $this->extension->load($config, $this->container);
     }
 
     public function testLoadServicesWithDefaults()
