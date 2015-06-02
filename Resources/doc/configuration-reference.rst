@@ -117,9 +117,6 @@ Full default configuration
                 exception_fallback_format:  null
                 priorities:           []
             media_type:
-                version_regex:
-                    enabled:              false
-                    service:              null
-                    regex:                '/(v|version)=(?P<version>[0-9\.]+)/'
-
-
+                enabled:              false
+                service:              null
+                version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
