@@ -101,9 +101,8 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            if (!array_key_exists('_method', $route->getRequirements())) {
-                unset($params['requirements']['_method']);
-            }
+            // Symfony sets _method to keep BC, should be removed in 3.0
+            $params['requirements']['_method'] = $params['method'];
 
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
@@ -142,9 +141,8 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            if (!array_key_exists('_method', $route->getRequirements())) {
-                unset($params['requirements']['_method']);
-            }
+            // Symfony sets _method to keep BC, should be removed with 3.0
+            $params['requirements']['_method'] = $params['method'];
 
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
