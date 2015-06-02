@@ -160,3 +160,4 @@ If you have to verify if the version is correctly catched you can use something 
 Note that this version mechanism is configurable by your own by changing the regular expression in the `media type version regex configuration`_.
 
 .. _`media type version regex configuration`: http://symfony.com/doc/master/bundles/FOSRestBundle/format_listener.html#media-type-version-extraction
+.. _`mime type listener`: http://symfony.com/doc/current/cookbook/request/mime_type.html
