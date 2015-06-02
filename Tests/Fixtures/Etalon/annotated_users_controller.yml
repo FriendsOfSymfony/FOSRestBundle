@@ -1,30 +1,30 @@
 get_users:
   path:      /users.{_format}
   controller:   ::getUsersAction
-  method: GET
+  methods: [GET]
 
 get_user:
   path:      /users/{slug}.{_format}
   controller:   ::getUserAction
   requirements: {slug: '[a-z]+'}
-  method: GET
+  methods: [GET]
 
 patch_users:
   path:      /users.{_format}
   controller:   ::patchUsersAction
-  method: PATCH
+  methods: [PATCH]
 
 patch_user:
   path:      /users/{slug}.{_format}
   controller:   ::patchUserAction
   requirements: {slug: '[a-z]+'}
-  method: PATCH
+  methods: [PATCH]
 
 get_user_comment:
   path:      /users/{slug}/comments/{id}.{_format}
   controller:   ::getUserCommentAction
   requirements: {slug: '[a-z]+', id: '\d+'}
-  method: GET
+  methods: [GET]
 
 get_user_post:
   path:      /users/{slug}/posts/{id}.{_format}
@@ -32,68 +32,68 @@ get_user_post:
   options:
     expose: true
   requirements: {slug: '[a-z]+', id: '\d+'}
-  method: GET
+  methods: [GET]
 
 rate_user:
   path:      /users/{slug}/rate.{_format}
   controller:   ::rateUserAction
   requirements: {slug: '[a-z]+'}
-  method: POST
+  methods: [POST]
 
 rate_user_comment:
   path:      /users/{slug}/rate_comment/{id}.{_format}
   controller:   ::rateUserCommentAction
   requirements: {slug: '[a-z]+', id: '\d+'}
-  method: PATCH
+  methods: [PATCH]
 
 bget_user:
   path:      /users/{slug}/bget.{_format}
   controller:   ::bgetUserAction
-  method: GET
+  methods: [GET]
 
 bpost_user:
   path:      /users/{slug}/bpost.{_format}
   controller:   ::bpostUserAction
-  method: POST
+  methods: [POST]
 
 bput_user:
   path:      /users/{slug}/bput.{_format}
   controller:   ::bputUserAction
-  method: PUT
+  methods: [PUT]
 
 bdel_user:
   path:      /users/{slug}/bdel.{_format}
   controller:   ::bdelUserAction
-  method: DELETE
+  methods: [DELETE]
 
 bhead_user:
   path:      /users/{slug}/bhead.{_format}
   controller:   ::bheadUserAction
-  method: HEAD
+  methods: [HEAD]
 
 
 multipleget_users_a_get_method:
   path:      /users2.{_format}
   controller:   ::multiplegetUsersAction
-  method: GET
+  methods: [GET]
 multipleget_users_an_other_get_method:
   path:      /users3.{_format}
   controller:   ::multiplegetUsersAction
-  method: GET
+  methods: [GET]
 multipleget_users_a_post_method:
   path:      /users4.{_format}
   controller:   ::multiplegetUsersAction
-  method: POST
+  methods: [POST]
 multipleget_users_a_link_method:
   path:      /users1.{_format}
   controller:   ::multiplegetUsersAction
-  method: LINK
+  methods: [LINK]
 
 post_users_foo:
   path:      /users1/{foo}.{_format}
   controller:   ::multiplepostUsersAction
-  method: POST
+  methods: [POST]
 post_users_bar:
   path:      /users2/{foo}.{_format}
   controller:   ::multiplepostUsersAction
-  method: POST
+  methods: [POST]

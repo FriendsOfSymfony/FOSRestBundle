@@ -1,114 +1,114 @@
 get_users:
-  method:     GET
+  methods: [GET]
   path:    /users.{_format}
   controller: ::getUsersAction
 
 get_user:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}.{_format}
   controller: ::getUserAction
 
 post_users:
-  method:     POST
+  methods: [POST]
   path:    /users.{_format}
   controller: ::postUsersAction
 
 patch_users:
-  method:     PATCH
+  methods: [PATCH]
   path:    /users.{_format}
   controller: ::patchUsersAction
 
 put_user:
-  method:     PUT
+  methods: [PUT]
   path:    /users/{slug}.{_format}
   controller: ::putUserAction
 
 patch_user:
-  method:     PATCH
+  methods: [PATCH]
   path:    /users/{slug}.{_format}
   controller: ::patchUserAction
 
 lock_user:
-  method:     PATCH
+  methods: [PATCH]
   path:    /users/{slug}/lock.{_format}
   controller: ::lockUserAction
 
 get_user_comments:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/comments.{_format}
   controller: ::getUserCommentsAction
 
 get_user_comment:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/comments/{id}.{_format}
   controller: ::getUserCommentAction
 
 delete_user_comment:
-  method:     DELETE
+  methods: [DELETE]
   path:    /users/{slug}/comments/{id}.{_format}
   controller: ::deleteUserCommentAction
 
 new_users:
-  method:     GET
+  methods: [GET]
   path:    /users/new.{_format}
   controller: ::newUsersAction
 
 new_user_comments:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/comments/new.{_format}
   controller: ::newUserCommentsAction
 
 ban_user:
-  method:     PATCH
+  methods: [PATCH]
   path:    /users/{slug}/ban.{_format}
   controller: ::banUserAction
 
 post_user_comment_vote:
-  method:     POST
+  methods: [POST]
   path:    /users/{slug}/comments/{id}/votes.{_format}
   controller: ::postUserCommentVoteAction
 
 get_user_topics:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/topics.{_format}
   controller: ::getTopics
 
 new_user_topics:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/topics/new.{_format}
   controller: ::newTopics
 
 get_user_topic:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/topics/{title}.{_format}
   controller: ::getTopic
 
 put_user_topic:
-  method:     PUT
+  methods: [PUT]
   path:    /users/{slug}/topics/{title}.{_format}
   controller: ::putTopic
 
 hide_user_topic:
-  method:     PATCH
+  methods: [PATCH]
   path:    /users/{slug}/topics/{title}/hide.{_format}
   controller: ::hideTopic
 
 get_user_topic_comments:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/topics/{title}/comments.{_format}
   controller: ::getComments
 
 new_user_topic_comments:
-  method:     GET
+  methods: [GET]
   path:    /users/{slug}/topics/{title}/comments/new.{_format}
   controller: ::newComments
 
 put_user_topic_comment:
-  method:     PUT
+  methods: [PUT]
   path:    /users/{slug}/topics/{title}/comments/{id}.{_format}
   controller: ::putComment
 
 ban_user_topic_comment:
-  method:     PATCH
+  methods: [PATCH]
   path:    /users/{slug}/topics/{title}/comments/{id}/ban.{_format}
   controller: ::banComment

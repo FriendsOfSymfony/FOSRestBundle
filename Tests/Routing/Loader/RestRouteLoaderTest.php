@@ -38,7 +38,7 @@ class RestRouteLoaderTest extends LoaderTest
 
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
             $this->assertEquals($params['path'], $route->getPath(), 'Path does not match for route: '.$name);
-            $this->assertEquals($params['method'], $methods[0], 'Method does not match for route: '.$name);
+            $this->assertEquals($params['methods'][0], $methods[0], 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
     }
@@ -60,7 +60,7 @@ class RestRouteLoaderTest extends LoaderTest
 
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
             $this->assertEquals($params['path'], $route->getPath(), 'Path does not match for route: '.$name);
-            $this->assertEquals($params['method'], $methods[0], 'Method does not match for route: '.$name);
+            $this->assertEquals($params['methods'][0], $methods[0], 'Method does not match for route: '.$name);
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
     }
@@ -102,7 +102,7 @@ class RestRouteLoaderTest extends LoaderTest
             $route = $collection->get($name);
 
             // Symfony sets _method to keep BC, should be removed in 3.0
-            $params['requirements']['_method'] = $params['method'];
+            $params['requirements']['_method'] = implode('|', $params['methods']);
 
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
@@ -142,7 +142,7 @@ class RestRouteLoaderTest extends LoaderTest
             $route = $collection->get($name);
 
             // Symfony sets _method to keep BC, should be removed with 3.0
-            $params['requirements']['_method'] = $params['method'];
+            $params['requirements']['_method'] = implode('|', $params['methods']);
 
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
