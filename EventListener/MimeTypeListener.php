@@ -48,7 +48,7 @@ class MimeTypeListener
         $request = $event->getRequest();
 
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
-            foreach ($this->mimeTypes as $format => $mimeType) {
+            foreach ($this->mimeTypes['formats'] as $format => $mimeType) {
                 $request->setFormat($format, $mimeType);
                 $this->formatNegotiator->registerFormat($format, (array) $mimeType, true);
             }
