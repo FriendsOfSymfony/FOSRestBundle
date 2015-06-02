@@ -31,7 +31,7 @@ class MimeTypeListenerTest extends \PHPUnit_Framework_TestCase
             ->with('jsonp', array('application/javascript+jsonp'), true)
             ->will($this->returnValue(null));
 
-        $listener = new MimeTypeListener(array('jsonp' => array('application/javascript+jsonp')), $formatNegotiator);
+        $listener = new MimeTypeListener(array('enabled' => true, 'formats' => array('jsonp' => array('application/javascript+jsonp'))), $formatNegotiator);
 
         $request = new Request();
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
