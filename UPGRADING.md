@@ -13,6 +13,7 @@ This document will be updated to list important BC breaks and behavioral changes
 
   * Dropped support for Symfony 2.2 (which includes dropping support for "pattern" in favor of only supporting "path" in routes), see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/952
   * Dropped support for SensioFrameworkExtraBundle 2.x, see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/952
+    (support for SensioFrameworkExtraBundle was added back in version 1.6.1 of the FOSRestBundle)
 
 ### upgrading from 1.4.*
 
