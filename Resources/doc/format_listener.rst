@@ -106,6 +106,8 @@ format will remain unchanged.
                 - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
                 - { path: '^/', stop: true } # Available for version >= 1.5
 
+.. _media-type-version-extraction:
+
 Media Type Version Extraction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -140,7 +142,7 @@ To make the version mechanism working :
         view:
             mime_types:
                 json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
-                
+
 3 - You should have tagged your entities with version information (@Since, @Until ...)
 
 See `this JMS Serializer article`_ for details about versioning objects.
@@ -157,7 +159,7 @@ If you have to verify if the version is correctly catched you can use something 
             print $this->container->get('fos_rest.version_listener')->getVersion();
         }
 
-Note that this version mechanism is configurable by your own by changing the regular expression in the `media type version regex configuration`_.
+Note that this version mechanism is configurable by your own by changing the regular expression in the
+:ref:`media type version regex configuration <media-type-version-extraction>`.
 
-.. _`media type version regex configuration`: http://symfony.com/doc/master/bundles/FOSRestBundle/format_listener.html#media-type-version-extraction
 .. _`mime type listener`: http://symfony.com/doc/current/cookbook/request/mime_type.html
