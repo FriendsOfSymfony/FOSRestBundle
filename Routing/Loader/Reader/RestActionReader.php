@@ -183,7 +183,7 @@ class RestActionReader
         $routeName    = strtolower($routeName);
         $path         = implode('/', $urlParts);
         $defaults     = array('_controller' => $method->getName());
-        $requirements = array('_method' => strtoupper($httpMethod));
+        $requirements = array();
         $options      = array();
         $host         = '';
         $condition    = null;
@@ -200,12 +200,11 @@ class RestActionReader
                 $condition    = null;
 
                 $annoRequirements = $annotation->getRequirements();
+                $annoMethods = $annotation->getMethods();
 
-                if (isset($annoRequirements['_method'])) {
-                    $methods = explode('|', strtoupper($annoRequirements['_method']));
+                if (!empty($annoMethods)) {
+                    $methods = $annoMethods;
                 }
-
-                unset($annoRequirements['_method']);
 
                 $path         = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $path;
                 $requirements = array_merge($requirements, $annoRequirements);
@@ -241,12 +240,7 @@ class RestActionReader
                 }
             }
 
-            if (isset($requirements['_method'])) {
-                $methods = explode('|', $requirements['_method']);
-                unset($requirements['_method']);
-            } else {
-                $methods = array();
-            }
+            $methods = explode('|', strtoupper($httpMethod));
 
             // add route to collection
             $route = new Route(

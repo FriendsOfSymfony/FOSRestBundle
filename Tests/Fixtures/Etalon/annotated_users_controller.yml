@@ -1,93 +1,99 @@
 get_users:
   path:      /users.{_format}
   controller:   ::getUsersAction
-  requirements: {_method: GET}
+  methods: [GET]
 
 get_user:
   path:      /users/{slug}.{_format}
   controller:   ::getUserAction
-  requirements: {_method: GET, slug: '[a-z]+'}
+  requirements: {slug: '[a-z]+'}
+  methods: [GET]
 
 patch_users:
   path:      /users.{_format}
   controller:   ::patchUsersAction
-  requirements: {_method: PATCH}
+  methods: [PATCH]
 
 patch_user:
   path:      /users/{slug}.{_format}
   controller:   ::patchUserAction
-  requirements: {_method: PATCH, slug: '[a-z]+'}
+  requirements: {slug: '[a-z]+'}
+  methods: [PATCH]
 
 get_user_comment:
   path:      /users/{slug}/comments/{id}.{_format}
   controller:   ::getUserCommentAction
-  requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
+  requirements: {slug: '[a-z]+', id: '\d+'}
+  methods: [GET]
 
 get_user_post:
   path:      /users/{slug}/posts/{id}.{_format}
   controller:   ::getUserPostAction
   options:
     expose: true
-  requirements: {_method: GET, slug: '[a-z]+', id: '\d+'}
+  requirements: {slug: '[a-z]+', id: '\d+'}
+  methods: [GET]
 
 rate_user:
   path:      /users/{slug}/rate.{_format}
   controller:   ::rateUserAction
-  requirements: {_method: POST, slug: '[a-z]+'}
+  requirements: {slug: '[a-z]+'}
+  methods: [POST]
 
 rate_user_comment:
   path:      /users/{slug}/rate_comment/{id}.{_format}
   controller:   ::rateUserCommentAction
-  requirements: {_method: PATCH, slug: '[a-z]+', id: '\d+'}
+  requirements: {slug: '[a-z]+', id: '\d+'}
+  methods: [PATCH]
 
 bget_user:
   path:      /users/{slug}/bget.{_format}
   controller:   ::bgetUserAction
-  requirements: {_method: GET}
+  methods: [GET]
 
 bpost_user:
   path:      /users/{slug}/bpost.{_format}
   controller:   ::bpostUserAction
-  requirements: {_method: POST}
+  methods: [POST]
 
 bput_user:
   path:      /users/{slug}/bput.{_format}
   controller:   ::bputUserAction
-  requirements: {_method: PUT}
+  methods: [PUT]
 
 bdel_user:
   path:      /users/{slug}/bdel.{_format}
   controller:   ::bdelUserAction
-  requirements: {_method: DELETE}
+  methods: [DELETE]
 
 bhead_user:
   path:      /users/{slug}/bhead.{_format}
   controller:   ::bheadUserAction
-  requirements: {_method: HEAD}
+  methods: [HEAD]
 
 
 multipleget_users_a_get_method:
   path:      /users2.{_format}
   controller:   ::multiplegetUsersAction
-  requirements: {_method: GET}
+  methods: [GET]
 multipleget_users_an_other_get_method:
   path:      /users3.{_format}
   controller:   ::multiplegetUsersAction
-  requirements: {_method: GET}
+  methods: [GET]
 multipleget_users_a_post_method:
   path:      /users4.{_format}
   controller:   ::multiplegetUsersAction
-  requirements: {_method: POST}
+  methods: [POST]
 multipleget_users_a_link_method:
   path:      /users1.{_format}
   controller:   ::multiplegetUsersAction
-  requirements: {_method: LINK}
+  methods: [LINK]
 
 post_users_foo:
   path:      /users1/{foo}.{_format}
   controller:   ::multiplepostUsersAction
-  requirements: {_method: POST}
+  methods: [POST]
 post_users_bar:
   path:      /users2/{foo}.{_format}
   controller:   ::multiplepostUsersAction
-  requirements: {_method: POST}
+  methods: [POST]
