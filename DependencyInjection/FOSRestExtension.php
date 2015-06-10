@@ -99,7 +99,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $loader->load('access_denied_listener.xml');
 
             if (!empty($config['access_denied_listener']['service'])) {
-                $service = $container->getDefinition('fos_rest.allowed_methods_listener');
+                $service = $container->getDefinition('fos_rest.access_denied_listener');
                 $service->clearTag('kernel.event_listener');
             }
 
