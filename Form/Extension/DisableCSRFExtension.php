@@ -12,8 +12,11 @@
 namespace FOS\RestBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class DisableCSRFExtension
@@ -22,28 +25,53 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class DisableCSRFExtension extends AbstractTypeExtension
 {
-    private $securityContext;
+    /**
+     * @var SecurityContextInterface|TokenStorageInterface
+     */
+    private $tokenStorage;
     private $role;
+    private $authorizationChecker;
 
-    public function __construct(SecurityContextInterface $securityContext, $role)
+    public function __construct($tokenStorage, $role, $authorizationChecker = null)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->role = $role;
+        $this->authorizationChecker = $authorizationChecker;
+
+        if (!$tokenStorage instanceof TokenStorageInterface && !$tokenStorage instanceof SecurityContextInterface) {
+            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface or Symfony\Component\Security\Core\SecurityContextInterface');
+        }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        if (!$this->securityContext->getToken()) {
-            return;
-        }
+        if ($this->authorizationChecker instanceof AuthorizationCheckerInterface) {
+            if (!$this->tokenStorage->getToken()) {
+                return;
+            }
 
-        if (!$this->securityContext->isGranted($this->role)) {
-            return;
+            if (!$this->authorizationChecker->isGranted($this->role)) {
+                return;
+            }
+        } else {
+            if (!$this->tokenStorage->getToken()) {
+                return;
+            }
+
+            if (!$this->tokenStorage->isGranted($this->role)) {
+                return;
+            }
         }
 
         $resolver->setDefaults(array(
             'csrf_protection' => false,
         ));
+    }
+
+    // BC for < 2.7
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $this->configureOptions($resolver);
     }
 
     public function getExtendedType()

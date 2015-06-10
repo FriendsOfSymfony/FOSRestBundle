@@ -18,6 +18,7 @@ use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
 use FOS\RestBundle\DependencyInjection\Compiler\ExceptionWrapperHandlerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use FOS\RestBundle\DependencyInjection\Compiler\TwigExceptionPass;
+use FOS\RestBundle\DependencyInjection\Compiler\CsrfExtensionPass;
 
 /**
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
@@ -35,5 +36,6 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new FormatListenerRulesPass());
         $container->addCompilerPass(new TwigExceptionPass());
         $container->addCompilerPass(new ExceptionWrapperHandlerPass());
+        $container->addCompilerPass(new CsrfExtensionPass());
     }
 }
