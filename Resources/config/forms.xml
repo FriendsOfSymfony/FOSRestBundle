@@ -13,7 +13,7 @@
     <services>
         <service id="fos_rest.form.extension.csrf_disable" class="%fos_rest.form.extension.csrf_disable.class%">
             <tag name="form.type_extension" alias="form" />
-            <argument type="service" id="security.context" />
+            <argument /> <!-- security.token_storage or security.context for Symfony < 2.6 -->
             <argument>%fos_rest.disable_csrf_role%</argument>
         </service>
     </services>
