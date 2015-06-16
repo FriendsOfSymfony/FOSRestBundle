@@ -71,10 +71,10 @@ class AnnotatedConditionalUsersController extends Controller
     {} // [POST]    /users/{slug}/rate
 
     /**
-     * @Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"})
+     * @Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"}, methods={"PATCH", "POST"})
      */
     public function rateUserCommentAction($slug, $id)
-    {} // [POST]     /users/{slug}/rate_comment/{id}
+    {} // [PATCH, POST]     /users/{slug}/rate_comment/{id}
 
     /**
      * @Get

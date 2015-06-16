@@ -23,7 +23,9 @@ class Route extends BaseRoute
     {
         parent::__construct($data);
 
-        $this->setMethods((array) $this->getMethod());
+        if (!$this->getMethods()) {
+            $this->setMethods((array) $this->getMethod());
+        }
     }
 
     /**

@@ -44,7 +44,7 @@ rate_user_comment:
   path:      /users/{slug}/rate_comment/{id}.{_format}
   controller:   ::rateUserCommentAction
   requirements: {slug: '[a-z]+', id: '\d+'}
-  methods: [PATCH]
+  methods: [PATCH, POST]
 
 bget_user:
   path:      /users/{slug}/bget.{_format}
