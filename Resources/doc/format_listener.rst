@@ -142,6 +142,53 @@ To make the version mechanism working :
         view:
             mime_types:
                 json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
+                
+Note: If you have to handle huge versions and mime types, you can simplify the configuration with a php script:
+
+.. code-block:: php
+
+    // app/config/fos_rest_mime_types.php
+    $versions = array(
+        '1.0',
+        '1.1',
+        '2.0',
+    );
+    
+    $mimeTypes = array(
+        'json' => array(
+            'application/json',
+        ),
+        'yml'  => array(
+            'application/yaml',
+            'text/yaml',
+        ),
+    );
+    
+    array_walk($mimeTypes, function (&$mimeTypes, $format, $versions) {
+        $versionMimeTypes = array();
+        foreach ($mimeTypes as $mimeType) {
+            foreach ($versions as $version) {
+                array_push($versionMimeTypes, sprintf('%s;version=%s', $mimeType, $version));
+                array_push($versionMimeTypes, sprintf('%s;v=%s', $mimeType, $version));
+            }
+        }
+        $mimeTypes = array_merge($mimeTypes, $versionMimeTypes);
+    }, $versions);
+    
+    $container->loadFromExtension('fos_rest', array(
+        'view' => array(
+            'mime_types' => $mimeTypes,
+        ),
+    ));
+
+And then, import it from your config.yml file:
+
+.. code-block:: yaml
+
+    imports:
+        - { resource: assets_version.php }
+
+With this way, you will ony have to update needed versions and base mime types, the script will handle the rest.
 
 3 - You should have tagged your entities with version information (@Since, @Until ...)
 
