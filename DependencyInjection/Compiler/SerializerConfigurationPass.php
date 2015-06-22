@@ -28,14 +28,20 @@ class SerializerConfigurationPass implements CompilerPassInterface
             return;
         }
 
+        if (!$container->has('serializer') && !$container->has('jms_serializer.serializer')) {
+            throw new \InvalidArgumentException('Neither a service called "jms_serializer.serializer" nor "serializer" is available and no serializer is explicitly configured. You must either enable the JMSSerializerBundle, enable the FrameworkBundle serializer or configure a custom serializer.');
+        }
+
         if ($container->has('jms_serializer.serializer')) {
             $container->setAlias('fos_rest.serializer', 'jms_serializer.serializer');
-            $container->removeDefinition('fos_rest.serializer.exception_wrapper_normalizer');
-        } elseif ($container->has('serializer')) {
-            $container->setAlias('fos_rest.serializer', 'serializer');
-            $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
         } else {
-            throw new \InvalidArgumentException('Neither a service called "jms_serializer.serializer" nor "serializer" is available and no serializer is explicitly configured. You must either enable the JMSSerializerBundle, enable the FrameworkBundle serializer or configure a custom serializer.');
+            $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
+        }
+
+        if ($container->has('serializer')) {
+            $container->setAlias('fos_rest.serializer', 'serializer');
+        } else {
+            $container->removeDefinition('fos_rest.serializer.exception_wrapper_normalizer');
         }
     }
 }
