@@ -65,16 +65,15 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValueMap(array(
                 array('fos_rest.serializer', false),
                 array('jms_serializer.serializer', true),
-                array('serializer', true))));
+                array('serializer', true)
+            )));
 
-
-        $container->expects($this->once())
+        $container->expects($this->exactly(2))
             ->method('setAlias')
-            ->with($this->equalTo('fos_rest.serializer'), $this->equalTo('jms_serializer.serializer'));
-
-        $container->expects($this->once())
-            ->method('removeDefinition')
-            ->with('fos_rest.serializer.exception_wrapper_normalizer');
+            ->withConsecutive(
+                array($this->equalTo('fos_rest.serializer'), $this->equalTo('jms_serializer.serializer')),
+                array($this->equalTo('fos_rest.serializer'), $this->equalTo('serializer'))
+            );
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($container);
