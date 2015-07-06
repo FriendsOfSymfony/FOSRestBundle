@@ -71,14 +71,14 @@ explicit configuration. So make sure to remove or disable the following setting:
             return $data;
         }
     }
-    
+
 If you need to pass additional data to template, not for serialization,
-you should return a $view object with the data seted by ``setTemplateData``.
+you should return a $view object with the data set by ``setTemplateData``.
 
 .. code-block:: php
 
     <?php
-    
+
     /**
      * @View()
      */
