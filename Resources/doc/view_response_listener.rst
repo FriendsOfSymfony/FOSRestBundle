@@ -71,6 +71,25 @@ explicit configuration. So make sure to remove or disable the following setting:
             return $data;
         }
     }
+    
+If you need to pass additional data to template, not for serialization,
+you should return a $view object with the data seted by ``setTemplateData``.
+
+.. code-block:: php
+
+    <?php
+    
+    /**
+     * @View()
+     */
+    public function getUsersAction()
+    {
+        // ...
+        $view = $this->view($data, 200)
+            ->setTemplateData($templateData)
+        ;
+        return $view;
+    }
 
 If ``@View()`` is used, the template variable name used to render templating
 formats can be configured (default  ``'data'``):
