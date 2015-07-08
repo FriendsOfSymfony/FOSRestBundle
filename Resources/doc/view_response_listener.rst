@@ -72,6 +72,30 @@ explicit configuration. So make sure to remove or disable the following setting:
         }
     }
 
+If you need to pass additional data to the template, not for serialization,
+you should return a ``$view`` object with the data set by ``setTemplateData``.
+
+.. code-block:: php
+
+    <?php
+
+    use FOS\RestBundle\View\View;
+
+    /**
+     * @View()
+     */
+    public function getUsersAction()
+    {
+        $view = View::create();
+        
+        // ...
+        $view
+            ->setData($data)
+            ->setTemplateData($templateData)
+        ;
+        return $view;
+    }
+
 If ``@View()`` is used, the template variable name used to render templating
 formats can be configured (default  ``'data'``):
 
