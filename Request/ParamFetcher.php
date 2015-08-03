@@ -16,6 +16,9 @@ use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatterInterface;
 use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -31,7 +34,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class ParamFetcher implements ParamFetcherInterface
+class ParamFetcher extends ContainerAware implements ParamFetcherInterface
 {
     private $paramReader;
     private $requestStack;
@@ -285,10 +288,13 @@ class ParamFetcher implements ParamFetcherInterface
             );
         }
 
-        $this->params = $this->paramReader->read(
+        $params = $this->paramReader->read(
             new \ReflectionClass(ClassUtils::getClass($this->controller[0])),
             $this->controller[1]
         );
+        $this->resolveParameters($params);
+
+        $this->params = $params;
     }
 
     /**
@@ -322,5 +328,63 @@ class ParamFetcher implements ParamFetcherInterface
                 throw new BadRequestHttpException($exceptionMessage);
             }
         }
+    }
+
+    /**
+     * @param Param[] $params
+     */
+    private function resolveParameters(array $params)
+    {
+        foreach ($params as $param) {
+            $param->requirements = $this->resolve($param->requirements);
+            $param->default = $this->resolve($param->default);
+        }
+    }
+
+    private function resolve($value)
+    {
+        if (is_array($value)) {
+            foreach($value as $key => $val) {
+                $value[$key] = $this->resolve($val);
+            }
+
+            return $value;
+        }
+
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $container = $this->container;
+
+        $escapedValue = preg_replace_callback('/%%|%([^%\s]++)%/', function ($match) use ($container, $value) {
+            // skip %%
+            if (!isset($match[1])) {
+                return '%%';
+            }
+
+            if (empty($container)) {
+                throw new \InvalidArgumentException(
+                    'The ParamFetcher has been not initialized correctly. ' .
+                    'The container for parameter resolution is missing.'
+                );
+            }
+
+            $resolved = $container->getParameter($match[1]);
+            if (is_string($resolved) || is_numeric($resolved)) {
+                return (string) $resolved;
+            }
+
+            throw new RuntimeException(sprintf(
+                    'The container parameter "%s", used in the controller parameters ' .
+                    'configuration value "%s", must be a string or numeric, but it is of type %s.',
+                    $match[1],
+                    $value,
+                    gettype($resolved)
+                )
+            );
+        }, $value);
+
+        return str_replace('%%', '%', $escapedValue);
     }
 }

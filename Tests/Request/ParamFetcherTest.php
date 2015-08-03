@@ -55,6 +55,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     private $constraint;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $container;
+
+    /**
      * Test setup.
      */
     public function setup()
@@ -66,6 +71,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->constraint = $this->getMockForAbstractClass('Symfony\Component\Validator\Constraint');
+
+        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $annotations = array();
         $annotations['foo'] = new QueryParam();
@@ -138,6 +147,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['i_cant_be_with_moo']->incompatibles = array('moo');
         $annotations['i_cant_be_with_moo']->description = 'A scalar param that can not be present in the same request with a given other parameter';
 
+        $annotations['def_param'] = new QueryParam();
+        $annotations['def_param']->name = 'default_param';
+        $annotations['def_param']->key = 'def_param';
+        $annotations['def_param']->default = '%default_parameter% %%';
+        $annotations['def_param']->description = "A default value with resolved container parameter";
+
         $this->paramReader
             ->expects($this->any())
             ->method('read')
@@ -145,6 +160,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
         $this->violationFormatter = $this->getMock('FOS\RestBundle\Util\ViolationFormatterInterface');
+
+        $this->container
+            ->expects($this->any())
+            ->method('getParameter')
+            ->will($this->returnValueMap(array(
+                array('default_parameter', 100)
+            )));
     }
 
     /**
@@ -165,7 +187,9 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $reqStack = new RequestStack();
         $reqStack->push($req);
 
-        return new ParamFetcher($this->paramReader, $reqStack, $this->violationFormatter, $this->validator);
+        $paramFetcher = new ParamFetcher($this->paramReader, $reqStack, $this->violationFormatter, $this->validator);
+        $paramFetcher->setContainer($this->container);
+        return $paramFetcher;
     }
 
     /**
@@ -190,6 +214,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $queryFetcher = $this->getParamFetcher($query, $request);
         $queryFetcher->setController($this->controller);
+        $queryFetcher->setContainer($this->container);
 
         $this->assertEquals($expected, $queryFetcher->get($param));
         $this->assertEquals($expectedAll, $queryFetcher->all());
@@ -206,21 +231,21 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array( // check that non-strict missing params take default value
                 'foo',
                 '1',
-                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),  'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),  'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array(),
                 array('bar' => '2', 'baz' => '4', 'arr' => array()),
             ),
             array( // pass Param in GET
                 'foo',
                 '42',
-                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('foo' => '42'),
                 array('bar' => '2', 'baz' => '4', 'arr' => array()),
             ),
             array( // check that invalid non-strict params take default value
                 'foo',
                 '1',
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('foo' => 'bar'),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
@@ -242,21 +267,21 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array( // nullable array with strict
                 'arr_null_strict',
                 array(),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array(),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array( // invalid array
                 'buzz',
                 array(1),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => 'invaliddata'),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array( // invalid array (multiple depth)
                 'buzz',
                 array(1),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(array(1))),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
@@ -264,14 +289,14 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array( // multiple array
                 'buzz',
                 array(2, 3, 4),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4)),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array( // multiple array with one invalid value
                 'buzz',
                 array(2, 1, 4),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 'invaliddata', 4)),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
@@ -293,49 +318,49 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             array(  // Array not provided in GET query
                 'boo',
                 array(),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4)),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query but as a scalar
                 'boo',
                 array(),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4), 'boo' => 'scalar'),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'boo',
                 array('1', 'foo', 5),
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'boozz',
                 null,
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'boozz',
                 5,
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5),
                 array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'moo',
                 'string',
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => 'string', 'i_cant_be_with_moo' => null),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => 'string', 'i_cant_be_with_moo' => null, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'moo' => 'string'),
                 array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
             ),
             array(  // QueryParam provided in GET query with valid values
                 'i_cant_be_with_moo',
                 5,
-                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),'moo' => null, 'i_cant_be_with_moo' => 5),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),'moo' => null, 'i_cant_be_with_moo' => 5, 'def_param' => '100 %'),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'i_cant_be_with_moo' => 5),
                 array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
             )
@@ -347,6 +372,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $queryFetcher = $this->getParamFetcher(array(), array('bar' => '2', 'baz' => '4','bub' => '10', 'arr' => array()));
         $queryFetcher->setController($this->controller);
+        $queryFetcher->setContainer($this->container);
 
         $runtimeParam = new RequestParam();
         $runtimeParam->name = "bub";
@@ -355,7 +381,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $queryFetcher->addParam($runtimeParam);
 
         $this->assertEquals(10, $queryFetcher->get('bub'));
-        $this->assertEquals(array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'bub' => 10, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => '', 'i_cant_be_with_moo' => null), $queryFetcher->all());
+        $this->assertEquals(array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'bub' => 10, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => '', 'i_cant_be_with_moo' => null, 'def_param' => '100 %'), $queryFetcher->all());
     }
 
     public function testValidatesConfiguredParamStrictly()
@@ -372,10 +398,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $queryFetcher = $this->getParamFetcher(array('boozz' => 354), array());
         $queryFetcher->setController($this->controller);
+        $queryFetcher->setContainer($this->container);
         $this->assertEquals(354, $queryFetcher->get('boozz', true));
 
         $queryFetcher = $this->getParamFetcher(array(), array());
         $queryFetcher->setController($this->controller);
+        $queryFetcher->setContainer($this->container);
         try {
             $queryFetcher->get('boozz', true);
             $this->fail('Fetching get() in strict mode with no default value did not throw an exception');
@@ -383,6 +411,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $queryFetcher = $this->getParamFetcher(array(), array());
         $queryFetcher->setController($this->controller);
+        $queryFetcher->setContainer($this->container);
         $this->assertNull($queryFetcher->get('biz', true));
     }
 
@@ -400,6 +429,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $queryFetcher = $this->getParamFetcher($query, $request);
         $queryFetcher->setController($this->controller);
+        $queryFetcher->setContainer($this->container);
 
         try {
             try {
@@ -487,6 +517,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push(new Request());
 
         $queryFetcher = new ParamFetcher($this->paramReader, $requestStack, $this->violationFormatter, $this->validator);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->get('none', '42');
     }
 
@@ -497,6 +528,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     public function testExceptionOnNoController()
     {
         $queryFetcher = $this->getParamFetcher();
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController(array());
         $queryFetcher->get('none', '42');
     }
@@ -508,6 +540,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     public function testExceptionOnNonController()
     {
         $queryFetcher = $this->getParamFetcher();
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController(array('foo', 'bar'));
         $queryFetcher->get('none', '42');
     }
@@ -519,7 +552,20 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     public function testExceptionOnNonConfiguredParameter()
     {
         $queryFetcher = $this->getParamFetcher();
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
+        $queryFetcher->get('none', '42');
+    }
+
+    /**
+     * @expectedException        LogicException
+     * @expectedExceptionMessage The ParamFetcher has been not initialized correctly. The container for parameter resolution is missing.
+     */
+    public function testExceptionOnNoContainer()
+    {
+        $queryFetcher = $this->getParamFetcher();
+        $queryFetcher->setController($this->controller);
+        $queryFetcher->setContainer(null);
         $queryFetcher->get('none', '42');
     }
 
@@ -573,6 +619,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
@@ -612,6 +659,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('expected', $queryFetcher->get('bizoo'));
     }
@@ -645,6 +693,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
@@ -678,6 +727,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
         $this->assertSame(array('foo' => array('b', 'a', 'r')), $queryFetcher->get('bizoo'));
     }
@@ -707,6 +757,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
@@ -731,6 +782,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
@@ -771,6 +823,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
+        $queryFetcher->setContainer($this->container);
         $queryFetcher->setController($this->controller);
 
         try {
