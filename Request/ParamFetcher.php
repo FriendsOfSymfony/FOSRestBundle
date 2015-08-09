@@ -344,7 +344,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     private function resolve($value)
     {
         if (is_array($value)) {
-            foreach($value as $key => $val) {
+            foreach ($value as $key => $val) {
                 $value[$key] = $this->resolve($val);
             }
 
