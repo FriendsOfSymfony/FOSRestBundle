@@ -158,12 +158,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $event->expects($this->never())
             ->method('setResponse');
 
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('templating'))
-            ->will($this->returnValue($this->templating));
-
-        $this->listener->onKernelView($event);
+        $this->assertEquals(array(), $this->listener->onKernelView($event));
     }
 
     /**
