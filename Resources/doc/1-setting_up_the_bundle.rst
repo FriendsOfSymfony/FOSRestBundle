@@ -43,7 +43,7 @@ This bundle needs a serializer to work correctly. In most cases,
 you'll need to enable a serializer or install one. This bundle tries
 the following (in the given order) to determine the serializer to use:
 
-#. The one you configured using ``fos_rest.services.serializer`` (if you did).
+#. The one you configured using ``fos_rest.service.serializer`` (if you did).
 #. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
 #. The `Symfony Serializer`_ if it's enabled (or any service called ``serializer``).
 
