@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use FOS\RestBundle\Util\FormatNegotiator;
+use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 

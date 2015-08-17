@@ -11,29 +11,11 @@
 
 namespace FOS\RestBundle\Util;
 
-use FOS\RestBundle\Controller\Annotations\Param;
-use Symfony\Component\Validator\ConstraintViolationInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
+use FOS\RestBundle\Validator\ViolationFormatterInterface as BaseViolationFormatterInterface;
 
-interface ViolationFormatterInterface
+/**
+ * @deprecated since version 1.7, to be removed in 2.0. Use {@link BaseViolationFormatterInterface} instead.
+ */
+interface ViolationFormatterInterface extends BaseViolationFormatterInterface
 {
-    /**
-     * Format a Param's ConstraintViolation into a string message
-     *
-     * @param Param                        $param
-     * @param ConstraintViolationInterface $violation
-     *
-     * @return string
-     */
-    public function format(Param $param, ConstraintViolationInterface $violation);
-
-    /**
-     * Format a Param's ConstraintViolationList into a string message
-     *
-     * @param Param                            $param
-     * @param ConstraintViolationListInterface $violationList
-     *
-     * @return string
-     */
-    public function formatList(Param $param, ConstraintViolationListInterface $violationList);
 }
