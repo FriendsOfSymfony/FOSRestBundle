@@ -13,11 +13,18 @@ namespace FOS\RestBundle\Controller\Annotations;
 
 /**
  * RouteResource annotation class.
+ *
  * @Annotation
  * @Target("CLASS")
  */
 class RouteResource
 {
-    /** @var string required */
+    /**
+     * @var string required
+     */
     public $resource;
+    /**
+     * @var bool
+     */
+    public $pluralize = true;
 }
