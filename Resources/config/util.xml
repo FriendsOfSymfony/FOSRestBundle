@@ -5,10 +5,10 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="fos_rest.format_negotiator" class="FOS\RestBundle\Util\FormatNegotiator" />
-        <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Util\FormatNegotiator" />
-        <service id="fos_rest.inflector.doctrine" class="FOS\RestBundle\Util\Inflector\DoctrineInflector" />
+        <service id="fos_rest.format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" />
+        <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" />
+        <service id="fos_rest.inflector.doctrine" class="FOS\RestBundle\Inflector\DoctrineInflector" />
         <service id="fos_rest.request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
-        <service id="fos_rest.violation_formatter" class="FOS\RestBundle\Util\ViolationFormatter" />
+        <service id="fos_rest.violation_formatter" class="FOS\RestBundle\Validator\ViolationFormatter" />
     </services>
 </container>

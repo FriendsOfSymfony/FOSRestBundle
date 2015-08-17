@@ -11,20 +11,13 @@
 
 namespace FOS\RestBundle\Util\Inflector;
 
-use Doctrine\Common\Inflector\Inflector;
+use FOS\RestBundle\Inflector\DoctrineInflector as BaseDoctrineInflector;
 
 /**
- * Inflector object using the Doctrine/Inflector
+ * {@inheritdoc}
  *
- * @author Mark Kazemier <Markkaz>
+ * @deprecated since version 1.7, to be removed in 2.0. Use {@link BaseDoctrineInflector} instead.
  */
-class DoctrineInflector implements InflectorInterface
+class DoctrineInflector extends BaseDoctrineInflector implements InflectorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function pluralize($word)
-    {
-        return Inflector::pluralize($word);
-    }
 }
