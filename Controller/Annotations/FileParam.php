@@ -12,16 +12,17 @@
 namespace FOS\RestBundle\Controller\Annotations;
 
 /**
- * Represents a parameter that must be present in POST data.
+ * Represents a file that must be present.
  *
  * @Annotation
  * @Target("METHOD")
  *
- * @author Jordi Boggiano <j.boggiano@seld.be>
- * @author Boris Guéry    <guery.b@gmail.com>
+ * @author Ener-Getick <egetick@gmail.com>
  */
-class RequestParam extends ScalarParam
+class FileParam extends Param
 {
     /** @var bool */
     public $strict = true;
+    /** @var bool */
+    public $image = false;
 }

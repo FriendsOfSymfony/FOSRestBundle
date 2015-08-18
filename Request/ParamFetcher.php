@@ -12,9 +12,13 @@
 namespace FOS\RestBundle\Request;
 
 use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\Validator\Constraint;
 use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\ScalarParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
+use FOS\RestBundle\Controller\Annotations\FileParam;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -22,8 +26,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Helper to validate parameters of the active request.
@@ -112,14 +118,14 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
         $params = $this->getParams();
 
         if (!array_key_exists($name, $params)) {
-            throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam configuration for parameter '%s'.", $name));
+            throw new \InvalidArgumentException(sprintf("No @QueryParam/@RequestParam/@FileParam configuration for parameter '%s'.", $name));
         }
 
         /** @var Param $config */
         $config = $params[$name];
         $nullable = $config->nullable;
         $default = $config->default;
-        $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
+        $paramType = $config instanceof QueryParam ? 'Query' : ($config instanceof FileParam ? 'File' : 'Request');
 
         if (null === $strict) {
             $strict = $config->strict;
@@ -129,11 +135,13 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
             $param = $this->requestStack->getCurrentRequest()->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
             $param = $this->requestStack->getCurrentRequest()->query->get($config->getKey(), $default);
+        } elseif ($config instanceof FileParam) {
+            $param = $this->requestStack->getCurrentRequest()->files->get($config->getKey(), $default);
         } else {
             $param = null;
         }
 
-        if ($config->array) {
+        if ($config instanceof ScalarParam && $config->array) {
             if (($default !== null || !$strict) || $nullable) {
                 $default = (array) $default;
             }
@@ -156,20 +164,22 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
             return $param;
         }
 
-        if (!is_scalar($param)) {
+        if ((!($config instanceof FileParam) && !is_scalar($param)) || ($config instanceof FileParam && !($param instanceof UploadedFile))) {
             if (!$nullable) {
                 if ($strict) {
-                    $problem = empty($param) ? 'empty' : 'not a scalar';
+                    if ($config instanceof FileParam) {
+                        $problem = 'not a file';
+                    } else {
+                        $problem = empty($param) ? 'empty' : 'not a scalar';
+                    }
 
                     throw new BadRequestHttpException(
                         sprintf('%s parameter "%s" is %s', $paramType, $name, $problem)
                     );
                 }
-
-                return $this->cleanParamWithRequirements($config, $param, $strict);
+            } else {
+                return $default;
             }
-
-            return $default;
         }
 
         return $this->cleanParamWithRequirements($config, $param, $strict);
@@ -188,7 +198,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     public function cleanParamWithRequirements(Param $config, $param, $strict)
     {
         $default = $config->default;
-        $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
+        $paramType = $config instanceof QueryParam ? 'Query' : ($config instanceof FileParam ? 'File' : 'Request');
 
         if (null !== $config->requirements && null === $this->validator) {
             throw new \RuntimeException(
@@ -202,42 +212,54 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
             return $param;
         }
 
-        $constraint = $config->requirements;
+        $constraints = array();
 
-        if (is_scalar($constraint)) {
-            if (is_array($param)) {
-                if ($strict) {
-                    throw new BadRequestHttpException(
-                        sprintf('%s parameter is an array', $paramType)
-                    );
+        if ($config->requirements instanceof Constraint) { // Complex requirements
+            $constraints[] = $config->requirements;
+        } elseif ($config instanceof FileParam) { // FileParam constraints
+            if (is_array($config->requirements)) {
+                if ($config->image) {
+                    $constraints[] = new Image($config->requirements);
+                } else {
+                    $constraints[] = new File($config->requirements);
                 }
-
-                return $default;
             }
-            $constraint = new Regex([
-                'pattern' => '#^(?:'.$config->requirements.')$#xsu',
-                'message' => sprintf(
-                    "%s parameter value '%s', does not match requirements '%s'",
-                    $paramType,
-                    $param,
-                    $config->requirements
-                ),
-            ]);
-        } elseif (is_array($constraint) && isset($constraint['rule']) && $constraint['error_message']) {
-            $constraint = new Regex([
-                'pattern' => '#^(?:'.$config->requirements['rule'].')$#xsu',
-                'message' => $config->requirements['error_message'],
-            ]);
-        }
+        } else { // Other params
+            if (is_scalar($config->requirements)) {
+                if (is_array($param)) {
+                    if ($strict) {
+                        throw new BadRequestHttpException(
+                            sprintf('%s parameter is an array', $paramType)
+                        );
+                    }
 
-        if (false === $config->allowBlank) {
-            $constraint = [new NotBlank(), $constraint];
+                    return $default;
+                }
+                $constraints[] = new Regex(array(
+                    'pattern' => '#^(?:'.$config->requirements.')$#xsu',
+                    'message' => sprintf(
+                        "%s parameter value '%s', does not match requirements '%s'",
+                        $paramType,
+                        $param,
+                        $config->requirements
+                    ),
+                ));
+            } elseif (is_array($config->requirements) && isset($config->requirements['rule']) && $config->requirements['error_message']) {
+                $constraints[] = new Regex(array(
+                    'pattern' => '#^(?:'.$config->requirements['rule'].')$#xsu',
+                    'message' => $config->requirements['error_message'],
+                ));
+            }
+
+            if ($config instanceof ScalarParam && false === $config->allowBlank) {
+                $constraints[] = new NotBlank();
+            }
         }
 
         if ($this->validator instanceof ValidatorInterface) {
-            $errors = $this->validator->validate($param, $constraint);
+            $errors = $this->validator->validate($param, $constraints);
         } else {
-            $errors = $this->validator->validateValue($param, $constraint);
+            $errors = $this->validator->validateValue($param, $constraints);
         }
 
         if (0 !== count($errors)) {

@@ -19,6 +19,6 @@ namespace FOS\RestBundle\Controller\Annotations;
  *
  * @author Alexander <iam.asm89@gmail.com>
  */
-class QueryParam extends Param
+class QueryParam extends ScalarParam
 {
 }

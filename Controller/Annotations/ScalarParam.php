@@ -12,16 +12,14 @@
 namespace FOS\RestBundle\Controller\Annotations;
 
 /**
- * Represents a parameter that must be present in POST data.
+ * {@inheritdoc}
  *
- * @Annotation
- * @Target("METHOD")
- *
- * @author Jordi Boggiano <j.boggiano@seld.be>
- * @author Boris Guéry    <guery.b@gmail.com>
+ * @author Ener-Getick <egetick@gmail.Com>
  */
-class RequestParam extends ScalarParam
+abstract class ScalarParam extends Param
 {
     /** @var bool */
-    public $strict = true;
+    public $array = false;
+    /** @var bool */
+    public $allowBlank = true;
 }

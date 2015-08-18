@@ -13,11 +13,14 @@ namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
+use FOS\RestBundle\Controller\Annotations\FileParam;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
@@ -153,6 +156,16 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $annotations['def_param']->default = '%default_parameter% %%';
         $annotations['def_param']->description = 'A default value with resolved container parameter';
 
+        $annotations['my_file'] = new FileParam();
+        $annotations['my_file']->name = 'my_file';
+        $annotations['my_file']->key = 'myFile';
+        $annotations['my_file']->requirements = array(
+            'maxSize' => '20'
+        );
+        $annotations['my_file']->default = null;
+        $annotations['my_file']->nullable = true;
+        $annotations['my_file']->description = 'A file';
+
         $this->paramReader
             ->expects($this->any())
             ->method('read')
@@ -176,14 +189,15 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      * @param array $query      Query parameters for the request.
      * @param array $request    Request parameters for the request.
      * @param array $attributes Attributes for the request.
+     * @param array $files      Files for the request.
      *
      * @return ParamFetcher
      */
-    public function getParamFetcher($query = [], $request = [], $attributes = null)
+    public function getParamFetcher($query = [], $request = [], $attributes = null, $files = [])
     {
         $attributes = $attributes ?: ['_controller' => __CLASS__.'::stubAction'];
 
-        $req = new Request($query, $request, $attributes);
+        $req = new Request($query, $request, $attributes, array(), $files);
 
         $reqStack = new RequestStack();
         $reqStack->push($req);
@@ -202,11 +216,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      * @param string   $expectedAll Expected query parameter values.
      * @param array    $query       Query parameters for the request.
      * @param array    $request     Request parameters for the request.
+     * @param array    $files       Files for the request.
      * @param \Closure $callback    Callback to be applied on the validator
      *
      * @dataProvider validatesConfiguredParamDataProvider
      */
-    public function testValidatesConfiguredParam($param, $expected, $expectedAll, $query, $request, \Closure $callback = null)
+    public function testValidatesConfiguredParam($param, $expected, $expectedAll, $query, $request, $files, \Closure $callback = null)
     {
         if (null !== $callback) {
             $self = $this;
@@ -214,7 +229,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             $callback($validator, $self);
         }
 
-        $queryFetcher = $this->getParamFetcher($query, $request);
+        $queryFetcher = $this->getParamFetcher($query, $request, null, $files);
         $queryFetcher->setController($this->controller);
         $queryFetcher->setContainer($this->container);
 
@@ -229,150 +244,175 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public static function validatesConfiguredParamDataProvider()
     {
-        return [
-            [ // check that non-strict missing params take default value
+        $validFile = new UploadedFile(realpath(__DIR__.'/../Fixtures/Files/valid_file.txt'), 'foofile');
+
+        return array(
+            array( // check that non-strict missing params take default value
                 'foo',
                 '1',
-                ['foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [],  'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                [],
-                ['bar' => '2', 'baz' => '4', 'arr' => []],
-            ],
-            [ // pass Param in GET
+                array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),  'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array(),
+                array('bar' => '2', 'baz' => '4', 'arr' => array()),
+                array(),
+            ),
+            array( // pass Param in GET
                 'foo',
                 '42',
-                ['foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['foo' => '42'],
-                ['bar' => '2', 'baz' => '4', 'arr' => []],
-            ],
-            [ // check that invalid non-strict params take default value
+                array('foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('foo' => '42'),
+                array('bar' => '2', 'baz' => '4', 'arr' => array()),
+                array(),
+            ),
+            array( // check that invalid non-strict params take default value
                 'foo',
                 '1',
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['foo' => 'bar'],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('foo' => 'bar'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
+                    $errors = new ConstraintViolationList(array(
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
+                    ));
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('bar', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'"]), null)
+                        ->with('bar', array(new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'"))), null)
                         ->will($self->returnValue($errors));
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('bar', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'"]), null)
+                        ->with('bar', array(new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'"))), null)
                         ->will($self->returnValue($errors));
 
                 },
-            ],
+            ),
             [ // nullable array with strict
                 'arr_null_strict',
-                [],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                [],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
+                array(),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array(),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
             ],
-            [ // invalid array
+            array( // invalid array
                 'buzz',
-                [1],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => 'invaliddata'],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [ // invalid array (multiple depth)
+                array(1),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => 'invaliddata'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
+            ),
+            array( // invalid array (multiple depth)
                 'buzz',
-                [1],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [[1]]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
+                array(1),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(array(1))),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
+            ),
 
             [ // multiple array
                 'buzz',
-                [2, 3, 4],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
+                array(2, 3, 4),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4)),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
             ],
-            [ // multiple array with one invalid value
+            array( // multiple array with one invalid value
                 'buzz',
-                [2, 1, 4],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 1, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 'invaliddata', 4]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
+                array(2, 1, 4),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 'invaliddata', 4)),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
+                    $errors = new ConstraintViolationList(array(
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
+                    ));
 
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('invaliddata', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'"]), null)
+                        ->with('invaliddata', array(new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'"))), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(6))
                         ->method('validateValue')
-                        ->with('invaliddata', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'"]), null)
+                        ->with('invaliddata', array(new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'"))), null)
                         ->will($self->returnValue($errors));
                 },
-            ],
+            ),
             [  // Array not provided in GET query
                 'boo',
-                [],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
+                array(),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4)),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
             ],
-            [  // QueryParam provided in GET query but as a scalar
+            array(  // QueryParam provided in GET query but as a scalar
                 'boo',
-                [],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => 'scalar'],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
+                array(),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4), 'boo' => 'scalar'),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
+            ),
+            array(  // QueryParam provided in GET query with valid values
                 'boo',
-                ['1', 'foo', 5],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
+                array('1', 'foo', 5),
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
+            ),
+            array(  // QueryParam provided in GET query with valid values
                 'boozz',
                 null,
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5)),
+                array('bar' => '1', 'baz' => '4', 'arr' => array()),
+                array(),
+            ),
+            array(  // QueryParam provided in GET query with valid values
                 'boozz',
                 5,
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5],
-                ['bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5),
+                array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
+                array(),
+            ),
+            array(  // QueryParam provided in GET query with valid values
                 'moo',
                 'string',
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => 'string', 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'moo' => 'string'],
-                ['bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => 'string', 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'moo' => 'string'),
+                array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
+                array(),
+            ),
+            array(  // QueryParam provided in GET query with valid values
                 'i_cant_be_with_moo',
                 5,
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'biz' => null, 'arr' => [], 'arr_null_strict' => [],'moo' => null, 'i_cant_be_with_moo' => 5, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'i_cant_be_with_moo' => 5],
-                ['bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => []],
-            ],
+                array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),'moo' => null, 'i_cant_be_with_moo' => 5, 'def_param' => '100 %', 'my_file' => null),
+                array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'i_cant_be_with_moo' => 5),
+                array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
+                array(),
+            ),
+            array(  // FileParam provided in POST query with valid values
+                'my_file',
+                $validFile,
+                array('foo' => '1', 'bar' => 'foo', 'baz' => 'bar', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => $validFile),
+                array(),
+                array('bar' => 'foo', 'baz' => 'bar', 'arr' => array()),
+                array('myFile' => $validFile),
+            )
 
-        ];
+        );
     }
 
     public function testValidatesAddParam()
     {
-        $queryFetcher = $this->getParamFetcher([], ['bar' => '2', 'baz' => '4','bub' => '10', 'arr' => []]);
+        $queryFetcher = $this->getParamFetcher(array(), array('bar' => '2', 'baz' => '4', 'bub' => '10', 'arr' => array()));
         $queryFetcher->setController($this->controller);
         $queryFetcher->setContainer($this->container);
 
@@ -383,7 +423,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $queryFetcher->addParam($runtimeParam);
 
         $this->assertEquals(10, $queryFetcher->get('bub'));
-        $this->assertEquals(['foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'bub' => 10, 'arr' => [], 'arr_null_strict' => [], 'moo' => '', 'i_cant_be_with_moo' => null, 'def_param' => '100 %'], $queryFetcher->all());
+        $this->assertEquals(array('foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'bub' => 10, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => '', 'i_cant_be_with_moo' => null, 'def_param' => '100 %', 'my_file' => null), $queryFetcher->all());
     }
 
     public function testValidatesConfiguredParamStrictly()
@@ -395,7 +435,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->validator->expects($this->once())
             ->method('validateValue')
-            ->with('354', $constraint);
+            ->with('354', array($constraint));
 
         $queryFetcher = $this->getParamFetcher(['boozz' => 354], []);
         $queryFetcher->setController($this->controller);
@@ -422,7 +462,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider exceptionOnValidatesFailureDataProvider
      */
-    public function testExceptionOnValidatesFailure($query, $request, $param, \Closure $callback = null)
+    public function testExceptionOnValidatesFailure($query, $request, $files, $param, \Closure $callback = null)
     {
         if (null !== $callback) {
             $self = $this;
@@ -430,24 +470,20 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             $callback($validator, $self);
         }
 
-        $queryFetcher = $this->getParamFetcher($query, $request);
+        $queryFetcher = $this->getParamFetcher($query, $request, null, $files);
         $queryFetcher->setController($this->controller);
         $queryFetcher->setContainer($this->container);
 
         try {
+            $queryFetcher->get($param, true);
+            $this->fail('Fetching get() in strict mode did not throw an exception');
+        } catch (HttpException $e) {
             try {
-                $queryFetcher->get($param, true);
-                $this->fail('Fetching get() in strict mode did not throw an exception');
+                $queryFetcher->all(true);
+                $this->fail('Fetching all() in strict mode did not throw an exception');
             } catch (HttpException $e) {
-                try {
-                    $queryFetcher->all(true);
-                    $this->fail('Fetching all() in strict mode did not throw an exception');
-                } catch (HttpException $e) {
-                    return;
-                }
+                return;
             }
-        } catch (\Exception $e) {
-            $this->fail('Fetching in strict mode did not throw an Symfony\Component\HttpKernel\Exception\HttpException');
         }
     }
 
@@ -456,58 +492,80 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public static function exceptionOnValidatesFailureDataProvider()
     {
-        return [
-            [ // test missing 'arr' request param of array type
-                ['boozz' => 'foo'],
-                ['bar' => 'foo', 'baz' => 'foo'],
+        $invalidFile =  new UploadedFile(realpath(__DIR__.'/../Fixtures/Files/big_file.txt'), 'bigFile');
+        return array(
+            array( // test missing 'arr' request param of array type
+                array('boozz' => 'foo'),
+                array('bar' => 'foo', 'baz' => 'foo'),
+                array(),
                 'arr',
-            ],
-            [ // test param present with an other param declared as incompatible
-                ['i_cant_be_with_moo' => 42, 'moo' => 'plop'],
-                [],
+            ),
+            array( // test param present with an other param declared as incompatible
+                array('i_cant_be_with_moo' => 42, 'moo' => 'plop'),
+                array(),
+                array(),
                 'i_cant_be_with_moo',
-            ],
-            [ // test missing strict param
-                [],
-                [],
+            ),
+            array( // test missing strict param
+                array(),
+                array(),
+                array(),
                 'bar',
-            ],
-            [ // test invalid strict param
-                [],
-                ['bar' => 'foo'],
+            ),
+            array( // test invalid strict param
+                array(),
+                array('bar' => 'foo'),
+                array(),
                 'bar',
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
+                    $errors = new ConstraintViolationList(array(
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
+                    ));
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('foo', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'"]), null)
+                        ->with('foo', array(new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'"))), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('foo', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'"]), null)
+                        ->with('foo', array(new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'"))), null)
                         ->will($self->returnValue($errors));
                 },
-            ],
-            [ // test missing strict param with lax requirement
-                [],
-                ['baz' => 'foo'],
+            ),
+            array( // test missing strict param with lax requirement
+                array(),
+                array('baz' => 'foo'),
+                array(),
                 'baz',
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
+                    $errors = new ConstraintViolationList(array(
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
+                    ));
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('foo', new Regex(['pattern' => '#^(?:\\d?)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'"]), null)
+                        ->with('foo', array(new Regex(array('pattern' => '#^(?:\\d?)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'"))), null)
                         ->will($self->returnValue($errors));
                 },
-            ],
-        ];
+            ),
+            array( // test missing strict param with lax requirement
+                array(),
+                array(),
+                array('myFile' => $invalidFile),
+                'my_file',
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) use ($invalidFile) {
+                    $errors = new ConstraintViolationList(array(
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
+                    ));
+
+                    $validator->expects($self->at(0))
+                        ->method('validateValue')
+                        ->with($invalidFile, array(new File(array('maxSize' => '20'))), null)
+                        ->will($self->returnValue($errors));
+                },
+            ),
+        );
     }
 
     /**
@@ -550,7 +608,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage No @QueryParam/@RequestParam configuration for parameter 'none'.
+     * @expectedExceptionMessage No @QueryParam/@RequestParam/@FileParam configuration for parameter 'none'.
      */
     public function testExceptionOnNonConfiguredParameter()
     {
@@ -584,14 +642,14 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstraintThrowExceptionInStrictMode()
     {
-        $errors = new ConstraintViolationList([
-            new ConstraintViolation('expected message 1', null, [], null, null, null),
-            new ConstraintViolation('expected message 2', null, [], null, null, null),
-        ]);
+        $errors = new ConstraintViolationList(array(
+            new ConstraintViolation('expected message 1', null, array(), null, null, null),
+            new ConstraintViolation('expected message 2', null, array(), null, null, null),
+        ));
 
         $this->validator->expects($this->once())
             ->method('validateValue')
-            ->with('foobar', $this->constraint)
+            ->with('foobar', array($this->constraint))
             ->will($this->returnValue($errors));
 
         $param = new QueryParam();
@@ -600,7 +658,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->requirements = $this->constraint;
         $param->description = 'A requirements param';
 
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
+        $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
         $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -640,8 +698,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->validator->expects($this->once())
             ->method('validateValue')
-            ->with('foobar', $this->constraint)
-            ->will($this->returnValue([$violation1]));
+            ->with('foobar', array($this->constraint))
+            ->will($this->returnValue(array($violation1)));
 
         $param = new QueryParam();
         $param->name = 'bizoo';
@@ -649,7 +707,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->default = 'expected';
         $param->description = 'A requirements param';
 
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
+        $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
         $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -674,8 +732,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $this->validator->expects($this->once())
             ->method('validateValue')
-            ->with('foobar', $this->constraint)
-            ->will($this->returnValue([]));
+            ->with('foobar', array($this->constraint))
+            ->will($this->returnValue(array()));
 
         $param = new QueryParam();
         $param->name = 'bizoo';
@@ -683,7 +741,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->default = 'not expected';
         $param->description = 'A requirements param';
 
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
+        $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
         $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -708,8 +766,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $this->validator->expects($this->once())
             ->method('validateValue')
-            ->with(['foo' => ['b', 'a', 'r']], $this->constraint)
-            ->will($this->returnValue([]));
+            ->with(array('foo' => array('b', 'a', 'r')), array($this->constraint))
+            ->will($this->returnValue(array()));
 
         $param = new QueryParam();
         $param->name = 'bizoo';
@@ -717,7 +775,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->default = 'not expected';
         $param->description = 'A requirements param';
 
-        $request = new Request(['bizoo' => ['foo' => ['b', 'a', 'r']]], [], ['_controller' => __CLASS__.'::stubAction']);
+        $request = new Request(array('bizoo' => array('foo' => array('b', 'a', 'r'))), array(), array('_controller' => __CLASS__.'::stubAction'));
         $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -747,7 +805,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->default = 'not expected';
         $param->description = 'A requirements param';
 
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
+        $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
         $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -772,7 +830,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->default = 'not expected';
         $param->description = 'A param without requirement nor validator';
 
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
+        $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
         $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -795,11 +853,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param = new QueryParam();
         $param->name = 'fero';
         $errorMessage = 'variable must be an integer';
-        $param->requirements = ['rule' => '\d+', 'error_message' => $errorMessage];
+        $param->requirements = array('rule' => '\d+', 'error_message' => $errorMessage);
         $param->description = 'integer value';
         $param->strict = true;
 
-        $request = new Request(['fero' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
+        $request = new Request(array('fero' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
         $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
@@ -819,7 +877,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->validator->expects($this->once())
             ->method('validateValue')
-            ->with('foobar', $constraint)
+            ->with('foobar', array($constraint))
             ->will($this->returnValue($errors));
 
         $requestStack = new RequestStack();
@@ -848,9 +906,9 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
         $validator->method('validateValue')
-            ->will($this->returnCallback(function ($param, $constraint) {
+            ->will($this->returnCallback(function ($param, $constraints) {
                 //Emulating behavior of a Symfony RegexValidator
-                return preg_match($constraint->pattern, $param) ? null : ['error'];
+                return preg_match($constraints[0]->pattern, $param) ? null : array('error');
             }));
 
         $request = new Request([$param->name => $input], [], ['_controller' => __CLASS__.'::stubAction']);
