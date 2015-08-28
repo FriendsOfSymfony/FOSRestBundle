@@ -16,7 +16,7 @@ use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatterInterface;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -52,10 +52,10 @@ class ParamFetcher implements ParamFetcherInterface
      * @param ValidatorInterface|LegacyValidatorInterface $validator
      * @param ViolationFormatterInterface $violationFormatter
      */
-    public function __construct(ParamReader $paramReader, Request $request, ViolationFormatterInterface $violationFormatter, $validator = null)
+    public function __construct(ParamReader $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
         $this->paramReader        = $paramReader;
-        $this->request            = $request;
+        $this->request            = $requestStack->getCurrentRequest();
         $this->violationFormatter = $violationFormatter;
         $this->validator          = $validator;
 
