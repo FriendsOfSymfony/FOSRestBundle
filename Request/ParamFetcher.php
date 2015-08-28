@@ -48,7 +48,7 @@ class ParamFetcher implements ParamFetcherInterface
      * Initializes fetcher.
      *
      * @param ParamReader                 $paramReader
-     * @param Request                     $request
+     * @param RequestStack                $requestStack
      * @param ValidatorInterface|LegacyValidatorInterface $validator
      * @param ViolationFormatterInterface $violationFormatter
      */
