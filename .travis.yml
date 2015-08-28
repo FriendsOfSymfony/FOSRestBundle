@@ -35,7 +35,7 @@ matrix:
     - php: 5.5
       env: SYMFONY_VERSION='2.7.*'
     - php: 5.5
-      env: SYMFONY_VERSION='2.8.*@dev'
+      env: SYMFONY_VERSION='2.8.*@dev symfony/security-acl:2.8.*@dev'
   allow_failures:
     - php: nightly
 
