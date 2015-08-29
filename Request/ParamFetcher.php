@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ParamFetcher implements ParamFetcherInterface
 {
     private $paramReader;
-    private $request;
+    private $requestStack;
     private $params;
     private $validator;
     private $violationFormatter;
@@ -55,7 +55,7 @@ class ParamFetcher implements ParamFetcherInterface
     public function __construct(ParamReader $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
         $this->paramReader        = $paramReader;
-        $this->request            = $requestStack->getCurrentRequest();
+        $this->requestStack       = $requestStack;
         $this->violationFormatter = $violationFormatter;
         $this->validator          = $validator;
 
@@ -124,9 +124,9 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config instanceof RequestParam) {
-            $param = $this->request->request->get($config->getKey(), $default);
+            $param = $this->requestStack->getCurrentRequest()->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
-            $param = $this->request->query->get($config->getKey(), $default);
+            $param = $this->requestStack->getCurrentRequest()->query->get($config->getKey(), $default);
         } else {
             $param = null;
         }
@@ -307,7 +307,7 @@ class ParamFetcher implements ParamFetcherInterface
         };
 
         foreach ($config->incompatibles as $incompatibleParam) {
-            $isIncompatiblePresent = $this->request->query->get(
+            $isIncompatiblePresent = $this->requestStack->getCurrentRequest()->query->get(
                 $incompatibleParam,
                 null
             ) !== null;
