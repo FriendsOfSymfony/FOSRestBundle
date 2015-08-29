@@ -202,26 +202,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
     {
         if (!empty($config['body_converter'])) {
             if (!empty($config['body_converter']['enabled'])) {
-                $parameter = new \ReflectionParameter(
-                    array(
-                        'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
-                        'supports',
-                    ),
-                    'configuration'
-                );
-
-                if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' === $parameter->getClass()->getName()) {
-                    $container->setParameter(
-                        'fos_rest.converter.request_body.class',
-                        'FOS\RestBundle\Request\RequestBodyParamConverter'
-                    );
-                } else {
-                    $container->setParameter(
-                        'fos_rest.converter.request_body.class',
-                        'FOS\RestBundle\Request\RequestBodyParamConverter20'
-                    );
-                }
-
                 $loader->load('request_body_param_converter.xml');
             }
 
@@ -241,7 +221,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if (!empty($config['view']['exception_wrapper_handler'])) {
-            $container->setParameter('fos_rest.view.exception_wrapper_handler', $config['view']['exception_wrapper_handler']);
+            $container->setAlias('fos_rest.view.exception_wrapper_handler', $config['view']['exception_wrapper_handler']);
         }
 
         if (!empty($config['view']['jsonp_handler'])) {
@@ -253,10 +233,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $container->setDefinition('fos_rest.view_handler', $handler);
 
             $container->setParameter('fos_rest.view_handler.jsonp.callback_param', $config['view']['jsonp_handler']['callback_param']);
-
-            if ('/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i' !== $config['view']['jsonp_handler']['callback_filter']) {
-                throw new \LogicException('As of 1.2.0, the "callback_filter" parameter is deprecated, and is not used anymore. For more information, read: https://github.com/FriendsOfSymfony/FOSRestBundle/pull/642.');
-            }
 
             if (empty($config['view']['mime_types']['jsonp'])) {
                 $config['view']['mime_types']['jsonp'] = $config['view']['jsonp_handler']['mime_type'];

@@ -340,41 +340,30 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testConfigLoad()
     {
         $controllerLoaderDefinitionName = 'fos_rest.routing.loader.controller';
-        $controllerLoaderClassParameter = 'fos_rest.routing.loader.controller.class';
         $controllerLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestRouteLoader';
 
         $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
-        $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
         $yamlCollectionLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader';
 
         $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
         $xmlCollectionLoaderClass           = 'FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader';
 
         $this->extension->load(array(), $this->container);
 
-        $this->assertEquals($controllerLoaderClass, $this->container->getParameter($controllerLoaderClassParameter));
         $this->assertTrue($this->container->hasDefinition($controllerLoaderDefinitionName));
-        $this->assertValidRestRouteLoader(
-            $this->container->getDefinition($controllerLoaderDefinitionName),
-            $controllerLoaderClassParameter
-        );
+        $this->assertValidRestRouteLoader( $this->container->getDefinition($controllerLoaderDefinitionName));
 
-        $this->assertEquals($yamlCollectionLoaderClass, $this->container->getParameter($yamlCollectionLoaderClassParameter));
         $this->assertTrue($this->container->hasDefinition($yamlCollectionLoaderDefinitionName));
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
-            $yamlCollectionLoaderClassParameter,
             $this->includeFormat,
             $this->formats,
             $this->defaultFormat
         );
 
-        $this->assertEquals($xmlCollectionLoaderClass, $this->container->getParameter($xmlCollectionLoaderClassParameter));
         $this->assertTrue($this->container->hasDefinition($xmlCollectionLoaderDefinitionName));
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
-            $xmlCollectionLoaderClassParameter,
             $this->includeFormat,
             $this->formats,
             $this->defaultFormat
@@ -395,20 +384,16 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
-        $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
-            $yamlCollectionLoaderClassParameter,
             false,
             $this->formats,
             $this->defaultFormat
         );
 
         $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
-            $xmlCollectionLoaderClassParameter,
             false,
             $this->formats,
             $this->defaultFormat
@@ -429,20 +414,16 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
-        $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
-            $yamlCollectionLoaderClassParameter,
             $this->includeFormat,
             $this->formats,
             'xml'
         );
 
         $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
-            $xmlCollectionLoaderClassParameter,
             $this->includeFormat,
             $this->formats,
             'xml'
@@ -466,10 +447,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
-        $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
-            $yamlCollectionLoaderClassParameter,
             $this->includeFormat,
             array(
                 'xml'  => false,
@@ -479,10 +458,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         );
 
         $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
-            $xmlCollectionLoaderClassParameter,
             $this->includeFormat,
             array(
                 'xml'  => false,
@@ -576,13 +553,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      * Assert that loader definition described properly.
      *
      * @param Definition $loader               loader definition
-     * @param string     $loaderClassParameter loader class parameter name
      */
-    private function assertValidRestRouteLoader(Definition $loader, $loaderClassParameter)
+    private function assertValidRestRouteLoader(Definition $loader)
     {
         $arguments = $loader->getArguments();
 
-        $this->assertEquals('%'.$loaderClassParameter.'%', $loader->getClass());
         $this->assertEquals(5, count($arguments));
         $this->assertEquals('service_container', (string) $arguments[0]);
         $this->assertEquals('file_locator', (string) $arguments[1]);
@@ -596,14 +571,12 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
      * Assert that loader definition described properly.
      *
      * @param Definition $loader               loader definition
-     * @param string     $loaderClassParameter loader class parameter name
      * @param bool       $includeFormat        whether or not the requested view format must be included in the route path
      * @param string[]   $formats              supported view formats
      * @param string     $defaultFormat        default view format
      */
     private function assertValidRestFileLoader(
         Definition $loader,
-        $loaderClassParameter,
         $includeFormat,
         array $formats,
         $defaultFormat
@@ -612,7 +585,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $processorRef = new Reference('fos_rest.routing.loader.processor');
         $arguments  = $loader->getArguments();
 
-        $this->assertEquals('%'.$loaderClassParameter.'%', $loader->getClass());
         $this->assertEquals(5, count($arguments));
         $this->assertEquals($locatorRef, $arguments[0]);
         $this->assertEquals($processorRef, $arguments[1]);
@@ -662,9 +634,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load(array(), $this->container);
 
         $this->assertTrue($this->container->has('fos_rest.view.exception_wrapper_handler'));
-
-        $exceptionWrapperHandler = $this->container->getDefinition('fos_rest.view.exception_wrapper_handler');
-        $this->assertEquals('%fos_rest.view.exception_wrapper_handler%', $exceptionWrapperHandler->getClass());
     }
 
     public function testSerializerExceptionNormalizer()
@@ -675,13 +644,5 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('fos_rest.serializer.exception_wrapper_normalizer');
         $this->assertEquals('FOS\RestBundle\Serializer\ExceptionWrapperNormalizer', $definition->getClass());
-    }
-
-    /**
-     * @expectedException \LogicException
-     */
-    public function testExceptionThrownIfCallbackFilterIsUsed()
-    {
-        $this->extension->load(array('fos_rest' => array('view' => array('jsonp_handler' => array('callback_filter' => 'foo')))), $this->container);
     }
 }

@@ -14,8 +14,7 @@ namespace FOS\RestBundle\Controller;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\HttpKernel\Exception\FlattenException as HttpFlattenException;
-use Symfony\Component\Debug\Exception\FlattenException as DebugFlattenException;
+use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,32 +48,16 @@ class ExceptionController extends ContainerAware
     /**
      * Converts an Exception to a Response.
      *
-     * @param Request                                    $request
-     * @param HttpFlattenException|DebugFlattenException $exception
-     * @param DebugLoggerInterface                       $logger
+     * @param Request               $request
+     * @param FlattenException      $exception
+     * @param DebugLoggerInterface  $logger
      *
      * @return Response
      *
      * @throws \InvalidArgumentException
      */
-    public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
+    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
-        /**
-         * Validates that the exception that is handled by the Exception controller is either a DebugFlattenException
-         * or HttpFlattenException.
-         * Type hinting has been removed due to a BC change in symfony/symfony 2.3.5.
-         *
-         * @see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/565
-         */
-        if (!$exception instanceof DebugFlattenException && !$exception instanceof HttpFlattenException) {
-            throw new \InvalidArgumentException(sprintf(
-                'ExceptionController::showAction can only accept some exceptions (%s, %s), "%s" given',
-                'Symfony\Component\HttpKernel\Exception\FlattenException',
-                'Symfony\Component\Debug\Exception\FlattenException',
-                get_class($exception)
-            ));
-        }
-
         $format = $this->getFormat($request, $request->getRequestFormat());
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined, while handling: ';

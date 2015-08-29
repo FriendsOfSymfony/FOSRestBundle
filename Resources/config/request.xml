@@ -4,23 +4,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-
-        <parameter key="fos_rest.request.param_fetcher.class">FOS\RestBundle\Request\ParamFetcher</parameter>
-        <parameter key="fos_rest.request.param_fetcher.reader.class">FOS\RestBundle\Request\ParamReader</parameter>
-
-    </parameters>
-
     <services>
 
-        <service id="fos_rest.request.param_fetcher" class="%fos_rest.request.param_fetcher.class%" scope="request">
+        <service id="fos_rest.request.param_fetcher" class="FOS\RestBundle\Request\ParamFetcher" scope="request">
             <argument type="service" id="fos_rest.request.param_fetcher.reader"/>
             <argument type="service" id="request"/>
             <argument type="service" id="fos_rest.violation_formatter"/>
             <argument type="service" id="validator" on-invalid="null"/>
         </service>
 
-        <service id="fos_rest.request.param_fetcher.reader" class="%fos_rest.request.param_fetcher.reader.class%">
+        <service id="fos_rest.request.param_fetcher.reader" class="FOS\RestBundle\Request\ParamReader">
             <argument type="service" id="annotation_reader"/>
         </service>
 

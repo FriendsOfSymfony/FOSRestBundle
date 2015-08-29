@@ -48,9 +48,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
             $this->warmUp(null);
         }
 
-        $path = method_exists($this->cache, 'getPath') ? $this->cache->getPath() : $this->cache;
-
-        return require $path;
+        return require $this->cache->getPath();
     }
 
     /**

@@ -4,18 +4,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="fos_rest.format_negotiator.class">FOS\RestBundle\Util\FormatNegotiator</parameter>
-        <parameter key="fos_rest.inflector.class">FOS\RestBundle\Util\Inflector\DoctrineInflector</parameter>
-        <parameter key="fos_rest.request_matcher.class">Symfony\Component\HttpFoundation\RequestMatcher</parameter>
-        <parameter key="fos_rest.violation_formatter.class">FOS\RestBundle\Util\ViolationFormatter</parameter>
-    </parameters>
-
     <services>
-        <service id="fos_rest.format_negotiator" class="%fos_rest.format_negotiator.class%" />
-        <service id="fos_rest.exception_format_negotiator" class="%fos_rest.format_negotiator.class%" />
-        <service id="fos_rest.inflector.doctrine" class="%fos_rest.inflector.class%" />
-        <service id="fos_rest.request_matcher" class="%fos_rest.request_matcher.class%" public="false" />
-        <service id="fos_rest.violation_formatter" class="%fos_rest.violation_formatter.class%" />
+        <service id="fos_rest.format_negotiator" class="FOS\RestBundle\Util\FormatNegotiator" />
+        <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Util\FormatNegotiator" />
+        <service id="fos_rest.inflector.doctrine" class="FOS\RestBundle\Util\Inflector\DoctrineInflector" />
+        <service id="fos_rest.request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
+        <service id="fos_rest.violation_formatter" class="FOS\RestBundle\Util\ViolationFormatter" />
     </services>
 </container>

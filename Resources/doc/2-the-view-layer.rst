@@ -126,11 +126,11 @@ a single key (default  ``'data'``), which will become the variable name of the
 object in the respective template. You can change this variable by calling
 the ``setTemplateVar()`` method on the view object.
 
-There are also two specialized ``View`` classes for handling redirects, one for
-redirecting to an URL called ``RedirectView`` and one to redirect to a route
-called ``RouteRedirectView``.  Note that whether these classes actually cause a
-redirect or not is determined by the ``force_redirects`` configuration option,
-which is only enabled for ``html`` by default (see below).
+There are also two specialized methods for redirect in the ``View`` classes.
+``View::createRedirect`` redirects to an URL called ``RedirectView`` and
+``View::createRouteRedirect`` redirects to a route. Note that whether these
+classes actually cause a redirect or not is determined by the ``force_redirects``
+configuration option, which is only enabled for ``html`` by default (see below).
 
 There are several more methods on the ``View`` class, here is a list of all
 the important ones for configuring the view:
@@ -222,7 +222,7 @@ Update the ``config.yml``:
     fos_rest:
         view:
             # ...
-            exception_wrapper_handler: My\Bundle\Handler\MyExceptionWrapperHandler
+            exception_wrapper_handler: my_exception_wrapper_handler_service
             # ...
 
 Data Transformation

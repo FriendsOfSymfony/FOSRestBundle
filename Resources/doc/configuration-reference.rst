@@ -73,7 +73,6 @@ Full default configuration
             serialize_null:       false
             jsonp_handler:
                 callback_param:       callback
-                callback_filter:      '/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i'
                 mime_type:            application/javascript+jsonp
         exception:
             enabled:              false

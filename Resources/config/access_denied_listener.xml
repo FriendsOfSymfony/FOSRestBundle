@@ -6,7 +6,6 @@
 
     <parameters>
 
-        <parameter key="fos_rest.access_denied_listener.class">FOS\RestBundle\EventListener\AccessDeniedListener</parameter>
         <parameter key="fos_rest.access_denied_listener.formats" type="collection"/>
         <parameter key="fos_rest.access_denied_listener.unauthorized_challenge" type="string" />
 
@@ -14,7 +13,7 @@
 
     <services>
 
-        <service id="fos_rest.access_denied_listener" class="%fos_rest.access_denied_listener.class%">
+        <service id="fos_rest.access_denied_listener" class="FOS\RestBundle\EventListener\AccessDeniedListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
             <argument>%fos_rest.access_denied_listener.formats%</argument>
