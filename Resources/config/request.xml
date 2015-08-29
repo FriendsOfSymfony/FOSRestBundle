@@ -6,7 +6,7 @@
 
     <services>
 
-        <service id="fos_rest.request.param_fetcher" class="FOS\RestBundle\Request\ParamFetcher" scope="request">
+        <service id="fos_rest.request.param_fetcher" class="FOS\RestBundle\Request\ParamFetcher">
             <argument type="service" id="fos_rest.request.param_fetcher.reader"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="fos_rest.violation_formatter"/>
