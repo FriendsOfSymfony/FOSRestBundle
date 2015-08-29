@@ -15,8 +15,7 @@ use FOS\RestBundle\Util\StopFormatListenerException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use FOS\RestBundle\Util\FormatNegotiatorInterface;
-use FOS\RestBundle\Util\MediaTypeNegotiatorInterface;
+use Negotiation\FormatNegotiatorInterface;
 
 /**
  * This listener handles Accept header format negotiations.
@@ -51,14 +50,12 @@ class FormatListener
 
             $format = $request->getRequestFormat(null);
             if (null === $format) {
-                if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
-                    $mediaType = $this->formatNegotiator->getBestMediaType($request);
-                    if (null !== $mediaType) {
-                        $request->attributes->set('media_type', $mediaType);
-                        $format = $request->getFormat($mediaType);
-                    }
-                } else {
-                    $format = $this->formatNegotiator->getBestFormat($request);
+                $accept = $this->formatNegotiator->getBest('');
+                if (null !== $accept && 0.0 < $accept->getQuality() &&
+                    null !== $mimeTypeFormat = $this->formatNegotiator->getFormat($accept->getValue())
+                ) {
+                    $request->attributes->set('media_type', $accept->getValue());
+                    $format = $mimeTypeFormat;
                 }
             }
 

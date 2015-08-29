@@ -26,7 +26,7 @@
         "symfony/framework-bundle":       "^2.7",
         "symfony/routing":                "^2.7",
         "doctrine/inflector":             "^1.0",
-        "willdurand/negotiation":         "^1.2",
+        "willdurand/negotiation":         "^1.3",
         "willdurand/jsonp-callback-validator": "^1.0"
     },
 
