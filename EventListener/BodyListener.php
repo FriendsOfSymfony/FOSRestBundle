@@ -54,18 +54,6 @@ class BodyListener
     }
 
     /**
-     * Sets the array normalizer.
-     *
-     * @param ArrayNormalizerInterface $arrayNormalizer
-     *
-     * @deprecated To be removed in FOSRestBundle 2.0.0 (constructor injection is used instead).
-     */
-    public function setArrayNormalizer(ArrayNormalizerInterface $arrayNormalizer)
-    {
-        $this->arrayNormalizer = $arrayNormalizer;
-    }
-
-    /**
      * Sets the fallback format if there's no Content-Type in the request.
      *
      * @param string $defaultFormat

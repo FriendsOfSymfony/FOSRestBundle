@@ -26,52 +26,38 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class DisableCSRFExtension extends AbstractTypeExtension
 {
     /**
-     * @var SecurityContextInterface|TokenStorageInterface
+     * @var TokenStorageInterface
      */
     private $tokenStorage;
+    /**
+     * @var string
+     */
     private $role;
+    /**
+     * @var AuthorizationCheckerInterface
+     */
     private $authorizationChecker;
 
-    public function __construct($tokenStorage, $role, $authorizationChecker = null)
+    public function __construct(TokenStorageInterface $tokenStorage, $role, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->tokenStorage = $tokenStorage;
         $this->role = $role;
         $this->authorizationChecker = $authorizationChecker;
-
-        if (!$tokenStorage instanceof TokenStorageInterface && !$tokenStorage instanceof SecurityContextInterface) {
-            throw new \InvalidArgumentException('Argument 1 should be an instance of Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface or Symfony\Component\Security\Core\SecurityContextInterface');
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        if ($this->authorizationChecker instanceof AuthorizationCheckerInterface) {
-            if (!$this->tokenStorage->getToken()) {
-                return;
-            }
+        if (!$this->tokenStorage->getToken()) {
+            return;
+        }
 
-            if (!$this->authorizationChecker->isGranted($this->role)) {
-                return;
-            }
-        } else {
-            if (!$this->tokenStorage->getToken()) {
-                return;
-            }
-
-            if (!$this->tokenStorage->isGranted($this->role)) {
-                return;
-            }
+        if (!$this->authorizationChecker->isGranted($this->role)) {
+            return;
         }
 
         $resolver->setDefaults(array(
             'csrf_protection' => false,
         ));
-    }
-
-    // BC for < 2.7
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $this->configureOptions($resolver);
     }
 
     public function getExtendedType()

@@ -6,7 +6,7 @@
 
     <services>
 
-        <service id="fos_rest.converter.request_body" class="%fos_rest.converter.request_body.class%">
+        <service id="fos_rest.converter.request_body" class="FOS\RestBundle\Request\RequestBodyParamConverter">
             <argument type="service" id="fos_rest.serializer"/>
             <argument>%fos_rest.serializer.exclusion_strategy.groups%</argument>
             <argument>%fos_rest.serializer.exclusion_strategy.version%</argument>

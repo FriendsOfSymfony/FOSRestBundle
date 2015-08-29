@@ -212,10 +212,7 @@ class RestActionReader
                 $defaults     = array_merge($defaults, $annotation->getDefaults());
                 $host = $annotation->getHost();
                 $schemes = $annotation->getSchemes();
-               //TODO remove checks after Symfony requirement is bumped to 2.4
-                if (method_exists($annotation, 'getCondition')) {
-                    $condition = $annotation->getCondition();
-                }
+                $condition = $annotation->getCondition();
 
                 if ($this->includeFormat === true) {
                     $path .= '.{_format}';

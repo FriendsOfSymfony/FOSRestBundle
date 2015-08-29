@@ -125,13 +125,6 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testAnnotatedConditionalUsersFixture()
     {
-
-        if (!method_exists('Symfony\Component\Routing\Annotation\Route','setCondition')) {
-            $this->markTestSkipped('The "Routing" component have a version <2.4');
-
-            return;
-        }
-
         $collection     = $this->loadFromControllerFixture('AnnotatedConditionalUsersController');
         $etalonRoutes   = $this->loadEtalonRoutesInfo('annotated_conditional_controller.yml');
 
