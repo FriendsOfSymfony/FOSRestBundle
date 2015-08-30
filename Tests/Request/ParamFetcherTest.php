@@ -674,7 +674,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-		$requestStack = new RequestStack();
+        $requestStack = new RequestStack();
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
@@ -703,7 +703,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-		$requestStack = new RequestStack();
+        $requestStack = new RequestStack();
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter);
@@ -727,7 +727,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-		$requestStack = new RequestStack();
+        $requestStack = new RequestStack();
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter);
@@ -767,7 +767,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('foobar', $constraint)
             ->will($this->returnValue($errors));
 
-		$requestStack = new RequestStack();
+        $requestStack = new RequestStack();
         $requestStack->push($request);
 
         $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
