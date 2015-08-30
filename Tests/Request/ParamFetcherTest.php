@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -161,7 +162,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $req = new Request($query, $request, $attributes);
 
-        return new ParamFetcher($this->paramReader, $req, $this->violationFormatter, $this->validator);
+        $reqStack = new RequestStack();
+        $reqStack->push($req);
+
+        return new ParamFetcher($this->paramReader, $reqStack, $this->violationFormatter, $this->validator);
     }
 
     /**
@@ -479,7 +483,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionOnRequestWithoutController()
     {
-        $queryFetcher = new ParamFetcher($this->paramReader, new Request(), $this->violationFormatter, $this->validator);
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+
+        $queryFetcher = new ParamFetcher($this->paramReader, $requestStack, $this->violationFormatter, $this->validator);
         $queryFetcher->get('none', '42');
     }
 
@@ -562,7 +569,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             "foobar"
         );
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
@@ -598,7 +608,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('expected', $queryFetcher->get('bizoo'));
     }
@@ -628,7 +641,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
@@ -658,7 +674,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertSame(array('foo' => array('b', 'a', 'r')), $queryFetcher->get('bizoo'));
     }
@@ -684,7 +703,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
@@ -705,7 +727,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
@@ -742,7 +767,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('foobar', $constraint)
             ->will($this->returnValue($errors));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
 
         try {

@@ -16,7 +16,7 @@ use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatterInterface;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ParamFetcher implements ParamFetcherInterface
 {
     private $paramReader;
-    private $request;
+    private $requestStack;
     private $params;
     private $validator;
     private $violationFormatter;
@@ -48,14 +48,14 @@ class ParamFetcher implements ParamFetcherInterface
      * Initializes fetcher.
      *
      * @param ParamReader                 $paramReader
-     * @param Request                     $request
+     * @param RequestStack                $requestStack
      * @param ValidatorInterface|LegacyValidatorInterface $validator
      * @param ViolationFormatterInterface $violationFormatter
      */
-    public function __construct(ParamReader $paramReader, Request $request, ViolationFormatterInterface $violationFormatter, $validator = null)
+    public function __construct(ParamReader $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
         $this->paramReader        = $paramReader;
-        $this->request            = $request;
+        $this->requestStack       = $requestStack;
         $this->violationFormatter = $violationFormatter;
         $this->validator          = $validator;
 
@@ -124,9 +124,9 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config instanceof RequestParam) {
-            $param = $this->request->request->get($config->getKey(), $default);
+            $param = $this->requestStack->getCurrentRequest()->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
-            $param = $this->request->query->get($config->getKey(), $default);
+            $param = $this->requestStack->getCurrentRequest()->query->get($config->getKey(), $default);
         } else {
             $param = null;
         }
@@ -307,7 +307,7 @@ class ParamFetcher implements ParamFetcherInterface
         };
 
         foreach ($config->incompatibles as $incompatibleParam) {
-            $isIncompatiblePresent = $this->request->query->get(
+            $isIncompatiblePresent = $this->requestStack->getCurrentRequest()->query->get(
                 $incompatibleParam,
                 null
             ) !== null;
