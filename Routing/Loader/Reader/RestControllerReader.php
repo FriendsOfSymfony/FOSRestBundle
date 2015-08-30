@@ -75,6 +75,7 @@ class RestControllerReader
         // read route-resource annotation
         if ($annotation = $this->readClassAnnotation($reflectionClass, 'RouteResource')) {
             $resource = explode('_', $annotation->resource);
+            $this->actionReader->setPluralize($annotation->pluralize);
         } elseif ($reflectionClass->implementsInterface('FOS\RestBundle\Routing\ClassResourceInterface')) {
             $resource  = preg_split(
                 '/([A-Z][^A-Z]*)Controller/', $reflectionClass->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
@@ -96,6 +97,7 @@ class RestControllerReader
 
         $this->actionReader->setRoutePrefix(null);
         $this->actionReader->setNamePrefix(null);
+        $this->actionReader->setPluralize(null);
         $this->actionReader->setParents(array());
 
         return $collection;

@@ -34,6 +34,7 @@ class RestActionReader
     private $includeFormat;
     private $routePrefix;
     private $namePrefix;
+    private $pluralize;
     private $parents = array();
     private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options');
     private $availableConventionalActions = array('new', 'edit', 'remove');
@@ -94,6 +95,26 @@ class RestActionReader
     public function getNamePrefix()
     {
         return $this->namePrefix;
+    }
+
+    /**
+     * Sets pluralize.
+     *
+     * @param bool|null $pluralize Specify if resource name must be pluralized
+     */
+    public function setPluralize($pluralize)
+    {
+        $this->pluralize = $pluralize;
+    }
+
+    /**
+     * Returns pluralize.
+     *
+     * @return bool|null
+     */
+    public function getPluralize()
+    {
+        return $this->pluralize;
     }
 
     /**
@@ -308,9 +329,9 @@ class RestActionReader
         }
 
         if ($isCollection && !empty($resource)) {
-            $resourcePluralized = $this->inflector->pluralize(end($resource));
+            $resourcePluralized = $this->generateResourceName(end($resource));
             $isInflectable = ($resourcePluralized != $resource[count($resource) - 1]);
-            $resource[count($resource)-1] = $resourcePluralized;
+            $resource[count($resource) - 1] = $resourcePluralized;
         }
 
         $resources = array_merge($resource, $resources);
@@ -363,6 +384,22 @@ class RestActionReader
     }
 
     /**
+     * Generates final resource name.
+     *
+     * @param string|bool $resource
+     *
+     * @return string
+     */
+    private function generateResourceName($resource)
+    {
+        if (false === $this->pluralize) {
+            return $resource;
+        }
+
+        return $this->inflector->pluralize($resource);
+    }
+
+    /**
      * Generates route name from resources list.
      *
      * @param string[] $resources
@@ -405,7 +442,7 @@ class RestActionReader
             if (isset($arguments[$i])) {
                 if (null !== $resource) {
                     $urlParts[] =
-                        strtolower($this->inflector->pluralize($resource))
+                        strtolower($this->generateResourceName($resource))
                         .'/{'.$arguments[$i]->getName().'}';
                 } else {
                     $urlParts[] = '{'.$arguments[$i]->getName().'}';
@@ -415,7 +452,7 @@ class RestActionReader
                     || 'new' === $httpMethod
                     || 'post' === $httpMethod
                 ) {
-                    $urlParts[] = $this->inflector->pluralize(strtolower($resource));
+                    $urlParts[] = $this->generateResourceName(strtolower($resource));
                 } else {
                     $urlParts[] = strtolower($resource);
                 }
@@ -519,7 +556,6 @@ class RestActionReader
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
         if ($annotations_new = $this->annotationReader->getMethodAnnotations($reflectionMethod)) {
-
             foreach ($annotations_new as $annotation) {
                 if ($annotation instanceof $annotationClass) {
                     $annotations[] = $annotation;

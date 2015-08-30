@@ -120,6 +120,19 @@ class RestRouteLoaderTest extends LoaderTest
         }
     }
 
+    public function testDisabledPluralization()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedNonPluralizedArticleController');
+
+        $this->assertEquals('/article.{_format}', $collection->get('cget_article')->getPath());
+
+        $this->assertEquals('/article/{slug}.{_format}', $collection->get('get_article')->getPath());
+
+        $this->assertEquals('/article/{slug}/comment.{_format}', $collection->get('cget_article_comment')->getPath());
+
+        $this->assertEquals('/article/{slug}/comment/{comment}.{_format}', $collection->get('get_article_comment')->getPath());
+    }
+
     /**
      * Test that annotated UsersController RESTful class gets parsed correctly with condition option (expression-language).
      */
