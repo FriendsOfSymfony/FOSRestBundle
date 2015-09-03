@@ -140,3 +140,33 @@ request attributes
 
             return array('articles' => $articles, 'page' => $page);
         }
+
+Container parameters can be used in requirements and default field.
+
+.. note::
+
+    The percent sign (%) in ``requirements`` and ``default`` field, must be
+    escaped with another percent sign
+
+
+.. code-block:: php
+
+    <?php
+
+    class FooController extends Controller
+    {
+        /**
+         * Use the "locale" parameter as the default value
+         * @QueryParam(name="language", default="%locale%")
+         * 
+         * The "baz" container parameter is used here as requirements
+         * Can be used for complex or auto-generated regex
+         * @QueryParam(name="foo", requirements="%baz%")
+         *
+         * The percent sign must be escaped
+         * @QueryParam(name="val", default="75 %%")
+         */
+        public function getArticlesAction(ParamFetcher $paramFetcher)
+        {
+            ...
+        }
