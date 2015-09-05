@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\EventListener\FormatListener;
-use Negotiation\AcceptHeader;
+use Negotiation\Accept;
 
 /**
  * Request listener test
@@ -44,7 +44,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $formatNegotiator->expects($this->once())
             ->method('getBest')
-            ->willReturn(new AcceptHeader('text/xml', 1));
+            ->willReturn(new Accept('text/xml; q=1'));
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -134,7 +134,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $formatNegotiator->expects($this->any())
             ->method('getBest')
-            ->willReturn(new AcceptHeader('text/xml', 1));
+            ->willReturn(new Accept('text/xml; q=1'));
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -178,7 +178,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator->expects($this->any())
-            ->method('getBestMediaType')
+            ->method('getBest')
             ->will($this->returnValue('application/json'));
 
         $listener = new FormatListener($formatNegotiator);

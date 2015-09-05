@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Tests\Util;
+namespace FOS\RestBundle\Tests\Validator;
 
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;

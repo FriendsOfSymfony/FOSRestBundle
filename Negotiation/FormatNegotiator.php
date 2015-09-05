@@ -13,11 +13,10 @@ namespace FOS\RestBundle\Negotiation;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
-use FOS\RestBundle\Util\MediaTypeNegotiatorInterface;
-use Negotiation\FormatNegotiator as BaseFormatNegotiator;
-use Negotiation\AcceptHeader;
+use Negotiation\Negotiator as BaseNegotiator;
+use Negotiation\Accept;
 
-class FormatNegotiator extends BaseFormatNegotiator
+class FormatNegotiator extends BaseNegotiator
 {
     /**
      * @var array
@@ -46,11 +45,8 @@ class FormatNegotiator extends BaseFormatNegotiator
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      * The best format is also determined in function of the bundle configuration.
-     *
-     * @param string $header     If empty replaced by the current request Accept header
-     * @param array  $priorities If empty replaced by the bundle configuration
      */
     public function getBest($header, array $priorities = array())
     {
@@ -67,12 +63,13 @@ class FormatNegotiator extends BaseFormatNegotiator
             }
 
             $options = &$elements[1]; // Do not reallow memory for this variable
+
             if (!empty($options['stop'])) {
                 throw new StopFormatListenerException('Stopped format listener');
             }
             if (empty($options['priorities']) && empty($priorities)) {
                 if (!empty($options['fallback_format'])) {
-                    return $request->getMimeType($options['fallback_format']);
+                    return new Accept($request->getMimeType($options['fallback_format']));
                 }
                 continue;
             }
@@ -103,35 +100,14 @@ class FormatNegotiator extends BaseFormatNegotiator
             if (isset($options['fallback_format']) && false !== $options['fallback_format']) {
                 // if false === fallback_format then we fail here instead of considering more rules
                 if (false === $options['fallback_format']) {
-                    return null;
+                    return;
                 }
 
                 // stop looking at rules since we have a fallback defined
-                return new AcceptHeader(
-                    $request->getMimeType($options['fallback_format']),
-                    1 // Default quality
-                );
+                return new Accept($request->getMimeType($options['fallback_format']));
             }
         }
 
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBestFormat($acceptHeader = '', array $priorities = array())
-    {
-        $mimeTypes = $this->normalizePriorities($priorities);
-
-        if (null !== $accept = $this->getBest($acceptHeader, $mimeTypes)) {
-            if (0.0 < $accept->getQuality() &&
-                null !== $format = $this->getFormat($accept->getValue())
-            ) {
-                return $format;
-            }
-        }
-
-        return null;
+        return;
     }
 }
