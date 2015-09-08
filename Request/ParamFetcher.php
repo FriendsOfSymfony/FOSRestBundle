@@ -213,7 +213,7 @@ class ParamFetcher implements ParamFetcherInterface
                 return $default;
             }
             $constraint = new Regex(array(
-                'pattern' => '#^'.$config->requirements.'$#xsu',
+                'pattern' => '#^(?:'.$config->requirements.')$#xsu',
                 'message' => sprintf(
                     "%s parameter value '%s', does not match requirements '%s'",
                     $paramType,
@@ -223,7 +223,7 @@ class ParamFetcher implements ParamFetcherInterface
             ));
         } elseif (is_array($constraint) && isset($constraint["rule"]) && $constraint["error_message"]) {
             $constraint = new Regex(array(
-                'pattern' => '#^'.$config->requirements["rule"].'$#xsu',
+                'pattern' => '#^(?:'.$config->requirements["rule"].')$#xsu',
                 'message' => $config->requirements["error_message"]
             ));
         }
