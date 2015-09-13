@@ -53,7 +53,7 @@ class FormatListener
             if (null === $format) {
                 if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
                     $mediaType = $this->formatNegotiator->getBestMediaType($request);
-                    if ($mediaType) {
+                    if (null !== $mediaType) {
                         $request->attributes->set('media_type', $mediaType);
                         $format = $request->getFormat($mediaType);
                     }
