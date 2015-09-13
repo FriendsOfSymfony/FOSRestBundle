@@ -122,8 +122,8 @@ class ExceptionController extends ContainerAware
     /**
      * Extracts the exception message.
      *
-     * @param HttpFlattenException|DebugFlattenException $exception
-     * @param array                                      $exceptionMap
+     * @param FlattenException $exception
+     * @param array            $exceptionMap
      *
      * @return int|false
      */
@@ -150,7 +150,7 @@ class ExceptionController extends ContainerAware
     /**
      * Extracts the exception message.
      *
-     * @param HttpFlattenException|DebugFlattenException $exception
+     * @param FlattenException $exception
      *
      * @return string Message
      */
@@ -171,7 +171,7 @@ class ExceptionController extends ContainerAware
     /**
      * Determines the status code to use for the response.
      *
-     * @param HttpFlattenException|DebugFlattenException $exception
+     * @param FlattenException $exception
      *
      * @return int
      */
@@ -210,12 +210,12 @@ class ExceptionController extends ContainerAware
      * Overwrite it in a custom ExceptionController class to add additionally parameters
      * that should be passed to the view layer.
      *
-     * @param ViewHandler                                $viewHandler
-     * @param string                                     $currentContent
-     * @param int                                        $code
-     * @param HttpFlattenException|DebugFlattenException $exception
-     * @param DebugLoggerInterface                       $logger
-     * @param string                                     $format
+     * @param ViewHandler          $viewHandler
+     * @param string               $currentContent
+     * @param int                  $code
+     * @param FlattenException     $exception
+     * @param DebugLoggerInterface $logger
+     * @param string               $format
      *
      * @return array
      */

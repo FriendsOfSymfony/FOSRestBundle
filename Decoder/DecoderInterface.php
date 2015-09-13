@@ -23,7 +23,7 @@ interface DecoderInterface
      *
      * @param string $data
      *
-     * @return array|bool False in case the content could not be decoded, else an array
+     * @return mixed False in case the content could not be decoded
      */
     public function decode($data);
 }

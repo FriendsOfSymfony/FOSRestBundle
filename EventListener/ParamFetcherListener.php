@@ -77,7 +77,7 @@ class ParamFetcherListener
     /**
      * Determines which attribute the ParamFetcher should be injected as.
      *
-     * @param array $controller The controller action as an "array" callable.
+     * @param callable $controller The controller action as an "array" callable.
      *
      * @return string
      */
