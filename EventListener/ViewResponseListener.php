@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
-use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Util\Codes;
 
@@ -80,6 +79,7 @@ class ViewResponseListener extends TemplateListener
         }
 
         if ($configuration) {
+            $context = $view->getSerializationContext();
             if ($configuration->getTemplateVar()) {
                 $view->setTemplateVar($configuration->getTemplateVar());
             }
@@ -87,14 +87,10 @@ class ViewResponseListener extends TemplateListener
                 $view->setStatusCode($configuration->getStatusCode());
             }
             if ($configuration->getSerializerGroups() && !$customViewDefined) {
-                $context = $view->getSerializationContext() ?: new SerializationContext();
-                $context->setGroups($configuration->getSerializerGroups());
-                $view->setSerializationContext($context);
+                $context->addGroups($configuration->getSerializerGroups());
             }
             if ($configuration->getSerializerEnableMaxDepthChecks()) {
-                $context = $view->getSerializationContext() ?: new SerializationContext();
-                $context->enableMaxDepthChecks();
-                $view->setSerializationContext($context);
+                $context->setMaxDepth(0);
             }
             $populateDefaultVars = $configuration->isPopulateDefaultVars();
         } else {

@@ -118,6 +118,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $noContentCode)
     {
         $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $noContentCode, false, $forceRedirects);
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -144,6 +145,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->setupMockedSerializer($container, $testValue);
 
         $viewHandler = new ViewHandler(array('json' => false));
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $viewHandler->setContainer($container);
 
         $view = new View();
@@ -213,6 +215,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         //test
         $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Codes::HTTP_I_AM_A_TEAPOT);
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $viewHandler->setContainer($container);
 
         $form = $this->getMock('Symfony\\Component\\Form\\Form', array('createView', 'getData', 'isValid', 'isSubmitted'), array(), '', false);
@@ -241,6 +244,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false)
     {
         $viewHandler = new ViewHandler(array('html' => true, 'json' => false));
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         if ('html' === $format) {
@@ -344,6 +348,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
 
         $viewHandler->setContainer($container);
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
         $serializer = $this->getMockBuilder('JMS\Serializer\Serializer')
             ->setMethods(array('serialize', 'setExclusionStrategy'))
@@ -357,9 +362,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 ->will($this->returnValue(json_encode(null)));
 
             $container
-                ->expects($this->once())
+                ->expects($this->any())
                 ->method('get')
-                ->with('fos_rest.serializer')
+                ->with($this->equalTo('fos_rest.serializer'))
                 ->will($this->returnValue($serializer));
         } else {
             $serializer
@@ -399,7 +404,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $view = new View();
         $context = $contextMethod->invoke($viewHandler, $view);
-        $this->assertEquals($expected, $context->shouldSerializeNull());
+        $this->assertEquals($expected, $context->getSerializeNull());
     }
 
     public static function createSerializeNullDataValuesDataProvider()
@@ -461,6 +466,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $viewHandler = new ViewHandler(array());
         $viewHandler->registerHandler('html', ($callback = function () { return 'foo'; }));
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container
@@ -482,6 +488,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandleNotSupported()
     {
         $viewHandler = new ViewHandler(array());
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container
@@ -503,6 +510,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testPrepareTemplateParametersWithProvider($viewData, $templateData, $expected)
     {
         $handler = new ViewHandler(array('html' => true));
+        $handler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
         $view = new View();
         $view->setFormat('html');
@@ -562,6 +570,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         //test
         $viewHandler = new ViewHandler();
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $viewHandler->setExclusionStrategyGroups('bar');
         $viewHandler->setExclusionStrategyVersion('1.1');
         $viewHandler->setSerializeNullStrategy(true);
@@ -571,9 +580,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $view = new View();
         $context = $contextMethod->invoke($viewHandler, $view);
-        $this->assertEquals(array('bar'), $context->attributes->get('groups')->getOrThrow(new \Exception('Serialization groups not set as expected')));
-        $this->assertEquals('1.1', $context->attributes->get('version')->getOrThrow(new \Exception('Serialization version not set as expected')));
-        $this->assertTrue($context->shouldSerializeNull());
+        $this->assertEquals(array('bar'), $context->getGroups());
+        $this->assertEquals('1.1', $context->getVersion());
+        $this->assertTrue($context->getSerializeNull());
     }
 
     /**
@@ -598,7 +607,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         );
 
         $view = new View($exceptionWrapper);
-        $view->getSerializationContext()->setGroups(array('Custom'));
+        $view->getSerializationContext()->addGroups(array('Custom'));
 
         $wrapperHandler = new ExceptionWrapperSerializeHandler();
         $translatorMock = $this->getMock(
@@ -618,15 +627,31 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
                 $handlerRegistry->registerSubscribingHandler($formErrorHandler);
             })
             ->build();
+        $adapter = $this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface');
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('get')
-            ->with('fos_rest.serializer')
-            ->will($this->returnValue($serializer));
+            ->with($this->logicalOr(
+                  $this->equalTo('fos_rest.serializer'),
+                  $this->equalTo('fos_rest.context.adapter.chain_context_adapter')
+              ))
+            ->will(
+                $this->returnCallback(
+                    function ($method) use ($serializer, $adapter) {
+                          switch ($method) {
+                              case 'fos_rest.serializer':
+                                  return $serializer;
+                              case 'fos_rest.context.adapter.chain_context_adapter':
+                                  return $adapter;
+                          }
+                    }
+                )
+            );
 
         $viewHandler = new ViewHandler(array());
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $viewHandler->setContainer($container);
 
         $response = $viewHandler->createResponse($view, new Request(), $format);
@@ -639,12 +664,27 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $container2 = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
         $container2
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('get')
-            ->with('fos_rest.serializer')
-            ->will($this->returnValue($serializer2));
+            ->with($this->logicalOr(
+                  $this->equalTo('fos_rest.serializer'),
+                  $this->equalTo('fos_rest.context.adapter.chain_context_adapter')
+              ))
+            ->will(
+                $this->returnCallback(
+                    function ($method) use ($serializer2, $adapter) {
+                          switch ($method) {
+                              case 'fos_rest.serializer':
+                                  return $serializer2;
+                              case 'fos_rest.context.adapter.chain_context_adapter':
+                                  return $adapter;
+                          }
+                    }
+                )
+            );
 
         $viewHandler = new ViewHandler(array());
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $viewHandler->setContainer($container2);
 
         $view2 = new View($exceptionWrapper);

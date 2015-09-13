@@ -264,15 +264,15 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     public static function serializerEnableMaxDepthChecksProvider()
     {
         return array(
-            array(false, get_class(null)),
-            array(true, 'JMS\Serializer\Exclusion\DepthExclusionStrategy'),
+            array(false, null),
+            array(true, 0),
         );
     }
 
     /**
      * @dataProvider serializerEnableMaxDepthChecksProvider
      */
-    public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedClass)
+    public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedMaxDepth)
     {
         $viewAnnotation = new ViewAnnotation(array());
         $viewAnnotation->setSerializerEnableMaxDepthChecks($enableMaxDepthChecks);
@@ -306,9 +306,9 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener->onKernelView($event);
 
         $context = $view->getSerializationContext();
-        $exclusionStrategy = $context->getExclusionStrategy();
+        $maxDepth = $context->getMaxDepth();
 
-        $this->assertEquals($expectedClass, get_class($exclusionStrategy));
+        $this->assertEquals($expectedMaxDepth, $maxDepth);
     }
 
     public function getDataForDefaultVarsCopy()

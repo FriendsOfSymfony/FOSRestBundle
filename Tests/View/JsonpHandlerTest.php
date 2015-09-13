@@ -34,6 +34,7 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(array('jsonp' => false));
         $jsonpHandler = new JsonpHandler(key($query));
         $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
         $serializer = $this->getMock('stdClass', array('serialize', 'setVersion'));
@@ -43,9 +44,9 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(var_export($data, true)));
 
         $container
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('get')
-            ->with('fos_rest.serializer')
+            ->with($this->equalTo('fos_rest.serializer'))
             ->will($this->returnValue($serializer));
 
         $container
@@ -85,6 +86,7 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(array('jsonp' => false));
         $jsonpHandler = new JsonpHandler('callback');
         $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
+        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
         $serializer = $this->getMock('stdClass', array('serialize', 'setVersion'));
@@ -94,9 +96,9 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(var_export($data, true)));
 
         $container
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('get')
-            ->with('fos_rest.serializer')
+            ->with($this->equalTo('fos_rest.serializer'))
             ->will($this->returnValue($serializer));
 
         $container

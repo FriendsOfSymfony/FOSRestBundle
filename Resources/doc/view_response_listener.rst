@@ -87,7 +87,7 @@ you should return a ``$view`` object with the data set by ``setTemplateData``.
     public function getUsersAction()
     {
         $view = View::create();
-        
+
         // ...
         $view
             ->setData($data)
@@ -152,6 +152,36 @@ configured as follows:
     public function getUsersAction()
     {
         // ...
+    }
+
+You can also define your serializer options dynamically:
+
+.. code-block:: php
+
+    <?php
+
+    use FOS\RestBundle\View\View;
+    use FOS\RestBundle\Context\Context;
+
+    /**
+     * @View()
+     */
+    public function getUsersAction()
+    {
+        $view = View::create();
+
+        $context = new Context();
+        $context->setVersion('1.0');
+        $context->addGroup('user');
+
+        $view->setSerializationContext($context);
+
+        // ...
+        $view
+            ->setData($data)
+            ->setTemplateData($templateData)
+        ;
+        return $view;
     }
 
 See `this example code`_ for more details.

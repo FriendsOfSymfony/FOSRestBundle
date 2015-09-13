@@ -14,7 +14,8 @@ namespace FOS\RestBundle\View;
 use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
-use JMS\Serializer\SerializationContext;
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Context\ContextInterface;
 
 /**
  * Default View implementation.
@@ -35,7 +36,7 @@ class View
     private $routeParameters;
 
     /**
-     * @var SerializationContext
+     * @var ContextInterface
      */
     private $serializationContext;
 
@@ -192,11 +193,11 @@ class View
     /**
      * Sets the serialization context.
      *
-     * @param SerializationContext $serializationContext
+     * @param ContextInterface $serializationContext
      *
      * @return View
      */
-    public function setSerializationContext(SerializationContext $serializationContext)
+    public function setSerializationContext(ContextInterface $serializationContext)
     {
         $this->serializationContext = $serializationContext;
 
@@ -449,12 +450,12 @@ class View
     /**
      * Gets the serialization context.
      *
-     * @return SerializationContext
+     * @return ContextInterface
      */
     public function getSerializationContext()
     {
         if (null === $this->serializationContext) {
-            $this->serializationContext = new SerializationContext();
+            $this->serializationContext = new Context();
         }
 
         return $this->serializationContext;

@@ -22,8 +22,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInte
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\Serializer\Exception\UnsupportedFormatException;
 use JMS\Serializer\Exception\Exception as JMSSerializerException;
-use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializerInterface;
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\GroupableContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
+use FOS\RestBundle\Context\MaxDepthContextInterface;
+use FOS\RestBundle\Context\SerializeNullContextInterface;
+use FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface;
+use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
@@ -42,12 +48,17 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     protected $validationErrorsArgument;
 
     /**
-     * @param object             $serializer
-     * @param array|null         $groups                   An array of groups to be used in the serialization context
-     * @param string|null        $version                  A version string to be used in the serialization context
-     * @param object             $serializer
+     * @var DeserializationContextAdapterInterface
+     */
+    protected $contextAdapter;
+
+    /**
+     * @param object                                      $serializer
+     * @param array|null                                  $groups                   An array of groups to be used in the serialization context
+     * @param string|null                                 $version                  A version string to be used in the serialization context
+     * @param object                                      $serializer
      * @param LegacyValidatorInterface|ValidatorInterface $validator
-     * @param string|null        $validationErrorsArgument
+     * @param string|null                                 $validationErrorsArgument
      *
      * @throws \InvalidArgumentException
      */
@@ -86,6 +97,16 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     }
 
     /**
+     * Sets context adapter.
+     *
+     * @param DeserializationContextAdapterInterface $contextAdapter
+     */
+    public function setDeserializationContextAdapter(DeserializationContextAdapterInterface $contextAdapter)
+    {
+        $this->contextAdapter = $contextAdapter;
+    }
+
+    /**
      * Stores the object in the request.
      *
      * @param Request        $request       The request
@@ -106,9 +127,11 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
             $context = $this->context;
         }
 
-        if ($this->serializer instanceof SerializerInterface) {
-            $context = $this->configureDeserializationContext($this->getDeserializationContext(), $context);
+        $context = $this->configureDeserializationContext($this->getDeserializationContext(), $context);
+        if ($this->contextAdapter instanceof SerializerAwareInterface) {
+            $this->contextAdapter->setSerializer($this->serializer);
         }
+        $context = $this->contextAdapter->convertDeserializationContext($context);
 
         try {
             $object = $this->serializer->deserialize(
@@ -151,26 +174,33 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     }
 
     /**
-     * @return DeserializationContext
+     * @return ContextInterface
      */
     protected function getDeserializationContext()
     {
-        return DeserializationContext::create();
+        return new Context();
     }
 
     /**
-     * @param DeserializationContext $context
-     * @param array                  $options
+     * @param ContextInterface $context
+     * @param array            $options
      *
-     * @return DeserializationContext
+     * @return ContextInterface
      */
-    protected function configureDeserializationContext(DeserializationContext $context, array $options)
+    protected function configureDeserializationContext(ContextInterface $context, array $options)
     {
-        if (isset($options['groups'])) {
-            $context->setGroups($options['groups']);
-        }
-        if (isset($options['version'])) {
-            $context->setVersion($options['version']);
+        foreach ($options as $key => $value) {
+            if ($key == 'groups' && $context instanceof GroupableContextInterface) {
+                $context->addGroups($options['groups']);
+            } elseif ($key == 'version' && $context instanceof VersionableContextInterface) {
+                $context->setVersion($options['version']);
+            } elseif ($key == 'maxDepth' && $context instanceof MaxDepthContextInterface) {
+                $context->setMaxDepth($options['maxDepth']);
+            } elseif ($key == 'serializeNull' && $context instanceof SerializeNullContextInterface) {
+                $context->setSerializeNull($options['serializeNull']);
+            } else {
+                $context->setAttribute($key, $value);
+            }
         }
 
         return $context;
@@ -193,4 +223,3 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         return $resolver->resolve(isset($options['validator']) ? $options['validator'] : array());
     }
 }
-
