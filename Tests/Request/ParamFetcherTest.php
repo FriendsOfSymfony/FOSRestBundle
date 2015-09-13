@@ -230,11 +230,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('bar', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
+                        ->with('bar', new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('bar', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
+                        ->with('bar', new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                 },
@@ -281,12 +281,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('invaliddata', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
+                        ->with('invaliddata', new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(6))
                         ->method('validateValue')
-                        ->with('invaliddata', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
+                        ->with('invaliddata', new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                 },
             ),
@@ -361,7 +361,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     public function testValidatesConfiguredParamStrictly()
     {
         $constraint = new Regex(array(
-            'pattern' => '#^\d+$#xsu',
+            'pattern' => '#^(?:\d+)$#xsu',
             'message' => "Query parameter value '354', does not match requirements '\\d+'",
         ));
 
@@ -450,12 +450,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('foo', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
+                        ->with('foo', new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(1))
                         ->method('validateValue')
-                        ->with('foo', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
+                        ->with('foo', new Regex(array('pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                 },
             ),
@@ -470,7 +470,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
                     $validator->expects($self->at(0))
                         ->method('validateValue')
-                        ->with('foo', new Regex(array('pattern' => '#^\\d?$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'")), null)
+                        ->with('foo', new Regex(array('pattern' => '#^(?:\\d?)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'")), null)
                         ->will($self->returnValue($errors));
                 },
             ),
@@ -754,7 +754,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array('fero' => $param)));
 
         $constraint = new Regex(array(
-            'pattern' => '#^\d+$#xsu',
+            'pattern' => '#^(?:\d+)$#xsu',
             'message' => $errorMessage,
         ));
 
@@ -779,5 +779,74 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         } catch (HttpException $httpException) {
             $this->assertEquals($errorMessage, $httpException->getMessage());
         }
+    }
+
+    /**
+     * @dataProvider regexProvider
+     */
+    public function testRegexSucceed($regex, $input, $expected)
+    {
+        $param = new QueryParam();
+        $param->name = 'regex_param';
+        $param->requirements = $regex;
+
+        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        $validator->method('validateValue')
+            ->will($this->returnCallback(function ($param, $constraint) {
+                //Emulating behavior of a Symfony RegexValidator
+                return preg_match($constraint->pattern, $param) ? null : array('error');
+            }));
+
+        $request = new Request(array($param->name => $input), array(), array('_controller' => __CLASS__.'::stubAction'));
+        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $reader->expects($this->any())
+            ->method('read')
+            ->will($this->returnValue(array($param->name => $param)));
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $queryFetcher =  new ParamFetcher($reader, $requestStack, $this->violationFormatter, $validator);
+        $queryFetcher->setController($this->controller);
+
+        $this->assertEquals($expected, $queryFetcher->get($param->name));
+    }
+
+    /**
+     * Provides various data to test regex edge cases
+     * @return array
+     */
+    public function regexProvider()
+    {
+        return array(
+            array(
+                'A|B|C',
+                'Abc',
+                '',
+            ),
+            array(
+                'A|B|C',
+                'abC',
+                '',
+            ),
+            array(
+                'A|B|C',
+                'aBc',
+                '',
+            ),
+            array(
+                'A|B|C',
+                'B',
+                'B',
+            ),
+            array(
+                '^(A|B|C)$',
+                'B',
+                'B',
+            ),
+        );
     }
 }
