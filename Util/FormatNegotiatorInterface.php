@@ -11,16 +11,9 @@
 
 namespace FOS\RestBundle\Util;
 
-use Symfony\Component\HttpFoundation\Request;
-
+/**
+ * @deprecated since version 1.7, to be removed in 2.0. Use {@link Negotiation\FormatNegotiatorInterface} instead.
+ */
 interface FormatNegotiatorInterface
 {
-    /**
-     * Gets the best format.
-     *
-     * @param Request $request
-     *
-     * @return null|string
-     */
-    public function getBestFormat(Request $request);
 }

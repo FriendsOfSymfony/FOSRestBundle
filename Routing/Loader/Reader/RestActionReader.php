@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Routing\Loader\Reader;
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\Routing\Route;
 use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
-use FOS\RestBundle\Util\Inflector\InflectorInterface;
+use FOS\RestBundle\Inflector\InflectorInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Request\ParamReader;
 

@@ -11,16 +11,9 @@
 
 namespace FOS\RestBundle\Util;
 
-use Symfony\Component\HttpFoundation\Request;
-
+/**
+ * @deprecated since version 1.7, to be removed in 2.0. Use {@link Negotiation\FormatNegotiatorInterface} instead.
+ */
 interface MediaTypeNegotiatorInterface extends FormatNegotiatorInterface
 {
-    /**
-     * Gets the best media type.
-     *
-     * @param Request $request The request
-     *
-     * @return null|string
-     */
-    public function getBestMediaType(Request $request);
 }
