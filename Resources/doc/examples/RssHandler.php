@@ -78,7 +78,7 @@ class RssHandler
         $feed->setLink($data['link']);
         $feed->setFeedLink($data['link'], 'rss');
         $feed->addAuthor([
-            'name'  => 'ZeroCMS',
+            'name' => 'ZeroCMS',
             'email' => 'email!',
         ]);
         $feed->setDateModified(time());
@@ -91,7 +91,7 @@ class RssHandler
             $entry->setTitle($document['title']);
             $entry->setLink($document['url']);
             $entry->addAuthor([
-                'name'  => $document['author'],
+                'name' => $document['author'],
                 //'email' => '',
                 //'uri'   => '',
             ]);

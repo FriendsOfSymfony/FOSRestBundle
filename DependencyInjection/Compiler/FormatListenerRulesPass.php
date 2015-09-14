@@ -34,13 +34,13 @@ class FormatListenerRulesPass implements CompilerPassInterface
             }
 
             $profilerRule = [
-                'host'                      => null,
-                'methods'                   => null,
-                'path'                      => "^/$path/",
-                'priorities'                => ['html', 'json'],
-                'fallback_format'           => 'html',
+                'host' => null,
+                'methods' => null,
+                'path' => "^/$path/",
+                'priorities' => ['html', 'json'],
+                'fallback_format' => 'html',
                 'exception_fallback_format' => 'html',
-                'prefer_extension'          => true,
+                'prefer_extension' => true,
             ];
 
             $this->addRule($profilerRule, $container);

@@ -38,9 +38,9 @@ class ExceptionWrapperNormalizer implements NormalizerInterface
     public function normalize($object, $format = null, array $context = [])
     {
         return [
-            'code'    => $object->getCode(),
+            'code' => $object->getCode(),
             'message' => $object->getMessage(),
-            'errors'  => $object->getErrors() ? $this->convertFormToArray($object->getErrors()) : null,
+            'errors' => $object->getErrors() ? $this->convertFormToArray($object->getErrors()) : null,
         ];
     }
 

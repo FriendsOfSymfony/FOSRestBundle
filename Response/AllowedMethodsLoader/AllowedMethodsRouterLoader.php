@@ -72,7 +72,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
             if (!isset($processedRoutes[$route->getPath()])) {
                 $processedRoutes[$route->getPath()] = [
                     'methods' => [],
-                    'names'   => [],
+                    'names' => [],
                 ];
             }
 

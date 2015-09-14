@@ -69,9 +69,9 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'jQuery callback syntax' => [['callback' => 'jQuery171065827149929257_1343950463342']],
-            'YUI callback syntax'    => [['callback' => 'YUI.Env.JSONP._12345']],
-            'jQuery custom syntax'   => [['custom'   => 'jQuery171065827149929257_1343950463342']],
-            'YUI custom syntax'      => [['custom'   => 'YUI.Env.JSONP._12345']],
+            'YUI callback syntax' => [['callback' => 'YUI.Env.JSONP._12345']],
+            'jQuery custom syntax' => [['custom' => 'jQuery171065827149929257_1343950463342']],
+            'YUI custom syntax' => [['custom' => 'YUI.Env.JSONP._12345']],
         ];
     }
 
@@ -118,8 +118,8 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
     public function getCallbackFailureDataProvider()
     {
         return [
-            'no callback'                    => [new Request()],
-            'incorrect callback param name'  => [new Request(['foo' => 'bar'])],
+            'no callback' => [new Request()],
+            'incorrect callback param name' => [new Request(['foo' => 'bar'])],
         ];
     }
 }

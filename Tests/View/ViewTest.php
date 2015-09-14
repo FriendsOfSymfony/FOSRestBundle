@@ -86,7 +86,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public static function setDataDataProvider()
     {
         return [
-            'null as data'  => [null],
+            'null as data' => [null],
             'array as data' => [['foo' => 'bar']],
         ];
     }
@@ -104,8 +104,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public static function setTemplateDataDataProvider()
     {
         return [
-            'null as data'     => [null],
-            'array as data'    => [['foo' => 'bar']],
+            'null as data' => [null],
+            'array as data' => [['foo' => 'bar']],
             'function as data' => [function () {}],
         ];
     }

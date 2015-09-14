@@ -162,7 +162,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $request = new Request();
-        $attributes =  ['_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured'];
+        $attributes = ['_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured'];
         $request->attributes->add($attributes);
         $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', []), $attributes));
 

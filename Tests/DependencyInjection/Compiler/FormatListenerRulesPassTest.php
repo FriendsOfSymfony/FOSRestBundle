@@ -41,13 +41,13 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                 2,
                 [
                     [
-                        'host'                      => null,
-                        'methods'                   => null,
-                        'path'                      => '^/',
-                        'priorities'                => ['html', 'json'],
-                        'fallback_format'           => 'html',
+                        'host' => null,
+                        'methods' => null,
+                        'path' => '^/',
+                        'priorities' => ['html', 'json'],
+                        'fallback_format' => 'html',
                         'exception_fallback_format' => 'html',
-                        'prefer_extension'          => true,
+                        'prefer_extension' => true,
                 ],
             ])
         );
@@ -87,13 +87,13 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(
                 [
                     [
-                        'host'                      => null,
-                        'methods'                   => null,
-                        'path'                      => '^/',
-                        'priorities'                => ['html', 'json'],
-                        'fallback_format'           => 'html',
+                        'host' => null,
+                        'methods' => null,
+                        'path' => '^/',
+                        'priorities' => ['html', 'json'],
+                        'fallback_format' => 'html',
                         'exception_fallback_format' => 'html',
-                        'prefer_extension'          => true,
+                        'prefer_extension' => true,
                     ],
                 ])
             );

@@ -59,7 +59,7 @@ class JMSContextAdapter implements SerializationContextAdapterInterface, Deseria
 
         $newContext = JMSDeserializationContext::create();
         if ($context instanceof MaxDepthContextInterface && null !== $context->getMaxDepth()) {
-            for ($i = 0; $i < $context->getMaxDepth(); $i++) {
+            for ($i = 0; $i < $context->getMaxDepth(); ++$i) {
                 $newContext->increaseDepth();
             }
         }

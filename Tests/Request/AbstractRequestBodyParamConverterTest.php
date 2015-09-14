@@ -263,11 +263,11 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     {
         $converter = $this->converterBuilder->getMock();
         $options = [
-            'groups'        => ['foo', 'bar'],
-            'version'       => 'v1.2',
-            'maxDepth'      => 5,
+            'groups' => ['foo', 'bar'],
+            'version' => 'v1.2',
+            'maxDepth' => 5,
             'serializeNull' => false,
-            'foo'           => 'bar',
+            'foo' => 'bar',
         ];
         $context = $this->getMock('FOS\RestBundle\Context\Context');
         $context
@@ -298,7 +298,7 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
 
         $options1 = [
             'validator' => [
-                'groups'   => ['foo'],
+                'groups' => ['foo'],
                 'traverse' => true,
             ],
         ];

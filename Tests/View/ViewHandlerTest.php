@@ -49,10 +49,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function supportsFormatDataProvider()
     {
         return [
-            'not supported'   => [false, ['json' => false], 'xml'],
-            'html default'    => [true, ['html' => true], 'xml'],
-            'html custom'     => [true, ['json' => false], 'html'],
-            'html both'       => [true, ['html' => true], 'html'],
+            'not supported' => [false, ['json' => false], 'xml'],
+            'html default' => [true, ['html' => true], 'xml'],
+            'html custom' => [true, ['json' => false], 'html'],
+            'html both' => [true, ['html' => true], 'html'],
         ];
     }
 
@@ -103,11 +103,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function getStatusCodeDataProvider()
     {
         return [
-            'no data'                            => [Codes::HTTP_OK, false, false, false, 0, 0, Codes::HTTP_OK],
-            'no data with 204'                   => [Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, Codes::HTTP_NO_CONTENT],
-            'form key form not bound'            => [Codes::HTTP_OK, true, false, true, 1, 0, Codes::HTTP_OK],
+            'no data' => [Codes::HTTP_OK, false, false, false, 0, 0, Codes::HTTP_OK],
+            'no data with 204' => [Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, Codes::HTTP_NO_CONTENT],
+            'form key form not bound' => [Codes::HTTP_OK, true, false, true, 1, 0, Codes::HTTP_OK],
             'form key form is bound and invalid' => [403, true, true, false, 1, 1, Codes::HTTP_OK],
-            'form key form bound and valid'      => [Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK],
+            'form key form bound and valid' => [Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK],
             'form key null form bound and valid' => [Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK],
         ];
     }
@@ -130,11 +130,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseWithLocationDataProvider()
     {
         return [
-            'empty force redirects'                 => [200, 'xml', ['json' => 403], Codes::HTTP_OK],
-            'empty force redirects with 204'        => [204, 'xml', ['json' => 403], Codes::HTTP_NO_CONTENT],
-            'force redirects response is redirect'  => [200, 'json', [], Codes::HTTP_OK],
+            'empty force redirects' => [200, 'xml', ['json' => 403], Codes::HTTP_OK],
+            'empty force redirects with 204' => [204, 'xml', ['json' => 403], Codes::HTTP_NO_CONTENT],
+            'force redirects response is redirect' => [200, 'json', [], Codes::HTTP_OK],
             'force redirects response not redirect' => [403, 'json', ['json' => 403], Codes::HTTP_OK],
-            'html and redirect'                     => [301, 'html', ['html' => 301], Codes::HTTP_OK],
+            'html and redirect' => [301, 'html', ['html' => 301], Codes::HTTP_OK],
         ];
     }
 
@@ -331,9 +331,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseWithoutLocationDataProvider()
     {
         return [
-            'not templating aware no form'          => ['json', ['foo' => 'bar']],
-            'templating aware no form'              => ['html', ['foo' => 'bar']],
-            'templating aware and form'             => ['html', ['data' => ['bla' => 'toto']], 1, true, true],
+            'not templating aware no form' => ['json', ['foo' => 'bar']],
+            'templating aware no form' => ['html', ['foo' => 'bar']],
+            'templating aware and form' => ['html', ['data' => ['bla' => 'toto']], 1, true, true],
             'not templating aware and invalid form' => ['json', ['data' => [0 => 'error', 1 => 'error']], 0, false, true],
         ];
     }
@@ -382,7 +382,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createSerializeNullDataProvider()
     {
         return [
-            'should serialize null'     => ['null', true],
+            'should serialize null' => ['null', true],
             'should not serialize null' => ['', false],
         ];
     }
@@ -409,7 +409,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createSerializeNullDataValuesDataProvider()
     {
         return [
-            'should serialize null values'     => [true, true],
+            'should serialize null values' => [true, true],
             'should not serialize null values' => [false, false],
         ];
     }
@@ -429,8 +429,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseDataProvider()
     {
         return [
-            'no handler'       => [Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, []],
-            'custom handler'   => [200, []],
+            'no handler' => [Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, []],
+            'custom handler' => [200, []],
             'transform called' => [200, ['json' => false]],
         ];
     }
@@ -543,17 +543,17 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $self = $this;
 
         return [
-            'assoc array does not change'           => [['foo' => 'bar'], null, ['foo' => 'bar']],
-            'ordered array is wrapped as data key'  => [['foo', 'bar'], null, ['data' => ['foo', 'bar']]],
-            'object is wrapped as data key'         => [$object, null, ['data' => $object]],
-            'form is wrapped as form key'           => [$form, null, ['form' => $formView, 'data' => $formView]],
-            'template data is added to data'        => [['foo' => 'bar'], ['baz' => 'qux'], ['foo' => 'bar', 'baz' => 'qux']],
-            'lazy template data is added to data'   => [
-                ['foo'                      => 'bar'],
+            'assoc array does not change' => [['foo' => 'bar'], null, ['foo' => 'bar']],
+            'ordered array is wrapped as data key' => [['foo', 'bar'], null, ['data' => ['foo', 'bar']]],
+            'object is wrapped as data key' => [$object, null, ['data' => $object]],
+            'form is wrapped as form key' => [$form, null, ['form' => $formView, 'data' => $formView]],
+            'template data is added to data' => [['foo' => 'bar'], ['baz' => 'qux'], ['foo' => 'bar', 'baz' => 'qux']],
+            'lazy template data is added to data' => [
+                ['foo' => 'bar'],
                 function () { return ['baz' => 'qux']; },
                 ['foo' => 'bar', 'baz' => 'qux'],
             ],
-            'lazy template data have reference to viewhandler and view'   => [
+            'lazy template data have reference to viewhandler and view' => [
                 ['foo' => 'bar'],
                 function ($handler, $view) use ($self) {
                     $self->assertInstanceOf('FOS\\RestBundle\\View\\ViewHandlerInterface', $handler);
@@ -603,8 +603,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $exceptionWrapper = new ExceptionWrapper(
             [
                 'status_code' => 400,
-                'message'     => 'Validation Failed',
-                'errors'      => $form,
+                'message' => 'Validation Failed',
+                'errors' => $form,
             ]
         );
 
@@ -702,7 +702,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'json' => ['json'],
-            'xml'  => ['xml'],
+            'xml' => ['xml'],
         ];
     }
 }

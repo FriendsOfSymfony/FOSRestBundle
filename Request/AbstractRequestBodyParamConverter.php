@@ -215,9 +215,9 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
-            'groups'   => null,
+            'groups' => null,
             'traverse' => false,
-            'deep'     => false,
+            'deep' => false,
         ]);
 
         return $resolver->resolve(isset($options['validator']) ? $options['validator'] : []);

@@ -159,7 +159,7 @@ class RestRouteLoader extends Loader
         $class = false;
         $namespace = false;
         $tokens = token_get_all(file_get_contents($file));
-        for ($i = 0, $count = count($tokens); $i < $count; $i++) {
+        for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
             $token = $tokens[$i];
 
             if (!is_array($token)) {

@@ -78,14 +78,14 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public static function testOnKernelRequestDataProvider()
     {
         return [
-            'Empty POST request'                 => [true, new Request([], [], [], [], [], [], ['foo']), 'POST', ['foo'], 'application/json'],
-            'Empty PUT request'                  => [true, new Request([], [], [], [], [], [], ['foo']), 'PUT', ['foo'], 'application/json'],
-            'Empty PATCH request'                => [true, new Request([], [], [], [], [], [], ['foo']), 'PATCH', ['foo'], 'application/json'],
-            'Empty DELETE request'               => [true, new Request([], [], [], [], [], [], ['foo']), 'DELETE', ['foo'], 'application/json'],
-            'Empty GET request'                  => [false, new Request([], [], [], [], [], [], ['foo']), 'GET', [], 'application/json'],
-            'POST request with parameters'       => [false, new Request([], ['bar'], [], [], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded'], ['foo']), 'POST', ['bar'], 'application/x-www-form-urlencoded'],
+            'Empty POST request' => [true, new Request([], [], [], [], [], [], ['foo']), 'POST', ['foo'], 'application/json'],
+            'Empty PUT request' => [true, new Request([], [], [], [], [], [], ['foo']), 'PUT', ['foo'], 'application/json'],
+            'Empty PATCH request' => [true, new Request([], [], [], [], [], [], ['foo']), 'PATCH', ['foo'], 'application/json'],
+            'Empty DELETE request' => [true, new Request([], [], [], [], [], [], ['foo']), 'DELETE', ['foo'], 'application/json'],
+            'Empty GET request' => [false, new Request([], [], [], [], [], [], ['foo']), 'GET', [], 'application/json'],
+            'POST request with parameters' => [false, new Request([], ['bar'], [], [], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded'], ['foo']), 'POST', ['bar'], 'application/x-www-form-urlencoded'],
             'POST request with unallowed format' => [false, new Request([], [], [], [], [], [], ['foo']), 'POST', [], 'application/fooformat'],
-            'POST request with no Content-Type'  => [true, new Request([], [], ['_format' => 'json'], [], [], [], ['foo']), 'POST', ['foo']],
+            'POST request with no Content-Type' => [true, new Request([], [], ['_format' => 'json'], [], [], [], ['foo']), 'POST', ['foo']],
         ];
     }
 

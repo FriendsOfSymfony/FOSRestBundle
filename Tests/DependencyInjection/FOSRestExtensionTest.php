@@ -57,7 +57,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->includeFormat = true;
         $this->formats = [
             'json' => false,
-            'xml'  => false,
+            'xml' => false,
             'html' => true,
         ];
         $this->defaultFormat = null;
@@ -83,7 +83,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load([], $this->container);
         $decoders = [
             'json' => 'fos_rest.decoder.json',
-            'xml'  => 'fos_rest.decoder.xml',
+            'xml' => 'fos_rest.decoder.xml',
         ];
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
@@ -134,7 +134,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             'fos_rest' => ['body_listener' => [
                 'array_normalizer' => [
                     'service' => 'fos_rest.normalizer.camel_keys',
-                    'forms'   => true,
+                    'forms' => true,
                 ],
             ]],
         ];
@@ -220,7 +220,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $config = [
             'fos_rest' => ['format_listener' => [
-                'rules'      => ['path' => '/'],
+                'rules' => ['path' => '/'],
                 'media_type' => true,
             ]],
         ];
@@ -255,7 +255,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load([], $this->container);
         $formats = [
             'json' => false,
-            'xml'  => false,
+            'xml' => false,
             'html' => true,
         ];
 
@@ -455,7 +455,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
                     'view' => [
                         'formats' => [
                             'json' => false,
-                            'xml'  => true,
+                            'xml' => true,
                         ],
                     ],
                 ],
@@ -468,7 +468,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
             $this->includeFormat,
             [
-                'xml'  => false,
+                'xml' => false,
                 'html' => true,
             ],
             $this->defaultFormat
@@ -479,7 +479,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
             $this->includeFormat,
             [
-                'xml'  => false,
+                'xml' => false,
                 'html' => true,
             ],
             $this->defaultFormat

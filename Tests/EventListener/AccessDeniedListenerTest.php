@@ -171,14 +171,14 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
     public static function getFormatsDataProvider()
     {
         return [
-            [['json'  => true], 'json'],
+            [['json' => true], 'json'],
         ];
     }
 
     public static function getContentTypesDataProvider()
     {
         return [
-            [['json'  => true], 'application/json'],
+            [['json' => true], 'application/json'],
         ];
     }
 }
