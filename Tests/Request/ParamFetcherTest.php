@@ -159,7 +159,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($annotations));
 
         $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
-        $this->violationFormatter = $this->getMock('FOS\RestBundle\Util\ViolationFormatterInterface');
+
+        $this->violationFormatter = $this->getMock('FOS\RestBundle\Validator\ViolationFormatterInterface');
 
         $this->container
             ->expects($this->any())

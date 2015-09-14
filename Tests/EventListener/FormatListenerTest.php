@@ -11,11 +11,13 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use FOS\RestBundle\Util\FormatNegotiator;
+use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\EventListener\FormatListener;
+use Negotiation\Accept;
 
 /**
  * Request listener test
@@ -36,18 +38,19 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
+            ->setMethods(array('getBest'))
             ->getMock();
         $formatNegotiator->expects($this->once())
-            ->method('getBestMediaType')
-            ->will($this->returnValue('application/xml'));
+            ->method('getBest')
+            ->willReturn(new Accept('text/xml; q=1'));
 
         $listener = new FormatListener($formatNegotiator);
 
         $listener->onKernelRequest($event);
 
-        $this->assertEquals($request->getRequestFormat(), 'xml');
+        $this->assertEquals('xml', $request->getRequestFormat());
     }
 
     public function testOnKernelControllerNegotiationStopped()
@@ -59,11 +62,14 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->setRequestFormat('xml');
 
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $event->expects($this->once())
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = new FormatNegotiator();
+        $formatNegotiator = new FormatNegotiator($requestStack);
         $formatNegotiator->add(new RequestMatcher('/'), array('stop' => true));
         $formatNegotiator->add(new RequestMatcher('/'), array('fallback_format' => 'json'));
 
@@ -93,7 +99,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequestType')
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -122,12 +128,13 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
+            ->setMethods(array('getBest'))
             ->getMock();
         $formatNegotiator->expects($this->any())
-            ->method('getBestMediaType')
-            ->will($this->returnValue('application/xml'));
+            ->method('getBest')
+            ->willReturn(new Accept('text/xml; q=1'));
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -167,11 +174,11 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequestType')
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator->expects($this->any())
-            ->method('getBestMediaType')
+            ->method('getBest')
             ->will($this->returnValue('application/json'));
 
         $listener = new FormatListener($formatNegotiator);

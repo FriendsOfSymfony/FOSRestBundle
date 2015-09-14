@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Request;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
-use FOS\RestBundle\Util\ViolationFormatterInterface;
+use FOS\RestBundle\Validator\ViolationFormatterInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;

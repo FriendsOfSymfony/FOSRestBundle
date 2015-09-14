@@ -9,22 +9,21 @@
  * file that was distributed with this source code
  */
 
-namespace FOS\RestBundle\Util\Inflector;
-
-use Doctrine\Common\Inflector\Inflector;
+namespace FOS\RestBundle\Inflector;
 
 /**
- * Inflector object using the Doctrine/Inflector
+ * Inflector interface
  *
  * @author Mark Kazemier <Markkaz>
  */
-class DoctrineInflector implements InflectorInterface
+interface InflectorInterface
 {
     /**
-     * {@inheritdoc}
+     * Pluralizes noun.
+     *
+     * @param string $word
+     *
+     * @return string
      */
-    public function pluralize($word)
-    {
-        return Inflector::pluralize($word);
-    }
+    public function pluralize($word);
 }

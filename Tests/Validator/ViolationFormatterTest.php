@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Tests\Util;
+namespace FOS\RestBundle\Tests\Validator;
 
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Util\ViolationFormatter;
+use FOS\RestBundle\Validator\ViolationFormatter;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 

@@ -15,8 +15,7 @@ use FOS\RestBundle\Util\StopFormatListenerException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use FOS\RestBundle\Util\FormatNegotiatorInterface;
-use FOS\RestBundle\Util\MediaTypeNegotiatorInterface;
+use Negotiation\AbstractNegotiator;
 
 /**
  * This listener handles Accept header format negotiations.
@@ -32,13 +31,13 @@ class FormatListener
      *
      * @param FormatNegotiatorInterface $formatNegotiator
      */
-    public function __construct(FormatNegotiatorInterface $formatNegotiator)
+    public function __construct(AbstractNegotiator $formatNegotiator)
     {
         $this->formatNegotiator = $formatNegotiator;
     }
 
     /**
-     * Determines and sets the Request format
+     * Determines and sets the Request format.
      *
      * @param GetResponseEvent $event The event
      *
@@ -51,20 +50,18 @@ class FormatListener
 
             $format = $request->getRequestFormat(null);
             if (null === $format) {
-                if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
-                    $mediaType = $this->formatNegotiator->getBestMediaType($request);
-                    if (null !== $mediaType) {
-                        $request->attributes->set('media_type', $mediaType);
-                        $format = $request->getFormat($mediaType);
+                $accept = $this->formatNegotiator->getBest('');
+                if (null !== $accept && 0.0 < $accept->getQuality()) {
+                    $format = $request->getFormat($accept->getType());
+                    if (null !== $format) {
+                        $request->attributes->set('media_type', $accept->getValue());
                     }
-                } else {
-                    $format = $this->formatNegotiator->getBestFormat($request);
                 }
             }
 
             if (null === $format) {
                 if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
-                    throw new NotAcceptableHttpException("No matching accepted Response format could be determined");
+                    throw new NotAcceptableHttpException('No matching accepted Response format could be determined');
                 }
 
                 return;
@@ -74,6 +71,5 @@ class FormatListener
         } catch (StopFormatListenerException $e) {
             // nothing to do
         }
-
     }
 }
