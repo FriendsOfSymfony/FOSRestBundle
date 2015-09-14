@@ -28,15 +28,15 @@ class ExceptionWrapperSerializeHandler implements SubscribingHandlerInterface
         return [
             [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
-                'format'    => 'json',
-                'type'      => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
-                'method'    => 'serializeToJson',
+                'format' => 'json',
+                'type' => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
+                'method' => 'serializeToJson',
             ],
             [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
-                'format'    => 'xml',
-                'type'      => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
-                'method'    => 'serializeToXml',
+                'format' => 'xml',
+                'type' => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
+                'method' => 'serializeToXml',
             ],
         ];
     }
@@ -100,9 +100,9 @@ class ExceptionWrapperSerializeHandler implements SubscribingHandlerInterface
     protected function convertToArray(ExceptionWrapper $exceptionWrapper)
     {
         return [
-            'code'    => $exceptionWrapper->getCode(),
+            'code' => $exceptionWrapper->getCode(),
             'message' => $exceptionWrapper->getMessage(),
-            'errors'  => $exceptionWrapper->getErrors(),
+            'errors' => $exceptionWrapper->getErrors(),
         ];
     }
 }

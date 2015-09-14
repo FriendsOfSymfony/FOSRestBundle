@@ -43,10 +43,10 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
         return [
             [[], []],
             [
-                ['foo'        => ['Foo_bar_baz' => ['foo_Bar' => ['foo_bar' => 'foo_bar']]],
+                ['foo' => ['Foo_bar_baz' => ['foo_Bar' => ['foo_bar' => 'foo_bar']]],
                     'foo_1ar' => ['foo_bar'],
                 ],
-                ['foo'       => ['FooBarBaz' => ['fooBar' => ['fooBar' => 'foo_bar']]],
+                ['foo' => ['FooBarBaz' => ['fooBar' => ['fooBar' => 'foo_bar']]],
                     'foo1ar' => ['foo_bar'],
                 ],
             ],

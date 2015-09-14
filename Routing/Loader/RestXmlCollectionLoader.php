@@ -113,7 +113,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
             // set format requirement if configured globally
             $requirements = $node->getElementsByTagNameNS(self::NAMESPACE_URI, 'requirement');
             $format = null;
-            for ($i = 0; $i < $requirements->length; $i++) {
+            for ($i = 0; $i < $requirements->length; ++$i) {
                 $item = $requirements->item($i);
                 if ($item instanceof \DOMElement && $item->hasAttribute('_format')) {
                     $format = $item->getAttribute('_format');
@@ -150,7 +150,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         }
 
         $length = $node->childNodes->length;
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $loopNode = $node->childNodes->item($i);
             if ($loopNode->nodeType == XML_TEXT_NODE) {
                 continue;

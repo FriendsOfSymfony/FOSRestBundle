@@ -145,7 +145,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             true,
             [
                 'json' => false,
-                'xml'  => false,
+                'xml' => false,
                 'html' => true,
             ],
             'xml'
@@ -206,7 +206,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $includeFormat = true,
         array $formats = [
             'json' => false,
-            'xml'  => false,
+            'xml' => false,
             'html' => true,
         ],
         $defaultFormat = null

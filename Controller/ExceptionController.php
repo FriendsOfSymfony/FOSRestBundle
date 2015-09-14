@@ -225,12 +225,12 @@ class ExceptionController extends ContainerAware
     protected function getParameters(ViewHandler $viewHandler, $currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
         $parameters = [
-            'status'         => 'error',
-            'status_code'    => $code,
-            'status_text'    => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
+            'status' => 'error',
+            'status_code' => $code,
+            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
             'currentContent' => $currentContent,
-            'message'        => $this->getExceptionMessage($exception),
-            'exception'      => $exception,
+            'message' => $this->getExceptionMessage($exception),
+            'exception' => $exception,
         ];
 
         if ($viewHandler->isFormatTemplating($format)) {

@@ -24,13 +24,13 @@ class JsonToFormDecoderTest extends \PHPUnit_Framework_TestCase
     {
         $data = [
             'arrayKey' => [
-                'falseKey'  => false,
+                'falseKey' => false,
                 'stringKey' => 'foo',
             ],
-            'falseKey'  => false,
-            'trueKey'   => true,
-            'intKey'    => 69,
-            'floatKey'  => 3.14,
+            'falseKey' => false,
+            'trueKey' => true,
+            'intKey' => 69,
+            'floatKey' => 3.14,
             'stringKey' => 'bar',
         ];
         $decoder = new JsonToFormDecoder();
