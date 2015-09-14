@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests;
 use FOS\RestBundle\FOSRestBundle;
 
 /**
- * FOSRestBundle test
+ * FOSRestBundle test.
  *
  * @author Eriksen Costa <eriksencosta@gmail.com>
  */
@@ -23,7 +23,7 @@ class FOSRestBundleTest extends \PHPUnit_Framework_TestCase
     public function testBuild()
     {
         $container = $this->getMockBuilder('\Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('addCompilerPass'))
+            ->setMethods(['addCompilerPass'])
             ->getMock();
         $container->expects($this->exactly(5))
             ->method('addCompilerPass')

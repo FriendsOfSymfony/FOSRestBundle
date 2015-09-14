@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\Context\Adapter;
 
+use FOS\RestBundle\Context\ContextInterface;
 use FOS\RestBundle\Context\GroupableContextInterface;
-use FOS\RestBundle\Context\VersionableContextInterface;
 use FOS\RestBundle\Context\MaxDepthContextInterface;
 use FOS\RestBundle\Context\SerializeNullContextInterface;
-use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
 
 /**
  * {@inheritdoc}
@@ -74,7 +74,7 @@ class ArrayContextAdapter implements SerializationContextAdapterInterface, Deser
      */
     protected function convertContext(ContextInterface $context)
     {
-        $newContext = array();
+        $newContext = [];
         foreach ($context->getAttributes() as $key => $value) {
             $newContext[$key] = $value;
         }

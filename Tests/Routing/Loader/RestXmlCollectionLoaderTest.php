@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
-use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\RouteCollection;
 use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 use FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * RestXmlCollectionLoader test.
@@ -29,8 +29,8 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      */
     public function testUsersFixture()
     {
-        $collection     = $this->loadFromXmlCollectionFixture('users_collection.xml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('users_collection.yml');
+        $collection = $this->loadFromXmlCollectionFixture('users_collection.xml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -48,8 +48,8 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      */
     public function testPrefixedUsersFixture()
     {
-        $collection     = $this->loadFromXmlCollectionFixture('prefixed_users_collection.xml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
+        $collection = $this->loadFromXmlCollectionFixture('prefixed_users_collection.xml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -85,9 +85,9 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         $collection = $this->loadFromXmlCollectionFixture(
             'routes.xml',
             true,
-            array(
+            [
                 'json' => false,
-            )
+            ]
         );
         $route = $collection->get('get_users');
 
@@ -99,11 +99,11 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         $collection = $this->loadFromXmlCollectionFixture(
             'routes.xml',
             true,
-            array(
+            [
                 'json' => false,
                 'xml'  => false,
                 'html' => true,
-            ),
+            ],
             'xml'
         );
         $route = $collection->get('get_users');
@@ -121,6 +121,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
             $this->assertEquals('home', $route->getDefault('slug'));
         }
     }
+
     /**
      * Load routes collection from XML fixture routes under Tests\Fixtures directory.
      *
@@ -134,15 +135,15 @@ class RestXmlCollectionLoaderTest extends LoaderTest
     protected function loadFromXmlCollectionFixture(
         $fixtureName,
         $includeFormat = true,
-        array $formats = array(
+        array $formats = [
             'json' => false,
             'xml'  => false,
             'html' => true,
-        ),
+        ],
         $defaultFormat = null
     ) {
         $collectionLoader = new RestXmlCollectionLoader(
-            new FileLocator(array(__DIR__.'/../../Fixtures/Routes')),
+            new FileLocator([__DIR__.'/../../Fixtures/Routes']),
             new RestRouteProcessor(),
             $includeFormat,
             $formats,
@@ -150,7 +151,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         );
         $controllerLoader = $this->getControllerLoader();
 
-        new LoaderResolver(array($collectionLoader, $controllerLoader));
+        new LoaderResolver([$collectionLoader, $controllerLoader]);
 
         return $collectionLoader->load($fixtureName, 'rest');
     }

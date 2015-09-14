@@ -11,12 +11,12 @@
 
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
-use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
-use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Routing\RouteCollection;
 use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
 use FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader;
+use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * RestYamlCollectionLoader test.
@@ -30,8 +30,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testUsersFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('users_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('users_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('users_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -49,8 +49,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testPrefixedUsersFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('prefixed_users_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('prefixed_users_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -68,8 +68,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testNamedPrefixedReportsFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('named_prefixed_reports_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('named_prefixed_reports_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -87,7 +87,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testNamedPrefixedReportsFixtureHasNoDuplicates()
     {
-        $names = array();
+        $names = [];
         $collection = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
         foreach ($collection as $route) {
             $names[] = $route->getPath();
@@ -129,9 +129,9 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $collection = $this->loadFromYamlCollectionFixture(
             'routes.yml',
             true,
-            array(
+            [
                 'json' => false,
-            )
+            ]
         );
         $route = $collection->get('get_users');
 
@@ -143,11 +143,11 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $collection = $this->loadFromYamlCollectionFixture(
             'routes.yml',
             true,
-            array(
+            [
                 'json' => false,
                 'xml'  => false,
                 'html' => true,
-            ),
+            ],
             'xml'
         );
         $route = $collection->get('get_users');
@@ -168,7 +168,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         // We register the controller in the fake container by its class name
         $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->disableOriginalConstructor()
-            ->setMethods(array('has', 'get', 'enterScope', 'leaveScope'))
+            ->setMethods(['has', 'get', 'enterScope', 'leaveScope'])
             ->getMock();
         $this->containerMock->expects($this->any())
             ->method('has')
@@ -204,15 +204,15 @@ class RestYamlCollectionLoaderTest extends LoaderTest
     protected function loadFromYamlCollectionFixture(
         $fixtureName,
         $includeFormat = true,
-        array $formats = array(
+        array $formats = [
             'json' => false,
             'xml'  => false,
             'html' => true,
-        ),
+        ],
         $defaultFormat = null
     ) {
         $collectionLoader = new RestYamlCollectionLoader(
-            new FileLocator(array(__DIR__.'/../../Fixtures/Routes')),
+            new FileLocator([__DIR__.'/../../Fixtures/Routes']),
             new RestRouteProcessor(),
             $includeFormat,
             $formats,
@@ -221,7 +221,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $controllerLoader = $this->getControllerLoader();
 
         // LoaderResolver sets the resolvers on the loaders passed to it
-        new LoaderResolver(array($collectionLoader, $controllerLoader));
+        new LoaderResolver([$collectionLoader, $controllerLoader]);
 
         return $collectionLoader->load($fixtureName, 'rest');
     }
@@ -231,8 +231,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testNamedPrefixedBaseReportsFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);

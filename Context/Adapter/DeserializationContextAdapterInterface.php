@@ -25,9 +25,9 @@ interface DeserializationContextAdapterInterface
       *
       * @param ContextInterface $context
       *
-      * @return mixed
-      *
       * @throws \LogicException if the specialization is not supported
+      *
+      * @return mixed
       */
      public function convertDeserializationContext(ContextInterface $context);
 

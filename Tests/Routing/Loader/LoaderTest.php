@@ -12,12 +12,12 @@
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Symfony\Component\Yaml\Yaml;
-use FOS\RestBundle\Routing\Loader\RestRouteLoader;
-use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
-use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
-use FOS\RestBundle\Request\ParamReader;
 use FOS\RestBundle\Inflector\DoctrineInflector;
+use FOS\RestBundle\Request\ParamReader;
+use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
+use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
+use FOS\RestBundle\Routing\Loader\RestRouteLoader;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Base Loader testing class.
@@ -49,19 +49,19 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Builds a RestRouteLoader
+     * Builds a RestRouteLoader.
      *
      * @param array $formats available resource formats
      *
      * @return RestRouteLoader
      */
-    protected function getControllerLoader(array $formats = array())
+    protected function getControllerLoader(array $formats = [])
     {
         // This check allows to override the container
         if ($this->containerMock === null) {
             $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
                 ->disableOriginalConstructor()
-                ->setMethods(array('get', 'has'))
+                ->setMethods(['get', 'has'])
                 ->getMock();
         }
         $l = $this->getMockBuilder('Symfony\Component\Config\FileLocator')

@@ -12,11 +12,11 @@
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
 use Doctrine\Common\Annotations\Reader;
-use Symfony\Component\Routing\Route;
 use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
 use FOS\RestBundle\Inflector\InflectorInterface;
-use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Request\ParamReader;
+use FOS\RestBundle\Routing\RestRouteCollection;
+use Symfony\Component\Routing\Route;
 
 /**
  * REST controller actions reader.
@@ -35,9 +35,9 @@ class RestActionReader
     private $routePrefix;
     private $namePrefix;
     private $pluralize;
-    private $parents = array();
-    private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options');
-    private $availableConventionalActions = array('new', 'edit', 'remove');
+    private $parents = [];
+    private $availableHTTPMethods = ['get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options'];
+    private $availableConventionalActions = ['new', 'edit', 'remove'];
 
     /**
      * Initializes controller reader.
@@ -48,7 +48,7 @@ class RestActionReader
      * @param bool               $includeFormat
      * @param array              $formats
      */
-    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = array())
+    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [])
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
@@ -144,9 +144,9 @@ class RestActionReader
      * @param \ReflectionMethod   $method
      * @param string[]            $resource
      *
-     * @return Route
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return Route
      */
     public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource)
     {
@@ -155,7 +155,7 @@ class RestActionReader
             if (empty($parent) || '/' === substr($parent, -1)) {
                 throw new \InvalidArgumentException(
                     "Every parent controller must have `get{SINGULAR}Action(\$id)` method\n".
-                    "where {SINGULAR} is a singular form of associated object"
+                    'where {SINGULAR} is a singular form of associated object'
                 );
             }
         }
@@ -172,7 +172,7 @@ class RestActionReader
         }
 
         list($httpMethod, $resources, $isCollection, $isInflectable) = $httpMethodAndResources;
-        $arguments                                                   = $this->getMethodArguments($method);
+        $arguments = $this->getMethodArguments($method);
 
         // if we have only 1 resource & 1 argument passed, then it's object call, so
         // we can set collection singular name
@@ -190,7 +190,7 @@ class RestActionReader
         }
 
         $routeName = $httpMethod.$this->generateRouteName($resources);
-        $urlParts  = $this->generateUrlParts($resources, $arguments, $httpMethod);
+        $urlParts = $this->generateUrlParts($resources, $arguments, $httpMethod);
 
         // if passed method is not valid HTTP method then it's either
         // a hypertext driver, a custom object (PUT) or collection (GET)
@@ -201,24 +201,23 @@ class RestActionReader
         }
 
         // generated parameters
-        $routeName    = strtolower($routeName);
-        $path         = implode('/', $urlParts);
-        $defaults     = array('_controller' => $method->getName());
-        $requirements = array();
-        $options      = array();
-        $host         = '';
-        $condition    = null;
+        $routeName = strtolower($routeName);
+        $path = implode('/', $urlParts);
+        $defaults = ['_controller' => $method->getName()];
+        $requirements = [];
+        $options = [];
+        $host = '';
+        $condition = null;
 
         $annotations = $this->readRouteAnnotation($method);
         if ($annotations) {
             foreach ($annotations as $annotation) {
-
-                $path         = implode('/', $urlParts);
-                $defaults     = array('_controller' => $method->getName());
-                $requirements = array();
-                $options      = array();
-                $methods      = explode('|', $httpMethod);
-                $condition    = null;
+                $path = implode('/', $urlParts);
+                $defaults = ['_controller' => $method->getName()];
+                $requirements = [];
+                $options = [];
+                $methods = explode('|', $httpMethod);
+                $condition = null;
 
                 $annoRequirements = $annotation->getRequirements();
                 $annoMethods = $annotation->getMethods();
@@ -227,10 +226,10 @@ class RestActionReader
                     $methods = $annoMethods;
                 }
 
-                $path         = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $path;
+                $path = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $path;
                 $requirements = array_merge($requirements, $annoRequirements);
-                $options      = array_merge($options, $annotation->getOptions());
-                $defaults     = array_merge($defaults, $annotation->getDefaults());
+                $options = array_merge($options, $annotation->getOptions());
+                $defaults = array_merge($defaults, $annotation->getDefaults());
                 $host = $annotation->getHost();
                 $schemes = $annotation->getSchemes();
                 $condition = $annotation->getCondition();
@@ -248,7 +247,6 @@ class RestActionReader
                 );
                 $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
-
         } else {
             if ($this->includeFormat === true) {
                 $path .= '.{_format}';
@@ -262,7 +260,7 @@ class RestActionReader
 
             // add route to collection
             $route = new Route(
-                $path, $defaults, $requirements, $options, $host, array(), $methods, $condition
+                $path, $defaults, $requirements, $options, $host, [], $methods, $condition
             );
             $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable);
         }
@@ -313,7 +311,7 @@ class RestActionReader
         }
 
         $httpMethod = strtolower($matches[1]);
-        $resources  = preg_split(
+        $resources = preg_split(
             '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
         $isCollection = false;
@@ -336,7 +334,7 @@ class RestActionReader
 
         $resources = array_merge($resource, $resources);
 
-        return array($httpMethod, $resources, $isCollection, $isInflectable);
+        return [$httpMethod, $resources, $isCollection, $isInflectable];
     }
 
     /**
@@ -355,14 +353,14 @@ class RestActionReader
         // * Symfony\Component\HttpFoundation\Request
         // * FOS\RestBundle\Request\QueryFetcher
         // * Symfony\Component\Validator\ConstraintViolationList
-        $ignoreClasses = array(
+        $ignoreClasses = [
             'Symfony\Component\HttpFoundation\Request',
             'FOS\RestBundle\Request\ParamFetcherInterface',
             'Symfony\Component\Validator\ConstraintViolationListInterface',
-            'Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter'
-        );
+            'Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter',
+        ];
 
-        $arguments = array();
+        $arguments = [];
         foreach ($method->getParameters() as $argument) {
             if (isset($params[$argument->getName()])) {
                 continue;
@@ -429,7 +427,7 @@ class RestActionReader
      */
     private function generateUrlParts(array $resources, array $arguments, $httpMethod)
     {
-        $urlParts = array();
+        $urlParts = [];
         foreach ($resources as $i => $resource) {
             // if we already added all parent routes paths to URL & we have
             // prefix - add it
@@ -497,9 +495,9 @@ class RestActionReader
      */
     private function readRouteAnnotation(\ReflectionMethod $reflectionMethod)
     {
-        $annotations = array();
+        $annotations = [];
 
-        foreach ( array('Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options') as $annotationName) {
+        foreach (['Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options'] as $annotationName) {
             if ($annotations_new = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
                 $annotations = array_merge($annotations, $annotations_new);
             }
@@ -552,7 +550,7 @@ class RestActionReader
      */
     private function readMethodAnnotations(\ReflectionMethod $reflectionMethod, $annotationName)
     {
-        $annotations = array();
+        $annotations = [];
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
         if ($annotations_new = $this->annotationReader->getMethodAnnotations($reflectionMethod)) {

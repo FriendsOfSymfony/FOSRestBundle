@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 
 /**
- * RequestParamTest
+ * RequestParamTest.
  *
  * @author Eduardo Oliveira <entering@gmail.com>
  */

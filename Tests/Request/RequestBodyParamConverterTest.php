@@ -26,10 +26,10 @@ class RequestBodyParamConverterTest extends AbstractRequestBodyParamConverterTes
         // skip the test if the installed version of SensioFrameworkExtraBundle
         // is not compatible with the RequestBodyParamConverter class
         $parameter = new \ReflectionParameter(
-            array(
+            [
                 'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
                 'supports',
-            ),
+            ],
             'configuration'
         );
         if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' != $parameter->getClass()->getName()) {

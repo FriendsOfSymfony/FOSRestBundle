@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Decoder;
 
 /**
- * Defines the interface of decoder providers
+ * Defines the interface of decoder providers.
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */

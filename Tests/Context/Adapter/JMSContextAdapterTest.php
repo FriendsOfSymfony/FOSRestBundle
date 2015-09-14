@@ -39,10 +39,10 @@ class JMSContextAdapterTest extends \PHPUnit_Framework_TestCase
     public function testSerializationContextConversion()
     {
         $context = new Context();
-        $context->setAttribute('groups', array('d'));
+        $context->setAttribute('groups', ['d']);
         $context->setAttribute('foo', 'bar');
         $context->setAttribute('version', 1);
-        $context->addGroups(array('a', 'b', 'c'));
+        $context->addGroups(['a', 'b', 'c']);
         $context->setVersion(1.3);
         $context->setMaxDepth(10);
         $context->setSerializeNull(true);
@@ -50,7 +50,7 @@ class JMSContextAdapterTest extends \PHPUnit_Framework_TestCase
         $JMSContext = $this->adapter->convertSerializationContext($context);
         $this->assertInstanceOf('JMS\Serializer\SerializationContext', $JMSContext);
         $this->assertEquals('bar', $JMSContext->attributes->get('foo')->get());
-        $this->assertEquals(array('a', 'b', 'c'), $JMSContext->attributes->get('groups')->get());
+        $this->assertEquals(['a', 'b', 'c'], $JMSContext->attributes->get('groups')->get());
         $this->assertEquals(1.3, $JMSContext->attributes->get('version')->get());
         $this->assertEquals(true, $JMSContext->shouldSerializeNull());
     }
@@ -60,7 +60,7 @@ class JMSContextAdapterTest extends \PHPUnit_Framework_TestCase
         $context = new Context();
         $context->setAttribute('bar', 'foo');
         $context->setAttribute('version', 1);
-        $context->addGroups(array('e', 'f'));
+        $context->addGroups(['e', 'f']);
         $context->setVersion(1.4);
         $context->setMaxDepth(10);
         $context->setSerializeNull(false);
@@ -68,7 +68,7 @@ class JMSContextAdapterTest extends \PHPUnit_Framework_TestCase
         $JMSContext = $this->adapter->convertDeserializationContext($context);
         $this->assertInstanceOf('JMS\Serializer\DeserializationContext', $JMSContext);
         $this->assertEquals('foo', $JMSContext->attributes->get('bar')->get());
-        $this->assertEquals(array('e', 'f'), $JMSContext->attributes->get('groups')->get());
+        $this->assertEquals(['e', 'f'], $JMSContext->attributes->get('groups')->get());
         $this->assertEquals(1.4, $JMSContext->attributes->get('version')->get());
         $this->assertEquals(false, $JMSContext->shouldSerializeNull());
     }

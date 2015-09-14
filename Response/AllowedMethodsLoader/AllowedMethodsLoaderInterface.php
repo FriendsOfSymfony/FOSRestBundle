@@ -12,14 +12,14 @@
 namespace FOS\RestBundle\Response\AllowedMethodsLoader;
 
 /**
- * AllowedMethodsLoaderInterface
+ * AllowedMethodsLoaderInterface.
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
 interface AllowedMethodsLoaderInterface
 {
     /**
-     * Returns the allowed http methods
+     * Returns the allowed http methods.
      *
      * array(
      *  'some_route'    => array('GET', 'POST'),

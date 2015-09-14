@@ -2,12 +2,12 @@
 
 namespace FOS\RestBundle\Examples;
 
+use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use FOS\RestBundle\Util\Codes;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\LoggerInterface;
 
 /**
  * This is an example RSS ViewHandler.
@@ -47,6 +47,7 @@ class RssHandler
 
     /**
      * Converts the viewdata to a RSS feed. Modify to suit your datastructure.
+     *
      * @return Response
      */
     public function createResponse(ViewHandler $handler, View $view, Request $request)
@@ -59,7 +60,7 @@ class RssHandler
                 $this->logger->error($e);
             }
 
-            $content = sprintf("%s:<br/><pre>%s</pre>", $e->getMessage(), $e->getTraceAsString());
+            $content = sprintf('%s:<br/><pre>%s</pre>', $e->getMessage(), $e->getTraceAsString());
             $code = Codes::HTTP_BAD_REQUEST;
         }
 
@@ -70,18 +71,18 @@ class RssHandler
      * @param $data array
      * @param format string, either rss or atom
      */
-    protected function createFeed($data, $format = "rss")
+    protected function createFeed($data, $format = 'rss')
     {
         $feed = new \Zend_Feed_Writer_Feed();
         $feed->setTitle($data['title']);
         $feed->setLink($data['link']);
         $feed->setFeedLink($data['link'], 'rss');
-        $feed->addAuthor(array(
+        $feed->addAuthor([
             'name'  => 'ZeroCMS',
             'email' => 'email!',
-        ));
+        ]);
         $feed->setDateModified(time());
-        $feed->setDescription("RSS feed from query");
+        $feed->setDescription('RSS feed from query');
 
         // Add one or more entries. Note that entries must be manually added once created.
         foreach ($data['documents'] as $document) {
@@ -89,11 +90,11 @@ class RssHandler
 
             $entry->setTitle($document['title']);
             $entry->setLink($document['url']);
-            $entry->addAuthor(array(
+            $entry->addAuthor([
                 'name'  => $document['author'],
                 //'email' => '',
                 //'uri'   => '',
-            ));
+            ]);
 
             $entry->setDateModified($document['dateUpdated']->getTimestamp());
             $entry->setDateCreated($document['dateCreated']->getTimestamp());
@@ -102,7 +103,7 @@ class RssHandler
                 $entry->setDescription($document['summary']);
             }
 
-            $entry->setContent($document['body'] );
+            $entry->setContent($document['body']);
             $feed->addEntry($entry);
         }
 

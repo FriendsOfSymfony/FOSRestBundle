@@ -25,7 +25,7 @@ class ChainContextAdapterTest extends \PHPUnit_Framework_TestCase
         $this->adapter1 = $this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface');
         $this->adapter2 = $this->getMock('FOS\RestBundle\Tests\Fixtures\Context\Adapter\SerializerAwareAdapter');
 
-        $this->adapter = $this->getMock('FOS\RestBundle\Context\Adapter\ChainContextAdapter', null, array(array($this->adapter1, $this->adapter2)));
+        $this->adapter = $this->getMock('FOS\RestBundle\Context\Adapter\ChainContextAdapter', null, [[$this->adapter1, $this->adapter2]]);
     }
 
     public function testInterface()
@@ -114,7 +114,7 @@ class ChainContextAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testSerializerTransmission()
     {
-        $serializer = $this->getMock('JMS\Serializer\Serializer', array(), array(), '', false);
+        $serializer = $this->getMock('JMS\Serializer\Serializer', [], [], '', false);
         $this->adapter->setSerializer($serializer);
         $this->adapter2
              ->expects($this->exactly(4))

@@ -11,20 +11,20 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\RestBundle\Context\GroupableContextInterface;
-use FOS\RestBundle\Context\VersionableContextInterface;
-use FOS\RestBundle\Context\SerializeNullContextInterface;
-use FOS\RestBundle\Context\ContextInterface;
-use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
 use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\GroupableContextInterface;
+use FOS\RestBundle\Context\SerializeNullContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
+use FOS\RestBundle\Util\Codes;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -41,7 +41,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      *
      * @var array
      */
-    protected $customHandlers = array();
+    protected $customHandlers = [];
 
     /**
      * The supported formats as keys and if the given formats
@@ -88,7 +88,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     /**
      * @var array
      */
-    protected $exclusionStrategyGroups = array();
+    protected $exclusionStrategyGroups = [];
 
     /**
      * @var string
@@ -309,9 +309,9 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      * @param View    $view
      * @param Request $request
      *
-     * @return Response
-     *
      * @throws UnsupportedMediaTypeHttpException
+     *
+     * @return Response
      */
     public function handle(View $view, Request $request = null)
     {
@@ -404,9 +404,9 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
         $data = $view->getData();
 
         if ($data instanceof FormInterface) {
-            $data = array($view->getTemplateVar() => $data->getData(), 'form' => $data);
+            $data = [$view->getTemplateVar() => $data->getData(), 'form' => $data];
         } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
-            $data = array($view->getTemplateVar() => $data);
+            $data = [$view->getTemplateVar() => $data];
         }
 
         if (isset($data['form']) && $data['form'] instanceof FormInterface) {
@@ -486,7 +486,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     }
 
     /**
-     * Returns the form from the given view if present, false otherwise
+     * Returns the form from the given view if present, false otherwise.
      *
      * @param View $view
      *
@@ -508,7 +508,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     }
 
     /**
-     * Returns the data from a view. If the data is form with errors, it will return it wrapped in an ExceptionWrapper
+     * Returns the data from a view. If the data is form with errors, it will return it wrapped in an ExceptionWrapper.
      *
      * @param View $view
      *
@@ -530,11 +530,11 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
         $exceptionWrapperHandler = $this->container->get('fos_rest.exception_handler');
 
         return $exceptionWrapperHandler->wrap(
-            array(
+            [
                  'status_code' => $this->failedValidationCode,
                  'message'     => 'Validation Failed',
                  'errors'      => $form,
-            )
+            ]
         );
     }
 }

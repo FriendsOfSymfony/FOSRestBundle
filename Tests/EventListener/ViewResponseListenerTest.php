@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * View response listener test
+ * View response listener test.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
@@ -116,7 +116,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
             ->with('format', null);
 
         $request = new Request();
-        $request->attributes->set('_template_default_vars', array('foo', 'halli'));
+        $request->attributes->set('_template_default_vars', ['foo', 'halli']);
         $request->attributes->set('foo', 'baz');
         $request->attributes->set('halli', 'galli');
         $request->attributes->set('_template', $template);
@@ -154,16 +154,16 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     {
         $request = new Request();
 
-        $event = $this->getResponseEvent($request, array());
+        $event = $this->getResponseEvent($request, []);
         $event->expects($this->never())
             ->method('setResponse');
 
-        $this->assertEquals(array(), $this->listener->onKernelView($event));
+        $this->assertEquals([], $this->listener->onKernelView($event));
     }
 
     /**
      * onKernelView falls back to FrameworkExtraBundles' onKernelView
-     * when fos_rest.view_response_listener.force_view is false
+     * when fos_rest.view_response_listener.force_view is false.
      */
     public function testOnKernelViewFallsBackToFrameworkExtraBundle()
     {
@@ -176,14 +176,14 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->templating->expects($this->any())
             ->method('renderResponse')
-            ->with($template, array())
+            ->with($template, [])
             ->will($this->returnValue(new Response('output')));
         $this->templating->expects($this->any())
             ->method('render')
-            ->with($template, array())
+            ->with($template, [])
             ->will($this->returnValue('output'));
 
-        $event = $this->getResponseEvent($request, array());
+        $event = $this->getResponseEvent($request, []);
         $response = null;
 
         $event->expects($this->once())
@@ -205,11 +205,11 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public static function statusCodeProvider()
     {
-        return array(
-            array(201, 200, 201),
-            array(201, 404, 404),
-            array(201, 500, 500),
-        );
+        return [
+            [201, 200, 201],
+            [201, 404, 404],
+            [201, 500, 500],
+        ];
     }
 
     /**
@@ -217,14 +217,14 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testStatusCode($annotationCode, $viewCode, $expectedCode)
     {
-        $viewAnnotation = new ViewAnnotation(array());
+        $viewAnnotation = new ViewAnnotation([]);
         $viewAnnotation->setStatusCode($annotationCode);
 
         $request = new Request();
         $request->setRequestFormat('json');
         $request->attributes->set('_view', $viewAnnotation);
 
-        $this->viewHandler = new ViewHandler(array('json' => true));
+        $this->viewHandler = new ViewHandler(['json' => true]);
         $this->viewHandler->setContainer($this->container);
 
         // This is why we avoid container dependencies!
@@ -263,10 +263,10 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public static function serializerEnableMaxDepthChecksProvider()
     {
-        return array(
-            array(false, null),
-            array(true, 0),
-        );
+        return [
+            [false, null],
+            [true, 0],
+        ];
     }
 
     /**
@@ -274,14 +274,14 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedMaxDepth)
     {
-        $viewAnnotation = new ViewAnnotation(array());
+        $viewAnnotation = new ViewAnnotation([]);
         $viewAnnotation->setSerializerEnableMaxDepthChecks($enableMaxDepthChecks);
 
         $request = new Request();
         $request->setRequestFormat('json');
         $request->attributes->set('_view', $viewAnnotation);
 
-        $this->viewHandler = new ViewHandler(array('json' => true));
+        $this->viewHandler = new ViewHandler(['json' => true]);
         $this->viewHandler->setContainer($this->container);
 
         // This is why we avoid container dependencies!
@@ -313,11 +313,11 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function getDataForDefaultVarsCopy()
     {
-        return array(
-            array(true, false, false),
-            array(true, true, true),
-            array(false, null, true),
-        );
+        return [
+            [true, false, false],
+            [true, true, true],
+            [false, null, true],
+        ];
     }
 
     /**
@@ -326,19 +326,19 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     public function testViewWithNoCopyDefaultVars($createAnnotation, $populateDefaultVars, $shouldCopy)
     {
         $request = new Request();
-        $request->attributes->set('_template_default_vars', array('customer'));
+        $request->attributes->set('_template_default_vars', ['customer']);
         $request->attributes->set('customer', 'A person goes here');
         $view = View::create();
 
         if ($createAnnotation) {
-            $viewAnnotation = new ViewAnnotation(array());
+            $viewAnnotation = new ViewAnnotation([]);
             $viewAnnotation->setPopulateDefaultVars($populateDefaultVars);
             $request->attributes->set('_view', $viewAnnotation);
         }
 
         $event = $this->getResponseEvent($request, $view);
 
-        $this->viewHandler = new ViewHandler(array('html' => true));
+        $this->viewHandler = new ViewHandler(['html' => true]);
         $this->viewHandler->setContainer($this->container);
 
         // This is why we avoid container dependencies!

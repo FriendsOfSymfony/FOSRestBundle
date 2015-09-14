@@ -33,15 +33,15 @@ class FormatListenerRulesPass implements CompilerPassInterface
                 $path .= '|_wdt';
             }
 
-            $profilerRule = array(
-                'host' => null,
-                'methods' => null,
-                'path' => "^/$path/",
-                'priorities' => array('html', 'json'),
-                'fallback_format' => 'html',
+            $profilerRule = [
+                'host'                      => null,
+                'methods'                   => null,
+                'path'                      => "^/$path/",
+                'priorities'                => ['html', 'json'],
+                'fallback_format'           => 'html',
                 'exception_fallback_format' => 'html',
-                'prefer_extension' => true,
-            );
+                'prefer_extension'          => true,
+            ];
 
             $this->addRule($profilerRule, $container);
         }
@@ -69,16 +69,16 @@ class FormatListenerRulesPass implements CompilerPassInterface
         $exceptionFallbackFormat = $rule['exception_fallback_format'];
         unset($rule['exception_fallback_format']);
         $container->getDefinition('fos_rest.format_negotiator')
-            ->addMethodCall('add', array($matcher, $rule));
+            ->addMethodCall('add', [$matcher, $rule]);
 
         $rule['fallback_format'] = $exceptionFallbackFormat;
         $container->getDefinition('fos_rest.exception_format_negotiator')
-            ->addMethodCall('add', array($matcher, $rule));
+            ->addMethodCall('add', [$matcher, $rule]);
     }
 
     protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
     {
-        $arguments = array($path, $host, $methods);
+        $arguments = [$path, $host, $methods];
         $serialized = serialize($arguments);
         $id = 'fos_rest.request_matcher.'.md5($serialized).sha1($serialized);
 
@@ -86,8 +86,7 @@ class FormatListenerRulesPass implements CompilerPassInterface
             // only add arguments that are necessary
             $container
                 ->setDefinition($id, new DefinitionDecorator('fos_rest.request_matcher'))
-                ->setArguments($arguments)
-            ;
+                ->setArguments($arguments);
         }
 
         return new Reference($id);

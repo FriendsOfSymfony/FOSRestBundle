@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
 
 /**
  *  @Rest\RouteResource("Article", pluralize=false)
@@ -20,14 +20,26 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 class AnnotatedNonPluralizedArticleController extends FosRestController
 {
     public function cgetAction()
-    {} // [GET] /article
+    {
+    }
+
+ // [GET] /article
 
     public function getAction($slug)
-    {} // [GET] /article/{slug}
+    {
+    }
+
+ // [GET] /article/{slug}
 
     public function cgetCommentAction($slug)
-    {} // [GET] /article/{slug}/comment
+    {
+    }
+
+ // [GET] /article/{slug}/comment
 
     public function getCommentAction($slug, $comment)
-    {} // [GET] /article/{slug}/comment/{slug}
+    {
+    }
+
+ // [GET] /article/{slug}/comment/{slug}
 }

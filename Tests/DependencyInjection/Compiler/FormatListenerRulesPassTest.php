@@ -20,10 +20,10 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
     {
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', array('addMethod'));
+        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', ['addMethod']);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'))
+            ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
         $container->expects($this->exactly(3))
@@ -39,17 +39,17 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->method('getParameter')
             ->will($this->onConsecutiveCalls(
                 2,
-                array(
-                    array(
-                        'host' => null,
-                        'methods' => null,
-                        'path' => '^/',
-                        'priorities' => array('html', 'json'),
-                        'fallback_format' => 'html',
+                [
+                    [
+                        'host'                      => null,
+                        'methods'                   => null,
+                        'path'                      => '^/',
+                        'priorities'                => ['html', 'json'],
+                        'fallback_format'           => 'html',
                         'exception_fallback_format' => 'html',
-                        'prefer_extension' => true,
-                ),
-            ) )
+                        'prefer_extension'          => true,
+                ],
+            ])
         );
 
         $container->expects($this->exactly(4))
@@ -66,10 +66,10 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
 
     public function testNoRulesAreAddedWhenProfilerToolbarAreDisabled()
     {
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', array('addMethod'));
+        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', ['addMethod']);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'))
+            ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
         $container->expects($this->exactly(2))
@@ -85,17 +85,17 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->method('getParameter')
             ->with('fos_rest.format_listener.rules')
             ->will($this->returnValue(
-                array(
-                    array(
-                        'host' => null,
-                        'methods' => null,
-                        'path' => '^/',
-                        'priorities' => array('html', 'json'),
-                        'fallback_format' => 'html',
+                [
+                    [
+                        'host'                      => null,
+                        'methods'                   => null,
+                        'path'                      => '^/',
+                        'priorities'                => ['html', 'json'],
+                        'fallback_format'           => 'html',
                         'exception_fallback_format' => 'html',
-                        'prefer_extension' => true,
-                    ),
-                ) )
+                        'prefer_extension'          => true,
+                    ],
+                ])
             );
 
         $container->expects($this->exactly(2))

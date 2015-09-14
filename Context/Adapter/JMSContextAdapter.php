@@ -11,15 +11,15 @@
 
 namespace FOS\RestBundle\Context\Adapter;
 
-use JMS\Serializer\Context as JMSContext;
-use JMS\Serializer\SerializationContext as JMSSerializationContext;
-use JMS\Serializer\DeserializationContext as JMSDeserializationContext;
-use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
+use FOS\RestBundle\Context\ContextInterface;
 use FOS\RestBundle\Context\GroupableContextInterface;
-use FOS\RestBundle\Context\VersionableContextInterface;
 use FOS\RestBundle\Context\MaxDepthContextInterface;
 use FOS\RestBundle\Context\SerializeNullContextInterface;
-use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
+use JMS\Serializer\Context as JMSContext;
+use JMS\Serializer\DeserializationContext as JMSDeserializationContext;
+use JMS\Serializer\SerializationContext as JMSSerializationContext;
+use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
 
 /**
  * {@inheritdoc}

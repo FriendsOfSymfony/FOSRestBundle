@@ -11,17 +11,14 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
 
 /**
- * Class ReportController
- *
- * @package Vifeed\PaymentBundle\Controller\Api
+ * Class ReportController.
  */
 class ReportController extends FOSRestController
 {
-
     public function getBillingSpendingsAction()
     {
     }

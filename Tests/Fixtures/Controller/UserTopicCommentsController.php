@@ -16,23 +16,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserTopicCommentsController extends Controller
 {
     public function getCommentsAction($slug, $title)
-    {} // [GET] /users/{slug}/topics/{title}/comments
+    {
+    }
+
+ // [GET] /users/{slug}/topics/{title}/comments
 
     public function putCommentAction($slug, $title, $id)
-    {} // [PUT] /users/{slug}/topics/{title}/comments/{id}
+    {
+    }
+
+ // [PUT] /users/{slug}/topics/{title}/comments/{id}
 
     public function banCommentAction($slug, $title, $id)
-    {} // [POST] /users/{slug}/topics/{title}/comments/{id}/ban
+    {
+    }
+
+ // [POST] /users/{slug}/topics/{title}/comments/{id}/ban
 
     // conventional HATEOAS actions below
 
     public function newCommentsAction($slug, $title)
-    {} // [GET] /users/{slug}/topics/{title}/comments/new
+    {
+    }
+
+ // [GET] /users/{slug}/topics/{title}/comments/new
 
     public function editCommentAction($slug, $title, $id)
-    {} // [GET] /users/{slug}/topics/{title}/comments/edit
+    {
+    }
+
+ // [GET] /users/{slug}/topics/{title}/comments/edit
 
     public function removeCommentAction($slug, $title, $id)
-    {} // [GET] /users/{slug}/topics/{title}/comments/remove
+    {
+    }
 
+ // [GET] /users/{slug}/topics/{title}/comments/remove
 }

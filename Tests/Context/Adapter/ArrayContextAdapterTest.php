@@ -34,21 +34,21 @@ class ArrayContextAdapterTest extends \PHPUnit_Framework_TestCase
     public function testContextConversion()
     {
         $context = new Context();
-        $context->setAttribute('groups', array('d'));
+        $context->setAttribute('groups', ['d']);
         $context->setAttribute('foo', 'bar');
         $context->setAttribute('version', 1);
-        $context->addGroups(array('a', 'b', 'c'));
+        $context->addGroups(['a', 'b', 'c']);
         $context->setVersion(1.3);
         $context->setMaxDepth(10);
         $context->setSerializeNull(false);
 
         $serializationContext = $this->adapter->convertSerializationContext($context);
         $this->assertTrue(is_array($serializationContext));
-        $this->assertEquals(array('groups' => array('a', 'b', 'c'), 'foo' => 'bar', 'version' => 1.3, 'maxDepth' => 10, 'serializeNull' => false), $serializationContext);
+        $this->assertEquals(['groups' => ['a', 'b', 'c'], 'foo' => 'bar', 'version' => 1.3, 'maxDepth' => 10, 'serializeNull' => false], $serializationContext);
 
         $deserializationContext = $this->adapter->convertDeserializationContext($context);
         $this->assertTrue(is_array($deserializationContext));
-        $this->assertEquals(array('groups' => array('a', 'b', 'c'), 'foo' => 'bar', 'version' => 1.3, 'maxDepth' => 10), $deserializationContext);
+        $this->assertEquals(['groups' => ['a', 'b', 'c'], 'foo' => 'bar', 'version' => 1.3, 'maxDepth' => 10], $deserializationContext);
     }
 
     public function testSupports()

@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Routing\Loader\XmlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
-use FOS\RestBundle\Routing\RestRouteCollection;
-use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * RestXmlCollectionLoader XML file collections loader.
@@ -24,7 +24,7 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class RestXmlCollectionLoader extends XmlFileLoader
 {
-    protected $collectionParents = array();
+    protected $collectionParents = [];
     private $processor;
     private $includeFormat;
     private $formats;
@@ -43,7 +43,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         FileLocatorInterface $locator,
         RestRouteProcessor $processor,
         $includeFormat = true,
-        array $formats = array(),
+        array $formats = [],
         $defaultFormat = null
     ) {
         parent::__construct($locator);
@@ -64,15 +64,15 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $this->parseRoute($collection, $node, $path);
                 break;
             case 'import':
-                $name       = (string) $node->getAttribute('id');
-                $resource   = (string) $node->getAttribute('resource');
-                $prefix     = (string) $node->getAttribute('prefix');
+                $name = (string) $node->getAttribute('id');
+                $resource = (string) $node->getAttribute('resource');
+                $prefix = (string) $node->getAttribute('prefix');
                 $namePrefix = (string) $node->getAttribute('name-prefix');
-                $parent     = (string) $node->getAttribute('parent');
-                $type       = (string) $node->getAttribute('type');
+                $parent = (string) $node->getAttribute('parent');
+                $type = (string) $node->getAttribute('type');
                 $currentDir = dirname($path);
 
-                $parents = array();
+                $parents = [];
                 if (!empty($parent)) {
                     if (!isset($this->collectionParents[$parent])) {
                         throw new \InvalidArgumentException(sprintf('Cannot find parent resource with name %s', $parent));
@@ -84,8 +84,8 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type, $currentDir);
 
                 if (!empty($name) && $imported instanceof RestRouteCollection) {
-                    $parents[]  = (!empty($prefix) ? $prefix.'/' : '').$imported->getSingularName();
-                    $prefix     = null;
+                    $parents[] = (!empty($prefix) ? $prefix.'/' : '').$imported->getSingularName();
+                    $prefix = null;
 
                     $this->collectionParents[$name] = $parents;
                 }
@@ -99,7 +99,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
     {
@@ -174,7 +174,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
     private function getOptions(\DOMElement $node)
     {
-        $options = array();
+        $options = [];
         foreach ($node->childNodes as $child) {
             if ($child instanceof \DOMElement && $child->tagName === 'option') {
                 $option = $node->ownerDocument->createElementNs(
@@ -191,7 +191,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {
@@ -208,9 +208,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
     protected function validate(\DOMDocument $dom)
     {
         $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
-        $restRoutinglocation =  str_replace('\\', '/', $restRoutinglocation);
+        $restRoutinglocation = str_replace('\\', '/', $restRoutinglocation);
         $routinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing-1.0.xsd');
-        $routinglocation =  str_replace('\\', '/', $routinglocation);
+        $routinglocation = str_replace('\\', '/', $routinglocation);
         $source = <<<EOF
 <?xml version="1.0" encoding="utf-8" ?>
 <xsd:schema xmlns="http://symfony.com/schema"
@@ -222,8 +222,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     <xsd:import namespace="http://friendsofsymfony.github.com/schema/rest" schemaLocation="$restRoutinglocation" />
     <xsd:import namespace="http://symfony.com/schema/routing" schemaLocation="$routinglocation" />
 </xsd:schema>
-EOF
-        ;
+EOF;
 
         $current = libxml_use_internal_errors(true);
         libxml_clear_errors();
@@ -235,7 +234,7 @@ EOF
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function loadFile($file)
     {
@@ -261,7 +260,7 @@ EOF
      */
     private function getXmlErrors_($internalErrors)
     {
-        $errors = array();
+        $errors = [];
         foreach (libxml_get_errors() as $error) {
             $errors[] = sprintf('[%s %s] %s (in %s - line %d, column %d)',
                 LIBXML_ERR_WARNING == $error->level ? 'WARNING' : 'ERROR',

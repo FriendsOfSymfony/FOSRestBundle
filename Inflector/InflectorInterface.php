@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Inflector;
 
 /**
- * Inflector interface
+ * Inflector interface.
  *
  * @author Mark Kazemier <Markkaz>
  */

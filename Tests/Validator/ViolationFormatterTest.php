@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Validator;
 
-use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Validator\ViolationFormatter;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -50,10 +50,10 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testViolationListIsWellFormatted()
     {
-        $errors = new ConstraintViolationList(array(
-            new ConstraintViolation("expected message 1", null, array(), null, null, 'bar'),
-            new ConstraintViolation("expected message 2", null, array(), null, null, 'bar'),
-        ));
+        $errors = new ConstraintViolationList([
+            new ConstraintViolation('expected message 1', null, [], null, null, 'bar'),
+            new ConstraintViolation('expected message 2', null, [], null, null, 'bar'),
+        ]);
 
         $param = new RequestParam();
         $param->name = 'foo';

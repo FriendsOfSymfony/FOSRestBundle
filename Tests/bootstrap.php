@@ -17,6 +17,7 @@ if (!file_exists($file)) {
 $autoload = require_once $file;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+
 AnnotationRegistry::registerLoader(function ($class) {
     if (strpos($class, 'FOS\RestBundle\Controller\Annotations\\') === 0) {
         $path = __DIR__.'/../'.str_replace('\\', '/', substr($class, strlen('FOS\RestBundle\\'))).'.php';

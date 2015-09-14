@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
 use FOS\RestBundle\DependencyInjection\Compiler\ExceptionWrapperHandlerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
+use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\TwigExceptionPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>

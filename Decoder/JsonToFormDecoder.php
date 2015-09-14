@@ -19,7 +19,7 @@ namespace FOS\RestBundle\Decoder;
 class JsonToFormDecoder implements DecoderInterface
 {
     /**
-     * Makes data decoded from JSON application/x-www-form-encoded compliant
+     * Makes data decoded from JSON application/x-www-form-encoded compliant.
      *
      * @param array $data
      */

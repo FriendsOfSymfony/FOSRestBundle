@@ -35,13 +35,13 @@ class SerializerErrorController extends Controller
      */
     public function invalidFormAction()
     {
-        $form = $this->createFormBuilder(null, array(
+        $form = $this->createFormBuilder(null, [
             'csrf_protection' => false,
-        ))->add('name', 'text', array(
-            'constraints' => array(new NotBlank())
-        ))->getForm();
+        ])->add('name', 'text', [
+            'constraints' => [new NotBlank()],
+        ])->getForm();
 
-        $form->submit(array());
+        $form->submit([]);
 
         return $form;
     }

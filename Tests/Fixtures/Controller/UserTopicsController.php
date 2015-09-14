@@ -16,25 +16,46 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserTopicsController extends Controller
 {
     public function getTopicsAction($slug)
-    {} // [GET] /users/{slug}/topics
+    {
+    }
+
+ // [GET] /users/{slug}/topics
 
     public function getTopicAction($slug, $title)
-    {} // [GET] /users/{slug}/topics/{title}
+    {
+    }
+
+ // [GET] /users/{slug}/topics/{title}
 
     public function putTopicAction($slug, $title)
-    {} // [PUT] /users/{slug}/topics/{title}
+    {
+    }
+
+ // [PUT] /users/{slug}/topics/{title}
 
     public function hideTopicAction($slug, $title)
-    {} // [POST] /users/{slug}/topics/{title}/hide
+    {
+    }
+
+ // [POST] /users/{slug}/topics/{title}/hide
 
     // conventional HATEOAS actions below
 
     public function newTopicsAction($slug)
-    {} // [GET] /users/{slug}/topics/new
+    {
+    }
+
+ // [GET] /users/{slug}/topics/new
 
     public function editTopicAction($slug, $title)
-    {} // [GET] /users/{slug}/topics/{title}/edit
+    {
+    }
+
+ // [GET] /users/{slug}/topics/{title}/edit
 
     public function removeTopicAction($slug, $title)
-    {} // [GET] /remove/{slug}/topics/{title}/remove
+    {
+    }
+
+ // [GET] /remove/{slug}/topics/{title}/remove
 }

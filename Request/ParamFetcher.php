@@ -11,20 +11,19 @@
 
 namespace FOS\RestBundle\Request;
 
-use FOS\RestBundle\Controller\Annotations\QueryParam;
+use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
 
 /**
  * Helper to validate parameters of the active request.
@@ -50,17 +49,17 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     /**
      * Initializes fetcher.
      *
-     * @param ParamReader                 $paramReader
-     * @param RequestStack                $requestStack
+     * @param ParamReader                                 $paramReader
+     * @param RequestStack                                $requestStack
      * @param ValidatorInterface|LegacyValidatorInterface $validator
-     * @param ViolationFormatterInterface $violationFormatter
+     * @param ViolationFormatterInterface                 $violationFormatter
      */
     public function __construct(ParamReader $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
-        $this->paramReader        = $paramReader;
-        $this->requestStack       = $requestStack;
+        $this->paramReader = $paramReader;
+        $this->requestStack = $requestStack;
         $this->violationFormatter = $violationFormatter;
-        $this->validator          = $validator;
+        $this->validator = $validator;
 
         if ($validator !== null && !$validator instanceof LegacyValidatorInterface && !$validator instanceof ValidatorInterface) {
             throw new \InvalidArgumentException(sprintf(
@@ -73,7 +72,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setController($controller)
     {
@@ -106,7 +105,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get($name, $strict = null)
     {
@@ -117,9 +116,9 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
         }
 
         /** @var Param $config */
-        $config   = $params[$name];
+        $config = $params[$name];
         $nullable = $config->nullable;
-        $default  = $config->default;
+        $default = $config->default;
         $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
         if (null === $strict) {
@@ -135,7 +134,6 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
         }
 
         if ($config->array) {
-
             if (($default !== null || !$strict) || $nullable) {
                 $default = (array) $default;
             }
@@ -182,10 +180,10 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
      * @param string $param
      * @param bool   $strict
      *
-     * @return string
-     *
      * @throws BadRequestHttpException
      * @throws \RuntimeException
+     *
+     * @return string
      */
     public function cleanParamWithRequirements(Param $config, $param, $strict)
     {
@@ -210,12 +208,13 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
             if (is_array($param)) {
                 if ($strict) {
                     throw new BadRequestHttpException(
-                        sprintf("%s parameter is an array", $paramType)
+                        sprintf('%s parameter is an array', $paramType)
                     );
                 }
+
                 return $default;
             }
-            $constraint = new Regex(array(
+            $constraint = new Regex([
                 'pattern' => '#^(?:'.$config->requirements.')$#xsu',
                 'message' => sprintf(
                     "%s parameter value '%s', does not match requirements '%s'",
@@ -223,16 +222,16 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
                     $param,
                     $config->requirements
                 ),
-            ));
-        } elseif (is_array($constraint) && isset($constraint["rule"]) && $constraint["error_message"]) {
-            $constraint = new Regex(array(
-                'pattern' => '#^(?:'.$config->requirements["rule"].')$#xsu',
-                'message' => $config->requirements["error_message"]
-            ));
+            ]);
+        } elseif (is_array($constraint) && isset($constraint['rule']) && $constraint['error_message']) {
+            $constraint = new Regex([
+                'pattern' => '#^(?:'.$config->requirements['rule'].')$#xsu',
+                'message' => $config->requirements['error_message'],
+            ]);
         }
 
         if (false === $config->allowBlank) {
-            $constraint = array(new NotBlank(), $constraint);
+            $constraint = [new NotBlank(), $constraint];
         }
 
         if ($this->validator instanceof ValidatorInterface) {
@@ -243,13 +242,14 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
 
         if (0 !== count($errors)) {
             if ($strict) {
-                if (is_array($config->requirements) && isset($config->requirements["error_message"])) {
-                    $errorMessage = $config->requirements["error_message"];
+                if (is_array($config->requirements) && isset($config->requirements['error_message'])) {
+                    $errorMessage = $config->requirements['error_message'];
                 } else {
                     $errorMessage = $this->violationFormatter->formatList($config, $errors);
                 }
                 throw new BadRequestHttpException($errorMessage);
             }
+
             return null === $default ? '' : $default;
         }
 
@@ -257,13 +257,13 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function all($strict = null)
     {
         $configuredParams = $this->getParams();
 
-        $params = array();
+        $params = [];
         foreach ($configuredParams as $name => $config) {
             $params[$name] = $this->get($name, $strict);
         }
@@ -272,7 +272,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     }
 
     /**
-     * Initialize the parameters
+     * Initialize the parameters.
      *
      * @throws \InvalidArgumentException
      */
@@ -299,7 +299,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
 
     /**
      * Check if current param is not in conflict with other parameters
-     * according to the "incompatibles" field
+     * according to the "incompatibles" field.
      *
      * @param Param $config the configuration for the param fetcher
      *
@@ -307,7 +307,6 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
      */
     private function checkNotIncompatibleParams(Param $config)
     {
-
         if (!$config instanceof QueryParam) {
             return;
         };
@@ -365,7 +364,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
 
             if (empty($container)) {
                 throw new \InvalidArgumentException(
-                    'The ParamFetcher has been not initialized correctly. ' .
+                    'The ParamFetcher has been not initialized correctly. '.
                     'The container for parameter resolution is missing.'
                 );
             }
@@ -376,7 +375,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
             }
 
             throw new RuntimeException(sprintf(
-                    'The container parameter "%s", used in the controller parameters ' .
+                    'The container parameter "%s", used in the controller parameters '.
                     'configuration value "%s", must be a string or numeric, but it is of type %s.',
                     $match[1],
                     $value,

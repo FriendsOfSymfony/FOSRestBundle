@@ -11,17 +11,17 @@
 
 namespace FOS\RestBundle\Form\Transformer;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class EntityToIdObjectTransformer
+ * Class EntityToIdObjectTransformer.
  *
  * @author Marc Juchli <mail@marcjuch.li>
  */
-class EntityToIdObjectTransformer implements DataTransformerInterface {
-
+class EntityToIdObjectTransformer implements DataTransformerInterface
+{
     /**
      * @var ObjectManager
      */
@@ -34,7 +34,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
 
     /**
      * @param ObjectManager $om
-     * @param String $entityName
+     * @param String        $entityName
      */
     public function __construct(ObjectManager $om, $entityName)
     {
@@ -45,13 +45,14 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
     /**
      * Do nothing.
      *
-     * @param  Object|null $object
+     * @param Object|null $object
+     *
      * @return string
      */
     public function transform($object)
     {
         if (null === $object) {
-            return "";
+            return '';
         }
 
         return current(array_values($this->om->getClassMetadata($this->entityName)->getIdentifierValues($object)));
@@ -60,16 +61,16 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
     /**
      * Transforms an array including an identifier to an object.
      *
-     * @param  array $idObject
-     *
-     * @return Object|null
+     * @param array $idObject
      *
      * @throws TransformationFailedException if object is not found.
+     *
+     * @return Object|null
      */
     public function reverseTransform($idObject)
     {
         if (!is_array($idObject)) {
-            return null;
+            return;
         }
 
         $identifier = current(array_values($this->om->getClassMetadata($this->entityName)->getIdentifier()));
@@ -77,8 +78,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
 
         $object = $this->om
             ->getRepository($this->entityName)
-            ->findOneBy(array($identifier => $id))
-        ;
+            ->findOneBy([$identifier => $id]);
 
         if (null === $object) {
             throw new TransformationFailedException(sprintf(

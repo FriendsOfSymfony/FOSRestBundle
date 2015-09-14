@@ -23,15 +23,15 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
 
     public function setUp()
     {
-        $this->serializer = $this->getMock('SerializerInterface', array('deserialize'));
+        $this->serializer = $this->getMock('SerializerInterface', ['deserialize']);
         $this->converterBuilder = $this->getConverterBuilder()
              ->setMethods(null)
-             ->setConstructorArgs(array($this->serializer));
+             ->setConstructorArgs([$this->serializer]);
     }
 
     public function testInterface()
     {
-        $abstractConverter = $this->getMockForAbstractClass('FOS\RestBundle\Request\AbstractRequestBodyParamConverter', array($this->serializer));
+        $abstractConverter = $this->getMockForAbstractClass('FOS\RestBundle\Request\AbstractRequestBodyParamConverter', [$this->serializer]);
         $this->assertInstanceOf('Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface', $abstractConverter);
         $converter = $this->converterBuilder->getMock();
         $this->assertInstanceOf('FOS\RestBundle\Request\AbstractRequestBodyParamConverter', $converter);
@@ -49,12 +49,12 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     public function testContextSetting()
     {
         $converter = $this->converterBuilder
-            ->setConstructorArgs(array($this->serializer, 'foo', 'v1'))
+            ->setConstructorArgs([$this->serializer, 'foo', 'v1'])
             ->getMock();
         $contextProperty = new \ReflectionProperty($converter, 'context');
         $contextProperty->setAccessible(true);
 
-        $this->assertEquals(array('groups' => array('foo'), 'version' => 'v1'), $contextProperty->getValue($converter));
+        $this->assertEquals(['groups' => ['foo'], 'version' => 'v1'], $contextProperty->getValue($converter));
     }
 
     /**
@@ -64,10 +64,9 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     public function testConstructorThrowsExceptionIfInvalidValidator()
     {
         $this->converterBuilder
-             ->setConstructorArgs(array($this->serializer, null, null, new \stdClass()))
+             ->setConstructorArgs([$this->serializer, null, null, new \stdClass()])
              ->setMethods(null)
-             ->getMock()
-        ;
+             ->getMock();
     }
 
     /**
@@ -77,10 +76,9 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     public function testConstructThrowsExceptionIfValidatorIsSetAndValidationArgumentIsNull()
     {
         $this->converterBuilder
-             ->setConstructorArgs(array($this->serializer, null, null, $this->getMock('Symfony\Component\Validator\ValidatorInterface')))
+             ->setConstructorArgs([$this->serializer, null, null, $this->getMock('Symfony\Component\Validator\ValidatorInterface')])
              ->setMethods(null)
-             ->getMock()
-        ;
+             ->getMock();
     }
 
     public function testDeserializationAdapterSetting()
@@ -105,22 +103,22 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
 
     public function testContextMergeDuringExecution()
     {
-        $options = array(
-            'deserializationContext' => array(
-                'groups' => array('foo', 'bar'),
+        $options = [
+            'deserializationContext' => [
+                'groups' => ['foo', 'bar'],
                 'foobar' => 'foo',
-            ),
-        );
+            ],
+        ];
         $configuration = $this->createConfiguration(null, null, $options);
         $converter = $this->converterBuilder
-             ->setConstructorArgs(array($this->serializer, 'foogroup', 'fooversion'))
-             ->setMethods(array('configureDeserializationContext'))
+             ->setConstructorArgs([$this->serializer, 'foogroup', 'fooversion'])
+             ->setMethods(['configureDeserializationContext'])
              ->getMock();
         $converter->setDeserializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface'));
         $converter
             ->expects($this->once())
             ->method('configureDeserializationContext')
-            ->with($this->anything(), array('groups' => array('foo', 'bar'), 'foobar' => 'foo', 'version' => 'fooversion'))
+            ->with($this->anything(), ['groups' => ['foo', 'bar'], 'foobar' => 'foo', 'version' => 'fooversion'])
             ->willReturn($this->getMock('FOS\RestBundle\Context\ContextInterface'));
         $this->launchExecution($converter, null, $configuration);
     }
@@ -215,14 +213,14 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
         $validator
             ->expects($this->once())
             ->method('validate')
-            ->with('Object', array('foo'), true, false)
+            ->with('Object', ['foo'], true, false)
             ->willReturn('fooError');
         $converter = $this->converterBuilder
-            ->setConstructorArgs(array($this->serializer, null, null, $validator, 'errors'))
+            ->setConstructorArgs([$this->serializer, null, null, $validator, 'errors'])
             ->getMock();
         $converter->setDeserializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface'));
         $request = $this->createRequest();
-        $configuration = $this->createConfiguration(null, null, array('validator' => array('groups' => array('foo'), 'traverse' => true)));
+        $configuration = $this->createConfiguration(null, null, ['validator' => ['groups' => ['foo'], 'traverse' => true]]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertEquals('fooError', $request->attributes->get('errors'));
     }
@@ -242,14 +240,14 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
         $validator
             ->expects($this->once())
             ->method('validate')
-            ->with('Object', null, array('foo'))
+            ->with('Object', null, ['foo'])
             ->willReturn('fooError');
         $converter = $this->converterBuilder
-            ->setConstructorArgs(array($this->serializer, null, null, $validator, 'errors'))
+            ->setConstructorArgs([$this->serializer, null, null, $validator, 'errors'])
             ->getMock();
         $converter->setDeserializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface'));
         $request = $this->createRequest();
-        $configuration = $this->createConfiguration(null, null, array('validator' => array('groups' => array('foo'))));
+        $configuration = $this->createConfiguration(null, null, ['validator' => ['groups' => ['foo']]]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertEquals('fooError', $request->attributes->get('errors'));
     }
@@ -264,13 +262,13 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     public function testContextConfiguration()
     {
         $converter = $this->converterBuilder->getMock();
-        $options = array(
-            'groups' => array('foo', 'bar'),
-            'version' => 'v1.2',
-            'maxDepth' => 5,
+        $options = [
+            'groups'        => ['foo', 'bar'],
+            'version'       => 'v1.2',
+            'maxDepth'      => 5,
             'serializeNull' => false,
-            'foo' => 'bar',
-        );
+            'foo'           => 'bar',
+        ];
         $context = $this->getMock('FOS\RestBundle\Context\Context');
         $context
             ->expects($this->once())
@@ -298,22 +296,22 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     {
         $converter = $this->converterBuilder->getMock();
 
-        $options1 = array(
-            'validator' => array(
-                'groups' => array('foo'),
+        $options1 = [
+            'validator' => [
+                'groups'   => ['foo'],
                 'traverse' => true,
-            ),
-        );
-        $options2 = array(
-            'validator' => array(
+            ],
+        ];
+        $options2 = [
+            'validator' => [
                 'deep' => true,
-            ),
-        );
+            ],
+        ];
 
         $validatorMethod = new \ReflectionMethod($converter, 'getValidatorOptions');
         $validatorMethod->setAccessible(true);
-        $this->assertEquals(array('groups' => array('foo'), 'traverse' => true, 'deep' => false), $validatorMethod->invoke($converter, $options1));
-        $this->assertEquals(array('groups' => false, 'traverse' => false, 'deep' => true), $validatorMethod->invoke($converter, $options2));
+        $this->assertEquals(['groups' => ['foo'], 'traverse' => true, 'deep' => false], $validatorMethod->invoke($converter, $options1));
+        $this->assertEquals(['groups' => false, 'traverse' => false, 'deep' => true], $validatorMethod->invoke($converter, $options2));
     }
 
     public function testApply()
@@ -321,8 +319,8 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
         $request = $this->createRequest();
         $configuration = $this->createConfiguration('FooClass', 'foo');
         $converter = $this->converterBuilder
-            ->setConstructorArgs(array($this->serializer))
-            ->setMethods(array('execute'))
+            ->setConstructorArgs([$this->serializer])
+            ->setMethods(['execute'])
             ->getMock();
         $converter
             ->expects($this->once())
@@ -365,7 +363,7 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     {
         $config = $this->getMockBuilder('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter')
             ->disableOriginalConstructor()
-            ->setMethods(array('getClass', 'getAliasName', 'getOptions', 'getName', 'allowArray'))
+            ->setMethods(['getClass', 'getAliasName', 'getOptions', 'getName', 'allowArray'])
             ->getMock();
 
         if ($name !== null) {
@@ -392,12 +390,12 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     protected function createRequest($body = null, $contentType = null)
     {
         $request = new Request(
-            array(),
-            array(),
-            array(),
-            array(),
-            array(),
-            array(),
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
             $body
         );
         $request->headers->set('CONTENT_TYPE', $contentType);

@@ -26,8 +26,8 @@ class MimeTypeListener
     /**
      * Constructor.
      *
-     * @param array            $mimeTypes        An array with the format as key and
-     *                                           the corresponding mime type as value
+     * @param array $mimeTypes An array with the format as key and
+     *                         the corresponding mime type as value
      */
     public function __construct(array $mimeTypes)
     {
@@ -35,7 +35,7 @@ class MimeTypeListener
     }
 
     /**
-     * Core request handler
+     * Core request handler.
      *
      * @param GetResponseEvent $event The event
      */
