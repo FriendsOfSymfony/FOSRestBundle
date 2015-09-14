@@ -19,27 +19,38 @@ use FOS\RestBundle\Controller\FOSRestController;
  */
 class AnnotatedNonPluralizedArticleController extends FosRestController
 {
+    /**
+     * [GET] /article
+     */
     public function cgetAction()
     {
     }
 
- // [GET] /article
-
+    /**
+     * [GET] /article/{slug}
+     *
+     * @param $slug
+     */
     public function getAction($slug)
     {
     }
 
- // [GET] /article/{slug}
-
+    /**
+     * [GET] /article/{slug}/comment
+     *
+     * @param $slug
+     */
     public function cgetCommentAction($slug)
     {
     }
 
- // [GET] /article/{slug}/comment
-
+    /**
+     * [GET] /article/{slug}/comment/{slug}
+     *
+     * @param $slug
+     * @param $comment
+     */
     public function getCommentAction($slug, $comment)
     {
     }
-
- // [GET] /article/{slug}/comment/{slug}
 }
