@@ -18,21 +18,21 @@ use Symfony\Component\HttpFoundation\Request;
 class ArticleController extends FosRestController implements ClassResourceInterface
 {
     /**
-     * [OPTIONS] /articles
+     * [OPTIONS] /articles.
      */
     public function optionsAction()
     {
     }
 
     /**
-     * [GET] /articles
+     * [GET] /articles.
      */
     public function cgetAction()
     {
     }
 
     /**
-     * [GET] /articles/{slug}
+     * [GET] /articles/{slug}.
      *
      * @param $slug
      */
@@ -41,21 +41,21 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [POST] /articles
+     * [POST] /articles.
      */
     public function cpostAction()
     {
     }
 
     /**
-     * [PATCH] /articles
+     * [PATCH] /articles.
      */
     public function cpatchAction()
     {
     }
 
     /**
-     * [PUT] /articles/{slug}
+     * [PUT] /articles/{slug}.
      *
      * @param $slug
      */
@@ -64,7 +64,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [PATCH] /articles/{slug}
+     * [PATCH] /articles/{slug}.
      *
      * @param $slug
      */
@@ -73,7 +73,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [PATCH] /articles/{slug}/lock
+     * [PATCH] /articles/{slug}/lock.
      *
      * @param $slug
      */
@@ -82,7 +82,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /articles/{slug}/comments
+     * [GET] /articles/{slug}/comments.
      *
      * @param $slug
      */
@@ -91,7 +91,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /articles/{slug}/comments/{id}
+     * [GET] /articles/{slug}/comments/{id}.
      *
      * @param $slug
      * @param $id
@@ -101,7 +101,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [DELETE] /articles/{slug}/comments/{id}
+     * [DELETE] /articles/{slug}/comments/{id}.
      *
      * @param $slug
      * @param $id
@@ -111,7 +111,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [PATCH] /articles/{slug}/ban
+     * [PATCH] /articles/{slug}/ban.
      *
      * @param $slug
      * @param $id
@@ -121,7 +121,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [POST] /articles/{slug}/comments/{id}/vote
+     * [POST] /articles/{slug}/comments/{id}/vote.
      *
      * @param $slug
      * @param $id
@@ -131,14 +131,14 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * NO route
+     * NO route.
      */
     public function _articlebarAction()
     {
     }
 
     /**
-     * [GET] /articles/check_articlename
+     * [GET] /articles/check_articlename.
      */
     public function check_articlenameAction()
     {
@@ -147,14 +147,14 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     // conventional HATEOAS actions below
 
     /**
-     * [GET] /articles/new
+     * [GET] /articles/new.
      */
     public function newAction()
     {
     }
 
     /**
-     * [GET] /article/{slug}/edit
+     * [GET] /article/{slug}/edit.
      *
      * @param $slug
      */
@@ -163,7 +163,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /article/{slug}/remove
+     * [GET] /article/{slug}/remove.
      *
      * @param $slug
      */
@@ -172,7 +172,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /articles/{slug}/comments/new
+     * [GET] /articles/{slug}/comments/new.
      *
      * @param $slug
      */
@@ -181,7 +181,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /articles/{slug}/comments/{id}/edit
+     * [GET] /articles/{slug}/comments/{id}/edit.
      *
      * @param $slug
      * @param $id
@@ -191,7 +191,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /articles/{slug}/comments/{id}/remove
+     * [GET] /articles/{slug}/comments/{id}/remove.
      *
      * @param $slug
      * @param $id
@@ -201,7 +201,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [PATCH] /articles/{articleId}/comments/{commentId}/hide
+     * [PATCH] /articles/{articleId}/comments/{commentId}/hide.
      *
      * @param $articleId
      * @param $commentId
@@ -213,7 +213,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     // Parameter of type Request should be ignored
 
     /**
-     * [GET] /articles/{slug}/votes
+     * [GET] /articles/{slug}/votes.
      *
      * @param Request $request
      * @param $slug
@@ -223,7 +223,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /articles/{slug}/votes/{id}
+     * [GET] /articles/{slug}/votes/{id}.
      *
      * @param Request $request
      * @param $slug
@@ -234,7 +234,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     }
 
     /**
-     * [GET] /articles/{slug}/foos
+     * [GET] /articles/{slug}/foos.
      *
      * @param $slug
      * @param Request $request

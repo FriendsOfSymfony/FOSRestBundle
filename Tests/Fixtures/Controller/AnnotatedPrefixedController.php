@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AnnotatedPrefixedController extends Controller
 {
     /**
-     * [GET]     /aprefix/something.{_format}
+     * [GET]     /aprefix/something.{_format}.
      */
     public function getSomethingAction()
     {

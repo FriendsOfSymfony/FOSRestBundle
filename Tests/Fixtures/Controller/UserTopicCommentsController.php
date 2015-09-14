@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserTopicCommentsController extends Controller
 {
     /**
-     * [GET] /users/{slug}/topics/{title}/comments
+     * [GET] /users/{slug}/topics/{title}/comments.
      *
      * @param $slug
      * @param $title
@@ -26,7 +26,7 @@ class UserTopicCommentsController extends Controller
     }
 
     /**
-     * [PUT] /users/{slug}/topics/{title}/comments/{id}
+     * [PUT] /users/{slug}/topics/{title}/comments/{id}.
      *
      * @param $slug
      * @param $title
@@ -37,7 +37,7 @@ class UserTopicCommentsController extends Controller
     }
 
     /**
-     * [POST] /users/{slug}/topics/{title}/comments/{id}/ban
+     * [POST] /users/{slug}/topics/{title}/comments/{id}/ban.
      *
      * @param $slug
      * @param $title
@@ -50,7 +50,7 @@ class UserTopicCommentsController extends Controller
     // conventional HATEOAS actions below
 
     /**
-     * [GET] /users/{slug}/topics/{title}/comments/new
+     * [GET] /users/{slug}/topics/{title}/comments/new.
      *
      * @param $slug
      * @param $title
@@ -60,7 +60,7 @@ class UserTopicCommentsController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/topics/{title}/comments/edit
+     * [GET] /users/{slug}/topics/{title}/comments/edit.
      *
      * @param $slug
      * @param $title
@@ -71,7 +71,7 @@ class UserTopicCommentsController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/topics/{title}/comments/remove
+     * [GET] /users/{slug}/topics/{title}/comments/remove.
      *
      * @param $slug
      * @param $title

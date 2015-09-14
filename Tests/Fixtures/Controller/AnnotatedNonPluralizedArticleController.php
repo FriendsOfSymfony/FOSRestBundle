@@ -20,14 +20,14 @@ use FOS\RestBundle\Controller\FOSRestController;
 class AnnotatedNonPluralizedArticleController extends FosRestController
 {
     /**
-     * [GET] /article
+     * [GET] /article.
      */
     public function cgetAction()
     {
     }
 
     /**
-     * [GET] /article/{slug}
+     * [GET] /article/{slug}.
      *
      * @param $slug
      */
@@ -36,7 +36,7 @@ class AnnotatedNonPluralizedArticleController extends FosRestController
     }
 
     /**
-     * [GET] /article/{slug}/comment
+     * [GET] /article/{slug}/comment.
      *
      * @param $slug
      */
@@ -45,7 +45,7 @@ class AnnotatedNonPluralizedArticleController extends FosRestController
     }
 
     /**
-     * [GET] /article/{slug}/comment/{slug}
+     * [GET] /article/{slug}/comment/{slug}.
      *
      * @param $slug
      * @param $comment

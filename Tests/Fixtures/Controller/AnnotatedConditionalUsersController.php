@@ -27,14 +27,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AnnotatedConditionalUsersController extends Controller
 {
     /**
-     * [OPTIONS]     /users
+     * [OPTIONS]     /users.
      */
     public function optionsUsersAction()
     {
     }
 
     /**
-     * [OPTIONS]     /users
+     * [OPTIONS]     /users.
      *
      * @Options
      */
@@ -43,14 +43,14 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [GET]     /users
+     * [GET]     /users.
      */
     public function getUsersAction()
     {
     }
 
     /**
-     * [GET]     /users/{slug}
+     * [GET]     /users/{slug}.
      *
      * @Route(requirements={"slug" = "[a-z]+"})
      */
@@ -59,7 +59,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [PATCH]     /users
+     * [PATCH]     /users.
      *
      * @Patch
      */
@@ -68,7 +68,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [GET]     /users/{slug}
+     * [GET]     /users/{slug}.
      *
      * @Patch(requirements={"slug" = "[a-z]+"})
      */
@@ -77,7 +77,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [GET]     /users/{slug}/comments/{id}
+     * [GET]     /users/{slug}/comments/{id}.
      *
      * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
@@ -86,7 +86,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [POST]    /users/{slug}/rate
+     * [POST]    /users/{slug}/rate.
      *
      * @Post(requirements={"slug" = "[a-z]+"})
      */
@@ -95,7 +95,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [PATCH, POST]     /users/{slug}/rate_comment/{id}
+     * [PATCH, POST]     /users/{slug}/rate_comment/{id}.
      *
      * @Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"}, methods={"PATCH", "POST"})
      */
@@ -104,7 +104,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [GET]     /users/{slug}/bget
+     * [GET]     /users/{slug}/bget.
      *
      * @Get
      */
@@ -113,7 +113,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [POST]    /users/{slug}/bpost
+     * [POST]    /users/{slug}/bpost.
      *
      * @Post
      */
@@ -122,7 +122,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [PUT]     /users/{slug}/bput
+     * [PUT]     /users/{slug}/bput.
      *
      * @Put
      */
@@ -131,7 +131,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [DELETE]  /users/{slug}/bdel
+     * [DELETE]  /users/{slug}/bdel.
      *
      * @Delete
      */
@@ -140,7 +140,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [HEAD]    /users/{slug}/bhead
+     * [HEAD]    /users/{slug}/bhead.
      *
      * @Head
      */
@@ -149,7 +149,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [LINK]    /users/{slug}/blink
+     * [LINK]    /users/{slug}/blink.
      *
      * @Link
      */
@@ -158,7 +158,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [UNLINK]    /users/{slug}/bunlink
+     * [UNLINK]    /users/{slug}/bunlink.
      *
      * @Unlink
      */
@@ -174,7 +174,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [GET]     /users/{slug}/custom
+     * [GET]     /users/{slug}/custom.
      *
      * @Route(requirements={"_format"="custom"})
      */
@@ -183,7 +183,7 @@ class AnnotatedConditionalUsersController extends Controller
     }
 
     /**
-     * [GET, HEAD]     /users/{slug}/conditional
+     * [GET, HEAD]     /users/{slug}/conditional.
      *
      * @Get(condition="context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'")
      */
