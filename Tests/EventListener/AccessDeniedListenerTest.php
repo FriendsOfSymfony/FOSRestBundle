@@ -12,15 +12,15 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\AccessDeniedListener;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
- * AccessDeniedListenerTest
+ * AccessDeniedListenerTest.
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
@@ -84,6 +84,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getFormatsDataProvider
+     *
      * @param array $formats
      */
     public function testCommonExceptionsAreBypassed($formats)
@@ -100,6 +101,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getFormatsDataProvider
+     *
      * @param array  $formats
      * @param string $format
      */
@@ -113,6 +115,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider getContentTypesDataProvider
+     *
      * @param array  $formats
      * @param string $contentType
      */
@@ -167,16 +170,16 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 
     public static function getFormatsDataProvider()
     {
-        return array(
-            array(array('json'  => true), 'json'),
-        );
+        return [
+            [['json' => true], 'json'],
+        ];
     }
 
     public static function getContentTypesDataProvider()
     {
-        return array(
-            array(array('json'  => true), 'application/json'),
-        );
+        return [
+            [['json' => true], 'application/json'],
+        ];
     }
 }
 

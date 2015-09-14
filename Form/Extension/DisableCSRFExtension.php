@@ -13,13 +13,11 @@ namespace FOS\RestBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Class DisableCSRFExtension
+ * Class DisableCSRFExtension.
  *
  * @author Grégoire Pineau
  */
@@ -55,9 +53,9 @@ class DisableCSRFExtension extends AbstractTypeExtension
             return;
         }
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'csrf_protection' => false,
-        ));
+        ]);
     }
 
     public function getExtendedType()

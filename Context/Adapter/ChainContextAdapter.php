@@ -40,8 +40,8 @@ class ChainContextAdapter implements SerializationContextAdapterInterface, Deser
      */
     public function __construct(array $adapters)
     {
-        $this->serializationAdapters = array();
-        $this->deserializationAdapters = array();
+        $this->serializationAdapters = [];
+        $this->deserializationAdapters = [];
         foreach ($adapters as $adapter) {
             $treated = false;
             if ($adapter instanceof SerializationContextAdapterInterface) {
@@ -52,7 +52,7 @@ class ChainContextAdapter implements SerializationContextAdapterInterface, Deser
                 $this->deserializationAdapters[] = $adapter;
                 $treated = true;
             }
-            if(!$treated) {
+            if (!$treated) {
                 throw new \LogicException(sprintf('%s::__construct parameter must be an array of FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface and FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface.', get_class($this)));
             }
         }

@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Context\Adapter;
 
-use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
 use FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface;
+use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
 use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
 use FOS\RestBundle\Context\ContextInterface;
 

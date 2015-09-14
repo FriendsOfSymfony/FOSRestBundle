@@ -12,10 +12,10 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\Util\StopFormatListenerException;
+use Negotiation\AbstractNegotiator;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Negotiation\AbstractNegotiator;
 
 /**
  * This listener handles Accept header format negotiations.

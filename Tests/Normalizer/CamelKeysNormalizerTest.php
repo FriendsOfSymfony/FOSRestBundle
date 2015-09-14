@@ -21,12 +21,12 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
     public function testNormalizeSameValueException()
     {
         $normalizer = new CamelKeysNormalizer();
-        $normalizer->normalize(array(
-            'foo' => array(
+        $normalizer->normalize([
+            'foo' => [
                 'foo_bar' => 'foo',
                 'foo_Bar' => 'foo',
-            ),
-        ));
+            ],
+        ]);
     }
 
     /**
@@ -40,16 +40,16 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
 
     public function normalizeProvider()
     {
-        return array(
-            array(array(), array()),
-            array(
-                array('foo' => array('Foo_bar_baz' => array('foo_Bar' => array('foo_bar' => 'foo_bar'))),
-                    'foo_1ar' => array('foo_bar'),
-                ),
-                array('foo' => array('FooBarBaz' => array('fooBar' => array('fooBar' => 'foo_bar'))),
-                    'foo1ar' => array('foo_bar'),
-                ),
-            ),
-        );
+        return [
+            [[], []],
+            [
+                ['foo' => ['Foo_bar_baz' => ['foo_Bar' => ['foo_bar' => 'foo_bar']]],
+                    'foo_1ar' => ['foo_bar'],
+                ],
+                ['foo' => ['FooBarBaz' => ['fooBar' => ['fooBar' => 'foo_bar']]],
+                    'foo1ar' => ['foo_bar'],
+                ],
+            ],
+        ];
     }
 }

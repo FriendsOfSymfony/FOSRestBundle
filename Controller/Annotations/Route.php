@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as BaseRoute;
 
 /**
  * Route annotation class.
+ *
  * @Annotation
  */
 class Route extends BaseRoute
@@ -33,6 +34,6 @@ class Route extends BaseRoute
      */
     public function getMethod()
     {
-        return null;
+        return;
     }
 }

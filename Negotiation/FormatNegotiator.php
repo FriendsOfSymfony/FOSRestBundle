@@ -11,17 +11,17 @@
 
 namespace FOS\RestBundle\Negotiation;
 
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\RequestMatcherInterface;
-use Negotiation\Negotiator as BaseNegotiator;
 use Negotiation\Accept;
+use Negotiation\Negotiator as BaseNegotiator;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class FormatNegotiator extends BaseNegotiator
 {
     /**
      * @var array
      */
-    private $map = array();
+    private $map = [];
     /**
      * @var RequestStack
      */
@@ -39,16 +39,16 @@ class FormatNegotiator extends BaseNegotiator
      * @param RequestMatcherInterface $requestMatcher
      * @param array                   $options
      */
-    public function add(RequestMatcherInterface $requestMatcher, array $options = array())
+    public function add(RequestMatcherInterface $requestMatcher, array $options = [])
     {
-        $this->map[] = array($requestMatcher, $options);
+        $this->map[] = [$requestMatcher, $options];
     }
 
     /**
      * {@inheritdoc}
      * The best format is also determined in function of the bundle configuration.
      */
-    public function getBest($header, array $priorities = array())
+    public function getBest($header, array $priorities = [])
     {
         $request = $this->requestStack->getCurrentRequest();
 

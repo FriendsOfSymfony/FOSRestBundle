@@ -38,7 +38,7 @@ class XmlDecoder implements DecoderInterface
         try {
             return $this->encoder->decode($data, 'xml');
         } catch (UnexpectedValueException $e) {
-            return null;
+            return;
         }
     }
 }

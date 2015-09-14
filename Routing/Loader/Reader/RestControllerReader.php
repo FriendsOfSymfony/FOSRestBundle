@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
-use Symfony\Component\Config\Resource\FileResource;
 use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Routing\RestRouteCollection;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * REST controller reader.
@@ -33,7 +33,7 @@ class RestControllerReader
      */
     public function __construct(RestActionReader $actionReader, Reader $annotationReader)
     {
-        $this->actionReader     = $actionReader;
+        $this->actionReader = $actionReader;
         $this->annotationReader = $annotationReader;
     }
 
@@ -52,9 +52,9 @@ class RestControllerReader
      *
      * @param \ReflectionClass $reflectionClass
      *
-     * @return RestRouteCollection
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return RestRouteCollection
      */
     public function read(\ReflectionClass $reflectionClass)
     {
@@ -71,13 +71,13 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
-        $resource = array();
+        $resource = [];
         // read route-resource annotation
         if ($annotation = $this->readClassAnnotation($reflectionClass, 'RouteResource')) {
             $resource = explode('_', $annotation->resource);
             $this->actionReader->setPluralize($annotation->pluralize);
         } elseif ($reflectionClass->implementsInterface('FOS\RestBundle\Routing\ClassResourceInterface')) {
-            $resource  = preg_split(
+            $resource = preg_split(
                 '/([A-Z][^A-Z]*)Controller/', $reflectionClass->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
             );
             if (empty($resource)) {
@@ -98,7 +98,7 @@ class RestControllerReader
         $this->actionReader->setRoutePrefix(null);
         $this->actionReader->setNamePrefix(null);
         $this->actionReader->setPluralize(null);
-        $this->actionReader->setParents(array());
+        $this->actionReader->setParents([]);
 
         return $collection;
     }

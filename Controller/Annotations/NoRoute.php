@@ -12,7 +12,8 @@
 namespace FOS\RestBundle\Controller\Annotations;
 
 /**
- * No Route annotation class
+ * No Route annotation class.
+ *
  * @Annotation
  * @Target({"METHOD","CLASS"})
  */

@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * This listener handles various setup tasks related to the query fetcher.
@@ -54,7 +54,7 @@ class ParamFetcherListener
         $controller = $event->getController();
 
         if (is_callable($controller) && method_exists($controller, '__invoke')) {
-            $controller = array($controller, '__invoke');
+            $controller = [$controller, '__invoke'];
         }
 
         $paramFetcher->setController($controller);
@@ -110,6 +110,7 @@ class ParamFetcherListener
             return false;
         }
         $fetcherInterface = 'FOS\\RestBundle\\Request\\ParamFetcherInterface';
+
         return $type->implementsInterface($fetcherInterface);
     }
 }

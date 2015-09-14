@@ -39,7 +39,7 @@ class RestRouteProcessor
     public function importResource(
         LoaderInterface $loader,
         $resource,
-        array $parents = array(),
+        array $parents = [],
         $routePrefix = null,
         $namePrefix = null,
         $type = null,

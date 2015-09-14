@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 
 /**
  * LINK Route annotation class.
+ *
  * @Annotation
  * @Target("METHOD")
  */

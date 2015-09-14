@@ -34,7 +34,7 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->viewHandler = $this->getMock('FOS\RestBundle\View\ConfigurableViewHandlerInterface');
 
-        $this->listener = $this->getMock('FOS\RestBundle\EventListener\VersionListener', null, array($this->viewHandler));
+        $this->listener = $this->getMock('FOS\RestBundle\EventListener\VersionListener', null, [$this->viewHandler]);
     }
 
     public function testDefaultVersion()
@@ -57,7 +57,7 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
 
         $request->attributes = $attributesBag;
 
-        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', array(), array(), '', false);
+        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', [], [], '', false);
         $event
             ->expects($this->once())
             ->method('getRequest')

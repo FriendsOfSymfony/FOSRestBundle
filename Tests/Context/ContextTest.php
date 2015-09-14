@@ -34,8 +34,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultValues()
     {
-        $this->assertEquals(array(), $this->context->getAttributes());
-        $this->assertEquals(array(), $this->context->getGroups());
+        $this->assertEquals([], $this->context->getAttributes());
+        $this->assertEquals([], $this->context->getGroups());
     }
 
     public function testAttributes()
@@ -51,20 +51,20 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $this->context->getAttribute('foo'));
         $this->assertEquals('foo', $this->context->getAttribute('foobar'));
 
-        $this->assertEquals(array('foo' => 'bar', 'foobar' => 'foo'), $this->context->getAttributes());
+        $this->assertEquals(['foo' => 'bar', 'foobar' => 'foo'], $this->context->getAttributes());
     }
 
     public function testGroupsAddition()
     {
-        $context = $this->getMock('FOS\RestBundle\Context\Context', array('addGroup'));
+        $context = $this->getMock('FOS\RestBundle\Context\Context', ['addGroup']);
         $context
             ->expects($this->exactly(2))
             ->method('addGroup')
             ->withConsecutive(
-                array('Default'),
-                array('foo')
+                ['Default'],
+                ['foo']
             );
-        $this->assertEquals($context, $context->addGroups(array('Default', 'foo')));
+        $this->assertEquals($context, $context->addGroups(['Default', 'foo']));
     }
 
     public function testGroupAddition()
@@ -72,7 +72,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->context->addGroup('foo');
         $this->context->addGroup('bar');
 
-        $this->assertEquals(array('foo', 'bar'), $this->context->getGroups());
+        $this->assertEquals(['foo', 'bar'], $this->context->getGroups());
     }
 
     public function testAlreadyExistentGroupAddition()
@@ -81,7 +81,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->context->addGroup('foo');
         $this->context->addGroup('bar');
 
-        $this->assertEquals(array('foo', 'bar'), $this->context->getGroups());
+        $this->assertEquals(['foo', 'bar'], $this->context->getGroups());
     }
 
     /**

@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\View\JsonpHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use FOS\RestBundle\View\JsonpHandler;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Jsonp handler test
+ * Jsonp handler test.
  *
  * @author Victor Berchet <victor@suumit.com>
  * @author Lukas K. Smith <smith@pooteeweet.org>
@@ -29,15 +29,15 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testHandle($query)
     {
-        $data = array('foo' => 'bar');
+        $data = ['foo' => 'bar'];
 
-        $viewHandler = new ViewHandler(array('jsonp' => false));
+        $viewHandler = new ViewHandler(['jsonp' => false]);
         $jsonpHandler = new JsonpHandler(key($query));
-        $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
+        $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
-        $serializer = $this->getMock('stdClass', array('serialize', 'setVersion'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get', 'getParameter']);
+        $serializer = $this->getMock('stdClass', ['serialize', 'setVersion']);
         $serializer
             ->expects($this->once())
             ->method('serialize')
@@ -67,12 +67,12 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
 
     public static function handleDataProvider()
     {
-        return array(
-            'jQuery callback syntax' => array(array('callback' => 'jQuery171065827149929257_1343950463342')),
-            'YUI callback syntax' => array(array('callback' => 'YUI.Env.JSONP._12345')),
-            'jQuery custom syntax' => array(array('custom' => 'jQuery171065827149929257_1343950463342')),
-            'YUI custom syntax' => array(array('custom' => 'YUI.Env.JSONP._12345')),
-        );
+        return [
+            'jQuery callback syntax' => [['callback' => 'jQuery171065827149929257_1343950463342']],
+            'YUI callback syntax' => [['callback' => 'YUI.Env.JSONP._12345']],
+            'jQuery custom syntax' => [['custom' => 'jQuery171065827149929257_1343950463342']],
+            'YUI custom syntax' => [['custom' => 'YUI.Env.JSONP._12345']],
+        ];
     }
 
     /**
@@ -81,15 +81,15 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetCallbackFailure(Request $request)
     {
-        $data = array('foo' => 'bar');
+        $data = ['foo' => 'bar'];
 
-        $viewHandler = new ViewHandler(array('jsonp' => false));
+        $viewHandler = new ViewHandler(['jsonp' => false]);
         $jsonpHandler = new JsonpHandler('callback');
-        $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
+        $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
-        $serializer = $this->getMock('stdClass', array('serialize', 'setVersion'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get', 'getParameter']);
+        $serializer = $this->getMock('stdClass', ['serialize', 'setVersion']);
         $serializer
             ->expects($this->once())
             ->method('serialize')
@@ -108,7 +108,7 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
 
         $viewHandler->setContainer($container);
 
-        $data = array('foo' => 'bar');
+        $data = ['foo' => 'bar'];
 
         $view = new View($data);
         $view->setFormat('jsonp');
@@ -117,9 +117,9 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function getCallbackFailureDataProvider()
     {
-        return array(
-            'no callback'   => array(new Request()),
-            'incorrect callback param name'  => array(new Request(array('foo' => 'bar'))),
-        );
+        return [
+            'no callback' => [new Request()],
+            'incorrect callback param name' => [new Request(['foo' => 'bar'])],
+        ];
     }
 }

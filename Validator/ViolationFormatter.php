@@ -39,7 +39,9 @@ class ViolationFormatter implements ViolationFormatterInterface
     {
         $str = '';
         foreach ($violationList as $key => $violation) {
-            if ($key > 0) $str .= "\n";
+            if ($key > 0) {
+                $str .= "\n";
+            }
             $str .= $this->format($param, $violation);
         }
 

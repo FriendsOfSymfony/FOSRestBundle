@@ -12,28 +12,28 @@
 namespace FOS\RestBundle\View;
 
 /**
- * Specialized ViewInterface that allows dynamic configuration of JMS serializer context aspects
+ * Specialized ViewInterface that allows dynamic configuration of JMS serializer context aspects.
  *
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
 interface ConfigurableViewHandlerInterface extends ViewHandlerInterface
 {
     /**
-     * Set the default serialization groups
+     * Set the default serialization groups.
      *
      * @param array $groups
      */
     public function setExclusionStrategyGroups($groups);
 
     /**
-     * Set the default serialization version
+     * Set the default serialization version.
      *
      * @param string $version
      */
     public function setExclusionStrategyVersion($version);
 
     /**
-     * If nulls should be serialized
+     * If nulls should be serialized.
      *
      * @param bool $isEnabled
      */

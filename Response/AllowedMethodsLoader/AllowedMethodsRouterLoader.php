@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle\Response\AllowedMethodsLoader;
 
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * AllowedMethodsRouterLoader implementation using RouterInterface to fetch
- * allowed http methods
+ * allowed http methods.
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
@@ -27,7 +27,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
     private $cache;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param RouterInterface $router
      * @param string          $cacheDir
@@ -36,7 +36,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
     public function __construct(RouterInterface $router, $cacheDir, $isDebug)
     {
         $this->router = $router;
-        $this->cache  = new ConfigCache(sprintf('%s/allowed_methods.cache.php', $cacheDir), $isDebug);
+        $this->cache = new ConfigCache(sprintf('%s/allowed_methods.cache.php', $cacheDir), $isDebug);
     }
 
     /**
@@ -64,17 +64,16 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
      */
     public function warmUp($cacheDir)
     {
-        $processedRoutes = array();
+        $processedRoutes = [];
 
         $routeCollection = $this->router->getRouteCollection();
 
         foreach ($routeCollection->all() as $name => $route) {
-
             if (!isset($processedRoutes[$route->getPath()])) {
-                $processedRoutes[$route->getPath()] = array(
-                    'methods' => array(),
-                    'names'   => array(),
-                );
+                $processedRoutes[$route->getPath()] = [
+                    'methods' => [],
+                    'names' => [],
+                ];
             }
 
             $processedRoutes[$route->getPath()]['names'][] = $name;
@@ -89,7 +88,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
             }
         }
 
-        $allowedMethods = array();
+        $allowedMethods = [];
 
         foreach ($processedRoutes as $processedRoute) {
             if (count($processedRoute['methods']) > 0) {

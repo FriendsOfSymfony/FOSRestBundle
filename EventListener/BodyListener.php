@@ -123,11 +123,12 @@ class BodyListener
     }
 
     /**
-     * Check if the Request is a not a DELETE with no content and no Content-Type
+     * Check if the Request is a not a DELETE with no content and no Content-Type.
      *
      * @param $method
      * @param $content
      * @param $contentType
+     *
      * @return bool
      */
     private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
@@ -136,14 +137,15 @@ class BodyListener
     }
 
     /**
-     * Check if we should try to decode the body
+     * Check if we should try to decode the body.
      *
      * @param Request $request
+     *
      * @return bool
      */
     protected function isDecodeable(Request $request)
     {
-        if (!in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))) {
+        if (!in_array($request->getMethod(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             return false;
         }
 
@@ -151,9 +153,10 @@ class BodyListener
     }
 
     /**
-     * Check if the content type indicates a form submission
+     * Check if the content type indicates a form submission.
      *
      * @param Request $request
+     *
      * @return bool
      */
     protected function isFormRequest(Request $request)
@@ -161,7 +164,7 @@ class BodyListener
         $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
 
         if (isset($contentTypeParts[0])) {
-            return in_array($contentTypeParts[0], array('multipart/form-data', 'application/x-www-form-urlencoded'));
+            return in_array($contentTypeParts[0], ['multipart/form-data', 'application/x-www-form-urlencoded']);
         }
 
         return false;

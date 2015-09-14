@@ -96,7 +96,7 @@ class AppKernel extends Kernel
 
     public function serialize()
     {
-        return serialize(array($this->testCase, $this->rootConfig, $this->getEnvironment(), $this->isDebug()));
+        return serialize([$this->testCase, $this->rootConfig, $this->getEnvironment(), $this->isDebug()]);
     }
 
     public function unserialize($str)

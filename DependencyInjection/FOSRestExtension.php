@@ -11,21 +11,21 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Component\DependencyInjection\Reference;
 use FOS\RestBundle\Util\Codes;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class FOSRestExtension extends Extension implements PrependExtensionInterface
 {
     /**
-     * Default sensio_framework_extra { view: { annotations: false } }
+     * Default sensio_framework_extra { view: { annotations: false } }.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function prepend(ContainerBuilder $container)
     {
@@ -35,7 +35,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         if ($config['view']['view_response_listener']['enabled']) {
-            $container->prependExtensionConfig('sensio_framework_extra', array('view' => array('annotations' => false)));
+            $container->prependExtensionConfig('sensio_framework_extra', ['view' => ['annotations' => false]]);
         }
     }
 
@@ -112,7 +112,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
     public function loadAllowedMethodsListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if ($config['allowed_methods_listener']['enabled']) {
-
             if (!empty($config['allowed_methods_listener']['service'])) {
                 $service = $container->getDefinition('fos_rest.allowed_methods_listener');
                 $service->clearTag('kernel.event_listener');
@@ -230,7 +229,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $handler->setPublic(true);
 
             $jsonpHandler = new Reference('fos_rest.view_handler.jsonp');
-            $handler->addMethodCall('registerHandler', array('jsonp', array($jsonpHandler, 'createResponse')));
+            $handler->addMethodCall('registerHandler', ['jsonp', [$jsonpHandler, 'createResponse']]);
             $container->setDefinition('fos_rest.view_handler', $handler);
 
             $container->setParameter('fos_rest.view_handler.jsonp.callback_param', $config['view']['jsonp_handler']['callback_param']);
@@ -250,7 +249,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
             $container->setParameter('fos_rest.mime_types', $config['view']['mime_types']);
         } else {
-            $container->setParameter('fos_rest.mime_types', array());
+            $container->setParameter('fos_rest.mime_types', []);
         }
 
         if ($config['view']['view_response_listener']['enabled']) {
@@ -264,7 +263,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $container->setParameter('fos_rest.view_response_listener.force_view', $config['view']['view_response_listener']['force']);
         }
 
-        $formats = array();
+        $formats = [];
         foreach ($config['view']['formats'] as $format => $enabled) {
             if ($enabled) {
                 $formats[$format] = false;

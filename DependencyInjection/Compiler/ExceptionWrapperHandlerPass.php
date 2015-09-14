@@ -11,8 +11,8 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Checks if the JMS serializer is available to be able to use the ExceptionWrapperSerializeHandler.

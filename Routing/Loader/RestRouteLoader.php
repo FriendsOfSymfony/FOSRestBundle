@@ -11,12 +11,12 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Config\Loader\Loader;
-use Symfony\Component\Config\FileLocatorInterface;
-use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
@@ -47,11 +47,11 @@ class RestRouteLoader extends Loader
         ControllerNameParser $controllerParser,
         RestControllerReader $controllerReader, $defaultFormat = 'html'
     ) {
-        $this->container        = $container;
-        $this->locator          = $locator;
+        $this->container = $container;
+        $this->locator = $locator;
         $this->controllerParser = $controllerParser;
         $this->controllerReader = $controllerReader;
-        $this->defaultFormat    = $defaultFormat;
+        $this->defaultFormat = $defaultFormat;
     }
 
     /**
@@ -85,7 +85,7 @@ class RestRouteLoader extends Loader
     {
         return is_string($resource)
             && 'rest' === $type
-            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), array('xml', 'yml')
+            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), ['xml', 'yml']
         );
     }
 
@@ -94,13 +94,13 @@ class RestRouteLoader extends Loader
      *
      * @param string $controller
      *
-     * @return array
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     private function getControllerLocator($controller)
     {
-        $class  = null;
+        $class = null;
         $prefix = null;
 
         if (0 === strpos($controller, '@')) {
@@ -123,14 +123,14 @@ class RestRouteLoader extends Loader
             $this->container->leaveScope('request');
         } elseif (class_exists($controller)) {
             // full class name
-            $class  = $controller;
+            $class = $controller;
             $prefix = $class.'::';
         } elseif (false !== strpos($controller, ':')) {
             // bundle:controller notation
             try {
-                $notation             = $this->controllerParser->parse($controller.':method');
-                list($class, ) = explode('::', $notation);
-                $prefix               = $class.'::';
+                $notation = $this->controllerParser->parse($controller.':method');
+                list($class) = explode('::', $notation);
+                $prefix = $class.'::';
             } catch (\Exception $e) {
                 throw new \InvalidArgumentException(
                     sprintf('Can\'t locate "%s" controller.', $controller)
@@ -144,7 +144,7 @@ class RestRouteLoader extends Loader
             ));
         }
 
-        return array($prefix, $class);
+        return [$prefix, $class];
     }
 
     /**
@@ -159,7 +159,7 @@ class RestRouteLoader extends Loader
         $class = false;
         $namespace = false;
         $tokens = token_get_all(file_get_contents($file));
-        for ($i = 0, $count = count($tokens); $i < $count; $i++) {
+        for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
             $token = $tokens[$i];
 
             if (!is_array($token)) {
@@ -175,7 +175,7 @@ class RestRouteLoader extends Loader
                 do {
                     $namespace .= $token[1];
                     $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], array(T_NS_SEPARATOR, T_STRING)));
+                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING]));
             }
 
             if (T_CLASS === $token[0]) {

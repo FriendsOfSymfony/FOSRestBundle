@@ -11,21 +11,21 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Util\Codes;
-use FOS\RestBundle\View\ViewHandler;
-use FOS\RestBundle\View\View;
-use FOS\RestBundle\Util\ExceptionWrapper;
+use Symfony\Component\HttpKernel\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
- * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
+ * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
  */
 class ExceptionController extends ContainerAware
 {
@@ -48,13 +48,13 @@ class ExceptionController extends ContainerAware
     /**
      * Converts an Exception to a Response.
      *
-     * @param Request               $request
-     * @param FlattenException      $exception
-     * @param DebugLoggerInterface  $logger
-     *
-     * @return Response
+     * @param Request              $request
+     * @param FlattenException     $exception
+     * @param DebugLoggerInterface $logger
      *
      * @throws \InvalidArgumentException
+     *
+     * @return Response
      */
     public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
@@ -140,7 +140,7 @@ class ExceptionController extends ContainerAware
                 }
             }
         } catch (\ReflectionException $re) {
-            return "FOSUserBundle: Invalid class in  fos_res.exception.messages: "
+            return 'FOSUserBundle: Invalid class in  fos_res.exception.messages: '
                     .$re->getMessage();
         }
 
@@ -195,7 +195,7 @@ class ExceptionController extends ContainerAware
     {
         try {
             $formatNegotiator = $this->container->get('fos_rest.exception_format_negotiator');
-            $accept = $formatNegotiator->getBest('', array());
+            $accept = $formatNegotiator->getBest('', []);
             if ($accept) {
                 $format = $request->getFormat($accept->getType());
             }
@@ -224,14 +224,14 @@ class ExceptionController extends ContainerAware
      */
     protected function getParameters(ViewHandler $viewHandler, $currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
-        $parameters  = array(
+        $parameters = [
             'status' => 'error',
             'status_code' => $code,
-            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : "error",
+            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
             'currentContent' => $currentContent,
             'message' => $this->getExceptionMessage($exception),
             'exception' => $exception,
-        );
+        ];
 
         if ($viewHandler->isFormatTemplating($format)) {
             $parameters['logger'] = $logger;

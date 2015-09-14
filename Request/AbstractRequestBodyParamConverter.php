@@ -11,25 +11,25 @@
 
 namespace FOS\RestBundle\Request;
 
+use FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface;
+use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\GroupableContextInterface;
+use FOS\RestBundle\Context\MaxDepthContextInterface;
+use FOS\RestBundle\Context\SerializeNullContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
+use JMS\Serializer\Exception\Exception as JMSSerializerException;
+use JMS\Serializer\Exception\UnsupportedFormatException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
-use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use JMS\Serializer\Exception\UnsupportedFormatException;
-use JMS\Serializer\Exception\Exception as JMSSerializerException;
-use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Context\ContextInterface;
-use FOS\RestBundle\Context\GroupableContextInterface;
-use FOS\RestBundle\Context\VersionableContextInterface;
-use FOS\RestBundle\Context\MaxDepthContextInterface;
-use FOS\RestBundle\Context\SerializeNullContextInterface;
-use FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface;
-use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
+use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
@@ -37,7 +37,7 @@ use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
 abstract class AbstractRequestBodyParamConverter implements ParamConverterInterface
 {
     protected $serializer;
-    protected $context = array();
+    protected $context = [];
     protected $validator;
 
     /**
@@ -112,10 +112,10 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
      * @param Request        $request       The request
      * @param ParamConverter $configuration Contains the name, class and options of the object
      *
-     * @return bool True if the object has been successfully set, else false
-     *
      * @throws UnsupportedMediaTypeHttpException
      * @throws BadRequestHttpException
+     *
+     * @return bool True if the object has been successfully set, else false
      */
     protected function execute(Request $request, ParamConverter $configuration)
     {
@@ -214,12 +214,12 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     protected function getValidatorOptions(array $options)
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'groups' => null,
             'traverse' => false,
             'deep' => false,
-        ));
+        ]);
 
-        return $resolver->resolve(isset($options['validator']) ? $options['validator'] : array());
+        return $resolver->resolve(isset($options['validator']) ? $options['validator'] : []);
     }
 }

@@ -16,7 +16,7 @@ use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Param Fetcher Listener Tests
+ * Param Fetcher Listener Tests.
  */
 class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,9 +48,9 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 'customer' => 5,
-            )));
+            ]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -69,7 +69,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -90,7 +90,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -120,7 +120,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -129,22 +129,22 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setParamFetcherByTypehintProvider()
     {
-        return array(
+        return [
             // Without a typehint, the ParamFetcher should be injected as
             // $paramFetcher.
-            array('byNameAction', 'paramFetcher'),
+            ['byNameAction', 'paramFetcher'],
 
             // With a typehint, the ParamFetcher should be injected as whatever
             // the parameter name is.
-            array('byTypeAction', 'pf'),
+            ['byTypeAction', 'pf'],
 
             // The user can typehint using ParamFetcherInterface, too.
-            array('byInterfaceAction', 'pfi'),
+            ['byInterfaceAction', 'pfi'],
 
             // If there is no controller argument for the ParamFetcher, it
             // should be injected as the default name.
-            array('notProvidedAction', 'paramFetcher'),
-        );
+            ['notProvidedAction', 'paramFetcher'],
+        ];
     }
 
     protected function getEvent(Request $request, $actionMethod = 'byNameAction')
@@ -161,7 +161,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $event->expects($this->atLeastOnce())
             ->method('getController')
-            ->will($this->returnValue(array($controller, $actionMethod)));
+            ->will($this->returnValue([$controller, $actionMethod]));
 
         return $event;
     }

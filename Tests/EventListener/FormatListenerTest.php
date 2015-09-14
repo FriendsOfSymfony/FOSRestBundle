@@ -11,16 +11,16 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use FOS\RestBundle\Negotiation\FormatNegotiator;
-use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\EventListener\FormatListener;
+use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Negotiation\Accept;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Request listener test
+ * Request listener test.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
@@ -40,7 +40,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
-            ->setMethods(array('getBest'))
+            ->setMethods(['getBest'])
             ->getMock();
         $formatNegotiator->expects($this->once())
             ->method('getBest')
@@ -70,8 +70,8 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($request));
 
         $formatNegotiator = new FormatNegotiator($requestStack);
-        $formatNegotiator->add(new RequestMatcher('/'), array('stop' => true));
-        $formatNegotiator->add(new RequestMatcher('/'), array('fallback_format' => 'json'));
+        $formatNegotiator->add(new RequestMatcher('/'), ['stop' => true]);
+        $formatNegotiator->add(new RequestMatcher('/'), ['fallback_format' => 'json']);
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -109,7 +109,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test FormatListener won't overwrite request format when it was already specified
+     * Test FormatListener won't overwrite request format when it was already specified.
      *
      * @dataProvider useSpecifiedFormatDataProvider
      */
@@ -130,7 +130,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
-            ->setMethods(array('getBest'))
+            ->setMethods(['getBest'])
             ->getMock();
         $formatNegotiator->expects($this->any())
             ->method('getBest')
@@ -145,15 +145,15 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
     public function useSpecifiedFormatDataProvider()
     {
-        return array(
-            array(null, 'xml'),
-            array('json', 'json'),
-        );
+        return [
+            [null, 'xml'],
+            ['json', 'json'],
+        ];
     }
 
     /**
      * Generates a request like a symfony fragment listener does.
-     * Set request type to master
+     * Set request type to master.
      */
     public function testSfFragmentFormat()
     {
@@ -162,9 +162,9 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $request = new Request();
-        $attributes = array ( '_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured', );
+        $attributes = ['_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured'];
         $request->attributes->add($attributes);
-        $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', array()), $attributes));
+        $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', []), $attributes));
 
         $event->expects($this->once())
             ->method('getRequest')

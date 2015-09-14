@@ -14,14 +14,14 @@ namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
 
 /**
- * SerializerConfigurationPassTest test
+ * SerializerConfigurationPassTest test.
  */
 class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testShouldDoNothingIfSerializerIsFound()
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has'))
+            ->setMethods(['has'])
             ->getMock();
 
         $container->expects($this->once())
@@ -42,14 +42,14 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
     public function testShouldThrowInvalidArgumentExceptionWhenNoSerializerIsFound()
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has'))
+            ->setMethods(['has'])
             ->getMock();
 
         $container->method('has')
-            ->will($this->returnValueMap(array(
-                array('fos_rest.serializer', false),
-                array('jms_serializer.serializer', false),
-                array('serializer', false))));
+            ->will($this->returnValueMap([
+                ['fos_rest.serializer', false],
+                ['jms_serializer.serializer', false],
+                ['serializer', false], ]));
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($container);
@@ -58,21 +58,21 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
     public function testShouldConfigureJMSSerializer()
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has', 'setAlias', 'removeDefinition'))
+            ->setMethods(['has', 'setAlias', 'removeDefinition'])
             ->getMock();
 
         $container->method('has')
-            ->will($this->returnValueMap(array(
-                array('fos_rest.serializer', false),
-                array('jms_serializer.serializer', true),
-                array('serializer', true)
-            )));
+            ->will($this->returnValueMap([
+                ['fos_rest.serializer', false],
+                ['jms_serializer.serializer', true],
+                ['serializer', true],
+            ]));
 
         $container->expects($this->exactly(2))
             ->method('setAlias')
             ->withConsecutive(
-                array($this->equalTo('fos_rest.serializer'), $this->equalTo('jms_serializer.serializer')),
-                array($this->equalTo('fos_rest.serializer'), $this->equalTo('serializer'))
+                [$this->equalTo('fos_rest.serializer'), $this->equalTo('jms_serializer.serializer')],
+                [$this->equalTo('fos_rest.serializer'), $this->equalTo('serializer')]
             );
 
         $compiler = new SerializerConfigurationPass();
@@ -82,15 +82,14 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
     public function testShouldConfigureCoreSerializer()
     {
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has', 'setAlias', 'removeDefinition'))
+            ->setMethods(['has', 'setAlias', 'removeDefinition'])
             ->getMock();
 
         $container->method('has')
-            ->will($this->returnValueMap(array(
-                array('fos_rest.serializer', false),
-                array('jms_serializer.serializer', false),
-                array('serializer', true))));
-
+            ->will($this->returnValueMap([
+                ['fos_rest.serializer', false],
+                ['jms_serializer.serializer', false],
+                ['serializer', true], ]));
 
         $container->expects($this->once())
             ->method('setAlias')

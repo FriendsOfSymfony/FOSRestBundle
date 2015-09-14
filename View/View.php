@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\View;
 
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Context\ContextInterface;
 use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Context\ContextInterface;
 
 /**
  * Default View implementation.
@@ -26,7 +26,7 @@ use FOS\RestBundle\Context\ContextInterface;
 class View
 {
     private $data;
-    private $templateData = array();
+    private $templateData = [];
     private $template;
     private $templateVar;
     private $engine;
@@ -54,7 +54,7 @@ class View
      *
      * @return \FOS\RestBundle\View\View
      */
-    public static function create($data = null, $statusCode = null, array $headers = array())
+    public static function create($data = null, $statusCode = null, array $headers = [])
     {
         return new static($data, $statusCode, $headers);
     }
@@ -69,7 +69,7 @@ class View
      *
      * @return View
      */
-    public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
+    public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = [])
     {
         $view = static::create(null, $statusCode, $headers);
         $view->setLocation($url);
@@ -90,9 +90,9 @@ class View
      */
     public static function createRouteRedirect(
         $route,
-        array $parameters = array(),
+        array $parameters = [],
         $statusCode = Codes::HTTP_FOUND,
-        array $headers = array()
+        array $headers = []
     ) {
         $view = static::create(null, $statusCode, $headers);
         $view->setRoute($route);
@@ -108,7 +108,7 @@ class View
      * @param int   $statusCode
      * @param array $headers
      */
-    public function __construct($data = null, $statusCode = null, array $headers = array())
+    public function __construct($data = null, $statusCode = null, array $headers = [])
     {
         $this->setData($data);
         $this->setStatusCode($statusCode ?: 200);
@@ -134,13 +134,13 @@ class View
     }
 
     /**
-     * Set template variable
+     * Set template variable.
      *
-     * @param  array|callable $data
+     * @param array|callable $data
      *
      * @return View
      */
-    public function setTemplateData($data = array())
+    public function setTemplateData($data = [])
     {
         $this->templateData = $data;
 
@@ -209,9 +209,9 @@ class View
      *
      * @param string|TemplateReference $template
      *
-     * @return View
-     *
      * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReference
+     *
+     * @return View
      */
     public function setTemplate($template)
     {

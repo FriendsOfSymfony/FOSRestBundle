@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Inflector;
 use Doctrine\Common\Inflector\Inflector;
 
 /**
- * Inflector object using the Doctrine/Inflector
+ * Inflector object using the Doctrine/Inflector.
  *
  * @author Mark Kazemier <Markkaz>
  */

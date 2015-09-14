@@ -15,6 +15,7 @@ use Doctrine\Common\Annotations\Annotation;
 
 /**
  * Prefix Route annotation class.
+ *
  * @Annotation
  * @Target("CLASS")
  */
