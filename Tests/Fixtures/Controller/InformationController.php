@@ -17,7 +17,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 class InformationController extends FOSRestController implements ClassResourceInterface
 {
     /**
-     * [GET] /information
+     * [GET] /information.
      */
     public function cgetAction()
     {

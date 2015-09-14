@@ -17,21 +17,21 @@ use Symfony\Component\HttpFoundation\Request;
 class UsersController extends Controller
 {
     /**
-     * [OPTION] /users
+     * [OPTION] /users.
      */
     public function optionsUsersAction()
     {
     }
 
     /**
-     * [GET] /users
+     * [GET] /users.
      */
     public function getUsersAction()
     {
     }
 
     /**
-     * [GET] /users/{slug}
+     * [GET] /users/{slug}.
      *
      * @param $slug
      */
@@ -40,21 +40,21 @@ class UsersController extends Controller
     }
 
     /**
-     * [POST] /users
+     * [POST] /users.
      */
     public function postUsersAction()
     {
     }
 
     /**
-     * [PATCH] /users
+     * [PATCH] /users.
      */
     public function patchUsersAction()
     {
     }
 
     /**
-     * [PUT] /users/{slug}
+     * [PUT] /users/{slug}.
      *
      * @param $slug
      */
@@ -63,7 +63,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [PATCH] /users/{slug}
+     * [PATCH] /users/{slug}.
      *
      * @param $slug
      */
@@ -72,7 +72,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [PATCH] /users/{slug}/lock
+     * [PATCH] /users/{slug}/lock.
      *
      * @param $slug
      */
@@ -81,7 +81,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/comments
+     * [GET] /users/{slug}/comments.
      *
      * @param $slug
      */
@@ -90,7 +90,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/comments/{id}
+     * [GET] /users/{slug}/comments/{id}.
      *
      * @param $slug
      * @param $id
@@ -100,7 +100,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [DELETE] /users/{slug}/comments/{id}
+     * [DELETE] /users/{slug}/comments/{id}.
      *
      * @param $slug
      * @param $id
@@ -110,7 +110,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [PATCH] /users/{slug}/ban
+     * [PATCH] /users/{slug}/ban.
      *
      * @param $slug
      * @param $id
@@ -120,7 +120,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [POST] /users/{slug}/comments/{id}/vote
+     * [POST] /users/{slug}/comments/{id}/vote.
      *
      * @param $slug
      * @param $id
@@ -130,14 +130,14 @@ class UsersController extends Controller
     }
 
     /**
-     * NO route
+     * NO route.
      */
     public function _userbarAction()
     {
     }
 
     /**
-     * [GET] /users/check_username
+     * [GET] /users/check_username.
      */
     public function check_usernameUsersAction()
     {
@@ -146,14 +146,14 @@ class UsersController extends Controller
     // conventional HATEOAS actions below
 
     /**
-     * [GET] /users/new
+     * [GET] /users/new.
      */
     public function newUsersAction()
     {
     }
 
     /**
-     * [GET] /user/{slug}/edit
+     * [GET] /user/{slug}/edit.
      *
      * @param $slug
      */
@@ -162,7 +162,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /user/{slug}/remove
+     * [GET] /user/{slug}/remove.
      *
      * @param $slug
      */
@@ -171,7 +171,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/comments/new
+     * [GET] /users/{slug}/comments/new.
      *
      * @param $slug
      */
@@ -180,7 +180,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/comments/{id}/edit
+     * [GET] /users/{slug}/comments/{id}/edit.
      *
      * @param $slug
      * @param $id
@@ -190,7 +190,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/comments/{id}/remove
+     * [GET] /users/{slug}/comments/{id}/remove.
      *
      * @param $slug
      * @param $id
@@ -200,7 +200,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [PATCH] /users/{userId}/comments/{commentId}/hide
+     * [PATCH] /users/{userId}/comments/{commentId}/hide.
      *
      * @param $userId
      * @param $commentId
@@ -210,7 +210,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /foos/{foo}/bars
+     * [GET] /foos/{foo}/bars.
      *
      * @param $foo
      */
@@ -221,7 +221,7 @@ class UsersController extends Controller
     // Parameter of type Request should be ignored
 
     /**
-     * [GET] /users/{slug}/votes
+     * [GET] /users/{slug}/votes.
      *
      * @param Request $request
      * @param $slug
@@ -231,7 +231,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/votes/{id}
+     * [GET] /users/{slug}/votes/{id}.
      *
      * @param Request $request
      * @param $slug
@@ -242,7 +242,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/foos
+     * [GET] /users/{slug}/foos.
      *
      * @param $slug
      * @param Request $request
@@ -252,7 +252,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [GET] /categories
+     * [GET] /categories.
      */
     public function getCategoriesAction()
     {

@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class UserTopicsController extends Controller
 {
     /**
-     * [GET] /users/{slug}/topics
+     * [GET] /users/{slug}/topics.
      *
      * @param $slug
      */
@@ -25,7 +25,7 @@ class UserTopicsController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/topics/{title}
+     * [GET] /users/{slug}/topics/{title}.
      *
      * @param $slug
      * @param $title
@@ -35,7 +35,7 @@ class UserTopicsController extends Controller
     }
 
     /**
-     * [PUT] /users/{slug}/topics/{title}
+     * [PUT] /users/{slug}/topics/{title}.
      *
      * @param $slug
      * @param $title
@@ -45,7 +45,7 @@ class UserTopicsController extends Controller
     }
 
     /**
-     * [POST] /users/{slug}/topics/{title}/hide
+     * [POST] /users/{slug}/topics/{title}/hide.
      *
      * @param $slug
      * @param $title
@@ -57,7 +57,7 @@ class UserTopicsController extends Controller
     // conventional HATEOAS actions below
 
     /**
-     * [GET] /users/{slug}/topics/new
+     * [GET] /users/{slug}/topics/new.
      *
      * @param $slug
      */
@@ -66,7 +66,7 @@ class UserTopicsController extends Controller
     }
 
     /**
-     * [GET] /users/{slug}/topics/{title}/edit
+     * [GET] /users/{slug}/topics/{title}/edit.
      *
      * @param $slug
      * @param $title
@@ -76,7 +76,7 @@ class UserTopicsController extends Controller
     }
 
     /**
-     * [GET] /remove/{slug}/topics/{title}/remove
+     * [GET] /remove/{slug}/topics/{title}/remove.
      *
      * @param $slug
      * @param $title
