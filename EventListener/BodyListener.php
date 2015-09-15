@@ -133,7 +133,7 @@ class BodyListener
      */
     private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
     {
-        return false === ('DELETE' === $method && empty($content) && null === $contentType);
+        return false === ('DELETE' === $method && empty($content) && empty($contentType));
     }
 
     /**
