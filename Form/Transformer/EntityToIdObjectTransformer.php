@@ -82,7 +82,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
 
         if (null === $object) {
             throw new TransformationFailedException(sprintf(
-                'An object with identifier key "%s" and value "%d" does not exist!',
+                'An object with identifier key "%s" and value "%s" does not exist!',
                 $identifier, $id
             ));
         }
