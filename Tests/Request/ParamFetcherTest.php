@@ -11,15 +11,10 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Constraints\File;
 
 /**
  * ParamFetcher test.
@@ -30,880 +25,461 @@ use Symfony\Component\Validator\ConstraintViolationList;
 class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var array
+     * @var callable
      */
     private $controller;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var FOS\RestBundle\Request\ParamReaderInterface
      */
     private $paramReader;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var ParamFetcherTest|Symfony\Component\Validator\ValidatorInterface
      */
     private $validator;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var FOS\RestBundle\Util\ViolationFormatterInterface
      */
     private $violationFormatter;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var Symfony\Component\HttpFoundation\RequestStack
      */
-    private $constraint;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $container;
+    private $requestStack;
 
     /**
      * Test setup.
      */
     public function setup()
     {
-        $this->controller = [new \stdClass(), 'indexAction'];
+        $this->controller = [new \stdClass(), 'fooAction'];
 
-        $this->paramReader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
+        $this->params = [];
+        $this->paramReader = $this->getMock('FOS\RestBundle\Request\ParamReaderInterface');
+
+        $this->validator = $this->getMock('Symfony\Component\Validator\Validator\ValidatorInterface');
+
+        $this->violationFormatter = $this->getMock('FOS\RestBundle\Validator\ViolationFormatterInterface');
+
+        $this->request = new Request();
+        $this->requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack', array());
+        $this->requestStack
+            ->expects($this->any())
+            ->method('getCurrentRequest')
+            ->willReturn($this->request);
+
+        $this->paramFetcherBuilder = $this->getMockBuilder('FOS\RestBundle\Request\ParamFetcher');
+        $this->paramFetcherBuilder
+            ->setConstructorArgs(array(
+                $this->paramReader,
+                $this->requestStack,
+                $this->violationFormatter,
+                $this->validator,
+            ))
+            ->setMethods(null);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Validator has expected to be an instance of
+     */
+    public function testConstructorWithInvalidValidator()
+    {
+        $this->paramFetcherBuilder
+            ->setConstructorArgs(array(
+                $this->paramReader,
+                $this->requestStack,
+                $this->violationFormatter,
+                $this,
+            ))
+            ->getMock();
+    }
+
+    public function testControllerSetter()
+    {
+        $fetcher = $this->paramFetcherBuilder->getMock();
+        $fetcher->setController($this->controller);
+        $this->assertEquals($this->controller, \PHPUnit_Framework_Assert::readAttribute($fetcher, 'controller'));
+    }
+
+    public function testParamDynamicCreation()
+    {
+        $fetcher = $this->paramFetcherBuilder->getMock();
+        $fetcher->setController($this->controller);
+
+        $param1 = $this->createMockedParam('foo');
+        $param2 = $this->createMockedParam('foobar');
+        $param3 = $this->createMockedParam('bar');
+        $this->setParams(array($param1)); // Controller params
+        $fetcher->addParam($param2);
+        $fetcher->addParam($param3);
+
+        $this->assertEquals(array('foo' => $param1, 'foobar' => $param2, 'bar' => $param3), $fetcher->getParams());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage No @ParamInterface configuration for parameter 'foo'.
+     */
+    public function testInexistentParam()
+    {
+        $fetcher = $this->paramFetcherBuilder
+            ->setMethods(array('getParams'))
+            ->getMock();
+        $fetcher
+            ->expects($this->once())
+            ->method('getParams')
+            ->willReturn(array(
+                'bar' => $this->createMockedParam('bar'),
+            ));
+        $fetcher->get('foo');
+    }
+
+    public function testDefaultReplacement()
+    {
+        $fetcher = $this->paramFetcherBuilder
+            ->setMethods(['getParams', 'cleanParamWithRequirements'])
             ->getMock();
 
-        $this->constraint = $this->getMockForAbstractClass('Symfony\Component\Validator\Constraint');
+        $param = $this->createMockedParam('foo', 'bar'); // Default value: bar
+        $fetcher
+            ->expects($this->once())
+            ->method('getParams')
+            ->willReturn(['foo' => $param]);
+        $fetcher
+            ->expects($this->once())
+            ->method('cleanParamWithRequirements')
+            ->with($param, 'bar', true)
+            ->willReturn('foooo');
 
-        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')
-            ->disableOriginalConstructor()
+        $this->assertEquals('foooo', $fetcher->get('foo', true));
+    }
+
+    public function testReturnBeforeGettingConstraints()
+    {
+        $param = $this->getMock('FOS\RestBundle\Controller\Annotations\ParamInterface');
+        $param
+            ->expects($this->once())
+            ->method('getDefault')
+            ->willReturn('default');
+        $param
+            ->expects($this->never())
+            ->method('getConstraints');
+
+        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+
+        $this->assertEquals(
+            'default',
+            $method->invokeArgs($fetcher, array($param, 'default', null))
+        );
+    }
+
+    public function testReturnWhenEmptyConstraints()
+    {
+        $param = $this->createMockedParam('foo');
+        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+
+        $this->assertEquals(
+            'value',
+            $method->invokeArgs($fetcher, array($param, 'value', null))
+        );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage The ParamFetcher requirements feature requires the symfony/validator component.
+     */
+    public function testEmptyValidator()
+    {
+        $param = $this->createMockedParam('foo', null, array(), false, null, array('constraint'));
+        list($fetcher, $method) = $this->getFetcherToCheckValidation(
+            $param,
+            array(
+                $this->paramReader,
+                $this->requestStack,
+                $this->violationFormatter,
+                null,
+            )
+        );
+
+        $method->invokeArgs($fetcher, array($param, 'value', null));
+    }
+
+    public function testNoValidationErrors()
+    {
+        $param = $this->createMockedParam('foo', null, array(), false, null, array('constraint'));
+        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->with('value', array('constraint'))
+            ->willReturn(array());
+
+        $this->assertEquals('value', $method->invokeArgs($fetcher, array($param, 'value', null)));
+    }
+
+    public function testValidationErrors()
+    {
+        $param = $this->createMockedParam('foo', 'default', [], false, null, ['constraint']);
+        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+
+        $errors = $this->getMock('Symfony\Component\Validator\ConstraintViolationListInterface');
+        $errors
+            ->expects($this->once())
+            ->method('count')
+            ->willReturn(1);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->with('value', ['constraint'])
+            ->willReturn($errors);
+
+        $this->assertEquals('default', $method->invokeArgs($fetcher, array($param, 'value', false)));
+    }
+
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedMessage expected exception.
+     */
+    public function testValidationErrorsInStrictMode()
+    {
+        $param = $this->createMockedParam('foo', null, [], false, null, ['constraint']);
+        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+
+        $errors = $this->getMock('Symfony\Component\Validator\ConstraintViolationListInterface');
+        $errors
+            ->expects($this->once())
+            ->method('count')
+            ->willReturn(1);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->with('value', array('constraint'))
+            ->willReturn($errors);
+        $this->violationFormatter
+            ->expects($this->once())
+            ->method('formatList')
+            ->with($param, $errors)
+            ->willReturn('expected exception.');
+
+        $method->invokeArgs($fetcher, array($param, 'value', true));
+    }
+
+    protected function getFetcherToCheckValidation($param, array $constructionArguments = null)
+    {
+        $this->paramFetcherBuilder->setMethods(array('checkNotIncompatibleParams'));
+
+        if (null !== $constructionArguments) {
+            $this->paramFetcherBuilder->setConstructorArgs($constructionArguments);
+        }
+
+        $fetcher = $this->paramFetcherBuilder->getMock();
+
+        $fetcher
+            ->expects($this->once())
+            ->method('checkNotIncompatibleParams')
+            ->with($param);
+
+        $reflection = new \ReflectionClass($fetcher);
+        $method = $reflection->getMethod('cleanParamWithRequirements');
+        $method->setAccessible(true);
+
+        return [$fetcher, $method];
+    }
+
+    public function testAllGetter()
+    {
+        $fetcher = $this->paramFetcherBuilder
+            ->setMethods(array('getParams', 'get'))
             ->getMock();
 
-        $annotations = [];
-        $annotations['foo'] = new QueryParam();
-        $annotations['foo']->name = 'foo';
-        $annotations['foo']->requirements = '\d+';
-        $annotations['foo']->default = '1';
-        $annotations['foo']->description = 'The foo';
-        $annotations['foo']->nullable = false;
+        $fetcher
+            ->expects($this->once())
+            ->method('getParams')
+            ->willReturn(array(
+                'foo' => $this->createMockedParam('foo', null, array(), true), // strict
+                'bar' => $this->createMockedParam('bar'),
+            ));
 
-        $annotations['bar'] = new RequestParam();
-        $annotations['bar']->name = 'bar';
-        $annotations['bar']->requirements = '\d+';
-        $annotations['bar']->description = 'The bar';
+        $fetcher
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->with(
+                $this->logicalOr('foo', 'bar'),
+                $this->logicalOr(true, false)
+            )
+            ->will($this->onConsecutiveCalls('first', 'second'));
 
-        $annotations['baz'] = new RequestParam();
-        $annotations['baz']->name = 'baz';
-        $annotations['baz']->requirements = '\d?';
+        $this->assertEquals(array('foo' => 'first', 'bar' => 'second'), $fetcher->all());
+    }
 
-        $annotations['buzz'] = new QueryParam();
-        $annotations['buzz']->array = true;
-        $annotations['buzz']->name = 'buzz';
-        $annotations['buzz']->requirements = '\d+';
-        $annotations['buzz']->default = '1';
-        $annotations['buzz']->nullable = false;
-        $annotations['buzz']->description = 'An array';
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Controller and method needs to be set via setController
+     */
+    public function testEmptyControllerExceptionWhenInitParams()
+    {
+        $fetcher = $this->paramFetcherBuilder->getMock();
 
-        $annotations['boo'] = new QueryParam();
-        $annotations['boo']->array = true;
-        $annotations['boo']->name = 'boo';
-        $annotations['boo']->description = 'An array with no default value';
+        $reflection = new \ReflectionClass($fetcher);
+        $method = $reflection->getMethod('initParams');
+        $method->setAccessible(true);
 
-        $annotations['boozz'] = new QueryParam();
-        $annotations['boozz']->name = 'boozz';
-        $annotations['boozz']->requirements = '\d+';
-        $annotations['boozz']->description = 'A scalar param with no default value (an optional limit param for example)';
+        $method->invokeArgs($fetcher, array());
+    }
 
-        $annotations['biz'] = new QueryParam();
-        $annotations['biz']->name = 'biz';
-        $annotations['biz']->key = 'business';
-        $annotations['biz']->requirements = '\d+';
-        $annotations['biz']->default = null;
-        $annotations['biz']->nullable = true;
-        $annotations['biz']->description = 'A scalar param with an explicitly defined null default';
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Controller needs to be set as a class instance (closures/functions are not supported)
+     * @dataProvider invalidControllerProvider
+     */
+    public function testNotCallableControllerExceptionWhenInitParams($controller)
+    {
+        $fetcher = $this->paramFetcherBuilder->getMock();
+        $fetcher->setController($controller);
 
-        $annotations['arr'] = new RequestParam();
-        $annotations['arr']->name = 'arr';
-        $annotations['arr']->array = true;
+        $reflection = new \ReflectionClass($fetcher);
+        $method = $reflection->getMethod('initParams');
+        $method->setAccessible(true);
 
-        $annotations['arr_null_strict'] = new RequestParam();
-        $annotations['arr_null_strict']->name = 'arr_null_strict';
-        $annotations['arr_null_strict']->array = true;
-        $annotations['arr_null_strict']->nullable = true;
-        $annotations['arr_null_strict']->strict = true;
+        $method->invokeArgs($fetcher, array());
+    }
 
-        $annotations['moo'] = new QueryParam();
-        $annotations['moo']->name = 'mooh';
-        $annotations['moo']->key = 'moo';
-        $annotations['moo']->requirements = '\d+';
-        $annotations['moo']->default = null;
-        $annotations['moo']->nullable = true;
-        $annotations['moo']->allowBlank = false;
-        $annotations['moo']->description = 'A scalar param with an explicitly defined null default';
+    public function invalidControllerProvider()
+    {
+        return [
+            ['controller'],
+            [[null, 'foo']],
+            [['Foo', null]],
+        ];
+    }
 
-        $annotations['i_cant_be_with_moo'] = new QueryParam();
-        $annotations['i_cant_be_with_moo']->name = 'its_likely_a_bug_from_client_side_if_i_m_with_moo';
-        $annotations['i_cant_be_with_moo']->key = 'i_cant_be_with_moo';
-        $annotations['i_cant_be_with_moo']->requirements = '\d+';
-        $annotations['i_cant_be_with_moo']->default = null;
-        $annotations['i_cant_be_with_moo']->nullable = true;
-        $annotations['i_cant_be_with_moo']->incompatibles = ['moo'];
-        $annotations['i_cant_be_with_moo']->description = 'A scalar param that can not be present in the same request with a given other parameter';
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage No @ParamInterface configuration for parameter 'foobar'.
+     */
+    public function testInexistentIncompatibleParam()
+    {
+        $fetcher = $this->paramFetcherBuilder
+            ->setMethods(array('getParams'))
+            ->getMock();
+        $fetcher
+            ->expects($this->once())
+            ->method('getParams')
+            ->willReturn(array('foo' => $this->createMockedParam('foo')));
 
-        $annotations['def_param'] = new QueryParam();
-        $annotations['def_param']->name = 'default_param';
-        $annotations['def_param']->key = 'def_param';
-        $annotations['def_param']->default = '%default_parameter% %%';
-        $annotations['def_param']->description = 'A default value with resolved container parameter';
+        $param = $this->createMockedParam('bar', null, array('foobar', 'fos')); // Incompatible with foobar & fos
+
+        $reflection = new \ReflectionClass($fetcher);
+        $method = $reflection->getMethod('checkNotIncompatibleParams');
+        $method->setAccessible(true);
+
+        $method->invokeArgs($fetcher, array($param));
+    }
+
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedExceptionMessage 'bar' param is incompatible with fos param.
+     */
+    public function testIncompatibleParam()
+    {
+        $fetcher = $this->paramFetcherBuilder
+            ->setMethods(array('getParams'))
+            ->getMock();
+        $fetcher
+            ->expects($this->once())
+            ->method('getParams')
+            ->willReturn(array(
+                'foobar' => $this->createMockedParam('foobar'),
+                'fos' => $this->createMockedParam('fos', null, array(), false, 'value'),
+            ));
+
+        $param = $this->createMockedParam('bar', null, array('foobar', 'fos')); // Incompatible with foobar & fos
+
+        $reflection = new \ReflectionClass($fetcher);
+        $method = $reflection->getMethod('checkNotIncompatibleParams');
+        $method->setAccessible(true);
+
+        $method->invokeArgs($fetcher, array($param));
+    }
+
+    public function testParamContainerDefinition()
+    {
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $fetcher = $this->paramFetcherBuilder->getMock();
+        $fetcher->setContainer($container);
+        $fetcher->setController($this->controller);
+
+        $param1 = $this->createMockedParam('foo');
+        $param1->expects($this->never())
+            ->method('setContainer');
+
+        $param2 = $this->getMock('FOS\RestBundle\Controller\Annotations\AbstractParam', array());
+        $param2->expects($this->once())
+            ->method('getName')
+            ->willReturn('bar');
+        $param2->expects($this->once())
+            ->method('setContainer')
+            ->with($container);
+
+        $this->setParams([$param1, $param2]);
+
+        $fetcher->getParams();
+    }
+
+    protected function setParams(array $params = array())
+    {
+        $newParams = array();
+        foreach ($params as $param) {
+            $newParams[$param->getName()] = $param;
+        }
 
         $this->paramReader
             ->expects($this->any())
             ->method('read')
-            ->will($this->returnValue($annotations));
+            ->with(new \ReflectionClass($this->controller[0]), $this->controller[1])
+            ->willReturn($newParams);
+    }
 
-        $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
-
-        $this->violationFormatter = $this->getMock('FOS\RestBundle\Validator\ViolationFormatterInterface');
-
-        $this->container
+    protected function createMockedParam(
+        $name,
+        $default = null,
+        array $incompatibles = [],
+        $strict = false,
+        $value = null,
+        array $constraints = []
+    ) {
+        $param = $this->getMock('FOS\RestBundle\Controller\Annotations\ParamInterface');
+        $param
             ->expects($this->any())
-            ->method('getParameter')
-            ->will($this->returnValueMap([
-                ['default_parameter', 100],
-            ]));
-    }
-
-    /**
-     * Get a param fetcher.
-     *
-     * @param array $query      Query parameters for the request.
-     * @param array $request    Request parameters for the request.
-     * @param array $attributes Attributes for the request.
-     *
-     * @return ParamFetcher
-     */
-    public function getParamFetcher($query = [], $request = [], $attributes = null)
-    {
-        $attributes = $attributes ?: ['_controller' => __CLASS__.'::stubAction'];
-
-        $req = new Request($query, $request, $attributes);
-
-        $reqStack = new RequestStack();
-        $reqStack->push($req);
-
-        $paramFetcher = new ParamFetcher($this->paramReader, $reqStack, $this->violationFormatter, $this->validator);
-        $paramFetcher->setContainer($this->container);
-
-        return $paramFetcher;
-    }
-
-    /**
-     * Test valid parameters.
-     *
-     * @param string   $param       which param to test
-     * @param string   $expected    Expected query parameter value.
-     * @param string   $expectedAll Expected query parameter values.
-     * @param array    $query       Query parameters for the request.
-     * @param array    $request     Request parameters for the request.
-     * @param \Closure $callback    Callback to be applied on the validator
-     *
-     * @dataProvider validatesConfiguredParamDataProvider
-     */
-    public function testValidatesConfiguredParam($param, $expected, $expectedAll, $query, $request, \Closure $callback = null)
-    {
-        if (null !== $callback) {
-            $self = $this;
-            $validator = $this->validator;
-            $callback($validator, $self);
-        }
-
-        $queryFetcher = $this->getParamFetcher($query, $request);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->setContainer($this->container);
-
-        $this->assertEquals($expected, $queryFetcher->get($param));
-        $this->assertEquals($expectedAll, $queryFetcher->all());
-    }
-
-    /**
-     * Data provider for the valid parameters test.
-     *
-     * @return array Data
-     */
-    public static function validatesConfiguredParamDataProvider()
-    {
-        return [
-            [ // check that non-strict missing params take default value
-                'foo',
-                '1',
-                ['foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [],  'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                [],
-                ['bar' => '2', 'baz' => '4', 'arr' => []],
-            ],
-            [ // pass Param in GET
-                'foo',
-                '42',
-                ['foo' => '42', 'bar' => '2', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['foo' => '42'],
-                ['bar' => '2', 'baz' => '4', 'arr' => []],
-            ],
-            [ // check that invalid non-strict params take default value
-                'foo',
-                '1',
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['foo' => 'bar'],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
-
-                    $validator->expects($self->at(0))
-                        ->method('validateValue')
-                        ->with('bar', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'"]), null)
-                        ->will($self->returnValue($errors));
-                    $validator->expects($self->at(1))
-                        ->method('validateValue')
-                        ->with('bar', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'"]), null)
-                        ->will($self->returnValue($errors));
-
-                },
-            ],
-            [ // nullable array with strict
-                'arr_null_strict',
-                [],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                [],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [ // invalid array
-                'buzz',
-                [1],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => 'invaliddata'],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [ // invalid array (multiple depth)
-                'buzz',
-                [1],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [[1]]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-
-            [ // multiple array
-                'buzz',
-                [2, 3, 4],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [ // multiple array with one invalid value
-                'buzz',
-                [2, 1, 4],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 1, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 'invaliddata', 4]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
-
-                    $validator->expects($self->at(1))
-                        ->method('validateValue')
-                        ->with('invaliddata', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'"]), null)
-                        ->will($self->returnValue($errors));
-
-                    $validator->expects($self->at(6))
-                        ->method('validateValue')
-                        ->with('invaliddata', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'"]), null)
-                        ->will($self->returnValue($errors));
-                },
-            ],
-            [  // Array not provided in GET query
-                'boo',
-                [],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query but as a scalar
-                'boo',
-                [],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => [], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => 'scalar'],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
-                'boo',
-                ['1', 'foo', 5],
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
-                'boozz',
-                null,
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => null, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5]],
-                ['bar' => '1', 'baz' => '4', 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
-                'boozz',
-                5,
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => null, 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5],
-                ['bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
-                'moo',
-                'string',
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'biz' => null, 'arr' => [], 'arr_null_strict' => [], 'moo' => 'string', 'i_cant_be_with_moo' => null, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'moo' => 'string'],
-                ['bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => []],
-            ],
-            [  // QueryParam provided in GET query with valid values
-                'i_cant_be_with_moo',
-                5,
-                ['foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'biz' => null, 'arr' => [], 'arr_null_strict' => [],'moo' => null, 'i_cant_be_with_moo' => 5, 'def_param' => '100 %'],
-                ['buzz' => [2, 3, 4], 'boo' => ['1', 'foo', 5], 'boozz' => 5, 'i_cant_be_with_moo' => 5],
-                ['bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => []],
-            ],
-
-        ];
-    }
-
-    public function testValidatesAddParam()
-    {
-        $queryFetcher = $this->getParamFetcher([], ['bar' => '2', 'baz' => '4','bub' => '10', 'arr' => []]);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->setContainer($this->container);
-
-        $runtimeParam = new RequestParam();
-        $runtimeParam->name = 'bub';
-        $runtimeParam->requirements = '\d+';
-        $runtimeParam->description = 'The bub';
-        $queryFetcher->addParam($runtimeParam);
-
-        $this->assertEquals(10, $queryFetcher->get('bub'));
-        $this->assertEquals(['foo' => '1', 'bar' => '2', 'baz' => '4', 'buzz' => [1], 'boo' => [], 'boozz' => null, 'biz' => null, 'bub' => 10, 'arr' => [], 'arr_null_strict' => [], 'moo' => '', 'i_cant_be_with_moo' => null, 'def_param' => '100 %'], $queryFetcher->all());
-    }
-
-    public function testValidatesConfiguredParamStrictly()
-    {
-        $constraint = new Regex([
-            'pattern' => '#^(?:\d+)$#xsu',
-            'message' => "Query parameter value '354', does not match requirements '\\d+'",
-        ]);
-
-        $this->validator->expects($this->once())
-            ->method('validateValue')
-            ->with('354', $constraint);
-
-        $queryFetcher = $this->getParamFetcher(['boozz' => 354], []);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->setContainer($this->container);
-        $this->assertEquals(354, $queryFetcher->get('boozz', true));
-
-        $queryFetcher = $this->getParamFetcher([], []);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->setContainer($this->container);
-        try {
-            $queryFetcher->get('boozz', true);
-            $this->fail('Fetching get() in strict mode with no default value did not throw an exception');
-        } catch (HttpException $e) {
-        }
-
-        $queryFetcher = $this->getParamFetcher([], []);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->setContainer($this->container);
-        $this->assertNull($queryFetcher->get('biz', true));
-    }
-
-    /**
-     * Throw exception on invalid parameters.
-     *
-     * @dataProvider exceptionOnValidatesFailureDataProvider
-     */
-    public function testExceptionOnValidatesFailure($query, $request, $param, \Closure $callback = null)
-    {
-        if (null !== $callback) {
-            $self = $this;
-            $validator = $this->validator;
-            $callback($validator, $self);
-        }
-
-        $queryFetcher = $this->getParamFetcher($query, $request);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->setContainer($this->container);
-
-        try {
-            try {
-                $queryFetcher->get($param, true);
-                $this->fail('Fetching get() in strict mode did not throw an exception');
-            } catch (HttpException $e) {
-                try {
-                    $queryFetcher->all(true);
-                    $this->fail('Fetching all() in strict mode did not throw an exception');
-                } catch (HttpException $e) {
-                    return;
-                }
-            }
-        } catch (\Exception $e) {
-            $this->fail('Fetching in strict mode did not throw an Symfony\Component\HttpKernel\Exception\HttpException');
-        }
-    }
-
-    /**
-     * @return array Data
-     */
-    public static function exceptionOnValidatesFailureDataProvider()
-    {
-        return [
-            [ // test missing 'arr' request param of array type
-                ['boozz' => 'foo'],
-                ['bar' => 'foo', 'baz' => 'foo'],
-                'arr',
-            ],
-            [ // test param present with an other param declared as incompatible
-                ['i_cant_be_with_moo' => 42, 'moo' => 'plop'],
-                [],
-                'i_cant_be_with_moo',
-            ],
-            [ // test missing strict param
-                [],
-                [],
-                'bar',
-            ],
-            [ // test invalid strict param
-                [],
-                ['bar' => 'foo'],
-                'bar',
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
-
-                    $validator->expects($self->at(0))
-                        ->method('validateValue')
-                        ->with('foo', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'"]), null)
-                        ->will($self->returnValue($errors));
-
-                    $validator->expects($self->at(1))
-                        ->method('validateValue')
-                        ->with('foo', new Regex(['pattern' => '#^(?:\\d+)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'"]), null)
-                        ->will($self->returnValue($errors));
-                },
-            ],
-            [ // test missing strict param with lax requirement
-                [],
-                ['baz' => 'foo'],
-                'baz',
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
-                    $errors = new ConstraintViolationList([
-                        new ConstraintViolation('expected error', null, [], null, null, null),
-                    ]);
-
-                    $validator->expects($self->at(0))
-                        ->method('validateValue')
-                        ->with('foo', new Regex(['pattern' => '#^(?:\\d?)$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'"]), null)
-                        ->will($self->returnValue($errors));
-                },
-            ],
-        ];
-    }
-
-    /**
-     * @expectedException        LogicException
-     * @expectedExceptionMessage Controller and method needs to be set via setController
-     */
-    public function testExceptionOnRequestWithoutController()
-    {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
-
-        $queryFetcher = new ParamFetcher($this->paramReader, $requestStack, $this->violationFormatter, $this->validator);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->get('none', '42');
-    }
-
-    /**
-     * @expectedException        LogicException
-     * @expectedExceptionMessage Controller and method needs to be set via setController
-     */
-    public function testExceptionOnNoController()
-    {
-        $queryFetcher = $this->getParamFetcher();
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController([]);
-        $queryFetcher->get('none', '42');
-    }
-
-    /**
-     * @expectedException        LogicException
-     * @expectedExceptionMessage Controller needs to be set as a class instance (closures/functions are not supported)
-     */
-    public function testExceptionOnNonController()
-    {
-        $queryFetcher = $this->getParamFetcher();
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController(['foo', 'bar']);
-        $queryFetcher->get('none', '42');
-    }
-
-    /**
-     * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage No @QueryParam/@RequestParam configuration for parameter 'none'.
-     */
-    public function testExceptionOnNonConfiguredParameter()
-    {
-        $queryFetcher = $this->getParamFetcher();
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->get('none', '42');
-    }
-
-    /**
-     * @expectedException        LogicException
-     * @expectedExceptionMessage The ParamFetcher has been not initialized correctly. The container for parameter resolution is missing.
-     */
-    public function testExceptionOnNoContainer()
-    {
-        $queryFetcher = $this->getParamFetcher();
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->setContainer(null);
-        $queryFetcher->get('none', '42');
-    }
-
-    public function testKeyPrecedenceOverName()
-    {
-        $queryFetcher = $this->getParamFetcher(['business' => 5]);
-        $queryFetcher->setController($this->controller);
-        $this->assertEquals(5, $queryFetcher->get('biz'));
-    }
-
-    /**
-     * Test an Exception is thrown in strict mode.
-     */
-    public function testConstraintThrowExceptionInStrictMode()
-    {
-        $errors = new ConstraintViolationList([
-            new ConstraintViolation('expected message 1', null, [], null, null, null),
-            new ConstraintViolation('expected message 2', null, [], null, null, null),
-        ]);
-
-        $this->validator->expects($this->once())
-            ->method('validateValue')
-            ->with('foobar', $this->constraint)
-            ->will($this->returnValue($errors));
-
-        $param = new QueryParam();
-        $param->name = 'bizoo';
-        $param->strict = true;
-        $param->requirements = $this->constraint;
-        $param->description = 'A requirements param';
-
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue(['bizoo' => $param]));
-
-        $this->violationFormatter->expects($this->once())
-            ->method('formatList')
-            ->will($this->returnValue('foobar'));
-
-        $this->setExpectedException(
-            '\\Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException',
-            'foobar'
-        );
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->get('bizoo');
-    }
-
-    /**
-     * Test that the default value is returned in safe mode.
-     */
-    public function testConstraintReturnDefaultInSafeMode()
-    {
-        $violation1 = $this->getMockBuilder('Symfony\Component\Validator\ConstraintViolation')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $violation1->expects($this->never())->method('getMessage');
-
-        $this->validator->expects($this->once())
-            ->method('validateValue')
-            ->with('foobar', $this->constraint)
-            ->will($this->returnValue([$violation1]));
-
-        $param = new QueryParam();
-        $param->name = 'bizoo';
-        $param->requirements = $this->constraint;
-        $param->default = 'expected';
-        $param->description = 'A requirements param';
-
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue(['bizoo' => $param]));
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-        $this->assertEquals('expected', $queryFetcher->get('bizoo'));
-    }
-
-    /**
-     * Test a succesful return with a requirements.
-     */
-    public function testConstraintOk()
-    {
-        $this->validator->expects($this->once())
-            ->method('validateValue')
-            ->with('foobar', $this->constraint)
-            ->will($this->returnValue([]));
-
-        $param = new QueryParam();
-        $param->name = 'bizoo';
-        $param->requirements = $this->constraint;
-        $param->default = 'not expected';
-        $param->description = 'A requirements param';
-
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue(['bizoo' => $param]));
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-        $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
-    }
-
-    /**
-     * Test that we can use deep array structure with a requirements.
-     */
-    public function testDeepArrayAllowedWithConstraint()
-    {
-        $this->validator->expects($this->once())
-            ->method('validateValue')
-            ->with(['foo' => ['b', 'a', 'r']], $this->constraint)
-            ->will($this->returnValue([]));
-
-        $param = new QueryParam();
-        $param->name = 'bizoo';
-        $param->requirements = $this->constraint;
-        $param->default = 'not expected';
-        $param->description = 'A requirements param';
-
-        $request = new Request(['bizoo' => ['foo' => ['b', 'a', 'r']]], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue(['bizoo' => $param]));
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-        $this->assertSame(['foo' => ['b', 'a', 'r']], $queryFetcher->get('bizoo'));
-    }
-
-    /**
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage The ParamFetcher requirements feature requires the symfony/validator component.
-     */
-    public function testNullValidatorWithRequirements()
-    {
-        $param = new QueryParam();
-        $param->name = 'bizoo';
-        $param->requirements = '\d+';
-        $param->default = 'not expected';
-        $param->description = 'A requirements param';
-
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue(['bizoo' => $param]));
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-        $queryFetcher->get('bizoo');
-    }
-
-    public function testNullValidatorWithoutRequirements()
-    {
-        $param = new QueryParam();
-        $param->name = 'bizoo';
-        $param->default = 'not expected';
-        $param->description = 'A param without requirement nor validator';
-
-        $request = new Request(['bizoo' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue(['bizoo' => $param]));
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-        $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
-    }
-
-    public function testCustomErrorMessage()
-    {
-        $param = new QueryParam();
-        $param->name = 'fero';
-        $errorMessage = 'variable must be an integer';
-        $param->requirements = ['rule' => '\d+', 'error_message' => $errorMessage];
-        $param->description = 'integer value';
-        $param->strict = true;
-
-        $request = new Request(['fero' => 'foobar'], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue(['fero' => $param]));
-
-        $constraint = new Regex([
-            'pattern' => '#^(?:\d+)$#xsu',
-            'message' => $errorMessage,
-        ]);
-
-        $errors = new ConstraintViolationList([
-            new ConstraintViolation($errorMessage, null, [], null, null, null),
-        ]);
-
-        $this->validator->expects($this->once())
-            ->method('validateValue')
-            ->with('foobar', $constraint)
-            ->will($this->returnValue($errors));
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
-        $queryFetcher->setContainer($this->container);
-        $queryFetcher->setController($this->controller);
-
-        try {
-            $queryFetcher->get('fero');
-            $this->fail('Fetching get() in strict mode with no default value did not throw an exception');
-        } catch (HttpException $httpException) {
-            $this->assertEquals($errorMessage, $httpException->getMessage());
-        }
-    }
-
-    /**
-     * @dataProvider regexProvider
-     */
-    public function testRegexSucceed($regex, $input, $expected)
-    {
-        $param = new QueryParam();
-        $param->name = 'regex_param';
-        $param->requirements = $regex;
-
-        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
-        $validator->method('validateValue')
-            ->will($this->returnCallback(function ($param, $constraint) {
-                //Emulating behavior of a Symfony RegexValidator
-                return preg_match($constraint->pattern, $param) ? null : ['error'];
-            }));
-
-        $request = new Request([$param->name => $input], [], ['_controller' => __CLASS__.'::stubAction']);
-        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $reader->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue([$param->name => $param]));
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter, $validator);
-        $queryFetcher->setController($this->controller);
-
-        $this->assertEquals($expected, $queryFetcher->get($param->name));
-    }
-
-    /**
-     * Provides various data to test regex edge cases.
-     *
-     * @return array
-     */
-    public function regexProvider()
-    {
-        return [
-            [
-                'A|B|C',
-                'Abc',
-                '',
-            ],
-            [
-                'A|B|C',
-                'abC',
-                '',
-            ],
-            [
-                'A|B|C',
-                'aBc',
-                '',
-            ],
-            [
-                'A|B|C',
-                'B',
-                'B',
-            ],
-            [
-                '^(A|B|C)$',
-                'B',
-                'B',
-            ],
-        ];
+            ->method('getName')
+            ->willReturn($name);
+        $param
+            ->expects($this->any())
+            ->method('getDefault')
+            ->willReturn($default);
+        $param
+            ->expects($this->any())
+            ->method('getIncompatibilities')
+            ->willReturn($incompatibles);
+        $param
+            ->expects($this->any())
+            ->method('getConstraints')
+            ->willReturn($constraints);
+        $param
+            ->expects($this->any())
+            ->method('isStrict')
+            ->willReturn($strict);
+        $param
+            ->expects($this->any())
+            ->method('getValue')
+            ->with($this->request, $default)
+            ->will($value !== null ? $this->returnValue($value) : $this->returnArgument(1));
+
+        return $param;
     }
 }

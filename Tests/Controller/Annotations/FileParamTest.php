@@ -12,23 +12,22 @@
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
 /**
- * QueryParamTest.
+ * FileParamTest.
  *
- * @author Eduardo Oliveira <entering@gmail.com>
  * @author Ener-Getick <egetick@gmail.com>
  */
-class QueryParamTest extends \PHPUnit_Framework_TestCase
+class FileParamTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMock('FOS\RestBundle\Controller\Annotations\QueryParam', array(
+        $this->param = $this->getMock('FOS\RestBundle\Controller\Annotations\FileParam', array(
             'getKey',
         ));
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\AbstractScalarParam', $this->param);
+        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\AbstractParam', $this->param);
     }
 
     public function testValueGetter()
@@ -45,7 +44,7 @@ class QueryParamTest extends \PHPUnit_Framework_TestCase
             ->method('get')
             ->with('foo', 'bar')
             ->willReturn('foobar');
-        $request->query = $parameterBag;
+        $request->files = $parameterBag;
 
         $this->assertEquals('foobar', $this->param->getValue($request, 'bar'));
     }

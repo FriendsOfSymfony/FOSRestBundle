@@ -17,6 +17,7 @@ use FOS\RestBundle\Inflector\InflectorInterface;
 use FOS\RestBundle\Request\ParamReader;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Routing\Route;
+use FOS\RestBundle\Request\ParamReaderInterface;
 
 /**
  * REST controller actions reader.
@@ -42,13 +43,13 @@ class RestActionReader
     /**
      * Initializes controller reader.
      *
-     * @param Reader             $annotationReader
-     * @param ParamReader        $paramReader
-     * @param InflectorInterface $inflector
-     * @param bool               $includeFormat
-     * @param array              $formats
+     * @param Reader               $annotationReader
+     * @param ParamReaderInterface $paramReader
+     * @param InflectorInterface   $inflector
+     * @param bool                 $includeFormat
+     * @param array                $formats
      */
-    public function __construct(Reader $annotationReader, ParamReader $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [])
+    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [])
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;

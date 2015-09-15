@@ -12,11 +12,10 @@
 namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Request\ParamReader;
 
 /**
- * QueryParamReader test.
+ * ParamReader test.
  *
  * @author Alexander <iam.asm89@gmail.com>
  */
@@ -32,16 +31,18 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
         $annotationReader = $this->getMock('Doctrine\Common\Annotations\Reader');
 
         $methodAnnotations = [];
-        $foo = new QueryParam();
-        $foo->name = 'foo';
-        $foo->requirements = '\d+';
-        $foo->description = 'The foo';
+        $foo = $this->createMockedParam();
+        $foo
+            ->expects($this->any())
+            ->method('getName')
+            ->willReturn('foo');
         $methodAnnotations[] = $foo;
 
-        $bar = new QueryParam();
-        $bar->name = 'bar';
-        $bar->requirements = '\d+';
-        $bar->description = 'The bar';
+        $bar = $this->createMockedParam();
+        $bar
+            ->expects($this->any())
+            ->method('getName')
+            ->willReturn('bar');
         $methodAnnotations[] = $bar;
 
         $methodAnnotations[] = new NamePrefix([]);
@@ -53,20 +54,21 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
 
         $classAnnotations = [];
 
-        $baz = new QueryParam();
-        $baz->name = 'baz';
-        $baz->requirements = '\d+';
-        $baz->description = 'The baz';
+        $baz = $this->createMockedParam();
+        $baz
+            ->expects($this->any())
+            ->method('getName')
+            ->willReturn('baz');
         $classAnnotations[] = $baz;
 
-        $mikz = new QueryParam();
-        $mikz->name = 'mikz';
-        $mikz->requirements = '\d+';
-        $mikz->description = 'The real mikz';
+        $mikz = $this->createMockedParam();
+        $mikz
+            ->expects($this->any())
+            ->method('getName')
+            ->willReturn('micz');
         $classAnnotations[] = $mikz;
 
-        $not = new NamePrefix([]);
-        $classAnnotations[] = $not;
+        $classAnnotations[] = new NamePrefix([]);
 
         $annotationReader
                 ->expects($this->any())
@@ -77,7 +79,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that only QueryParam annotations are returned.
+     * Test that only ParamInterface annotations are returned.
      */
     public function testReadsOnlyParamAnnotations()
     {
@@ -86,17 +88,22 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(4, $annotations);
 
         foreach ($annotations as $name => $annotation) {
-            $this->assertThat($annotation, $this->isInstanceOf('FOS\RestBundle\Controller\Annotations\Param'));
-            $this->assertEquals($annotation->name, $name);
+            $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\ParamInterface', $annotation);
+            $this->assertEquals($annotation->getName(), $name);
         }
     }
 
     /**
      * @expectedException        InvalidArgumentException
-     * @expectedExceptionMessage Class 'FOS\RestBundle\Tests\Request\ParamReaderTest' has no method 'foo' method.
+     * @expectedExceptionMessage Class 'FOS\RestBundle\Tests\Request\ParamReaderTest' has no method 'foo'.
      */
     public function testExceptionOnNonExistingMethod()
     {
         $this->paramReader->read(new \ReflectionClass(__CLASS__), 'foo');
+    }
+
+    protected function createMockedParam()
+    {
+        return $this->getMock('FOS\RestBundle\Controller\Annotations\ParamInterface');
     }
 }

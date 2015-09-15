@@ -45,6 +45,26 @@ RequestParam
      * )
      */
 
+FileParam
+~~~~~~~~~~~~
+
+.. code-block:: php
+
+    use FOS\RestBundle\Controller\Annotations\FileParam;
+
+    /**
+     * @FileParam(
+     *   name="",
+     *   key=null,
+     *   requirements={},
+     *   default=null,
+     *   description="",
+     *   strict=true,
+     *   nullable=false,
+     *   image=false
+     * )
+     */
+
 View
 ----
 

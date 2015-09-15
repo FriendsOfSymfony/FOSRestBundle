@@ -11,29 +11,29 @@
 
 namespace FOS\RestBundle\Validator;
 
-use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 interface ViolationFormatterInterface
 {
     /**
-     * Format a Param's ConstraintViolation into a string message.
+     * Format a ParamInterface's ConstraintViolation into a string message.
      *
-     * @param Param                        $param
+     * @param ParamInterface               $param
      * @param ConstraintViolationInterface $violation
      *
      * @return string
      */
-    public function format(Param $param, ConstraintViolationInterface $violation);
+    public function format(ParamInterface $param, ConstraintViolationInterface $violation);
 
     /**
-     * Format a Param's ConstraintViolationList into a string message.
+     * Format a ParamInterface's ConstraintViolationList into a string message.
      *
-     * @param Param                            $param
+     * @param ParamInterface                   $param
      * @param ConstraintViolationListInterface $violationList
      *
      * @return string
      */
-    public function formatList(Param $param, ConstraintViolationListInterface $violationList);
+    public function formatList(ParamInterface $param, ConstraintViolationListInterface $violationList);
 }

@@ -32,11 +32,7 @@ abstract class Param
     /** @var bool */
     public $strict = false;
     /** @var bool */
-    public $array = false;
-    /** @var bool */
     public $nullable = false;
-    /** @var bool */
-    public $allowBlank = true;
     /** @var array */
     public $incompatibles = [];
 

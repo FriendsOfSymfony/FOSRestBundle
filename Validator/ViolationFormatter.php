@@ -11,8 +11,7 @@
 
 namespace FOS\RestBundle\Validator;
 
-use FOS\RestBundle\Controller\Annotations\Param;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -21,12 +20,11 @@ class ViolationFormatter implements ViolationFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function format(Param $param, ConstraintViolationInterface $violation)
+    public function format(ParamInterface $param, ConstraintViolationInterface $violation)
     {
         return sprintf(
-            "%s parameter %s value '%s' violated a constraint (%s)",
-            $param instanceof QueryParam ? 'Query' : 'Request',
-            $param->getKey(),
+            "Parameter %s value '%s' violated a constraint (%s)",
+            $param->getName(),
             $violation->getInvalidValue(),
             $violation->getMessage()
         );
@@ -35,7 +33,7 @@ class ViolationFormatter implements ViolationFormatterInterface
     /**
      * {@inheritdoc}
      */
-    public function formatList(Param $param, ConstraintViolationListInterface $violationList)
+    public function formatList(ParamInterface $param, ConstraintViolationListInterface $violationList)
     {
         $str = '';
         foreach ($violationList as $key => $violation) {
