@@ -27,7 +27,7 @@ class FileParam extends AbstractParam
 {
     /** @var bool */
     public $strict = true;
-    /** @var array|Constraint|null */
+    /** @var mixed */
     public $requirements = null;
     /** @var bool */
     public $image = false;
@@ -42,7 +42,7 @@ class FileParam extends AbstractParam
             $constraints[] = $this->requirements;
         }
 
-        $options = $this->requirements ?: array();
+        $options = is_array($this->requirements) ? $this->requirements : array();
         if ($this->image) {
             $constraints[] = new Constraints\Image($options);
         } else {

@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints;
  */
 abstract class AbstractScalarParam extends AbstractParam
 {
-    /** @var scalar|array|Constraint|null */
+    /** @var mixed */
     public $requirements = null;
     /** @var bool */
     public $array = false;

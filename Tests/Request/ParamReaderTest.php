@@ -13,6 +13,8 @@ namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Request\ParamReader;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * ParamReader test.
@@ -100,6 +102,47 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
     public function testExceptionOnNonExistingMethod()
     {
         $this->paramReader->read(new \ReflectionClass(__CLASS__), 'foo');
+    }
+
+    public function testAnnotationReader()
+    {
+        $reader = new AnnotationReader();
+
+        $method = new \ReflectionMethod('FOS\RestBundle\Tests\Fixtures\Controller\ParamsAnnotatedController', 'getArticlesAction');
+        $params = $reader->getMethodAnnotations($method);
+
+        // Param 1 (query)
+        $this->assertEquals('page', $params[0]->name);
+        $this->assertEquals('\\d+', $params[0]->requirements);
+        $this->assertEquals('1', $params[0]->default);
+        $this->assertEquals('Page of the overview.', $params[0]->description);
+        $this->assertFalse($params[0]->array);
+        $this->assertFalse($params[0]->strict);
+
+        // Param 2 (request)
+        $this->assertEquals('byauthor', $params[1]->name);
+        $this->assertEquals('[a-z]+', $params[1]->requirements);
+        $this->assertEquals('by author', $params[1]->description);
+        $this->assertEquals(['search'], $params[1]->incompatibles);
+        $this->assertFalse($params[1]->array);
+        $this->assertTrue($params[1]->strict);
+
+        // Param 3 (query)
+        $this->assertEquals('filters', $params[2]->name);
+        $this->assertTrue($params[2]->array);
+        $this->assertEquals(new NotNull(), $params[2]->requirements);
+
+        // Param 4 (file)
+        $this->assertEquals('avatar', $params[3]->name);
+        $this->assertEquals(['mimeTypes' => 'application/json'], $params[3]->requirements);
+        $this->assertTrue($params[3]->image);
+        $this->assertTrue($params[3]->strict);
+
+        // Param 5 (file)
+        $this->assertEquals('foo', $params[4]->name);
+        $this->assertEquals(new NotNull(), $params[4]->requirements);
+        $this->assertFalse($params[4]->image);
+        $this->assertFalse($params[4]->strict);
     }
 
     protected function createMockedParam()

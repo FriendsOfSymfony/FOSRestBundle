@@ -22,6 +22,9 @@ AnnotationRegistry::registerLoader(function ($class) {
     if (strpos($class, 'FOS\RestBundle\Controller\Annotations\\') === 0) {
         $path = __DIR__.'/../'.str_replace('\\', '/', substr($class, strlen('FOS\RestBundle\\'))).'.php';
         require_once $path;
+    } elseif (strpos($class, 'Symfony\Component\Validator\Constraints\\') === 0) {
+        $path = __DIR__.'/../vendor/symfony/validator/'.str_replace('\\', '/', substr($class, strlen('Symfony\Component\Validator\\'))).'.php';
+        require_once $path;
     }
 
     return class_exists($class, false);

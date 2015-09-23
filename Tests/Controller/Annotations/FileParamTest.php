@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use Symfony\Component\Validator\Constraints;
+
 /**
  * FileParamTest.
  *
@@ -47,5 +49,34 @@ class FileParamTest extends \PHPUnit_Framework_TestCase
         $request->files = $parameterBag;
 
         $this->assertEquals('foobar', $this->param->getValue($request, 'bar'));
+    }
+
+    public function testComplexRequirements()
+    {
+        $this->param->requirements = $requirement = $this->getMock('Symfony\Component\Validator\Constraint');
+        $this->assertEquals(array(
+            new Constraints\NotNull(),
+            $requirement,
+            new Constraints\File(),
+        ), $this->param->getConstraints());
+    }
+
+    public function testFileRequirements()
+    {
+        $this->param->nullable = true;
+        $this->param->requirements = $requirements = ['mimeTypes' => 'application/json'];
+        $this->assertEquals(array(
+            new Constraints\File($requirements),
+        ), $this->param->getConstraints());
+    }
+
+    public function testImageRequirements()
+    {
+        $this->param->image = true;
+        $this->param->requirements = $requirements = ['mimeTypes' => 'image/gif'];
+        $this->assertEquals(array(
+            new Constraints\NotNull(),
+            new Constraints\Image($requirements),
+        ), $this->param->getConstraints());
     }
 }
