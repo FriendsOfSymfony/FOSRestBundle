@@ -28,13 +28,13 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
     private $om;
 
     /**
-     * @var String
+     * @var string
      */
     private $entityName;
 
     /**
      * @param ObjectManager $om
-     * @param String        $entityName
+     * @param string        $entityName
      */
     public function __construct(ObjectManager $om, $entityName)
     {
@@ -45,7 +45,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
     /**
      * Do nothing.
      *
-     * @param Object|null $object
+     * @param object|null $object
      *
      * @return string
      */
@@ -65,7 +65,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException if object is not found.
      *
-     * @return Object|null
+     * @return object|null
      */
     public function reverseTransform($idObject)
     {
