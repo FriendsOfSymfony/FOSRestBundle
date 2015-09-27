@@ -273,7 +273,7 @@ case based on the id:
 Unfortunately, this form builder does not accept our serialized object as it is
 - even though it contains the necessary id. In fact, the object would have to
 contain the id directly assigned to the person field to be be accepted by the
-form validtion process:
+form validation process:
 
 .. code-block:: json
     
@@ -283,7 +283,7 @@ Well, this is somewhat useless since we not only want to display the name of the
 person but also do not want to do some client side trick to extract the id
 before updating the data, right? Instead, we rather update the data the same way
 as we received it in our GET request and thus, extend the form builder with a
-data transformer. Furtunately the FOSRestBundle comes with an
+data transformer. Fortunately, the FOSRestBundle comes with an
 ``EntityToIdObjectTransformer``, which can be applied to any form builder:
 
 .. code-block:: php
@@ -413,13 +413,13 @@ Here is an example using a closure registered inside a Controller action:
         }
     }
 
-Jsonp custom handler
+JSONP custom handler
 ~~~~~~~~~~~~~~~~~~~~
 
-To enable the common use case of creating Jsonp responses this Bundle provides an
+To enable the common use case of creating JSONP responses this Bundle provides an
 easy solution to handle a custom handler for this use case. Enabling this setting
 also automatically uses the mime type listener (see the next chapter) to register
-a mime type for Jsonp.
+a mime type for JSONP.
 
 Simply add the following to your configuration
 
