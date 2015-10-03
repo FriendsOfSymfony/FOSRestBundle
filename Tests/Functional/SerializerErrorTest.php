@@ -69,7 +69,6 @@ XML;
 
     /**
      * @dataProvider serializeInvalidFormJsonProvider
-     * @group legacy
      */
     public function testSerializeInvalidFormJson($testCase, $expectedContent)
     {
@@ -89,7 +88,6 @@ XML;
 
     /**
      * @dataProvider serializeInvalidFormXmlProvider
-     * @group legacy
      */
     public function testSerializeInvalidFormXml($testCase, $expectedContent)
     {
