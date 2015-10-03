@@ -588,6 +588,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider exceptionWrapperSerializeResponseContentProvider
+     * @group legacy
      *
      * @param string $format
      */

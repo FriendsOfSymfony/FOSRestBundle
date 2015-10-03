@@ -32,6 +32,7 @@ class SerializerErrorController extends Controller
 
     /**
      * @View
+     * @group legacy
      */
     public function invalidFormAction()
     {
