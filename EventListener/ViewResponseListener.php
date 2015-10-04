@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;

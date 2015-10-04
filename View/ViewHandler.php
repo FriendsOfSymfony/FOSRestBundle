@@ -17,7 +17,6 @@ use FOS\RestBundle\Context\ContextInterface;
 use FOS\RestBundle\Context\GroupableContextInterface;
 use FOS\RestBundle\Context\SerializeNullContextInterface;
 use FOS\RestBundle\Context\VersionableContextInterface;
-use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;

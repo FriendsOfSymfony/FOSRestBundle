@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -316,8 +316,8 @@ return $v; })
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
                             ->validate()
-                                ->ifTrue(function ($v) { return 0 !== count(array_filter($v, function ($i) { return !defined('FOS\RestBundle\Util\Codes::'.$i) && !is_int($i); })); })
-                                ->thenInvalid('Invalid HTTP code in fos_rest.exception.codes, see FOS\RestBundle\Util\Codes for all valid codes.')
+                                ->ifTrue(function ($v) { return 0 !== count(array_filter($v, function ($i) { return !defined('Symfony\Component\HttpFoundation\Response::'.$i) && !is_int($i); })); })
+                                ->thenInvalid('Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.')
                             ->end()
                             ->prototype('scalar')->end()
                         ->end()

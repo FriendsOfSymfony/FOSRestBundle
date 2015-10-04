@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Controller;
 
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;

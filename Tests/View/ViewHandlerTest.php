@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler;
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
