@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use FOS\RestBundle\Util\Codes;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
@@ -19,6 +18,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpFoundation\Response;
 
 class FOSRestExtension extends Extension implements PrependExtensionInterface
 {
@@ -279,20 +279,20 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
         foreach ($config['view']['force_redirects'] as $format => $code) {
             if (true === $code) {
-                $config['view']['force_redirects'][$format] = Codes::HTTP_FOUND;
+                $config['view']['force_redirects'][$format] = Response::HTTP_FOUND;
             }
         }
 
         $container->setParameter('fos_rest.force_redirects', $config['view']['force_redirects']);
 
         if (!is_numeric($config['view']['failed_validation'])) {
-            $config['view']['failed_validation'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['failed_validation']);
+            $config['view']['failed_validation'] = constant('\Symfony\Component\HttpFoundation\Response::'.$config['view']['failed_validation']);
         }
 
         $container->setParameter('fos_rest.failed_validation', $config['view']['failed_validation']);
 
         if (!is_numeric($config['view']['empty_content'])) {
-            $config['view']['empty_content'] = constant('\FOS\RestBundle\Util\Codes::'.$config['view']['empty_content']);
+            $config['view']['empty_content'] = constant('\Symfony\Component\HttpFoundation\Response::'.$config['view']['empty_content']);
         }
 
         $container->setParameter('fos_rest.empty_content', $config['view']['empty_content']);
@@ -317,7 +317,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
         foreach ($config['exception']['codes'] as $exception => $code) {
             if (!is_numeric($code)) {
-                $config['exception']['codes'][$exception] = constant("\FOS\RestBundle\Util\Codes::$code");
+                $config['exception']['codes'][$exception] = constant("\Symfony\Component\HttpFoundation\Response::$code");
             }
 
             $this->testExceptionExists($exception);

@@ -2,7 +2,6 @@
 
 namespace FOS\RestBundle\Examples;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Psr\Log\LoggerInterface;
@@ -54,14 +53,14 @@ class RssHandler
     {
         try {
             $content = $this->createFeed($view->getData());
-            $code = Codes::HTTP_OK;
+            $code = Response::HTTP_OK;
         } catch (\Exception $e) {
             if ($this->logger) {
                 $this->logger->error($e);
             }
 
             $content = sprintf('%s:<br/><pre>%s</pre>', $e->getMessage(), $e->getTraceAsString());
-            $code = Codes::HTTP_BAD_REQUEST;
+            $code = Response::HTTP_BAD_REQUEST;
         }
 
         return new Response($content, $code, $view->getHeaders());

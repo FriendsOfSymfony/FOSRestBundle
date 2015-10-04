@@ -17,7 +17,6 @@ use FOS\RestBundle\Context\ContextInterface;
 use FOS\RestBundle\Context\GroupableContextInterface;
 use FOS\RestBundle\Context\SerializeNullContextInterface;
 use FOS\RestBundle\Context\VersionableContextInterface;
-use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
@@ -117,8 +116,8 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      */
     public function __construct(
         array $formats = null,
-        $failedValidationCode = Codes::HTTP_BAD_REQUEST,
-        $emptyContentCode = Codes::HTTP_NO_CONTENT,
+        $failedValidationCode = Response::HTTP_BAD_REQUEST,
+        $emptyContentCode = Response::HTTP_NO_CONTENT,
         $serializeNull = false,
         array $forceRedirects = null,
         $defaultEngine = 'twig'
@@ -224,7 +223,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
             return $code;
         }
 
-        return null !== $content ? Codes::HTTP_OK : $this->emptyContentCode;
+        return null !== $content ? Response::HTTP_OK : $this->emptyContentCode;
     }
 
     /**
@@ -345,7 +344,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        if (($view->getStatusCode() == Codes::HTTP_CREATED || $view->getStatusCode() == Codes::HTTP_ACCEPTED) && $view->getData() != null) {
+        if (($view->getStatusCode() == Response::HTTP_CREATED || $view->getStatusCode() == Response::HTTP_ACCEPTED) && $view->getData() != null) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();

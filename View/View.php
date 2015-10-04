@@ -13,7 +13,6 @@ namespace FOS\RestBundle\View;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Context\ContextInterface;
-use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -69,7 +68,7 @@ class View
      *
      * @return View
      */
-    public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = [])
+    public static function createRedirect($url, $statusCode = Response::HTTP_FOUND, array $headers = [])
     {
         $view = static::create(null, $statusCode, $headers);
         $view->setLocation($url);
@@ -91,7 +90,7 @@ class View
     public static function createRouteRedirect(
         $route,
         array $parameters = [],
-        $statusCode = Codes::HTTP_FOUND,
+        $statusCode = Response::HTTP_FOUND,
         array $headers = []
     ) {
         $view = static::create(null, $statusCode, $headers);

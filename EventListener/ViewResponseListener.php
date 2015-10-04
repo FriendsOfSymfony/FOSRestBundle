@@ -11,13 +11,13 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -83,7 +83,7 @@ class ViewResponseListener extends TemplateListener
             if ($configuration->getTemplateVar()) {
                 $view->setTemplateVar($configuration->getTemplateVar());
             }
-            if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Codes::HTTP_OK === $view->getStatusCode())) {
+            if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Response::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
             if ($configuration->getSerializerGroups() && !$customViewDefined) {
