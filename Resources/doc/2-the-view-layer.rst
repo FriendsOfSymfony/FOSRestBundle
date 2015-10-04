@@ -313,7 +313,7 @@ formats if needed.
 
 Finally the HTTP response status code for failed validation defaults to
 ``400``. Note when changing the default you can use name constants of
-``FOS\RestBundle\Util\Codes`` class or an integer status code.
+``Symfony\Component\HttpFoundation\Response`` class or an integer status code.
 
 You can also set the default templating engine to something different than the
 default of ``twig``:

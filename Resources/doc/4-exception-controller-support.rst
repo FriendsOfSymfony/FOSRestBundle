@@ -33,7 +33,7 @@ disables the TwigBundle exception listener and subsequent configuration.
 To map Exception classes to HTTP response status codes an *exception map* may
 be configured, where the keys match a fully qualified class name and the values
 are either an integer HTTP response status code or a string matching a class
-constant of the ``FOS\RestBundle\Util\Codes`` class:
+constant of the ``Symfony\Component\HttpFoundation\Response`` class:
 
 .. code-block:: yaml
 

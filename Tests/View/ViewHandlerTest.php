@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler;
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
@@ -103,12 +102,12 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function getStatusCodeDataProvider()
     {
         return [
-            'no data' => [Codes::HTTP_OK, false, false, false, 0, 0, Codes::HTTP_OK],
-            'no data with 204' => [Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, Codes::HTTP_NO_CONTENT],
-            'form key form not bound' => [Codes::HTTP_OK, true, false, true, 1, 0, Codes::HTTP_OK],
-            'form key form is bound and invalid' => [403, true, true, false, 1, 1, Codes::HTTP_OK],
-            'form key form bound and valid' => [Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK],
-            'form key null form bound and valid' => [Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK],
+            'no data' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_OK],
+            'no data with 204' => [Response::HTTP_NO_CONTENT, false, false, false, 0, 0, Response::HTTP_NO_CONTENT],
+            'form key form not bound' => [Response::HTTP_OK, true, false, true, 1, 0, Response::HTTP_OK],
+            'form key form is bound and invalid' => [403, true, true, false, 1, 1, Response::HTTP_OK],
+            'form key form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
+            'form key null form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
         ];
     }
 
@@ -117,7 +116,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $noContentCode)
     {
-        $viewHandler = new ViewHandler(['html' => true, 'json' => false, 'xml' => false], Codes::HTTP_BAD_REQUEST, $noContentCode, false, $forceRedirects);
+        $viewHandler = new ViewHandler(['html' => true, 'json' => false, 'xml' => false], Response::HTTP_BAD_REQUEST, $noContentCode, false, $forceRedirects);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $view = new View();
         $view->setLocation('foo');
@@ -130,11 +129,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseWithLocationDataProvider()
     {
         return [
-            'empty force redirects' => [200, 'xml', ['json' => 403], Codes::HTTP_OK],
-            'empty force redirects with 204' => [204, 'xml', ['json' => 403], Codes::HTTP_NO_CONTENT],
-            'force redirects response is redirect' => [200, 'json', [], Codes::HTTP_OK],
-            'force redirects response not redirect' => [403, 'json', ['json' => 403], Codes::HTTP_OK],
-            'html and redirect' => [301, 'html', ['html' => 301], Codes::HTTP_OK],
+            'empty force redirects' => [200, 'xml', ['json' => 403], Response::HTTP_OK],
+            'empty force redirects with 204' => [204, 'xml', ['json' => 403], Response::HTTP_NO_CONTENT],
+            'force redirects response is redirect' => [200, 'json', [], Response::HTTP_OK],
+            'force redirects response not redirect' => [403, 'json', ['json' => 403], Response::HTTP_OK],
+            'html and redirect' => [301, 'html', ['html' => 301], Response::HTTP_OK],
         ];
     }
 
@@ -149,7 +148,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         $view = new View();
-        $view->setStatusCode(Codes::HTTP_CREATED);
+        $view->setStatusCode(Response::HTTP_CREATED);
         $view->setLocation('foo');
         $view->setData($testValue);
         $returnedResponse = $viewHandler->createResponse($view, new Request(), 'json');
@@ -189,7 +188,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         $view = new View();
-        $view->setStatusCode(Codes::HTTP_CREATED);
+        $view->setStatusCode(Response::HTTP_CREATED);
         $view->setRoute('foo');
         $view->setRouteParameters(['id' => 2]);
         $returnedResponse = $viewHandler->createResponse($view, new Request(), 'json');
@@ -213,7 +212,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $container->set('fos_rest.exception_handler', new ExceptionWrapperHandler());
 
         //test
-        $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Codes::HTTP_I_AM_A_TEAPOT);
+        $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Response::HTTP_I_AM_A_TEAPOT);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
         $viewHandler->setContainer($container);
 
@@ -429,7 +428,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseDataProvider()
     {
         return [
-            'no handler' => [Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, []],
+            'no handler' => [Response::HTTP_UNSUPPORTED_MEDIA_TYPE, []],
             'custom handler' => [200, []],
             'transform called' => [200, ['json' => false]],
         ];

@@ -11,10 +11,10 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use FOS\RestBundle\Util\Codes;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class contains the configuration information for the bundle.
@@ -188,8 +188,8 @@ return $v; })
                                 ->scalarNode('service')->defaultNull()->end()
                             ->end()
                         ->end()
-                        ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
-                        ->scalarNode('empty_content')->defaultValue(Codes::HTTP_NO_CONTENT)->end()
+                        ->scalarNode('failed_validation')->defaultValue(Response::HTTP_BAD_REQUEST)->end()
+                        ->scalarNode('empty_content')->defaultValue(Response::HTTP_NO_CONTENT)->end()
                         ->scalarNode('exception_wrapper_handler')->defaultNull()->end()
                         ->booleanNode('serialize_null')->defaultFalse()->end()
                         ->arrayNode('jsonp_handler')
@@ -316,8 +316,8 @@ return $v; })
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
                             ->validate()
-                                ->ifTrue(function ($v) { return 0 !== count(array_filter($v, function ($i) { return !defined('FOS\RestBundle\Util\Codes::'.$i) && !is_int($i); })); })
-                                ->thenInvalid('Invalid HTTP code in fos_rest.exception.codes, see FOS\RestBundle\Util\Codes for all valid codes.')
+                                ->ifTrue(function ($v) { return 0 !== count(array_filter($v, function ($i) { return !defined('Symfony\Component\HttpFoundation\Response::'.$i) && !is_int($i); })); })
+                                ->thenInvalid('Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.')
                             ->end()
                             ->prototype('scalar')->end()
                         ->end()
