@@ -256,7 +256,7 @@ class RestActionReader
     }
 
     /**
-     * Include the format in the path and requirements if its enabled
+     * Include the format in the path and requirements if its enabled.
      *
      * @param $path
      * @param $requirements
