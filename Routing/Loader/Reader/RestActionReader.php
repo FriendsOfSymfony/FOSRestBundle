@@ -211,14 +211,13 @@ class RestActionReader
         $condition = null;
 
         $annotations = $this->readRouteAnnotation($method);
-        if ($annotations) {
+        if (!empty($annotations)) {
             foreach ($annotations as $annotation) {
                 $path = implode('/', $urlParts);
                 $defaults = ['_controller' => $method->getName()];
                 $requirements = [];
                 $options = [];
                 $methods = explode('|', $httpMethod);
-                $condition = null;
 
                 $annoRequirements = $annotation->getRequirements();
                 $annoMethods = $annotation->getMethods();
@@ -235,13 +234,8 @@ class RestActionReader
                 $schemes = $annotation->getSchemes();
                 $condition = $annotation->getCondition();
 
-                if ($this->includeFormat === true) {
-                    $path .= '.{_format}';
+                $this->includeFormatIfNeeded($path, $requirements);
 
-                    if (!isset($requirements['_format']) && !empty($this->formats)) {
-                        $requirements['_format'] = implode('|', array_keys($this->formats));
-                    }
-                }
                 // add route to collection
                 $route = new Route(
                     $path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition
@@ -249,13 +243,7 @@ class RestActionReader
                 $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
         } else {
-            if ($this->includeFormat === true) {
-                $path .= '.{_format}';
-
-                if (!isset($requirements['_format']) && !empty($this->formats)) {
-                    $requirements['_format'] = implode('|', array_keys($this->formats));
-                }
-            }
+            $this->includeFormatIfNeeded($path, $requirements);
 
             $methods = explode('|', strtoupper($httpMethod));
 
@@ -264,6 +252,23 @@ class RestActionReader
                 $path, $defaults, $requirements, $options, $host, [], $methods, $condition
             );
             $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable);
+        }
+    }
+
+    /**
+     * Include the format in the path and requirements if its enabled.
+     *
+     * @param string $path
+     * @param array  $requirements
+     */
+    private function includeFormatIfNeeded(&$path, &$requirements)
+    {
+        if ($this->includeFormat === true) {
+            $path .= '.{_format}';
+
+            if (!isset($requirements['_format']) && !empty($this->formats)) {
+                $requirements['_format'] = implode('|', array_keys($this->formats));
+            }
         }
     }
 
