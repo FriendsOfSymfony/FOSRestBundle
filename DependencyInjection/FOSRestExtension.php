@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;

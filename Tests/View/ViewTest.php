@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 
 /**
