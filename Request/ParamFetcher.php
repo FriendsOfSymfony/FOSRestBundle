@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -47,26 +47,17 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     /**
      * Initializes fetcher.
      *
-     * @param ParamReaderInterface                        $paramReader
-     * @param RequestStack                                $requestStack
-     * @param ValidatorInterface|LegacyValidatorInterface $validator
-     * @param ViolationFormatterInterface                 $violationFormatter
+     * @param ParamReaderInterface        $paramReader
+     * @param RequestStack                $requestStack
+     * @param ValidatorInterface          $validator
+     * @param ViolationFormatterInterface $violationFormatter
      */
-    public function __construct(ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, $validator = null)
+    public function __construct(ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
     {
         $this->paramReader = $paramReader;
         $this->requestStack = $requestStack;
         $this->violationFormatter = $violationFormatter;
         $this->validator = $validator;
-
-        if ($validator !== null && !$validator instanceof LegacyValidatorInterface && !$validator instanceof ValidatorInterface) {
-            throw new \InvalidArgumentException(sprintf(
-                'Validator has expected to be an instance of %s or %s, "%s" given',
-                'Symfony\Component\Validator\ValidatorInterface',
-                'Symfony\Component\Validator\Validator\ValidatorInterface',
-                get_class($validator)
-            ));
-        }
     }
 
     /**
@@ -153,11 +144,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
         }
 
         try {
-            if ($this->validator instanceof ValidatorInterface) {
-                $errors = $this->validator->validate($paramValue, $constraints);
-            } else {
-                $errors = $this->validator->validateValue($paramValue, $constraints);
-            }
+            $errors = $this->validator->validate($paramValue, $constraints);
         } catch (ValidatorException $e) {
             $violation = new ConstraintViolation(
                 $e->getMessage(),
@@ -169,7 +156,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
                 null,
                 $e->getCode()
             );
-            $errors->add($violation);
+            $errors = new ConstraintViolationList(array($violation));
         }
 
         if (0 < count($errors)) {

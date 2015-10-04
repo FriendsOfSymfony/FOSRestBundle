@@ -5,6 +5,7 @@ This document will be updated to list important BC breaks and behavioral changes
 
 ### upgrading to 2.0.0
 
+ * dropped support for the legacy ``Symfony\Component\Validator\ValidatorInterface``
  * removed ``FOS\RestBundle\Util\Codes`` in favor of ``Symfony\Component\HttpFoundation\Response``
  * Compatibility with Symfony <2.7, JMS Serializer/SerializerBundle <1.0 and SensioFrameworkExtraBundle <3.0 was dropped
  * RedirectView and RouteRedirect view were removed. Use View::createRedirect and
