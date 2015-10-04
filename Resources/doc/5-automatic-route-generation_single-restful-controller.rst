@@ -103,7 +103,7 @@ Define resource actions
         {} // "put_user_comment"     [PUT] /users/{slug}/comments/{id}
 
         public function postUserCommentVoteAction($slug, $id)
-        {} // "post_user_comment_vote" [POST] /users/{slug}/comments/{id}/vote
+        {} // "post_user_comment_vote" [POST] /users/{slug}/comments/{id}/votes
 
         public function removeUserCommentAction($slug, $id)
         {} // "remove_user_comment"  [GET] /users/{slug}/comments/{id}/remove
