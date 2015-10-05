@@ -67,6 +67,7 @@ class ExceptionController extends ContainerAware
 
         $currentContent = $this->getAndCleanOutputBuffering();
         $code = $this->getStatusCode($exception);
+        /** @var ViewHandler $viewHandler */
         $viewHandler = $this->container->get('fos_rest.view_handler');
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
         $showException = $request->attributes->get('showException', $this->container->get('kernel')->isDebug());
