@@ -25,6 +25,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -447,11 +448,13 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->method('render')
             ->will($this->returnValue(''));
 
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
         $container
             ->expects($this->exactly(2))
             ->method('get')
-            ->will($this->onConsecutiveCalls(new Request(), $templating));
+            ->will($this->onConsecutiveCalls($requestStack, $templating));
         $viewHandler->setContainer($container);
 
         $data = ['foo' => 'bar'];
@@ -466,12 +469,14 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->registerHandler('html', ($callback = function () { return 'foo'; }));
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
         $container
             ->expects($this->once())
             ->method('get')
-            ->with('request')
-            ->will($this->returnValue(new Request()));
+            ->with('request_stack')
+            ->will($this->returnValue($requestStack));
         $viewHandler->setContainer($container);
 
         $data = ['foo' => 'bar'];
@@ -488,12 +493,14 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler([]);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
         $container
             ->expects($this->once())
             ->method('get')
-            ->with('request')
-            ->will($this->returnValue(new Request()));
+            ->with('request_stack')
+            ->will($this->returnValue($requestStack));
         $viewHandler->setContainer($container);
 
         $data = ['foo' => 'bar'];
