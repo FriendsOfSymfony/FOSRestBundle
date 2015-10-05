@@ -35,9 +35,15 @@ class SerializerErrorController extends Controller
      */
     public function invalidFormAction()
     {
+        // BC hack for Symfony 2.7 where FormType's didn't yet get configured via the FQN
+        $formType = method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
+            ? 'Symfony\Component\Form\Extension\Core\Type\TextType'
+            : 'text'
+        ;
+
         $form = $this->createFormBuilder(null, [
             'csrf_protection' => false,
-        ])->add('name', 'text', [
+        ])->add('name', $formType, [
             'constraints' => [new NotBlank()],
         ])->getForm();
 
