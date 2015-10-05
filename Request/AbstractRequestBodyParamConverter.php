@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SymfonySerializerException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
