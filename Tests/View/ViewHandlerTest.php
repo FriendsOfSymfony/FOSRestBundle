@@ -592,9 +592,15 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithFormErrorsAndSerializationGroups($format)
     {
+        // BC hack for Symfony 2.7 where FormType's didn't yet get configured via the FQN
+        $formType = method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
+            ? 'Symfony\Component\Form\Extension\Core\Type\TextType'
+            : 'text'
+        ;
+
         $form = Forms::createFormFactory()->createBuilder()
-            ->add('name', 'text')
-            ->add('description', 'text')
+            ->add('name', $formType)
+            ->add('description', $formType)
             ->getForm();
 
         $form->get('name')->addError(new FormError('Invalid name'));
