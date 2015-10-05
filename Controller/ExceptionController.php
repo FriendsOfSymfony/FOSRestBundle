@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\FlattenException;
+use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
@@ -67,6 +67,7 @@ class ExceptionController extends ContainerAware
 
         $currentContent = $this->getAndCleanOutputBuffering();
         $code = $this->getStatusCode($exception);
+        /** @var ViewHandler $viewHandler */
         $viewHandler = $this->container->get('fos_rest.view_handler');
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
         $showException = $request->attributes->get('showException', $this->container->get('kernel')->isDebug());

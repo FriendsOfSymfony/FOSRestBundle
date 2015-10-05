@@ -29,6 +29,8 @@ matrix:
       env: COMPOSER_FLAGS="--prefer-lowest"
     - php: 5.5
       env: SYMFONY_VERSION='2.8.*@dev symfony/security-acl:2.8.*@dev'
+    - php: 5.5
+      env: SYMFONY_VERSION='3.0.*@dev symfony/security-acl:3.0.*@dev'
 
 before_install:
   - composer self-update

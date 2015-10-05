@@ -57,30 +57,6 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
         $this->assertEquals(['groups' => ['foo'], 'version' => 'v1'], $contextProperty->getValue($converter));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage ValidatorInterface
-     */
-    public function testConstructorThrowsExceptionIfInvalidValidator()
-    {
-        $this->converterBuilder
-             ->setConstructorArgs([$this->serializer, null, null, new \stdClass()])
-             ->setMethods(null)
-             ->getMock();
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage $validationErrorsArgument
-     */
-    public function testConstructThrowsExceptionIfValidatorIsSetAndValidationArgumentIsNull()
-    {
-        $this->converterBuilder
-             ->setConstructorArgs([$this->serializer, null, null, $this->getMock('Symfony\Component\Validator\ValidatorInterface')])
-             ->setMethods(null)
-             ->getMock();
-    }
-
     public function testDeserializationAdapterSetting()
     {
         $adapter = $this->getMock('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface');
@@ -201,28 +177,6 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
         $request = $this->createRequest();
         $this->launchExecution($converter, $request);
         $this->assertEquals('Object', $request->attributes->get('foo'));
-    }
-
-    public function testLegacyValidatorParameters()
-    {
-        $this->serializer
-             ->expects($this->once())
-             ->method('deserialize')
-             ->willReturn('Object');
-        $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
-        $validator
-            ->expects($this->once())
-            ->method('validate')
-            ->with('Object', ['foo'], true, false)
-            ->willReturn('fooError');
-        $converter = $this->converterBuilder
-            ->setConstructorArgs([$this->serializer, null, null, $validator, 'errors'])
-            ->getMock();
-        $converter->setDeserializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface'));
-        $request = $this->createRequest();
-        $configuration = $this->createConfiguration(null, null, ['validator' => ['groups' => ['foo'], 'traverse' => true]]);
-        $this->launchExecution($converter, $request, $configuration);
-        $this->assertEquals('fooError', $request->attributes->get('errors'));
     }
 
     public function testValidatorParameters()

@@ -101,12 +101,14 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            // Symfony sets _method to keep BC, should be removed in 3.0
-            $params['requirements']['_method'] = implode('|', $params['methods']);
-
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
-            $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
+
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $requirements = $route->getRequirements();
+            unset($requirements['_method']);
+            $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
+
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
@@ -147,12 +149,14 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            // Symfony sets _method to keep BC, should be removed with 3.0
-            $params['requirements']['_method'] = implode('|', $params['methods']);
-
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
-            $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
+
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $requirements = $route->getRequirements();
+            unset($requirements['_method']);
+            $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
+
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);

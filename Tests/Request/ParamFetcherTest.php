@@ -81,22 +81,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->setMethods(null);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Validator has expected to be an instance of
-     */
-    public function testConstructorWithInvalidValidator()
-    {
-        $this->paramFetcherBuilder
-            ->setConstructorArgs(array(
-                $this->paramReader,
-                $this->requestStack,
-                $this->violationFormatter,
-                $this,
-            ))
-            ->getMock();
-    }
-
     public function testControllerSetter()
     {
         $fetcher = $this->paramFetcherBuilder->getMock();
