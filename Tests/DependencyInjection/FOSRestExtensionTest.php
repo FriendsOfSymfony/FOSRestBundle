@@ -71,10 +71,39 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testDisableBodyListener()
     {
         $config = [
-            'fos_rest' => ['body_listener' => false],
+            'fos_rest' => [
+                'zones' => [
+                    'default' => [
+                        'view' => [
+                            'force_redirects' => [
+                                'html' => true,
+                            ],
+                            'formats' => [
+                                'json' => true,
+                                'xml' => true,
+                            ],
+                            'templating_formats' => [
+                                'html' => true,
+                            ],
+                        ],
+                        'allowed_methods_listener' => true,
+                        'access_denied_listener' => [
+                            'json' => true,
+                        ],
+                        'format_listener' => [
+                            'priorities' => [ 'html', 'json', 'xml', 'css' ],
+                            'fallback_format' => 'html',
+                            'prefer_extension' => false,
+                        ],
+                    ],
+                ],
+                'zone_rules' => [
+                    [ 'path' => '^/', 'zone' => 'default' ]
+                ],
+            ],
         ];
-        $this->extension->load($config, $this->container);
-
+        $config = $this->extension->load($config, $this->container);
+var_dump($config); die;
         $this->assertFalse($this->container->hasDefinition('fos_rest.body_listener'));
     }
 
