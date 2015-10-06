@@ -20,6 +20,8 @@
             <argument type="service" id="annotation_reader"/>
         </service>
 
+        <service id="fos_rest.violation_formatter" class="FOS\RestBundle\Validator\ViolationFormatter" />
+
     </services>
 
 </container>

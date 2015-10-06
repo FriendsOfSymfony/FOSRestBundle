@@ -56,7 +56,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $loader->load('context_adapters.xml');
         $loader->load('view.xml');
         $loader->load('routing.xml');
-        $loader->load('util.xml');
         $loader->load('request.xml');
 
         $container->setParameter('fos_rest.cache_dir', $config['cache_dir']);
@@ -251,7 +250,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $service->clearTag('kernel.event_listener');
             }
 
-            $container->setParameter('fos_rest.mime_types', $config['view']['mime_types']);
+            $container->setParameter('fos_rest.mime_types', $config['view']['mime_types']['formats']);
         } else {
             $container->setParameter('fos_rest.mime_types', []);
         }
