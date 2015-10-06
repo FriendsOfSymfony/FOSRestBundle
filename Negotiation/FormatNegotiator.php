@@ -54,14 +54,11 @@ class FormatNegotiator extends BaseNegotiator
     public function getBest($header, array $priorities = [])
     {
         $request = $this->requestStack->getCurrentRequest();
-
-        if (empty($header)) {
-            $header = $request->headers->get('Accept');
-        }
+        $header = $header ?: $request->headers->get('Accept');
 
         foreach ($this->map as $elements) {
             // Check if the current RequestMatcherInterface matches the current request
-            if (null === $elements[0] || !$elements[0]->matches($request)) {
+            if (!$elements[0]->matches($request)) {
                 continue;
             }
             $options = &$elements[1]; // Do not reallow memory for this variable
@@ -77,16 +74,16 @@ class FormatNegotiator extends BaseNegotiator
             }
 
             if (isset($options['prefer_extension']) && $options['prefer_extension'] && !isset($extensionHeader)) {
-                if (preg_match('/.*\.([a-z0-9]+)$/', $request->getPathInfo(), $matches)) {
-                    $extension = $matches[1];
-                }
+                $extension = pathinfo($request->getPathInfo(), PATHINFO_EXTENSION);
 
-                // $extensionHeader will now be either a non empty string or an empty string
-                $extensionHeader = isset($extension) ? (string) $request->getMimeType($extension) : '';
-                if ($header && $extensionHeader) {
-                    $extensionHeader = ','.$extensionHeader;
+                if (!empty($extension)) {
+                    // $extensionHeader will now be either a non empty string or an empty string
+                    $extensionHeader = $request->getMimeType($extension);
+                    if ($header && $extensionHeader) {
+                        $header .= ',';
+                    }
+                    $header .= $extensionHeader.'; q='.$options['prefer_extension'];
                 }
-                $header .= $extensionHeader.'; q='.$options['prefer_extension'];
             }
 
             $mimeTypes = empty($priorities) ? $options['priorities'] : $priorities;
@@ -95,7 +92,7 @@ class FormatNegotiator extends BaseNegotiator
                 return $mimeType;
             }
 
-            if (isset($options['fallback_format']) && false !== $options['fallback_format']) {
+            if (isset($options['fallback_format'])) {
                 // if false === fallback_format then we fail here instead of considering more rules
                 if (false === $options['fallback_format']) {
                     return;
