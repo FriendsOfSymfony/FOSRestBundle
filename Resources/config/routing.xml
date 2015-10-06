@@ -48,6 +48,8 @@
             <argument>%fos_rest.formats%</argument>
         </service>
 
+        <service id="fos_rest.inflector.doctrine" class="FOS\RestBundle\Inflector\DoctrineInflector" />
+
     </services>
 
 </container>

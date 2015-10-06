@@ -20,5 +20,11 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="33"  />
         </service>
 
+        <service id="fos_rest.format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator">
+            <argument type="service" id="request_stack" />
+        </service>
+
+        <service id="fos_rest.request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
+
     </services>
 </container>
