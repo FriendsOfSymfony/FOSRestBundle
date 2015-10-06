@@ -86,7 +86,9 @@ class FormatNegotiator extends BaseNegotiator
                 }
             }
 
-            $mimeTypes = empty($priorities) ? $options['priorities'] : $priorities;
+            $mimeTypes = $this->normalizePriorities(
+                empty($priorities) ? $options['priorities'] : $priorities
+            );
             $mimeType = parent::getBest($header, $mimeTypes);
             if ($mimeType !== null) {
                 return $mimeType;
@@ -102,5 +104,25 @@ class FormatNegotiator extends BaseNegotiator
                 return new Accept($request->getMimeType($options['fallback_format']));
             }
         }
+    }
+
+    /**
+     * Transform the format (json, html, ...) to their mimeType form (application/json, text/html, ...).
+     *
+     * @param array $priorities
+     *
+     * @return array formated priorities
+     */
+    private function normalizePriorities(array $priorities)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        foreach ($priorities as &$priority) {
+            if (($mimeType = $request->getMimeType($priority)) !== null) {
+                $priority = $mimeType;
+            }
+        }
+
+        return $priorities;
     }
 }
