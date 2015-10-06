@@ -14,7 +14,7 @@ This document will be updated to list important BC breaks and behavioral changes
  * Constructor signature of DisableCSRFExtension was changed
  * Removed ``callback_filter`` configuration option for the jsonp_handler
  * ``exception_wrapper_handler`` is now the name of a service and not the name of a class
- * removed all ``.class`` parameters, instead overwriting services via explicit Bundle configuration is prefered
+ * removed all ``.class`` parameters, instead overwriting services via explicit Bundle configuration is preferred
 
 ### upgrading from 1.5.*
 
