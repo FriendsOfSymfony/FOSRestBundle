@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Negotiation;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use Negotiation\Accept;
 use Negotiation\Negotiator as BaseNegotiator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -23,17 +24,24 @@ class FormatNegotiator extends BaseNegotiator
      * @var array
      */
     private $map = [];
+
     /**
      * @var RequestStack
      */
     private $requestStack;
 
     /**
+     * @var
+     */
+    private $mimeTypes;
+
+    /**
      * Constructor.
      */
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, array $mimeTypes = array())
     {
         $this->requestStack = $requestStack;
+        $this->mimeTypes = $mimeTypes;
     }
 
     /**
@@ -86,7 +94,7 @@ class FormatNegotiator extends BaseNegotiator
                 }
             }
 
-            $mimeTypes = $this->normalizePriorities(
+            $mimeTypes = $this->normalizePriorities($request,
                 empty($priorities) ? $options['priorities'] : $priorities
             );
             $mimeType = parent::getBest($header, $mimeTypes);
@@ -107,22 +115,45 @@ class FormatNegotiator extends BaseNegotiator
     }
 
     /**
+     * @param array $values
+     *
+     * @return array
+     */
+    protected function sanitize(array $values)
+    {
+        return array_map(function ($value) {
+            return preg_replace('/\s+/', '', strtolower($value));
+        }, $values);
+    }
+
+    /**
      * Transform the format (json, html, ...) to their mimeType form (application/json, text/html, ...).
      *
-     * @param array $priorities
+     * @param Request $request
+     * @param array   $priorities
      *
      * @return array formated priorities
      */
-    private function normalizePriorities(array $priorities)
+    protected function normalizePriorities(Request $request, $priorities)
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $priorities = $this->sanitize($priorities);
 
-        foreach ($priorities as &$priority) {
-            if (($mimeType = $request->getMimeType($priority)) !== null) {
-                $priority = $mimeType;
+        $mimeTypes = array();
+        foreach ($priorities as $priority) {
+            if (strpos($priority, '/')) {
+                $mimeTypes[] = $priority;
+                continue;
+            }
+
+            if (isset($this->mimeTypes[$priority])) {
+                foreach ($this->mimeTypes[$priority] as $mimeType) {
+                    $mimeTypes[] = $mimeType;
+                }
+            } elseif (($mimeType = $request->getMimeType($priority)) !== null) {
+                $mimeTypes[] = $mimeType;
             }
         }
 
-        return $priorities;
+        return $mimeTypes;
     }
 }

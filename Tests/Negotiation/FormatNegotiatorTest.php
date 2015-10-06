@@ -32,7 +32,8 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->requestStack = new RequestStack();
         $this->request = new Request();
         $this->requestStack->push($this->request);
-        $this->negotiator = new FormatNegotiator($this->requestStack);
+        $mimeTypes = ['json' => ['application/json', 'application/json;version=1.0'], 'html' => ['text/html', 'application/xhtml+xml'], 'xml' => ['application/xml']];
+        $this->negotiator = new FormatNegotiator($this->requestStack, $mimeTypes);
     }
 
     public function testEmptyRequestMatcherMap()
@@ -67,7 +68,7 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->addRequestMatcher(true, ['priorities' => $priorities]);
 
         $this->assertEquals(
-            new Accept('text/html; charset=UTF-8'),
+            new Accept('text/html;charset=utf-8'),
             $this->negotiator->getBest('')
         );
 
@@ -83,6 +84,24 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $priorities = ['application/json'];
         $this->addRequestMatcher(true, ['priorities' => $priorities, 'fallback_format' => 'xml']);
         $this->assertEquals(new Accept('text/xml'), $this->negotiator->getBest(''));
+    }
+
+    public function testGetBestWithFormat()
+    {
+        $this->request->headers->set('Accept', 'application/json;version=1.0');
+        $priorities = ['json'];
+        $this->addRequestMatcher(true, ['priorities' => $priorities, 'fallback_format' => 'xml']);
+        $this->assertEquals(new Accept('application/json;version=1.0'), $this->negotiator->getBest(''));
+    }
+
+    public function testGetBestWithFormatWithRequestMimeTypeFallback()
+    {
+        $negotiator = new FormatNegotiator($this->requestStack);
+
+        $this->request->headers->set('Accept', 'application/json');
+        $priorities = ['json'];
+        $this->addRequestMatcher(true, ['priorities' => $priorities, 'fallback_format' => 'xml']);
+        $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
     }
 
     /**

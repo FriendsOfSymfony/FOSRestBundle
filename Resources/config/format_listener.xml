@@ -22,6 +22,7 @@
 
         <service id="fos_rest.format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator">
             <argument type="service" id="request_stack" />
+            <argument>%fos_rest.mime_types%</argument>
         </service>
 
         <service id="fos_rest.request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
