@@ -13,6 +13,7 @@
 
         <service id="fos_rest.version_listener" class="FOS\RestBundle\EventListener\VersionListener">
             <argument type="service" id="fos_rest.view_handler.default" />
+            <argument type="string">%fos_rest.format_listener.media_type.default_version%</argument>
             <call method="setRegex">
                 <argument type="string">%fos_rest.format_listener.media_type.version_regex%</argument>
             </call>
