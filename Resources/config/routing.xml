@@ -11,7 +11,7 @@
             <argument type="service" id="file_locator" />
             <argument type="service" id="controller_name_converter" />
             <argument type="service" id="fos_rest.routing.loader.reader.controller" />
-            <argument>%fos_rest.routing.loader.default_format%</argument>
+            <argument /> <!-- default format -->
             <tag name="routing.loader" />
         </service>
 
@@ -20,18 +20,18 @@
         <service id="fos_rest.routing.loader.yaml_collection" class="FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader">
             <argument type="service" id="file_locator" />
             <argument type="service" id="fos_rest.routing.loader.processor" />
-            <argument>%fos_rest.routing.loader.include_format%</argument>
-            <argument>%fos_rest.formats%</argument>
-            <argument>%fos_rest.routing.loader.default_format%</argument>
+            <argument /> <!-- include format -->
+            <argument type="collection" /> <!-- formats -->
+            <argument /> <!-- default format -->
             <tag name="routing.loader" />
         </service>
 
         <service id="fos_rest.routing.loader.xml_collection" class="FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader">
             <argument type="service" id="file_locator" />
             <argument type="service" id="fos_rest.routing.loader.processor" />
-            <argument>%fos_rest.routing.loader.include_format%</argument>
-            <argument>%fos_rest.formats%</argument>
-            <argument>%fos_rest.routing.loader.default_format%</argument>
+            <argument /> <!-- include format -->
+            <argument type="collection" /> <!-- formats -->
+            <argument /> <!-- default format -->
             <tag name="routing.loader" />
         </service>
 
@@ -44,8 +44,8 @@
             <argument type="service" id="annotation_reader" />
             <argument type="service" id="fos_rest.request.param_fetcher.reader" />
             <argument type="service" id="fos_rest.inflector" />
-            <argument>%fos_rest.routing.loader.include_format%</argument>
-            <argument>%fos_rest.formats%</argument>
+            <argument /> <!-- include format -->
+            <argument type="collection" /> <!-- formats -->
         </service>
 
         <service id="fos_rest.inflector.doctrine" class="FOS\RestBundle\Inflector\DoctrineInflector" />

@@ -8,7 +8,7 @@
         <service id="fos_rest.form.extension.csrf_disable" class="FOS\RestBundle\Form\Extension\DisableCSRFExtension">
             <tag name="form.type_extension" alias="form" />
             <argument type="service" id="security.token_storage" />
-            <argument>%fos_rest.disable_csrf_role%</argument>
+            <argument /> <!-- disable CSRF role -->
             <argument type="service" id="security.authorization_checker" />
         </service>
     </services>

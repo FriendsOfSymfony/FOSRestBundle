@@ -4,17 +4,11 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-
-        <parameter key="fos_rest.exception_listener.controller">fos_rest.controller.exception:showAction</parameter>
-
-    </parameters>
-
     <services>
         <service id="fos_rest.exception_listener" class="Symfony\Component\HttpKernel\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
-            <argument>%fos_rest.exception_listener.controller%</argument>
+            <argument>fos_rest.controller.exception:showAction</argument>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
@@ -26,7 +20,7 @@
 
         <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
             <argument type="service" id="request_stack" />
-            <argument>%fos_rest.mime_types%</argument>
+            <argument type="collection" /> <!-- mime types -->
         </service>
     </services>
 </container>

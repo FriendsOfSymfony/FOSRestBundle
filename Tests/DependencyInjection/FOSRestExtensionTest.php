@@ -87,8 +87,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
-        $this->assertParameter($decoders, 'fos_rest.decoders');
-        $this->assertParameter(false, 'fos_rest.throw_exception_on_unsupported_content_type');
+        $this->assertEquals($decoders, $this->container->getDefinition('fos_rest.decoder_provider')->getArgument(0));
+        $this->assertFalse($this->container->getDefinition('fos_rest.body_listener')->getArgument(1));
         $this->assertCount(2, $this->container->getDefinition('fos_rest.body_listener')->getArguments());
     }
 
@@ -187,7 +187,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.param_fetcher_listener'));
-        $this->assertFalse($this->container->getParameter('fos_rest.param_fetcher_listener.set_params_as_attributes'));
+        $this->assertFalse($this->container->getDefinition('fos_rest.param_fetcher_listener')->getArgument(1));
     }
 
     public function testLoadParamFetcherListenerForce()
@@ -198,7 +198,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.param_fetcher_listener'));
-        $this->assertTrue($this->container->getParameter('fos_rest.param_fetcher_listener.set_params_as_attributes'));
+        $this->assertTrue($this->container->getDefinition('fos_rest.param_fetcher_listener')->getArgument(1));
     }
 
     public function testLoadFormatListenerWithMultipleRule()
@@ -250,18 +250,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertAlias('fos_rest.view.exception_wrapper_handler', 'fos_rest.exception_handler');
     }
 
-    public function testLoadFormatsWithDefaults()
-    {
-        $this->extension->load([], $this->container);
-        $formats = [
-            'json' => false,
-            'xml' => false,
-            'html' => true,
-        ];
-
-        $this->assertEquals($formats, $this->container->getParameter('fos_rest.formats'));
-    }
-
     public function testDisableViewResponseListener()
     {
         $config = [
@@ -297,27 +285,27 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testForceEmptyContentDefault()
     {
         $this->extension->load([], $this->container);
-        $this->assertEquals(204, $this->container->getParameter('fos_rest.empty_content'));
+        $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(2));
     }
 
     public function testForceEmptyContentIs200()
     {
         $config = ['fos_rest' => ['view' => ['empty_content' => 200]]];
         $this->extension->load($config, $this->container);
-        $this->assertEquals(200, $this->container->getParameter('fos_rest.empty_content'));
+        $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(2));
     }
 
     public function testViewSerializeNullDefault()
     {
         $this->extension->load([], $this->container);
-        $this->assertFalse($this->container->getParameter('fos_rest.serialize_null'));
+        $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(3));
     }
 
     public function testViewSerializeNullIsTrue()
     {
         $config = ['fos_rest' => ['view' => ['serialize_null' => true]]];
         $this->extension->load($config, $this->container);
-        $this->assertTrue($this->container->getParameter('fos_rest.serialize_null'));
+        $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(3));
     }
 
     public function testValidatorAliasWhenEnabled()
@@ -374,13 +362,13 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->extension->load([], $this->container);
 
-        $this->assertEquals('FOS\RestBundle\Context\Adapter\JMSContextAdapter', $this->container->getParameter('fos_rest.context.adapter.jms_context_adapter.class'));
+        $this->assertEquals('FOS\RestBundle\Context\Adapter\JMSContextAdapter', $this->container->getDefinition('fos_rest.context.adapter.jms_context_adapter')->getClass());
         $this->assertTrue($this->container->hasDefinition('fos_rest.context.adapter.jms_context_adapter'));
 
-        $this->assertEquals('FOS\RestBundle\Context\Adapter\ArrayContextAdapter', $this->container->getParameter('fos_rest.context.adapter.array_context_adapter.class'));
+        $this->assertEquals('FOS\RestBundle\Context\Adapter\ArrayContextAdapter', $this->container->getDefinition('fos_rest.context.adapter.array_context_adapter')->getClass());
         $this->assertTrue($this->container->hasDefinition('fos_rest.context.adapter.array_context_adapter'));
 
-        $this->assertEquals('FOS\RestBundle\Context\Adapter\ChainContextAdapter', $this->container->getParameter('fos_rest.context.adapter.chain_context_adapter.class'));
+        $this->assertEquals('FOS\RestBundle\Context\Adapter\ChainContextAdapter', $this->container->getDefinition('fos_rest.context.adapter.chain_context_adapter')->getClass());
         $this->assertTrue($this->container->hasDefinition('fos_rest.context.adapter.chain_context_adapter'));
         $argument = $this->container->getDefinition('fos_rest.context.adapter.chain_context_adapter')->getArgument(0);
         $this->assertEquals('fos_rest.context.adapter.jms_context_adapter', $argument[0]);
@@ -580,7 +568,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('file_locator', (string) $arguments[1]);
         $this->assertEquals('controller_name_converter', (string) $arguments[2]);
         $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[3]);
-        $this->assertEquals('%fos_rest.routing.loader.default_format%', (string) $arguments[4]);
+        $this->assertNull($arguments[4]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
     }
 
@@ -605,35 +593,15 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, count($arguments));
         $this->assertEquals($locatorRef, $arguments[0]);
         $this->assertEquals($processorRef, $arguments[1]);
-        $this->assertEquals(
-            $includeFormat,
-            $this->container->getParameter(
-                strtr($arguments[2], ['%' => ''])
-            )
-        );
-        $this->assertEquals(
-            $formats,
-            $this->container->getParameter(
-                strtr($arguments[3], ['%' => ''])
-            )
-        );
-        $this->assertEquals(
-            $defaultFormat,
-            $this->container->getParameter(
-                strtr($arguments[4], ['%' => ''])
-            )
-        );
+        $this->assertSame($includeFormat, $arguments[2]);
+        $this->assertEquals($formats, $arguments[3]);
+        $this->assertSame($defaultFormat, $arguments[4]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
     }
 
     private function assertAlias($value, $key)
     {
         $this->assertEquals($value, (string) $this->container->getAlias($key), sprintf('%s alias is correct', $key));
-    }
-
-    private function assertParameter($value, $key)
-    {
-        $this->assertEquals($value, $this->container->getParameter($key), sprintf('%s parameter is correct', $key));
     }
 
     public function testCheckViewHandlerWithJsonp()
