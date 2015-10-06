@@ -171,6 +171,10 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                     'fos_rest.format_listener.media_type.version_regex',
                     $config['format_listener']['media_type']['version_regex']
                 );
+                $container->setParameter(
+                    'fos_rest.format_listener.media_type.default_version',
+                    $config['format_listener']['media_type']['default_version']
+                );
 
                 if (!empty($config['format_listener']['media_type']['service'])) {
                     $service = $container->getDefinition('fos_rest.version_listener');

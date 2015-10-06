@@ -20,10 +20,12 @@ class VersionListener
     private $viewHandler;
     private $regex;
     private $version = false;
+    private $defaultVersion;
 
-    public function __construct(ViewHandlerInterface $viewHandler)
+    public function __construct(ViewHandlerInterface $viewHandler, $defaultVersion = null)
     {
         $this->viewHandler = $viewHandler;
+        $this->defaultVersion = $defaultVersion;
     }
 
     /**
@@ -52,8 +54,8 @@ class VersionListener
 
         $mediaType = $request->attributes->get('media_type');
 
-        if (1 === preg_match($this->regex, $mediaType, $matches)) {
-            $this->version = $matches['version'];
+        if (1 === preg_match($this->regex, $mediaType, $matches) || null !== $this->defaultVersion) {
+            $this->version = isset($matches['version']) ? $matches['version'] : $this->defaultVersion;
             $request->attributes->set('version', $this->version);
 
             if ($this->viewHandler instanceof ConfigurableViewHandlerInterface) {
