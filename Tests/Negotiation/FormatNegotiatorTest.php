@@ -66,7 +66,15 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $priorities = ['text/html; charset=UTF-8', 'application/json'];
         $this->addRequestMatcher(true, ['priorities' => $priorities]);
 
-        $this->assertEquals(new Accept('text/html; charset=UTF-8'), $this->negotiator->getBest(''));
+        $this->assertEquals(
+            new Accept('text/html; charset=UTF-8'),
+            $this->negotiator->getBest('')
+        );
+
+        $this->assertEquals(
+            new Accept('text/html'),
+            $this->negotiator->getBest('', ['html', 'json'])
+        );
     }
 
     public function testGetBestFallback()
