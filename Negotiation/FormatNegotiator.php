@@ -18,26 +18,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @author Ener-Getick <energetick.guigui@gmail.com>
+ */
 class FormatNegotiator extends BaseNegotiator
 {
-    /**
-     * @var array
-     */
     private $map = [];
-
-    /**
-     * @var RequestStack
-     */
     private $requestStack;
-
-    /**
-     * @var
-     */
     private $mimeTypes;
 
-    /**
-     * Constructor.
-     */
     public function __construct(RequestStack $requestStack, array $mimeTypes = array())
     {
         $this->requestStack = $requestStack;
@@ -119,7 +108,7 @@ class FormatNegotiator extends BaseNegotiator
      *
      * @return array
      */
-    protected function sanitize(array $values)
+    private function sanitize(array $values)
     {
         return array_map(function ($value) {
             return preg_replace('/\s+/', '', strtolower($value));
@@ -129,12 +118,12 @@ class FormatNegotiator extends BaseNegotiator
     /**
      * Transform the format (json, html, ...) to their mimeType form (application/json, text/html, ...).
      *
-     * @param Request $request
-     * @param array   $priorities
+     * @param Request  $request
+     * @param string[] $priorities
      *
-     * @return array formated priorities
+     * @return string[] formatted priorities
      */
-    protected function normalizePriorities(Request $request, $priorities)
+    private function normalizePriorities(Request $request, array $priorities)
     {
         $priorities = $this->sanitize($priorities);
 
