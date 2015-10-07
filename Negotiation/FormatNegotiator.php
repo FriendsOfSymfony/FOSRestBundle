@@ -61,7 +61,7 @@ class FormatNegotiator extends BaseNegotiator
      */
     public function getBest($header, array $priorities = [])
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->getRequest();
         $header = $header ?: $request->headers->get('Accept');
 
         foreach ($this->map as $elements) {
@@ -155,5 +155,20 @@ class FormatNegotiator extends BaseNegotiator
         }
 
         return $mimeTypes;
+    }
+
+    /**
+     * @throws \RuntimeException
+     *
+     * @return Request
+     */
+    private function getRequest()
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request === null) {
+            throw new \RuntimeException('There is no current request.');
+        }
+
+        return $request;
     }
 }
