@@ -11,14 +11,14 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Negotiation\FormatNegotiator;
 use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException;
@@ -27,9 +27,33 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
  */
-class ExceptionController implements ContainerAwareInterface
+class ExceptionController
 {
-    use ContainerAwareTrait;
+    private $exceptionWrapperHandler;
+    private $formatNegotiator;
+    private $viewHandler;
+    private $templating;
+    private $exceptionCodes;
+    private $exceptionMessages;
+    private $showException;
+
+    public function __construct(
+        ExceptionWrapperHandlerInterface $exceptionWrapperHandler,
+        FormatNegotiator $formatNegotiator,
+        ViewHandlerInterface $viewHandler,
+        EngineInterface $templating,
+        array $exceptionCodes,
+        array $exceptionMessages,
+        $showException
+    ) {
+        $this->exceptionWrapperHandler = $exceptionWrapperHandler;
+        $this->formatNegotiator = $formatNegotiator;
+        $this->viewHandler = $viewHandler;
+        $this->templating = $templating;
+        $this->exceptionCodes = $exceptionCodes;
+        $this->exceptionMessages = $exceptionMessages;
+        $this->showException = $showException;
+    }
 
     /**
      * Creates a new ExceptionWrapper instance that can be overwritten by a custom
@@ -41,10 +65,7 @@ class ExceptionController implements ContainerAwareInterface
      */
     protected function createExceptionWrapper(array $parameters)
     {
-        /** @var ExceptionWrapperHandlerInterface $exceptionWrapperHandler */
-        $exceptionWrapperHandler = $this->container->get('fos_rest.exception_handler');
-
-        return $exceptionWrapperHandler->wrap($parameters);
+        return $this->exceptionWrapperHandler->wrap($parameters);
     }
 
     /**
@@ -72,24 +93,22 @@ class ExceptionController implements ContainerAwareInterface
             $request->headers->get('X-Php-Ob-Level', -1)
         );
         $code = $this->getStatusCode($exception);
-        /** @var ViewHandler $viewHandler */
-        $viewHandler = $this->container->get('fos_rest.view_handler');
-        $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
-        $showException = $request->attributes->get('showException', $this->container->get('kernel')->isDebug());
+        $parameters = $this->getParameters($this->viewHandler, $currentContent, $code, $exception, $logger, $format);
+        $showException = $request->attributes->get('showException', $this->showException);
 
         try {
-            if (!$viewHandler->isFormatTemplating($format)) {
+            if (!$this->viewHandler->isFormatTemplating($format)) {
                 $parameters = $this->createExceptionWrapper($parameters);
             }
 
             $view = View::create($parameters, $code, $exception->getHeaders());
             $view->setFormat($format);
 
-            if ($viewHandler->isFormatTemplating($format)) {
+            if ($this->viewHandler->isFormatTemplating($format)) {
                 $view->setTemplate($this->findTemplate($request, $format, $code, $showException));
             }
 
-            $response = $viewHandler->handle($view);
+            $response = $this->viewHandler->handle($view);
         } catch (\Exception $e) {
             $message = 'An Exception was thrown while handling: ';
             $message .= $this->getExceptionMessage($exception);
@@ -154,10 +173,9 @@ class ExceptionController implements ContainerAwareInterface
      */
     protected function getExceptionMessage($exception)
     {
-        $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
-        $showExceptionMessage = $this->isSubclassOf($exception, $exceptionMap);
+        $showExceptionMessage = $this->isSubclassOf($exception, $this->exceptionMessages);
 
-        if ($showExceptionMessage || $this->container->get('kernel')->isDebug()) {
+        if ($showExceptionMessage || $this->showException) {
             return $exception->getMessage();
         }
 
@@ -175,8 +193,7 @@ class ExceptionController implements ContainerAwareInterface
      */
     protected function getStatusCode($exception)
     {
-        $exceptionMap = $this->container->getParameter('fos_rest.exception.codes');
-        $isExceptionMappedToStatusCode = $this->isSubclassOf($exception, $exceptionMap);
+        $isExceptionMappedToStatusCode = $this->isSubclassOf($exception, $this->exceptionCodes);
 
         return $isExceptionMappedToStatusCode ?: $exception->getStatusCode();
     }
@@ -192,8 +209,7 @@ class ExceptionController implements ContainerAwareInterface
     protected function getFormat(Request $request, $format)
     {
         try {
-            $formatNegotiator = $this->container->get('fos_rest.exception_format_negotiator');
-            $accept = $formatNegotiator->getBest('', []);
+            $accept = $this->formatNegotiator->getBest('', []);
             if ($accept) {
                 $format = $request->getFormat($accept->getType());
             }
@@ -211,7 +227,7 @@ class ExceptionController implements ContainerAwareInterface
      * Overwrite it in a custom ExceptionController class to add additionally parameters
      * that should be passed to the view layer.
      *
-     * @param ViewHandler          $viewHandler
+     * @param ViewHandlerInterface $viewHandler
      * @param string               $currentContent
      * @param int                  $code
      * @param FlattenException     $exception
@@ -220,7 +236,7 @@ class ExceptionController implements ContainerAwareInterface
      *
      * @return array
      */
-    protected function getParameters(ViewHandler $viewHandler, $currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
+    protected function getParameters(ViewHandlerInterface $viewHandler, $currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
         $parameters = [
             'status' => 'error',
@@ -264,14 +280,14 @@ class ExceptionController implements ContainerAwareInterface
         // when not in debug, try to find a template for the specific HTTP status code and format
         if (!$showException) {
             $template = new TemplateReference('TwigBundle', 'Exception', $name.$statusCode, $format, 'twig');
-            if ($this->container->get('templating')->exists($template)) {
+            if ($this->templating->exists($template)) {
                 return $template;
             }
         }
 
         // try to find a template for the given format
         $template = new TemplateReference('TwigBundle', 'Exception', $name, $format, 'twig');
-        if ($this->container->get('templating')->exists($template)) {
+        if ($this->templating->exists($template)) {
             return $template;
         }
 

@@ -143,7 +143,13 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             $service->replaceArgument(1, $config['body_listener']['throw_exception_on_unsupported_content_type']);
             $service->addMethodCall('setDefaultFormat', array($config['body_listener']['default_format']));
 
-            $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(0, $config['body_listener']['decoders']);
+            $decoders = array();
+
+            foreach ($config['body_listener']['decoders'] as $format => $decoderId) {
+                $decoders[$format] = new Reference($decoderId);
+            }
+
+            $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(0, $decoders);
 
             $arrayNormalizer = $config['body_listener']['array_normalizer'];
 
@@ -290,13 +296,13 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
         if ($config['view']['view_response_listener']['enabled']) {
             $loader->load('view_response_listener.xml');
+            $service = $container->getDefinition('fos_rest.view_response_listener');
 
             if (!empty($config['view_response_listener']['service'])) {
-                $service = $container->getDefinition('fos_rest.view_response_listener');
                 $service->clearTag('kernel.event_listener');
             }
 
-            $container->setParameter('fos_rest.view_response_listener.force_view', $config['view']['view_response_listener']['force']);
+            $service->replaceArgument(2, $config['view']['view_response_listener']['force']);
         }
 
         $formats = [];
@@ -314,7 +320,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(3, $formats);
         $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(3, $formats);
         $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(4, $formats);
-        $container->getDefinition('fos_rest.view_handler.default')->replaceArgument(0, $formats);
 
         foreach ($config['view']['force_redirects'] as $format => $code) {
             if (true === $code) {
@@ -327,16 +332,17 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
 
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');
-        $defaultViewHandler->replaceArgument(1, $config['view']['failed_validation']);
+        $defaultViewHandler->replaceArgument(5, $formats);
+        $defaultViewHandler->replaceArgument(6, $config['view']['failed_validation']);
 
         if (!is_numeric($config['view']['empty_content'])) {
             $config['view']['empty_content'] = constant('\Symfony\Component\HttpFoundation\Response::'.$config['view']['empty_content']);
         }
 
-        $defaultViewHandler->replaceArgument(2, $config['view']['empty_content']);
-        $defaultViewHandler->replaceArgument(3, $config['view']['serialize_null']);
-        $defaultViewHandler->replaceArgument(4, $config['view']['force_redirects']);
-        $defaultViewHandler->replaceArgument(5, $config['view']['default_engine']);
+        $defaultViewHandler->replaceArgument(7, $config['view']['empty_content']);
+        $defaultViewHandler->replaceArgument(8, $config['view']['serialize_null']);
+        $defaultViewHandler->replaceArgument(9, $config['view']['force_redirects']);
+        $defaultViewHandler->replaceArgument(10, $config['view']['default_engine']);
     }
 
     private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container)
@@ -356,6 +362,10 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             if ($config['view']['mime_types']['enabled']) {
                 $container->getDefinition('fos_rest.exception_format_negotiator')->replaceArgument(1, $config['view']['mime_types']['formats']);
             }
+
+            $exceptionController = $container->getDefinition('fos_rest.controller.exception');
+            $exceptionController->replaceArgument(4, $config['exception']['codes']);
+            $exceptionController->replaceArgument(5, $config['exception']['messages']);
         }
 
         foreach ($config['exception']['codes'] as $exception => $code) {
@@ -369,9 +379,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         foreach ($config['exception']['messages'] as $exception => $message) {
             $this->testExceptionExists($exception);
         }
-
-        $container->setParameter('fos_rest.exception.codes', $config['exception']['codes']);
-        $container->setParameter('fos_rest.exception.messages', $config['exception']['messages']);
     }
 
     private function loadSerializer(array $config, ContainerBuilder $container)

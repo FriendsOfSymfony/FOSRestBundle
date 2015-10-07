@@ -24,11 +24,6 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    private $container;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
     private $paramFetcher;
 
     /**
@@ -191,18 +186,9 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\ContainerInterface')
-            ->getMock();
-
         $this->paramFetcher = $this->getMockBuilder('FOS\\RestBundle\\Request\\ParamFetcher')
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->container->expects($this->any())
-            ->method('get')
-            ->with('fos_rest.request.param_fetcher')
-            ->will($this->returnValue($this->paramFetcher));
-
-        $this->paramFetcherListener = new ParamFetcherListener($this->container, true);
+        $this->paramFetcherListener = new ParamFetcherListener($this->paramFetcher, true);
     }
 }

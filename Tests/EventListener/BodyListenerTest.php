@@ -38,7 +38,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false)
     {
-        $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->disableOriginalConstructor()->getMock();
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
         $decoder->expects($this->any())
             ->method('decode')
             ->will($this->returnValue($request->getContent()));

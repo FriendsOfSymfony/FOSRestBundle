@@ -11,8 +11,9 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use FOS\RestBundle\View\View;
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,16 +28,22 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ViewResponseListener extends TemplateListener
 {
-    protected $container;
+    private $viewHandler;
+    private $forceView;
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
+     * @param ContainerInterface   $container
+     * @param ViewHandlerInterface $viewHandler
+     * @param bool                 $forceView
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, ViewHandlerInterface $viewHandler, $forceView)
     {
-        $this->container = $container;
+        parent::__construct($container);
+
+        $this->viewHandler = $viewHandler;
+        $this->forceView = $forceView;
     }
 
     /**
@@ -80,7 +87,7 @@ class ViewResponseListener extends TemplateListener
         $view = $event->getControllerResult();
         $customViewDefined = true;
         if (!$view instanceof View) {
-            if (!$configuration && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
+            if (!$configuration && !$this->forceView) {
                 return parent::onKernelView($event);
             }
 
@@ -116,11 +123,9 @@ class ViewResponseListener extends TemplateListener
             $vars = $request->attributes->get('_template_default_vars');
         }
 
-        $viewHandler = $this->container->get('fos_rest.view_handler');
-
-        if ($viewHandler->isFormatTemplating($view->getFormat())) {
+        if ($this->viewHandler->isFormatTemplating($view->getFormat())) {
             if (!empty($vars)) {
-                $parameters = (array) $viewHandler->prepareTemplateParameters($view);
+                $parameters = (array) $this->viewHandler->prepareTemplateParameters($view);
                 foreach ($vars as $var) {
                     if (!array_key_exists($var, $parameters)) {
                         $parameters[$var] = $request->attributes->get($var);
@@ -139,7 +144,7 @@ class ViewResponseListener extends TemplateListener
             }
         }
 
-        $response = $viewHandler->handle($view, $request);
+        $response = $this->viewHandler->handle($view, $request);
 
         $event->setResponse($response);
     }

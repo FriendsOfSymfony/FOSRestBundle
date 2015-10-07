@@ -82,8 +82,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->extension->load([], $this->container);
         $decoders = [
-            'json' => 'fos_rest.decoder.json',
-            'xml' => 'fos_rest.decoder.xml',
+            'json' => new Reference('fos_rest.decoder.json'),
+            'xml' => new Reference('fos_rest.decoder.xml'),
         ];
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
@@ -255,7 +255,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.view_response_listener'));
-        $this->assertFalse($this->container->getParameter('fos_rest.view_response_listener.force_view'));
+        $this->assertFalse($this->container->getDefinition('fos_rest.view_response_listener')->getArgument(2));
     }
 
     public function testLoadViewResponseListenerForce()
@@ -266,33 +266,33 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.view_response_listener'));
-        $this->assertTrue($this->container->getParameter('fos_rest.view_response_listener.force_view'));
+        $this->assertTrue($this->container->getDefinition('fos_rest.view_response_listener')->getArgument(2));
     }
 
     public function testForceEmptyContentDefault()
     {
         $this->extension->load([], $this->container);
-        $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(2));
+        $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
     public function testForceEmptyContentIs200()
     {
         $config = ['fos_rest' => ['view' => ['empty_content' => 200]]];
         $this->extension->load($config, $this->container);
-        $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(2));
+        $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
     public function testViewSerializeNullDefault()
     {
         $this->extension->load([], $this->container);
-        $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(3));
+        $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(8));
     }
 
     public function testViewSerializeNullIsTrue()
     {
         $config = ['fos_rest' => ['view' => ['serialize_null' => true]]];
         $this->extension->load($config, $this->container);
-        $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(3));
+        $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(8));
     }
 
     public function testValidatorAliasWhenEnabled()

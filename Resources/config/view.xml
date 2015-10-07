@@ -7,6 +7,11 @@
     <services>
 
         <service id="fos_rest.view_handler.default" class="FOS\RestBundle\View\ViewHandler" public="false">
+            <argument type="service" id="fos_rest.router" />
+            <argument type="service" id="fos_rest.serializer" />
+            <argument type="service" id="fos_rest.templating" />
+            <argument type="service" id="request_stack" />
+            <argument type="service" id="fos_rest.exception_handler" />
             <argument type="collection" /> <!-- formats -->
             <argument /> <!-- failed validation -->
             <argument /> <!-- empty content -->
@@ -15,9 +20,6 @@
             <argument /> <!-- default engine -->
             <call method="setSerializationContextAdapter">
                 <argument type="service" id="fos_rest.context.adapter.chain_context_adapter" />
-            </call>
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
             </call>
         </service>
 

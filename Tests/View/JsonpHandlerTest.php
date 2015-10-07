@@ -11,10 +11,12 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\JsonpHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Jsonp handler test.
@@ -24,6 +26,21 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
 {
+    private $router;
+    private $serializer;
+    private $templating;
+    private $requestStack;
+    private $exceptionWrapperHandler;
+
+    protected function setUp()
+    {
+        $this->router = $this->getMock('Symfony\Component\Routing\RouterInterface');
+        $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
+        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $this->requestStack = new RequestStack();
+        $this->exceptionWrapperHandler = new ExceptionWrapperHandler();
+    }
+
     /**
      * @dataProvider handleDataProvider
      */
@@ -31,30 +48,15 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $data = ['foo' => 'bar'];
 
-        $viewHandler = new ViewHandler(['jsonp' => false]);
+        $viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $this->exceptionWrapperHandler, ['jsonp' => false]);
         $jsonpHandler = new JsonpHandler(key($query));
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get', 'getParameter']);
-        $serializer = $this->getMock('stdClass', ['serialize', 'setVersion']);
-        $serializer
+        $this->serializer
             ->expects($this->once())
             ->method('serialize')
             ->will($this->returnValue(var_export($data, true)));
-
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->with($this->equalTo('fos_rest.serializer'))
-            ->will($this->returnValue($serializer));
-
-        $container
-            ->expects($this->any())
-            ->method('getParameter')
-            ->will($this->onConsecutiveCalls('version', '1.0'));
-
-        $viewHandler->setContainer($container);
 
         $view = new View($data);
         $view->setFormat('jsonp');
@@ -83,30 +85,15 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $data = ['foo' => 'bar'];
 
-        $viewHandler = new ViewHandler(['jsonp' => false]);
+        $viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $this->exceptionWrapperHandler, ['jsonp' => false]);
         $jsonpHandler = new JsonpHandler('callback');
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get', 'getParameter']);
-        $serializer = $this->getMock('stdClass', ['serialize', 'setVersion']);
-        $serializer
+        $this->serializer
             ->expects($this->once())
             ->method('serialize')
             ->will($this->returnValue(var_export($data, true)));
-
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->with($this->equalTo('fos_rest.serializer'))
-            ->will($this->returnValue($serializer));
-
-        $container
-            ->expects($this->any())
-            ->method('getParameter')
-            ->will($this->onConsecutiveCalls('version', '1.0'));
-
-        $viewHandler->setContainer($container);
 
         $data = ['foo' => 'bar'];
 

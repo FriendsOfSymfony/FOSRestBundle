@@ -14,9 +14,11 @@ namespace FOS\RestBundle\Tests\EventListener;
 use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\EventListener\ViewResponseListener;
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -32,11 +34,6 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     public $listener;
 
     /**
-     * @var \Symfony\Component\DependencyInjection\Container|\PHPUnit_Framework_MockObject_MockObject
-     */
-    public $container;
-
-    /**
      * @var \FOS\RestBundle\View\ViewHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public $viewHandler;
@@ -45,6 +42,12 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      * @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public $templating;
+
+    private $container;
+    private $router;
+    private $serializer;
+    private $requestStack;
+    private $exceptionWrapperHandler;
 
     /**
      * @param Request $request
@@ -88,6 +91,8 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelController()
     {
+        $this->createViewResponseListener();
+
         $request = new Request();
         $request->attributes->set('_view', 'foo');
         $event = $this->getFilterEvent($request);
@@ -99,6 +104,8 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelControllerNoZone()
     {
+        $this->createViewResponseListener();
+
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $request->attributes->set('_view', 'foo');
@@ -111,6 +118,8 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelControllerNoView()
     {
+        $this->createViewResponseListener();
+
         $request = new Request();
         $event = $this->getFilterEvent($request);
 
@@ -142,29 +151,29 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getFormat')
             ->will($this->onConsecutiveCalls(null, 'html'));
 
-        $this->viewHandler->expects($this->once())
+        $viewHandler = $this->getMock('FOS\RestBundle\View\ViewHandlerInterface');
+        $viewHandler->expects($this->once())
             ->method('handle')
             ->with($this->isInstanceOf('FOS\RestBundle\View\View'), $this->equalTo($request))
             ->will($this->returnValue($response));
-        $this->viewHandler->expects($this->once())
+        $viewHandler->expects($this->once())
             ->method('isFormatTemplating')
             ->with('html')
             ->will($this->returnValue(true));
 
+        $this->listener = new ViewResponseListener($this->container, $viewHandler, false);
+
         $event = $this->getResponseEvent($request, $view);
         $event->expects($this->once())
             ->method('setResponse');
-
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('fos_rest.view_handler'))
-            ->will($this->returnValue($this->viewHandler));
 
         $this->listener->onKernelView($event);
     }
 
     public function testOnKernelViewWhenControllerResultIsNotViewObject()
     {
+        $this->createViewResponseListener();
+
         $request = new Request();
 
         $event = $this->getResponseEvent($request, []);
@@ -180,6 +189,8 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelViewFallsBackToFrameworkExtraBundle()
     {
+        $this->createViewResponseListener();
+
         $template = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\TemplateReference')
             ->disableOriginalConstructor()
             ->getMock();
@@ -230,26 +241,14 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testStatusCode($annotationCode, $viewCode, $expectedCode)
     {
+        $this->createViewResponseListener(['json' => true]);
+
         $viewAnnotation = new ViewAnnotation([]);
         $viewAnnotation->setStatusCode($annotationCode);
 
         $request = new Request();
         $request->setRequestFormat('json');
         $request->attributes->set('_view', $viewAnnotation);
-
-        $this->viewHandler = new ViewHandler(['json' => true]);
-        $this->viewHandler->setContainer($this->container);
-
-        // This is why we avoid container dependencies!
-        $that = $this;
-        $this->container->expects($this->exactly(2))
-            ->method('get')
-            ->with($this->logicalOr('fos_rest.view_handler', 'fos_rest.templating'))
-            ->will($this->returnCallback(function ($service) use ($that) {
-                return $service === 'fos_rest.view_handler' ?
-                    $that->viewHandler :
-                    $that->templating;
-            }));
 
         $this->templating->expects($this->any())
             ->method('render')
@@ -287,26 +286,14 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedMaxDepth)
     {
+        $this->createViewResponseListener(['json' => true]);
+
         $viewAnnotation = new ViewAnnotation([]);
         $viewAnnotation->setSerializerEnableMaxDepthChecks($enableMaxDepthChecks);
 
         $request = new Request();
         $request->setRequestFormat('json');
         $request->attributes->set('_view', $viewAnnotation);
-
-        $this->viewHandler = new ViewHandler(['json' => true]);
-        $this->viewHandler->setContainer($this->container);
-
-        // This is why we avoid container dependencies!
-        $that = $this;
-        $this->container->expects($this->exactly(2))
-            ->method('get')
-            ->with($this->logicalOr('fos_rest.view_handler', 'fos_rest.templating'))
-            ->will($this->returnCallback(function ($service) use ($that) {
-                        return $service === 'fos_rest.view_handler' ?
-                            $that->viewHandler :
-                            $that->templating;
-                    }));
 
         $this->templating->expects($this->any())
             ->method('render')
@@ -338,6 +325,8 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testViewWithNoCopyDefaultVars($createAnnotation, $populateDefaultVars, $shouldCopy)
     {
+        $this->createViewResponseListener(['html' => true]);
+
         $request = new Request();
         $request->attributes->set('_template_default_vars', ['customer']);
         $request->attributes->set('customer', 'A person goes here');
@@ -350,20 +339,6 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         }
 
         $event = $this->getResponseEvent($request, $view);
-
-        $this->viewHandler = new ViewHandler(['html' => true]);
-        $this->viewHandler->setContainer($this->container);
-
-        // This is why we avoid container dependencies!
-        $that = $this;
-        $this->container->expects($this->exactly(2))
-            ->method('get')
-            ->with($this->logicalOr('fos_rest.view_handler', 'fos_rest.templating'))
-            ->will($this->returnCallback(function ($service) use ($that) {
-                return $service === 'fos_rest.view_handler' ?
-                    $that->viewHandler :
-                    $that->templating;
-            }));
 
         $this->listener->onKernelView($event);
 
@@ -378,9 +353,17 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->viewHandler = $this->getMock('FOS\RestBundle\View\ViewHandlerInterface');
-        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->listener = new ViewResponseListener($this->container);
+        $this->router = $this->getMock('Symfony\Component\Routing\RouterInterface');
+        $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
+        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $this->requestStack = new RequestStack();
+        $this->exceptionWrapperHandler = new ExceptionWrapperHandler();
+    }
+
+    private function createViewResponseListener($formats = null)
+    {
+        $this->viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $this->exceptionWrapperHandler, $formats);
+        $this->listener = new ViewResponseListener($this->container, $this->viewHandler, false);
     }
 }

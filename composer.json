@@ -46,7 +46,8 @@
         "symfony/css-selector":           "^2.7|^3.0",
         "phpoption/phpoption":            "^1.1",
         "jms/serializer-bundle":          "^1.0",
-        "sllh/php-cs-fixer-styleci-bridge": "^1.3"
+        "sllh/php-cs-fixer-styleci-bridge": "^1.3",
+        "twig/twig": "~1.22.0"
     },
 
     "suggest": {

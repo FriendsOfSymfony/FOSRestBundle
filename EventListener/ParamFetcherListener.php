@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
@@ -25,18 +25,18 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
  */
 class ParamFetcherListener
 {
-    private $container;
+    private $paramFetcher;
     private $setParamsAsAttributes;
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
-     * @param bool               $setParamsAsAttributes
+     * @param ParamFetcherInterface $paramFetcher
+     * @param bool                  $setParamsAsAttributes
      */
-    public function __construct(ContainerInterface $container, $setParamsAsAttributes = false)
+    public function __construct(ParamFetcherInterface $paramFetcher, $setParamsAsAttributes = false)
     {
-        $this->container = $container;
+        $this->paramFetcher = $paramFetcher;
         $this->setParamsAsAttributes = $setParamsAsAttributes;
     }
 
@@ -55,20 +55,18 @@ class ParamFetcherListener
             return;
         }
 
-        $paramFetcher = $this->container->get('fos_rest.request.param_fetcher');
-
         $controller = $event->getController();
 
         if (is_callable($controller) && method_exists($controller, '__invoke')) {
             $controller = [$controller, '__invoke'];
         }
 
-        $paramFetcher->setController($controller);
+        $this->paramFetcher->setController($controller);
         $attributeName = $this->getAttributeName($controller);
-        $request->attributes->set($attributeName, $paramFetcher);
+        $request->attributes->set($attributeName, $this->paramFetcher);
 
         if ($this->setParamsAsAttributes) {
-            $params = $paramFetcher->all();
+            $params = $this->paramFetcher->all();
             foreach ($params as $name => $param) {
                 if ($request->attributes->has($name) && null !== $request->attributes->get($name)) {
                     $msg = sprintf("ParamFetcher parameter conflicts with a path parameter '$name' for route '%s'", $request->attributes->get('_route'));

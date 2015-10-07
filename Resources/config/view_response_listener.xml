@@ -10,6 +10,8 @@
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="-10" />
             <tag name="kernel.event_listener" event="kernel.view" method="onKernelView" priority="100" />
             <argument type="service" id="service_container" />
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument /> <!-- force view -->
         </service>
 
     </services>
