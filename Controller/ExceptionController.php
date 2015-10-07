@@ -65,7 +65,9 @@ class ExceptionController extends ContainerAware
             return new Response($message, Response::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
         }
 
-        $currentContent = $this->getAndCleanOutputBuffering();
+        $currentContent = $this->getAndCleanOutputBuffering(
+            $request->headers->get('X-Php-Ob-Level', -1)
+        );
         $code = $this->getStatusCode($exception);
         /** @var ViewHandler $viewHandler */
         $viewHandler = $this->container->get('fos_rest.view_handler');
@@ -102,22 +104,14 @@ class ExceptionController extends ContainerAware
      *
      * @return string
      */
-    protected function getAndCleanOutputBuffering()
+    protected function getAndCleanOutputBuffering($startObLevel)
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-        $startObLevel = $request->headers->get('X-Php-Ob-Level', -1);
-
-        // ob_get_level() never returns 0 on some Windows configurations, so if
-        // the level is the same two times in a row, the loop should be stopped.
-        $previousObLevel = null;
-        $currentContent = '';
-
-        while (($obLevel = ob_get_level()) > $startObLevel && $obLevel !== $previousObLevel) {
-            $previousObLevel = $obLevel;
-            $currentContent .= ob_get_clean();
+        if (ob_get_level() <= $startObLevel) {
+            return '';
         }
+        Response::closeOutputBuffers($startObLevel + 1, true);
 
-        return $currentContent;
+        return ob_get_clean();
     }
 
     /**
