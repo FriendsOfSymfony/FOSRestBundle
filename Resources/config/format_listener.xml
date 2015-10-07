@@ -13,16 +13,13 @@
 
         <service id="fos_rest.version_listener" class="FOS\RestBundle\EventListener\VersionListener">
             <argument type="service" id="fos_rest.view_handler.default" />
-            <argument type="string">%fos_rest.format_listener.media_type.default_version%</argument>
-            <call method="setRegex">
-                <argument type="string">%fos_rest.format_listener.media_type.version_regex%</argument>
-            </call>
+            <argument /> <!-- default media type version -->
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="33"  />
         </service>
 
         <service id="fos_rest.format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator">
             <argument type="service" id="request_stack" />
-            <argument>%fos_rest.mime_types%</argument>
+            <argument type="collection" /> <!-- mime types -->
         </service>
 
         <service id="fos_rest.request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
