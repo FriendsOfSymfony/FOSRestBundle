@@ -11,32 +11,36 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use FOS\RestBundle\View\View;
 use FOS\RestBundle\FOSRestBundle;
-use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class ViewResponseListener extends TemplateListener
+class ViewResponseListener implements EventSubscriberInterface
 {
-    protected $container;
+    private $viewHandler;
+    private $forceView;
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
+     * @param ViewHandlerInterface $viewHandler
+     * @param bool                 $forceView
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ViewHandlerInterface $viewHandler, $forceView)
     {
-        $this->container = $container;
+        $this->viewHandler = $viewHandler;
+        $this->forceView = $forceView;
     }
 
     /**
@@ -56,8 +60,6 @@ class ViewResponseListener extends TemplateListener
         if ($configuration = $request->attributes->get('_view')) {
             $request->attributes->set('_template', $configuration);
         }
-
-        parent::onKernelController($event);
     }
 
     /**
@@ -80,8 +82,8 @@ class ViewResponseListener extends TemplateListener
         $view = $event->getControllerResult();
         $customViewDefined = true;
         if (!$view instanceof View) {
-            if (!$configuration && !$this->container->getParameter('fos_rest.view_response_listener.force_view')) {
-                return parent::onKernelView($event);
+            if (!$configuration && !$this->forceView) {
+                return;
             }
 
             $view = new View($view);
@@ -116,11 +118,9 @@ class ViewResponseListener extends TemplateListener
             $vars = $request->attributes->get('_template_default_vars');
         }
 
-        $viewHandler = $this->container->get('fos_rest.view_handler');
-
-        if ($viewHandler->isFormatTemplating($view->getFormat())) {
+        if ($this->viewHandler->isFormatTemplating($view->getFormat())) {
             if (!empty($vars)) {
-                $parameters = (array) $viewHandler->prepareTemplateParameters($view);
+                $parameters = (array) $this->viewHandler->prepareTemplateParameters($view);
                 foreach ($vars as $var) {
                     if (!array_key_exists($var, $parameters)) {
                         $parameters[$var] = $request->attributes->get($var);
@@ -139,8 +139,16 @@ class ViewResponseListener extends TemplateListener
             }
         }
 
-        $response = $viewHandler->handle($view, $request);
+        $response = $this->viewHandler->handle($view, $request);
 
         $event->setResponse($response);
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::CONTROLLER => array('onKernelController', -100),
+            KernelEvents::VIEW => 'onKernelView',
+        );
     }
 }

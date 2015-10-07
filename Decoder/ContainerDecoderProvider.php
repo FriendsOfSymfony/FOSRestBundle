@@ -11,27 +11,27 @@
 
 namespace FOS\RestBundle\Decoder;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides encoders through the Symfony2 DIC.
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ContainerDecoderProvider implements DecoderProviderInterface, ContainerAwareInterface
+class ContainerDecoderProvider implements DecoderProviderInterface
 {
-    use ContainerAwareTrait;
-
+    private $container;
     private $decoders;
 
     /**
      * Constructor.
      *
-     * @param array $decoders List of key (format) value (service ids) of decoders
+     * @param ContainerInterface $container The container from which the actual decoders are retrieved
+     * @param array              $decoders  List of key (format) value (service ids) of decoders
      */
-    public function __construct(array $decoders)
+    public function __construct(ContainerInterface $container, array $decoders)
     {
+        $this->container = $container;
         $this->decoders = $decoders;
     }
 
