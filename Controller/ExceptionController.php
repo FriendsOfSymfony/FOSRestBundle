@@ -126,7 +126,7 @@ class ExceptionController extends ContainerAware
      * @param FlattenException $exception
      * @param array            $exceptionMap
      *
-     * @return int|false
+     * @return int|bool
      */
     protected function isSubclassOf($exception, $exceptionMap)
     {
@@ -141,7 +141,7 @@ class ExceptionController extends ContainerAware
                 }
             }
         } catch (\ReflectionException $re) {
-            return 'FOSUserBundle: Invalid class in  fos_res.exception.messages: '
+            return 'FOSUserBundle: Invalid class in fos_res.exception.messages: '
                     .$re->getMessage();
         }
 

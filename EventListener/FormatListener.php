@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\Util\StopFormatListenerException;
-use Negotiation\AbstractNegotiator;
+use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -31,7 +31,7 @@ class FormatListener
      *
      * @param FormatNegotiatorInterface $formatNegotiator
      */
-    public function __construct(AbstractNegotiator $formatNegotiator)
+    public function __construct(FormatNegotiator $formatNegotiator)
     {
         $this->formatNegotiator = $formatNegotiator;
     }

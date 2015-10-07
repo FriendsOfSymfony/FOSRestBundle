@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Request;
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\File;
@@ -109,7 +110,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
         $default = $param->getDefault();
         $strict = (null !== $strict ? $strict : $param->isStrict());
 
-        $paramValue = $param->getValue($this->requestStack->getCurrentRequest(), $default);
+        $paramValue = $param->getValue($this->getRequest(), $default);
 
         return $this->cleanParamWithRequirements($param, $paramValue, $strict);
     }
@@ -133,7 +134,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
             return $paramValue;
         }
 
-        $constraints = $param->getConstraints($paramValue);
+        $constraints = $param->getConstraints();
         if (empty($constraints)) {
             return $paramValue;
         }
@@ -219,6 +220,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
      *
      * @param ParamInterface $param the configuration for the param fetcher
      *
+     * @throws InvalidArgumentException
      * @throws BadRequestHttpException
      */
     protected function checkNotIncompatibleParams(ParamInterface $param)
@@ -230,7 +232,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
             }
             $incompatibleParam = $params[$incompatibleParamName];
 
-            if ($incompatibleParam->getValue($this->requestStack->getCurrentRequest(), null) !== null) {
+            if ($incompatibleParam->getValue($this->getRequest(), null) !== null) {
                 $exceptionMessage = sprintf(
                     "'%s' param is incompatible with %s param.",
                     $param->getName(),
@@ -243,7 +245,7 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
     }
 
     /**
-     * @param Param[] $params
+     * @param ParamInterface[] $params
      */
     private function resolveParameters(array $params)
     {
@@ -258,5 +260,20 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
                 $param->setContainer($this->container);
             }
         }
+    }
+
+    /**
+     * @throws \RuntimeException
+     *
+     * @return Request
+     */
+    private function getRequest()
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request === null) {
+            throw new \RuntimeException('There is no current request.');
+        }
+
+        return $request;
     }
 }
