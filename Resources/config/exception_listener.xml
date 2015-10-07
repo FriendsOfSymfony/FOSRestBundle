@@ -26,6 +26,7 @@
 
         <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
             <argument type="service" id="request_stack" />
+            <argument>%fos_rest.mime_types%</argument>
         </service>
     </services>
 </container>
