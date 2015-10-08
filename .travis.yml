@@ -45,8 +45,7 @@ before_install:
 
 install: composer update $COMPOSER_FLAGS --prefer-dist
 
-script: phpunit --coverage-clover=coverage.clover
+script: if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then phpunit --coverage-clover=coverage.clover; else phpunit; fi
 
 after_script:
-  - if [ "$TRAVIS_PHP_VERSION" != "nightly" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [ "$TRAVIS_PHP_VERSION" != "nightly" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
