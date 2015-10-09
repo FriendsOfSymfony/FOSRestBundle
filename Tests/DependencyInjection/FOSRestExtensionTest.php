@@ -57,7 +57,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->includeFormat = true;
         $this->formats = array(
             'json' => false,
-            'xml'  => false,
+            'xml' => false,
             'html' => true,
         );
         $this->defaultFormat = null;
@@ -113,7 +113,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             'fos_rest' => array('body_listener' => array(
                 'array_normalizer' => array(
                     'service' => 'fos_rest.normalizer.camel_keys',
-                )
+                ),
             )),
         );
 
@@ -135,7 +135,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
                 'array_normalizer' => array(
                     'service' => 'fos_rest.normalizer.camel_keys',
                     'forms' => true,
-                )
+                ),
             )),
         );
 
@@ -208,7 +208,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
                 'rules' => array(
                     array('path' => '/foo'),
                     array('path' => '/'),
-                )
+                ),
             )),
         );
         $this->extension->load($config, $this->container);
@@ -341,15 +341,15 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $controllerLoaderDefinitionName = 'fos_rest.routing.loader.controller';
         $controllerLoaderClassParameter = 'fos_rest.routing.loader.controller.class';
-        $controllerLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestRouteLoader';
+        $controllerLoaderClass = 'FOS\RestBundle\Routing\Loader\RestRouteLoader';
 
         $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
         $yamlCollectionLoaderClassParameter = 'fos_rest.routing.loader.yaml_collection.class';
-        $yamlCollectionLoaderClass          = 'FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader';
+        $yamlCollectionLoaderClass = 'FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader';
 
-        $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
-        $xmlCollectionLoaderClass           = 'FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader';
+        $xmlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.xml_collection';
+        $xmlCollectionLoaderClassParameter = 'fos_rest.routing.loader.xml_collection.class';
+        $xmlCollectionLoaderClass = 'FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader';
 
         $this->extension->load(array(), $this->container);
 
@@ -404,8 +404,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             $this->defaultFormat
         );
 
-        $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
+        $xmlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.xml_collection';
+        $xmlCollectionLoaderClassParameter = 'fos_rest.routing.loader.xml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
             $xmlCollectionLoaderClassParameter,
@@ -438,8 +438,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             'xml'
         );
 
-        $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
+        $xmlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.xml_collection';
+        $xmlCollectionLoaderClassParameter = 'fos_rest.routing.loader.xml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
             $xmlCollectionLoaderClassParameter,
@@ -457,7 +457,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
                     'view' => array(
                         'formats' => array(
                             'json' => false,
-                            'xml'  => true,
+                            'xml' => true,
                         ),
                     ),
                 ),
@@ -472,20 +472,20 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
             $yamlCollectionLoaderClassParameter,
             $this->includeFormat,
             array(
-                'xml'  => false,
+                'xml' => false,
                 'html' => true,
             ),
             $this->defaultFormat
         );
 
-        $xmlCollectionLoaderDefinitionName  = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClassParameter  = 'fos_rest.routing.loader.xml_collection.class';
+        $xmlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.xml_collection';
+        $xmlCollectionLoaderClassParameter = 'fos_rest.routing.loader.xml_collection.class';
         $this->assertValidRestFileLoader(
             $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
             $xmlCollectionLoaderClassParameter,
             $this->includeFormat,
             array(
-                'xml'  => false,
+                'xml' => false,
                 'html' => true,
             ),
             $this->defaultFormat
@@ -610,7 +610,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     ) {
         $locatorRef = new Reference('file_locator');
         $processorRef = new Reference('fos_rest.routing.loader.processor');
-        $arguments  = $loader->getArguments();
+        $arguments = $loader->getArguments();
 
         $this->assertEquals('%'.$loaderClassParameter.'%', $loader->getClass());
         $this->assertEquals(5, count($arguments));

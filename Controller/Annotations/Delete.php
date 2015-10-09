@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 
 /**
  * DELETE Route annotation class.
+ *
  * @Annotation
  * @Target("METHOD")
  */

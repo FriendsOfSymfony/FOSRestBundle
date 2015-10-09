@@ -33,7 +33,7 @@ class RestControllerReader
      */
     public function __construct(RestActionReader $actionReader, Reader $annotationReader)
     {
-        $this->actionReader     = $actionReader;
+        $this->actionReader = $actionReader;
         $this->annotationReader = $annotationReader;
     }
 
@@ -76,7 +76,7 @@ class RestControllerReader
         if ($annotation = $this->readClassAnnotation($reflectionClass, 'RouteResource')) {
             $resource = explode('_', $annotation->resource);
         } elseif ($reflectionClass->implementsInterface('FOS\RestBundle\Routing\ClassResourceInterface')) {
-            $resource  = preg_split(
+            $resource = preg_split(
                 '/([A-Z][^A-Z]*)Controller/', $reflectionClass->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
             );
             if (empty($resource)) {

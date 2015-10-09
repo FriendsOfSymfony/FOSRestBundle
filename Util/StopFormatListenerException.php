@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the FOSRest package.
+ * This file is part of the FOSRestBundle package.
  *
  * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
  *
@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Util;
 
 /**
- * Thrown to stop the format negotiator from continuing so that no format is set
+ * Thrown to stop the format negotiator from continuing so that no format is set.
  */
 class StopFormatListenerException extends \Exception
 {

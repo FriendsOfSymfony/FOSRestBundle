@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class RequestBodyParamConverter extends AbstractRequestBodyParamConverter
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function apply(Request $request, ParamConverter $configuration)
     {
@@ -28,7 +28,7 @@ class RequestBodyParamConverter extends AbstractRequestBodyParamConverter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports(ParamConverter $configuration)
     {

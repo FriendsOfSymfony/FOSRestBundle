@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Implements a custom handler for JSONP leveraging the ViewHandler
+ * Implements a custom handler for JSONP leveraging the ViewHandler.
  *
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
@@ -31,7 +31,7 @@ class JsonpHandler
 
     protected function getCallback(Request $request)
     {
-        $callback  = $request->query->get($this->callbackParam);
+        $callback = $request->query->get($this->callbackParam);
         $validator = new \JsonpCallbackValidator();
 
         if (!$validator->validate($callback)) {
@@ -42,7 +42,7 @@ class JsonpHandler
     }
 
     /**
-     * Handles wrapping a JSON response into a JSONP response
+     * Handles wrapping a JSON response into a JSONP response.
      *
      * @param ViewHandler $handler
      * @param View        $view

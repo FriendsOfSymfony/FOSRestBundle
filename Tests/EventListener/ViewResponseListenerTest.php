@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * View response listener test
+ * View response listener test.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
@@ -163,7 +163,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * onKernelView falls back to FrameworkExtraBundles' onKernelView
-     * when fos_rest.view_response_listener.force_view is false
+     * when fos_rest.view_response_listener.force_view is false.
      */
     public function testOnKernelViewFallsBackToFrameworkExtraBundle()
     {

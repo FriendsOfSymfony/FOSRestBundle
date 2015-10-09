@@ -47,17 +47,17 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * Initializes fetcher.
      *
-     * @param ParamReader                 $paramReader
-     * @param Request                     $request
+     * @param ParamReader                                 $paramReader
+     * @param Request                                     $request
      * @param ValidatorInterface|LegacyValidatorInterface $validator
-     * @param ViolationFormatterInterface $violationFormatter
+     * @param ViolationFormatterInterface                 $violationFormatter
      */
     public function __construct(ParamReader $paramReader, Request $request, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
-        $this->paramReader        = $paramReader;
-        $this->request            = $request;
+        $this->paramReader = $paramReader;
+        $this->request = $request;
         $this->violationFormatter = $violationFormatter;
-        $this->validator          = $validator;
+        $this->validator = $validator;
 
         if ($validator !== null && !$validator instanceof LegacyValidatorInterface && !$validator instanceof ValidatorInterface) {
             throw new \InvalidArgumentException(sprintf(
@@ -70,7 +70,7 @@ class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setController($controller)
     {
@@ -103,7 +103,7 @@ class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get($name, $strict = null)
     {
@@ -114,9 +114,9 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         /** @var Param $config */
-        $config   = $params[$name];
+        $config = $params[$name];
         $nullable = $config->nullable;
-        $default  = $config->default;
+        $default = $config->default;
         $paramType = $config instanceof QueryParam ? 'Query' : 'Request';
 
         if (null === $strict) {
@@ -132,7 +132,6 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config->array) {
-
             if (($default !== null || !$strict) || $nullable) {
                 $default = (array) $default;
             }
@@ -207,9 +206,10 @@ class ParamFetcher implements ParamFetcherInterface
             if (is_array($param)) {
                 if ($strict) {
                     throw new BadRequestHttpException(
-                        sprintf("%s parameter is an array", $paramType)
+                        sprintf('%s parameter is an array', $paramType)
                     );
                 }
+
                 return $default;
             }
             $constraint = new Regex(array(
@@ -221,10 +221,10 @@ class ParamFetcher implements ParamFetcherInterface
                     $config->requirements
                 ),
             ));
-        } elseif (is_array($constraint) && isset($constraint["rule"]) && $constraint["error_message"]) {
+        } elseif (is_array($constraint) && isset($constraint['rule']) && $constraint['error_message']) {
             $constraint = new Regex(array(
-                'pattern' => '#^'.$config->requirements["rule"].'$#xsu',
-                'message' => $config->requirements["error_message"]
+                'pattern' => '#^'.$config->requirements['rule'].'$#xsu',
+                'message' => $config->requirements['error_message'],
             ));
         }
 
@@ -240,13 +240,14 @@ class ParamFetcher implements ParamFetcherInterface
 
         if (0 !== count($errors)) {
             if ($strict) {
-                if (is_array($config->requirements) && isset($config->requirements["error_message"])) {
-                    $errorMessage = $config->requirements["error_message"];
+                if (is_array($config->requirements) && isset($config->requirements['error_message'])) {
+                    $errorMessage = $config->requirements['error_message'];
                 } else {
                     $errorMessage = $this->violationFormatter->formatList($config, $errors);
                 }
                 throw new BadRequestHttpException($errorMessage);
             }
+
             return null === $default ? '' : $default;
         }
 
@@ -254,7 +255,7 @@ class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function all($strict = null)
     {
@@ -269,7 +270,7 @@ class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * Initialize the parameters
+     * Initialize the parameters.
      *
      * @throws \InvalidArgumentException
      */
@@ -293,7 +294,7 @@ class ParamFetcher implements ParamFetcherInterface
 
     /**
      * Check if current param is not in conflict with other parameters
-     * according to the "incompatibles" field
+     * according to the "incompatibles" field.
      *
      * @param Param $config the configuration for the param fetcher
      *
@@ -301,7 +302,6 @@ class ParamFetcher implements ParamFetcherInterface
      */
     private function checkNotIncompatibleParams(Param $config)
     {
-
         if (!$config instanceof QueryParam) {
             return;
         };

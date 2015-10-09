@@ -39,7 +39,7 @@ class MimeTypeListener
     }
 
     /**
-     * Core request handler
+     * Core request handler.
      *
      * @param GetResponseEvent $event The event
      */

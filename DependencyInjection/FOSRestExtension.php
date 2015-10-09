@@ -23,9 +23,9 @@ use FOS\RestBundle\Util\Codes;
 class FOSRestExtension extends Extension implements PrependExtensionInterface
 {
     /**
-     * Default sensio_framework_extra { view: { annotations: false } }
+     * Default sensio_framework_extra { view: { annotations: false } }.
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function prepend(ContainerBuilder $container)
     {
@@ -111,7 +111,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
     public function loadAllowedMethodsListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if ($config['allowed_methods_listener']['enabled']) {
-
             if (!empty($config['allowed_methods_listener']['service'])) {
                 $service = $container->getDefinition('fos_rest.allowed_methods_listener');
                 $service->clearTag('kernel.event_listener');

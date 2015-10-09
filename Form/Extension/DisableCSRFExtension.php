@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Class DisableCSRFExtension
+ * Class DisableCSRFExtension.
  *
  * @author Grégoire Pineau
  */
@@ -69,6 +69,7 @@ class DisableCSRFExtension extends AbstractTypeExtension
     }
 
     // BC for < 2.7
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $this->configureOptions($resolver);

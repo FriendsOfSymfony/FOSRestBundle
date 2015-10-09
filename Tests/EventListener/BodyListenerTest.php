@@ -18,7 +18,7 @@ use FOS\RestBundle\Decoder\ContainerDecoderProvider;
 use FOS\RestBundle\EventListener\BodyListener;
 
 /**
- * Request listener test
+ * Request listener test.
  *
  * @author Alain Horner <alain.horner@liip.ch>
  * @author Stefan Paschke <stefan.paschke@liip.ch>
@@ -26,12 +26,12 @@ use FOS\RestBundle\EventListener\BodyListener;
 class BodyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param boolean $decode                                 use decoder provider
+     * @param bool    $decode                                 use decoder provider
      * @param Request $request                                the original request
      * @param string  $method                                 a http method (e.g. POST, GET, PUT, ...)
      * @param array   $expectedParameters                     the http parameters of the updated request
      * @param string  $contentType                            the request header content type
-     * @param boolean $throwExceptionOnUnsupportedContentType
+     * @param bool    $throwExceptionOnUnsupportedContentType
      *
      * @dataProvider testOnKernelRequestDataProvider
      */
@@ -239,7 +239,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that a malformed request will cause a BadRequestHttpException to be thrown
+     * Test that a malformed request will cause a BadRequestHttpException to be thrown.
      */
     public function testBadRequestExceptionOnMalformedContent()
     {
@@ -248,7 +248,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that a unallowed format will cause a UnsupportedMediaTypeHttpException to be thrown
+     * Test that a unallowed format will cause a UnsupportedMediaTypeHttpException to be thrown.
      */
     public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
     {

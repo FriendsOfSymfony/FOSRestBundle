@@ -16,6 +16,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  *
  * @Annotation
  * @Target("METHOD")
+ *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry    <guery.b@gmail.com>
  */

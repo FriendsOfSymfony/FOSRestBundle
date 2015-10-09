@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormView;
 
 /**
- * View test
+ * View test.
  *
  * @author Victor Berchet <victor@suumit.com>
  */
@@ -49,10 +49,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function supportsFormatDataProvider()
     {
         return array(
-            'not supported'   => array(false, array('json' => false), 'xml'),
-            'html default'   => array(true, array('html' => true), 'xml'),
-            'html custom'   => array(true, array('json' => false), 'html'),
-            'html both'   => array(true, array('html' => true), 'html'),
+            'not supported' => array(false, array('json' => false), 'xml'),
+            'html default' => array(true, array('html' => true), 'xml'),
+            'html custom' => array(true, array('json' => false), 'html'),
+            'html both' => array(true, array('html' => true), 'html'),
         );
     }
 
@@ -378,8 +378,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createSerializeNullDataProvider()
     {
         return array(
-            'should serialize null'     => array("null", true),
-            'should not serialize null' => array("", false),
+            'should serialize null' => array('null', true),
+            'should not serialize null' => array('', false),
         );
     }
 
@@ -405,7 +405,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createSerializeNullDataValuesDataProvider()
     {
         return array(
-            'should serialize null values'     => array(true, true),
+            'should serialize null values' => array(true, true),
             'should not serialize null values' => array(false, false),
         );
     }
@@ -508,8 +508,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $view->setFormat('html');
         $view->setData($viewData);
 
-        if (null !== $templateData)
+        if (null !== $templateData) {
             $view->setTemplateData($templateData);
+        }
 
         $this->assertEquals($expected, $handler->prepareTemplateParameters($view));
     }
@@ -535,25 +536,26 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $self = $this;
 
         return array(
-            'assoc array does not change'   => array(array('foo' => 'bar'), null, array('foo' => 'bar')),
-            'ordered array is wrapped as data key'  => array(array('foo', 'bar'), null, array('data' => array('foo', 'bar'))),
+            'assoc array does not change' => array(array('foo' => 'bar'), null, array('foo' => 'bar')),
+            'ordered array is wrapped as data key' => array(array('foo', 'bar'), null, array('data' => array('foo', 'bar'))),
             'object is wrapped as data key' => array($object, null, array('data' => $object)),
-            'form is wrapped as form key'   => array($form, null, array('form' => $formView, 'data' => $formView)),
-            'template data is added to data'   => array(array('foo' => 'bar'), array('baz' => 'qux'), array('foo' => 'bar', 'baz' => 'qux')),
-            'lazy template data is added to data'   => array(
+            'form is wrapped as form key' => array($form, null, array('form' => $formView, 'data' => $formView)),
+            'template data is added to data' => array(array('foo' => 'bar'), array('baz' => 'qux'), array('foo' => 'bar', 'baz' => 'qux')),
+            'lazy template data is added to data' => array(
                 array('foo' => 'bar'),
-                function() { return array('baz' => 'qux'); },
-                array('foo' => 'bar', 'baz' => 'qux')
+                function () { return array('baz' => 'qux'); },
+                array('foo' => 'bar', 'baz' => 'qux'),
             ),
-            'lazy template data have reference to viewhandler and view'   => array(
+            'lazy template data have reference to viewhandler and view' => array(
                 array('foo' => 'bar'),
                 function ($handler, $view) use ($self) {
                     $self->assertInstanceOf('FOS\\RestBundle\\View\\ViewHandlerInterface', $handler);
                     $self->assertInstanceOf('FOS\\RestBundle\\View\\View', $view);
                     $self->assertTrue($handler->isFormatTemplating($view->getFormat()));
+
                     return array('format' => $view->getFormat());
                 },
-                array('foo' => 'bar', 'format' => 'html')
+                array('foo' => 'bar', 'format' => 'html'),
             ),
         );
     }
@@ -578,6 +580,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider exceptionWrapperSerializeResponseContentProvider
+     *
      * @param string $format
      */
     public function testCreateResponseWithFormErrorsAndSerializationGroups($format)

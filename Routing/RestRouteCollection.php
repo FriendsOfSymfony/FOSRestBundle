@@ -79,8 +79,7 @@ class RestRouteCollection extends RouteCollection
         $routes = parent::all();
         $customMethodRoutes = array();
         foreach ($routes as $routeName => $route) {
-
-            if ( ! preg_match('/(_|^)(get|post|put|delete|patch|head|options)_/', $routeName)) {
+            if (!preg_match('/(_|^)(get|post|put|delete|patch|head|options)_/', $routeName)) {
                 $customMethodRoutes[$routeName] = $route;
                 unset($routes[$routeName]);
             }

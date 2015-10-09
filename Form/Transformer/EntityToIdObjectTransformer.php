@@ -16,25 +16,25 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Class EntityToIdObjectTransformer
+ * Class EntityToIdObjectTransformer.
  *
  * @author Marc Juchli <mail@marcjuch.li>
  */
-class EntityToIdObjectTransformer implements DataTransformerInterface {
-
+class EntityToIdObjectTransformer implements DataTransformerInterface
+{
     /**
      * @var ObjectManager
      */
     private $om;
 
     /**
-     * @var String
+     * @var string
      */
     private $entityName;
 
     /**
      * @param ObjectManager $om
-     * @param String $entityName
+     * @param string        $entityName
      */
     public function __construct(ObjectManager $om, $entityName)
     {
@@ -45,13 +45,14 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
     /**
      * Do nothing.
      *
-     * @param  Object|null $object
+     * @param object|null $object
+     *
      * @return string
      */
     public function transform($object)
     {
         if (null === $object) {
-            return "";
+            return '';
         }
 
         return current(array_values($this->om->getClassMetadata($this->entityName)->getIdentifierValues($object)));
@@ -60,16 +61,16 @@ class EntityToIdObjectTransformer implements DataTransformerInterface {
     /**
      * Transforms an array including an identifier to an object.
      *
-     * @param  array $idObject
+     * @param array $idObject
      *
-     * @return Object|null
+     * @return object|null
      *
      * @throws TransformationFailedException if object is not found.
      */
     public function reverseTransform($idObject)
     {
         if (!is_array($idObject)) {
-            return null;
+            return;
         }
 
         $identifier = current(array_values($this->om->getClassMetadata($this->entityName)->getIdentifier()));

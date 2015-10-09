@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the FOSRest package.
+ * This file is part of the FOSRestBundle package.
  *
  * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
  *
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 interface ViolationFormatterInterface
 {
     /**
-     * Format a Param's ConstraintViolation into a string message
+     * Format a Param's ConstraintViolation into a string message.
      *
      * @param Param                        $param
      * @param ConstraintViolationInterface $violation
@@ -28,7 +28,7 @@ interface ViolationFormatterInterface
     public function format(Param $param, ConstraintViolationInterface $violation);
 
     /**
-     * Format a Param's ConstraintViolationList into a string message
+     * Format a Param's ConstraintViolationList into a string message.
      *
      * @param Param                            $param
      * @param ConstraintViolationListInterface $violationList

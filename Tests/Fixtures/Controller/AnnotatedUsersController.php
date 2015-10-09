@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\NoRoute;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -28,129 +27,179 @@ use FOS\RestBundle\Controller\Annotations\Unlink;
 class AnnotatedUsersController extends Controller
 {
     public function optionsUsersAction()
-    {} // [OPTIONS]     /users
+    {
+    }
+
+ // [OPTIONS]     /users
 
     /**
      * @Options
      */
     public function boptionsUsersAction()
     {
-    } // [OPTIONS]     /users
+    }
+
+ // [OPTIONS]     /users
 
     public function getUsersAction()
-    {} // [GET]     /users
+    {
+    }
+
+ // [GET]     /users
 
     /**
      * @Route(requirements={"slug" = "[a-z]+"})
      */
     public function getUserAction($slug)
-    {} // [GET]     /users/{slug}
+    {
+    }
+
+ // [GET]     /users/{slug}
 
     /**
      * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"}, options={"expose"=true})
      */
     public function getUserPostAction($slug, $id)
-    {} // [GET]     /users/{slug}/posts/{id}
+    {
+    }
+
+ // [GET]     /users/{slug}/posts/{id}
 
     /**
      * @Patch
      */
     public function patchUsersAction()
-    {}
+    {
+    }
 
     /**
      * @Patch(requirements={"slug" = "[a-z]+"})
      */
     public function patchUserAction($slug)
-    {} // [GET]     /users/{slug}
+    {
+    }
+
+ // [GET]     /users/{slug}
 
     /**
      * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
     public function getUserCommentAction($slug, $id)
-    {} // [GET]     /users/{slug}/comments/{id}
+    {
+    }
+
+ // [GET]     /users/{slug}/comments/{id}
 
     /**
      * @Post(requirements={"slug" = "[a-z]+"})
      */
     public function rateUserAction($slug)
-    {} // [POST]    /users/{slug}/rate
+    {
+    }
+
+ // [POST]    /users/{slug}/rate
 
     /**
      * @Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"}, methods={"PATCH", "POST"})
      */
     public function rateUserCommentAction($slug, $id)
-    {} // [PATCH, POST]     /users/{slug}/rate_comment/{id}
+    {
+    }
+
+ // [PATCH, POST]     /users/{slug}/rate_comment/{id}
 
     /**
      * @Get
      */
     public function bgetUserAction($slug)
-    {} // [GET]     /users/{slug}/bget
+    {
+    }
+
+ // [GET]     /users/{slug}/bget
 
     /**
      * @Post
      */
     public function bpostUserAction($slug)
-    {} // [POST]    /users/{slug}/bpost
+    {
+    }
+
+ // [POST]    /users/{slug}/bpost
 
     /**
      * @Put
      */
     public function bputUserAction($slug)
-    {} // [PUT]     /users/{slug}/bput
+    {
+    }
+
+ // [PUT]     /users/{slug}/bput
 
     /**
      * @Delete
      */
     public function bdelUserAction($slug)
-    {} // [DELETE]  /users/{slug}/bdel
+    {
+    }
+
+ // [DELETE]  /users/{slug}/bdel
 
     /**
      * @Head
      */
     public function bheadUserAction($slug)
-    {} // [HEAD]    /users/{slug}/bhead
+    {
+    }
+
+ // [HEAD]    /users/{slug}/bhead
 
     /**
      * @Link
      */
     public function bLinkUserAction($slug)
-    {} // [LINK]    /users/{slug}/blink
+    {
+    }
+
+ // [LINK]    /users/{slug}/blink
 
     /**
      * @Unlink
      */
     public function bunlinkUserAction($slug)
-    {} // [UNLINK]    /users/{slug}/bunlink
+    {
+    }
+
+ // [UNLINK]    /users/{slug}/bunlink
 
     /**
      * @NoRoute
      */
     public function splitUserAction($slug)
-    {}
+    {
+    }
 
     /**
      * @Route(requirements={"_format"="custom"})
      */
     public function customUserAction($slug)
-    {}
+    {
+    }
 
     /**
      * @Link("/users1", name="_a_link_method")
      * @Get("/users2",  name="_a_get_method")
      * @Get("/users3",  name="_an_other_get_method")
      * @Post("/users4",  name="_a_post_method")
-     *
      */
     public function multiplegetUsersAction()
-    {}
+    {
+    }
 
     /**
      * @POST("/users1/{foo}", name="post_users_foo", options={ "method_prefix" = false })
      * @POST("/users2/{foo}", name="post_users_bar", options={ "method_prefix" = false })
-     *
      */
     public function multiplepostUsersAction()
-    {}
+    {
+    }
 }

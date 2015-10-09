@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the FOSRest package.
+ * This file is part of the FOSRestBundle package.
  *
  * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
  *
@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Decoder;
 
 /**
- * Defines the interface of decoders
+ * Defines the interface of decoders.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */

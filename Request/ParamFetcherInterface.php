@@ -23,8 +23,6 @@ interface ParamFetcherInterface
      * Sets the controller.
      *
      * @param callable $controller
-     *
-     * @return void
      */
     public function setController($controller);
 

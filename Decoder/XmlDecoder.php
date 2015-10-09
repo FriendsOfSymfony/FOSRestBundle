@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the FOSRest package.
+ * This file is part of the FOSRestBundle package.
  *
  * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
  *
@@ -38,7 +38,7 @@ class XmlDecoder implements DecoderInterface
         try {
             return $this->encoder->decode($data, 'xml');
         } catch (UnexpectedValueException $e) {
-            return null;
+            return;
         }
     }
 }

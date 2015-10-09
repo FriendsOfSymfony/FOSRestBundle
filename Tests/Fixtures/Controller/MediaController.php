@@ -17,8 +17,14 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 class MediaController extends FOSRestController implements ClassResourceInterface
 {
     public function cgetAction()
-    {} // [GET] /media
+    {
+    }
+
+ // [GET] /media
 
     public function getAction($slug)
-    {} // [GET] /media/{slug}
+    {
+    }
+
+ // [GET] /media/{slug}
 }

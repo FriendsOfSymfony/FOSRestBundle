@@ -68,15 +68,15 @@ class RestYamlCollectionLoader extends YamlFileLoader
         // process routes and imports
         foreach ($config as $name => $config) {
             if (isset($config['resource'])) {
-                $resource     = $config['resource'];
-                $prefix       = isset($config['prefix'])       ? $config['prefix']         : null;
-                $namePrefix   = isset($config['name_prefix'])  ? $config['name_prefix']    : null;
-                $parent       = isset($config['parent'])       ? $config['parent']         : null;
-                $type         = isset($config['type'])         ? $config['type']           : null;
+                $resource = $config['resource'];
+                $prefix = isset($config['prefix'])       ? $config['prefix']         : null;
+                $namePrefix = isset($config['name_prefix'])  ? $config['name_prefix']    : null;
+                $parent = isset($config['parent'])       ? $config['parent']         : null;
+                $type = isset($config['type'])         ? $config['type']           : null;
                 $requirements = isset($config['requirements']) ? $config['requirements']   : array();
-                $defaults     = isset($config['defaults'])     ? $config['defaults']       : array();
-                $options      = isset($config['options'])      ? $config['options']        : array();
-                $currentDir   = dirname($path);
+                $defaults = isset($config['defaults'])     ? $config['defaults']       : array();
+                $options = isset($config['options'])      ? $config['options']        : array();
+                $currentDir = dirname($path);
 
                 $parents = array();
                 if (!empty($parent)) {
@@ -90,8 +90,8 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type, $currentDir);
 
                 if ($imported instanceof RestRouteCollection) {
-                    $parents[]  = ($prefix ? $prefix.'/' : '').$imported->getSingularName();
-                    $prefix     = null;
+                    $parents[] = ($prefix ? $prefix.'/' : '').$imported->getSingularName();
+                    $prefix = null;
                     $namePrefix = null;
 
                     $this->collectionParents[$name] = $parents;
@@ -153,21 +153,20 @@ class RestYamlCollectionLoader extends YamlFileLoader
     /**
      * Adds a name prefix to the route name of all collection routes.
      *
-     * @param RouteCollection $collection    Route collection
-     * @param array $namePrefix              NamePrefix to add in each route name of the route collection
+     * @param RouteCollection $collection Route collection
+     * @param array           $namePrefix NamePrefix to add in each route name of the route collection
      *
      * @return RouteCollection
      */
     public function addParentNamePrefix(RouteCollection $collection, $namePrefix)
     {
-        if (!isset($namePrefix) || ($namePrefix = trim($namePrefix)) === "") {
+        if (!isset($namePrefix) || ($namePrefix = trim($namePrefix)) === '') {
             return $collection;
         }
 
         $iterator = $collection->getIterator();
 
-        foreach($iterator as $key1 => $route1)
-        {
+        foreach ($iterator as $key1 => $route1) {
             $collection->add($namePrefix.$key1, $route1);
             $collection->remove($key1);
         }

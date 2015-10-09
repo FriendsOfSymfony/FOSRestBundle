@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 
 /**
- * RequestParamTest
+ * RequestParamTest.
  *
  * @author Eduardo Oliveira <entering@gmail.com>
  */
@@ -45,6 +45,4 @@ class QueryParamTest extends \PHPUnit_Framework_TestCase
             'Expected QueryParam incompatibles property to be empty'
         );
     }
-
 }
-

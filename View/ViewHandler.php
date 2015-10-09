@@ -97,7 +97,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     protected $serializeNullStrategy;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array  $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
      * @param int    $failedValidationCode The HTTP response status code for a failed validation
@@ -182,7 +182,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     }
 
     /**
-     * Gets a response HTTP status code from a View instance
+     * Gets a response HTTP status code from a View instance.
      *
      * By default it will return 200. However if there is a FormInterface stored for
      * the key 'form' in the View's data it will return the failed_validation
@@ -383,7 +383,6 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
 
         if ($data instanceof FormInterface) {
             $data = array($view->getTemplateVar() => $data->getData(), 'form' => $data);
-
         } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
             $data = array($view->getTemplateVar() => $data);
         }
@@ -464,7 +463,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     }
 
     /**
-     * Returns the form from the given view if present, false otherwise
+     * Returns the form from the given view if present, false otherwise.
      *
      * @param View $view
      *
@@ -486,7 +485,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     }
 
     /**
-     * Returns the data from a view. If the data is form with errors, it will return it wrapped in an ExceptionWrapper
+     * Returns the data from a view. If the data is form with errors, it will return it wrapped in an ExceptionWrapper.
      *
      * @param View $view
      *
@@ -510,8 +509,8 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
         return $exceptionWrapperHandler->wrap(
             array(
                  'status_code' => $this->failedValidationCode,
-                 'message'     => 'Validation Failed',
-                 'errors'      => $form,
+                 'message' => 'Validation Failed',
+                 'errors' => $form,
             )
         );
     }

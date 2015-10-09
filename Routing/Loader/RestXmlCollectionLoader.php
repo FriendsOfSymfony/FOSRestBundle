@@ -64,12 +64,12 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $this->parseRoute($collection, $node, $path);
                 break;
             case 'import':
-                $name       = (string) $node->getAttribute('id');
-                $resource   = (string) $node->getAttribute('resource');
-                $prefix     = (string) $node->getAttribute('prefix');
+                $name = (string) $node->getAttribute('id');
+                $resource = (string) $node->getAttribute('resource');
+                $prefix = (string) $node->getAttribute('prefix');
                 $namePrefix = (string) $node->getAttribute('name-prefix');
-                $parent     = (string) $node->getAttribute('parent');
-                $type       = (string) $node->getAttribute('type');
+                $parent = (string) $node->getAttribute('parent');
+                $type = (string) $node->getAttribute('type');
                 $currentDir = dirname($path);
 
                 $parents = array();
@@ -84,8 +84,8 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $imported = $this->processor->importResource($this, $resource, $parents, $prefix, $namePrefix, $type, $currentDir);
 
                 if (!empty($name) && $imported instanceof RestRouteCollection) {
-                    $parents[]  = (!empty($prefix) ? $prefix.'/' : '').$imported->getSingularName();
-                    $prefix     = null;
+                    $parents[] = (!empty($prefix) ? $prefix.'/' : '').$imported->getSingularName();
+                    $prefix = null;
 
                     $this->collectionParents[$name] = $parents;
                 }
@@ -99,7 +99,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
     {
@@ -113,7 +113,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
             // set format requirement if configured globally
             $requirements = $node->getElementsByTagNameNS(self::NAMESPACE_URI, 'requirement');
             $format = null;
-            for ($i = 0; $i < $requirements->length; $i++) {
+            for ($i = 0; $i < $requirements->length; ++$i) {
                 $item = $requirements->item($i);
                 if ($item instanceof \DOMElement && $item->hasAttribute('_format')) {
                     $format = $item->getAttribute('_format');
@@ -150,7 +150,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         }
 
         $length = $node->childNodes->length;
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $loopNode = $node->childNodes->item($i);
             if ($loopNode->nodeType == XML_TEXT_NODE) {
                 continue;
@@ -191,7 +191,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {
@@ -208,9 +208,9 @@ class RestXmlCollectionLoader extends XmlFileLoader
     protected function validate(\DOMDocument $dom)
     {
         $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
-        $restRoutinglocation =  str_replace('\\', '/', $restRoutinglocation);
+        $restRoutinglocation = str_replace('\\', '/', $restRoutinglocation);
         $routinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing-1.0.xsd');
-        $routinglocation =  str_replace('\\', '/', $routinglocation);
+        $routinglocation = str_replace('\\', '/', $routinglocation);
         $source = <<<EOF
 <?xml version="1.0" encoding="utf-8" ?>
 <xsd:schema xmlns="http://symfony.com/schema"
@@ -235,7 +235,7 @@ EOF
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function loadFile($file)
     {

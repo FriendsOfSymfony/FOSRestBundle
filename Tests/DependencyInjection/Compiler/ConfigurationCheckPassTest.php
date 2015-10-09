@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
 
 /**
- * ConfigurationCheckPass test
+ * ConfigurationCheckPass test.
  *
  * @author Eriksen Costa <eriksencosta@gmail.com>
  */

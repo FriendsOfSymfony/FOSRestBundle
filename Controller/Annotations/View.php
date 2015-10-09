@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * View annotation class.
+ *
  * @Annotation
  * @Target({"METHOD","CLASS"})
  */
@@ -49,6 +50,7 @@ class View extends Template
      * Returns the annotation alias name.
      *
      * @return string
+     *
      * @see Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface
      */
     public function getAliasName()
@@ -93,7 +95,7 @@ class View extends Template
     }
 
     /**
-     * @var array $serializerGroups
+     * @var array
      */
     public function setSerializerGroups($serializerGroups)
     {

@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests\Decoder;
 use FOS\RestBundle\Decoder\JsonToFormDecoder;
 
 /**
- * Tests the form-like encoder
+ * Tests the form-like encoder.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */

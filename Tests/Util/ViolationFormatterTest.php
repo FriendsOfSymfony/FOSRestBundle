@@ -51,8 +51,8 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
     public function testViolationListIsWellFormatted()
     {
         $errors = new ConstraintViolationList(array(
-            new ConstraintViolation("expected message 1", null, array(), null, null, 'bar'),
-            new ConstraintViolation("expected message 2", null, array(), null, null, 'bar'),
+            new ConstraintViolation('expected message 1', null, array(), null, null, 'bar'),
+            new ConstraintViolation('expected message 2', null, array(), null, null, 'bar'),
         ));
 
         $param = new RequestParam();

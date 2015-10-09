@@ -38,7 +38,7 @@ class FormatListener
     }
 
     /**
-     * Determines and sets the Request format
+     * Determines and sets the Request format.
      *
      * @param GetResponseEvent $event The event
      *
@@ -64,7 +64,7 @@ class FormatListener
 
             if (null === $format) {
                 if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
-                    throw new NotAcceptableHttpException("No matching accepted Response format could be determined");
+                    throw new NotAcceptableHttpException('No matching accepted Response format could be determined');
                 }
 
                 return;
@@ -74,6 +74,5 @@ class FormatListener
         } catch (StopFormatListenerException $e) {
             // nothing to do
         }
-
     }
 }

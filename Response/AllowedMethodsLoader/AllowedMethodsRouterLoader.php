@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 /**
  * AllowedMethodsRouterLoader implementation using RouterInterface to fetch
- * allowed http methods
+ * allowed http methods.
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
@@ -27,7 +27,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
     private $cache;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param RouterInterface $router
      * @param string          $cacheDir
@@ -36,7 +36,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
     public function __construct(RouterInterface $router, $cacheDir, $isDebug)
     {
         $this->router = $router;
-        $this->cache  = new ConfigCache(sprintf('%s/allowed_methods.cache.php', $cacheDir), $isDebug);
+        $this->cache = new ConfigCache(sprintf('%s/allowed_methods.cache.php', $cacheDir), $isDebug);
     }
 
     /**
@@ -71,11 +71,10 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
         $routeCollection = $this->router->getRouteCollection();
 
         foreach ($routeCollection->all() as $name => $route) {
-
             if (!isset($processedRoutes[$route->getPath()])) {
                 $processedRoutes[$route->getPath()] = array(
                     'methods' => array(),
-                    'names'   => array(),
+                    'names' => array(),
                 );
             }
 

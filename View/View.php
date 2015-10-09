@@ -133,9 +133,9 @@ class View
     }
 
     /**
-     * Set template variable
+     * Set template variable.
      *
-     * @param  array|callable $data
+     * @param array|callable $data
      *
      * @return View
      */

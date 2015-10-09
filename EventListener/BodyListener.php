@@ -135,11 +135,12 @@ class BodyListener
     }
 
     /**
-     * Check if the Request is a not a DELETE with no content and no Content-Type
+     * Check if the Request is a not a DELETE with no content and no Content-Type.
      *
      * @param $method
      * @param $content
      * @param $contentType
+     *
      * @return bool
      */
     private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
@@ -148,9 +149,10 @@ class BodyListener
     }
 
     /**
-     * Check if we should try to decode the body
+     * Check if we should try to decode the body.
      *
      * @param Request $request
+     *
      * @return bool
      */
     protected function isDecodeable(Request $request)
@@ -163,9 +165,10 @@ class BodyListener
     }
 
     /**
-     * Check if the content type indicates a form submission
+     * Check if the content type indicates a form submission.
      *
      * @param Request $request
+     *
      * @return bool
      */
     protected function isFormRequest(Request $request)

@@ -110,6 +110,7 @@ class ParamFetcherListener
             return false;
         }
         $fetcherInterface = 'FOS\\RestBundle\\Request\\ParamFetcherInterface';
+
         return $type->implementsInterface($fetcherInterface);
     }
 }

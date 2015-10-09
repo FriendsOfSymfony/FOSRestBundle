@@ -26,7 +26,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\Util\ExceptionWrapper;
 
 /**
- * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping
+ * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
  */
 class ExceptionController extends ContainerAware
 {
@@ -59,7 +59,7 @@ class ExceptionController extends ContainerAware
      */
     public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
-        /**
+        /*
          * Validates that the exception that is handled by the Exception controller is either a DebugFlattenException
          * or HttpFlattenException.
          * Type hinting has been removed due to a BC change in symfony/symfony 2.3.5.
@@ -157,7 +157,7 @@ class ExceptionController extends ContainerAware
                 }
             }
         } catch (\ReflectionException $re) {
-            return "FOSUserBundle: Invalid class in  fos_res.exception.messages: "
+            return 'FOSUserBundle: Invalid class in  fos_res.exception.messages: '
                     .$re->getMessage();
         }
 
@@ -238,10 +238,10 @@ class ExceptionController extends ContainerAware
      */
     protected function getParameters(ViewHandler $viewHandler, $currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
-        $parameters  = array(
+        $parameters = array(
             'status' => 'error',
             'status_code' => $code,
-            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : "error",
+            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
             'currentContent' => $currentContent,
             'message' => $this->getExceptionMessage($exception),
             'exception' => $exception,

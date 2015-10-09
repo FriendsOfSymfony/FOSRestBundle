@@ -221,7 +221,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null),
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
@@ -272,7 +272,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null),
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(1))
@@ -334,18 +334,18 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(),'moo' => null, 'i_cant_be_with_moo' => 5),
                 array('buzz' => array(2, 3, 4), 'boo' => array('1', 'foo', 5), 'boozz' => 5, 'i_cant_be_with_moo' => 5),
                 array('bar' => '1', 'baz' => '4', 'boozz' => 5, 'arr' => array()),
-            )
+            ),
 
         );
     }
 
     public function testValidatesAddParam()
     {
-        $queryFetcher = $this->getParamFetcher(array(), array('bar' => '2', 'baz' => '4','bub' => '10', 'arr' => array()));
+        $queryFetcher = $this->getParamFetcher(array(), array('bar' => '2', 'baz' => '4', 'bub' => '10', 'arr' => array()));
         $queryFetcher->setController($this->controller);
 
         $runtimeParam = new RequestParam();
-        $runtimeParam->name = "bub";
+        $runtimeParam->name = 'bub';
         $runtimeParam->requirements = '\d+';
         $runtimeParam->description = 'The bub';
         $queryFetcher->addParam($runtimeParam);
@@ -375,7 +375,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         try {
             $queryFetcher->get('boozz', true);
             $this->fail('Fetching get() in strict mode with no default value did not throw an exception');
-        } catch (HttpException $e) {}
+        } catch (HttpException $e) {
+        }
 
         $queryFetcher = $this->getParamFetcher(array(), array());
         $queryFetcher->setController($this->controller);
@@ -384,6 +385,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Throw exception on invalid parameters.
+     *
      * @dataProvider exceptionOnValidatesFailureDataProvider
      */
     public function testExceptionOnValidatesFailure($query, $request, $param, \Closure $callback = null)
@@ -441,7 +443,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 'bar',
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null),
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
@@ -461,7 +463,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 'baz',
                 function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
-                        new ConstraintViolation("expected error", null, array(), null, null, null),
+                        new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
@@ -524,13 +526,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test an Exception is thrown in strict mode
+     * Test an Exception is thrown in strict mode.
      */
     public function testConstraintThrowExceptionInStrictMode()
     {
         $errors = new ConstraintViolationList(array(
-            new ConstraintViolation("expected message 1", null, array(), null, null, null),
-            new ConstraintViolation("expected message 2", null, array(), null, null, null),
+            new ConstraintViolation('expected message 1', null, array(), null, null, null),
+            new ConstraintViolation('expected message 2', null, array(), null, null, null),
         ));
 
         $this->validator->expects($this->once())
@@ -545,7 +547,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->description = 'A requirements param';
 
         $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
-        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -558,17 +560,17 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('foobar'));
 
         $this->setExpectedException(
-            "\\Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException",
-            "foobar"
+            '\\Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException',
+            'foobar'
         );
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
 
     /**
-     * Test that the default value is returned in safe mode
+     * Test that the default value is returned in safe mode.
      */
     public function testConstraintReturnDefaultInSafeMode()
     {
@@ -590,7 +592,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->description = 'A requirements param';
 
         $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
-        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -598,13 +600,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('expected', $queryFetcher->get('bizoo'));
     }
 
     /**
-     * Test a succesful return with a requirements
+     * Test a succesful return with a requirements.
      */
     public function testConstraintOk()
     {
@@ -620,7 +622,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->description = 'A requirements param';
 
         $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
-        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -628,13 +630,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
 
     /**
-     * Test that we can use deep array structure with a requirements
+     * Test that we can use deep array structure with a requirements.
      */
     public function testDeepArrayAllowedWithConstraint()
     {
@@ -650,7 +652,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->description = 'A requirements param';
 
         $request = new Request(array('bizoo' => array('foo' => array('b', 'a', 'r'))), array(), array('_controller' => __CLASS__.'::stubAction'));
-        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -658,7 +660,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
         $this->assertSame(array('foo' => array('b', 'a', 'r')), $queryFetcher->get('bizoo'));
     }
@@ -676,7 +678,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->description = 'A requirements param';
 
         $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
-        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -684,7 +686,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter);
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
     }
@@ -697,7 +699,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param->description = 'A param without requirement nor validator';
 
         $request = new Request(array('bizoo' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
-        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -705,7 +707,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter);
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $this->assertEquals('foobar', $queryFetcher->get('bizoo'));
     }
@@ -714,13 +716,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $param = new QueryParam();
         $param->name = 'fero';
-        $errorMessage = "variable must be an integer";
+        $errorMessage = 'variable must be an integer';
         $param->requirements = array('rule' => '\d+', 'error_message' => $errorMessage);
         $param->description = 'integer value';
         $param->strict = true;
 
         $request = new Request(array('fero' => 'foobar'), array(), array('_controller' => __CLASS__.'::stubAction'));
-        $reader  = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -742,7 +744,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('foobar', $constraint)
             ->will($this->returnValue($errors));
 
-        $queryFetcher =  new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
         $queryFetcher->setController($this->controller);
 
         try {

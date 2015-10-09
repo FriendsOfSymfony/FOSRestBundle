@@ -36,7 +36,7 @@ class ParamReader implements ParamReaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function read(\ReflectionClass $reflection, $method)
     {
@@ -51,7 +51,7 @@ class ParamReader implements ParamReaderInterface
     }
 
     /**
-     * Fetches parameters from provided annotation array (fetched from annotationReader)
+     * Fetches parameters from provided annotation array (fetched from annotationReader).
      *
      * @param array $annotations
      *
@@ -70,7 +70,7 @@ class ParamReader implements ParamReaderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getParamsFromMethod(\ReflectionMethod $method)
     {
@@ -80,8 +80,7 @@ class ParamReader implements ParamReaderInterface
     }
 
     /**
-     *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getParamsFromClass(\ReflectionClass $class)
     {

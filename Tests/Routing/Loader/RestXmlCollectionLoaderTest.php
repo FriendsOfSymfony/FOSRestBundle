@@ -29,8 +29,8 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      */
     public function testUsersFixture()
     {
-        $collection     = $this->loadFromXmlCollectionFixture('users_collection.xml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('users_collection.yml');
+        $collection = $this->loadFromXmlCollectionFixture('users_collection.xml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -48,8 +48,8 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      */
     public function testPrefixedUsersFixture()
     {
-        $collection     = $this->loadFromXmlCollectionFixture('prefixed_users_collection.xml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
+        $collection = $this->loadFromXmlCollectionFixture('prefixed_users_collection.xml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -101,7 +101,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
             true,
             array(
                 'json' => false,
-                'xml'  => false,
+                'xml' => false,
                 'html' => true,
             ),
             'xml'
@@ -121,6 +121,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
             $this->assertEquals('home', $route->getDefault('slug'));
         }
     }
+
     /**
      * Load routes collection from XML fixture routes under Tests\Fixtures directory.
      *
@@ -136,7 +137,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         $includeFormat = true,
         array $formats = array(
             'json' => false,
-            'xml'  => false,
+            'xml' => false,
             'html' => true,
         ),
         $defaultFormat = null

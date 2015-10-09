@@ -42,12 +42,12 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     protected $validationErrorsArgument;
 
     /**
-     * @param object             $serializer
-     * @param array|null         $groups                   An array of groups to be used in the serialization context
-     * @param string|null        $version                  A version string to be used in the serialization context
-     * @param object             $serializer
+     * @param object                                      $serializer
+     * @param array|null                                  $groups                   An array of groups to be used in the serialization context
+     * @param string|null                                 $version                  A version string to be used in the serialization context
+     * @param object                                      $serializer
      * @param LegacyValidatorInterface|ValidatorInterface $validator
-     * @param string|null        $validationErrorsArgument
+     * @param string|null                                 $validationErrorsArgument
      *
      * @throws \InvalidArgumentException
      */
@@ -193,4 +193,3 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         return $resolver->resolve(isset($options['validator']) ? $options['validator'] : array());
     }
 }
-

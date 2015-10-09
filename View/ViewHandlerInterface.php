@@ -32,7 +32,7 @@ interface ViewHandlerInterface
     public function supports($format);
 
     /**
-     * Registers a custom handler
+     * Registers a custom handler.
      *
      * The handler must have the following signature: handler($viewObject, $request, $response)
      * It can use the methods of this class to retrieve the needed data and return a
@@ -65,7 +65,7 @@ interface ViewHandlerInterface
     public function handle(View $view, Request $request = null);
 
     /**
-     * Create the Response from the view
+     * Create the Response from the view.
      *
      * @param View   $view
      * @param string $location
@@ -76,7 +76,7 @@ interface ViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format);
 
     /**
-     * Render the view data with the given template
+     * Render the view data with the given template.
      *
      * @param View   $view
      * @param string $format
@@ -95,7 +95,7 @@ interface ViewHandlerInterface
     public function prepareTemplateParameters(View $view);
 
     /**
-     * Handles creation of a Response using either redirection or the templating/serializer service
+     * Handles creation of a Response using either redirection or the templating/serializer service.
      *
      * @param View    $view
      * @param Request $request

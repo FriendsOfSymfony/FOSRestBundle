@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\EventListener\FormatListener;
 
 /**
- * Request listener test
+ * Request listener test.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
@@ -103,7 +103,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test FormatListener won't overwrite request format when it was already specified
+     * Test FormatListener won't overwrite request format when it was already specified.
      *
      * @dataProvider useSpecifiedFormatDataProvider
      */
@@ -146,7 +146,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Generates a request like a symfony fragment listener does.
-     * Set request type to master
+     * Set request type to master.
      */
     public function testSfFragmentFormat()
     {
@@ -155,7 +155,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $request = new Request();
-        $attributes = array ( '_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured', );
+        $attributes = array('_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured');
         $request->attributes->add($attributes);
         $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', array()), $attributes));
 

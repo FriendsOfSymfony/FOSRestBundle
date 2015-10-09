@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use FOS\RestBundle\Util\Codes;
 
 /**
- * View test
+ * View test.
  *
  * @author Victor Berchet <victor@suumit.com>
  */
@@ -106,7 +106,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         return array(
             'null as data' => array(null),
             'array as data' => array(array('foo' => 'bar')),
-            'function as data' => array(function() {})
+            'function as data' => array(function () {}),
         );
     }
 

@@ -17,7 +17,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use FOS\RestBundle\Util\Codes;
 
 /**
- * This class contains the configuration information for the bundle
+ * This class contains the configuration information for the bundle.
  *
  * This information is solely responsible for how the different configuration
  * sections are normalized, and merged.
@@ -42,7 +42,12 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('access_denied_listener')
                     ->canBeEnabled()
                     ->beforeNormalization()
-                        ->ifArray()->then(function($v) { if (!empty($v) && empty($v['formats'])) { unset($v['enabled']); $v = array('enabled' => true, 'formats' => $v); } return $v; })
+                        ->ifArray()->then(function ($v) { if (!empty($v) && empty($v['formats'])) {
+     unset($v['enabled']);
+     $v = array('enabled' => true, 'formats' => $v);
+ }
+
+return $v; })
                     ->end()
                     ->fixXmlConfig('format', 'formats')
                     ->children()
@@ -145,7 +150,12 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('mime_types')
                             ->canBeEnabled()
                             ->beforeNormalization()
-                                ->ifArray()->then(function($v) { if (!empty($v) && empty($v['formats'])) { unset($v['enabled']); $v = array('enabled' => true, 'formats' => $v); } return $v; })
+                                ->ifArray()->then(function ($v) { if (!empty($v) && empty($v['formats'])) {
+     unset($v['enabled']);
+     $v = array('enabled' => true, 'formats' => $v);
+ }
+
+return $v; })
                             ->end()
                             ->fixXmlConfig('format', 'formats')
                             ->children()
@@ -218,7 +228,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('array_normalizer')
                             ->addDefaultsIfNotSet()
                             ->beforeNormalization()
-                                ->ifString()->then(function($v) { return array('service' => $v); })
+                                ->ifString()->then(function ($v) { return array('service' => $v); })
                             ->end()
                             ->children()
                                 ->scalarNode('service')->defaultNull()->end()
@@ -245,11 +255,12 @@ class Configuration implements ConfigurationInterface
                                 && is_array($v['rules'])
                                 && array_keys($v['rules']) !== range(0, count($v['rules']) - 1);
                         })
-                        ->then(function($v) {
+                        ->then(function ($v) {
                             $v['rules'] = array($v['rules']);
+
                             return $v;
                         })
-                    ->end()                    
+                    ->end()
                     ->canBeEnabled()
                     ->validate()
                         ->ifTrue(function ($v) { return empty($v['rules']) && !empty($v['media_type']['enabled']); })

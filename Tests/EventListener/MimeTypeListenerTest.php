@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use FOS\RestBundle\EventListener\MimeTypeListener;
 
 /**
- * Request listener test
+ * Request listener test.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */

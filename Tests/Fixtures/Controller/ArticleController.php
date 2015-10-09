@@ -18,81 +18,156 @@ use Symfony\Component\HttpFoundation\Request;
 class ArticleController extends FosRestController implements ClassResourceInterface
 {
     public function optionsAction()
-    {} // [OPTIONS] /articles
+    {
+    }
+
+ // [OPTIONS] /articles
 
     public function cgetAction()
-    {} // [GET] /articles
+    {
+    }
+
+ // [GET] /articles
 
     public function getAction($slug)
-    {} // [GET] /articles/{slug}
+    {
+    }
+
+ // [GET] /articles/{slug}
 
     public function cpostAction()
-    {} // [POST] /articles
+    {
+    }
+
+ // [POST] /articles
 
     public function cpatchAction()
-    {} // [PATCH] /articles
+    {
+    }
+
+ // [PATCH] /articles
 
     public function putAction($slug)
-    {} // [PUT] /articles/{slug}
+    {
+    }
+
+ // [PUT] /articles/{slug}
 
     public function patchAction($slug)
-    {} // [PATCH] /articles/{slug}
+    {
+    }
+
+ // [PATCH] /articles/{slug}
 
     public function lockAction($slug)
-    {} // [PATCH] /articles/{slug}/lock
+    {
+    }
+
+ // [PATCH] /articles/{slug}/lock
 
     public function getCommentsAction($slug)
-    {} // [GET] /articles/{slug}/comments
+    {
+    }
+
+ // [GET] /articles/{slug}/comments
 
     public function getCommentAction($slug, $id)
-    {} // [GET] /articles/{slug}/comments/{id}
+    {
+    }
+
+ // [GET] /articles/{slug}/comments/{id}
 
     public function deleteCommentAction($slug, $id)
-    {} // [DELETE] /articles/{slug}/comments/{id}
+    {
+    }
+
+ // [DELETE] /articles/{slug}/comments/{id}
 
     public function banAction($slug, $id)
-    {} // [PATCH] /articles/{slug}/ban
+    {
+    }
+
+ // [PATCH] /articles/{slug}/ban
 
     public function postCommentVoteAction($slug, $id)
-    {} // [POST] /articles/{slug}/comments/{id}/vote
+    {
+    }
+
+ // [POST] /articles/{slug}/comments/{id}/vote
 
     public function _articlebarAction()
-    {} // NO route
+    {
+    }
+
+ // NO route
 
     public function check_articlenameAction()
-    {} // [GET] /articles/check_articlename
+    {
+    }
+
+ // [GET] /articles/check_articlename
 
     // conventional HATEOAS actions below
 
     public function newAction()
     {
-    } // [GET] /articles/new
+    }
+
+ // [GET] /articles/new
 
     public function editAction($slug)
-    {} // [GET] /article/{slug}/edit
+    {
+    }
+
+ // [GET] /article/{slug}/edit
 
     public function removeAction($slug)
-    {} // [GET] /article/{slug}/remove
+    {
+    }
+
+ // [GET] /article/{slug}/remove
 
     public function newCommentAction($slug)
-    {} // [GET] /articles/{slug}/comments/new
+    {
+    }
+
+ // [GET] /articles/{slug}/comments/new
 
     public function editCommentAction($slug, $id)
-    {} // [GET] /articles/{slug}/comments/{id}/edit
+    {
+    }
+
+ // [GET] /articles/{slug}/comments/{id}/edit
 
     public function removeCommentAction($slug, $id)
-    {} // [GET] /articles/{slug}/comments/{id}/remove
+    {
+    }
+
+ // [GET] /articles/{slug}/comments/{id}/remove
 
     public function hideCommentAction($articleId, $commentId)
-    {} // [PATCH] /articles/{articleId}/comments/{commentId}/hide
+    {
+    }
+
+ // [PATCH] /articles/{articleId}/comments/{commentId}/hide
 
     // Parameter of type Request should be ignored
+
     public function getVotesAction(Request $request, $slug)
-    {} // [GET] /articles/{slug}/votes
+    {
+    }
+
+ // [GET] /articles/{slug}/votes
 
     public function getVoteAction(Request $request, $slug, $id)
-    {} // [GET] /articles/{slug}/votes/{id}
+    {
+    }
+
+ // [GET] /articles/{slug}/votes/{id}
 
     public function getFoosAction($slug, Request $request)
-    {} // [GET] /articles/{slug}/foos
+    {
+    }
+
+ // [GET] /articles/{slug}/foos
 }

@@ -49,7 +49,7 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'exception_fallback_format' => 'html',
                         'prefer_extension' => true,
                 ),
-            ) )
+            ))
         );
 
         $container->expects($this->exactly(4))
@@ -95,7 +95,7 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'exception_fallback_format' => 'html',
                         'prefer_extension' => true,
                     ),
-                ) )
+                ))
             );
 
         $container->expects($this->exactly(2))

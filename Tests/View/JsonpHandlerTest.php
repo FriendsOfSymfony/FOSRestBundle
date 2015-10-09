@@ -17,7 +17,7 @@ use FOS\RestBundle\View\JsonpHandler;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Jsonp handler test
+ * Jsonp handler test.
  *
  * @author Victor Berchet <victor@suumit.com>
  * @author Lukas K. Smith <smith@pooteeweet.org>
@@ -116,8 +116,8 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
     public function getCallbackFailureDataProvider()
     {
         return array(
-            'no callback'   => array(new Request()),
-            'incorrect callback param name'  => array(new Request(array('foo' => 'bar'))),
+            'no callback' => array(new Request()),
+            'incorrect callback param name' => array(new Request(array('foo' => 'bar'))),
         );
     }
 }

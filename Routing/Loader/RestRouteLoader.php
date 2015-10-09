@@ -47,11 +47,11 @@ class RestRouteLoader extends Loader
         ControllerNameParser $controllerParser,
         RestControllerReader $controllerReader, $defaultFormat = 'html'
     ) {
-        $this->container        = $container;
-        $this->locator          = $locator;
+        $this->container = $container;
+        $this->locator = $locator;
         $this->controllerParser = $controllerParser;
         $this->controllerReader = $controllerReader;
-        $this->defaultFormat    = $defaultFormat;
+        $this->defaultFormat = $defaultFormat;
     }
 
     /**
@@ -100,7 +100,7 @@ class RestRouteLoader extends Loader
      */
     private function getControllerLocator($controller)
     {
-        $class  = null;
+        $class = null;
         $prefix = null;
 
         if (0 === strpos($controller, '@')) {
@@ -123,14 +123,14 @@ class RestRouteLoader extends Loader
             $this->container->leaveScope('request');
         } elseif (class_exists($controller)) {
             // full class name
-            $class  = $controller;
+            $class = $controller;
             $prefix = $class.'::';
         } elseif (false !== strpos($controller, ':')) {
             // bundle:controller notation
             try {
-                $notation             = $this->controllerParser->parse($controller.':method');
-                list($class, ) = explode('::', $notation);
-                $prefix               = $class.'::';
+                $notation = $this->controllerParser->parse($controller.':method');
+                list($class) = explode('::', $notation);
+                $prefix = $class.'::';
             } catch (\Exception $e) {
                 throw new \InvalidArgumentException(
                     sprintf('Can\'t locate "%s" controller.', $controller)
@@ -159,7 +159,7 @@ class RestRouteLoader extends Loader
         $class = false;
         $namespace = false;
         $tokens = token_get_all(file_get_contents($file));
-        for ($i = 0, $count = count($tokens); $i < $count; $i++) {
+        for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
             $token = $tokens[$i];
 
             if (!is_array($token)) {

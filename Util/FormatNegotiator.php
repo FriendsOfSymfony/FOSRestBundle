@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the FOSRest package.
+ * This file is part of the FOSRestBundle package.
  *
  * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
  *
@@ -46,7 +46,7 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
     {
         $mediaType = $this->getBestMediaType($request);
         if (null === $mediaType) {
-            return null;
+            return;
         }
 
         return $this->getFormat($mediaType);
@@ -107,7 +107,7 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
             if (isset($options['fallback_format'])) {
                 // if false === fallback_format then we fail here instead of considering more rules
                 if (false === $options['fallback_format']) {
-                    return null;
+                    return;
                 }
 
                 // stop looking at rules since we have a fallback defined
@@ -115,7 +115,7 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
             }
         }
 
-        return null;
+        return;
     }
 
     /**

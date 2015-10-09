@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * This listener handles ensures that for specific formats AccessDeniedExceptions
- * will return a 403 regardless of how the firewall is configured
+ * will return a 403 regardless of how the firewall is configured.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */

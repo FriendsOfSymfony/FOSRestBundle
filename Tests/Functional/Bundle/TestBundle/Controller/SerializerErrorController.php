@@ -38,7 +38,7 @@ class SerializerErrorController extends Controller
         $form = $this->createFormBuilder(null, array(
             'csrf_protection' => false,
         ))->add('name', 'text', array(
-            'constraints' => array(new NotBlank())
+            'constraints' => array(new NotBlank()),
         ))->getForm();
 
         $form->submit(array());

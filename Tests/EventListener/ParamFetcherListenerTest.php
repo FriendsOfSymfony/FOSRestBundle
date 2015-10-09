@@ -16,7 +16,7 @@ use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Param Fetcher Listener Tests
+ * Param Fetcher Listener Tests.
  */
 class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 {

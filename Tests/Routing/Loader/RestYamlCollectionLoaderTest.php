@@ -30,8 +30,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testUsersFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('users_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('users_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('users_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -49,8 +49,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testPrefixedUsersFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('prefixed_users_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('prefixed_users_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('prefixed_users_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -68,8 +68,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testNamedPrefixedReportsFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('named_prefixed_reports_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('named_prefixed_reports_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('named_prefixed_reports_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -145,7 +145,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             true,
             array(
                 'json' => false,
-                'xml'  => false,
+                'xml' => false,
                 'html' => true,
             ),
             'xml'
@@ -206,7 +206,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $includeFormat = true,
         array $formats = array(
             'json' => false,
-            'xml'  => false,
+            'xml' => false,
             'html' => true,
         ),
         $defaultFormat = null
@@ -231,8 +231,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      */
     public function testNamedPrefixedBaseReportsFixture()
     {
-        $collection     = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
-        $etalonRoutes   = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);

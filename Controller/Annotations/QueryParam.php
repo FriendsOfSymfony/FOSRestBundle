@@ -16,6 +16,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  *
  * @Annotation
  * @Target({"CLASS", "METHOD"})
+ *
  * @author Alexander <iam.asm89@gmail.com>
  */
 class QueryParam extends Param

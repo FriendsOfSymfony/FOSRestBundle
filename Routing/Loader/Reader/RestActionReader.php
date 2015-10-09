@@ -134,7 +134,7 @@ class RestActionReader
             if (empty($parent) || '/' === substr($parent, -1)) {
                 throw new \InvalidArgumentException(
                     "Every parent controller must have `get{SINGULAR}Action(\$id)` method\n".
-                    "where {SINGULAR} is a singular form of associated object"
+                    'where {SINGULAR} is a singular form of associated object'
                 );
             }
         }
@@ -151,7 +151,7 @@ class RestActionReader
         }
 
         list($httpMethod, $resources, $isCollection, $isInflectable) = $httpMethodAndResources;
-        $arguments                                                   = $this->getMethodArguments($method);
+        $arguments = $this->getMethodArguments($method);
 
         // if we have only 1 resource & 1 argument passed, then it's object call, so
         // we can set collection singular name
@@ -169,7 +169,7 @@ class RestActionReader
         }
 
         $routeName = $httpMethod.$this->generateRouteName($resources);
-        $urlParts  = $this->generateUrlParts($resources, $arguments, $httpMethod);
+        $urlParts = $this->generateUrlParts($resources, $arguments, $httpMethod);
 
         // if passed method is not valid HTTP method then it's either
         // a hypertext driver, a custom object (PUT) or collection (GET)
@@ -180,24 +180,23 @@ class RestActionReader
         }
 
         // generated parameters
-        $routeName    = strtolower($routeName);
-        $path         = implode('/', $urlParts);
-        $defaults     = array('_controller' => $method->getName());
+        $routeName = strtolower($routeName);
+        $path = implode('/', $urlParts);
+        $defaults = array('_controller' => $method->getName());
         $requirements = array();
-        $options      = array();
-        $host         = '';
-        $condition    = null;
+        $options = array();
+        $host = '';
+        $condition = null;
 
         $annotations = $this->readRouteAnnotation($method);
         if ($annotations) {
             foreach ($annotations as $annotation) {
-
-                $path         = implode('/', $urlParts);
-                $defaults     = array('_controller' => $method->getName());
+                $path = implode('/', $urlParts);
+                $defaults = array('_controller' => $method->getName());
                 $requirements = array();
-                $options      = array();
-                $methods      = explode('|', $httpMethod);
-                $condition    = null;
+                $options = array();
+                $methods = explode('|', $httpMethod);
+                $condition = null;
 
                 $annoRequirements = $annotation->getRequirements();
                 $annoMethods = $annotation->getMethods();
@@ -206,10 +205,10 @@ class RestActionReader
                     $methods = $annoMethods;
                 }
 
-                $path         = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $path;
+                $path = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $path;
                 $requirements = array_merge($requirements, $annoRequirements);
-                $options      = array_merge($options, $annotation->getOptions());
-                $defaults     = array_merge($defaults, $annotation->getDefaults());
+                $options = array_merge($options, $annotation->getOptions());
+                $defaults = array_merge($defaults, $annotation->getDefaults());
                 $host = $annotation->getHost();
                 $schemes = $annotation->getSchemes();
                //TODO remove checks after Symfony requirement is bumped to 2.4
@@ -230,7 +229,6 @@ class RestActionReader
                 );
                 $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
-
         } else {
             if ($this->includeFormat === true) {
                 $path .= '.{_format}';
@@ -295,7 +293,7 @@ class RestActionReader
         }
 
         $httpMethod = strtolower($matches[1]);
-        $resources  = preg_split(
+        $resources = preg_split(
             '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
         $isCollection = false;
@@ -313,7 +311,7 @@ class RestActionReader
         if ($isCollection && !empty($resource)) {
             $resourcePluralized = $this->inflector->pluralize(end($resource));
             $isInflectable = ($resourcePluralized != $resource[count($resource) - 1]);
-            $resource[count($resource)-1] = $resourcePluralized;
+            $resource[count($resource) - 1] = $resourcePluralized;
         }
 
         $resources = array_merge($resource, $resources);
@@ -341,7 +339,7 @@ class RestActionReader
             'Symfony\Component\HttpFoundation\Request',
             'FOS\RestBundle\Request\ParamFetcherInterface',
             'Symfony\Component\Validator\ConstraintViolationListInterface',
-            'Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter'
+            'Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter',
         );
 
         $arguments = array();
@@ -465,7 +463,7 @@ class RestActionReader
     {
         $annotations = array();
 
-        foreach ( array('Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options') as $annotationName) {
+        foreach (array('Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options') as $annotationName) {
             if ($annotations_new = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
                 $annotations = array_merge($annotations, $annotations_new);
             }
@@ -522,7 +520,6 @@ class RestActionReader
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
         if ($annotations_new = $this->annotationReader->getMethodAnnotations($reflectionMethod)) {
-
             foreach ($annotations_new as $annotation) {
                 if ($annotation instanceof $annotationClass) {
                     $annotations[] = $annotation;

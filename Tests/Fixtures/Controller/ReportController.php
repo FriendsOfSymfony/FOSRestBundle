@@ -15,13 +15,10 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
 /**
- * Class ReportController
- *
- * @package Vifeed\PaymentBundle\Controller\Api
+ * Class ReportController.
  */
 class ReportController extends FOSRestController
 {
-
     public function getBillingSpendingsAction()
     {
     }
