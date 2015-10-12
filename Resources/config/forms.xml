@@ -12,7 +12,8 @@
 
     <services>
         <service id="fos_rest.form.extension.csrf_disable" class="%fos_rest.form.extension.csrf_disable.class%">
-            <tag name="form.type_extension" alias="form" />
+            <!-- "alias" option for SF <2.8 -->
+            <tag name="form.type_extension" alias="form" extended-type="Symfony\Component\Form\Extension\Core\Type\FormType" />
             <argument /> <!-- security.token_storage or security.context for Symfony < 2.6 -->
             <argument>%fos_rest.disable_csrf_role%</argument>
         </service>
