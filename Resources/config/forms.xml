@@ -6,7 +6,8 @@
 
     <services>
         <service id="fos_rest.form.extension.csrf_disable" class="FOS\RestBundle\Form\Extension\DisableCSRFExtension">
-            <tag name="form.type_extension" alias="form" />
+            <!-- "alias" option for SF <2.8 -->
+            <tag name="form.type_extension" alias="form" extended-type="Symfony\Component\Form\Extension\Core\Type\FormType" />
             <argument type="service" id="security.token_storage" />
             <argument /> <!-- disable CSRF role -->
             <argument type="service" id="security.authorization_checker" />
