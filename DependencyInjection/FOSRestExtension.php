@@ -170,6 +170,8 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 }
             }
 
+            FormatListenerRulesPass::setRules($config['format_listener']['rules']);
+
             if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
                 $versionListener = $container->getDefinition('fos_rest.version_listener');
                 $versionListener->replaceArgument(1, $config['format_listener']['media_type']['default_version']);
