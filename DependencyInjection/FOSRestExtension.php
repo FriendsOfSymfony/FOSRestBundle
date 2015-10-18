@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
+use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
