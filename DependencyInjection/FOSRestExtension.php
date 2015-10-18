@@ -163,16 +163,12 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $service->clearTag('kernel.event_listener');
             }
 
-            foreach ($config['format_listener']['rules'] as $key => $rule) {
+            foreach ($config['format_listener']['rules'] as &$rule) {
                 if (!isset($rule['exception_fallback_format'])) {
-                    $config['format_listener']['rules'][$key]['exception_fallback_format'] = $rule['fallback_format'];
+                    $rule['exception_fallback_format'] = $rule['fallback_format'];
                 }
+                $this->addFormatListenerRule($rule, $config, $container);
             }
-
-            $container->setParameter(
-                'fos_rest.format_listener.rules',
-                $config['format_listener']['rules']
-            );
 
             if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
                 $versionListener = $container->getDefinition('fos_rest.version_listener');
@@ -191,6 +187,48 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $container->getDefinition('fos_rest.format_negotiator')->replaceArgument(1, $config['view']['mime_types']['formats']);
             }
         }
+    }
+
+    private function addFormatListenerRule(array $rule, array $config, ContainerBuilder $container)
+    {
+        $matcher = $this->createRequestMatcher(
+            $container,
+            $rule['path'],
+            $rule['host'],
+            $rule['methods']
+        );
+
+        unset($rule['path'], $rule['host']);
+        if (is_bool($rule['prefer_extension']) && $rule['prefer_extension']) {
+            $rule['prefer_extension'] = '2.0';
+        }
+
+        $exceptionFallbackFormat = $rule['exception_fallback_format'];
+        unset($rule['exception_fallback_format']);
+        $container->getDefinition('fos_rest.format_negotiator')
+            ->addMethodCall('add', [$matcher, $rule]);
+
+        $rule['fallback_format'] = $exceptionFallbackFormat;
+        if ($config['exception']['enabled']) {
+            $container->getDefinition('fos_rest.exception_format_negotiator')
+            ->addMethodCall('add', [$matcher, $rule]);
+        }
+    }
+
+    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
+    {
+        $arguments = [$path, $host, $methods];
+        $serialized = serialize($arguments);
+        $id = 'fos_rest.request_matcher.'.md5($serialized).sha1($serialized);
+
+        if (!$container->hasDefinition($id)) {
+            // only add arguments that are necessary
+            $container
+                ->setDefinition($id, new DefinitionDecorator('fos_rest.request_matcher'))
+                ->setArguments($arguments);
+        }
+
+        return new Reference($id);
     }
 
     private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)

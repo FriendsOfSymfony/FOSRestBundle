@@ -45,11 +45,6 @@ class FormatListenerRulesPass implements CompilerPassInterface
 
             $this->addRule($profilerRule, $container);
         }
-
-        $rules = $container->getParameter('fos_rest.format_listener.rules');
-        foreach ($rules as $rule) {
-            $this->addRule($rule, $container);
-        }
     }
 
     protected function addRule(array $rule, ContainerBuilder $container)
