@@ -21,8 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class FormatListenerRulesPass implements CompilerPassInterface
 {
-    private static $rules = array();
-
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('fos_rest.format_listener')) {
@@ -48,15 +46,10 @@ class FormatListenerRulesPass implements CompilerPassInterface
             $this->addRule($profilerRule, $container);
         }
 
-        $rules = self::$rules;
+        $rules = $container->getParameter('fos_rest.format_listener.rules');
         foreach ($rules as $rule) {
             $this->addRule($rule, $container);
         }
-    }
-
-    public static function setRules(array $rules)
-    {
-        self::$rules = $rules;
     }
 
     protected function addRule(array $rule, ContainerBuilder $container)

@@ -35,9 +35,22 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->with('web_profiler.debug_toolbar.mode')
             ->will($this->returnValue(true));
 
-        $container->expects($this->once())
+        $container->expects($this->exactly(2))
             ->method('getParameter')
-            ->willReturn(2);
+            ->will($this->onConsecutiveCalls(
+                2,
+                [
+                    [
+                        'host' => null,
+                        'methods' => null,
+                        'path' => '^/',
+                        'priorities' => ['html', 'json'],
+                        'fallback_format' => 'html',
+                        'exception_fallback_format' => 'html',
+                        'prefer_extension' => true,
+                ],
+            ])
+        );
 
         $container->expects($this->exactly(4))
             ->method('getDefinition')
@@ -48,17 +61,6 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($definition));
 
         $compiler = new FormatListenerRulesPass();
-        FormatListenerRulesPass::setRules([
-            [
-                'host' => null,
-                'methods' => null,
-                'path' => '^/',
-                'priorities' => ['html', 'json'],
-                'fallback_format' => 'html',
-                'exception_fallback_format' => 'html',
-                'prefer_extension' => true,
-            ],
-        ]);
         $compiler->process($container);
     }
 
@@ -67,7 +69,7 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
         $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', ['addMethod']);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter'])
+            ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
         $container->expects($this->exactly(2))
@@ -79,6 +81,23 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->with('web_profiler.debug_toolbar.mode')
             ->will($this->returnValue(false));
 
+        $container->expects($this->once())
+            ->method('getParameter')
+            ->with('fos_rest.format_listener.rules')
+            ->will($this->returnValue(
+                [
+                    [
+                        'host' => null,
+                        'methods' => null,
+                        'path' => '^/',
+                        'priorities' => ['html', 'json'],
+                        'fallback_format' => 'html',
+                        'exception_fallback_format' => 'html',
+                        'prefer_extension' => true,
+                    ],
+                ])
+            );
+
         $container->expects($this->exactly(2))
             ->method('getDefinition')
             ->with($this->logicalOr(
@@ -88,17 +107,6 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($definition));
 
         $compiler = new FormatListenerRulesPass();
-        FormatListenerRulesPass::setRules([
-            [
-                'host' => null,
-                'methods' => null,
-                'path' => '^/',
-                'priorities' => ['html', 'json'],
-                'fallback_format' => 'html',
-                'exception_fallback_format' => 'html',
-                'prefer_extension' => true,
-            ],
-        ]);
         $compiler->process($container);
     }
 }

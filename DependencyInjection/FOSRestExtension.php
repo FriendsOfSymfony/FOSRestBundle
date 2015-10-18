@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
@@ -170,7 +169,10 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 }
             }
 
-            FormatListenerRulesPass::setRules($config['format_listener']['rules']);
+            $container->setParameter(
+                'fos_rest.format_listener.rules',
+                $config['format_listener']['rules']
+            );
 
             if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
                 $versionListener = $container->getDefinition('fos_rest.version_listener');
