@@ -4,6 +4,8 @@ imports:
 framework:
     serializer:
         enabled: true
+    router: { resource: "%kernel.root_dir%/Configuration/routing.yml" }
+    profiler: { only_exceptions: false }
 
 fos_rest:
     view:
@@ -18,7 +20,8 @@ fos_rest:
     body_listener: true
     format_listener:
         enabled: true
-        rules: {}
+        rules:
+            - { path: '^/', priorities: ['xml'], fallback_format: ~ }
         media_type: { enabled: true }
 
 security:
@@ -28,3 +31,6 @@ security:
     firewalls:
         default:
             anonymous: ~
+
+web_profiler:
+    toolbar: true

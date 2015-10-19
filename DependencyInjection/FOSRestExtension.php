@@ -23,6 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FOSRestExtension extends Extension implements PrependExtensionInterface
 {
+    private $formatListenerDefaultRules = array();
+
     /**
      * Default sensio_framework_extra { view: { annotations: false } }.
      *
@@ -50,7 +52,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                     $path .= '|_wdt';
                 }
 
-                $profilerRule = [
+                $this->formatListenerDefaultRules[] = [
                     'host' => null,
                     'methods' => null,
                     'path' => "^/$path/",
@@ -59,8 +61,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                     'exception_fallback_format' => 'html',
                     'prefer_extension' => true,
                 ];
-
-                $container->prependExtensionConfig('fos_rest', ['format_listener' => ['rules' => [$profilerRule]]]);
             }
         }
     }
@@ -109,7 +109,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $this->loadView($config, $loader, $container);
 
         $this->loadBodyListener($config, $loader, $container);
-        $this->loadFormatListener($config, $loader, $container, $configs);
+        $this->loadFormatListener($config, $loader, $container);
         $this->loadParamFetcherListener($config, $loader, $container);
         $this->loadAllowedMethodsListener($config, $loader, $container);
         $this->loadAccessDeniedListener($config, $loader, $container);
@@ -179,7 +179,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function loadFormatListener(array $config, XmlFileLoader $loader, ContainerBuilder $container, array $configs)
+    private function loadFormatListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if ($config['format_listener']['enabled'] && !empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
@@ -189,7 +189,9 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $service->clearTag('kernel.event_listener');
             }
 
-            foreach ($config['format_listener']['rules'] as &$rule) {
+            $rules = array_merge($this->formatListenerDefaultRules, $config['format_listener']['rules']);
+            // $rules = $config['format_listener']['rules'];
+            foreach ($rules as $rule) {
                 if (!isset($rule['exception_fallback_format'])) {
                     $rule['exception_fallback_format'] = $rule['fallback_format'];
                 }

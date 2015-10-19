@@ -11,6 +11,8 @@
 
 return [
     new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
+    new \Symfony\Bundle\TwigBundle\TwigBundle(),
+    new \Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
     new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
     new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
     new \FOS\RestBundle\FOSRestBundle(),
