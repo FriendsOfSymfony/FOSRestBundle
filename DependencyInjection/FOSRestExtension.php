@@ -38,6 +38,31 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         if ($config['view']['view_response_listener']['enabled']) {
             $container->prependExtensionConfig('sensio_framework_extra', ['view' => ['annotations' => false]]);
         }
+
+        $bundles = $container->getParameter('kernel.bundles');
+        if (isset($bundles['WebProfilerBundle'])) {
+            $profilerConfigs = $container->getExtensionConfig('web_profiler');
+            $profilerConfig = $this->processConfiguration(new ProfilerConfiguration(), $profilerConfigs);
+
+            if ($profilerConfig['toolbar'] || $profilerConfig['intercept_redirects']) {
+                $path = '_profiler';
+                if ($profilerConfig['toolbar']) {
+                    $path .= '|_wdt';
+                }
+
+                $profilerRule = [
+                    'host' => null,
+                    'methods' => null,
+                    'path' => "^/$path/",
+                    'priorities' => ['html', 'json'],
+                    'fallback_format' => 'html',
+                    'exception_fallback_format' => 'html',
+                    'prefer_extension' => true,
+                ];
+
+                $container->prependExtensionConfig('fos_rest', ['format_listener' => ['rules' => [$profilerRule]]]);
+            }
+        }
     }
 
     /**
@@ -169,30 +194,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                     $rule['exception_fallback_format'] = $rule['fallback_format'];
                 }
                 $this->addFormatListenerRule($rule, $config, $container);
-            }
-
-            $bundles = $container->getParameter('kernel.bundles');
-            if (isset($bundles['WebProfilerBundle'])) {
-                $profilerConfig = $this->processConfiguration(new ProfilerConfiguration(), $configs);
-
-                if ($profilerConfig['toolbar'] || $profilerConfig['intercept_redirects']) {
-                    $path = '_profiler';
-                    if ($profilerConfig['toolbar']) {
-                        $path .= '|_wdt';
-                    }
-
-                    $profilerRule = [
-                        'host' => null,
-                        'methods' => null,
-                        'path' => "^/$path/",
-                        'priorities' => ['html', 'json'],
-                        'fallback_format' => 'html',
-                        'exception_fallback_format' => 'html',
-                        'prefer_extension' => true,
-                    ];
-
-                    $this->addFormatListenerRule($profilerRule, $config, $container);
-                }
             }
 
             if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
