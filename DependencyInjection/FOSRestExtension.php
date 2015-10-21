@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Bundle\WebProfilerBundle\DependencyInjection\Configuration as ProfilerConfiguration;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
@@ -23,8 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FOSRestExtension extends Extension implements PrependExtensionInterface
 {
-    private $formatListenerDefaultRules = array();
-
     /**
      * Default sensio_framework_extra { view: { annotations: false } }.
      *
@@ -39,29 +36,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
         if ($config['view']['view_response_listener']['enabled']) {
             $container->prependExtensionConfig('sensio_framework_extra', ['view' => ['annotations' => false]]);
-        }
-
-        $bundles = $container->getParameter('kernel.bundles');
-        if (isset($bundles['WebProfilerBundle'])) {
-            $profilerConfigs = $container->getExtensionConfig('web_profiler');
-            $profilerConfig = $this->processConfiguration(new ProfilerConfiguration(), $profilerConfigs);
-
-            if ($profilerConfig['toolbar'] || $profilerConfig['intercept_redirects']) {
-                $path = '_profiler';
-                if ($profilerConfig['toolbar']) {
-                    $path .= '|_wdt';
-                }
-
-                $this->formatListenerDefaultRules[] = [
-                    'host' => null,
-                    'methods' => null,
-                    'path' => "^/$path/",
-                    'priorities' => ['html', 'json'],
-                    'fallback_format' => 'html',
-                    'exception_fallback_format' => 'html',
-                    'prefer_extension' => true,
-                ];
-            }
         }
     }
 
@@ -189,14 +163,16 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $service->clearTag('kernel.event_listener');
             }
 
-            $rules = array_merge($this->formatListenerDefaultRules, $config['format_listener']['rules']);
-            // $rules = $config['format_listener']['rules'];
-            foreach ($rules as $rule) {
+            foreach ($config['format_listener']['rules'] as &$rule) {
                 if (!isset($rule['exception_fallback_format'])) {
                     $rule['exception_fallback_format'] = $rule['fallback_format'];
                 }
-                $this->addFormatListenerRule($rule, $config, $container);
             }
+
+            $container->setParameter(
+                'fos_rest.format_listener.rules',
+                $config['format_listener']['rules']
+            );
 
             if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
                 $versionListener = $container->getDefinition('fos_rest.version_listener');
@@ -215,48 +191,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $container->getDefinition('fos_rest.format_negotiator')->replaceArgument(1, $config['view']['mime_types']['formats']);
             }
         }
-    }
-
-    private function addFormatListenerRule(array $rule, array $config, ContainerBuilder $container)
-    {
-        $matcher = $this->createRequestMatcher(
-            $container,
-            $rule['path'],
-            $rule['host'],
-            $rule['methods']
-        );
-
-        unset($rule['path'], $rule['host']);
-        if (is_bool($rule['prefer_extension']) && $rule['prefer_extension']) {
-            $rule['prefer_extension'] = '2.0';
-        }
-
-        $exceptionFallbackFormat = $rule['exception_fallback_format'];
-        unset($rule['exception_fallback_format']);
-        $container->getDefinition('fos_rest.format_negotiator')
-            ->addMethodCall('add', [$matcher, $rule]);
-
-        $rule['fallback_format'] = $exceptionFallbackFormat;
-        if ($config['exception']['enabled']) {
-            $container->getDefinition('fos_rest.exception_format_negotiator')
-            ->addMethodCall('add', [$matcher, $rule]);
-        }
-    }
-
-    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
-    {
-        $arguments = [$path, $host, $methods];
-        $serialized = serialize($arguments);
-        $id = 'fos_rest.request_matcher.'.md5($serialized).sha1($serialized);
-
-        if (!$container->hasDefinition($id)) {
-            // only add arguments that are necessary
-            $container
-                ->setDefinition($id, new DefinitionDecorator('fos_rest.request_matcher'))
-                ->setArguments($arguments);
-        }
-
-        return new Reference($id);
     }
 
     private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
