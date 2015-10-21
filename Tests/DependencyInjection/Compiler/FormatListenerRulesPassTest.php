@@ -26,7 +26,7 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
-        $container->expects($this->exactly(3))
+        $container->expects($this->exactly(5))
             ->method('hasDefinition')
             ->will($this->returnValue(true));
 
@@ -72,7 +72,7 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
-        $container->expects($this->exactly(2))
+        $container->expects($this->exactly(3))
             ->method('hasDefinition')
             ->will($this->returnValue(true));
 
