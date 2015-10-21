@@ -73,9 +73,11 @@ class FormatListenerRulesPass implements CompilerPassInterface
         $container->getDefinition('fos_rest.format_negotiator')
             ->addMethodCall('add', [$matcher, $rule]);
 
-        $rule['fallback_format'] = $exceptionFallbackFormat;
-        $container->getDefinition('fos_rest.exception_format_negotiator')
-            ->addMethodCall('add', [$matcher, $rule]);
+        if ($container->hasDefinition('fos_rest.exception_format_negotiator')) {
+            $rule['fallback_format'] = $exceptionFallbackFormat;
+            $container->getDefinition('fos_rest.exception_format_negotiator')
+                ->addMethodCall('add', [$matcher, $rule]);
+        }
     }
 
     protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
