@@ -210,3 +210,25 @@ Note that this version mechanism is configurable by your own by changing the reg
 :ref:`media type version regex configuration <media-type-version-extraction>`.
 
 .. _`mime type listener`: http://symfony.com/doc/current/cookbook/request/mime_type.html
+
+Furthermore you can use conditions on your request to check for the version that was determined:
+
+.. code-block:: yaml
+
+    my_route:
+        ...
+        condition: "request.attributes.get('version') == 'v2'"
+
+When using the :doc:`automatic route generation <5-automatic-route-generation_single-restful-controller>`,
+you can also use the ``@Version`` annotation to set the above condition automatically on all methods
+in the given controller.
+
+.. code-block:: php
+
+    use FOS\RestBundle\Controller\Annotations\Version;
+
+    /**
+     * @Version("v2")
+     */
+    class MyController
+    {

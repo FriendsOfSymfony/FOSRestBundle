@@ -35,6 +35,7 @@ class RestActionReader
     private $includeFormat;
     private $routePrefix;
     private $namePrefix;
+    private $version;
     private $pluralize;
     private $parents = [];
     private $availableHTTPMethods = ['get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options'];
@@ -96,6 +97,26 @@ class RestActionReader
     public function getNamePrefix()
     {
         return $this->namePrefix;
+    }
+
+    /**
+     * Sets route names version.
+     *
+     * @param string $version Route names version
+     */
+    public function setVersion($version = null)
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * Returns version.
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 
     /**
@@ -232,7 +253,7 @@ class RestActionReader
                 $defaults = array_merge($defaults, $annotation->getDefaults());
                 $host = $annotation->getHost();
                 $schemes = $annotation->getSchemes();
-                $condition = $annotation->getCondition();
+                $condition = $this->getCondition($method, $annotation);
 
                 $this->includeFormatIfNeeded($path, $requirements);
 
@@ -253,6 +274,26 @@ class RestActionReader
             );
             $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable);
         }
+    }
+
+    /**
+     * Determine the Route condition by combining Route annotations with Version annotation.
+     *
+     * @param \ReflectionMethod $method
+     * @param RouteAnnotation   $annotation
+     *
+     * @return string
+     */
+    private function getCondition(\ReflectionMethod $method, RouteAnnotation $annotation)
+    {
+        $condition = $annotation->getCondition();
+
+        if (null !== $this->version) {
+            $versionCondition = "request.attributes.get('version') == '".$this->version."'";
+            $condition = $condition ? '('.$condition.') and '.$versionCondition : $versionCondition;
+        }
+
+        return $condition;
     }
 
     /**

@@ -71,6 +71,11 @@ class RestControllerReader
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
+        // read version annotation
+        if ($annotation = $this->readClassAnnotation($reflectionClass, 'Version')) {
+            $this->actionReader->setVersion($annotation->value);
+        }
+
         $resource = [];
         // read route-resource annotation
         if ($annotation = $this->readClassAnnotation($reflectionClass, 'RouteResource')) {
@@ -97,6 +102,7 @@ class RestControllerReader
 
         $this->actionReader->setRoutePrefix(null);
         $this->actionReader->setNamePrefix(null);
+        $this->actionReader->setVersion(null);
         $this->actionReader->setPluralize(null);
         $this->actionReader->setParents([]);
 
