@@ -163,11 +163,16 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $service->clearTag('kernel.event_listener');
             }
 
-            foreach ($config['format_listener']['rules'] as $key => $rule) {
+            foreach ($config['format_listener']['rules'] as &$rule) {
                 if (!isset($rule['exception_fallback_format'])) {
-                    $config['format_listener']['rules'][$key]['exception_fallback_format'] = $rule['fallback_format'];
+                    $rule['exception_fallback_format'] = $rule['fallback_format'];
                 }
             }
+
+            $container->setParameter(
+                'fos_rest.format_listener.rules',
+                $config['format_listener']['rules']
+            );
 
             if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
                 $versionListener = $container->getDefinition('fos_rest.version_listener');
