@@ -165,6 +165,35 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * Test that annotated UsersController RESTful class gets parsed correctly with condition option (expression-language).
+     */
+    public function testAnnotatedVersionUserFixture()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedVersionUserController');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('annotated_version_controller.yml');
+
+        $this->assertTrue($collection instanceof RestRouteCollection);
+        $this->assertEquals(2, count($collection->all()));
+
+        foreach ($etalonRoutes as $name => $params) {
+            $route = $collection->get($name);
+
+            $this->assertNotNull($route, "no route found for '$name'");
+            $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
+
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $requirements = $route->getRequirements();
+            unset($requirements['_method']);
+            $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
+
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
+            if (isset($params['condition'])) {
+                $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
+            }
+        }
+    }
+
+    /**
      * Test that a custom format annotation is not overwritten.
      */
     public function testCustomFormatRequirementIsKept()
