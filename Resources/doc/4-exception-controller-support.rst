@@ -85,4 +85,10 @@ See `this example configuration`_ for more details.
 
 That was it!
 
+.. note::
+
+    If you are receiving a 500 error where you would expect a different response, the issue
+    is likely caused by an exception inside the ExceptionController. For example a template
+    is not found or the serializer failed.
+
 .. _`this example configuration`: https://github.com/liip-forks/symfony-standard/blob/techtalk/app/config/config.yml
