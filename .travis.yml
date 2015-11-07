@@ -24,8 +24,6 @@ branches:
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - env: SYMFONY_VERSION='3.0.*@dev'
   include:
     - php: 5.4
       env: COMPOSER_FLAGS="--prefer-lowest"

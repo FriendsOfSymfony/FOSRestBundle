@@ -28,7 +28,7 @@ class AbstractParamTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\ParamInterface', $this->param);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerAware', $this->param);
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerAwareInterface', $this->param);
     }
 
     public function testDefaultValues()

@@ -12,7 +12,8 @@
 namespace FOS\RestBundle\Controller\Annotations;
 
 use Symfony\Component\Validator\Constraints;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * {@inheritdoc}
@@ -21,8 +22,10 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  * @author Boris Guéry <guery.b@gmail.com>
  * @author Ener-Getick <egetick@gmail.com>
  */
-abstract class AbstractParam extends ContainerAware implements ParamInterface
+abstract class AbstractParam implements ParamInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /** @var string */
     public $name;
     /** @var string */

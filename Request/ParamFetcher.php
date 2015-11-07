@@ -13,12 +13,12 @@ namespace FOS\RestBundle\Request;
 
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -32,8 +32,10 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class ParamFetcher extends ContainerAware implements ParamFetcherInterface
+class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     private $paramReader;
     private $requestStack;
     private $params;
