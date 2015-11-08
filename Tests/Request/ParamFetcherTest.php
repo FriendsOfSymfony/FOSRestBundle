@@ -11,10 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Validator\Constraints\File;
 
 /**
  * ParamFetcher test.
@@ -30,22 +27,22 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     private $controller;
 
     /**
-     * @var FOS\RestBundle\Request\ParamReaderInterface
+     * @var \FOS\RestBundle\Request\ParamReaderInterface
      */
     private $paramReader;
 
     /**
-     * @var ParamFetcherTest|Symfony\Component\Validator\ValidatorInterface
+     * @var ParamFetcherTest|\Symfony\Component\Validator\ValidatorInterface
      */
     private $validator;
 
     /**
-     * @var FOS\RestBundle\Util\ViolationFormatterInterface
+     * @var \FOS\RestBundle\Util\ViolationFormatterInterface
      */
     private $violationFormatter;
 
     /**
-     * @var Symfony\Component\HttpFoundation\RequestStack
+     * @var \Symfony\Component\HttpFoundation\RequestStack
      */
     private $requestStack;
 

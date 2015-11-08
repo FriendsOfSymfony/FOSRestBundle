@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use FOS\RestBundle\Request\RequestBodyParamConverter;
-
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
  */
