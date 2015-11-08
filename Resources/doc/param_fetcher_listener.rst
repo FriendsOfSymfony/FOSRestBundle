@@ -57,8 +57,8 @@ configured for the matched controller so that the user does not need to do this 
          * resut and is likely to be considered as a bug) you can precise the parameters can't be present
          * at the same time by doing
          *
-         * @QueryParam(array=true, name="ids", requirements="\d+", default="1", description="List of ids")
-         * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337.
+         * @QueryParam(map=true, name="ids", requirements="\d+", default="1", description="List of ids")
+         * If you want to map the value as an array (apply the requirements to each element): ie. ?ids[]=1&ids[]=2&ids[]=1337.
          * (works with QueryParam and RequestParam)
          *
          * It will validate each entries of ids with your requirement, by this way, if an entry is invalid,
@@ -67,10 +67,10 @@ configured for the matched controller so that the user does not need to do this 
          * ie: ?ids[]=1337&ids[]=notinteger will return array(1337, 1);
          * If ids is not defined, array(1) will be given
          *
-         * Array must have a single depth or it will return default value. It's difficult to validate with
+         * Array must have a single depth if you use a regex. It's difficult to validate with
          * preg_match each deeps of array, if you want to deal with that, you can use a constraint:
          *
-         * @QueryParam(array=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
+         * @QueryParam(map=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
          * In this example, the ParamFetcher will validate each value of the array with the constraint, returning the
          * default value if you are in safe mode or throw a BadRequestHttpResponse containing the constraint violation
          * messages in the message.
@@ -169,7 +169,7 @@ Container parameters can be used in requirements and default field.
         /**
          * Use the "locale" parameter as the default value
          * @QueryParam(name="language", default="%locale%")
-         * 
+         *
          * The "baz" container parameter is used here as requirements
          * Can be used for complex or auto-generated regex
          * @QueryParam(name="foo", requirements="%baz%")

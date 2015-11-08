@@ -116,7 +116,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('\\d+', $params[0]->requirements);
         $this->assertEquals('1', $params[0]->default);
         $this->assertEquals('Page of the overview.', $params[0]->description);
-        $this->assertFalse($params[0]->array);
+        $this->assertFalse($params[0]->map);
         $this->assertFalse($params[0]->strict);
 
         // Param 2 (request)
@@ -124,12 +124,12 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('[a-z]+', $params[1]->requirements);
         $this->assertEquals('by author', $params[1]->description);
         $this->assertEquals(['search'], $params[1]->incompatibles);
-        $this->assertFalse($params[1]->array);
+        $this->assertFalse($params[1]->map);
         $this->assertTrue($params[1]->strict);
 
         // Param 3 (query)
         $this->assertEquals('filters', $params[2]->name);
-        $this->assertTrue($params[2]->array);
+        $this->assertTrue($params[2]->map);
         $this->assertEquals(new NotNull(), $params[2]->requirements);
 
         // Param 4 (file)
