@@ -79,7 +79,7 @@ configured for the matched controller so that the user does not need to do this 
          *
          * In this example, the ParamFetcher will validate each value of the array with the constraint, returning the
          * default value if you are in safe mode or throw a BadRequestHttpResponse containing the constraint violation
-         * messages in the message.
+         * messages in the message. Note that to validate associative arrays there is also the "withKeys" attribute.
          *
          * @param ParamFetcher $paramFetcher
          */
