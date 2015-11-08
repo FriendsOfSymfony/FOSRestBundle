@@ -17,6 +17,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
@@ -689,6 +690,37 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter);
         $queryFetcher->setController($this->controller);
         $queryFetcher->get('bizoo');
+    }
+
+    public function testArrayWithKeysValidator()
+    {
+        $param = new QueryParam();
+        $param->name = 'array_with_keys';
+        $param->array = true;
+        $param->withKeys = true;
+        $param->requirements = new EqualTo(array('value' => array('key' => 'value')));
+
+        $request = new Request(array('array_with_keys' => array('key' => 'value')), array(), array('_controller' => __CLASS__.'::stubAction'));
+        $reader = $this->getMockBuilder('FOS\RestBundle\Request\ParamReader')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $constraint = new EqualTo(array(
+            'value' => array('key' => 'value'),
+        ));
+
+        $reader->expects($this->any())
+            ->method('read')
+            ->will($this->returnValue(array('array_with_keys' => $param)));
+
+        $this->validator->expects($this->once())
+            ->method('validateValue')
+            ->with(array('key' => 'value'), $constraint);
+
+        $queryFetcher = new ParamFetcher($reader, $request, $this->violationFormatter, $this->validator);
+        $queryFetcher->setController($this->controller);
+
+        $this->assertEquals(array('key' => 'value'), $queryFetcher->get('array_with_keys'));
     }
 
     public function testNullValidatorWithoutRequirements()

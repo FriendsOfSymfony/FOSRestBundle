@@ -34,6 +34,8 @@ abstract class Param
     /** @var bool */
     public $array = false;
     /** @var bool */
+    public $withKeys = false;
+    /** @var bool */
     public $nullable = false;
     /** @var bool */
     public $allowBlank = true;
