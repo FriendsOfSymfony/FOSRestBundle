@@ -1,20 +1,26 @@
 API versioning
 ==============
-Why version your API ?
-----------------------
-If you want to introduce breaking changes in your API, you should think about version your API. Indeed, if you introduce them on your current API, your users won't necessary upgrade their application directly and their applications won't work.
+
+Think about versioning your API
+-------------------------------
+
+If you introduce changes to your current API, your users might not upgrade their applications right away, so versioning is important to prevent existing applications to break when such changes are made.
 
 How to version your API ?
 -------------------------
-There are several ways, none is standard :
-    - Use a query parameter ``/users?version=v1``
-    - Use a custom mime-type with an ``Accept`` header ``Accept: application/json; version=1.0``
-    - Use a custom header ``X-Accept-Version: v1``
+
+There are several ways, none is standard:
+
+* Use an uri parameter ``/v1/users``
+* Use a query parameter ``/users?version=v1``
+* Use a custom mime-type with an ``Accept`` header ``Accept: application/json; version=1.0``
+* Use a custom header ``X-Accept-Version: v1``
 
 The ``FOSRestBundle`` allows you to use several of them at the same time or to choose one of them.
 
 URI API versioning
 ------------------
+
 If you want to version your api with the uri, you can simply use the symfony router:
 
 .. code-block:: yaml
@@ -28,6 +34,7 @@ Note: this will override the ``version`` attribute of the request if you use the
 
 Configure ``FOSRestBundle`` to use the api versioning
 -----------------------------------------------------
+
 You should activate the versioning in your config.yml:
 
 .. code-block:: yaml
@@ -67,19 +74,19 @@ The matched version is set as a Request attribute with the name ``version``,
 and when using JMS serializer it is also set as an exclusion strategy
 automatically in the ``ViewHandler``.
 
-If you use the method using the ``Accept`` header, to make the version mechanism working:
+If you want to version by Accept header, you will need to do the following:
 
-1 - The format listener must be enabled
+#. The format listener must be enabled
 
 See :doc:`Format Listener <format_listener>`
 
-2 - The client must pass the requested version in his header like this :
+#. The client must pass the requested version in his header like this :
 
 .. code-block:: yaml
 
     Accept:application/json;version=1.0
 
-3 - You must have declared the version value in your config, otherwise it won't be catched :
+#. You must configure the possible mime types for all supported versions:
 
 .. code-block:: yaml
 
@@ -133,16 +140,9 @@ And then, import it from your config.yml file:
     imports:
         - { resource: assets_version.php }
 
-If you have to verify if the version is correctly catched you can use something like :
-
-.. code-block:: php
-
-        if ($this->container->get('fos_rest.versioning.listener')) {
-            print $this->container->get('fos_rest.versioning.listener')->getVersion();
-        }
-
 Use the ``JMSSerializer`` with the API versioning
 -------------------------------------------------
+
 You should have tagged your entities with version information (@Since, @Until ...)
 
 See `this JMS Serializer article`_ for details about versioning objects.
@@ -153,6 +153,7 @@ That's it, it should work now.
 
 How to match a specific version in my routing ?
 -----------------------------------------------
+
 You can use conditions on your request to check for the version that was determined:
 
 .. code-block:: yaml

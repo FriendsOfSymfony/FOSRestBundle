@@ -133,7 +133,6 @@ Full default configuration
                     enabled: true
                     regex: /(v|version)=(?P<version>[0-9\.]+)/
             guessing_order:
-                - uri
                 - query
                 - custom_header
                 - media_type
