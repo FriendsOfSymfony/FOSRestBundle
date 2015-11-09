@@ -171,6 +171,9 @@ in the given controller.
 
     /**
      * @Version("v2")
+     *
+     * or if you support multiple versions in this controller
+     * @Version({"v1", "v2"})
      */
     class MyController
     {
