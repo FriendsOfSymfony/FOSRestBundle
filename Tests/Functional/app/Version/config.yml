@@ -1,0 +1,29 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+
+fos_rest:
+    format_listener:
+        rules:
+            - { path: '^/', priorities: ['json', 'xml'] }
+
+    view:
+        mime_types:
+            json: ['application/json', 'application/json;myversion=2.3']
+    versioning:
+        enabled: true
+        default_version: 3.4.2
+        resolvers:
+            query:
+                parameter_name: query_version
+            custom_header:
+                header_name: Version-Header
+            media_type:
+                regex: '/(myversion)=(?P<version>[0-9\.]+)/'
+        guessing_order:
+            - custom_header
+            - media_type
+            - query

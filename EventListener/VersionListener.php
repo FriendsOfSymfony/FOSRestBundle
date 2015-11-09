@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Version\VersionResolverInterface;
 use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -19,13 +20,14 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class VersionListener
 {
     private $viewHandler;
-    private $regex;
-    private $version = false;
+    private $versionResolver;
     private $defaultVersion;
+    private $version = false;
 
-    public function __construct(ViewHandlerInterface $viewHandler, $defaultVersion = null)
+    public function __construct(ViewHandlerInterface $viewHandler, VersionResolverInterface $versionResolver, $defaultVersion = null)
     {
         $this->viewHandler = $viewHandler;
+        $this->versionResolver = $versionResolver;
         $this->defaultVersion = $defaultVersion;
     }
 
@@ -39,16 +41,6 @@ class VersionListener
         return $this->version;
     }
 
-    /**
-     * Sets the regex.
-     *
-     * @param string $regex
-     */
-    public function setRegex($regex)
-    {
-        $this->regex = $regex;
-    }
-
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
@@ -57,10 +49,12 @@ class VersionListener
             return;
         }
 
-        $mediaType = $request->attributes->get('media_type');
+        $this->version = $this->versionResolver->resolve($request);
+        if (false === $this->version && null !== $this->defaultVersion) {
+            $this->version = $this->defaultVersion;
+        }
 
-        if (1 === preg_match($this->regex, $mediaType, $matches) || null !== $this->defaultVersion) {
-            $this->version = isset($matches['version']) ? $matches['version'] : $this->defaultVersion;
+        if (false !== $this->version) {
             $request->attributes->set('version', $this->version);
 
             if ($this->viewHandler instanceof ConfigurableViewHandlerInterface) {

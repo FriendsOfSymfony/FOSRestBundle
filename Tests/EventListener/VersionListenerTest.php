@@ -27,6 +27,10 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $viewHandler;
     /**
+     * @var \FOS\RestBundle\Version\VersionResolverInterface
+     */
+    private $resolver;
+    /**
      * @var \FOS\RestBundle\EventListener\VersionListener
      */
     private $listener;
@@ -34,8 +38,9 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->viewHandler = $this->getMock('FOS\RestBundle\View\ConfigurableViewHandlerInterface');
+        $this->resolver = $this->getMock('FOS\RestBundle\Version\VersionResolverInterface');
 
-        $this->listener = new VersionListener($this->viewHandler);
+        $this->listener = new VersionListener($this->viewHandler, $this->resolver);
     }
 
     public function testDefaultVersion()
@@ -43,31 +48,10 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $this->listener->getVersion());
     }
 
-    public function testMatch()
-    {
-        $this->listener->setRegex('/(v|version)=(?P<version>[0-9\.]+)/');
-
-        $request = new Request();
-        $request->attributes->set('media_type', 'application/json;v=1.2');
-
-        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', [], [], '', false);
-        $event
-            ->expects($this->once())
-            ->method('getRequest')
-            ->willReturn($request);
-
-        $this->listener->onKernelRequest($event);
-
-        $this->assertEquals('1.2', $this->listener->getVersion());
-    }
-
     public function testMatchNoZone()
     {
-        $this->listener->setRegex('/(v|version)=(?P<version>[0-9\.]+)/');
-
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
-        $request->attributes->set('media_type', 'application/json;v=1.2');
 
         $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', [], [], '', false);
         $event

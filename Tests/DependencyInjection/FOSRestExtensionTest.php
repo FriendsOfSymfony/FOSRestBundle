@@ -216,19 +216,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
     }
 
-    public function testLoadFormatListenerMediaType()
-    {
-        $config = [
-            'fos_rest' => ['format_listener' => [
-                'rules' => ['path' => '/'],
-                'media_type' => true,
-            ]],
-        ];
-        $this->extension->load($config, $this->container);
-
-        $this->assertTrue($this->container->hasDefinition('fos_rest.version_listener'));
-    }
-
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      */
