@@ -16,7 +16,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
- * @Version("v1")
+ * @Version({"v1", "v3"})
  */
 class AnnotatedVersionUserController extends Controller
 {

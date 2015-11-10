@@ -35,7 +35,7 @@ class RestActionReader
     private $includeFormat;
     private $routePrefix;
     private $namePrefix;
-    private $version;
+    private $versions;
     private $pluralize;
     private $parents = [];
     private $availableHTTPMethods = ['get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options'];
@@ -100,23 +100,23 @@ class RestActionReader
     }
 
     /**
-     * Sets route names version.
+     * Sets route names versions.
      *
-     * @param string $version Route names version
+     * @param array|string|null $versions Route names versions
      */
-    public function setVersion($version = null)
+    public function setVersions($versions = null)
     {
-        $this->version = $version;
+        $this->versions = (array) $versions;
     }
 
     /**
-     * Returns version.
+     * Returns versions.
      *
-     * @return string
+     * @return array|null
      */
-    public function getVersion()
+    public function getVersions()
     {
-        return $this->version;
+        return $this->versions;
     }
 
     /**
@@ -288,8 +288,17 @@ class RestActionReader
     {
         $condition = $annotation->getCondition();
 
-        if (null !== $this->version) {
-            $versionCondition = "request.attributes.get('version') == '".$this->version."'";
+        if (!empty($this->versions)) {
+            $versionCondition = "request.attributes.get('version') == (";
+            $first = true;
+            foreach ($this->versions as $version) {
+                if (!$first) {
+                    $versionCondition .= ' or ';
+                }
+                $versionCondition .= '\''.$version.'\'';
+                $first = false;
+            }
+            $versionCondition .= ')';
             $condition = $condition ? '('.$condition.') and '.$versionCondition : $versionCondition;
         }
 
