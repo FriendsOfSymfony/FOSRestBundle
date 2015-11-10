@@ -17,7 +17,8 @@ use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException;
@@ -26,8 +27,10 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
  */
-class ExceptionController extends ContainerAware
+class ExceptionController implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * Creates a new ExceptionWrapper instance that can be overwritten by a custom
      * ExceptionController class.

@@ -406,7 +406,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param2->expects($this->once())
             ->method('getName')
             ->willReturn('bar');
-        $param2->expects($this->once())
+        $param2->expects($this->any())
             ->method('setContainer')
             ->with($container);
 

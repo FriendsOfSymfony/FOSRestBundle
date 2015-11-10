@@ -18,7 +18,8 @@ use FOS\RestBundle\Context\GroupableContextInterface;
 use FOS\RestBundle\Context\SerializeNullContextInterface;
 use FOS\RestBundle\Context\VersionableContextInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +34,10 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInterface
+class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * Key format, value a callable that returns a Response instance.
      *
