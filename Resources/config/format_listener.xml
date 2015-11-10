@@ -22,7 +22,7 @@
             <argument type="collection" /> <!-- mime types -->
         </service>
 
-        <service id="fos_rest.request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
+        <service id="fos_rest.format_request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
 
     </services>
 </container>

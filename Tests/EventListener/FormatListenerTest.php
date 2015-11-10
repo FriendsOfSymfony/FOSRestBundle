@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\FormatListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Negotiation\Accept;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,32 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals('xml', $request->getRequestFormat());
+    }
+
+    public function testOnKernelControllerNoZone()
+    {
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $formatNegotiator = new FormatNegotiator($requestStack);
+        $formatNegotiator->add(new RequestMatcher('/'), ['fallback_format' => 'json']);
+
+        $listener = new FormatListener($formatNegotiator);
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($request->getRequestFormat(), 'html');
     }
 
     public function testOnKernelControllerNegotiationStopped()
