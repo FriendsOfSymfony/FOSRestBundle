@@ -11,9 +11,6 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandler;
-
 /**
  * Version listener test.
  *

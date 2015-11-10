@@ -20,7 +20,6 @@ use JMS\Serializer\Handler\FormErrorHandler;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\FormView;
