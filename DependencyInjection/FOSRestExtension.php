@@ -84,6 +84,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
         $this->loadBodyListener($config, $loader, $container);
         $this->loadFormatListener($config, $loader, $container);
+        $this->loadVersioning($config, $loader, $container);
         $this->loadParamFetcherListener($config, $loader, $container);
         $this->loadAllowedMethodsListener($config, $loader, $container);
         $this->loadAccessDeniedListener($config, $loader, $container);
@@ -175,21 +176,47 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 $config['format_listener']['rules']
             );
 
-            if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
-                $versionListener = $container->getDefinition('fos_rest.version_listener');
-                $versionListener->replaceArgument(1, $config['format_listener']['media_type']['default_version']);
-                $versionListener->addMethodCall('setRegex', array($config['format_listener']['media_type']['version_regex']));
-
-                if (!empty($config['format_listener']['media_type']['service'])) {
-                    $service = $container->getDefinition('fos_rest.version_listener');
-                    $service->clearTag('kernel.event_listener');
-                }
-            } else {
-                $container->removeDefinition('fos_rest.version_listener');
-            }
-
             if ($config['view']['mime_types']['enabled']) {
                 $container->getDefinition('fos_rest.format_negotiator')->replaceArgument(1, $config['view']['mime_types']['formats']);
+            }
+        }
+    }
+
+    private function loadVersioning(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if (!empty($config['versioning']['enabled'])) {
+            $loader->load('versioning.xml');
+
+            $versionListener = $container->getDefinition('fos_rest.versioning.listener');
+            $versionListener->replaceArgument(2, $config['versioning']['default_version']);
+
+            $resolvers = [];
+            if ($config['versioning']['resolvers']['query']['enabled']) {
+                $resolvers['query'] = $container->getDefinition('fos_rest.versioning.query_parameter_resolver');
+                $resolvers['query']->replaceArgument(0, $config['versioning']['resolvers']['query']['parameter_name']);
+            } else {
+                $container->removeDefinition('fos_rest.versioning.query_parameter_resolver');
+            }
+
+            if ($config['versioning']['resolvers']['custom_header']['enabled']) {
+                $resolvers['custom_header'] = $container->getDefinition('fos_rest.versioning.header_resolver');
+                $resolvers['custom_header']->replaceArgument(0, $config['versioning']['resolvers']['custom_header']['header_name']);
+            } else {
+                $container->removeDefinition('fos_rest.versioning.header_resolver');
+            }
+
+            if ($config['versioning']['resolvers']['media_type']['enabled']) {
+                $resolvers['media_type'] = $container->getDefinition('fos_rest.versioning.media_type_resolver');
+                $resolvers['media_type']->replaceArgument(0, $config['versioning']['resolvers']['media_type']['regex']);
+            } else {
+                $container->removeDefinition('fos_rest.versioning.media_type_resolver');
+            }
+
+            $chainResolver = $container->getDefinition('fos_rest.versioning.chain_resolver');
+            foreach ($config['versioning']['guessing_order'] as $resolver) {
+                if (isset($resolvers[$resolver])) {
+                    $chainResolver->addMethodCall('addResolver', [$resolvers[$resolver]]);
+                }
             }
         }
     }

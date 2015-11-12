@@ -22,7 +22,7 @@ fos_rest:
         enabled: true
         rules:
             - { path: '^/', priorities: ['xml'], fallback_format: ~ }
-        media_type: { enabled: true }
+    versioning: true
 
 security:
     providers:
