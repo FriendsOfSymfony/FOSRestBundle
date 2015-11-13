@@ -646,14 +646,14 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[0][0]);
         $requestMatcherFirstId = (string) $addRequestMatcherCalls[0][1][0];
         $requestMatcherFirst = $this->container->getDefinition($requestMatcherFirstId);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', get_class($requestMatcherFirst));
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $requestMatcherFirst);
         $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0));
 
         // Second zone
         $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[1][0]);
         $requestMatcherSecondId = (string) $addRequestMatcherCalls[1][1][0];
         $requestMatcherSecond = $this->container->getDefinition($requestMatcherSecondId);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', get_class($requestMatcherSecond));
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $requestMatcherSecond);
         $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
         $this->assertEquals(array('127.0.0.1'), $requestMatcherSecond->getArgument(3));
     }
