@@ -17,7 +17,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 /**
  *  @Rest\RouteResource("Article", pluralize=false)
  */
-class AnnotatedNonPluralizedArticleController extends FosRestController
+class AnnotatedNonPluralizedArticleController extends FOSRestController
 {
     /**
      * [GET] /article.
