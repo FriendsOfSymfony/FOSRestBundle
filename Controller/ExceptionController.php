@@ -12,13 +12,11 @@
 namespace FOS\RestBundle\Controller;
 
 use FOS\RestBundle\Negotiation\FormatNegotiator;
-use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\Util\StopFormatListenerException;
+use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException;
@@ -32,7 +30,6 @@ class ExceptionController
     private $exceptionWrapperHandler;
     private $formatNegotiator;
     private $viewHandler;
-    private $templating;
     private $exceptionCodes;
     private $exceptionMessages;
     private $showException;
@@ -41,7 +38,6 @@ class ExceptionController
         ExceptionWrapperHandlerInterface $exceptionWrapperHandler,
         FormatNegotiator $formatNegotiator,
         ViewHandlerInterface $viewHandler,
-        EngineInterface $templating,
         array $exceptionCodes,
         array $exceptionMessages,
         $showException
@@ -49,23 +45,17 @@ class ExceptionController
         $this->exceptionWrapperHandler = $exceptionWrapperHandler;
         $this->formatNegotiator = $formatNegotiator;
         $this->viewHandler = $viewHandler;
-        $this->templating = $templating;
         $this->exceptionCodes = $exceptionCodes;
         $this->exceptionMessages = $exceptionMessages;
         $this->showException = $showException;
     }
 
     /**
-     * Creates a new ExceptionWrapper instance that can be overwritten by a custom
-     * ExceptionController class.
-     *
-     * @param array $parameters Template parameters
-     *
-     * @return ExceptionWrapper ExceptionWrapper instance
+     * @return ViewHandlerInterface
      */
-    protected function createExceptionWrapper(array $parameters)
+    protected function getViewHandler()
     {
-        return $this->exceptionWrapperHandler->wrap($parameters);
+        return $this->viewHandler;
     }
 
     /**
@@ -97,20 +87,11 @@ class ExceptionController
             $request->headers->get('X-Php-Ob-Level', -1)
         );
         $code = $this->getStatusCode($exception);
-        $parameters = $this->getParameters($this->viewHandler, $currentContent, $code, $exception, $logger, $format);
+        $parameters = $this->getParameters($currentContent, $code, $exception, $logger, $format);
         $showException = $request->attributes->get('showException', $this->showException);
 
         try {
-            if (!$this->viewHandler->isFormatTemplating($format)) {
-                $parameters = $this->createExceptionWrapper($parameters);
-            }
-
-            $view = View::create($parameters, $code, $exception->getHeaders());
-            $view->setFormat($format);
-
-            if ($this->viewHandler->isFormatTemplating($format)) {
-                $view->setTemplate($this->findTemplate($request, $format, $code, $showException));
-            }
+            $view = $this->createView($format, $exception, $code, $parameters, $request, $showException);
 
             $response = $this->viewHandler->handle($view);
         } catch (\Exception $e) {
@@ -136,6 +117,38 @@ class ExceptionController
         $headers['content-type'] = 'text/plain';
 
         return new Response($content, $status, $headers);
+    }
+
+    /**
+     * Creates a new ExceptionWrapper instance that can be overwritten by a custom
+     * ExceptionController class.
+     *
+     * @param array $parameters output data
+     *
+     * @return ExceptionWrapper ExceptionWrapper instance
+     */
+    protected function createExceptionWrapper(array $parameters)
+    {
+        return $this->exceptionWrapperHandler->wrap($parameters);
+    }
+
+    /**
+     * @param string           $format
+     * @param FlattenException $exception
+     * @param int              $code
+     * @param array            $parameters
+     * @param Request          $request
+     * @param bool             $showException
+     *
+     * @return View
+     */
+    protected function createView($format, FlattenException $exception, $code, $parameters, Request $request, $showException)
+    {
+        $parameters = $this->createExceptionWrapper($parameters);
+        $view = View::create($parameters, $code, $exception->getHeaders());
+        $view->setFormat($format);
+
+        return $view;
     }
 
     /**
@@ -247,7 +260,6 @@ class ExceptionController
      * Overwrite it in a custom ExceptionController class to add additionally parameters
      * that should be passed to the view layer.
      *
-     * @param ViewHandlerInterface $viewHandler
      * @param string               $currentContent
      * @param int                  $code
      * @param FlattenException     $exception
@@ -256,9 +268,9 @@ class ExceptionController
      *
      * @return array
      */
-    protected function getParameters(ViewHandlerInterface $viewHandler, $currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
+    protected function getParameters($currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
-        $parameters = [
+        return [
             'status' => 'error',
             'status_code' => $code,
             'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
@@ -266,54 +278,5 @@ class ExceptionController
             'message' => $this->getExceptionMessage($exception),
             'exception' => $exception,
         ];
-
-        if ($viewHandler->isFormatTemplating($format)) {
-            $parameters['logger'] = $logger;
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * Finds the template for the given format and status code.
-     *
-     * Note this method needs to be overridden in case another
-     * engine than Twig should be supported;
-     *
-     * This code is inspired by TwigBundle and should be synchronized on a regular basis
-     * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
-     *
-     * @param Request $request
-     * @param string  $format
-     * @param int     $statusCode
-     * @param bool    $showException
-     *
-     * @return TemplateReference
-     */
-    private function findTemplate(Request $request, $format, $statusCode, $showException)
-    {
-        $name = $showException ? 'exception' : 'error';
-        if ($showException && 'html' == $format) {
-            $name = 'exception_full';
-        }
-
-        // when not in debug, try to find a template for the specific HTTP status code and format
-        if (!$showException) {
-            $template = new TemplateReference('TwigBundle', 'Exception', $name.$statusCode, $format, 'twig');
-            if ($this->templating->exists($template)) {
-                return $template;
-            }
-        }
-
-        // try to find a template for the given format
-        $template = new TemplateReference('TwigBundle', 'Exception', $name, $format, 'twig');
-        if ($this->templating->exists($template)) {
-            return $template;
-        }
-
-        // default to a generic HTML exception
-        $request->setRequestFormat('html');
-
-        return new TemplateReference('TwigBundle', 'Exception', $showException ? 'exception_full' : $name, 'html', 'twig');
     }
 }
