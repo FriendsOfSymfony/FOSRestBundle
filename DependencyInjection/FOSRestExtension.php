@@ -424,7 +424,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
 
         $container
-            ->register($id, new DefinitionDecorator('fos_rest.zone_request_matcher'))
+            ->setDefinition($id, new DefinitionDecorator('fos_rest.zone_request_matcher'))
             ->setArguments($arguments)
         ;
 
