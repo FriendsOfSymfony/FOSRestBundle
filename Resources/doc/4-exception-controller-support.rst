@@ -25,7 +25,16 @@ Alternatively the TwigBundle configuration can be used to enable the ExceptionCo
 
     # app/config/config.yml
     twig:
-        exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
+        exception_controller: 'fos_rest.exception.twig_controller:showAction'
+
+.. note::
+
+    FOSRestBundle defines to services for exception rendering, by default it
+    configures ``fos_rest.exception.controller`` which only supports rendering
+    via a serializer. In case no explicit controller is configured by the user
+    and TwigBundle is detected it will automatically configure
+    ``fos_rest.exception.twig_controller`` which additionally also supports
+    rendering via Twig.
 
 When enabling the RestBundle view-layer-aware ExceptionController it automatically
 disables the TwigBundle exception listener and subsequent configuration.

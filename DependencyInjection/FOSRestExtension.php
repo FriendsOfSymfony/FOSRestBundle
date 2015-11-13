@@ -345,15 +345,20 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
             if ($config['exception']['exception_controller']) {
                 $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $config['exception']['exception_controller']);
+            } else {
+                $bundles = $container->getParameter('kernel.bundles');
+                if (isset($bundles['TwigBundle'])) {
+                    $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
+                }
             }
 
             if ($config['view']['mime_types']['enabled']) {
                 $container->getDefinition('fos_rest.exception_format_negotiator')->replaceArgument(1, $config['view']['mime_types']['formats']);
             }
 
-            $exceptionController = $container->getDefinition('fos_rest.controller.exception');
-            $exceptionController->replaceArgument(4, $config['exception']['codes']);
-            $exceptionController->replaceArgument(5, $config['exception']['messages']);
+            $exceptionController = $container->getDefinition('fos_rest.exception.controller');
+            $exceptionController->replaceArgument(3, $config['exception']['codes']);
+            $exceptionController->replaceArgument(4, $config['exception']['messages']);
         }
 
         foreach ($config['exception']['codes'] as $exception => $code) {
