@@ -26,6 +26,8 @@ abstract class AbstractScalarParam extends AbstractParam
     /** @var bool */
     public $array = false;
     /** @var bool */
+    public $withKeys = false;
+    /** @var bool */
     public $allowBlank = true;
 
     /** {@inheritdoc} */
@@ -33,7 +35,12 @@ abstract class AbstractScalarParam extends AbstractParam
     {
         $constraints = parent::getConstraints();
 
-        $constraints[] = new Constraints\Type(array('type' => 'scalar'));
+        if ($this->array && $this->withKeys) {
+            $constraints[] = new Constraints\Type(array('type' => 'array'));
+        } else {
+            $constraints[] = new Constraints\Type(array('type' => 'scalar'));
+        }
+
         $requirements = $this->resolve($this->requirements);
 
         if ($this->requirements instanceof Constraint) {
@@ -59,7 +66,7 @@ abstract class AbstractScalarParam extends AbstractParam
         }
 
         // If an array is expected apply the constraints to each element.
-        if ($this->array) {
+        if ($this->array && !$this->withKeys) {
             $constraints = array(
                 new Constraints\All($constraints),
             );
