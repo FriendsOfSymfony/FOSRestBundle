@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Request;
 
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Util\ClassUtils;
 
 /**
  * ParamFetcher test.
@@ -422,7 +423,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->paramReader
             ->expects($this->any())
             ->method('read')
-            ->with(new \ReflectionClass($this->controller[0]), $this->controller[1])
+            ->with(new \ReflectionClass(ClassUtils::getClass($this->controller[0])), $this->controller[1])
             ->willReturn($newParams);
     }
 

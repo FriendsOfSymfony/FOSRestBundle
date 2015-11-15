@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Request;
 
+use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -207,8 +208,11 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
             );
         }
 
+        // the controller could be a proxy, e.g. when using the JMSSecuriyExtraBundle or JMSDiExtraBundle
+        $className = ClassUtils::getClass($this->controller[0]);
+
         $params = $this->paramReader->read(
-            new \ReflectionClass($this->controller[0]),
+            new \ReflectionClass($className),
             $this->controller[1]
         );
         $this->resolveParameters($params);
