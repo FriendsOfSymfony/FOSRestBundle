@@ -19,6 +19,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
  * https://github.com/FriendsOfSymfony/FOSRestBundle/issues/622.
  *
  * @author Tyler Stroud <tyler@tylerstroud.com>
+ *
+ * @deprecated since 1.7, to be removed in 2.0.
  */
 class RequestBodyParamConverter20 extends AbstractRequestBodyParamConverter
 {

@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\Serializer\SerializationContext;
@@ -68,8 +68,11 @@ class View
      *
      * @return View
      */
-    public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
+    public static function createRedirect($url, $statusCode = null, array $headers = array())
     {
+        if ($statusCode === null) {
+            $statusCode = LegacyCodesHelper::get('HTTP_FOUND');
+        }
         $view = static::create(null, $statusCode, $headers);
         $view->setLocation($url);
 
@@ -90,9 +93,12 @@ class View
     public static function createRouteRedirect(
         $route,
         array $parameters = array(),
-        $statusCode = Codes::HTTP_FOUND,
+        $statusCode = null,
         array $headers = array()
     ) {
+        if ($statusCode === null) {
+            $statusCode = LegacyCodesHelper::get('HTTP_FOUND');
+        }
         $view = static::create(null, $statusCode, $headers);
         $view->setRoute($route);
         $view->setRouteParameters($parameters);

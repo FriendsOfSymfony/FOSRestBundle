@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 
 /**
  * Url based redirect implementation.
@@ -32,8 +32,12 @@ class RedirectView
      *
      * @deprecated To be removed in FOSRestBundle 2.0.0. Use View::createRedirect instead.
      */
-    public static function create($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
+    public static function create($url, $statusCode = null, array $headers = array())
     {
+        if ($statusCode === null) {
+            $statusCode = LegacyCodesHelper::get('HTTP_FOUND');
+        }
+
         return View::createRedirect($url, $statusCode, $headers);
     }
 }

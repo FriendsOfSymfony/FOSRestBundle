@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
+use FOS\RestBundle\Context\Context;
+use JMS\Serializer\DeserializationContext;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -62,21 +64,18 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
         return $request;
     }
 
-    protected function createDeserializationContext($groups = null, $version = null)
+    protected function createDeserializationContext(array $groups = null, $version = null)
     {
-        $context = $this->getMock('JMS\Serializer\DeserializationContext');
-        if (null !== $groups) {
-            $context->expects($this->once())
-                ->method('setGroups')
-                ->with($groups);
+        $context = new Context();
+        $jmsContext = new DeserializationContext();
+        if ($groups !== null) {
+            $jmsContext->setGroups($groups);
         }
-        if (null !== $version) {
-            $context->expects($this->once())
-                ->method('setVersion')
-                ->with($version);
+        if ($version !== null) {
+            $jmsContext->setVersion($version);
         }
 
-        return $context;
+        return array($context, $jmsContext);
     }
 }
 

@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -108,12 +108,18 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      */
     public function __construct(
         array $formats = null,
-        $failedValidationCode = Codes::HTTP_BAD_REQUEST,
-        $emptyContentCode = Codes::HTTP_NO_CONTENT,
+        $failedValidationCode = null,
+        $emptyContentCode = null,
         $serializeNull = false,
         array $forceRedirects = null,
         $defaultEngine = 'twig'
     ) {
+        if ($failedValidationCode === null) {
+            $failedValidationCode = LegacyCodesHelper::get('HTTP_BAD_REQUEST');
+        }
+        if ($emptyContentCode === null) {
+            $emptyContentCode = LegacyCodesHelper::get('HTTP_NO_CONTENT');
+        }
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
         $this->emptyContentCode = $emptyContentCode;
@@ -205,7 +211,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
             return $code;
         }
 
-        return null !== $content ? Codes::HTTP_OK : $this->emptyContentCode;
+        return null !== $content ? LegacyCodesHelper::get('HTTP_OK') : $this->emptyContentCode;
     }
 
     /**
@@ -323,7 +329,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        if (($view->getStatusCode() == Codes::HTTP_CREATED || $view->getStatusCode() == Codes::HTTP_ACCEPTED) && $view->getData() != null) {
+        if (($view->getStatusCode() == LegacyCodesHelper::get('HTTP_CREATED') || $view->getStatusCode() == LegacyCodesHelper::get('HTTP_ACCEPTED')) && $view->getData() != null) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();

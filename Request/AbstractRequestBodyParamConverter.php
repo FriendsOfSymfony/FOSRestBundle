@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Request;
 
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Context\LegacyJMSContextAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
@@ -27,6 +29,8 @@ use JMS\Serializer\SerializerInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
+ *
+ * @deprecated since 1.7, to be removed in 2.0.
  */
 abstract class AbstractRequestBodyParamConverter implements ParamConverterInterface
 {
@@ -151,21 +155,23 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     }
 
     /**
-     * @return DeserializationContext
+     * @return DeserializationContext|Context
      */
     protected function getDeserializationContext()
     {
-        return DeserializationContext::create();
+        return new Context();
     }
 
     /**
-     * @param DeserializationContext $context
-     * @param array                  $options
+     * @param DeserializationContext|Context $context
+     * @param array                          $options
      *
      * @return DeserializationContext
      */
-    protected function configureDeserializationContext(DeserializationContext $context, array $options)
+    protected function configureDeserializationContext($context, array $options)
     {
+        $context = LegacyJMSContextAdapter::convertDeserializationContext($context);
+
         if (isset($options['groups'])) {
             $context->setGroups($options['groups']);
         }

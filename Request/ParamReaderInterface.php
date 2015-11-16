@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Request;
 
-use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 
 /**
  * interface for loading query parameters for a method.
@@ -27,7 +27,7 @@ interface ParamReaderInterface
      * @param \ReflectionClass $reflection Reflection class
      * @param string           $method     Method name
      *
-     * @return Param[] Param annotation objects of the method. Indexed by parameter name.
+     * @return ParamInterface[] Param annotation objects of the method. Indexed by parameter name.
      */
     public function read(\ReflectionClass $reflection, $method);
 
@@ -36,14 +36,14 @@ interface ParamReaderInterface
      *
      * @param \ReflectionMethod $method Reflection method
      *
-     * @return Param[] Param annotation objects of the method. Indexed by parameter name.
+     * @return ParamInterface[] Param annotation objects of the method. Indexed by parameter name.
      */
     public function getParamsFromMethod(\ReflectionMethod $method);
 
     /**
      * @param \ReflectionClass $class
      *
-     * @return Param[] Param annotation objects of the class. Indexed by parameter name.
+     * @return ParamInterface[] Param annotation objects of the class. Indexed by parameter name.
      */
     public function getParamsFromClass(\ReflectionClass $class);
 }

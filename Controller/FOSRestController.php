@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 
 /**
  * Base Controller for Controllers using the View functionality of FOSRestBundle.
@@ -50,8 +50,12 @@ abstract class FOSRestController extends Controller
      *
      * @return View
      */
-    protected function redirectView($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
+    protected function redirectView($url, $statusCode = null, array $headers = array())
     {
+        if ($statusCode === null) {
+            $statusCode = LegacyCodesHelper::get('HTTP_FOUND');
+        }
+
         return View::createRedirect($url, $statusCode, $headers);
     }
 
@@ -67,8 +71,12 @@ abstract class FOSRestController extends Controller
      *
      * @return View
      */
-    protected function routeRedirectView($route, array $parameters = array(), $statusCode = Codes::HTTP_CREATED, array $headers = array())
+    protected function routeRedirectView($route, array $parameters = array(), $statusCode = null, array $headers = array())
     {
+        if ($statusCode === null) {
+            $statusCode = LegacyCodesHelper::get('HTTP_CREATED');
+        }
+
         return View::createRouteRedirect($route, $parameters, $statusCode, $headers);
     }
 

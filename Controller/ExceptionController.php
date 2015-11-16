@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Util\ExceptionWrapper;
@@ -80,7 +80,7 @@ class ExceptionController extends ContainerAware
             $message = 'No matching accepted Response format could be determined, while handling: ';
             $message .= $this->getExceptionMessage($exception);
 
-            return new Response($message, Codes::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
+            return new Response($message, LegacyCodesHelper::get('HTTP_NOT_ACCEPTABLE'), $exception->getHeaders());
         }
 
         $currentContent = $this->getAndCleanOutputBuffering();
@@ -105,7 +105,7 @@ class ExceptionController extends ContainerAware
         } catch (\Exception $e) {
             $message = 'An Exception was thrown while handling: ';
             $message .= $this->getExceptionMessage($exception);
-            $response = new Response($message, Codes::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
+            $response = new Response($message, LegacyCodesHelper::get('HTTP_INTERNAL_SERVER_ERROR'), $exception->getHeaders());
         }
 
         return $response;

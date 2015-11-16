@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 
 /**
  * View test.
@@ -58,10 +58,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         $routeName = 'users';
 
-        $view = View::createRouteRedirect($routeName, array(), Codes::HTTP_CREATED);
+        $view = View::createRouteRedirect($routeName, array(), LegacyCodesHelper::get('HTTP_CREATED'));
         $this->assertAttributeEquals($routeName, 'route', $view);
         $this->assertAttributeEquals(null, 'location', $view);
-        $this->assertEquals(Codes::HTTP_CREATED, $view->getResponse()->getStatusCode());
+        $this->assertEquals(LegacyCodesHelper::get('HTTP_CREATED'), $view->getResponse()->getStatusCode());
 
         $view->setLocation($routeName);
         $this->assertAttributeEquals($routeName, 'location', $view);

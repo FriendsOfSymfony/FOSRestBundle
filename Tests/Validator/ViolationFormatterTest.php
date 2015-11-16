@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Tests\Util;
+namespace FOS\RestBundle\Tests\Validator;
 
-use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatter;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -43,7 +43,7 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
 
         $formatter = new ViolationFormatter();
         $this->assertEquals(
-            "Query parameter foo value 'bar' violated a constraint (expected message)",
+            "Parameter foo value 'bar' violated a constraint (expected message)",
             $formatter->format($param, $violation)
         );
     }
@@ -60,8 +60,8 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
 
         $formatter = new ViolationFormatter();
         $this->assertEquals(
-            "Request parameter foo value 'bar' violated a constraint (expected message 1)"
-            ."\nRequest parameter foo value 'bar' violated a constraint (expected message 2)",
+            "Parameter foo value 'bar' violated a constraint (expected message 1)"
+            ."\nParameter foo value 'bar' violated a constraint (expected message 2)",
             $formatter->formatList($param, $errors)
         );
     }

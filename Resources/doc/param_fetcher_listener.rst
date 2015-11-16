@@ -63,7 +63,7 @@ configured for the matched controller so that the user does not need to do this 
          *
          * If you want to work with array: ie. ?ids[]=1&ids[]=2&ids[]=1337, use:
          *
-         * @QueryParam(array=true, name="ids", requirements="\d+", default="1", description="List of ids")
+         * @QueryParam(map=true, name="ids", requirements="\d+", default="1", description="List of ids")
          * (works with QueryParam and RequestParam)
          *
          * It will validate each entries of ids with your requirement, by this way, if an entry is invalid,
@@ -75,7 +75,7 @@ configured for the matched controller so that the user does not need to do this 
          * Array must have a single depth or it will return default value. It's difficult to validate with
          * preg_match each deeps of array, if you want to deal with that, you can use a constraint:
          *
-         * @QueryParam(array=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
+         * @QueryParam(map=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
          *
          * In this example, the ParamFetcher will validate each value of the array with the constraint, returning the
          * default value if you are in safe mode or throw a BadRequestHttpResponse containing the constraint violation

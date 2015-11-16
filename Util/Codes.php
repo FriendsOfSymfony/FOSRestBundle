@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Util;
 
+@trigger_error(__NAMESPACE__.'\Codes is deprecated since version 1.7 and will be removed in 2.0. Use the Symfony\Component\HttpFoundation\Response constants instead.', E_USER_DEPRECATED);
+
 /**
  * List of HTTP response status codes.
  *
@@ -22,6 +24,8 @@ namespace FOS\RestBundle\Util;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Markus Lanthaler <markus.lanthaler@gmx.net>
+ *
+ * @deprecated since 1.7, to be removed in 2.0. Use {@link \Symfony\Component\HttpFoundation\Response} instead.
  */
 final class Codes
 {

@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -83,7 +83,7 @@ class ViewResponseListener extends TemplateListener
             if ($configuration->getTemplateVar()) {
                 $view->setTemplateVar($configuration->getTemplateVar());
             }
-            if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Codes::HTTP_OK === $view->getStatusCode())) {
+            if ($configuration->getStatusCode() && (null === $view->getStatusCode() || LegacyCodesHelper::get('HTTP_OK') === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
             if ($configuration->getSerializerGroups() && !$customViewDefined) {

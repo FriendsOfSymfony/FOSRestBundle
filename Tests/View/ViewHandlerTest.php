@@ -19,7 +19,7 @@ use FOS\RestBundle\View\ViewHandler;
 use JMS\Serializer\Handler\FormErrorHandler;
 use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\SerializerBuilder;
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -103,12 +103,12 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function getStatusCodeDataProvider()
     {
         return array(
-            'no data' => array(Codes::HTTP_OK, false, false, false, 0, 0, Codes::HTTP_OK),
-            'no data with 204' => array(Codes::HTTP_NO_CONTENT, false, false, false, 0, 0, Codes::HTTP_NO_CONTENT),
-            'form key form not bound' => array(Codes::HTTP_OK, true, false, true, 1, 0, Codes::HTTP_OK),
-            'form key form is bound and invalid' => array(403, true, true, false, 1, 1, Codes::HTTP_OK),
-            'form key form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK),
-            'form key null form bound and valid' => array(Codes::HTTP_OK, true, true, true, 1, 1, Codes::HTTP_OK),
+            'no data' => array(LegacyCodesHelper::get('HTTP_OK'), false, false, false, 0, 0, LegacyCodesHelper::get('HTTP_OK')),
+            'no data with 204' => array(LegacyCodesHelper::get('HTTP_NO_CONTENT'), false, false, false, 0, 0, LegacyCodesHelper::get('HTTP_NO_CONTENT')),
+            'form key form not bound' => array(LegacyCodesHelper::get('HTTP_OK'), true, false, true, 1, 0, LegacyCodesHelper::get('HTTP_OK')),
+            'form key form is bound and invalid' => array(403, true, true, false, 1, 1, LegacyCodesHelper::get('HTTP_OK')),
+            'form key form bound and valid' => array(LegacyCodesHelper::get('HTTP_OK'), true, true, true, 1, 1, LegacyCodesHelper::get('HTTP_OK')),
+            'form key null form bound and valid' => array(LegacyCodesHelper::get('HTTP_OK'), true, true, true, 1, 1, LegacyCodesHelper::get('HTTP_OK')),
         );
     }
 
@@ -117,7 +117,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $noContentCode)
     {
-        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), Codes::HTTP_BAD_REQUEST, $noContentCode, false, $forceRedirects);
+        $viewHandler = new ViewHandler(array('html' => true, 'json' => false, 'xml' => false), LegacyCodesHelper::get('HTTP_BAD_REQUEST'), $noContentCode, false, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -129,11 +129,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseWithLocationDataProvider()
     {
         return array(
-            'empty force redirects' => array(200, 'xml', array('json' => 403), Codes::HTTP_OK),
-            'empty force redirects with 204' => array(204, 'xml', array('json' => 403), Codes::HTTP_NO_CONTENT),
-            'force redirects response is redirect' => array(200, 'json', array(), Codes::HTTP_OK),
-            'force redirects response not redirect' => array(403, 'json', array('json' => 403), Codes::HTTP_OK),
-            'html and redirect' => array(301, 'html', array('html' => 301), Codes::HTTP_OK),
+            'empty force redirects' => array(200, 'xml', array('json' => 403), LegacyCodesHelper::get('HTTP_OK')),
+            'empty force redirects with 204' => array(204, 'xml', array('json' => 403), LegacyCodesHelper::get('HTTP_NO_CONTENT')),
+            'force redirects response is redirect' => array(200, 'json', array(), LegacyCodesHelper::get('HTTP_OK')),
+            'force redirects response not redirect' => array(403, 'json', array('json' => 403), LegacyCodesHelper::get('HTTP_OK')),
+            'html and redirect' => array(301, 'html', array('html' => 301), LegacyCodesHelper::get('HTTP_OK')),
         );
     }
 
@@ -147,7 +147,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         $view = new View();
-        $view->setStatusCode(Codes::HTTP_CREATED);
+        $view->setStatusCode(LegacyCodesHelper::get('HTTP_CREATED'));
         $view->setLocation('foo');
         $view->setData($testValue);
         $returnedResponse = $viewHandler->createResponse($view, new Request(), 'json');
@@ -187,7 +187,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setContainer($container);
 
         $view = new View();
-        $view->setStatusCode(Codes::HTTP_CREATED);
+        $view->setStatusCode(LegacyCodesHelper::get('HTTP_CREATED'));
         $view->setRoute('foo');
         $view->setRouteParameters(array('id' => 2));
         $returnedResponse = $viewHandler->createResponse($view, new Request(), 'json');
@@ -212,7 +212,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $container->set('fos_rest.exception_handler', new ExceptionWrapperHandler());
 
         //test
-        $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = Codes::HTTP_I_AM_A_TEAPOT);
+        $viewHandler = new ViewHandler(null, $expectedFailedValidationCode = LegacyCodesHelper::get('HTTP_I_AM_A_TEAPOT'));
         $viewHandler->setContainer($container);
 
         $form = $this->getMock('Symfony\\Component\\Form\\Form', array('createView', 'getData', 'isValid', 'isSubmitted'), array(), '', false);
@@ -425,7 +425,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function createResponseDataProvider()
     {
         return array(
-            'no handler' => array(Codes::HTTP_UNSUPPORTED_MEDIA_TYPE, array()),
+            'no handler' => array(LegacyCodesHelper::get('HTTP_UNSUPPORTED_MEDIA_TYPE'), array()),
             'custom handler' => array(200, array()),
             'transform called' => array(200, array('json' => false)),
         );
