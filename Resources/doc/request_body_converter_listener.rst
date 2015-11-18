@@ -91,5 +91,23 @@ The validation errors will be set on the ``validationErrors`` controller argumen
         // ...
     }
 
+You can configure the validation groups used by the validator
+via the ``validator`` option:
+
+.. code-block:: php
+
+    /**
+     * @ParamConverter("post", converter="fos_rest.request_body", options={"validator"={"groups"={"foo", "bar"}}})
+     */
+    public function putPostAction(Post $post, ConstraintViolationListInterface $validationErrors)
+    {
+        if (count($validationErrors) > 0) {
+            // Handle validation errors
+        }
+
+        // ...
+    }
+
+
 .. _`ParamConverters`: http://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 .. _`SensioFrameworkExtraBundle`: http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
