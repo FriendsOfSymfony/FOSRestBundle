@@ -27,7 +27,7 @@ class ParamsAnnotatedController
     /**
      * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
      * @RequestParam(name="byauthor", requirements="[a-z]+", description="by author", incompatibles={"search"}, strict=true)
-     * @QueryParam(name="filters", array=true, requirements=@NotNull)
+     * @QueryParam(name="filters", map=true, requirements=@NotNull)
      * @FileParam(name="avatar", requirements={"mimeTypes"="application/json"}, image=true)
      * @FileParam(name="foo", requirements=@NotNull, strict=false)
      *

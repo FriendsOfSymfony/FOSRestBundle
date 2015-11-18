@@ -33,7 +33,7 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
     public function testDefaultValues()
     {
         $this->assertEquals(null, $this->param->requirements);
-        $this->assertFalse($this->param->array);
+        $this->assertFalse($this->param->map);
         $this->assertTrue($this->param->allowBlank);
     }
 
@@ -41,7 +41,6 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(array(
             new Constraints\NotNull(),
-            new Constraints\Type(array('type' => 'scalar')),
         ), $this->param->getConstraints());
     }
 
@@ -50,7 +49,6 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
         $this->param->requirements = $requirement = $this->getMock('Symfony\Component\Validator\Constraint');
         $this->assertEquals(array(
             new Constraints\NotNull(),
-            new Constraints\Type(array('type' => 'scalar')),
             $requirement,
         ), $this->param->getConstraints());
     }
@@ -69,7 +67,6 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
         $this->param->requirements = 'foo %bar% %%';
         $this->assertEquals(array(
             new Constraints\NotNull(),
-            new Constraints\Type(array('type' => 'scalar')),
             new Constraints\Regex(array(
                 'pattern' => '#^(?:foo foobar %)$#xsu',
                 'message' => "Parameter 'bar' value, does not match requirements 'foo foobar %'",
@@ -85,7 +82,6 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(array(
             new Constraints\NotNull(),
-            new Constraints\Type(array('type' => 'scalar')),
             new Constraints\Regex(array(
                 'pattern' => '#^(?:foo)$#xsu',
                 'message' => 'bar',
@@ -98,17 +94,15 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
         $this->param->allowBlank = false;
         $this->assertEquals(array(
             new Constraints\NotNull(),
-            new Constraints\Type(array('type' => 'scalar')),
             new Constraints\NotBlank(),
         ), $this->param->getConstraints());
     }
 
     public function testConstraintsTransformWhenParamIsAnArray()
     {
-        $this->param->array = true;
+        $this->param->map = true;
         $this->assertEquals(array(new Constraints\All(array(
             new Constraints\NotNull(),
-            new Constraints\Type(array('type' => 'scalar')),
         ))), $this->param->getConstraints());
     }
 }

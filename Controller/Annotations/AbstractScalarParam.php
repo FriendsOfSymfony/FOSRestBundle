@@ -24,7 +24,7 @@ abstract class AbstractScalarParam extends AbstractParam
     /** @var mixed */
     public $requirements = null;
     /** @var bool */
-    public $array = false;
+    public $map = false;
     /** @var bool */
     public $allowBlank = true;
 
@@ -32,8 +32,6 @@ abstract class AbstractScalarParam extends AbstractParam
     public function getConstraints()
     {
         $constraints = parent::getConstraints();
-
-        $constraints[] = new Constraints\Type(array('type' => 'scalar'));
         $requirements = $this->resolve($this->requirements);
 
         if ($this->requirements instanceof Constraint) {
@@ -58,8 +56,8 @@ abstract class AbstractScalarParam extends AbstractParam
             $constraints[] = new Constraints\NotBlank();
         }
 
-        // If an array is expected apply the constraints to each element.
-        if ($this->array) {
+        // If the user wants to map the value
+        if ($this->map) {
             $constraints = array(
                 new Constraints\All($constraints),
             );
