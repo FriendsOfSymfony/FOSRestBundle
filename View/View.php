@@ -42,7 +42,7 @@ class View
     /**
      * @var array
      */
-    private $simpleSerializationContext = [];
+    private $simpleSerializationContext = array();
 
     /**
      * @var Response
