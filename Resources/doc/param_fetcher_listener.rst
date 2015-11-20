@@ -82,11 +82,11 @@ configured for the matched controller so that the user does not need to do this 
          * See http://api.symfony.com/2.7/Symfony/Component/HttpFoundation/File/UploadedFile.html
          *
          * @FileParam(name="myJsonFile", requirements={"mimeTypes"="application/json", "maxSize"="2k"}, strict=true)
-         * The ParamFetch will throw an error if the file passed is not a json file or is bigger than 2,000 bytes.
+         * The ParamFetcher will throw an error if the file passed is not a json file or is bigger than 2,000 bytes.
          * See all file possible requirements: http://symfony.com/doc/current/reference/constraints/File.html
          *
          * @FileParam(name="avatar", requirements={"mimeTypes"="application/json", "minWidth"="200"}, image=true)
-         * The ParamFetch will throw an error if the file passed is not an image and is not larger than 2O0px.
+         * The ParamFetcher will throw an error if the file passed is not an image and is not larger than 2O0px.
          * See all image possible requirements: http://symfony.com/doc/current/reference/constraints/Image.html
          *
          * @FileParam(name="identityCard", image=true, default="noPicture")
