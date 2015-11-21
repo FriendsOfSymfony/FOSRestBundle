@@ -13,6 +13,9 @@ namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated since 1.7, to be removed in 2.0.
+ */
 interface FormatNegotiatorInterface
 {
     /**

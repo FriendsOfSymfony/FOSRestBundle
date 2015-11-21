@@ -11,7 +11,10 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\LegacyJMSContextAdapter;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\Serializer\SerializationContext;
@@ -35,9 +38,9 @@ class View
     private $routeParameters;
 
     /**
-     * @var SerializationContext
+     * @var SerializationContext|ContextInterface
      */
-    private $serializationContext;
+    private $context;
 
     /**
      * @var Response
@@ -68,8 +71,11 @@ class View
      *
      * @return View
      */
-    public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
+    public static function createRedirect($url, $statusCode = null, array $headers = array())
     {
+        if ($statusCode === null) {
+            $statusCode = LegacyCodesHelper::get('HTTP_FOUND');
+        }
         $view = static::create(null, $statusCode, $headers);
         $view->setLocation($url);
 
@@ -90,9 +96,12 @@ class View
     public static function createRouteRedirect(
         $route,
         array $parameters = array(),
-        $statusCode = Codes::HTTP_FOUND,
+        $statusCode = null,
         array $headers = array()
     ) {
+        if ($statusCode === null) {
+            $statusCode = LegacyCodesHelper::get('HTTP_FOUND');
+        }
         $view = static::create(null, $statusCode, $headers);
         $view->setRoute($route);
         $view->setRouteParameters($parameters);
@@ -192,13 +201,30 @@ class View
     /**
      * Sets the serialization context.
      *
-     * @param SerializationContext $serializationContext
+     * @param ContextInterface $context
      *
      * @return View
      */
-    public function setSerializationContext(SerializationContext $serializationContext)
+    public function setContext(ContextInterface $context)
     {
-        $this->serializationContext = $serializationContext;
+        $this->context = $context;
+
+        return $this;
+    }
+
+    /**
+     * Sets the serialization context.
+     *
+     * @param SerializationContext $context
+     *
+     * @return View
+     *
+     * @deprecated since 1.7, to be removed in 2.0. Use setContext() instead.
+     */
+    public function setSerializationContext(SerializationContext $context)
+    {
+        @trigger_error(sprintf('%s::setSerializationContext() is deprecated since version 1.7 and will be removed in 2.0. Use setContext() instead.'), E_USER_DEPRECATED);
+        $this->context = $context;
 
         return $this;
     }
@@ -449,14 +475,28 @@ class View
     /**
      * Gets the serialization context.
      *
+     * @return ContextInterface|SerializationContext
+     */
+    public function getContext()
+    {
+        if (null === $this->context) {
+            $this->context = new Context();
+        }
+
+        return $this->context;
+    }
+
+    /**
+     * Gets the serialization context.
+     *
      * @return SerializationContext
+     *
+     * @deprecated since 1.7, to be removed in 2.0. Use View::getContext() instead.
      */
     public function getSerializationContext()
     {
-        if (null === $this->serializationContext) {
-            $this->serializationContext = new SerializationContext();
-        }
+        @trigger_error(sprintf('%s::getSerializationContext() is deprecated since version 1.7 and will be removed in 2.0. Use getContext() instead.', get_class($this)), E_USER_DEPRECATED);
 
-        return $this->serializationContext;
+        return LegacyJMSContextAdapter::convertSerializationContext($this->getContext());
     }
 }

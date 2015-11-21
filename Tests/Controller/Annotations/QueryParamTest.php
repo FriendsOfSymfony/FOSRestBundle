@@ -11,38 +11,42 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
-use FOS\RestBundle\Controller\Annotations\QueryParam;
-
 /**
- * RequestParamTest.
+ * QueryParamTest.
  *
  * @author Eduardo Oliveira <entering@gmail.com>
+ * @author Ener-Getick <egetick@gmail.com>
  */
 class QueryParamTest extends \PHPUnit_Framework_TestCase
 {
-    public function testDefaultIsNull()
+    public function setUp()
     {
-        $queryParam = new QueryParam();
-        $this->assertNull($queryParam->default, 'Expected QueryParam default property to be null');
+        $this->param = $this->getMock('FOS\RestBundle\Controller\Annotations\QueryParam', array(
+            'getKey',
+        ));
     }
 
-    public function testStrictIsTrue()
+    public function testInterface()
     {
-        $queryParam = new QueryParam();
-        $this->assertFalse($queryParam->strict, 'Expected QueryParam strict property to be false');
+        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\AbstractScalarParam', $this->param);
     }
 
-    public function testIncompatiblesIsEmptyArray()
+    public function testValueGetter()
     {
-        $queryParam = new QueryParam();
-        $this->assertInternalType(
-            'array',
-            $queryParam->incompatibles,
-            'Expected QueryParam incompatibles property to be an array'
-        );
-        $this->assertEmpty(
-            $queryParam->incompatibles,
-            'Expected QueryParam incompatibles property to be empty'
-        );
+        $this->param
+            ->expects($this->once())
+            ->method('getKey')
+            ->willReturn('foo');
+
+        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $parameterBag = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+        $parameterBag
+            ->expects($this->once())
+            ->method('get')
+            ->with('foo', 'bar')
+            ->willReturn('foobar');
+        $request->query = $parameterBag;
+
+        $this->assertEquals('foobar', $this->param->getValue($request, 'bar'));
     }
 }

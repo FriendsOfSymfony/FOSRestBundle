@@ -16,9 +16,11 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
-use JMS\Serializer\SerializationContext;
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\GroupableContextInterface;
+use FOS\RestBundle\Context\MaxDepthContextInterface;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -83,18 +85,32 @@ class ViewResponseListener extends TemplateListener
             if ($configuration->getTemplateVar()) {
                 $view->setTemplateVar($configuration->getTemplateVar());
             }
-            if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Codes::HTTP_OK === $view->getStatusCode())) {
+            if ($configuration->getStatusCode() && (null === $view->getStatusCode() || LegacyCodesHelper::get('HTTP_OK') === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
             if ($configuration->getSerializerGroups() && !$customViewDefined) {
-                $context = $view->getSerializationContext() ?: new SerializationContext();
-                $context->setGroups($configuration->getSerializerGroups());
-                $view->setSerializationContext($context);
+                $context = $view->getContext();
+                if ($context instanceof ContextInterface) {
+                    if ($context instanceof GroupableContextInterface) {
+                        $context->addGroups($configuration->getSerializerGroups());
+                    }
+                    $view->setContext($context);
+                } else {
+                    $context->setGroups($configuration->getSerializerGroups());
+                    $view->setSerializationContext($context);
+                }
             }
             if ($configuration->getSerializerEnableMaxDepthChecks()) {
-                $context = $view->getSerializationContext() ?: new SerializationContext();
-                $context->enableMaxDepthChecks();
-                $view->setSerializationContext($context);
+                $context = $view->getContext();
+                if ($context instanceof ContextInterface) {
+                    if ($context instanceof MaxDepthContextInterface) {
+                        $context->setMaxDepth(0);
+                    }
+                    $view->setContext($context);
+                } else {
+                    $context->enableMaxDepthChecks();
+                    $view->setSerializationContext($context);
+                }
             }
             $populateDefaultVars = $configuration->isPopulateDefaultVars();
         } else {

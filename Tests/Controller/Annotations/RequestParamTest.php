@@ -11,24 +11,42 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
-use FOS\RestBundle\Controller\Annotations\RequestParam;
-
 /**
  * RequestParamTest.
  *
  * @author Eduardo Oliveira <entering@gmail.com>
+ * @author Ener-Getick <egetick@gmail.com>
  */
 class RequestParamTest extends \PHPUnit_Framework_TestCase
 {
-    public function testDefaultIsNull()
+    public function setUp()
     {
-        $requestParam = new RequestParam();
-        $this->assertNull($requestParam->default, 'Expected RequestParam default property to be null');
+        $this->param = $this->getMock('FOS\RestBundle\Controller\Annotations\RequestParam', array(
+            'getKey',
+        ));
     }
 
-    public function testStrictIsTrue()
+    public function testInterface()
     {
-        $requestParam = new RequestParam();
-        $this->assertTrue($requestParam->strict, 'Expected RequestParam strict property to be true');
+        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\AbstractScalarParam', $this->param);
+    }
+
+    public function testValueGetter()
+    {
+        $this->param
+            ->expects($this->once())
+            ->method('getKey')
+            ->willReturn('foo');
+
+        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
+        $parameterBag = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+        $parameterBag
+            ->expects($this->once())
+            ->method('get')
+            ->with('foo', 'bar')
+            ->willReturn('foobar');
+        $request->request = $parameterBag;
+
+        $this->assertEquals('foobar', $this->param->getValue($request, 'bar'));
     }
 }

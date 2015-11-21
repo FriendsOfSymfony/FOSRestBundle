@@ -11,9 +11,37 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Request\ParamReader;
+use Symfony\Component\Validator\Constraints\NotNull;
+
+/**
+ * @NamePrefix("foo")
+ * @QueryParam(name="bar")
+ */
+class FixtureClass
+{
+    /**
+     * @QueryParam(name="foo", array=true)
+     * @RequestParam(name="qux", map=true)
+     */
+    public function arrayOption()
+    {
+    }
+
+    /**
+     * @QueryParam(name="qux", default=false, description="null")
+     * @RequestParam("foobar", requirements=@NotNull, strict=false)
+     * @QueryParam(name="foo", nullable=true, description="foo")
+     * @QueryParam("baz", incompatibles={"qux"}, description="null")
+     */
+    public function annotations()
+    {
+    }
+}
 
 /**
  * QueryParamReader test.
@@ -29,51 +57,30 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $annotationReader = $this->getMock('Doctrine\Common\Annotations\Reader');
-
-        $methodAnnotations = array();
-        $foo = new QueryParam();
-        $foo->name = 'foo';
-        $foo->requirements = '\d+';
-        $foo->description = 'The foo';
-        $methodAnnotations[] = $foo;
-
         $bar = new QueryParam();
         $bar->name = 'bar';
-        $bar->requirements = '\d+';
-        $bar->description = 'The bar';
-        $methodAnnotations[] = $bar;
+        $this->classParams = [
+            'bar' => $bar,
+        ];
+        $this->paramReader = new ParamReader(new AnnotationReader());
+    }
 
-        $methodAnnotations[] = new NamePrefix(array());
+    public function testLegacyArrayOption()
+    {
+        $annotations = $this->paramReader->read(new \ReflectionClass(__NAMESPACE__.'\FixtureClass'), 'arrayOption');
 
-        $annotationReader
-            ->expects($this->any())
-            ->method('getMethodAnnotations')
-            ->will($this->returnValue($methodAnnotations));
+        $foo = new QueryParam();
+        $foo->name = 'foo';
+        $foo->map = true;
 
-        $classAnnotations = array();
+        $qux = new RequestParam();
+        $qux->name = 'qux';
+        $qux->array = true;
 
-        $baz = new QueryParam();
-        $baz->name = 'baz';
-        $baz->requirements = '\d+';
-        $baz->description = 'The baz';
-        $classAnnotations[] = $baz;
-
-        $mikz = new QueryParam();
-        $mikz->name = 'mikz';
-        $mikz->requirements = '\d+';
-        $mikz->description = 'The real mikz';
-        $classAnnotations[] = $mikz;
-
-        $not = new NamePrefix(array());
-        $classAnnotations[] = $not;
-
-        $annotationReader
-                ->expects($this->any())
-                ->method('getClassAnnotations')
-                ->will($this->returnValue($classAnnotations));
-
-        $this->paramReader = new ParamReader($annotationReader);
+        $this->assertEquals(array_merge(
+            $this->classParams,
+            array('foo' => $foo, 'qux' => $qux)
+        ), $annotations);
     }
 
     /**
@@ -81,14 +88,49 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadsOnlyParamAnnotations()
     {
-        $annotations = $this->paramReader->read(new \ReflectionClass(__CLASS__), 'setup');
+        $annotations = $this->paramReader->read(new \ReflectionClass(__NAMESPACE__.'\FixtureClass'), 'annotations');
 
-        $this->assertCount(4, $annotations);
+        $this->assertCount(5, $annotations);
 
         foreach ($annotations as $name => $annotation) {
-            $this->assertThat($annotation, $this->isInstanceOf('FOS\RestBundle\Controller\Annotations\Param'));
-            $this->assertEquals($annotation->name, $name);
+            $this->assertThat($annotation, $this->isInstanceOf('FOS\RestBundle\Controller\Annotations\ParamInterface'));
+            $this->assertEquals($annotation->getName(), $name);
         }
+    }
+
+    public function testParameterAnnotations()
+    {
+        $annotations = $this->paramReader->read(new \ReflectionClass(__NAMESPACE__.'\FixtureClass'), 'annotations');
+
+        $qux = new QueryParam();
+        $qux->name = 'qux';
+        $qux->default = false;
+        $qux->description = 'null';
+
+        $foobar = new RequestParam();
+        $foobar->name = 'foobar';
+        $foobar->requirements = new NotNull();
+        $foobar->strict = false;
+
+        $foo = new QueryParam();
+        $foo->name = 'foo';
+        $foo->nullable = true;
+        $foo->description = 'foo';
+
+        $baz = new QueryParam();
+        $baz->name = 'baz';
+        $baz->incompatibles = array('qux');
+        $baz->description = 'null';
+
+        $this->assertEquals(array_merge(
+            $this->classParams,
+            array(
+                'qux' => $qux,
+                'foobar' => $foobar,
+                'foo' => $foo,
+                'baz' => $baz,
+            )
+        ), $annotations);
     }
 
     /**

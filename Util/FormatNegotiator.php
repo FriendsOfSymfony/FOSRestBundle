@@ -13,9 +13,11 @@ namespace FOS\RestBundle\Util;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
-use Negotiation\FormatNegotiator as BaseFormatNegotiator;
 use Negotiation\AcceptHeader;
 
+/**
+ * @deprecated since 1.7, to be removed in 2.0. Use {@link \FOS\RestBundle\Negotiation\FormatNegotiator} instead.
+ */
 class FormatNegotiator implements MediaTypeNegotiatorInterface
 {
     private $formatNegotiator;
@@ -23,7 +25,10 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
 
     public function __construct()
     {
-        $this->formatNegotiator = new BaseFormatNegotiator();
+        if (get_class($this) === 'FOS\RestBundle\Util\FormatNegotiator') {
+            @trigger_error(__NAMESPACE__.'\FormatNegotiator is deprecated since version 1.7 and will be removed in 2.0. Use FOS\RestBundle\Negotiation\FormatNegotiator instead.', E_USER_DEPRECATED);
+        }
+        $this->formatNegotiator = new \Negotiation\FormatNegotiator();
     }
 
     /**

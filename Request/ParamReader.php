@@ -12,10 +12,10 @@
 namespace FOS\RestBundle\Request;
 
 use Doctrine\Common\Annotations\Reader;
-use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 
 /**
- * Class loading "@QueryParam" and "@RequestParam" annotations from methods.
+ * Class loading "@ParamInterface" annotations from methods.
  *
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
@@ -55,13 +55,13 @@ class ParamReader implements ParamReaderInterface
      *
      * @param array $annotations
      *
-     * @return Param[]
+     * @return ParamInterface[]
      */
     private function getParamsFromAnnotationArray(array $annotations)
     {
         $params = array();
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof Param) {
+            if ($annotation instanceof ParamInterface) {
                 $params[$annotation->name] = $annotation;
             }
         }

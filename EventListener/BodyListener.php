@@ -62,6 +62,7 @@ class BodyListener
      */
     public function setArrayNormalizer(ArrayNormalizerInterface $arrayNormalizer)
     {
+        @trigger_error(__CLASS__.'::setArrayNormalizer() is deprecated since 1.7 and will be removed in 2.0. Use the constructor instead.', E_USER_DEPRECATED);
         $this->arrayNormalizer = $arrayNormalizer;
     }
 

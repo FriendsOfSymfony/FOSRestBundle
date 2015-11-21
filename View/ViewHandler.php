@@ -11,6 +11,12 @@
 
 namespace FOS\RestBundle\View;
 
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\GroupableContextInterface;
+use FOS\RestBundle\Context\SerializeNullContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
+use FOS\RestBundle\Context\LegacyJMSContextAdapter;
+use FOS\RestBundle\Util\LegacyCodesHelper;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +26,6 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use FOS\RestBundle\Util\Codes;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -108,12 +113,18 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      */
     public function __construct(
         array $formats = null,
-        $failedValidationCode = Codes::HTTP_BAD_REQUEST,
-        $emptyContentCode = Codes::HTTP_NO_CONTENT,
+        $failedValidationCode = null,
+        $emptyContentCode = null,
         $serializeNull = false,
         array $forceRedirects = null,
         $defaultEngine = 'twig'
     ) {
+        if ($failedValidationCode === null) {
+            $failedValidationCode = LegacyCodesHelper::get('HTTP_BAD_REQUEST');
+        }
+        if ($emptyContentCode === null) {
+            $emptyContentCode = LegacyCodesHelper::get('HTTP_NO_CONTENT');
+        }
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
         $this->emptyContentCode = $emptyContentCode;
@@ -129,7 +140,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      */
     public function setExclusionStrategyGroups($groups)
     {
-        $this->exclusionStrategyGroups = $groups;
+        $this->exclusionStrategyGroups = (array) $groups;
     }
 
     /**
@@ -205,7 +216,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
             return $code;
         }
 
-        return null !== $content ? Codes::HTTP_OK : $this->emptyContentCode;
+        return null !== $content ? LegacyCodesHelper::get('HTTP_OK') : $this->emptyContentCode;
     }
 
     /**
@@ -248,25 +259,61 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
      *
      * @param View $view
      *
-     * @return SerializationContext
+     * @return ContextInterface|SerializationContext
      */
-    protected function getSerializationContext(View $view)
+    protected function getContext(View $view)
     {
-        $context = $view->getSerializationContext();
+        $context = $view->getContext();
 
-        if ($context->attributes->get('groups')->isEmpty() && $this->exclusionStrategyGroups) {
-            $context->setGroups($this->exclusionStrategyGroups);
-        }
+        if ($context instanceof ContextInterface) {
+            if ($context instanceof GroupableContextInterface) {
+                $groups = $context->getGroups();
+                if (empty($groups) && $this->exclusionStrategyGroups) {
+                    $context->addGroups($this->exclusionStrategyGroups);
+                }
+            }
 
-        if ($context->attributes->get('version')->isEmpty() && $this->exclusionStrategyVersion) {
-            $context->setVersion($this->exclusionStrategyVersion);
-        }
+            $version = $context->getVersion();
+            if (empty($version) && $this->exclusionStrategyVersion) {
+                $version = $context->getVersion();
+                if ($context instanceof VersionableContextInterface) {
+                    $context->setVersion($this->exclusionStrategyVersion);
+                }
+            }
 
-        if (null === $context->shouldSerializeNull() && null !== $this->serializeNullStrategy) {
-            $context->setSerializeNull($this->serializeNullStrategy);
+            if ($context instanceof SerializeNullContextInterface && null === $context->getSerializeNull() && null !== $this->serializeNullStrategy) {
+                $context->setSerializeNull($this->serializeNullStrategy);
+            }
+        } else {
+            if ($context->attributes->get('groups')->isEmpty() && $this->exclusionStrategyGroups) {
+                $context->setGroups($this->exclusionStrategyGroups);
+            }
+            if ($context->attributes->get('version')->isEmpty() && $this->exclusionStrategyVersion) {
+                $context->setVersion($this->exclusionStrategyVersion);
+            }
+            if (null === $context->shouldSerializeNull() && null !== $this->serializeNullStrategy) {
+                $context->setSerializeNull($this->serializeNullStrategy);
+            }
         }
 
         return $context;
+    }
+
+    /**
+     * Gets or creates a JMS\Serializer\SerializationContext and initializes it with
+     * the view exclusion strategies, groups & versions if a new context is created.
+     *
+     * @param View $view
+     *
+     * @return SerializationContext
+     *
+     * @deprecated since 1.7, to be removed in 2.0. Use ViewHandler::getContext() instead.
+     */
+    protected function getSerializationContext(View $view)
+    {
+        @trigger_error(sprintf('%s::getSerializationContext() is deprecated since version 1.7. Use ViewHandler::getContext() instead.', get_class($this)), E_USER_DEPRECATED);
+
+        return LegacyJMSContextAdapter::convertSerializationContext($this->getContext($view));
     }
 
     /**
@@ -323,7 +370,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        if (($view->getStatusCode() == Codes::HTTP_CREATED || $view->getStatusCode() == Codes::HTTP_ACCEPTED) && $view->getData() != null) {
+        if (($view->getStatusCode() == LegacyCodesHelper::get('HTTP_CREATED') || $view->getStatusCode() == LegacyCodesHelper::get('HTTP_ACCEPTED')) && $view->getData() != null) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();
@@ -445,7 +492,7 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
             $data = $this->getDataFromView($view);
             $serializer = $this->getSerializer($view);
             if ($serializer instanceof SerializerInterface) {
-                $context = $this->getSerializationContext($view);
+                $context = LegacyJMSContextAdapter::convertSerializationContext($this->getContext($view));
                 $content = $serializer->serialize($data, $format, $context);
             } else {
                 $content = $serializer->serialize($data, $format);

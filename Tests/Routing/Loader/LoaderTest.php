@@ -17,7 +17,7 @@ use FOS\RestBundle\Routing\Loader\RestRouteLoader;
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
 use FOS\RestBundle\Request\ParamReader;
-use FOS\RestBundle\Util\Inflector\DoctrineInflector;
+use FOS\RestBundle\Inflector\DoctrineInflector;
 
 /**
  * Base Loader testing class.
