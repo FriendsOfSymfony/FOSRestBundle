@@ -394,12 +394,12 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
 
         $viewHandler->setContainer($container);
-        $contextMethod = new \ReflectionMethod($viewHandler, 'getSerializationContext');
+        $contextMethod = new \ReflectionMethod($viewHandler, 'getContext');
         $contextMethod->setAccessible(true);
 
         $view = new View();
         $context = $contextMethod->invoke($viewHandler, $view);
-        $this->assertEquals($expected, $context->shouldSerializeNull());
+        $this->assertEquals($expected, $context->getSerializeNull());
     }
 
     public static function createSerializeNullDataValuesDataProvider()
@@ -568,14 +568,14 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->setExclusionStrategyVersion('1.1');
         $viewHandler->setSerializeNullStrategy(true);
 
-        $contextMethod = new \ReflectionMethod($viewHandler, 'getSerializationContext');
+        $contextMethod = new \ReflectionMethod($viewHandler, 'getContext');
         $contextMethod->setAccessible(true);
 
         $view = new View();
         $context = $contextMethod->invoke($viewHandler, $view);
-        $this->assertEquals(array('bar'), $context->attributes->get('groups')->getOrThrow(new \Exception('Serialization groups not set as expected')));
-        $this->assertEquals('1.1', $context->attributes->get('version')->getOrThrow(new \Exception('Serialization version not set as expected')));
-        $this->assertTrue($context->shouldSerializeNull());
+        $this->assertEquals(array('bar'), $context->getGroups());
+        $this->assertEquals('1.1', $context->getVersion());
+        $this->assertTrue($context->getSerializeNull());
     }
 
     /**
@@ -601,7 +601,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         );
 
         $view = new View($exceptionWrapper);
-        $view->getSerializationContext()->setGroups(array('Custom'));
+        $view->getContext()->addGroups(array('Custom'));
 
         $wrapperHandler = new ExceptionWrapperSerializeHandler();
         $translatorMock = $this->getMock(

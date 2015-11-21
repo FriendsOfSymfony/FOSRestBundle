@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Util;
 
-@trigger_error(__NAMESPACE__.'\FormatNegotiatorInterface is deprecated since version 1.7 and will be removed in 2.0.');
-
 use Symfony\Component\HttpFoundation\Request;
 
 /**

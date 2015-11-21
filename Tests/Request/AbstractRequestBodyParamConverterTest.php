@@ -68,11 +68,11 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
     {
         $context = new Context();
         $jmsContext = new DeserializationContext();
-        if ($groups !== null) {
-            $jmsContext->setGroups($groups);
-        }
         if ($version !== null) {
             $jmsContext->setVersion($version);
+        }
+        if ($groups !== null) {
+            $jmsContext->setGroups($groups);
         }
 
         return array($context, $jmsContext);
