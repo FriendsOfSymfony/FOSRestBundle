@@ -10,10 +10,6 @@ php:
 
 sudo: false
 
-env:
-    global:
-        - SYMFONY_DEPRECATIONS_HELPER: weak
-
 cache:
   directories:
     - $HOME/.composer/cache
@@ -27,7 +23,7 @@ matrix:
   fast_finish: true
   include:
     - php: 5.3
-      env: SYMFONY_VERSION=2.3.* COMPOSER_FLAGS="--prefer-lowest"
+      env: SYMFONY_VERSION=2.3.* COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.5
       env: SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.*'
     - php: 5.5
@@ -39,7 +35,7 @@ matrix:
     - php: 5.5
       env: SYMFONY_VERSION='2.7.*'
     - php: 5.5
-      env: SYMFONY_VERSION='2.8.*@dev symfony/security-acl:2.8.*@dev' SYMFONY_DEPRECATIONS_HELPER: strict
+      env: SYMFONY_VERSION='2.8.*@dev symfony/security-acl:2.8.*@dev'
   allow_failures:
     - php: nightly
 

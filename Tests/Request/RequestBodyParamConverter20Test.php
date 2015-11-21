@@ -38,7 +38,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
         $this->converter = $this->getMock(
             'FOS\RestBundle\Request\RequestBodyParamConverter20',
-            array('getDeserializationContext'),
+            array('getContext'),
             array($this->serializer)
         );
     }
@@ -77,7 +77,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
 
         list($context) = $this->createDeserializationContext();
         $this->converter->expects($this->once())
-            ->method('getDeserializationContext')
+            ->method('getContext')
             ->will($this->returnValue($context));
 
         $request = $this->createRequest('{"name": "Post 1", "body": "This is a blog post"}', 'application/json');
@@ -96,7 +96,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
 
         list($context) = $this->createDeserializationContext();
         $this->converter->expects($this->once())
-            ->method('getDeserializationContext')
+            ->method('getContext')
             ->will($this->returnValue($context));
 
         $request = $this->createRequest('', 'text/html');
@@ -115,7 +115,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
 
         list($context) = $this->createDeserializationContext();
         $this->converter->expects($this->once())
-            ->method('getDeserializationContext')
+            ->method('getContext')
             ->will($this->returnValue($context));
 
         $request = $this->createRequest();
@@ -133,19 +133,19 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
     {
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
         $options = array(
-            'deserializationContext' => array(
+            'context' => array(
                 'groups' => array('group1'),
                 'version' => '1.0',
             ),
         );
 
         list($context, $jmsContext) = $this->createDeserializationContext(
-            $options['deserializationContext']['groups'],
-            $options['deserializationContext']['version']
+            $options['context']['groups'],
+            $options['context']['version']
         );
 
         $this->converter->expects($this->once())
-            ->method('getDeserializationContext')
+            ->method('getContext')
             ->will($this->returnValue($context));
 
         $this->serializer->expects($this->once())
@@ -162,7 +162,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
     {
         $this->converter = $this->getMock(
             'FOS\RestBundle\Request\RequestBodyParamConverter20',
-            array('getDeserializationContext'),
+            array('getContext'),
             array($this->serializer, array('group1'), '1.0')
         );
 
@@ -171,7 +171,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post');
 
         $this->converter->expects($this->once())
-            ->method('getDeserializationContext')
+            ->method('getContext')
             ->will($this->returnValue($context));
 
         $this->serializer->expects($this->once())
@@ -188,14 +188,14 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
 
         $options = array(
-            'deserializationContext' => array(
+            'context' => array(
                 'json_decode_options' => 2, // JSON_BIGINT_AS_STRING
             ),
         );
 
         $this->serializer->expects($this->once())
             ->method('deserialize')
-            ->with($requestBody, 'FOS\RestBundle\Tests\Request\Post', 'json', $options['deserializationContext']);
+            ->with($requestBody, 'FOS\RestBundle\Tests\Request\Post', 'json', $options['context']);
 
         $request = $this->createRequest($requestBody, 'application/json');
         $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post', $options);

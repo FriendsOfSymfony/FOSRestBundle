@@ -11,9 +11,7 @@
 
 namespace FOS\RestBundle\Util\Inflector;
 
-use FOS\RestBundle\Inflector\DoctrineInflector as BaseDoctrineInflector;
-
-@trigger_error(__NAMESPACE__.'\DoctrineInflector is deprecated since version 1.7 and will be removed in 2.0. Use FOS\RestBundle\Inflector\DoctrineInflector instead.');
+use Doctrine\Common\Inflector\Inflector;
 
 /**
  * Inflector object using the Doctrine/Inflector.
@@ -22,6 +20,18 @@ use FOS\RestBundle\Inflector\DoctrineInflector as BaseDoctrineInflector;
  *
  * @deprecated since 1.7, to be remove in 2.0. Use {@link \FOS\RestBundle\Inflector\DoctrineInflector} instead.
  */
-class DoctrineInflector extends BaseDoctrineInflector implements InflectorInterface
+class DoctrineInflector implements InflectorInterface
 {
+    public function __construct()
+    {
+        @trigger_error(__NAMESPACE__.'\DoctrineInflector is deprecated since version 1.7 and will be removed in 2.0. Use FOS\RestBundle\Inflector\DoctrineInflector instead.', E_USER_DEPRECATED);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pluralize($word)
+    {
+        return Inflector::pluralize($word);
+    }
 }

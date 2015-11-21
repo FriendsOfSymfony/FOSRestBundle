@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Util\Inflector;
 
-@trigger_error(__NAMESPACE__.'\InflectorInterface is deprecated since version 1.7 and will be removed in 2.0. Use FOS\RestBundle\Inflector\InflectorInterface instead.');
-
 use FOS\RestBundle\Inflector\InflectorInterface as BaseInflectorInterface;
 
 /**
@@ -22,6 +20,14 @@ use FOS\RestBundle\Inflector\InflectorInterface as BaseInflectorInterface;
  *
  * @deprecated since 1.7, to be removed in 2.0. Use {@link BaseInflectorInterface} instead.
  */
-interface InflectorInterface extends BaseInflectorInterface
+interface InflectorInterface
 {
+    /**
+     * Pluralizes noun.
+     *
+     * @param string $word
+     *
+     * @return string
+     */
+    public function pluralize($word);
 }

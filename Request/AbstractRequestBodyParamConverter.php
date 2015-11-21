@@ -12,6 +12,9 @@
 namespace FOS\RestBundle\Request;
 
 use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Context\ContextInterface;
+use FOS\RestBundle\Context\GroupableContextInterface;
+use FOS\RestBundle\Context\VersionableContextInterface;
 use FOS\RestBundle\Context\LegacyJMSContextAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -104,14 +107,19 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
     {
         $options = (array) $configuration->getOptions();
 
-        if (isset($options['deserializationContext']) && is_array($options['deserializationContext'])) {
+        if (isset($options['context']) && is_array($options['context'])) {
+            $context = array_merge($this->context, $options['context']);
+        } elseif (isset($options['deserializationContext']) && is_array($options['deserializationContext'])) {
+            @trigger_error('The RequestBodyParamConverter "deserializationContext" option is deprecated since version 1.7 and will be removed in 2.0. Use "context" instead.', E_USER_DEPRECATED);
             $context = array_merge($this->context, $options['deserializationContext']);
         } else {
             $context = $this->context;
         }
 
         if ($this->serializer instanceof SerializerInterface) {
-            $context = $this->configureDeserializationContext($this->getDeserializationContext(), $context);
+            $context = LegacyJMSContextAdapter::convertDeserializationContext(
+                $this->configureContext($this->getContext(), $context)
+            );
         }
 
         try {
@@ -154,32 +162,66 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         return true;
     }
 
+   /**
+    * @return ContextInterface
+    */
+   protected function getContext()
+   {
+       return new Context();
+   }
+
     /**
-     * @return DeserializationContext|Context
+     * @return DeserializationContext
+     *
+     * @deprecated since 1.7 to be removed in 2.0. Use getContext() instead.
      */
     protected function getDeserializationContext()
     {
-        return new Context();
+        @trigger_error(sprintf('%s::getDeserializationContext() is deprecated since version 1.7 and will be removed in 2.0. Use getContext() instead.', get_class($this)), E_USER_DEPRECATED);
+
+        return new DeserializationContext();
     }
 
     /**
-     * @param DeserializationContext|Context $context
-     * @param array                          $options
+     * @param DeserializationContext|ContextInterface $context
+     * @param array                                   $options
      *
-     * @return DeserializationContext
+     * @return DeserializationContext|ContextInterface
      */
-    protected function configureDeserializationContext($context, array $options)
+    protected function configureContext($context, array $options)
     {
-        $context = LegacyJMSContextAdapter::convertDeserializationContext($context);
-
-        if (isset($options['groups'])) {
-            $context->setGroups($options['groups']);
-        }
-        if (isset($options['version'])) {
-            $context->setVersion($options['version']);
+        if ($context instanceof ContextInterface) {
+            if ($context instanceof GroupableContextInterface && isset($options['groups'])) {
+                $context->addGroups($options['groups']);
+            }
+            if ($context instanceof VersionableContextInterface && isset($options['version'])) {
+                $context->setVersion($options['version']);
+            }
+        } else {
+            if (isset($options['groups'])) {
+                $context->setGroups($options['groups']);
+            }
+            if (isset($options['version'])) {
+                $context->setVersion($options['version']);
+            }
         }
 
         return $context;
+    }
+
+    /**
+     * @param DeserializationContext|ContextInterface $context
+     * @param array                                   $options
+     *
+     * @return DeserializationContext
+     *
+     * @deprecated since 1.7 to be removed in 2.0. Use AbstractRequestBodyParamConverter::configureContext() instead.
+     */
+    protected function configureDeserializationContext($context, array $options)
+    {
+        @trigger_error(sprintf('%s::configureDeserializationContext() is deprecated since version 1.7 and will be removed in 2.0. Use configureContext() instead.', get_class($this)), E_USER_DEPRECATED);
+
+        return LegacyJMSContextAdapter::convertDeserializationContext($this->configureContext($context, $options));
     }
 
     /**

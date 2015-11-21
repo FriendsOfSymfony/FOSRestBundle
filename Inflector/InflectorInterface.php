@@ -11,19 +11,13 @@
 
 namespace FOS\RestBundle\Inflector;
 
+use FOS\RestBundle\Util\Inflector\InflectorInterface as LegacyInflectorInterface;
+
 /**
  * Inflector interface.
  *
  * @author Mark Kazemier <Markkaz>
  */
-interface InflectorInterface
+interface InflectorInterface extends LegacyInflectorInterface
 {
-    /**
-     * Pluralizes noun.
-     *
-     * @param string $word
-     *
-     * @return string
-     */
-    public function pluralize($word);
 }
