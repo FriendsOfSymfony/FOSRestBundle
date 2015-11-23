@@ -116,9 +116,9 @@ class ExceptionController extends ContainerAware
     }
 
     /**
-     * Returns a Response Object with content type text/plain
+     * Returns a Response Object with content type text/plain.
      *
-     * @param String $content
+     * @param string $content
      * @param int    $status
      * @param array  $headers
      *
@@ -127,6 +127,7 @@ class ExceptionController extends ContainerAware
     protected function getPlainResponse($content, $status = 200, $headers = array())
     {
         $headers['content-type'] = 'text/plain';
+
         return new Response($content, $status, $headers);
     }
 
