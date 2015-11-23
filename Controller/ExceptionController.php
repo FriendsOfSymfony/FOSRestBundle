@@ -75,12 +75,16 @@ class ExceptionController extends ContainerAware
             ));
         }
 
-        $format = $this->getFormat($request, $request->getRequestFormat());
+        try {
+            $format = $this->getFormat($request, $request->getRequestFormat());
+        } catch (\Exception $e) {
+            $format = null;
+        }
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined, while handling: ';
             $message .= $this->getExceptionMessage($exception);
 
-            return new Response($message, Codes::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
+            return $this->getPlainResponse($message, Codes::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
         }
 
         $currentContent = $this->getAndCleanOutputBuffering();
@@ -105,10 +109,25 @@ class ExceptionController extends ContainerAware
         } catch (\Exception $e) {
             $message = 'An Exception was thrown while handling: ';
             $message .= $this->getExceptionMessage($exception);
-            $response = new Response($message, Codes::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
+            $response = $this->getPlainResponse($message, Codes::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
         }
 
         return $response;
+    }
+
+    /**
+     * Returns a Response Object with content type text/plain
+     *
+     * @param String $content
+     * @param int    $status
+     * @param array  $headers
+     *
+     * @return Response
+     */
+    protected function getPlainResponse($content, $status = 200, $headers = array())
+    {
+        $headers['content-type'] = 'text/plain';
+        return new Response($content, $status, $headers);
     }
 
     /**
