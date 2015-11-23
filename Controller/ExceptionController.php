@@ -103,9 +103,9 @@ class ExceptionController implements ContainerAwareInterface
     }
 
     /**
-     * Returns a Response Object with content type text/plain
+     * Returns a Response Object with content type text/plain.
      *
-     * @param String $content
+     * @param string $content
      * @param int    $status
      * @param array  $headers
      *
