@@ -103,7 +103,7 @@ class ExceptionController implements ContainerAwareInterface
     }
 
     /**
-     * Returns a Symfony Response Object with
+     * Returns a Response Object with content type text/plain
      *
      * @param String $content
      * @param int    $status
