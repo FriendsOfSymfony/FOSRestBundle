@@ -114,7 +114,7 @@ class ExceptionController implements ContainerAwareInterface
     protected function getPlainResponse($content, $status = 200, $headers = array())
     {
         $headers['content-type'] = 'text/plain';
-        
+
         return new Response($content, $status, $headers);
     }
 
