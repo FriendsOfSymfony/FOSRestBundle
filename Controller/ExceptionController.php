@@ -60,12 +60,16 @@ class ExceptionController implements ContainerAwareInterface
      */
     public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
-        $format = $this->getFormat($request, $request->getRequestFormat());
+        try {
+            $format = $this->getFormat($request, $request->getRequestFormat());
+        } catch (\Exception $e) {
+            $format = null;
+        }
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined, while handling: ';
             $message .= $this->getExceptionMessage($exception);
 
-            return new Response($message, Response::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
+            return $this->getPlainResponse($message, Response::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
         }
 
         $currentContent = $this->getAndCleanOutputBuffering(
@@ -76,7 +80,6 @@ class ExceptionController implements ContainerAwareInterface
         $viewHandler = $this->container->get('fos_rest.view_handler');
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
         $showException = $request->attributes->get('showException', $this->container->get('kernel')->isDebug());
-
         try {
             if (!$viewHandler->isFormatTemplating($format)) {
                 $parameters = $this->createExceptionWrapper($parameters);
@@ -93,10 +96,25 @@ class ExceptionController implements ContainerAwareInterface
         } catch (\Exception $e) {
             $message = 'An Exception was thrown while handling: ';
             $message .= $this->getExceptionMessage($exception);
-            $response = new Response($message, Response::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
+            $response = $this->getPlainResponse($message, Response::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
         }
 
         return $response;
+    }
+
+    /**
+     * Returns a Symfony Response Object with
+     *
+     * @param String $content
+     * @param int    $status
+     * @param array  $headers
+     *
+     * @return Response
+     */
+    protected function getPlainResponse($content, $status = 200, $headers = array())
+    {
+        $headers['content-type'] = 'text/plain';
+        return new Response($content, $status, $headers);
     }
 
     /**
