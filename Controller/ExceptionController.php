@@ -69,7 +69,7 @@ class ExceptionController implements ContainerAwareInterface
             $message = 'No matching accepted Response format could be determined, while handling: ';
             $message .= $this->getExceptionMessage($exception);
 
-            return $this->getPlainResponse($message, Response::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
+            return $this->createPlainResponse($message, Response::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
         }
 
         $currentContent = $this->getAndCleanOutputBuffering(
@@ -96,7 +96,7 @@ class ExceptionController implements ContainerAwareInterface
         } catch (\Exception $e) {
             $message = 'An Exception was thrown while handling: ';
             $message .= $this->getExceptionMessage($exception);
-            $response = $this->getPlainResponse($message, Response::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
+            $response = $this->createPlainResponse($message, Response::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
         }
 
         return $response;
@@ -111,7 +111,7 @@ class ExceptionController implements ContainerAwareInterface
      *
      * @return Response
      */
-    protected function getPlainResponse($content, $status = 200, $headers = array())
+    protected function createPlainResponse($content, $status = 200, $headers = array())
     {
         $headers['content-type'] = 'text/plain';
 
