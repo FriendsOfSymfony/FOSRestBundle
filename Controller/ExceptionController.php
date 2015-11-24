@@ -11,18 +11,20 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Exception\NormalizedException;
+use FOS\RestBundle\Normalizer\ExceptionNormalizerInterface;
 use FOS\RestBundle\Util\ExceptionWrapper;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
@@ -30,6 +32,24 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 class ExceptionController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
+
+    private $viewHandler;
+    private $debug;
+    private $normalizer;
+
+    /**
+     * Constructor.
+     *
+     * @param ViewHandlerInterface              $viewHandler
+     * @param bool                              $debug
+     * @param ExceptionNormalizerInterface|null $normalizer
+     */
+    public function __construct(ViewHandlerInterface $viewHandler, $debug, ExceptionNormalizerInterface $normalizer = null)
+    {
+        $this->viewHandler = $viewHander;
+        $this->debug = $debug;
+        $this->normalizer = $normalizer;
+    }
 
     /**
      * Creates a new ExceptionWrapper instance that can be overwritten by a custom
@@ -50,21 +70,28 @@ class ExceptionController implements ContainerAwareInterface
     /**
      * Converts an Exception to a Response.
      *
-     * @param Request              $request
-     * @param FlattenException     $exception
-     * @param DebugLoggerInterface $logger
-     *
-     * @throws \InvalidArgumentException
+     * @param Request $request
+     * @param object  $exception
      *
      * @return Response
      */
-    public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
+    public function showAction(Request $request, $exception)
     {
         try {
             $format = $this->getFormat($request, $request->getRequestFormat());
         } catch (\Exception $e) {
             $format = null;
         }
+
+        if ($this->normalizer->supportsNormalization($exception)) {
+            $normalizedException = $this->normalizer->normalize($exception);
+        } else {
+            $normalizedException = new NormalizedException([
+                'message' => 'Unknown error.',
+                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            ]);
+        }
+
         if (null === $format) {
             $message = 'No matching accepted Response format could be determined, while handling: ';
             $message .= $this->getExceptionMessage($exception);
@@ -76,30 +103,29 @@ class ExceptionController implements ContainerAwareInterface
             $request->headers->get('X-Php-Ob-Level', -1)
         );
         $code = $this->getStatusCode($exception);
-        /** @var ViewHandler $viewHandler */
-        $viewHandler = $this->container->get('fos_rest.view_handler');
-        $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
-        $showException = $request->attributes->get('showException', $this->container->get('kernel')->isDebug());
-        try {
-            if (!$viewHandler->isFormatTemplating($format)) {
-                $parameters = $this->createExceptionWrapper($parameters);
-            }
 
-            $view = View::create($parameters, $code, $exception->getHeaders());
-            $view->setFormat($format);
-
-            if ($viewHandler->isFormatTemplating($format)) {
-                $view->setTemplate($this->findTemplate($request, $format, $code, $showException));
-            }
-
-            $response = $viewHandler->handle($view);
-        } catch (\Exception $e) {
-            $message = 'An Exception was thrown while handling: ';
-            $message .= $this->getExceptionMessage($exception);
-            $response = $this->createPlainResponse($message, Response::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
+        if ($this->viewHandler->isFormatTemplating($format)) {
+            $parameters = [
+                'info' => $normalizedException,
+                'exception' => $exception,
+            ];
+        } else {
+            $parameters = $normalizedException->getNormalizedData();
         }
 
-        return $response;
+        $view = View::create($parameters, $normalizedException->getStatusCode(), $normalizedException->getHeaders());
+        $view->setFormat($format);
+
+        if ($this->viewHandler->isFormatTemplating($format)) {
+            $view->setTemplate($this->findTemplate(
+                $request,
+                $format,
+                $code,
+                $request->attributes->get('showException', $this->debug
+            )));
+        }
+
+        return $this->viewHandler->handle($view);
     }
 
     /**
@@ -126,7 +152,7 @@ class ExceptionController implements ContainerAwareInterface
      *
      * @return string
      */
-    protected function getAndCleanOutputBuffering($startObLevel)
+    private function getAndCleanOutputBuffering($startObLevel)
     {
         if (ob_get_level() <= $startObLevel) {
             return '';
@@ -144,60 +170,19 @@ class ExceptionController implements ContainerAwareInterface
      *
      * @return int|bool
      */
-    protected function isSubclassOf($exception, $exceptionMap)
+    private function isSubclassOf($exception, $exceptionMap)
     {
-        $exceptionClass = $exception->getClass();
-        $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
         try {
             foreach ($exceptionMap as $exceptionMapClass => $value) {
-                if ($value
-                    && ($exceptionClass === $exceptionMapClass || $reflectionExceptionClass->isSubclassOf($exceptionMapClass))
-                ) {
+                if ($value && $exception instanceof $exceptionMapClass) {
                     return $value;
                 }
             }
         } catch (\ReflectionException $re) {
-            return 'FOSUserBundle: Invalid class in fos_res.exception.messages: '
-                    .$re->getMessage();
+            return 'Invalid class in fos_rest.exception.messages: '.$re->getMessage();
         }
 
         return false;
-    }
-
-    /**
-     * Extracts the exception message.
-     *
-     * @param FlattenException $exception
-     *
-     * @return string Message
-     */
-    protected function getExceptionMessage($exception)
-    {
-        $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
-        $showExceptionMessage = $this->isSubclassOf($exception, $exceptionMap);
-
-        if ($showExceptionMessage || $this->container->get('kernel')->isDebug()) {
-            return $exception->getMessage();
-        }
-
-        $statusCode = $this->getStatusCode($exception);
-
-        return array_key_exists($statusCode, Response::$statusTexts) ? Response::$statusTexts[$statusCode] : 'error';
-    }
-
-    /**
-     * Determines the status code to use for the response.
-     *
-     * @param FlattenException $exception
-     *
-     * @return int
-     */
-    protected function getStatusCode($exception)
-    {
-        $exceptionMap = $this->container->getParameter('fos_rest.exception.codes');
-        $isExceptionMappedToStatusCode = $this->isSubclassOf($exception, $exceptionMap);
-
-        return $isExceptionMappedToStatusCode ?: $exception->getStatusCode();
     }
 
     /**
@@ -211,7 +196,7 @@ class ExceptionController implements ContainerAwareInterface
     protected function getFormat(Request $request, $format)
     {
         try {
-            $formatNegotiator = $this->container->get('fos_rest.exception_format_negotiator');
+            $formatNegotiator = $this->container->get('fos_rest.exception.format_negotiator');
             $accept = $formatNegotiator->getBest('', []);
             if ($accept) {
                 $format = $request->getFormat($accept->getType());
@@ -222,39 +207,6 @@ class ExceptionController implements ContainerAwareInterface
         }
 
         return $format;
-    }
-
-    /**
-     * Determines the parameters to pass to the view layer.
-     *
-     * Overwrite it in a custom ExceptionController class to add additionally parameters
-     * that should be passed to the view layer.
-     *
-     * @param ViewHandler          $viewHandler
-     * @param string               $currentContent
-     * @param int                  $code
-     * @param FlattenException     $exception
-     * @param DebugLoggerInterface $logger
-     * @param string               $format
-     *
-     * @return array
-     */
-    protected function getParameters(ViewHandler $viewHandler, $currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
-    {
-        $parameters = [
-            'status' => 'error',
-            'status_code' => $code,
-            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
-            'currentContent' => $currentContent,
-            'message' => $this->getExceptionMessage($exception),
-            'exception' => $exception,
-        ];
-
-        if ($viewHandler->isFormatTemplating($format)) {
-            $parameters['logger'] = $logger;
-        }
-
-        return $parameters;
     }
 
     /**

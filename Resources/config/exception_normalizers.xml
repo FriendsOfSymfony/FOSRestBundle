@@ -5,10 +5,10 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="fos_rest.exception.listener" class="FOS\RestBundle\EventListener\ExceptionListener">
+        <service id="fos_rest.exception_listener" class="FOS\RestBundle\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
-            <argument>fos_rest.exception.controller:showAction</argument>
+            <argument>fos_rest.controller.exception:showAction</argument>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
@@ -19,7 +19,7 @@
             </call>
         </service>
 
-        <service id="fos_rest.exception.format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
+        <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
             <argument type="service" id="request_stack" />
             <argument type="collection" /> <!-- mime types -->
         </service>
