@@ -343,6 +343,24 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * RestActionReader::getMethodArguments should ignore certain types of
+     * parameters.
+     */
+    public function testRequestTypeHintsIgnoredCorrectly()
+    {
+        $collection = $this->loadFromControllerFixture('TypeHintedController');
+
+        $this->assertNotNull($collection->get('get_articles'), 'route for "get_articles" does not exist');
+        $this->assertEquals('/articles.{_format}', $collection->get('get_articles')->getPath());
+        $this->assertNotNull($collection->get('post_articles'), 'route for "post_articles" does not exist');
+        $this->assertEquals('/articles.{_format}', $collection->get('post_articles')->getPath());
+        $this->assertNotNull($collection->get('get_article'), 'route for "get_article" does not exist');
+        $this->assertEquals('/articles/{id}.{_format}', $collection->get('get_article')->getPath());
+        $this->assertNotNull($collection->get('post_article'), 'route for "post_article" does not exist');
+        $this->assertEquals('/articles/{id}.{_format}', $collection->get('post_article')->getPath());
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param string $fixtureName name of the class fixture
