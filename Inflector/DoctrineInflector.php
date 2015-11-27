@@ -9,22 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Util\Inflector;
+namespace FOS\RestBundle\Inflector;
 
 use Doctrine\Common\Inflector\Inflector;
+use FOS\RestBundle\Util\Inflector\DoctrineInflector as LegacyDoctrineInflector;
 
 /**
  * Inflector object using the Doctrine/Inflector.
  *
  * @author Mark Kazemier <Markkaz>
- *
- * @deprecated since 1.7, to be removed in 2.0. Use {@link \FOS\RestBundle\Inflector\DoctrineInflector} instead.
  */
-class DoctrineInflector implements InflectorInterface
+class DoctrineInflector extends LegacyDoctrineInflector implements InflectorInterface
 {
     public function __construct()
     {
-        @trigger_error('FOS\RestBundle\Util\Inflector\DoctrineInflector is deprecated since version 1.7 and will be removed in 2.0. Use FOS\RestBundle\Inflector\DoctrineInflector instead.', E_USER_DEPRECATED);
     }
 
     /**

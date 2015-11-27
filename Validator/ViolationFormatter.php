@@ -9,24 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Util;
+namespace FOS\RestBundle\Validator;
 
 use FOS\RestBundle\Controller\Annotations\Param;
-use FOS\RestBundle\Validator\ViolationFormatter as BaseViolationFormatter;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-/**
- * @deprecated since 1.7, to be removed in 2.0. Use {@link \FOS\RestBundle\Validator\ViolationFormatter} instead.
- */
 class ViolationFormatter implements ViolationFormatterInterface
 {
-    private $formatter;
-
     public function __construct()
     {
-        @trigger_error('FOS\RestBundle\Util\ViolationFormatter is deprecated since version 1.7. Use FOS\RestBundle\Validator\ViolationFormatter instead.', E_USER_DEPRECATED);
-        $this->formatter = new BaseViolationFormatter();
     }
 
     /**
@@ -34,7 +27,13 @@ class ViolationFormatter implements ViolationFormatterInterface
      */
     public function format(Param $param, ConstraintViolationInterface $violation)
     {
-        return $this->formatter->format($param, $violation);
+        return sprintf(
+            "%s parameter %s value '%s' violated a constraint (%s)",
+            $param instanceof QueryParam ? 'Query' : 'Request',
+            $param->getKey(),
+            $violation->getInvalidValue(),
+            $violation->getMessage()
+        );
     }
 
     /**
@@ -42,6 +41,14 @@ class ViolationFormatter implements ViolationFormatterInterface
      */
     public function formatList(Param $param, ConstraintViolationListInterface $violationList)
     {
-        return $this->formatter->formatList($param, $violationList);
+        $str = '';
+        foreach ($violationList as $key => $violation) {
+            if ($key > 0) {
+                $str .= "\n";
+            }
+            $str .= $this->format($param, $violation);
+        }
+
+        return $str;
     }
 }
