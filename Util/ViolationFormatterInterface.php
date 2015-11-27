@@ -15,6 +15,9 @@ use FOS\RestBundle\Controller\Annotations\Param;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+/**
+ * @deprecated since 1.8, to be removed in 2.0. Use {@link \FOS\RestBundle\Validator\ViolationFormatterInterface} instead.
+ */
 interface ViolationFormatterInterface
 {
     /**
