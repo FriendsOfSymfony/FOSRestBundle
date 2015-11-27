@@ -13,9 +13,9 @@
 
     <services>
 
-        <service id="fos_rest.request.param_fetcher" class="%fos_rest.request.param_fetcher.class%" scope="request">
+        <service id="fos_rest.request.param_fetcher" class="%fos_rest.request.param_fetcher.class%">
             <argument type="service" id="fos_rest.request.param_fetcher.reader"/>
-            <argument type="service" id="request"/>
+            <argument type="service" id="request_stack" on-invalid="null"/>
             <argument type="service" id="fos_rest.violation_formatter"/>
             <argument type="service" id="validator" on-invalid="null"/>
         </service>
