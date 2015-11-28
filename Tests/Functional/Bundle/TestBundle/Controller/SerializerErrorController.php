@@ -37,7 +37,7 @@ class SerializerErrorController extends Controller
     {
         $form = $this->createFormBuilder(null, array(
             'csrf_protection' => false,
-        ))->add('name', 'text', array(
+        ))->add('name', method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix') ? 'Symfony\Component\Form\Extension\Core\Type\TextType' : 'text', array(
             'constraints' => array(new NotBlank()),
         ))->getForm();
 

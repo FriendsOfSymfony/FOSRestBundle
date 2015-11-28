@@ -585,9 +585,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateResponseWithFormErrorsAndSerializationGroups($format)
     {
+        $type = method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix') ? 'Symfony\Component\Form\Extension\Core\Type\TextType' : 'text';
         $form = Forms::createFormFactory()->createBuilder()
-            ->add('name', 'text')
-            ->add('description', 'text')
+            ->add('name', $type)
+            ->add('description', $type)
             ->getForm();
 
         $form->get('name')->addError(new FormError('Invalid name'));

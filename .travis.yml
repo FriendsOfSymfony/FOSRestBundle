@@ -23,11 +23,9 @@ matrix:
   fast_finish: true
   include:
     - php: 5.3
-      env: SYMFONY_VERSION=2.3.* COMPOSER_FLAGS="--prefer-lowest"
+      env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.5
-      env: SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.*'
-    - php: 5.5
-      env: SYMFONY_VERSION='2.3.* sensio/framework-extra-bundle:2.*'
+      env: SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.*' SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 5.5
       env: SYMFONY_VERSION=2.4.*
     - php: 5.5

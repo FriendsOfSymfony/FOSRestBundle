@@ -16,7 +16,9 @@ use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatterInterface;
 use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -31,10 +33,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class ParamFetcher implements ParamFetcherInterface
+class ParamFetcher extends ContainerAware implements ParamFetcherInterface
 {
     private $paramReader;
-    private $request;
+    private $requestStack;
     private $params;
     private $validator;
     private $violationFormatter;
@@ -48,14 +50,20 @@ class ParamFetcher implements ParamFetcherInterface
      * Initializes fetcher.
      *
      * @param ParamReader                                 $paramReader
-     * @param Request                                     $request
+     * @param Request|RequestStack                        $request
      * @param ValidatorInterface|LegacyValidatorInterface $validator
      * @param ViolationFormatterInterface                 $violationFormatter
      */
-    public function __construct(ParamReader $paramReader, Request $request, ViolationFormatterInterface $violationFormatter, $validator = null)
+    public function __construct(ParamReader $paramReader, $requestStack = null, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
+        if (null === $requestStack || $requestStack instanceof Request) {
+            @trigger_error('Support of Symfony\Component\HttpFoundation\Request in FOS\RestBundle\Request\ParamFetcher is deprecated since version 1.7 and will be removed in 2.0. Use Symfony\Component\HttpFoundation\RequestStack instead.', E_USER_DEPRECATED);
+        } elseif (!($requestStack instanceof RequestStack)) {
+            throw new \InvalidArgumentException(sprintf('Argument 3 of %s constructor must be either an instance of Symfony\Component\HttpFoundation\Request or Symfony\Component\HttpFoundation\RequestStack.', get_class($this)));
+        }
+
         $this->paramReader = $paramReader;
-        $this->request = $request;
+        $this->requestStack = $requestStack;
         $this->violationFormatter = $violationFormatter;
         $this->validator = $validator;
 
@@ -124,9 +132,9 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if ($config instanceof RequestParam) {
-            $param = $this->request->request->get($config->getKey(), $default);
+            $param = $this->getRequest()->request->get($config->getKey(), $default);
         } elseif ($config instanceof QueryParam) {
-            $param = $this->request->query->get($config->getKey(), $default);
+            $param = $this->getRequest()->query->get($config->getKey(), $default);
         } else {
             $param = null;
         }
@@ -307,7 +315,7 @@ class ParamFetcher implements ParamFetcherInterface
         };
 
         foreach ($config->incompatibles as $incompatibleParam) {
-            $isIncompatiblePresent = $this->request->query->get(
+            $isIncompatiblePresent = $this->getRequest()->query->get(
                 $incompatibleParam,
                 null
             ) !== null;
@@ -322,5 +330,27 @@ class ParamFetcher implements ParamFetcherInterface
                 throw new BadRequestHttpException($exceptionMessage);
             }
         }
+    }
+
+    /**
+     * @throws \RuntimeException
+     *
+     * @return Request
+     */
+    private function getRequest()
+    {
+        if ($this->requestStack instanceof Request) {
+            return $this->requestStack;
+        } elseif ($this->requestStack instanceof RequestStack) {
+            $request = $this->requestStack->getCurrentRequest();
+        } else {
+            $request = $this->container->get('request');
+        }
+
+        if ($request !== null) {
+            return $request;
+        }
+
+        throw new \RuntimeException('There is no current request.');
     }
 }
