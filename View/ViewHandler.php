@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -244,7 +245,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     /**
      * Gets the router service.
      *
-     * @return \Symfony\Component\Routing\RouterInterface
+     * @return RouterInterface
      */
     protected function getRouter()
     {
@@ -436,7 +437,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     {
         $route = $view->getRoute();
         $location = $route
-            ? $this->getRouter()->generate($route, (array) $view->getRouteParameters(), true)
+            ? $this->getRouter()->generate($route, (array) $view->getRouteParameters(), RouterInterface::ABSOLUTE_URL)
             : $view->getLocation();
 
         if ($location) {
