@@ -13,12 +13,15 @@ namespace FOS\RestBundle\Request;
 
 use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
+use FOS\RestBundle\Util\ResolverTrait;
+use FOS\RestBundle\Validator\Constraints\ResolvableConstraintInterface;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
@@ -34,7 +37,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  */
 class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 {
-    use ContainerAwareTrait;
+    use ResolverTrait, ContainerAwareTrait;
 
     private $paramReader;
     private $requestStack;
@@ -129,7 +132,15 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, $strict)
     {
+        if (empty($this->container)) {
+            throw new \InvalidArgumentException(
+                'The ParamFetcher has been not initialized correctly. '.
+                'The container for parameter resolution is missing.'
+            );
+        }
+
         $default = $param->getDefault();
+        $default = $this->resolveValue($this->container, $default);
 
         $this->checkNotIncompatibleParams($param);
         if ($default !== null && $default === $paramValue) {
@@ -137,6 +148,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
         }
 
         $constraints = $param->getConstraints();
+        $this->resolveConstraints($constraints);
         if (empty($constraints)) {
             return $paramValue;
         }
@@ -210,13 +222,10 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
         // the controller could be a proxy, e.g. when using the JMSSecuriyExtraBundle or JMSDiExtraBundle
         $className = ClassUtils::getClass($this->controller[0]);
 
-        $params = $this->paramReader->read(
+        $this->params = $this->paramReader->read(
             new \ReflectionClass($className),
             $this->controller[1]
         );
-        $this->resolveParameters($params);
-
-        $this->params = $params;
     }
 
     /**
@@ -250,19 +259,13 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     }
 
     /**
-     * @param ParamInterface[] $params
+     * @param Constraint[] $constraints
      */
-    private function resolveParameters(array $params)
+    private function resolveConstraints(array $constraints)
     {
-        foreach ($params as $param) {
-            if ($param instanceof ContainerAwareInterface) {
-                if (empty($this->container)) {
-                    throw new \InvalidArgumentException(
-                        'The ParamFetcher has been not initialized correctly. '.
-                        'The container for parameter resolution is missing.'
-                    );
-                }
-                $param->setContainer($this->container);
+        foreach ($constraints as $constraint) {
+            if ($constraint instanceof ResolvableConstraintInterface) {
+                $constraint->resolve($this->container);
             }
         }
     }

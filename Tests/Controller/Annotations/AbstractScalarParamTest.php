@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use FOS\RestBundle\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints;
 
 /**
@@ -55,21 +56,13 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
 
     public function testScalarRequirements()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container->expects($this->once())
-            ->method('getParameter')
-            ->with('bar')
-            ->willReturn('foobar');
-
-        $this->param->setContainer($container);
-
         $this->param->name = 'bar';
         $this->param->requirements = 'foo %bar% %%';
         $this->assertEquals(array(
             new Constraints\NotNull(),
-            new Constraints\Regex(array(
-                'pattern' => '#^(?:foo foobar %)$#xsu',
-                'message' => "Parameter 'bar' value, does not match requirements 'foo foobar %'",
+            new Regex(array(
+                'pattern' => '#^(?:foo %bar% %%)$#xsu',
+                'message' => "Parameter 'bar' value, does not match requirements 'foo %bar% %%'",
             )),
         ), $this->param->getConstraints());
     }
@@ -82,7 +75,7 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(array(
             new Constraints\NotNull(),
-            new Constraints\Regex(array(
+            new Regex(array(
                 'pattern' => '#^(?:foo)$#xsu',
                 'message' => 'bar',
             )),

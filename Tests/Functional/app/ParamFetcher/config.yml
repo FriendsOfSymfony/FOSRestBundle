@@ -1,9 +1,13 @@
 imports:
     - { resource: ../config/default.yml }
 
+parameters:
+    foo: bar
+    invalid: invalid2
+
 framework:
     serializer:
         enabled: true
-        
+
 fos_rest:
     param_fetcher_listener: true

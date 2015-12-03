@@ -77,6 +77,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 $this->validator,
             ))
             ->setMethods(null);
+
+        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
     }
 
     public function testControllerSetter()
@@ -260,6 +262,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         }
 
         $fetcher = $this->paramFetcherBuilder->getMock();
+        $fetcher->setContainer($this->container);
 
         $fetcher
             ->expects($this->once())
