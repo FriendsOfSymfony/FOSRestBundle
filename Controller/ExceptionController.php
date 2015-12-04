@@ -14,9 +14,10 @@ namespace FOS\RestBundle\Controller;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\FlattenException as HttpFlattenException;
 use Symfony\Component\Debug\Exception\FlattenException as DebugFlattenException;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,8 +29,23 @@ use FOS\RestBundle\Util\ExceptionWrapper;
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
  */
-class ExceptionController extends ContainerAware
+class ExceptionController implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * Sets the Container associated with this Controller.
+     *
+     * @param ContainerInterface $container A ContainerInterface instance
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     /**
      * Creates a new ExceptionWrapper instance that can be overwritten by a custom
      * ExceptionController class.
@@ -87,7 +103,7 @@ class ExceptionController extends ContainerAware
             return $this->createPlainResponse($message, Codes::HTTP_NOT_ACCEPTABLE, $exception->getHeaders());
         }
 
-        $currentContent = $this->getAndCleanOutputBuffering();
+        $currentContent = $this->getAndCleanOutputBuffering($request);
         $code = $this->getStatusCode($exception);
         $viewHandler = $this->container->get('fos_rest.view_handler');
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
@@ -137,11 +153,13 @@ class ExceptionController extends ContainerAware
      * This code comes from Symfony and should be synchronized on a regular basis
      * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
      *
+     * @param Request $request
+     *
      * @return string
      */
-    protected function getAndCleanOutputBuffering()
+    protected function getAndCleanOutputBuffering(Request $request)
     {
-        $startObLevel = $this->container->get('request')->headers->get('X-Php-Ob-Level', -1);
+        $startObLevel = $request->headers->get('X-Php-Ob-Level', -1);
 
         // ob_get_level() never returns 0 on some Windows configurations, so if
         // the level is the same two times in a row, the loop should be stopped.

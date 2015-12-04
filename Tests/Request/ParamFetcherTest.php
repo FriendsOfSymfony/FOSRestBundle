@@ -45,6 +45,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     private $validator;
 
     /**
+     * @var string
+     */
+    private $validatorMethod;
+
+    /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $violationFormatter;
@@ -143,7 +148,14 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue($annotations));
 
-        $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+        if (interface_exists('Symfony\Component\Validator\Validator\ValidatorInterface')) {
+            $this->validator = $this->getMock('Symfony\Component\Validator\Validator\ValidatorInterface');
+            $this->validatorMethod = 'validate';
+        } else {
+            $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+            $this->validatorMethod = 'validateValue';
+        }
+
         $this->violationFormatter = $this->getMock('FOS\RestBundle\Util\ViolationFormatterInterface');
     }
 
@@ -188,7 +200,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         if (null !== $callback) {
             $self = $this;
             $validator = $this->validator;
-            $callback($validator, $self);
+            $callback($validator, $this->validatorMethod, $self);
         }
 
         $queryFetcher = $this->getParamFetcher($query, $request);
@@ -226,17 +238,17 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(1), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
                 array('foo' => 'bar'),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, $validatorMethod, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
                         new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
-                        ->method('validateValue')
+                        ->method($validatorMethod)
                         ->with('bar', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                     $validator->expects($self->at(1))
-                        ->method('validateValue')
+                        ->method($validatorMethod)
                         ->with('bar', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'bar', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
@@ -277,18 +289,18 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array('foo' => '1', 'bar' => '1', 'baz' => '4', 'buzz' => array(2, 1, 4), 'boo' => array(), 'boozz' => null, 'biz' => null, 'arr' => array(), 'arr_null_strict' => array(), 'moo' => null, 'i_cant_be_with_moo' => null),
                 array('buzz' => array(2, 'invaliddata', 4)),
                 array('bar' => '1', 'baz' => '4', 'arr' => array()),
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, $validatorMethod, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
                         new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(1))
-                        ->method('validateValue')
+                        ->method($validatorMethod)
                         ->with('invaliddata', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(6))
-                        ->method('validateValue')
+                        ->method($validatorMethod)
                         ->with('invaliddata', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Query parameter value 'invaliddata', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                 },
@@ -369,7 +381,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->validator->expects($this->once())
-            ->method('validateValue')
+            ->method($this->validatorMethod)
             ->with('354', $constraint)
         ;
 
@@ -400,7 +412,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         if (null !== $callback) {
             $self = $this;
             $validator = $this->validator;
-            $callback($validator, $self);
+            $callback($validator, $this->validatorMethod, $self);
         }
 
         $queryFetcher = $this->getParamFetcher($query, $request);
@@ -448,18 +460,18 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array(),
                 array('bar' => 'foo'),
                 'bar',
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, $validatorMethod, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
                         new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
-                        ->method('validateValue')
+                        ->method($validatorMethod)
                         ->with('foo', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
 
                     $validator->expects($self->at(1))
-                        ->method('validateValue')
+                        ->method($validatorMethod)
                         ->with('foo', new Regex(array('pattern' => '#^\\d+$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d+'")), null)
                         ->will($self->returnValue($errors));
                 },
@@ -468,13 +480,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 array(),
                 array('baz' => 'foo'),
                 'baz',
-                function (\PHPUnit_Framework_MockObject_MockObject $validator, \PHPUnit_Framework_TestCase $self) {
+                function (\PHPUnit_Framework_MockObject_MockObject $validator, $validatorMethod, \PHPUnit_Framework_TestCase $self) {
                     $errors = new ConstraintViolationList(array(
                         new ConstraintViolation('expected error', null, array(), null, null, null),
                     ));
 
                     $validator->expects($self->at(0))
-                        ->method('validateValue')
+                        ->method($validatorMethod)
                         ->with('foo', new Regex(array('pattern' => '#^\\d?$#xsu', 'message' => "Request parameter value 'foo', does not match requirements '\\d?'")), null)
                         ->will($self->returnValue($errors));
                 },
@@ -551,7 +563,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->validator->expects($this->once())
-            ->method('validateValue')
+            ->method($this->validatorMethod)
             ->with('foobar', $this->constraint)
             ->will($this->returnValue($errors));
 
@@ -601,7 +613,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $violation1->expects($this->never())->method('getMessage');
 
         $this->validator->expects($this->once())
-            ->method('validateValue')
+            ->method($this->validatorMethod)
             ->with('foobar', $this->constraint)
             ->will($this->returnValue(array($violation1)));
 
@@ -636,7 +648,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->validator->expects($this->once())
-            ->method('validateValue')
+            ->method($this->validatorMethod)
             ->with('foobar', $this->constraint)
             ->will($this->returnValue(array()));
 
@@ -671,7 +683,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->validator->expects($this->once())
-            ->method('validateValue')
+            ->method($this->validatorMethod)
             ->with(array('foo' => array('b', 'a', 'r')), $this->constraint)
             ->will($this->returnValue(array()));
 
@@ -786,7 +798,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         ));
 
         $this->validator->expects($this->once())
-            ->method('validateValue')
+            ->method($this->validatorMethod)
             ->with('foobar', $constraint)
             ->will($this->returnValue($errors));
 

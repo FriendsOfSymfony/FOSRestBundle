@@ -16,7 +16,8 @@ use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatterInterface;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -33,7 +34,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class ParamFetcher extends ContainerAware implements ParamFetcherInterface
+class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 {
     private $paramReader;
     private $requestStack;
@@ -45,6 +46,11 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
      * @var callable
      */
     private $controller;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * Initializes fetcher.
@@ -75,6 +81,16 @@ class ParamFetcher extends ContainerAware implements ParamFetcherInterface
                 get_class($validator)
             ));
         }
+    }
+
+    /**
+     * Sets the Container associated with this Controller.
+     *
+     * @param ContainerInterface $container A ContainerInterface instance
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**
