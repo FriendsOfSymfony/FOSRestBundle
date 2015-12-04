@@ -46,7 +46,8 @@ You should activate the versioning in your config.yml:
 If you do not want to allow all the methods described above, you should choose which version resolver to enable:
 
 .. code-block:: yaml
-configyml
+
+    #app/config/config.yml
     fos_rest:
         versioning:
             enabled: true
