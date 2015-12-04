@@ -102,7 +102,11 @@ class RestRouteLoaderTest extends LoaderTest
             $route = $collection->get($name);
 
             // Symfony sets _method to keep BC, should be removed in 3.0
-            $params['requirements']['_method'] = implode('|', $params['methods']);
+            if (method_exists('\Symfony\Component\Routing\Route', 'getPattern')) {
+                $params['requirements']['_method'] = implode('|', $params['methods']);
+            } elseif (!isset($params['requirements'])) {
+                $params['requirements'] = array();
+            }
 
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
@@ -140,8 +144,12 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            // Symfony sets _method to keep BC, should be removed with 3.0
-            $params['requirements']['_method'] = implode('|', $params['methods']);
+            // Symfony sets _method to keep BC, should be removed in 3.0
+            if (method_exists('\Symfony\Component\Routing\Route', 'getPattern')) {
+                $params['requirements']['_method'] = implode('|', $params['methods']);
+            } elseif (!isset($params['requirements'])) {
+                $params['requirements'] = array();
+            }
 
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);

@@ -13,11 +13,12 @@ namespace FOS\RestBundle\View;
 
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializationContext;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use FOS\RestBundle\Util\Codes;
@@ -30,7 +31,7 @@ use FOS\RestBundle\Util\Codes;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInterface
+class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInterface
 {
     /**
      * Key format, value a callable that returns a Response instance.
@@ -97,6 +98,11 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     protected $serializeNullStrategy;
 
     /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
      * Constructor.
      *
      * @param array  $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
@@ -120,6 +126,16 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
         $this->serializeNull = $serializeNull;
         $this->forceRedirects = (array) $forceRedirects;
         $this->defaultEngine = $defaultEngine;
+    }
+
+    /**
+     * Sets the Container associated with this Controller.
+     *
+     * @param ContainerInterface $container A ContainerInterface instance
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**
@@ -294,7 +310,9 @@ class ViewHandler extends ContainerAware implements ConfigurableViewHandlerInter
     public function handle(View $view, Request $request = null)
     {
         if (null === $request) {
-            $request = $this->container->get('request');
+            $request = $this->container->has('request_stack')
+                ? $this->container->get('request_stack')->getCurrentRequest()
+                : $this->container->get('request');
         }
 
         $format = $view->getFormat() ?: $request->getRequestFormat();
