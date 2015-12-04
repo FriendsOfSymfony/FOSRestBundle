@@ -34,14 +34,14 @@ class ParamFetcherTest extends WebTestCase
     {
         $this->client->request('POST', '/params');
 
-        $this->assertEquals(['raw' => 'invalid', 'map' => 'invalid2'], $this->getData());
+        $this->assertEquals(['raw' => 'invalid', 'map' => 'invalid2 %', 'bar' => null], $this->getData());
     }
 
     public function testValidRawParameter()
     {
         $this->client->request('POST', '/params', ['raw' => $this->validRaw, 'map' => $this->validMap]);
 
-        $this->assertEquals(['raw' => $this->validRaw, 'map' => 'invalid2'], $this->getData());
+        $this->assertEquals(['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null], $this->getData());
     }
 
     public function testValidMapParameter()
@@ -52,7 +52,13 @@ class ParamFetcherTest extends WebTestCase
         ];
         $this->client->request('POST', '/params', ['raw' => 'bar', 'map' => $map]);
 
-        $this->assertEquals(['raw' => 'invalid', 'map' => $map], $this->getData());
+        $this->assertEquals(['raw' => 'invalid', 'map' => $map, 'bar' => null], $this->getData());
+    }
+
+    public function testFooParameter()
+    {
+        $value = ['bar foo', 'bar foo'];
+        $this->client->request('POST', '/params', ['foo' => $value]);
     }
 
     protected function getData()

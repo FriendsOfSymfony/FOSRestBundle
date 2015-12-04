@@ -12,8 +12,6 @@
 namespace FOS\RestBundle\Controller\Annotations;
 
 use Symfony\Component\Validator\Constraints;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * {@inheritdoc}
@@ -22,10 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  * @author Boris Guéry <guery.b@gmail.com>
  * @author Ener-Getick <egetick@gmail.com>
  */
-abstract class AbstractParam implements ParamInterface, ContainerAwareInterface
+abstract class AbstractParam implements ParamInterface
 {
-    use ContainerAwareTrait;
-
     /** @var string */
     public $name;
     /** @var string */
@@ -50,7 +46,7 @@ abstract class AbstractParam implements ParamInterface, ContainerAwareInterface
     /** {@inheritdoc} */
     public function getDefault()
     {
-        return $this->resolve($this->default);
+        return $this->default;
     }
 
     /** {@inheritdoc} */
@@ -88,57 +84,5 @@ abstract class AbstractParam implements ParamInterface, ContainerAwareInterface
     protected function getKey()
     {
         return $this->key ?: $this->name;
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    protected function resolve($value)
-    {
-        if (is_array($value)) {
-            foreach ($value as $key => $val) {
-                $value[$key] = $this->resolve($val);
-            }
-
-            return $value;
-        }
-
-        if (!is_string($value)) {
-            return $value;
-        }
-
-        $container = $this->container;
-
-        $escapedValue = preg_replace_callback('/%%|%([^%\s]++)%/', function ($match) use ($container, $value) {
-            // skip %%
-            if (!isset($match[1])) {
-                return '%%';
-            }
-
-            if (empty($container)) {
-                throw new \InvalidArgumentException(
-                    'This param has been not initialized correctly. '.
-                    'The container for parameter resolution is missing.'
-                );
-            }
-
-            $resolved = $container->getParameter($match[1]);
-            if (is_string($resolved) || is_numeric($resolved)) {
-                return (string) $resolved;
-            }
-
-            throw new \RuntimeException(sprintf(
-                    'The container parameter "%s", used in the controller parameters '.
-                    'configuration value "%s", must be a string or numeric, but it is of type %s.',
-                    $match[1],
-                    $value,
-                    gettype($resolved)
-                )
-            );
-        }, $value);
-
-        return str_replace('%%', '%', $escapedValue);
     }
 }

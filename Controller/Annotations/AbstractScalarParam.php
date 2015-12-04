@@ -11,8 +11,10 @@
 
 namespace FOS\RestBundle\Controller\Annotations;
 
+use FOS\RestBundle\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\All;
 
 /**
  * {@inheritdoc}
@@ -32,34 +34,33 @@ abstract class AbstractScalarParam extends AbstractParam
     public function getConstraints()
     {
         $constraints = parent::getConstraints();
-        $requirements = $this->resolve($this->requirements);
 
         if ($this->requirements instanceof Constraint) {
-            $constraints[] = $requirements;
-        } elseif (is_scalar($requirements)) {
-            $constraints[] = new Constraints\Regex(array(
-                'pattern' => '#^(?:'.$requirements.')$#xsu',
+            $constraints[] = $this->requirements;
+        } elseif (is_scalar($this->requirements)) {
+            $constraints[] = new Regex(array(
+                'pattern' => '#^(?:'.$this->requirements.')$#xsu',
                 'message' => sprintf(
                     'Parameter \'%s\' value, does not match requirements \'%s\'',
                     $this->getName(),
-                    $requirements
+                    $this->requirements
                 ),
             ));
-        } elseif (is_array($requirements) && isset($requirements['rule']) && $requirements['error_message']) {
-            $constraints[] = new Constraints\Regex(array(
-                'pattern' => '#^(?:'.$requirements['rule'].')$#xsu',
-                'message' => $requirements['error_message'],
+        } elseif (is_array($this->requirements) && isset($this->requirements['rule']) && $this->requirements['error_message']) {
+            $constraints[] = new Regex(array(
+                'pattern' => '#^(?:'.$this->requirements['rule'].')$#xsu',
+                'message' => $this->requirements['error_message'],
             ));
         }
 
         if (false === $this->allowBlank) {
-            $constraints[] = new Constraints\NotBlank();
+            $constraints[] = new NotBlank();
         }
 
         // If the user wants to map the value
         if ($this->map) {
             $constraints = array(
-                new Constraints\All($constraints),
+                new All($constraints),
             );
         }
 

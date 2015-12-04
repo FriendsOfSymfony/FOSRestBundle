@@ -20,7 +20,8 @@ class ParamFetcherController
 {
     /**
      * @RequestParam(name="raw", requirements=@IdenticalTo({"foo"="raw", "bar"="foo"}), default="invalid")
-     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="invalid2")
+     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid% %%")
+     * @RequestParam(name="bar", map=true, requirements="%foo% foo", strict=true)
      */
     public function paramsAction(ParamFetcherInterface $fetcher)
     {

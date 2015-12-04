@@ -28,7 +28,6 @@ class AbstractParamTest extends \PHPUnit_Framework_TestCase
     public function testInterface()
     {
         $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\ParamInterface', $this->param);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\ContainerAwareInterface', $this->param);
     }
 
     public function testDefaultValues()
@@ -53,44 +52,8 @@ class AbstractParamTest extends \PHPUnit_Framework_TestCase
         $this->param->default = 'Bar';
         $this->assertEquals('Bar', $this->param->getDefault());
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container->expects($this->once())
-            ->method('getParameter')
-            ->with('parameter')
-            ->willReturn('bar');
-
         $this->param->default = 'foo %parameter%';
-        $this->param->setContainer($container);
-
-        $this->assertEquals('foo bar', $this->param->getDefault());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage This param has been not initialized correctly. The container for parameter resolution is missing.
-     */
-    public function testDefaultGetterWhenContainerNotPassed()
-    {
-        $this->param->default = 'foo %bar% ';
-        $this->param->getDefault();
-    }
-
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage The container parameter "parameter", used in the controller parameters configuration value "foo %parameter%", must be a string or numeric, but it is of type object.
-     */
-    public function testInvalidContainerParameter()
-    {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container->expects($this->once())
-            ->method('getParameter')
-            ->with('parameter')
-            ->willReturn(new \stdClass());
-
-        $this->param->default = 'foo %parameter%';
-        $this->param->setContainer($container);
-
-        $this->param->getDefault();
+        $this->assertEquals('foo %parameter%', $this->param->getDefault());
     }
 
     public function testDescriptionGetter()
