@@ -11,8 +11,10 @@
 
 namespace FOS\RestBundle\Tests\Context;
 
+use FOS\RestBundle\Context\Adapter;
 use FOS\RestBundle\Context\Adapter\ArrayContextAdapter;
 use FOS\RestBundle\Context\Context;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
@@ -22,13 +24,13 @@ class ArrayContextAdapterTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->adapter = new ArrayContextAdapter();
-        $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface');
+        $this->serializer = $this->getMock(SerializerInterface::class);
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface', $this->adapter);
-        $this->assertInstanceOf('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface', $this->adapter);
+        $this->assertInstanceOf(Adapter\SerializationContextAdapterInterface::class, $this->adapter);
+        $this->assertInstanceOf(Adapter\DeserializationContextAdapterInterface::class, $this->adapter);
     }
 
     public function testContextConversion()

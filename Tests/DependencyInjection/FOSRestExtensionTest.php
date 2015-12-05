@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Tests\DependencyInjection;
 use FOS\RestBundle\DependencyInjection\FOSRestExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -103,7 +104,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($config, $this->container);
         $normalizerArgument = $this->container->getDefinition('fos_rest.body_listener')->getArgument(2);
 
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $normalizerArgument);
+        $this->assertInstanceOf(Reference::class, $normalizerArgument);
         $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
     }
 
@@ -123,7 +124,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $normalizeForms = $bodyListener->getArgument(3);
 
         $this->assertCount(4, $bodyListener->getArguments());
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $normalizerArgument);
+        $this->assertInstanceOf(Reference::class, $normalizerArgument);
         $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
         $this->assertEquals(false, $normalizeForms);
     }
@@ -145,7 +146,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $normalizeForms = $bodyListener->getArgument(3);
 
         $this->assertCount(4, $bodyListener->getArguments());
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $normalizerArgument);
+        $this->assertInstanceOf(Reference::class, $normalizerArgument);
         $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
         $this->assertEquals(true, $normalizeForms);
     }
@@ -598,7 +599,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->has('fos_rest.view_handler'));
 
         $viewHandler = $this->container->getDefinition('fos_rest.view_handler');
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $viewHandler);
+        $this->assertInstanceOf(DefinitionDecorator::class, $viewHandler);
     }
 
     public function testCheckExceptionWrapperHandler()
@@ -646,14 +647,14 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[0][0]);
         $requestMatcherFirstId = (string) $addRequestMatcherCalls[0][1][0];
         $requestMatcherFirst = $this->container->getDefinition($requestMatcherFirstId);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $requestMatcherFirst);
+        $this->assertInstanceOf(DefinitionDecorator::class, $requestMatcherFirst);
         $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0));
 
         // Second zone
         $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[1][0]);
         $requestMatcherSecondId = (string) $addRequestMatcherCalls[1][1][0];
         $requestMatcherSecond = $this->container->getDefinition($requestMatcherSecondId);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $requestMatcherSecond);
+        $this->assertInstanceOf(DefinitionDecorator::class, $requestMatcherSecond);
         $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
         $this->assertEquals(array('127.0.0.1'), $requestMatcherSecond->getArgument(3));
     }

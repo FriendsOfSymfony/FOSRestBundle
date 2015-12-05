@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use FOS\RestBundle\Controller\Annotations;
 use Symfony\Component\Validator\Constraints;
 
 /**
@@ -22,12 +23,12 @@ class AbstractParamTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMockForAbstractClass('FOS\RestBundle\Controller\Annotations\AbstractParam');
+        $this->param = $this->getMockForAbstractClass(Annotations\AbstractParam::class);
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\ParamInterface', $this->param);
+        $this->assertInstanceOf(Annotations\ParamInterface::class, $this->param);
     }
 
     public function testDefaultValues()

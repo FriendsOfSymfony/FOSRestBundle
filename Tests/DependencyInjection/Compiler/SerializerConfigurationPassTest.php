@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * SerializerConfigurationPassTest test.
@@ -20,7 +21,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testShouldDoNothingIfSerializerIsFound()
     {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['has'])
             ->getMock();
 
@@ -41,7 +42,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldThrowInvalidArgumentExceptionWhenNoSerializerIsFound()
     {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['has'])
             ->getMock();
 
@@ -57,7 +58,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldConfigureJMSSerializer()
     {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['has', 'setAlias', 'removeDefinition'])
             ->getMock();
 
@@ -81,7 +82,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldConfigureCoreSerializer()
     {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['has', 'setAlias', 'removeDefinition'])
             ->getMock();
 

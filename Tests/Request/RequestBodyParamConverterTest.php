@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
+use FOS\RestBundle\Context\ContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -56,7 +57,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
         $getterMethod = new \ReflectionMethod($converter, 'getDeserializationContext');
         $getterMethod->setAccessible(true);
-        $this->assertInstanceOf('FOS\RestBundle\Context\ContextInterface', $getterMethod->invoke($converter, $this->createRequest()));
+        $this->assertInstanceOf(ContextInterface::class, $getterMethod->invoke($converter, $this->createRequest()));
     }
 
     public function testContextMergeDuringExecution()
@@ -77,7 +78,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('configureDeserializationContext')
             ->with($this->anything(), ['groups' => ['foo', 'bar'], 'foobar' => 'foo', 'version' => 'fooversion'])
-            ->willReturn($this->getMock('FOS\RestBundle\Context\ContextInterface'));
+            ->willReturn($this->getMock(ContextInterface::class));
         $this->launchExecution($converter, null, $configuration);
     }
 
@@ -163,11 +164,6 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     public function testValidatorParameters()
     {
-        if (!interface_exists('Symfony\Component\Validator\Validator\ValidatorInterface')) {
-            $this->markTestSkipped(
-                'skipping testValidatorParameters due to an incompatible version of the Symfony validator component'
-            );
-        }
         $this->serializer
              ->expects($this->once())
              ->method('deserialize')

@@ -17,6 +17,7 @@ use FOS\RestBundle\Request\ParamReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -27,7 +28,7 @@ use Symfony\Component\Yaml\Yaml;
 abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+     * @var ContainerBuilder
      */
     protected $containerMock;
 
@@ -59,7 +60,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
     {
         // This check allows to override the container
         if ($this->containerMock === null) {
-            $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            $this->containerMock = $this->getMockBuilder(ContainerBuilder::class)
                 ->disableOriginalConstructor()
                 ->setMethods(['get', 'has'])
                 ->getMock();

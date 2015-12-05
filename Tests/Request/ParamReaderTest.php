@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Request\ParamReader;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -30,7 +31,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $annotationReader = $this->getMock('Doctrine\Common\Annotations\Reader');
+        $annotationReader = $this->getMock(AnnotationReader::class, array());
 
         $methodAnnotations = [];
         $foo = $this->createMockedParam();
@@ -90,7 +91,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(4, $annotations);
 
         foreach ($annotations as $name => $annotation) {
-            $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\ParamInterface', $annotation);
+            $this->assertInstanceOf(ParamInterface::class, $annotation);
             $this->assertEquals($annotation->getName(), $name);
         }
     }
@@ -147,6 +148,6 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
 
     protected function createMockedParam()
     {
-        return $this->getMock('FOS\RestBundle\Controller\Annotations\ParamInterface');
+        return $this->getMock(ParamInterface::class);
     }
 }
