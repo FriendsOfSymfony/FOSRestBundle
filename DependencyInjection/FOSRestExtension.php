@@ -57,6 +57,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $loader->load('routing.xml');
         $loader->load('util.xml');
         $loader->load('request.xml');
+        $loader->load('serializer.xml');
 
         $container->setParameter('fos_rest.cache_dir', $config['cache_dir']);
         $container->setParameter('fos_rest.routing.loader.default_format', $config['routing_loader']['default_format']);

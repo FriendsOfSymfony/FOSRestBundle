@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\View;
 
 use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Context\Context;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use JMS\Serializer\SerializationContext;
@@ -35,9 +36,9 @@ class View
     private $routeParameters;
 
     /**
-     * @var SerializationContext
+     * @var SerializationContext|Context
      */
-    private $serializationContext;
+    private $context;
 
     /**
      * @var Response
@@ -192,13 +193,30 @@ class View
     /**
      * Sets the serialization context.
      *
-     * @param SerializationContext $serializationContext
+     * @param Context $context
      *
      * @return View
      */
-    public function setSerializationContext(SerializationContext $serializationContext)
+    public function setContext(Context $context)
     {
-        $this->serializationContext = $serializationContext;
+        $this->context = $context;
+
+        return $this;
+    }
+
+    /**
+     * Sets the serialization context.
+     *
+     * @param SerializationContext $context
+     *
+     * @return View
+     *
+     * @deprecated since 1.8, to be removed in 2.0. Use {@link View::setContext()} instead.
+     */
+    public function setSerializationContext(SerializationContext $context)
+    {
+        @trigger_error(sprintf('%s is deprecated since version 1.8 and will be removed in 2.0. Use %s::setContext() instead.', __METHOD__, get_class($this)), E_USER_DEPRECATED);
+        $this->context = $context;
 
         return $this;
     }
@@ -449,14 +467,32 @@ class View
     /**
      * Gets the serialization context.
      *
-     * @return SerializationContext
+     * @return SerializationContext|Context
+     */
+    public function getContext()
+    {
+        if (null === $this->context) {
+            $this->context = new Context();
+        }
+
+        return $this->context;
+    }
+
+    /**
+     * Gets the serialization context.
+     *
+     * @return SerializationContext|Context
+     *
+     * @deprecated since 1.8, to be removed in 2.0. Use {@link View::getContext()} instead.
      */
     public function getSerializationContext()
     {
-        if (null === $this->serializationContext) {
-            $this->serializationContext = new SerializationContext();
+        @trigger_error(sprintf('%s is deprecated since version 1.8 and will be removed in 2.0. Use %s::getContext() instead.', __METHOD__, get_class($this)), E_USER_DEPRECATED);
+
+        if (null === $this->context) {
+            $this->context = new SerializationContext();
         }
 
-        return $this->serializationContext;
+        return $this->context;
     }
 }

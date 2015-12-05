@@ -11,13 +11,14 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\Util\ContextHelper;
+use FOS\RestBundle\View\View;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
-use JMS\Serializer\SerializationContext;
-use FOS\RestBundle\View\View;
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\ViewHandlerInterface;
 
 /**
@@ -76,16 +77,28 @@ class ViewResponseListener extends TemplateListener
             if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Codes::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
+
+            // BC < 1.8
+            $viewClass = 'FOS\RestBundle\View\View';
+            if (get_class($view) === $viewClass) {
+                $context = $view->getContext();
+            } else {
+                $method = new \ReflectionMethod($view, 'getSerializationContext');
+                if ($method->getDeclaringClass()->getName() != $viewClass) {
+                    $context = $view->getSerializationContext();
+                } else {
+                    $context = $view->getContext();
+                }
+            }
+            $context = $context ?: new Context();
+
             if ($configuration->getSerializerGroups() && !$customViewDefined) {
-                $context = $view->getSerializationContext() ?: new SerializationContext();
-                $context->setGroups($configuration->getSerializerGroups());
-                $view->setSerializationContext($context);
+                ContextHelper::addGroups($context, $configuration->getSerializerGroups());
             }
             if ($configuration->getSerializerEnableMaxDepthChecks()) {
-                $context = $view->getSerializationContext() ?: new SerializationContext();
-                $context->enableMaxDepthChecks();
-                $view->setSerializationContext($context);
+                ContextHelper::setMaxDepth($context, 0);
             }
+
             $populateDefaultVars = $configuration->isPopulateDefaultVars();
         } else {
             $populateDefaultVars = true;

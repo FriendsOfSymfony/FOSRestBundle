@@ -61,23 +61,6 @@ abstract class AbstractRequestBodyParamConverterTest extends \PHPUnit_Framework_
 
         return $request;
     }
-
-    protected function createDeserializationContext($groups = null, $version = null)
-    {
-        $context = $this->getMock('JMS\Serializer\DeserializationContext');
-        if (null !== $groups) {
-            $context->expects($this->once())
-                ->method('setGroups')
-                ->with($groups);
-        }
-        if (null !== $version) {
-            $context->expects($this->once())
-                ->method('setVersion')
-                ->with($version);
-        }
-
-        return $context;
-    }
 }
 
 class Post
