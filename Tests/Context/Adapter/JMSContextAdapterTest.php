@@ -12,6 +12,9 @@
 namespace FOS\RestBundle\Tests\Context;
 
 use FOS\RestBundle\Context\Adapter\JMSContextAdapter;
+use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
+use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
+use FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface;
 use FOS\RestBundle\Context\Context;
 
 /**
@@ -24,16 +27,16 @@ class JMSContextAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
+        $this->serializer = $this->getMock(\JMS\Serializer\SerializerInterface::class);
         $this->adapter = new JMSContextAdapter();
         $this->adapter->setSerializer($this->serializer);
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface', $this->adapter);
-        $this->assertInstanceOf('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface', $this->adapter);
-        $this->assertInstanceOf('FOS\RestBundle\Context\Adapter\SerializerAwareInterface', $this->adapter);
+        $this->assertInstanceOf(SerializationContextAdapterInterface::class, $this->adapter);
+        $this->assertInstanceOf(DeserializationContextAdapterInterface::class, $this->adapter);
+        $this->assertInstanceOf(SerializerAwareInterface::class, $this->adapter);
     }
 
     public function testSerializationContextConversion()
@@ -48,7 +51,7 @@ class JMSContextAdapterTest extends \PHPUnit_Framework_TestCase
         $context->setSerializeNull(true);
 
         $JMSContext = $this->adapter->convertSerializationContext($context);
-        $this->assertInstanceOf('JMS\Serializer\SerializationContext', $JMSContext);
+        $this->assertInstanceOf(\JMS\Serializer\SerializationContext::class, $JMSContext);
         $this->assertEquals('bar', $JMSContext->attributes->get('foo')->get());
         $this->assertEquals(['a', 'b', 'c'], $JMSContext->attributes->get('groups')->get());
         $this->assertEquals(1.3, $JMSContext->attributes->get('version')->get());
@@ -66,7 +69,7 @@ class JMSContextAdapterTest extends \PHPUnit_Framework_TestCase
         $context->setSerializeNull(false);
 
         $JMSContext = $this->adapter->convertDeserializationContext($context);
-        $this->assertInstanceOf('JMS\Serializer\DeserializationContext', $JMSContext);
+        $this->assertInstanceOf(\JMS\Serializer\DeserializationContext::class, $JMSContext);
         $this->assertEquals('foo', $JMSContext->attributes->get('bar')->get());
         $this->assertEquals(['e', 'f'], $JMSContext->attributes->get('groups')->get());
         $this->assertEquals(1.4, $JMSContext->attributes->get('version')->get());

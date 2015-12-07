@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
@@ -115,8 +116,7 @@ class ParamFetcherListener
         if (null === $type) {
             return false;
         }
-        $fetcherInterface = 'FOS\\RestBundle\\Request\\ParamFetcherInterface';
 
-        return $type->implementsInterface($fetcherInterface);
+        return $type->implementsInterface(ParamFetcherInterface::class);
     }
 }

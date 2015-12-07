@@ -405,15 +405,12 @@ class RestActionReader
         // ignore all query params
         $params = $this->paramReader->getParamsFromMethod($method);
 
-        // ignore type hinted arguments that are or extend from:
-        // * Symfony\Component\HttpFoundation\Request
-        // * FOS\RestBundle\Request\QueryFetcher
-        // * Symfony\Component\Validator\ConstraintViolationList
+        // ignore several type hinted arguments
         $ignoreClasses = [
-            'Symfony\Component\HttpFoundation\Request',
-            'FOS\RestBundle\Request\ParamFetcherInterface',
-            'Symfony\Component\Validator\ConstraintViolationListInterface',
-            'Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter',
+            \Symfony\Component\HttpFoundation\Request::class,
+            \FOS\RestBundle\Request\ParamFetcherInterface::class,
+            \Symfony\Component\Validator\ConstraintViolationListInterface::class,
+            \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter::class,
         ];
 
         $arguments = [];

@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * ConfigurationCheckPass test.
@@ -25,7 +26,7 @@ class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldThrowRuntimeExceptionWhenFOSRestBundleAnnotations()
     {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['has'])
             ->getMock();
         $container->expects($this->at(0))
@@ -48,7 +49,7 @@ class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
             'RuntimeException',
             'You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter'
         );
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['has'])
             ->getMock();
         $container->expects($this->at(1))

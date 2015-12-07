@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @author Eduardo Gulias Davis <me@egulias.com>
@@ -20,9 +22,9 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
     {
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', ['addMethod']);
+        $definition = $this->getMock(Definition::class, ['addMethod']);
 
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
@@ -66,9 +68,9 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
 
     public function testNoRulesAreAddedWhenProfilerToolbarAreDisabled()
     {
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', ['addMethod']);
+        $definition = $this->getMock(Definition::class, ['addMethod']);
 
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+        $container = $this->getMockBuilder(ContainerBuilder::class)
             ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 

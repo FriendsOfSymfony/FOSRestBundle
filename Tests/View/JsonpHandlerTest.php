@@ -11,9 +11,11 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
 use FOS\RestBundle\View\JsonpHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -34,9 +36,9 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(['jsonp' => false]);
         $jsonpHandler = new JsonpHandler(key($query));
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
-        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
+        $viewHandler->setSerializationContextAdapter($this->getMock(SerializationContextAdapterInterface::class));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get', 'getParameter']);
+        $container = $this->getMock(ContainerInterface::class);
         $serializer = $this->getMock('stdClass', ['serialize', 'setVersion']);
         $serializer
             ->expects($this->once())
@@ -86,9 +88,9 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(['jsonp' => false]);
         $jsonpHandler = new JsonpHandler('callback');
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
-        $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
+        $viewHandler->setSerializationContextAdapter($this->getMock(SerializationContextAdapterInterface::class));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get', 'getParameter']);
+        $container = $this->getMock(ContainerInterface::class);
         $serializer = $this->getMock('stdClass', ['serialize', 'setVersion']);
         $serializer
             ->expects($this->once())

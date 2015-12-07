@@ -29,13 +29,13 @@ class ExceptionWrapperSerializeHandler implements SubscribingHandlerInterface
             [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'json',
-                'type' => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
+                'type' => ExceptionWrapper::class,
                 'method' => 'serializeToJson',
             ],
             [
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'xml',
-                'type' => 'FOS\\RestBundle\\Util\\ExceptionWrapper',
+                'type' => ExceptionWrapper::class,
                 'method' => 'serializeToXml',
             ],
         ];

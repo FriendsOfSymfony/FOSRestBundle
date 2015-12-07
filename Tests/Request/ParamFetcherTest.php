@@ -11,8 +11,14 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Util\ClassUtils;
+use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Request\ParamReaderInterface;
+use FOS\RestBundle\Validator\ViolationFormatterInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * ParamFetcher test.
@@ -28,22 +34,22 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     private $controller;
 
     /**
-     * @var \FOS\RestBundle\Request\ParamReaderInterface
+     * @var ParamReaderInterface
      */
     private $paramReader;
 
     /**
-     * @var ParamFetcherTest|\Symfony\Component\Validator\ValidatorInterface
+     * @var ParamFetcherTest|ValidatorInterface
      */
     private $validator;
 
     /**
-     * @var \FOS\RestBundle\Util\ViolationFormatterInterface
+     * @var ViolationFormatterInterface
      */
     private $violationFormatter;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\RequestStack
+     * @var RequestStack
      */
     private $requestStack;
 
@@ -55,20 +61,20 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->controller = [new \stdClass(), 'fooAction'];
 
         $this->params = [];
-        $this->paramReader = $this->getMock('FOS\RestBundle\Request\ParamReaderInterface');
+        $this->paramReader = $this->getMock(ParamReaderInterface::class);
 
-        $this->validator = $this->getMock('Symfony\Component\Validator\Validator\ValidatorInterface');
+        $this->validator = $this->getMock(ValidatorInterface::class);
 
-        $this->violationFormatter = $this->getMock('FOS\RestBundle\Validator\ViolationFormatterInterface');
+        $this->violationFormatter = $this->getMock(ViolationFormatterInterface::class);
 
         $this->request = new Request();
-        $this->requestStack = $this->getMock('Symfony\Component\HttpFoundation\RequestStack', array());
+        $this->requestStack = $this->getMock(RequestStack::class, array());
         $this->requestStack
             ->expects($this->any())
             ->method('getCurrentRequest')
             ->willReturn($this->request);
 
-        $this->paramFetcherBuilder = $this->getMockBuilder('FOS\RestBundle\Request\ParamFetcher');
+        $this->paramFetcherBuilder = $this->getMockBuilder(ParamFetcher::class);
         $this->paramFetcherBuilder
             ->setConstructorArgs(array(
                 $this->paramReader,
@@ -143,7 +149,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnBeforeGettingConstraints()
     {
-        $param = $this->getMock('FOS\RestBundle\Controller\Annotations\ParamInterface');
+        $param = $this->getMock(\FOS\RestBundle\Controller\Annotations\ParamInterface::class);
         $param
             ->expects($this->once())
             ->method('getDefault')
@@ -209,7 +215,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param = $this->createMockedParam('foo', 'default', [], false, null, ['constraint']);
         list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
 
-        $errors = $this->getMock('Symfony\Component\Validator\ConstraintViolationListInterface');
+        $errors = $this->getMock(ConstraintViolationListInterface::class);
         $errors
             ->expects($this->once())
             ->method('count')
@@ -233,7 +239,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param = $this->createMockedParam('foo', null, [], false, null, ['constraint']);
         list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
 
-        $errors = $this->getMock('Symfony\Component\Validator\ConstraintViolationListInterface');
+        $errors = $this->getMock(ConstraintViolationListInterface::class);
         $errors
             ->expects($this->once())
             ->method('count')

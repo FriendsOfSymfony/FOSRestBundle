@@ -440,7 +440,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
      */
     private function testExceptionExists($exception)
     {
-        if (!is_subclass_of($exception, '\Exception') && !is_a($exception, '\Exception', true)) {
+        if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
             throw new \InvalidArgumentException("FOSRestBundle exception mapper: Could not load class '$exception' or the class does not extend from '\Exception'. Most probably this is a configuration problem.");
         }
     }

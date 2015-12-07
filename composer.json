@@ -21,7 +21,7 @@
     ],
 
     "require": {
-        "php":                            ">=5.4.0",
+        "php":                            ">=5.5.9",
         "psr/log":                        "^1.0",
         "symfony/framework-bundle":       "^2.7|^3.0",
         "symfony/routing":                "^2.7|^3.0",

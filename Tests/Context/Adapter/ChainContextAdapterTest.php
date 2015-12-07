@@ -11,6 +11,11 @@
 
 namespace FOS\RestBundle\Tests\Context;
 
+use FOS\RestBundle\Context\Adapter\ChainContextAdapter;
+use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
+use FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface;
+use FOS\RestBundle\Context\ContextInterface;
+
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
@@ -20,18 +25,18 @@ class ChainContextAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->context = $this->getMock('FOS\RestBundle\Context\ContextInterface');
+        $this->context = $this->getMock(ContextInterface::class);
 
-        $this->adapter1 = $this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface');
-        $this->adapter2 = $this->getMock('FOS\RestBundle\Tests\Fixtures\Context\Adapter\SerializerAwareAdapter');
+        $this->adapter1 = $this->getMock(SerializationContextAdapterInterface::class);
+        $this->adapter2 = $this->getMock(\FOS\RestBundle\Tests\Fixtures\Context\Adapter\SerializerAwareAdapter::class);
 
-        $this->adapter = $this->getMock('FOS\RestBundle\Context\Adapter\ChainContextAdapter', null, [[$this->adapter1, $this->adapter2]]);
+        $this->adapter = new ChainContextAdapter([$this->adapter1, $this->adapter2]);
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface', $this->adapter);
-        $this->assertInstanceOf('FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface', $this->adapter);
+        $this->assertInstanceOf(SerializationContextAdapterInterface::class, $this->adapter);
+        $this->assertInstanceOf(DeserializationContextAdapterInterface::class, $this->adapter);
     }
 
     public function testSerializationContextConversion()
@@ -114,7 +119,7 @@ class ChainContextAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testSerializerTransmission()
     {
-        $serializer = $this->getMock('JMS\Serializer\Serializer', [], [], '', false);
+        $serializer = $this->getMock(\JMS\Serializer\Serializer::class, [], [], '', false);
         $this->adapter->setSerializer($serializer);
         $this->adapter2
              ->expects($this->exactly(4))

@@ -26,7 +26,7 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
 {
     public function testViolationIsWellFormatted()
     {
-        $violation = $this->getMockBuilder('Symfony\Component\Validator\ConstraintViolation')
+        $violation = $this->getMockBuilder(ConstraintViolation::class)
             ->disableOriginalConstructor()
             ->getMock();
 

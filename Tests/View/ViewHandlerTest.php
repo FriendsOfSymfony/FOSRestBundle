@@ -77,7 +77,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStatusCode($expected, $data, $isSubmitted, $isValid, $isSubmittedCalled, $isValidCalled, $noContentCode)
     {
-        $reflectionMethod = new \ReflectionMethod('FOS\RestBundle\View\ViewHandler', 'getStatusCode');
+        $reflectionMethod = new \ReflectionMethod(ViewHandler::class, 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
         $form = $this->getMock('Symfony\Component\Form\Form', ['isSubmitted', 'isValid'], [], '', false);
@@ -140,7 +140,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponseWithLocationAndData()
     {
         $testValue = ['naviter' => 'oudie'];
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
         $this->setupMockedSerializer($container, $testValue);
 
         $viewHandler = new ViewHandler(['json' => false]);
@@ -159,7 +159,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateResponseWithRoute()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
 
         $doRoute = function ($name, $parameters) {
             $route = '/';
@@ -244,7 +244,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(['html' => true, 'json' => false]);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
         if ('html' === $format) {
             $templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\PhpEngine')
                 ->setMethods(['render'])
@@ -343,7 +343,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSerializeNull($expected, $serializeNull)
     {
         $viewHandler = new ViewHandler(['json' => false], 404, 200, $serializeNull);
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
 
         $viewHandler->setContainer($container);
         $viewHandler->setSerializationContextAdapter($this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface'));
@@ -394,7 +394,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler(['json' => false], 404, 200);
         $viewHandler->setSerializeNullStrategy($serializeNull);
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
 
         $viewHandler->setContainer($container);
         $contextMethod = new \ReflectionMethod($viewHandler, 'getSerializationContext');
@@ -449,7 +449,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
         $container
             ->expects($this->exactly(2))
             ->method('get')
@@ -470,7 +470,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
         $container
             ->expects($this->once())
             ->method('get')
@@ -494,7 +494,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
         $container
             ->expects($this->once())
             ->method('get')
@@ -642,7 +642,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             ->build();
         $adapter = $this->getMock('FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface');
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container = $this->getMock(Container::class, ['get']);
         $container
             ->expects($this->any())
             ->method('get')
@@ -675,7 +675,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             })
             ->build();
 
-        $container2 = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
+        $container2 = $this->getMock(Container::class, ['get']);
         $container2
             ->expects($this->any())
             ->method('get')

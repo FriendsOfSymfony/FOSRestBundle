@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Context;
 
+use FOS\RestBundle\Context;
+
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
@@ -20,16 +22,16 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->context = $this->getMock('FOS\RestBundle\Context\Context', null);
+        $this->context = $this->getMock(Context\Context::class, null);
     }
 
     public function testInterfaces()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Context\ContextInterface', $this->context);
-        $this->assertInstanceOf('FOS\RestBundle\Context\GroupableContextInterface', $this->context);
-        $this->assertInstanceOf('FOS\RestBundle\Context\VersionableContextInterface', $this->context);
-        $this->assertInstanceOf('FOS\RestBundle\Context\MaxDepthContextInterface', $this->context);
-        $this->assertInstanceOf('FOS\RestBundle\Context\SerializeNullContextInterface', $this->context);
+        $this->assertInstanceOf(Context\ContextInterface::class, $this->context);
+        $this->assertInstanceOf(Context\GroupableContextInterface::class, $this->context);
+        $this->assertInstanceOf(Context\VersionableContextInterface::class, $this->context);
+        $this->assertInstanceOf(Context\MaxDepthContextInterface::class, $this->context);
+        $this->assertInstanceOf(Context\SerializeNullContextInterface::class, $this->context);
     }
 
     public function testDefaultValues()
@@ -56,7 +58,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function testGroupsAddition()
     {
-        $context = $this->getMock('FOS\RestBundle\Context\Context', ['addGroup']);
+        $context = $this->getMock(Context\Context::class, ['addGroup']);
         $context
             ->expects($this->exactly(2))
             ->method('addGroup')
