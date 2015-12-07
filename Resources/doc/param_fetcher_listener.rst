@@ -37,7 +37,7 @@ configured for the matched controller so that the user does not need to do this 
          * If you set the strict parameter without a nullable option, this will result in an error if the parameter is
          * missing from the query.
          *
-         * @QueryParam(name="sort", requirements="(asc|desc)+", allowBlank=false, default="asc", description="Sort direction")
+         * @QueryParam(name="sort", requirements="(asc|desc)", allowBlank=false, default="asc", description="Sort direction")
          * Will check if a blank value, e.g an empty string is passed and if so, it will set to the default of asc.
          *
          * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
