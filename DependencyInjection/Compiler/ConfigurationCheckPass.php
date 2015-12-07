@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * Checks if the SensioFrameworkExtraBundle views annotations are disabled when using the View Response listener.
  *
  * @author Eriksen Costa <eriksencosta@gmail.com>
+ *
+ * @internal
  */
 class ConfigurationCheckPass implements CompilerPassInterface
 {

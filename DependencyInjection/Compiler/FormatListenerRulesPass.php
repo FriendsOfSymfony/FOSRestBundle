@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @author Eduardo Gulias Davis <me@egulias.com>
+ *
+ * @internal
  */
 class FormatListenerRulesPass implements CompilerPassInterface
 {

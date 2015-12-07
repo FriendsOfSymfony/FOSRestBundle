@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * This listener handles registering custom mime types.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal
  */
 class MimeTypeListener
 {

@@ -49,6 +49,8 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 
     /**
      * @var ContainerInterface
+     *
+     * @internal
      */
     protected $container;
 
@@ -206,6 +208,8 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      *
      * @throws BadRequestHttpException
      * @throws \RuntimeException
+     *
+     * @internal
      */
     public function cleanParamWithRequirements(Param $config, $param, $strict)
     {

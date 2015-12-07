@@ -108,6 +108,9 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
     }
 
+    /**
+     * @internal
+     */
     public function loadAllowedMethodsListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if ($config['allowed_methods_listener']['enabled']) {

@@ -33,6 +33,8 @@ class ExceptionController implements ContainerAwareInterface
 {
     /**
      * @var ContainerInterface
+     *
+     * @internal
      */
     protected $container;
 
@@ -156,6 +158,8 @@ class ExceptionController implements ContainerAwareInterface
      * @param Request $request
      *
      * @return string
+     *
+     * @internal
      */
     protected function getAndCleanOutputBuffering(Request $request)
     {
@@ -181,6 +185,8 @@ class ExceptionController implements ContainerAwareInterface
      * @param array                                      $exceptionMap
      *
      * @return int|false
+     *
+     * @internal
      */
     protected function isSubclassOf($exception, $exceptionMap)
     {
@@ -307,6 +313,8 @@ class ExceptionController implements ContainerAwareInterface
      * @param bool    $showException
      *
      * @return TemplateReference
+     *
+     * @internal
      */
     protected function findTemplate(Request $request, $format, $statusCode, $showException)
     {

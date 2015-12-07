@@ -23,6 +23,8 @@ use FOS\RestBundle\Util\Codes;
  * sections are normalized, and merged.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal
  */
 class Configuration implements ConfigurationInterface
 {
