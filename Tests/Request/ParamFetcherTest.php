@@ -77,6 +77,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->paramFetcherBuilder = $this->getMockBuilder(ParamFetcher::class);
         $this->paramFetcherBuilder
             ->setConstructorArgs(array(
+                $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'),
                 $this->paramReader,
                 $this->requestStack,
                 $this->violationFormatter,
@@ -187,6 +188,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         list($fetcher, $method) = $this->getFetcherToCheckValidation(
             $param,
             array(
+                $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'),
                 $this->paramReader,
                 $this->requestStack,
                 $this->violationFormatter,
@@ -268,7 +270,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         }
 
         $fetcher = $this->paramFetcherBuilder->getMock();
-        $fetcher->setContainer($this->container);
 
         $fetcher
             ->expects($this->once())
@@ -400,22 +401,15 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     public function testParamContainerDefinition()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
         $fetcher = $this->paramFetcherBuilder->getMock();
-        $fetcher->setContainer($container);
         $fetcher->setController($this->controller);
 
         $param1 = $this->createMockedParam('foo');
-        $param1->expects($this->never())
-            ->method('setContainer');
 
         $param2 = $this->getMock('FOS\RestBundle\Controller\Annotations\AbstractParam', array());
         $param2->expects($this->once())
             ->method('getName')
             ->willReturn('bar');
-        $param2->expects($this->any())
-            ->method('setContainer')
-            ->with($container);
 
         $this->setParams([$param1, $param2]);
 
