@@ -1,7 +1,7 @@
 {
     "name": "friendsofsymfony/rest-bundle",
     "type": "symfony-bundle",
-    "description": "This Bundle provides various tools to rapidly develop RESTful API's with Symfony2",
+    "description": "This Bundle provides various tools to rapidly develop RESTful API's with Symfony",
     "keywords": ["rest"],
     "homepage": "http://friendsofsymfony.github.com",
     "license": "MIT",
@@ -21,7 +21,7 @@
     ],
 
     "require": {
-        "php":                            ">=5.3.9",
+        "php":                            "^5.3.9|~7.0",
         "psr/log":                        "~1.0",
         "symfony/framework-bundle":       "~2.3|~3.0",
         "symfony/http-kernel":            "^2.3.24|~3.0",

@@ -13,7 +13,6 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use JMS\Serializer\SerializationContext;
@@ -27,18 +26,6 @@ use FOS\RestBundle\Util\Codes;
  */
 class ViewResponseListener extends TemplateListener
 {
-    protected $container;
-
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Guesses the template name to render and its variables and adds them to
      * the request object.
