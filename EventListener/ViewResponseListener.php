@@ -15,7 +15,6 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\FOSRestBundle;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,18 +26,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ViewResponseListener extends TemplateListener
 {
-    protected $container;
-
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Guesses the template name to render and its variables and adds them to
      * the request object.
