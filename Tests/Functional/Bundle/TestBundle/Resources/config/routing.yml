@@ -9,3 +9,11 @@ test_serializer_error_exception:
 test_serializer_error_invalid_form:
     path:     /serializer-error/invalid-form.{_format}
     defaults: { _controller: TestBundle:SerializerError:invalidForm }
+
+test_param_fetcher:
+    path:     /params
+    defaults: { _controller: TestBundle:ParamFetcher:params }
+
+test_param_fetcher_test:
+    path:     /params/test
+    defaults: { _controller: TestBundle:ParamFetcher:test }
