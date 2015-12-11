@@ -11,11 +11,15 @@
 
 namespace FOS\RestBundle\Util;
 
+use FOS\RestBundle\Negotiation\FormatNegotiator as NewFormatNegotiator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Negotiation\FormatNegotiator as BaseFormatNegotiator;
 use Negotiation\AcceptHeader;
 
+/**
+ * @deprecated since 1.8, to be removed in 2.0. Use {@link \FOS\RestBundle\Negotiation\FormatNegotiator} instead.
+ */
 class FormatNegotiator implements MediaTypeNegotiatorInterface
 {
     private $formatNegotiator;
@@ -23,6 +27,10 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
 
     public function __construct()
     {
+        if (!$this instanceof NewFormatNegotiator) {
+            @trigger_error(sprintf('%s is deprecated since version 1.8 and will be removed in 2.0. Use FOS\RestBundle\Negotiation\FormatNegotiator instead.', __CLASS__), E_USER_DEPRECATED);
+        }
+
         $this->formatNegotiator = new BaseFormatNegotiator();
     }
 
@@ -61,45 +69,40 @@ class FormatNegotiator implements MediaTypeNegotiatorInterface
      */
     public function getBestMediaType(Request $request)
     {
+        $header = $request->headers->get('Accept');
+
         foreach ($this->map as $elements) {
-            if (null === $elements[0] || $elements[0]->matches($request)) {
-                $options = $elements[1];
+            // Check if the current RequestMatcherInterface matches the current request
+            if (!$elements[0]->matches($request)) {
+                continue;
             }
+            $options = &$elements[1];
 
             if (!empty($options['stop'])) {
                 throw new StopFormatListenerException('Stopped format listener');
             }
-
             if (empty($options['priorities'])) {
                 if (!empty($options['fallback_format'])) {
                     return $request->getMimeType($options['fallback_format']);
                 }
-
                 continue;
             }
 
-            $acceptHeader = $request->headers->get('Accept');
+            if (isset($options['prefer_extension']) && $options['prefer_extension'] && !isset($extensionHeader)) {
+                $extension = pathinfo($request->getPathInfo(), PATHINFO_EXTENSION);
 
-            if ($options['prefer_extension']) {
-                // ensure we only need to compute $extensionHeader once
-                if (!isset($extensionHeader)) {
-                    if (preg_match('/.*\.([a-z0-9]+)$/', $request->getPathInfo(), $matches)) {
-                        $extension = $matches[1];
-                    }
-
+                if (!empty($extension)) {
                     // $extensionHeader will now be either a non empty string or an empty string
-                    $extensionHeader = isset($extension) ? (string) $request->getMimeType($extension) : '';
-                    if ($acceptHeader && $extensionHeader) {
-                        $extensionHeader = ','.$extensionHeader;
+                    $extensionHeader = $request->getMimeType($extension);
+                    if ($header && $extensionHeader) {
+                        $header .= ',';
                     }
-                }
-                if ($extensionHeader) {
-                    $acceptHeader .= $extensionHeader.'; q='.$options['prefer_extension'];
+                    $header .= $extensionHeader.'; q='.$options['prefer_extension'];
                 }
             }
 
             $mimeTypes = $this->formatNegotiator->normalizePriorities($options['priorities']);
-            $mediaType = $this->formatNegotiator->getBest($acceptHeader, $mimeTypes);
+            $mediaType = $this->formatNegotiator->getBest($header, $mimeTypes);
             if ($mediaType instanceof AcceptHeader && !$mediaType->isMediaRange()) {
                 return $mediaType->getValue();
             }

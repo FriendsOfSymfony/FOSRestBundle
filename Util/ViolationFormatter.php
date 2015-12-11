@@ -13,11 +13,22 @@ namespace FOS\RestBundle\Util;
 
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Validator\ViolationFormatter as NewViolationFormatter;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+/**
+ * @deprecated since 1.8, to be removed in 2.0. Use {@link \FOS\RestBundle\Validator\ViolationFormatter} instead.
+ */
 class ViolationFormatter implements ViolationFormatterInterface
 {
+    public function __construct()
+    {
+        if (!$this instanceof NewViolationFormatter) {
+            @trigger_error(sprintf('%s is deprecated since version 1.8. Use FOS\RestBundle\Validator\ViolationFormatter instead.', __CLASS__), E_USER_DEPRECATED);
+        }
+    }
+
     /**
      * {@inheritdoc}
      */

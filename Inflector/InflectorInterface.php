@@ -9,23 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Util\Inflector;
+namespace FOS\RestBundle\Inflector;
+
+use FOS\RestBundle\Util\Inflector\InflectorInterface as LegacyInflectorInterface;
 
 /**
  * Inflector interface.
  *
  * @author Mark Kazemier <Markkaz>
- *
- * @deprecated since 1.8, to be removed in 2.0. Use {@link \FOS\RestBundle\Inflector\InflectorInterface} instead.
  */
-interface InflectorInterface
+interface InflectorInterface extends LegacyInflectorInterface
 {
-    /**
-     * Pluralizes noun.
-     *
-     * @param string $word
-     *
-     * @return string
-     */
-    public function pluralize($word);
 }
