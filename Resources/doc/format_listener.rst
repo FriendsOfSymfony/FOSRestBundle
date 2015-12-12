@@ -27,6 +27,7 @@ Setting ``priorities`` to a non-empty array enables Accept header negotiations.
     # app/config/config.yml
     fos_rest:
         format_listener:
+            enabled: true
             rules:
                 # setting fallback_format to json means that instead of considering the next rule in case of a priority mismatch, json will be used
                 - { path: '^/', host: 'api.%domain%', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
@@ -102,6 +103,7 @@ format will remain unchanged.
     # app/config/config.yml
     fos_rest:
         format_listener:
+            enabled: true
             rules:
                 - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
                 - { path: '^/', stop: true } # Available for version >= 1.5
@@ -119,6 +121,7 @@ follows. Setting it to an empty value will disable the behavior entirely.
 
     fos_rest:
         format_listener:
+            enabled: true
             media_type:
                 version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
 
@@ -142,7 +145,7 @@ To make the version mechanism working :
         view:
             mime_types:
                 json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
-                
+
 Note: If you have to handle huge versions and mime types, you can simplify the configuration with a php script:
 
 .. code-block:: php
@@ -153,7 +156,7 @@ Note: If you have to handle huge versions and mime types, you can simplify the c
         '1.1',
         '2.0',
     );
-    
+
     $mimeTypes = array(
         'json' => array(
             'application/json',
@@ -163,7 +166,7 @@ Note: If you have to handle huge versions and mime types, you can simplify the c
             'text/yaml',
         ),
     );
-    
+
     array_walk($mimeTypes, function (&$mimeTypes, $format, $versions) {
         $versionMimeTypes = array();
         foreach ($mimeTypes as $mimeType) {
@@ -174,7 +177,7 @@ Note: If you have to handle huge versions and mime types, you can simplify the c
         }
         $mimeTypes = array_merge($mimeTypes, $versionMimeTypes);
     }, $versions);
-    
+
     $container->loadFromExtension('fos_rest', array(
         'view' => array(
             'mime_types' => $mimeTypes,
