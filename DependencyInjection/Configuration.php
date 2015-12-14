@@ -128,6 +128,7 @@ return $v; })
         $this->addExceptionSection($rootNode);
         $this->addBodyListenerSection($rootNode);
         $this->addFormatListenerSection($rootNode);
+        $this->addVersioningSection($rootNode);
 
         return $treeBuilder;
     }
@@ -298,11 +299,59 @@ return $v; })
                             ->children()
                                 ->scalarNode('service')->defaultNull()->end()
                                 ->scalarNode('version_regex')->defaultValue('/(v|version)=(?P<version>[0-9\.]+)/')->end()
-                            ->end()
-                        ->end()
                     ->end()
                 ->end()
             ->end();
+    }
+
+    private function addVersioningSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+        ->children()
+            ->arrayNode('versioning')
+                ->canBeEnabled()
+                ->children()
+                    ->scalarNode('default_version')->defaultNull()->end()
+                    ->arrayNode('resolvers')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->arrayNode('query')
+                                ->canBeDisabled()
+                                ->children()
+                                    ->scalarNode('parameter_name')->defaultValue('version')->end()
+                                ->end()
+                            ->end()
+                            ->arrayNode('custom_header')
+                                ->canBeDisabled()
+                                ->children()
+                                    ->scalarNode('header_name')->defaultValue('X-Accept-Version')->end()
+                                ->end()
+                            ->end()
+                            ->arrayNode('media_type')
+                                ->canBeDisabled()
+                                ->children()
+                                    ->scalarNode('regex')->defaultValue('/(v|version)=(?P<version>[0-9\.]+)/')->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('guessing_order')
+                        ->defaultValue(array('query', 'custom_header', 'media_type'))
+                        ->validate()
+                            ->ifTrue(function ($v) {
+                                foreach ($v as $resolver) {
+                                    if (!in_array($resolver, array('query', 'custom_header', 'media_type'))) {
+                                        return true;
+                                    }
+                                }
+                            })
+                            ->thenInvalid('Versioning guessing order can only contain "query", "custom_header", "media_type".')
+                        ->end()
+                        ->prototype('scalar')->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
     }
 
     private function addExceptionSection(ArrayNodeDefinition $rootNode)

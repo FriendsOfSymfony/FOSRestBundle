@@ -25,6 +25,7 @@ to enable a few additional listeners:
             enabled: true
             rules:
                 - { path: '^/', priorities: ['json', 'xml'], fallback_format: 'html' }
+        versioning: true
         view:
             view_response_listener: 'force'
 
@@ -93,6 +94,17 @@ configuration. This way it becomes possible to leverage Accept-Headers to
 determine the request format, rather than a file extension (like foo.json).
 
 For details see :doc:`Format Listener <format_listener>`.
+
+Versioning
+----------
+
+This listener attemps to determine the current api version from different parameters of the ``Request``:
+    - the uri ``/{version}/users``
+    - a query parameter ``/users?version=v1``
+    - an ``Accept`` header ``Accept: appication/json; version=1.0``
+    - a custom header ``X-Accept-Version: v1``
+
+For details see :doc:`Versioning <versioning>`.
 
 Mime Type Listener
 ------------------

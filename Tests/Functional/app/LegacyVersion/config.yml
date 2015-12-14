@@ -1,0 +1,16 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+
+fos_rest:
+    format_listener:
+        rules:
+            - { path: '^/', priorities: ['json', 'xml'] }
+        media_type: true
+
+    view:
+        mime_types:
+            json: ['application/json', 'application/json;version=2.3']

@@ -216,7 +216,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
     }
 
-    public function testLoadFormatListenerMediaType()
+    public function testLegacyFormatListenerMediaType()
     {
         $config = array(
             'fos_rest' => array('format_listener' => array(

@@ -120,3 +120,21 @@ Full default configuration
                 enabled:              false
                 service:              null
                 version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
+        versioning:
+            enabled: false
+            default_version: ~
+            resolvers:
+                query:
+                    enabled: true
+                    parameter_name: version
+                custom_header:
+                    enabled: true
+                    header_name: X-Accept-Version
+                media_type:
+                    enabled: true
+                    regex: /(v|version)=(?P<version>[0-9\.]+)/
+            guessing_order:
+                - uri
+                - query
+                - custom_header
+                - media_type

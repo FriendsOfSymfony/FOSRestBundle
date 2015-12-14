@@ -80,6 +80,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
         $this->loadBodyListener($config, $loader, $container);
         $this->loadFormatListener($config, $loader, $container);
+        $this->loadVersioning($config, $loader, $container);
         $this->loadParamFetcherListener($config, $loader, $container);
         $this->loadAllowedMethodsListener($config, $loader, $container);
         $this->loadAccessDeniedListener($config, $loader, $container);
@@ -167,19 +168,52 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
                 'fos_rest.format_listener.rules',
                 $config['format_listener']['rules']
             );
+        }
+    }
 
-            if (!empty($config['format_listener']['media_type']['enabled']) && !empty($config['format_listener']['media_type']['version_regex'])) {
+    private function loadVersioning(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if ($config['versioning']['enabled'] || $config['format_listener']['media_type']['enabled']) {
+            $loader->load('versioning.xml');
+
+            $versionListener = $container->getDefinition('fos_rest.version_listener');
+            $versionListener->replaceArgument(2, $config['versioning']['default_version']);
+
+            // BC FOSRestBundle < 1.8, to be removed in 2.0
+            if ($config['format_listener']['media_type']['enabled'] && !empty($config['format_listener']['media_type']['version_regex'])) {
+                @trigger_error('The format_listener.media_type section of the FOSRestBundle configuration is deprecated since 1.8 and will be removed in 2.0. Use versioning instead.', E_USER_DEPRECATED);
+
                 $container->setParameter(
                     'fos_rest.format_listener.media_type.version_regex',
                     $config['format_listener']['media_type']['version_regex']
                 );
+                $versionListener->addMethodCall('setRegex', array($config['format_listener']['media_type']['version_regex']));
 
                 if (!empty($config['format_listener']['media_type']['service'])) {
                     $service = $container->getDefinition('fos_rest.version_listener');
                     $service->clearTag('kernel.event_listener');
                 }
-            } else {
-                $container->removeDefinition('fos_rest.version_listener');
+            }
+
+            $resolvers = array();
+            if ($config['versioning']['resolvers']['query']['enabled']) {
+                $resolvers['query'] = $container->getDefinition('fos_rest.versioning.query_parameter_resolver');
+                $resolvers['query']->replaceArgument(0, $config['versioning']['resolvers']['query']['parameter_name']);
+            }
+            if ($config['versioning']['resolvers']['custom_header']['enabled']) {
+                $resolvers['custom_header'] = $container->getDefinition('fos_rest.versioning.header_resolver');
+                $resolvers['custom_header']->replaceArgument(0, $config['versioning']['resolvers']['custom_header']['header_name']);
+            }
+            if ($config['versioning']['resolvers']['media_type']['enabled']) {
+                $resolvers['media_type'] = $container->getDefinition('fos_rest.versioning.media_type_resolver');
+                $resolvers['media_type']->replaceArgument(0, $config['versioning']['resolvers']['media_type']['regex']);
+            }
+
+            $chainResolver = $container->getDefinition('fos_rest.versioning.chain_resolver');
+            foreach ($config['versioning']['guessing_order'] as $resolver) {
+                if (isset($resolvers[$resolver])) {
+                    $chainResolver->addMethodCall('addResolver', array($resolvers[$resolver]));
+                }
             }
         }
     }
