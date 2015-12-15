@@ -75,8 +75,17 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
             return $string;
         }
 
-        return preg_replace_callback('/_([a-zA-Z0-9])/', function ($matches) {
+        if (preg_match('/^(_+)(.*)/', $string, $matches)) {
+            $underscorePrefix = $matches[1];
+            $string = $matches[2];
+        } else {
+            $underscorePrefix = '';
+        }
+
+        $string = preg_replace_callback('/_([a-zA-Z0-9])/', function ($matches) {
             return strtoupper($matches[1]);
         }, $string);
+
+        return $underscorePrefix.$string;
     }
 }

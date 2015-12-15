@@ -50,6 +50,8 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
                     'foo1ar' => array('foo_bar'),
                 ),
             ),
+            // ignore leading underscores
+            array(array('__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'), array('__username' => 'foo', '_password' => 'bar', '_fooBar' => 'foobar')),
         );
     }
 }
