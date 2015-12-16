@@ -69,7 +69,7 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
      *
      * @return string
      */
-    private function normalizeString($string)
+    protected function normalizeString($string)
     {
         if (false === strpos($string, '_')) {
             return $string;
