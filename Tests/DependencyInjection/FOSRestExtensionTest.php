@@ -309,6 +309,18 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load($config, $this->container);
         $this->assertFalse($this->container->has('fos_rest.validator'));
     }
+    
+    public function testBodyConvertorDisabledAndSerializerVersionGiven()
+    {
+        $config = ['fos_rest' => ['body_converter' => ['enabled' => false], 'serializer' => ['version' => '1.0']]];
+        $this->extension->load($config, $this->container);
+    }
+
+    public function testBodyConvertorDisabledAndSerializerGroupsGiven()
+    {
+        $config = ['fos_rest' => ['body_converter' => ['enabled' => false], 'serializer' => ['groups' => ['Default']]]];
+        $this->extension->load($config, $this->container);
+    }
 
     /**
      * Test that extension loads properly.
