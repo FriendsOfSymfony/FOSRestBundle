@@ -56,6 +56,11 @@ to camel cased ones, you can use the ``camel_keys`` array normalizer:
         body_listener:
             array_normalizer: fos_rest.normalizer.camel_keys
 
+.. note::
+
+    If you want to ignore leading underscores, for example in ``_username`` you can
+    instead use the ``fos_rest.normalizer.camel_keys_with_leading_underscore`` service.
+
 Sometimes an array contains a key, which once normalized, will override an
 existing array key. For example ``foo_bar`` and ``foo_Bar`` will both lead to
 ``fooBar``. If the normalizer receives this data, the listener will throw a

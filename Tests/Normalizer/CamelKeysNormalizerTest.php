@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Normalizer;
 
 use FOS\RestBundle\Normalizer\CamelKeysNormalizer;
+use FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore;
 
 class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,5 +52,22 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
         );
+    }
+
+    /**
+     * @dataProvider normalizeProvider
+     */
+    public function testNormalizeLeadingUnderscore(array $array, array $expected)
+    {
+        $normalizer = new CamelKeysNormalizerWithLeadingUnderscore();
+        $this->assertEquals($expected, $normalizer->normalize($array));
+    }
+
+    public function normalizeProviderLeadingUnderscore()
+    {
+        $array = $this->normalizeProvider();
+        $array[] = array(array('__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'), array('__username' => 'foo', '_password' => 'bar', '_fooBar' => 'foobar'));
+
+        return $array;
     }
 }
