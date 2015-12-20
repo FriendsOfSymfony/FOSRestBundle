@@ -25,6 +25,8 @@ class ContainerDecoderProvider implements DecoderProviderInterface, ContainerAwa
 
     /**
      * @var ContainerInterface
+     *
+     * @internal
      */
     protected $container;
 

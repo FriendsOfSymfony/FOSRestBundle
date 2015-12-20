@@ -153,6 +153,8 @@ class RestRouteLoader extends Loader
      * @param string $file A PHP file path
      *
      * @return string|false Full class name if found, false otherwise
+     *
+     * @internal
      */
     protected function findClass($file)
     {

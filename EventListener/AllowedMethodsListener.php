@@ -18,6 +18,8 @@ use FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsLoaderInterface;
  * Listener to append Allow-ed methods for a given route/resource.
  *
  * @author Boris Guéry <guery.b@gmail.com>
+ *
+ * @internal
  */
 class AllowedMethodsListener
 {

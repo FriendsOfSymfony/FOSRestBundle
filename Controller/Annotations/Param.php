@@ -42,6 +42,8 @@ abstract class Param
 
     /**
      * @return string
+     *
+     * @internal
      */
     public function getKey()
     {

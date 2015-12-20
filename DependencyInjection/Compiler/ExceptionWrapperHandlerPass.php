@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * Checks if the JMS serializer is available to be able to use the ExceptionWrapperSerializeHandler.
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
+ *
+ * @internal
  */
 class ExceptionWrapperHandlerPass implements CompilerPassInterface
 {

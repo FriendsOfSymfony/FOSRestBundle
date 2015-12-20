@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
  * @author Florian Voutzinos <florian@voutzinos.com>
+ *
+ * @internal
  */
 class SerializerConfigurationPass implements CompilerPassInterface
 {
