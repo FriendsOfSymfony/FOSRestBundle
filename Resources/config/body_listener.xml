@@ -19,6 +19,8 @@
 
         <service id="fos_rest.normalizer.camel_keys" class="%fos_rest.normalizer.camel_keys.class%" />
 
+        <service id="fos_rest.normalizer.camel_keys_with_leading_underscore" class="FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore" />
+
         <service id="fos_rest.decoder.json" class="%fos_rest.decoder.json.class%" />
 
         <service id="fos_rest.decoder.jsontoform" class="%fos_rest.decoder.jsontoform.class%" />
