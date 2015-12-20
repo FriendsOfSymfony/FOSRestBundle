@@ -21,7 +21,10 @@ to enable a few additional listeners:
     fos_rest:
         param_fetcher_listener: true
         body_listener: true
-        format_listener: true
+        format_listener:
+            enabled: true
+            rules:
+                - { path: '^/', priorities: ['json', 'xml'], fallback_format: 'html' }
         versioning: true
         view:
             view_response_listener: 'force'

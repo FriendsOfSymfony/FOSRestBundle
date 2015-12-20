@@ -27,6 +27,7 @@ Setting ``priorities`` to a non-empty array enables Accept header negotiations.
     # app/config/config.yml
     fos_rest:
         format_listener:
+            enabled: true
             rules:
                 # setting fallback_format to json means that instead of considering the next rule in case of a priority mismatch, json will be used
                 - { path: '^/', host: 'api.%domain%', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
@@ -102,6 +103,7 @@ format will remain unchanged.
     # app/config/config.yml
     fos_rest:
         format_listener:
+            enabled: true
             rules:
                 - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
                 - { path: '^/', stop: true } # Available for version >= 1.5
