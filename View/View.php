@@ -66,7 +66,7 @@ class View
      * @param int    $statusCode
      * @param array  $headers
      *
-     * @return View
+     * @return static
      */
     public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
     {
@@ -85,7 +85,7 @@ class View
      * @param int    $statusCode
      * @param array  $headers
      *
-     * @return View
+     * @return static
      */
     public static function createRouteRedirect(
         $route,
