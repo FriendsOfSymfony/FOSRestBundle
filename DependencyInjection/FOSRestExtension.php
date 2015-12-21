@@ -77,7 +77,6 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
 
         $this->loadForm($config, $loader, $container);
-        $this->loadSerializer($config, $container);
         $this->loadException($config, $loader, $container);
         $this->loadBodyConverter($config, $validator, $loader, $container);
         $this->loadView($config, $loader, $container);
@@ -89,6 +88,9 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $this->loadAllowedMethodsListener($config, $loader, $container);
         $this->loadAccessDeniedListener($config, $loader, $container);
         $this->loadZoneMatcherListener($config, $loader, $container);
+
+        // Needs RequestBodyParamConverter and View Handler loaded.
+        $this->loadSerializer($config, $container);
     }
 
     private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container)
@@ -376,17 +378,24 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
     private function loadSerializer(array $config, ContainerBuilder $container)
     {
+        $bodyConverter = $container->hasDefinition('fos_rest.converter.request_body') ? $container->getDefinition('fos_rest.converter.request_body') : null;
+        $viewHandler = $container->getDefinition('fos_rest.view_handler.default');
+
         if (!empty($config['serializer']['version'])) {
-            $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(2, $config['serializer']['version']);
-            $container->getDefinition('fos_rest.view_handler.default')->addMethodCall('setExclusionStrategyVersion', array($config['serializer']['version']));
+            if ($bodyConverter) {
+                $bodyConverter->replaceArgument(2, $config['serializer']['version']);
+            }
+            $viewHandler->addMethodCall('setExclusionStrategyVersion', array($config['serializer']['version']));
         }
 
         if (!empty($config['serializer']['groups'])) {
-            $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(1, $config['serializer']['groups']);
-            $container->getDefinition('fos_rest.view_handler.default')->addMethodCall('setExclusionStrategyGroups', array($config['serializer']['groups']));
+            if ($bodyConverter) {
+                $bodyConverter->replaceArgument(1, $config['serializer']['groups']);
+            }
+            $viewHandler->addMethodCall('setExclusionStrategyGroups', array($config['serializer']['groups']));
         }
 
-        $container->getDefinition('fos_rest.view_handler.default')->addMethodCall('setSerializeNullStrategy', array($config['serializer']['serialize_null']));
+        $viewHandler->addMethodCall('setSerializeNullStrategy', array($config['serializer']['serialize_null']));
     }
 
     private function loadZoneMatcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
