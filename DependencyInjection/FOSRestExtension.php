@@ -377,12 +377,18 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
     private function loadSerializer(array $config, ContainerBuilder $container)
     {
         if (!empty($config['serializer']['version'])) {
-            $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(2, $config['serializer']['version']);
+            if (!empty($config['body_converter']['enabled'])) {
+                $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(2, $config['serializer']['version']);
+            }
+            
             $container->getDefinition('fos_rest.view_handler.default')->addMethodCall('setExclusionStrategyVersion', array($config['serializer']['version']));
         }
 
         if (!empty($config['serializer']['groups'])) {
-            $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(1, $config['serializer']['groups']);
+            if (!empty($config['body_converter']['enabled'])) {
+                $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(1, $config['serializer']['groups']);
+            }
+
             $container->getDefinition('fos_rest.view_handler.default')->addMethodCall('setExclusionStrategyGroups', array($config['serializer']['groups']));
         }
 
