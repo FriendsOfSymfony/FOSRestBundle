@@ -51,7 +51,7 @@ class View
      * @param int   $statusCode
      * @param array $headers
      *
-     * @return \FOS\RestBundle\View\View
+     * @return static
      */
     public static function create($data = null, $statusCode = null, array $headers = array())
     {
