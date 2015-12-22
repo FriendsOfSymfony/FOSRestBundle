@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests\Request;
 use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
-use FOS\RestBundle\Validator\ViolationFormatterInterface;
+use FOS\RestBundle\Validator\ViolationFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -44,7 +44,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     private $validator;
 
     /**
-     * @var ViolationFormatterInterface
+     * @var ViolationFormatter
      */
     private $violationFormatter;
 
@@ -65,7 +65,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->validator = $this->getMock(ValidatorInterface::class);
 
-        $this->violationFormatter = $this->getMock(ViolationFormatterInterface::class);
+        $this->violationFormatter = $this->getMock(ViolationFormatter::class, array());
 
         $this->request = new Request();
         $this->requestStack = $this->getMock(RequestStack::class, array());

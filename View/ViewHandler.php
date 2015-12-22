@@ -18,7 +18,6 @@ use FOS\RestBundle\Context\GroupableContextInterface;
 use FOS\RestBundle\Context\SerializeNullContextInterface;
 use FOS\RestBundle\Context\VersionableContextInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,7 +34,7 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInterface
+class ViewHandler
 {
     use ContainerAwareTrait;
 
@@ -175,7 +174,11 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     }
 
     /**
-     * {@inheritdoc}
+     * Verifies whether the given format is supported by this view.
+     *
+     * @param string $format
+     *
+     * @return bool
      */
     public function supports($format)
     {

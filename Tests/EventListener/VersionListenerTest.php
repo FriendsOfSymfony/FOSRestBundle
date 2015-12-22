@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 class VersionListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \FOS\RestBundle\View\ConfigurableViewHandlerInterface
+     * @var \FOS\RestBundle\View\ViewHandler
      */
     private $viewHandler;
     /**
@@ -37,7 +37,7 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->viewHandler = $this->getMock('FOS\RestBundle\View\ConfigurableViewHandlerInterface');
+        $this->viewHandler = $this->getMock('FOS\RestBundle\View\ViewHandler');
         $this->resolver = $this->getMock('FOS\RestBundle\Version\VersionResolverInterface');
 
         $this->listener = new VersionListener($this->viewHandler, $this->resolver);

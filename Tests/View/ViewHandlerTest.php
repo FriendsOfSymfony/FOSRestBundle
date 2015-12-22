@@ -561,7 +561,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'lazy template data have reference to viewhandler and view' => [
                 ['foo' => 'bar'],
                 function ($handler, $view) use ($self) {
-                    $self->assertInstanceOf('FOS\\RestBundle\\View\\ViewHandlerInterface', $handler);
+                    $self->assertInstanceOf('FOS\\RestBundle\\View\\ViewHandler', $handler);
                     $self->assertInstanceOf('FOS\\RestBundle\\View\\View', $view);
                     $self->assertTrue($handler->isFormatTemplating($view->getFormat()));
 

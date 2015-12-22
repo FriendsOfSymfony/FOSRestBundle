@@ -57,7 +57,7 @@ which adds several convenience methods:
 
 There is also a trait called ``ControllerTrait`` for anyone that prefers to not
 inject the container into their controller. This requires using setter injection
-to set a ``ViewHandlerInterface`` instance via the ``setViewHandler`` method.
+to set a ``ViewHandler`` instance via the ``setViewHandler`` method.
 
 .. versionadded:: 2.0
     The ``ControllerTrait`` trait was added in 2.0.
@@ -107,9 +107,9 @@ or it is possible to use lazy-loading:
             $view = $this->view($products, 200)
                 ->setTemplate("MyBundle:Category:show.html.twig")
                 ->setTemplateVar('products')
-                ->setTemplateData(function (ViewHandlerInterface $viewHandler, ViewInterface $view) use ($categoryManager, $categorySlug) {
+                ->setTemplateData(function (ViewHandler $viewHandler, View $view) use ($categoryManager, $categorySlug) {
                     $category = $categoryManager->getBySlug($categorySlug);
-                    
+
                     return array(
                         'category' => $category,
                     );
@@ -260,7 +260,7 @@ Let's take an entity ``Task`` that holds a reference to a ``Person`` as
 an example. The serialized Task object will looks as follows:
 
 .. code-block:: json
-    
+
     {"task_form":{"name":"Task1", "person":{"id":1, "name":"Fabien"}}}
 
 In a traditional Symfony2 application we simply define the property of the
@@ -268,7 +268,7 @@ related class and it would perfectly assign the person to our task - in this
 case based on the id:
 
 .. code-block:: php
-    
+
     $builder
         ->add('name', 'text')
         ...
@@ -283,7 +283,7 @@ contain the id directly assigned to the person field to be be accepted by the
 form validation process:
 
 .. code-block:: json
-    
+
     {"task_form":{"name":"Task1", "person":1}}
 
 Well, this is somewhat useless since we not only want to display the name of the
@@ -294,7 +294,7 @@ data transformer. Fortunately, the FOSRestBundle comes with an
 ``EntityToIdObjectTransformer``, which can be applied to any form builder:
 
 .. code-block:: php
-    
+
     $personTransformer = new EntityToIdObjectTransformer($this->om, "AcmeDemoBundle:Person");
     $builder
         ->add('name', 'text')
@@ -396,26 +396,26 @@ Here is an example using a closure registered inside a Controller action:
                     // and place the content into the data
                     if ($view->getTemplate()) {
                         $data = $view->getData();
-                        
+
                         if (empty($data['params'])) {
                             $params = array();
                         } else {
                             $params = $data['params'];
                             unset($data['params']);
                         }
-                        
+
                         $view->setData($params);
                         $data['html'] = $handler->renderTemplate($view, 'html');
 
                         $view->setData($data);
                     }
-                    
+
                     return $handler->createResponse($view, $request, $format);
                 };
-                
+
                 $handler->registerHandler($view->getFormat(), $templatingHandler);
             }
-            
+
             return $handler->handle($view);
         }
     }
