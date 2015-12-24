@@ -408,7 +408,7 @@ class RestActionReader
         // ignore several type hinted arguments
         $ignoreClasses = [
             \Symfony\Component\HttpFoundation\Request::class,
-            \FOS\RestBundle\Request\ParamFetcherInterface::class,
+            \FOS\RestBundle\Request\ParamFetcher::class,
             \Symfony\Component\Validator\ConstraintViolationListInterface::class,
             \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter::class,
         ];

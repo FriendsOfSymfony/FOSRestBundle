@@ -13,8 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Version\VersionResolverInterface;
-use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
-use FOS\RestBundle\View\ViewHandlerInterface;
+use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
@@ -27,7 +26,7 @@ class VersionListener
     private $defaultVersion;
     private $version = false;
 
-    public function __construct(ViewHandlerInterface $viewHandler, VersionResolverInterface $versionResolver, $defaultVersion = null)
+    public function __construct(ViewHandler $viewHandler, VersionResolverInterface $versionResolver, $defaultVersion = null)
     {
         $this->viewHandler = $viewHandler;
         $this->versionResolver = $versionResolver;
@@ -59,10 +58,7 @@ class VersionListener
 
         if (false !== $this->version) {
             $request->attributes->set('version', $this->version);
-
-            if ($this->viewHandler instanceof ConfigurableViewHandlerInterface) {
-                $this->viewHandler->setExclusionStrategyVersion($this->version);
-            }
+            $this->viewHandler->setExclusionStrategyVersion($this->version);
         }
     }
 }

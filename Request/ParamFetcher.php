@@ -15,7 +15,7 @@ use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Util\ResolverTrait;
 use FOS\RestBundle\Validator\Constraints\ResolvableConstraintInterface;
-use FOS\RestBundle\Validator\ViolationFormatterInterface;
+use FOS\RestBundle\Validator\ViolationFormatter;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
+class ParamFetcher implements ContainerAwareInterface
 {
     use ResolverTrait, ContainerAwareTrait;
 
@@ -53,12 +53,12 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     /**
      * Initializes fetcher.
      *
-     * @param ParamReaderInterface        $paramReader
-     * @param RequestStack                $requestStack
-     * @param ValidatorInterface          $validator
-     * @param ViolationFormatterInterface $violationFormatter
+     * @param ParamReaderInterface $paramReader
+     * @param RequestStack         $requestStack
+     * @param ValidatorInterface   $validator
+     * @param ViolationFormatter   $violationFormatter
      */
-    public function __construct(ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
+    public function __construct(ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatter $violationFormatter, ValidatorInterface $validator = null)
     {
         $this->paramReader = $paramReader;
         $this->requestStack = $requestStack;
@@ -67,7 +67,9 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Sets the controller.
+     *
+     * @param callable $controller
      */
     public function setController($controller)
     {
@@ -100,7 +102,12 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets a validated parameter.
+     *
+     * @param string $name   Name of the parameter
+     * @param bool   $strict Whether a requirement mismatch should cause an exception
+     *
+     * @return mixed Value of the parameter.
      */
     public function get($name, $strict = null)
     {
@@ -190,7 +197,11 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Gets all validated parameter.
+     *
+     * @param bool $strict Whether a requirement mismatch should cause an exception
+     *
+     * @return array Values of all the parameters.
      */
     public function all($strict = null)
     {

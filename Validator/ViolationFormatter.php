@@ -15,10 +15,15 @@ use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class ViolationFormatter implements ViolationFormatterInterface
+class ViolationFormatter
 {
     /**
-     * {@inheritdoc}
+     * Format a ParamInterface's ConstraintViolation into a string message.
+     *
+     * @param ParamInterface               $param
+     * @param ConstraintViolationInterface $violation
+     *
+     * @return string
      */
     public function format(ParamInterface $param, ConstraintViolationInterface $violation)
     {
@@ -31,7 +36,12 @@ class ViolationFormatter implements ViolationFormatterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Format a ParamInterface's ConstraintViolationList into a string message.
+     *
+     * @param ParamInterface                   $param
+     * @param ConstraintViolationListInterface $violationList
+     *
+     * @return string
      */
     public function formatList(ParamInterface $param, ConstraintViolationListInterface $violationList)
     {

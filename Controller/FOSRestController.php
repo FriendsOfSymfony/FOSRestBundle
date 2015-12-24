@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Controller;
 
-use FOS\RestBundle\View\ViewHandlerInterface;
+use FOS\RestBundle\View\ViewHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
@@ -26,11 +26,11 @@ abstract class FOSRestController extends Controller
     /**
      * Get the ViewHandler.
      *
-     * @return ViewHandlerInterface
+     * @return ViewHandler
      */
     protected function getViewHandler()
     {
-        if (!$this->viewhandler instanceof ViewHandlerInterface) {
+        if (!$this->viewhandler instanceof ViewHandler) {
             $this->viewhandler = $this->container->get('fos_rest.view_handler');
         }
 

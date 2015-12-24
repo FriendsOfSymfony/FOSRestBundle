@@ -37,7 +37,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     public $container;
 
     /**
-     * @var \FOS\RestBundle\View\ViewHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \FOS\RestBundle\View\ViewHandler|\PHPUnit_Framework_MockObject_MockObject
      */
     public $viewHandler;
 
@@ -378,7 +378,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->viewHandler = $this->getMock('FOS\RestBundle\View\ViewHandlerInterface');
+        $this->viewHandler = $this->getMock('FOS\RestBundle\View\ViewHandler', array());
         $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
         $this->listener = new ViewResponseListener($this->container);

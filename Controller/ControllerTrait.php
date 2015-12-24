@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Controller;
 
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandlerInterface;
+use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -24,16 +24,16 @@ use Symfony\Component\HttpFoundation\Response;
 trait ControllerTrait
 {
     /**
-     * @var ViewHandlerInterface
+     * @var ViewHandler
      */
     private $viewhandler;
 
     /**
      * Get the ViewHandler.
      *
-     * @param ViewHandlerInterface $viewhandler
+     * @param ViewHandler $viewhandler
      */
-    public function setViewHandler(ViewHandlerInterface $viewhandler)
+    public function setViewHandler(ViewHandler $viewhandler)
     {
         $this->viewhandler = $viewhandler;
     }
@@ -41,12 +41,12 @@ trait ControllerTrait
     /**
      * Get the ViewHandler.
      *
-     * @return ViewHandlerInterface
+     * @return ViewHandler
      */
     protected function getViewHandler()
     {
-        if (!$this->viewhandler instanceof ViewHandlerInterface) {
-            throw new \RuntimeException('A "ViewHandlerInterface" instance must be set when usign the FOSRestBundle "ControllerTrait".');
+        if (!$this->viewhandler instanceof ViewHandler) {
+            throw new \RuntimeException('A "ViewHandler" instance must be set when using the FOSRestBundle "ControllerTrait".');
         }
 
         return $this->viewhandler;
