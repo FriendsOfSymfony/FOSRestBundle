@@ -5,9 +5,9 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="fos_rest.context.adapter.array_context_adapter" class="FOS\RestBundle\Context\Adapter\ArrayContextAdapter" />
-        <service id="fos_rest.context.adapter.jms_context_adapter" class="FOS\RestBundle\Context\Adapter\JMSContextAdapter" />
-        <service id="fos_rest.context.adapter.chain_context_adapter" class="FOS\RestBundle\Context\Adapter\ChainContextAdapter">
+        <service id="fos_rest.context.adapter.array_context_adapter" class="FOS\RestBundle\Context\Adapter\ArrayContextAdapter" public="false" />
+        <service id="fos_rest.context.adapter.jms_context_adapter" class="FOS\RestBundle\Context\Adapter\JMSContextAdapter" public="false" />
+        <service id="fos_rest.context.adapter.chain_context_adapter" class="FOS\RestBundle\Context\Adapter\ChainContextAdapter" public="false">
             <argument type="collection">
             <argument type="service" id="fos_rest.context.adapter.jms_context_adapter" />
                 <argument type="service" id="fos_rest.context.adapter.array_context_adapter" />

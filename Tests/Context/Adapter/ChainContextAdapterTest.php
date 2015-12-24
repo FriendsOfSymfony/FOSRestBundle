@@ -139,13 +139,4 @@ class ChainContextAdapterTest extends \PHPUnit_Framework_TestCase
         $this->adapter->convertSerializationContext($this->context);
         $this->adapter->convertDeserializationContext($this->context);
     }
-
-    public function testSerializerDefinition()
-    {
-        $this->adapter->setSerializer('SomeSerializer');
-        $serializerProperty = new \ReflectionProperty($this->adapter, 'serializer');
-        $serializerProperty->setAccessible(true);
-
-        $this->assertEquals('SomeSerializer', $serializerProperty->getValue($this->adapter));
-    }
 }

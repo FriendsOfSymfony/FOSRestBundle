@@ -11,7 +11,7 @@
             <argument type="service" id="fos_rest.allowed_methods_loader" />
         </service>
 
-        <service id="fos_rest.allowed_methods_loader" class="FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsRouterLoader">
+        <service id="fos_rest.allowed_methods_loader" class="FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsRouterLoader" public="false">
             <tag name="kernel.cache_warmer" />
             <argument type="service" id="router" />
             <argument /> <!-- cache dir -->

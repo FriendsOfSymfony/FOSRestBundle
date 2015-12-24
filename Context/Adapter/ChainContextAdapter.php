@@ -31,7 +31,7 @@ class ChainContextAdapter implements SerializationContextAdapterInterface, Deser
     /**
      * @var mixed
      */
-    protected $serializer;
+    private $serializer;
 
     /**
      * Constructor.

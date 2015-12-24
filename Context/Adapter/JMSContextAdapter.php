@@ -31,7 +31,7 @@ class JMSContextAdapter implements SerializationContextAdapterInterface, Deseria
     /**
      * @var mixed
      */
-    protected $serializer;
+    private $serializer;
 
     /**
      * {@inheritdoc}
@@ -101,7 +101,7 @@ class JMSContextAdapter implements SerializationContextAdapterInterface, Deseria
      *
      * @return JMSContext
      */
-    protected function fillContext(ContextInterface $context, JMSContext $newContext)
+    private function fillContext(ContextInterface $context, JMSContext $newContext)
     {
         foreach ($context->getAttributes() as $key => $value) {
             $newContext->attributes->set($key, $value);

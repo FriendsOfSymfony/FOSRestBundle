@@ -19,8 +19,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
  * @author Florian Voutzinos <florian@voutzinos.com>
+ *
+ * @internal
  */
-class SerializerConfigurationPass implements CompilerPassInterface
+final class SerializerConfigurationPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -37,11 +39,8 @@ class SerializerConfigurationPass implements CompilerPassInterface
         } else {
             $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
         }
-
         if ($container->has('serializer')) {
             $container->setAlias('fos_rest.serializer', 'serializer');
-        } else {
-            $container->removeDefinition('fos_rest.serializer.exception_wrapper_normalizer');
         }
     }
 }

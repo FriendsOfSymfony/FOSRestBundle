@@ -72,7 +72,7 @@ class ArrayContextAdapter implements SerializationContextAdapterInterface, Deser
     /**
      * @param ContextInterface $context
      */
-    protected function convertContext(ContextInterface $context)
+    private function convertContext(ContextInterface $context)
     {
         $newContext = [];
         foreach ($context->getAttributes() as $key => $value) {

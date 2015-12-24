@@ -23,8 +23,10 @@ use Symfony\Component\HttpFoundation\Response;
  * sections are normalized, and merged.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal
  */
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     /**
      * Generates the configuration tree.

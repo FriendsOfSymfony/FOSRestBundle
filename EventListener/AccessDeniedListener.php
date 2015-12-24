@@ -27,6 +27,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  * will return a 403 regardless of how the firewall is configured.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal
  */
 class AccessDeniedListener extends ExceptionListener
 {

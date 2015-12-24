@@ -6,7 +6,7 @@
 
     <services>
 
-        <service id="fos_rest.converter.request_body" class="FOS\RestBundle\Request\RequestBodyParamConverter">
+        <service id="fos_rest.converter.request_body" class="FOS\RestBundle\Request\RequestBodyParamConverter" public="false">
             <argument type="service" id="fos_rest.serializer"/>
             <argument type="collection" /> <!-- serializer exclusion strategy groups -->
             <argument /> <!-- serializer exclusion strategy version -->

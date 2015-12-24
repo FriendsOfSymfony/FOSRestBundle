@@ -235,6 +235,8 @@ EOF;
 
     /**
      * {@inheritdoc}
+     *
+     * @internal
      */
     protected function loadFile($file)
     {

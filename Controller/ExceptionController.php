@@ -126,7 +126,7 @@ class ExceptionController implements ContainerAwareInterface
      *
      * @return string
      */
-    protected function getAndCleanOutputBuffering($startObLevel)
+    private function getAndCleanOutputBuffering($startObLevel)
     {
         if (ob_get_level() <= $startObLevel) {
             return '';
@@ -142,9 +142,9 @@ class ExceptionController implements ContainerAwareInterface
      * @param FlattenException $exception
      * @param array            $exceptionMap
      *
-     * @return int|bool
+     * @return int|false
      */
-    protected function isSubclassOf($exception, $exceptionMap)
+    private function isSubclassOf($exception, $exceptionMap)
     {
         $exceptionClass = $exception->getClass();
         $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
@@ -273,7 +273,7 @@ class ExceptionController implements ContainerAwareInterface
      *
      * @return TemplateReference
      */
-    protected function findTemplate(Request $request, $format, $statusCode, $showException)
+    private function findTemplate(Request $request, $format, $statusCode, $showException)
     {
         $name = $showException ? 'exception' : 'error';
         if ($showException && 'html' == $format) {

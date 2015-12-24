@@ -21,23 +21,23 @@ class Context implements ContextInterface, GroupableContextInterface, Versionabl
     /**
      * @var array
      */
-    protected $attributes;
+    private $attributes;
     /**
      * @var int|null
      */
-    protected $version;
+    private $version;
     /**
      * @var array
      */
-    protected $groups;
+    private $groups;
     /**
      * @var int
      */
-    protected $maxDepth;
+    private $maxDepth;
     /**
      * @var bool
      */
-    protected $serializeNull;
+    private $serializeNull;
 
     /**
      * Constructor.

@@ -158,7 +158,7 @@ class RestRouteLoader extends Loader
      *
      * @return string|false Full class name if found, false otherwise
      */
-    protected function findClass($file)
+    private function findClass($file)
     {
         $class = false;
         $namespace = false;

@@ -16,11 +16,11 @@
             </call>
         </service>
 
-        <service id="fos_rest.request.param_fetcher.reader" class="FOS\RestBundle\Request\ParamReader">
+        <service id="fos_rest.request.param_fetcher.reader" class="FOS\RestBundle\Request\ParamReader" public="false">
             <argument type="service" id="annotation_reader"/>
         </service>
 
-        <service id="fos_rest.violation_formatter" class="FOS\RestBundle\Validator\ViolationFormatter" />
+        <service id="fos_rest.violation_formatter" class="FOS\RestBundle\Validator\ViolationFormatter" public="false" />
 
     </services>
 

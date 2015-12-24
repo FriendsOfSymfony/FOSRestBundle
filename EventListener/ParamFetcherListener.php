@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
  * Setting the query fetcher as a request attribute
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal
  */
 class ParamFetcherListener
 {

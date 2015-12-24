@@ -12,19 +12,19 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="33"  />
         </service>
 
-        <service id="fos_rest.versioning.chain_resolver" class="FOS\RestBundle\Version\ChainVersionResolver">
+        <service id="fos_rest.versioning.chain_resolver" class="FOS\RestBundle\Version\ChainVersionResolver" public="false">
             <argument type="collection" /> <!-- resolvers -->
         </service>
 
-        <service id="fos_rest.versioning.header_resolver" class="FOS\RestBundle\Version\Resolver\HeaderVersionResolver">
+        <service id="fos_rest.versioning.header_resolver" class="FOS\RestBundle\Version\Resolver\HeaderVersionResolver" public="false">
             <argument /> <!-- request header name -->
         </service>
 
-        <service id="fos_rest.versioning.media_type_resolver" class="FOS\RestBundle\Version\Resolver\MediaTypeVersionResolver">
+        <service id="fos_rest.versioning.media_type_resolver" class="FOS\RestBundle\Version\Resolver\MediaTypeVersionResolver" public="false">
             <argument /> <!-- regex -->
         </service>
 
-        <service id="fos_rest.versioning.query_parameter_resolver" class="FOS\RestBundle\Version\Resolver\QueryParameterVersionResolver">
+        <service id="fos_rest.versioning.query_parameter_resolver" class="FOS\RestBundle\Version\Resolver\QueryParameterVersionResolver" public="false">
             <argument /> <!-- request parameter name -->
         </service>
     </services>

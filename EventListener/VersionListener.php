@@ -17,6 +17,9 @@ use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
+/**
+ * @internal
+ */
 class VersionListener
 {
     private $viewHandler;

@@ -129,6 +129,8 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      * @throws \RuntimeException
      *
      * @return mixed
+     *
+     * @internal
      */
     protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, $strict)
     {
@@ -236,6 +238,8 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      *
      * @throws InvalidArgumentException
      * @throws BadRequestHttpException
+     *
+     * @internal
      */
     protected function checkNotIncompatibleParams(ParamInterface $param)
     {

@@ -18,8 +18,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * Checks if the SensioFrameworkExtraBundle views annotations are disabled when using the View Response listener.
  *
  * @author Eriksen Costa <eriksencosta@gmail.com>
+ *
+ * @internal
  */
-class ConfigurationCheckPass implements CompilerPassInterface
+final class ConfigurationCheckPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {

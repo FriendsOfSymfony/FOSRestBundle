@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * Matches FOSRest's zones.
  *
  * @author Florian Voutzinos <florian@voutzinos.com>
+ *
+ * @internal
  */
 class ZoneMatcherListener
 {

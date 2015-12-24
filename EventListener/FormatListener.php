@@ -22,6 +22,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * This listener handles Accept header format negotiations.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal
  */
 class FormatListener
 {

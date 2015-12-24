@@ -25,6 +25,8 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
  * This listener handles Request body decoding.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal
  */
 class BodyListener
 {
@@ -165,7 +167,7 @@ class BodyListener
      *
      * @return bool
      */
-    protected function isFormRequest(Request $request)
+    private function isFormRequest(Request $request)
     {
         $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
 
