@@ -1,0 +1,36 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+    router: { resource: "%kernel.root_dir%/Configuration/routing.yml" }
+    profiler: { only_exceptions: false }
+
+fos_rest:
+    view:
+        mime_types: true
+    param_fetcher_listener: true
+    disable_csrf_role: foo
+    allowed_methods_listener: true
+    body_converter:
+        enabled: true
+        validate: true
+    exception: true
+    body_listener: true
+    format_listener:
+        enabled: true
+        rules:
+            - { path: '^/', priorities: ['xml'], fallback_format: ~ }
+    versioning: true
+
+security:
+    providers:
+        in_memory:
+            memory: ~
+    firewalls:
+        default:
+            anonymous: ~
+
+web_profiler:
+    toolbar: true
