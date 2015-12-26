@@ -504,7 +504,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('RequestStack unvailable.');
         }
 
-        $queryFetcher = new ParamFetcher($this->paramReader, new RequestStack(), $this->violationFormatter, $this->validator);
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+
+        $queryFetcher = new ParamFetcher($this->paramReader, $requestStack, $this->violationFormatter, $this->validator);
         $queryFetcher->get('none', '42');
     }
 

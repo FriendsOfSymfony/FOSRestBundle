@@ -15,7 +15,6 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatterInterface;
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,17 +35,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 {
-    private $paramReader;
+    private $parameterBag;
     private $requestStack;
-    private $params;
     private $validator;
     private $violationFormatter;
-
     /**
      * @var callable
      */
     private $controller;
-
     /**
      * @var ContainerInterface
      */
@@ -68,10 +64,11 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
             throw new \InvalidArgumentException(sprintf('Argument 3 of %s constructor must be either an instance of Symfony\Component\HttpFoundation\Request or Symfony\Component\HttpFoundation\RequestStack.', get_class($this)));
         }
 
-        $this->paramReader = $paramReader;
         $this->requestStack = $requestStack;
         $this->violationFormatter = $violationFormatter;
         $this->validator = $validator;
+
+        $this->parameterBag = new ParameterBag($paramReader);
 
         if ($validator !== null && !$validator instanceof LegacyValidatorInterface && !$validator instanceof ValidatorInterface) {
             throw new \InvalidArgumentException(sprintf(
@@ -98,7 +95,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     public function setController($controller)
     {
-        $this->controller = $controller;
+        $this->parameterBag->setController($this->getRequest(), $controller);
     }
 
     /**
@@ -110,8 +107,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     public function addParam(Param $param)
     {
-        $this->getParams(); // init params
-        $this->params[$param->name] = $param;
+        $this->parameterBag->addParam($this->getRequest(), $param);
     }
 
     /**
@@ -119,11 +115,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     public function getParams()
     {
-        if (null === $this->params) {
-            $this->initParams();
-        }
-
-        return $this->params;
+        return $this->parameterBag->getParams($this->getRequest());
     }
 
     /**
@@ -291,29 +283,6 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
         }
 
         return $params;
-    }
-
-    /**
-     * Initialize the parameters.
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function initParams()
-    {
-        if (empty($this->controller)) {
-            throw new \InvalidArgumentException('Controller and method needs to be set via setController');
-        }
-
-        if (!is_array($this->controller) || empty($this->controller[0]) || !is_object($this->controller[0])) {
-            throw new \InvalidArgumentException(
-                'Controller needs to be set as a class instance (closures/functions are not supported)'
-            );
-        }
-
-        $this->params = $this->paramReader->read(
-            new \ReflectionClass(ClassUtils::getClass($this->controller[0])),
-            $this->controller[1]
-        );
     }
 
     /**
