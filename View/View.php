@@ -51,7 +51,7 @@ class View
      * @param int   $statusCode
      * @param array $headers
      *
-     * @return \FOS\RestBundle\View\View
+     * @return static
      */
     public static function create($data = null, $statusCode = null, array $headers = [])
     {
@@ -66,7 +66,7 @@ class View
      * @param int    $statusCode
      * @param array  $headers
      *
-     * @return View
+     * @return static
      */
     public static function createRedirect($url, $statusCode = Response::HTTP_FOUND, array $headers = [])
     {
@@ -85,7 +85,7 @@ class View
      * @param int    $statusCode
      * @param array  $headers
      *
-     * @return View
+     * @return static
      */
     public static function createRouteRedirect(
         $route,

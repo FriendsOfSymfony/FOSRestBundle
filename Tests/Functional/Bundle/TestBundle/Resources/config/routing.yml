@@ -19,3 +19,7 @@ test_version2:
 test_param_fetcher:
     path:     /params
     defaults: { _controller: TestBundle:ParamFetcher:params }
+
+test_param_fetcher_test:
+    path:     /params/test
+    defaults: { _controller: TestBundle:ParamFetcher:test }

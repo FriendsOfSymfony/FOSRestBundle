@@ -87,13 +87,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
     }
 
-    public function testControllerSetter()
-    {
-        $fetcher = $this->paramFetcherBuilder->getMock();
-        $fetcher->setController($this->controller);
-        $this->assertEquals($this->controller, \PHPUnit_Framework_Assert::readAttribute($fetcher, 'controller'));
-    }
-
     public function testParamDynamicCreation()
     {
         $fetcher = $this->paramFetcherBuilder->getMock();
@@ -183,18 +176,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function testEmptyValidator()
     {
-        $param = $this->createMockedParam('foo', null, array(), false, null, array('constraint'));
-        list($fetcher, $method) = $this->getFetcherToCheckValidation(
-            $param,
-            array(
-                $this->paramReader,
-                $this->requestStack,
-                $this->violationFormatter,
-                null,
-            )
-        );
+        $param = $this->createMockedParam('none', null, array(), false, null, array('constraint'));
+        $this->setParams([$param]);
 
-        $method->invokeArgs($fetcher, array($param, 'value', null));
+        $fetcher = new ParamFetcher($this->paramReader, $this->requestStack, $this->violationFormatter, null);
+        $fetcher->setContainer($this->container);
+        $fetcher->setController($this->controller);
+        $fetcher->get('none', '42');
     }
 
     public function testNoValidationErrors()
@@ -309,18 +297,13 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Controller and method needs to be set via setController
      */
     public function testEmptyControllerExceptionWhenInitParams()
     {
         $fetcher = $this->paramFetcherBuilder->getMock();
-
-        $reflection = new \ReflectionClass($fetcher);
-        $method = $reflection->getMethod('initParams');
-        $method->setAccessible(true);
-
-        $method->invokeArgs($fetcher, array());
+        $fetcher->all();
     }
 
     /**
@@ -333,11 +316,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $fetcher = $this->paramFetcherBuilder->getMock();
         $fetcher->setController($controller);
 
-        $reflection = new \ReflectionClass($fetcher);
-        $method = $reflection->getMethod('initParams');
-        $method->setAccessible(true);
-
-        $method->invokeArgs($fetcher, array());
+        $fetcher->all();
     }
 
     public function invalidControllerProvider()
@@ -396,30 +375,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $method->invokeArgs($fetcher, array($param));
-    }
-
-    public function testParamContainerDefinition()
-    {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $fetcher = $this->paramFetcherBuilder->getMock();
-        $fetcher->setContainer($container);
-        $fetcher->setController($this->controller);
-
-        $param1 = $this->createMockedParam('foo');
-        $param1->expects($this->never())
-            ->method('setContainer');
-
-        $param2 = $this->getMock('FOS\RestBundle\Controller\Annotations\AbstractParam', array());
-        $param2->expects($this->once())
-            ->method('getName')
-            ->willReturn('bar');
-        $param2->expects($this->any())
-            ->method('setContainer')
-            ->with($container);
-
-        $this->setParams([$param1, $param2]);
-
-        $fetcher->getParams();
     }
 
     protected function setParams(array $params = array())

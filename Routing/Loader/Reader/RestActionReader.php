@@ -339,7 +339,7 @@ class RestActionReader
         $hasNoRouteMethod = (bool) $this->readMethodAnnotation($method, 'NoRoute');
         $hasNoRouteClass = (bool) $this->readClassAnnotation($method->getDeclaringClass(), 'NoRoute');
 
-        $hasNoRoute = $hasNoRoute = $hasNoRouteMethod || $hasNoRouteClass;
+        $hasNoRoute = $hasNoRouteMethod || $hasNoRouteClass;
         // since NoRoute extends Route we need to exclude all the method NoRoute annotations
         $hasRoute = (bool) $this->readMethodAnnotation($method, 'Route') && !$hasNoRouteMethod;
 

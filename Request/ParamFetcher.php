@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\Request;
 
-use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Util\ResolverTrait;
 use FOS\RestBundle\Validator\Constraints\ResolvableConstraintInterface;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
+use FOS\RestBundle\Controller\Annotations\Param;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,12 +39,10 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 {
     use ResolverTrait, ContainerAwareTrait;
 
-    private $paramReader;
+    private $parameterBag;
     private $requestStack;
-    private $params;
     private $validator;
     private $violationFormatter;
-
     /**
      * @var callable
      */
@@ -60,10 +58,11 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     public function __construct(ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
     {
-        $this->paramReader = $paramReader;
         $this->requestStack = $requestStack;
         $this->violationFormatter = $violationFormatter;
         $this->validator = $validator;
+
+        $this->parameterBag = new ParameterBag($paramReader);
     }
 
     /**
@@ -71,7 +70,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     public function setController($controller)
     {
-        $this->controller = $controller;
+        $this->parameterBag->setController($this->getRequest(), $controller);
     }
 
     /**
@@ -83,8 +82,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     public function addParam(ParamInterface $param)
     {
-        $this->getParams(); // init params
-        $this->params[$param->getName()] = $param;
+        $this->parameterBag->addParam($this->getRequest(), $param);
     }
 
     /**
@@ -92,11 +90,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     public function getParams()
     {
-        if (null === $this->params) {
-            $this->initParams();
-        }
-
-        return $this->params;
+        return $this->parameterBag->getParams($this->getRequest());
     }
 
     /**
@@ -202,32 +196,6 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
         }
 
         return $params;
-    }
-
-    /**
-     * Initialize the parameters.
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function initParams()
-    {
-        if (empty($this->controller)) {
-            throw new \InvalidArgumentException('Controller and method needs to be set via setController');
-        }
-
-        if (!is_array($this->controller) || empty($this->controller[0]) || empty($this->controller[1])) {
-            throw new \InvalidArgumentException(
-                'Controller needs to be set as a class instance (closures/functions are not supported)'
-            );
-        }
-
-        // the controller could be a proxy, e.g. when using the JMSSecuriyExtraBundle or JMSDiExtraBundle
-        $className = ClassUtils::getClass($this->controller[0]);
-
-        $this->params = $this->paramReader->read(
-            new \ReflectionClass($className),
-            $this->controller[1]
-        );
     }
 
     /**

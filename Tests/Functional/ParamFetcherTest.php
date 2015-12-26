@@ -59,6 +59,24 @@ class ParamFetcherTest extends WebTestCase
     {
         $value = ['bar foo', 'bar foo'];
         $this->client->request('POST', '/params', ['foo' => $value]);
+
+        $map = array(
+            'foo' => $this->validMap,
+            'bar' => $this->validMap,
+        );
+        $this->client->request('POST', '/params', array('raw' => 'bar', 'map' => $map));
+
+        $this->assertEquals(array('raw' => 'invalid', 'map' => $map, 'bar' => null), $this->getData());
+    }
+
+    public function testWithSubRequests()
+    {
+        $this->client->request('POST', '/params/test?foo=quz', array('raw' => $this->validRaw));
+        $this->assertEquals(array(
+            'before' => array('foo' => 'quz', 'bar' => 'foo'),
+            'during' => array('raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null),
+            'after' => array('foo' => 'quz', 'bar' => 'foo'),
+        ), $this->getData());
     }
 
     protected function getData()
