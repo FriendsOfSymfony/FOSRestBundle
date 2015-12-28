@@ -133,12 +133,12 @@ class ExceptionController
     }
 
     /**
-     * @param string $format
+     * @param string           $format
      * @param FlattenException $exception
-     * @param int $code
-     * @param array $parameters
-     * @param Request $request
-     * @param boolean $showException
+     * @param int              $code
+     * @param array            $parameters
+     * @param Request          $request
+     * @param bool             $showException
      *
      * @return View
      */

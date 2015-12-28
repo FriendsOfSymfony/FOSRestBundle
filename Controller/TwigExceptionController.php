@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
- * It additionally is able to prepare the template parameters for the core EngineInterface
+ * It additionally is able to prepare the template parameters for the core EngineInterface.
  */
 class TwigExceptionController extends ExceptionController
 {
@@ -36,7 +36,7 @@ class TwigExceptionController extends ExceptionController
 
     public function getTemplating()
     {
-        if (! $this->templating instanceof EngineInterface) {
+        if (!$this->templating instanceof EngineInterface) {
             throw new \RuntimeException('No templating engine set');
         }
 
@@ -44,7 +44,7 @@ class TwigExceptionController extends ExceptionController
     }
 
     /**
-     * {inheritDoc}
+     * {inheritDoc}.
      */
     protected function createView($format, FlattenException $exception, $code, $parameters, Request $request, $showException)
     {
@@ -59,7 +59,7 @@ class TwigExceptionController extends ExceptionController
     }
 
     /**
-     * {inheritDoc}
+     * {inheritDoc}.
      */
     protected function getParameters($currentContent, $code, $exception, DebugLoggerInterface $logger = null, $format = 'html')
     {
