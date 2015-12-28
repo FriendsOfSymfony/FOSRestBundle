@@ -42,24 +42,22 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false)
     {
-        $decoder = $this->getMockBuilder(DecoderInterface::class)->disableOriginalConstructor()->getMock();
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
         $decoder->expects($this->any())
             ->method('decode')
             ->will($this->returnValue($request->getContent()));
 
-        $decoderProvider = new ContainerDecoderProvider(['json' => 'foo']);
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $decoderProvider = new ContainerDecoderProvider($container, ['json' => 'foo']);
 
         $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType);
 
         if ($decode) {
-            $container = $this->getMock('Symfony\Component\DependencyInjection\Container', ['get']);
             $container
                 ->expects($this->once())
                 ->method('get')
                 ->with('foo')
                 ->will($this->returnValue($decoder));
-
-            $decoderProvider->setContainer($container);
         }
 
         $request->setMethod($method);
