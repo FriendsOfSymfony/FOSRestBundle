@@ -266,16 +266,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Gets the serializer service.
-     *
-     * @return object that must provide a "serialize()" method
-     */
-    protected function getSerializer()
-    {
-        return $this->serializer;
-    }
-
-    /**
      * Gets or creates a JMS\Serializer\SerializationContext and initializes it with
      * the view exclusion strategies, groups & versions if a new context is created.
      *
@@ -303,16 +293,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         }
 
         return $context;
-    }
-
-    /**
-     * Gets the templating service.
-     *
-     * @return EngineInterface
-     */
-    protected function getTemplating()
-    {
-        return $this->templating;
     }
 
     /**
@@ -403,7 +383,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             }
         }
 
-        return $this->getTemplating()->render($template, $data);
+        return $this->templating->render($template, $data);
     }
 
     /**
@@ -479,14 +459,13 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             $content = $this->renderTemplate($view, $format);
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $data = $this->getDataFromView($view);
-            $serializer = $this->getSerializer($view);
 
             $standardContext = $this->getSerializationContext($view);
             if ($this->contextAdapter instanceof SerializerAwareInterface) {
-                $this->contextAdapter->setSerializer($serializer);
+                $this->contextAdapter->setSerializer($this->serializer);
             }
             $context = $this->contextAdapter->convertSerializationContext($standardContext);
-            $content = $serializer->serialize($data, $format, $context);
+            $content = $this->serializer->serialize($data, $format, $context);
         }
 
         $response = $view->getResponse();
