@@ -15,9 +15,7 @@ use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Util\ResolverTrait;
 use FOS\RestBundle\Validator\Constraints\ResolvableConstraintInterface;
 use FOS\RestBundle\Validator\ViolationFormatterInterface;
-use FOS\RestBundle\Controller\Annotations\Param;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -35,10 +33,11 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
+class ParamFetcher implements ParamFetcherInterface
 {
-    use ResolverTrait, ContainerAwareTrait;
+    use ResolverTrait;
 
+    private $container;
     private $parameterBag;
     private $requestStack;
     private $validator;
@@ -51,13 +50,15 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     /**
      * Initializes fetcher.
      *
+     * @param ContainerInterface          $container
      * @param ParamReaderInterface        $paramReader
      * @param RequestStack                $requestStack
      * @param ValidatorInterface          $validator
      * @param ViolationFormatterInterface $violationFormatter
      */
-    public function __construct(ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
+    public function __construct(ContainerInterface $container, ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
     {
+        $this->container = $container;
         $this->requestStack = $requestStack;
         $this->violationFormatter = $violationFormatter;
         $this->validator = $validator;
@@ -128,13 +129,6 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      */
     protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, $strict)
     {
-        if (empty($this->container)) {
-            throw new \InvalidArgumentException(
-                'The ParamFetcher has been not initialized correctly. '.
-                'The container for parameter resolution is missing.'
-            );
-        }
-
         $default = $param->getDefault();
         $default = $this->resolveValue($this->container, $default);
 

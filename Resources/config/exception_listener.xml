@@ -13,9 +13,13 @@
         </service>
 
         <service id="fos_rest.controller.exception" class="FOS\RestBundle\Controller\ExceptionController">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
+            <argument type="service" id="fos_rest.exception_handler" />
+            <argument type="service" id="fos_rest.exception_format_negotiator" />
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="templating" />
+            <argument type="collection" /> <!-- exception codes -->
+            <argument type="collection" /> <!-- exception messages -->
+            <argument>%kernel.debug%</argument>
         </service>
 
         <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >

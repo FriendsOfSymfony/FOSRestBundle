@@ -8,7 +8,7 @@
 
         <service id="fos_rest.param_fetcher_listener" class="FOS\RestBundle\EventListener\ParamFetcherListener">
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="5"/>
-            <argument type="service" id="service_container"/>
+            <argument type="service" id="fos_rest.request.param_fetcher"/>
             <argument>false</argument>
         </service>
 
