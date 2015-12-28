@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use FOS\RestBundle\Util\Codes;
 
 /**
@@ -430,7 +431,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     {
         $route = $view->getRoute();
         $location = $route
-            ? $this->getRouter()->generate($route, (array) $view->getRouteParameters(), true)
+            ? $this->getRouter()->generate($route, (array) $view->getRouteParameters(), UrlGeneratorInterface::ABSOLUTE_URL)
             : $view->getLocation();
 
         if ($location) {

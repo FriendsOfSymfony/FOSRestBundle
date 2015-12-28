@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Util\Codes;
+use FOS\RestBundle\View\ViewHandlerInterface;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -99,11 +100,16 @@ class ViewResponseListener extends TemplateListener
             $vars = $request->attributes->get('_template_default_vars');
         }
 
+        /** @var ViewHandlerInterface $viewHandler */
         $viewHandler = $this->container->get('fos_rest.view_handler');
 
-        if ($viewHandler->isFormatTemplating($view->getFormat())) {
+        if ($viewHandler->isFormatTemplating($view->getFormat())
+            && !$view->getRoute()
+            && !$view->getLocation()
+        ) {
             if (!empty($vars)) {
                 $parameters = (array) $viewHandler->prepareTemplateParameters($view);
+
                 foreach ($vars as $var) {
                     if (!array_key_exists($var, $parameters)) {
                         $parameters[$var] = $request->attributes->get($var);
@@ -113,7 +119,7 @@ class ViewResponseListener extends TemplateListener
             }
 
             $template = $request->attributes->get('_template');
-            if ($template) {
+            if ($template && !$view->getTemplate()) {
                 if ($template instanceof TemplateReference) {
                     $template->set('format', null);
                 }

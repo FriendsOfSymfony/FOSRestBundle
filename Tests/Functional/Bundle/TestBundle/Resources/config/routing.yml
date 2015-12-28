@@ -23,3 +23,11 @@ test_param_fetcher:
 test_param_fetcher_test:
     path:     /params/test
     defaults: { _controller: TestBundle:ParamFetcher:test }
+
+test_view_response_listener:
+    resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ArticleController
+    type:     rest
+
+test_redirect_endpoint:
+    path:     /hello/{name}
+    defaults: { _controller: TestBundle:Article:redirect }
