@@ -103,7 +103,10 @@ class ViewResponseListener extends TemplateListener
         /** @var ViewHandlerInterface $viewHandler */
         $viewHandler = $this->container->get('fos_rest.view_handler');
 
-        if ($viewHandler->isFormatTemplating($view->getFormat())) {
+        if ($viewHandler->isFormatTemplating($view->getFormat())
+            && !$view->getRoute()
+            && !$view->getLocation()
+        ) {
             if (!empty($vars)) {
                 $parameters = (array) $viewHandler->prepareTemplateParameters($view);
 
