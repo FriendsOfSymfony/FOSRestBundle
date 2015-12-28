@@ -43,7 +43,6 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
      */
     public $templating;
 
-    private $container;
     private $router;
     private $serializer;
     private $requestStack;
