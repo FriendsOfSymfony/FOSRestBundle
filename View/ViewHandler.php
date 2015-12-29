@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use FOS\RestBundle\Util\Codes;
 
 /**
@@ -240,7 +241,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     /**
      * Gets the router service.
      *
-     * @return \Symfony\Component\Routing\RouterInterface
+     * @return RouterInterface
      */
     protected function getRouter()
     {
