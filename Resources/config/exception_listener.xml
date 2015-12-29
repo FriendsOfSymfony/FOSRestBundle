@@ -8,18 +8,23 @@
         <service id="fos_rest.exception_listener" class="Symfony\Component\HttpKernel\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
-            <argument>fos_rest.controller.exception:showAction</argument>
+            <argument>fos_rest.exception.controller:showAction</argument>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
-        <service id="fos_rest.controller.exception" class="FOS\RestBundle\Controller\ExceptionController">
+        <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController">
             <argument type="service" id="fos_rest.exception_handler" />
             <argument type="service" id="fos_rest.exception_format_negotiator" />
             <argument type="service" id="fos_rest.view_handler" />
-            <argument type="service" id="templating" />
             <argument type="collection" /> <!-- exception codes -->
             <argument type="collection" /> <!-- exception messages -->
             <argument>%kernel.debug%</argument>
+        </service>
+
+        <service id="fos_rest.exception.twig_controller" class="FOS\RestBundle\Controller\TwigExceptionController" parent="fos_rest.exception.controller" public="false">
+            <call method="setTemplating">
+                <argument type="service" id="templating.engine.twig" />
+            </call>
         </service>
 
         <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
