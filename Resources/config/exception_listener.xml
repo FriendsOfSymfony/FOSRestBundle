@@ -21,7 +21,7 @@
             <argument>%kernel.debug%</argument>
         </service>
 
-        <service id="fos_rest.exception.twig_controller" class="FOS\RestBundle\Controller\TwigExceptionController" parent="fos_rest.exception.controller" public="false">
+        <service id="fos_rest.exception.twig_controller" class="FOS\RestBundle\Controller\TwigExceptionController" parent="fos_rest.exception.controller">
             <call method="setTemplating">
                 <argument type="service" id="templating.engine.twig" />
             </call>
