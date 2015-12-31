@@ -26,5 +26,9 @@ final class TwigExceptionPass implements CompilerPassInterface
         if ($container->has('fos_rest.exception_listener') && $container->has('twig.exception_listener')) {
             $container->removeDefinition('twig.exception_listener');
         }
+
+        if (!$container->has('templating.engine.twig')) {
+            $container->removeDefinition('fos_rest.exception.twig_controller');
+        }
     }
 }
