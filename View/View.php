@@ -224,7 +224,9 @@ class View
      */
     public function setStatusCode($code)
     {
-        $this->statusCode = (int) $code;
+        if (!empty($code)) {
+            $this->statusCode = (int) $code;
+        }
 
         return $this;
     }
