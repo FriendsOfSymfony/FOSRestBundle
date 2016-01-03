@@ -218,7 +218,7 @@ class View
     /**
      * Sets the HTTP status code.
      *
-     * @param int $code
+     * @param int|null $code
      *
      * @return View
      */
