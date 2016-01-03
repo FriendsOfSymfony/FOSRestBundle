@@ -93,7 +93,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $isSubmittedCalled,
         $isValidCalled,
         $noContentCode,
-        $actualStatusCode
+        $actualStatusCode = null
     ) {
         $reflectionMethod = new \ReflectionMethod(ViewHandler::class, 'getStatusCode');
         $reflectionMethod->setAccessible(true);
@@ -120,13 +120,13 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public static function getStatusCodeDataProvider()
     {
         return [
-            'no data' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_OK, null],
-            'no data with 204' => [Response::HTTP_NO_CONTENT, false, false, false, 0, 0, Response::HTTP_NO_CONTENT, null],
+            'no data' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_OK],
+            'no data with 204' => [Response::HTTP_NO_CONTENT, false, false, false, 0, 0, Response::HTTP_NO_CONTENT],
             'no data, but custom response code' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_NO_CONTENT, Response::HTTP_OK],
-            'form key form not bound' => [Response::HTTP_OK, true, false, true, 1, 0, Response::HTTP_OK, null],
-            'form key form is bound and invalid' => [Response::HTTP_FORBIDDEN, true, true, false, 1, 1, Response::HTTP_OK, null],
-            'form key form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK, null],
-            'form key null form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK, null],
+            'form key form not bound' => [Response::HTTP_OK, true, false, true, 1, 0, Response::HTTP_OK],
+            'form key form is bound and invalid' => [Response::HTTP_FORBIDDEN, true, true, false, 1, 1, Response::HTTP_OK],
+            'form key form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
+            'form key null form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
         ];
     }
 
