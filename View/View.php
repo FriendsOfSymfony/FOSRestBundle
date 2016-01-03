@@ -24,14 +24,54 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class View
 {
+    /**
+     * @var mixed
+     */
     private $data;
+
+    /**
+     * @var int
+     */
+    private $statusCode;
+
+    /**
+     * @var mixed[]
+     */
     private $templateData = [];
+
+    /**
+     * @var string
+     */
     private $template;
+
+    /**
+     * @var string
+     */
     private $templateVar;
+
+    /**
+     * @var string
+     */
     private $engine;
+
+    /**
+     * @var string
+     */
     private $format;
+
+    /**
+     * @var string
+     */
     private $location;
+
+    /**
+     * @var string
+     */
     private $route;
+
+    /**
+     * @var mixed[]
+     */
     private $routeParameters;
 
     /**
@@ -110,7 +150,7 @@ class View
     public function __construct($data = null, $statusCode = null, array $headers = [])
     {
         $this->setData($data);
-        $this->setStatusCode($statusCode ?: 200);
+        $this->setStatusCode($statusCode);
         $this->setTemplateVar('data');
 
         if (!empty($headers)) {
@@ -184,7 +224,7 @@ class View
      */
     public function setStatusCode($code)
     {
-        $this->getResponse()->setStatusCode($code);
+        $this->statusCode = (int) $code;
 
         return $this;
     }
@@ -349,7 +389,7 @@ class View
      */
     public function getStatusCode()
     {
-        return $this->getResponse()->getStatusCode();
+        return $this->statusCode;
     }
 
     /**
@@ -441,6 +481,10 @@ class View
     {
         if (null === $this->response) {
             $this->response = new Response();
+
+            if ($code = $this->getStatusCode()) {
+                $this->response->setStatusCode($this->getStatusCode());
+            }
         }
 
         return $this->response;
