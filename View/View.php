@@ -224,8 +224,8 @@ class View
      */
     public function setStatusCode($code)
     {
-        if (!empty($code)) {
-            $this->statusCode = (int) $code;
+        if (null !== $code) {
+            $this->statusCode = $code;
         }
 
         return $this;
@@ -484,7 +484,7 @@ class View
         if (null === $this->response) {
             $this->response = new Response();
 
-            if ($code = $this->getStatusCode()) {
+            if (null !== ($code = $this->getStatusCode())) {
                 $this->response->setStatusCode($code);
             }
         }
