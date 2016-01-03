@@ -25,52 +25,52 @@ use Symfony\Component\HttpFoundation\Response;
 class View
 {
     /**
-     * @var mixed
+     * @var mixed|null
      */
     private $data;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $statusCode;
 
     /**
-     * @var mixed[]
+     * @var mixed|null
      */
     private $templateData = [];
 
     /**
-     * @var string
+     * @var TemplateReference|string|null
      */
     private $template;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $templateVar;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $engine;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $format;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $location;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $route;
 
     /**
-     * @var mixed[]
+     * @var array|null
      */
     private $routeParameters;
 
@@ -485,7 +485,7 @@ class View
             $this->response = new Response();
 
             if ($code = $this->getStatusCode()) {
-                $this->response->setStatusCode($this->getStatusCode());
+                $this->response->setStatusCode($code);
             }
         }
 
