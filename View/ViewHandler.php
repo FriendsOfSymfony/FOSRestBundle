@@ -247,7 +247,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         }
 
         $statusCode = $view->getStatusCode();
-        if (!empty($statusCode)) {
+        if (null !== $statusCode) {
             return $statusCode;
         }
 
