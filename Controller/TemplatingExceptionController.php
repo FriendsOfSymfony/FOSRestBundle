@@ -15,8 +15,8 @@ use FOS\RestBundle\Negotiation\FormatNegotiator;
 use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Templating\TemplateReferenceInterface;
 
 abstract class TemplatingExceptionController extends ExceptionController
 {
@@ -44,7 +44,7 @@ abstract class TemplatingExceptionController extends ExceptionController
      * @param int     $statusCode
      * @param bool    $showException
      *
-     * @return TemplateReference
+     * @return TemplateReferenceInterface
      */
     abstract protected function findTemplate(Request $request, $format, $statusCode, $showException);
 }

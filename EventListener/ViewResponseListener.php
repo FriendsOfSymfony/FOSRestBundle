@@ -14,12 +14,12 @@ namespace FOS\RestBundle\EventListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -133,7 +133,7 @@ class ViewResponseListener implements EventSubscriberInterface
 
             $template = $request->attributes->get('_template');
             if ($template) {
-                if ($template instanceof TemplateReference) {
+                if ($template instanceof TemplateReferenceInterface) {
                     $template->set('format', null);
                 }
 

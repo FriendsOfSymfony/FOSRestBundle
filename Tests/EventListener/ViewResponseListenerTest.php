@@ -129,7 +129,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelView()
     {
-        $template = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\TemplateReference')
+        $template = $this->getMockBuilder('Symfony\Component\Templating\TemplateReferenceInterface')
             ->disableOriginalConstructor()
             ->getMock();
         $template->expects($this->once())
