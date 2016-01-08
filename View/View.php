@@ -12,8 +12,8 @@
 namespace FOS\RestBundle\View;
 
 use FOS\RestBundle\Util\Codes;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\TemplateReferenceInterface;
 use JMS\Serializer\SerializationContext;
 
 /**
@@ -206,16 +206,16 @@ class View
     /**
      * Sets template to use for the encoding.
      *
-     * @param string|TemplateReference $template
+     * @param string|TemplateReferenceInterface $template
      *
      * @return View
      *
-     * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReference
+     * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReferenceInterface
      */
     public function setTemplate($template)
     {
-        if (!(is_string($template) || $template instanceof TemplateReference)) {
-            throw new \InvalidArgumentException('The template should be a string or extend TemplateReference');
+        if (!(is_string($template) || $template instanceof TemplateReferenceInterface)) {
+            throw new \InvalidArgumentException('The template should be a string or implement TemplateReferenceInterface');
         }
         $this->template = $template;
 
@@ -365,7 +365,7 @@ class View
     /**
      * Gets the template.
      *
-     * @return TemplateReference|string|null
+     * @return TemplateReferenceInterface|string|null
      */
     public function getTemplate()
     {
