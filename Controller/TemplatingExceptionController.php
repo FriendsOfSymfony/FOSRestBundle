@@ -11,6 +11,9 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Negotiation\FormatNegotiator;
+use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Request;
