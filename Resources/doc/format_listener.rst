@@ -84,9 +84,7 @@ in the controller action.
         // ...
     }
 
-Note that the format needs to either be supported by the ``Request`` class
-natively or it needs to be added as documented here or using the
-`mime type listener`_ explained in the Symfony documentation.
+Note that the format needs to be added using the :doc:`Mime Type Listener <3-listener-support>`.
 
 Disabling the Format Listener via Rules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
