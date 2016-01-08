@@ -13,7 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\Templating\TemplateReferenceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener;
 use JMS\Serializer\SerializationContext;
 use FOS\RestBundle\View\View;
@@ -120,7 +120,7 @@ class ViewResponseListener extends TemplateListener
 
             $template = $request->attributes->get('_template');
             if ($template && !$view->getTemplate()) {
-                if ($template instanceof TemplateReference) {
+                if ($template instanceof TemplateReferenceInterface) {
                     $template->set('format', null);
                 }
 

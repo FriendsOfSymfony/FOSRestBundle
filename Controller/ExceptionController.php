@@ -21,6 +21,7 @@ use Symfony\Component\Debug\Exception\FlattenException as DebugFlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\TemplateReferenceInterface;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
@@ -312,7 +313,7 @@ class ExceptionController implements ContainerAwareInterface
      * @param int     $statusCode
      * @param bool    $showException
      *
-     * @return TemplateReference
+     * @return TemplateReferenceInterface
      *
      * @internal
      */
