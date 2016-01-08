@@ -29,7 +29,7 @@ Alternatively the TwigBundle configuration can be used to enable the ExceptionCo
 
 .. note::
 
-    FOSRestBundle defines to services for exception rendering, by default it
+    FOSRestBundle defines two services for exception rendering, by default it
     configures ``fos_rest.exception.controller`` which only supports rendering
     via a serializer. In case no explicit controller is configured by the user
     and TwigBundle is detected it will automatically configure

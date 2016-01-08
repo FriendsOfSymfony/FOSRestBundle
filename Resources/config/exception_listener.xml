@@ -22,9 +22,7 @@
         </service>
 
         <service id="fos_rest.exception.twig_controller" class="FOS\RestBundle\Controller\TwigExceptionController" parent="fos_rest.exception.controller">
-            <call method="setTemplating">
-                <argument type="service" id="templating.engine.twig" />
-            </call>
+            <argument type="service" id="templating.engine.twig" />
         </service>
 
         <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
