@@ -3,7 +3,7 @@ Status code when responding with no content
 
 In some use cases the api should not send any content, especially when deleting (*DELETE*) or updating (*PUT* or *PATCH*) a resource.
 
-In order to provide a status code that should be sent when having no content, the configuration must be customized:
+In order to provide a status code that should be sent when having no content, the configuration must can customized (the default value for the shown parameter would be "204"):
 
 .. code-block:: yaml
 
@@ -11,10 +11,10 @@ In order to provide a status code that should be sent when having no content, th
         view:
             empty_content: 204
 
-If a controller returns no respone, this will be the status code.
+If a controller returns an empty response, this status will be used.
 
 .. versionadded:: 2.0
-  Until FOSRestBundle 2.0 this code will be used even if another code is configured inside the view object!
+  Until FOSRestBundle 2.0 this code will be used even if another code is configured manually inside the view object!
 
 Changes in 2.0
 --------------
