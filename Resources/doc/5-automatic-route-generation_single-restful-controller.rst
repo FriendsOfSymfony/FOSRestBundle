@@ -67,7 +67,7 @@ Define resource actions
         {} // "unlock_users"    [UNLOCK] /users
 
         public function optionsUsersAction()
-        {} // "options_users "  [OPTIONS] /users
+        {} // "options_users"   [OPTIONS] /users
 
         public function getUsersAction()
         {} // "get_users"       [GET] /users
