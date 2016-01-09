@@ -15,7 +15,6 @@ use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -43,25 +42,6 @@ class ViewResponseListener implements EventSubscriberInterface
     {
         $this->viewHandler = $viewHandler;
         $this->forceView = $forceView;
-    }
-
-    /**
-     * Guesses the template name to render and its variables and adds them to
-     * the request object.
-     *
-     * @param FilterControllerEvent $event
-     */
-    public function onKernelController(FilterControllerEvent $event)
-    {
-        $request = $event->getRequest();
-
-        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
-            return;
-        }
-
-        if ($configuration = $request->attributes->get('_view')) {
-            $request->attributes->set('_template', $configuration);
-        }
     }
 
     /**
@@ -131,7 +111,9 @@ class ViewResponseListener implements EventSubscriberInterface
                 $view->setData($parameters);
             }
 
-            $template = $request->attributes->get('_template');
+            $template = null !== $configuration && $configuration->getTemplate()
+                ? $configuration->getTemplate()
+                : $request->attributes->get('_template');
             if ($template) {
                 if ($template instanceof TemplateReferenceInterface) {
                     $template->set('format', null);
@@ -149,7 +131,6 @@ class ViewResponseListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::CONTROLLER => array('onKernelController', -100),
             KernelEvents::VIEW => 'onKernelView',
         );
     }

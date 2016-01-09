@@ -12,15 +12,17 @@
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\View;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
 class VersionController
 {
+    /**
+     * @View("TestBundle:Version:version.html.twig")
+     */
     public function versionAction($version)
     {
-        return new Response($version);
+        return array('version' => $version);
     }
 }

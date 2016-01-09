@@ -14,31 +14,13 @@ namespace FOS\RestBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\HttpFoundation\Response;
 
-class FOSRestExtension extends Extension implements PrependExtensionInterface
+class FOSRestExtension extends Extension
 {
-    /**
-     * Default sensio_framework_extra { view: { annotations: false } }.
-     *
-     * {@inheritdoc}
-     */
-    public function prepend(ContainerBuilder $container)
-    {
-        $configs = $container->getExtensionConfig($this->getAlias());
-        $parameterBag = $container->getParameterBag();
-        $configs = $parameterBag->resolveValue($configs);
-        $config = $this->processConfiguration(new Configuration(), $configs);
-
-        if ($config['view']['view_response_listener']['enabled']) {
-            $container->prependExtensionConfig('sensio_framework_extra', ['view' => ['annotations' => false]]);
-        }
-    }
-
     /**
      * Loads the services based on your application configuration.
      *

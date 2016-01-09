@@ -13,7 +13,7 @@ namespace FOS\RestBundle\View;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Context\ContextInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReferenceInterface;
+use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

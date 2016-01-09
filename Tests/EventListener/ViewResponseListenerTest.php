@@ -88,45 +88,6 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         return $event;
     }
 
-    public function testOnKernelController()
-    {
-        $this->createViewResponseListener();
-
-        $request = new Request();
-        $request->attributes->set('_view', 'foo');
-        $event = $this->getFilterEvent($request);
-
-        $this->listener->onKernelController($event);
-
-        $this->assertEquals('foo', $request->attributes->get('_template'));
-    }
-
-    public function testOnKernelControllerNoZone()
-    {
-        $this->createViewResponseListener();
-
-        $request = new Request();
-        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
-        $request->attributes->set('_view', 'foo');
-        $event = $this->getFilterEvent($request);
-
-        $this->listener->onKernelController($event);
-
-        $this->assertNull($request->attributes->get('_template'));
-    }
-
-    public function testOnKernelControllerNoView()
-    {
-        $this->createViewResponseListener();
-
-        $request = new Request();
-        $event = $this->getFilterEvent($request);
-
-        $this->listener->onKernelController($event);
-
-        $this->assertNull($request->attributes->get('_template'));
-    }
-
     public function testOnKernelView()
     {
         $template = $this->getMockBuilder('Symfony\Component\Templating\TemplateReferenceInterface')

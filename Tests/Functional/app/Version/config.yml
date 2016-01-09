@@ -4,14 +4,18 @@ imports:
 framework:
     serializer:
         enabled: true
+    templating:
+        engines: ['twig']
 
 fos_rest:
     format_listener:
         rules:
-            - { path: '^/', priorities: ['json', 'xml'] }
+            - { path: '^/', priorities: ['json', 'html'], fallback_format: json }
 
     view:
+        view_response_listener: true
         mime_types:
+            html: ['text/html']
             json: ['application/json', 'application/json;myversion=2.3']
     versioning:
         enabled: true
