@@ -45,44 +45,62 @@ Define resource actions
     <?php
     class UsersController
     {
+        public function copyUsersAction()
+        {} // "copy_users"      [COPY] /users
+
+        public function lockUsersAction()
+        {} // "lock_users"      [LOCK] /users
+
+        public function mkcolUsersAction()
+        {} // "mkcol_users"     [MKCOL] /users
+
+        public function moveUsersAction()
+        {} // "move_users"      [MOVE] /users
+
+        public function propfindUsersAction()
+        {} // "propfind_users"  [PROPFIND] /users
+
+        public function proppatchUsersAction()
+        {} // "proppatch_users" [PROPPATCH] /users
+
+        public function unlockUsersAction()
+        {} // "unlock_users"    [UNLOCK] /users
+
         public function optionsUsersAction()
-        {} // "options_users" [OPTIONS] /users
+        {} // "options_users "  [OPTIONS] /users
 
         public function getUsersAction()
-        {} // "get_users"     [GET] /users
+        {} // "get_users"       [GET] /users
 
         public function newUsersAction()
-        {} // "new_users"     [GET] /users/new
+        {} // "new_users"       [GET] /users/new
 
         public function postUsersAction()
-        {} // "post_users"    [POST] /users
+        {} // "post_users"      [POST] /users
 
         public function patchUsersAction()
-        {} // "patch_users"   [PATCH] /users
+        {} // "patch_users"     [PATCH] /users
 
         public function getUserAction($slug)
-        {} // "get_user"      [GET] /users/{slug}
+        {} // "get_user"        [GET] /users/{slug}
 
         public function editUserAction($slug)
-        {} // "edit_user"     [GET] /users/{slug}/edit
+        {} // "edit_user"       [GET] /users/{slug}/edit
 
         public function putUserAction($slug)
-        {} // "put_user"      [PUT] /users/{slug}
+        {} // "put_user"        [PUT] /users/{slug}
 
         public function patchUserAction($slug)
-        {} // "patch_user"    [PATCH] /users/{slug}
-
-        public function lockUserAction($slug)
-        {} // "lock_user"     [PATCH] /users/{slug}/lock
+        {} // "patch_user"      [PATCH] /users/{slug}
 
         public function banUserAction($slug)
-        {} // "ban_user"      [PATCH] /users/{slug}/ban
+        {} // "ban_user"        [PATCH] /users/{slug}/ban
 
         public function removeUserAction($slug)
-        {} // "remove_user"   [GET] /users/{slug}/remove
+        {} // "remove_user"     [GET] /users/{slug}/remove
 
         public function deleteUserAction($slug)
-        {} // "delete_user"   [DELETE] /users/{slug}
+        {} // "delete_user"     [DELETE] /users/{slug}
 
         public function getUserCommentsAction($slug)
         {} // "get_user_comments"    [GET] /users/{slug}/comments

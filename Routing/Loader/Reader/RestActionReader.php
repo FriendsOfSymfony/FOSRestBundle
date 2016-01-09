@@ -35,7 +35,25 @@ class RestActionReader
     private $routePrefix;
     private $namePrefix;
     private $parents = array();
-    private $availableHTTPMethods = array('get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options');
+    private $availableHTTPMethods = array(
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete',
+        'link',
+        'unlink',
+        'head',
+        'options',
+        'lock',
+        'unlock',
+        'propfind',
+        'proppatch',
+        'copy',
+        'mkcol',
+        'move',
+    );
+
     private $availableConventionalActions = array('new', 'edit', 'remove');
 
     /**
@@ -462,8 +480,14 @@ class RestActionReader
     private function readRouteAnnotation(\ReflectionMethod $reflectionMethod)
     {
         $annotations = array();
+        $annotationNames = array_map(
+            function ($httpVerb) {
+                return ucfirst($httpVerb);
+            },
+            $this->availableHTTPMethods
+        );
 
-        foreach (array('Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options') as $annotationName) {
+        foreach ($annotationNames as $annotationName) {
             if ($annotations_new = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
                 $annotations = array_merge($annotations, $annotations_new);
             }
