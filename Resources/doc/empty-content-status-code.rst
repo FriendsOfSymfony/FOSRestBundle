@@ -3,15 +3,14 @@ Status code when responding with no content
 
 In some use cases the api should not send any content, especially when deleting (*DELETE*) or updating (*PUT* or *PATCH*) a resource.
 
-In order to provide a status code that should be sent when having no content, the configuration must can customized (the default value for the shown parameter would be "204"):
+By default, ``FOSRestBundle`` will send a *204* status if the response is empty.
+If you want to use another status code for empty responses, you can update your configuration file:
 
 .. code-block:: yaml
 
     fost_rest:
         view:
             empty_content: 204
-
-If a controller returns an empty response, this status will be used.
 
 .. versionadded:: 2.0
   Until FOSRestBundle 2.0 this code will be used even if another code is configured manually inside the view object!
