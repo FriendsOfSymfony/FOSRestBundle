@@ -15,12 +15,5 @@ If you want to use another status code for empty responses, you can update your 
 .. versionadded:: 2.0
   Until FOSRestBundle 2.0 this code will be used even if another code is configured manually inside the view object!
 
-Changes in 2.0
---------------
-
-In the ticket .. _#1278: https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1278 has been decided to make it possible for
-users to adjust a custom status code. So if the configured code is *204*, but you want to send a 200 with empty content, you simply
-have to adjust a status code to the *View* annotation or the view api of the *ControllerTrait*.
-
-Another reason for this change was that for the *OPTIONS* http verb a *200* in favour of a *204* should be sent with empty
-content as reported in .. _#1126: https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1126
+If you don't want to use the default empty content status for a specific empty ``Response``, you just
+have to set a status code manually thanks to the ``@View()`` annotation or the ``View`` class.
