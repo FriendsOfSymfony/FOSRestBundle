@@ -246,8 +246,9 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             return $this->failedValidationCode;
         }
 
-        if (200 !== ($code = $view->getStatusCode())) {
-            return $code;
+        $statusCode = $view->getStatusCode();
+        if (null !== $statusCode) {
+            return $statusCode;
         }
 
         return null !== $content ? Response::HTTP_OK : $this->emptyContentCode;

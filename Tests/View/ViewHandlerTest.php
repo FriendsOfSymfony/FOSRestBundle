@@ -85,8 +85,16 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getStatusCodeDataProvider
      */
-    public function testGetStatusCode($expected, $data, $isSubmitted, $isValid, $isSubmittedCalled, $isValidCalled, $noContentCode)
-    {
+    public function testGetStatusCode(
+        $expected,
+        $data,
+        $isSubmitted,
+        $isValid,
+        $isSubmittedCalled,
+        $isValidCalled,
+        $noContentCode,
+        $actualStatusCode = null
+    ) {
         $reflectionMethod = new \ReflectionMethod(ViewHandler::class, 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
@@ -103,7 +111,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         if ($data) {
             $data = ['form' => $form];
         }
-        $view = new View($data ? $data : null);
+        $view = new View($data ?: null, $actualStatusCode ?: null);
 
         $viewHandler = $this->createViewHandler([], $expected, $noContentCode);
         $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view, $view->getData()));
@@ -114,8 +122,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         return [
             'no data' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_OK],
             'no data with 204' => [Response::HTTP_NO_CONTENT, false, false, false, 0, 0, Response::HTTP_NO_CONTENT],
+            'no data, but custom response code' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_NO_CONTENT, Response::HTTP_OK],
             'form key form not bound' => [Response::HTTP_OK, true, false, true, 1, 0, Response::HTTP_OK],
-            'form key form is bound and invalid' => [403, true, true, false, 1, 1, Response::HTTP_OK],
+            'form key form is bound and invalid' => [Response::HTTP_FORBIDDEN, true, true, false, 1, 1, Response::HTTP_OK],
             'form key form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
             'form key null form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
         ];

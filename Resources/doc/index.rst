@@ -1,11 +1,12 @@
 Getting Started With FOSRestBundle
-=====================================
+==================================
 
 .. toctree::
     :hidden:
 
     1-setting_up_the_bundle
     2-the-view-layer
+    empty-content-status-code
     3-listener-support
     view_response_listener
     body_listener
