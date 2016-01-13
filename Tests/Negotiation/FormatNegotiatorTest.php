@@ -61,6 +61,15 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new Accept('text/html'), $this->negotiator->getBest(''));
     }
 
+    public function testFallbackFormatWithPriorities()
+    {
+        $this->addRequestMatcher(true, ['priorities' => ['json', 'xml'], 'fallback_format' => null]);
+        $this->assertNull($this->negotiator->getBest(''));
+
+        $this->addRequestMatcher(true, ['priorities' => ['json', 'xml'], 'fallback_format' => 'json']);
+        $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
+    }
+
     public function testGetBest()
     {
         $this->request->headers->set('Accept', 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8');
