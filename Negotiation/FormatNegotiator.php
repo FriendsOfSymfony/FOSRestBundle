@@ -83,12 +83,16 @@ class FormatNegotiator extends BaseNegotiator
                 }
             }
 
-            $mimeTypes = $this->normalizePriorities($request,
-                empty($priorities) ? $options['priorities'] : $priorities
-            );
-            $mimeType = parent::getBest($header, $mimeTypes);
-            if ($mimeType !== null) {
-                return $mimeType;
+            if ($header) {
+                $mimeTypes = $this->normalizePriorities($request,
+                    empty($priorities) ? $options['priorities'] : $priorities
+                );
+
+                $mimeType = parent::getBest($header, $mimeTypes);
+
+                if ($mimeType !== null) {
+                    return $mimeType;
+                }
             }
 
             if (isset($options['fallback_format'])) {
