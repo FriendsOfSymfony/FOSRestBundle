@@ -89,6 +89,8 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
     private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
+        $loader->load('form.xml');
+
         if (!empty($config['disable_csrf_role'])) {
             $loader->load('forms.xml');
             $container->setParameter('fos_rest.disable_csrf_role', $config['disable_csrf_role']);

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="fos_rest.form.extension.boolean" class="FOS\RestBundle\Form\Extension\BooleanExtension">
+            <!-- "alias" option for SF <2.8 -->
+            <tag name="form.type_extension" alias="checkbox" extended_type="Symfony\Component\Form\Extension\Core\Type\CheckboxType" />
+        </service>
+    </services>
+</container>
