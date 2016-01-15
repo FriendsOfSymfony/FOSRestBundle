@@ -720,11 +720,14 @@ class RestActionReader
      */
     private function convertAvailableHttpMethodsToAnnotationNames()
     {
-        return array_map(
-            function ($httpMethod) {
-                return ucfirst($httpMethod);
-            },
-            $this->availableHTTPMethods
+        return array_merge(
+            ['Route'],
+            array_map(
+                function ($httpMethod) {
+                    return ucfirst($httpMethod);
+                },
+                $this->availableHTTPMethods
+            )
         );
     }
 }
