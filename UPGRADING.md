@@ -18,6 +18,7 @@ This document will be updated to list important BC breaks and behavioral changes
  * removed all ``.class`` parameters, instead overwriting services via explicit Bundle configuration is preferred
  * renamed ``AbstractScalarParam::$array`` to ``AbstractScalarParam::$map``
  * added `ControllerTrait` for developers that prefer to use DI for their controllers instead of extending ``FOSRestController``
+ * when having an action called ``lockUserAction``, then it will have use the http method ``LOCK`` (RFC-2518) instead of ``PATCH``
 
 ### upgrading from 1.5.*
 
