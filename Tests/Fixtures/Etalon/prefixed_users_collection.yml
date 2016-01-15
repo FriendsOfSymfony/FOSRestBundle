@@ -29,7 +29,7 @@ patch_user:
   controller: ::patchUserAction
 
 lock_user:
-  methods: [PATCH]
+  methods: [LOCK]
   path:    /resources/all/users/{slug}/lock.{_format}
   controller: ::lockUserAction
 

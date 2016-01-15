@@ -22,11 +22,11 @@ class UsersController extends Controller
 
 // [COPY] /users
 
-    public function lockUsersAction()
+    public function lockUserAction()
     {
     }
 
-// [LOCK] /users
+// [LOCK] /user
 
     public function mkcolUsersAction()
     {

@@ -27,7 +27,8 @@
         "symfony/http-kernel":            "^2.3.24|~3.0",
         "doctrine/inflector":             "~1.0",
         "willdurand/negotiation":         "~1.2",
-        "willdurand/jsonp-callback-validator": "~1.0"
+        "willdurand/jsonp-callback-validator": "~1.0",
+        "phpunit/phpunit": "^5.1"
     },
 
     "require-dev": {
