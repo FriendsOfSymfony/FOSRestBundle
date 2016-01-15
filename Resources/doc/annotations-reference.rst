@@ -92,7 +92,7 @@ Route
 
 RestBundle extends the `@Route Symfony annotation`_ from Symfony.
 
-@Delete @Get @Head @Link @Patch @Post @Put @Unlink have the same options as @Route.
+@Delete @Get @Head @Link @Patch @Post @Put @Unlink @Copy @Lock @Mkcol @Move @Propfind @Proppatch @Unlock have the same options as @Route.
 
 When using ``symfony/routing:>=2.4`` (or the full framework) you have access to
 the expression language component and can add conditions to your routing

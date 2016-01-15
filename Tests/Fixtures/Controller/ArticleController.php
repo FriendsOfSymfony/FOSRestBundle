@@ -63,7 +63,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
     {
     }
 
- // [PATCH] /articles/{slug}/lock
+ // [LOCK] /articles/{slug}/lock
 
     public function getCommentsAction($slug)
     {

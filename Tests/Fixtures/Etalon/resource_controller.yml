@@ -34,7 +34,7 @@ patch_article:
   controller: ::patchAction
 
 lock_article:
-  methods: [PATCH]
+  methods: [LOCK]
   path:    /articles/{slug}/lock.{_format}
   controller: ::lockAction
 
