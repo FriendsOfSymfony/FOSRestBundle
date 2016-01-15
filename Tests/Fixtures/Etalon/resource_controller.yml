@@ -34,8 +34,8 @@ patch_article:
   controller: ::patchAction
 
 lock_article:
-  methods: [PATCH]
-  path:    /articles/{slug}/lock.{_format}
+  methods: [LOCK]
+  path:    /articles/{slug}.{_format}
   controller: ::lockAction
 
 get_article_comments:

@@ -14,10 +14,9 @@ namespace FOS\RestBundle\Routing\Loader\Reader;
 use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
 use FOS\RestBundle\Inflector\InflectorInterface;
-use FOS\RestBundle\Request\ParamReader;
+use FOS\RestBundle\Request\ParamReaderInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Routing\Route;
-use FOS\RestBundle\Request\ParamReaderInterface;
 
 /**
  * REST controller actions reader.
@@ -28,17 +27,81 @@ class RestActionReader
 {
     const COLLECTION_ROUTE_PREFIX = 'c';
 
+    /**
+     * @var Reader
+     */
     private $annotationReader;
+
+    /**
+     * @var ParamReaderInterface
+     */
     private $paramReader;
+
+    /**
+     * @var InflectorInterface
+     */
     private $inflector;
+
+    /**
+     * @var array
+     */
     private $formats;
+
+    /**
+     * @var bool
+     */
     private $includeFormat;
+
+    /**
+     * @var string|null
+     */
     private $routePrefix;
+
+    /**
+     * @var string|null
+     */
     private $namePrefix;
+
+    /**
+     * @var array|string|null
+     */
     private $versions;
+
+    /**
+     * @var bool|null
+     */
     private $pluralize;
+
+    /**
+     * @var array
+     */
     private $parents = [];
-    private $availableHTTPMethods = ['get', 'post', 'put', 'patch', 'delete', 'link', 'unlink', 'head', 'options'];
+
+    /**
+     * @var array
+     */
+    private $availableHTTPMethods = [
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete',
+        'link',
+        'unlink',
+        'head',
+        'options',
+        'mkcol',
+        'propfind',
+        'proppatch',
+        'move',
+        'copy',
+        'lock',
+        'unlock',
+    ];
+
+    /**
+     * @var array
+     */
     private $availableConventionalActions = ['new', 'edit', 'remove'];
 
     /**
@@ -536,7 +599,7 @@ class RestActionReader
             return 'get';
         }
 
-        //custom object
+        // custom object
         return 'patch';
     }
 
@@ -551,7 +614,7 @@ class RestActionReader
     {
         $annotations = [];
 
-        foreach (['Route', 'Get', 'Post', 'Put', 'Patch', 'Delete', 'Link', 'Unlink', 'Head', 'Options'] as $annotationName) {
+        foreach ($this->convertAvailableHttpMethodsToAnnotationNames() as $annotationName) {
             if ($annotations_new = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
                 $annotations = array_merge($annotations, $annotations_new);
             }
@@ -648,5 +711,20 @@ class RestActionReader
         } else {
             $collection->add($fullRouteName, $route);
         }
+    }
+
+    /**
+     * Converts all given http methods to their annotation names.
+     *
+     * @return string[]
+     */
+    private function convertAvailableHttpMethodsToAnnotationNames()
+    {
+        return array_map(
+            function ($httpMethod) {
+                return ucfirst($httpMethod);
+            },
+            $this->availableHTTPMethods
+        );
     }
 }

@@ -76,10 +76,17 @@ class RestRouteCollection extends RouteCollection
      */
     public function all()
     {
+        $regex = <<<REGEX
+/
+    (_|^)
+    (get|post|put|delete|patch|head|options|mkcol|propfind|proppatch|lock|unlock|move|copy|link|unlink)_ # allowed http methods
+/i
+REGEX;
+
         $routes = parent::all();
         $customMethodRoutes = [];
         foreach ($routes as $routeName => $route) {
-            if (!preg_match('/(_|^)(get|post|put|delete|patch|head|options)_/', $routeName)) {
+            if (!preg_match($regex, $routeName)) {
                 $customMethodRoutes[$routeName] = $route;
                 unset($routes[$routeName]);
             }

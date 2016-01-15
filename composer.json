@@ -27,7 +27,8 @@
         "symfony/routing":                "^2.7|^3.0",
         "doctrine/inflector":             "^1.0",
         "willdurand/negotiation":         "^2.0",
-        "willdurand/jsonp-callback-validator": "^1.0"
+        "willdurand/jsonp-callback-validator": "^1.0",
+        "phpunit/phpunit": "^5.1"
     },
 
     "require-dev": {

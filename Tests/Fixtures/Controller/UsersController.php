@@ -72,7 +72,7 @@ class UsersController extends Controller
     }
 
     /**
-     * [PATCH] /users/{slug}/lock.
+     * [LOCK] /users/{slug}/lock.
      *
      * @param $slug
      */
