@@ -77,7 +77,7 @@ class ArticleController extends Controller implements ClassResourceInterface
     }
 
     /**
-     * [LOCK] /articles/{slug}/lock.
+     * [LOCK] /articles/{slug}.
      *
      * @param $slug
      */

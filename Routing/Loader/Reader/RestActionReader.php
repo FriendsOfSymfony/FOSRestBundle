@@ -615,8 +615,8 @@ class RestActionReader
         $annotations = [];
 
         foreach ($this->convertAvailableHttpMethodsToAnnotationNames() as $annotationName) {
-            if ($annotations_new = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
-                $annotations = array_merge($annotations, $annotations_new);
+            if ($newAnnotations = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
+                $annotations = array_merge($annotations, $newAnnotations);
             }
         }
 

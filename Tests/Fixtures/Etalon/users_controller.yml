@@ -1,3 +1,28 @@
+copy_user:
+  methods: [COPY]
+  path:    /users/{id}.{_format}
+  controller: ::copyUserAction
+
+propfind_user_props:
+  methods:    [PROPFIND]
+  path:       /users/{id}/props/{property}.{_format}
+  controller: ::propfindUserPropsAction
+
+proppatch_user_props:
+  methods:    [PROPPATCH]
+  path:       /users/{id}/props/{property}.{_format}
+  controller: ::proppatchUserPropsAction
+
+move_user:
+  methods:    [MOVE]
+  path:       /users/{id}.{_format}
+  controller: ::moveUserAction
+
+mkcol_users:
+  methods:    [MKCOL]
+  path:       /users.{_format}
+  controller: ::mkcolUsersAction
+
 get_users:
   methods: [GET]
   path:    /users.{_format}
@@ -32,6 +57,11 @@ lock_user:
   methods: [LOCK]
   path:    /users/{slug}.{_format}
   controller: ::lockUserAction
+
+unlock_user:
+  methods: [UNLOCK]
+  path:    /users/{slug}.{_format}
+  controller: ::unlockUserAction
 
 get_user_comments:
   methods: [GET]
