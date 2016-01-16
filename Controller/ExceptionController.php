@@ -190,7 +190,7 @@ class ExceptionController
                 }
             }
         } catch (\ReflectionException $re) {
-            return 'FOSUserBundle: Invalid class in fos_res.exception.messages: '
+            return 'FOSRestBundle: Invalid class in fos_rest.exception.messages: '
                     .$re->getMessage();
         }
 
