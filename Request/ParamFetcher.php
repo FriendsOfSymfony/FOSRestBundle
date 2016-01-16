@@ -52,11 +52,11 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      * Initializes fetcher.
      *
      * @param ParamReader                                 $paramReader
-     * @param Request|RequestStack                        $request
+     * @param Request|RequestStack|null                   $request
      * @param ValidatorInterface|LegacyValidatorInterface $validator
      * @param ViolationFormatterInterface                 $violationFormatter
      */
-    public function __construct(ParamReader $paramReader, $requestStack = null, ViolationFormatterInterface $violationFormatter, $validator = null)
+    public function __construct(ParamReader $paramReader, $requestStack, ViolationFormatterInterface $violationFormatter, $validator = null)
     {
         if (null === $requestStack || $requestStack instanceof Request) {
             @trigger_error('Support of Symfony\Component\HttpFoundation\Request in FOS\RestBundle\Request\ParamFetcher is deprecated since version 1.7 and will be removed in 2.0. Use Symfony\Component\HttpFoundation\RequestStack instead.', E_USER_DEPRECATED);
