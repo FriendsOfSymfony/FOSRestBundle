@@ -36,7 +36,7 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
-        $serializer = $this->getMock('stdClass', array('serialize', 'setVersion'));
+        $serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
         $serializer
             ->expects($this->once())
             ->method('serialize')
@@ -87,7 +87,7 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler->registerHandler('jsonp', array($jsonpHandler, 'createResponse'));
 
         $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get', 'getParameter'));
-        $serializer = $this->getMock('stdClass', array('serialize', 'setVersion'));
+        $serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
         $serializer
             ->expects($this->once())
             ->method('serialize')

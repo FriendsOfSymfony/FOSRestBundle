@@ -11,6 +11,14 @@
 
 namespace FOS\RestBundle\Request;
 
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Serializer\Serializer;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Exception\Exception as JMSSerializerException;
+use JMS\Serializer\Exception\UnsupportedFormatException;
+use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
@@ -18,12 +26,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Serializer\Exception\Exception as SymfonySerializerException;
 use Symfony\Component\Validator\ValidatorInterface as LegacyValidatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use JMS\Serializer\Exception\UnsupportedFormatException;
-use JMS\Serializer\Exception\Exception as JMSSerializerException;
-use JMS\Serializer\DeserializationContext;
-use JMS\Serializer\SerializerInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
@@ -101,13 +103,27 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
         $options = (array) $configuration->getOptions();
 
         if (isset($options['deserializationContext']) && is_array($options['deserializationContext'])) {
-            $context = array_merge($this->context, $options['deserializationContext']);
+            $arrayContext = array_merge($this->context, $options['deserializationContext']);
         } else {
-            $context = $this->context;
+            $arrayContext = $this->context;
         }
 
-        if ($this->serializer instanceof SerializerInterface) {
-            $context = $this->configureDeserializationContext($this->getDeserializationContext(), $context);
+        if ($this->serializer instanceof JMSSerializerInterface || $this->serializer instanceof Serializer) {
+            // BC < 1.8
+            if (get_class($this) === 'FOS\RestBundle\Request\RequestBodyParamConverter' || get_class($this) === 'FOS\RestBundle\Request\RequestBodyParamConverter20') {
+                $context = new Context();
+                $this->configureContext($context, $arrayContext);
+            } else {
+                $method = new \ReflectionMethod($this, 'getDeserializationContext');
+                if ($method->getDeclaringClass()->getName() !== __CLASS__) {
+                    $context = $this->configureDeserializationContext($this->getDeserializationContext(), $arrayContext);
+                } else {
+                    $context = new Context();
+                    $this->configureContext($context, $arrayContext);
+                }
+            }
+        } else {
+            $context = $arrayContext;
         }
 
         try {
@@ -152,10 +168,28 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
 
     /**
      * @return DeserializationContext
+     *
+     * @deprecated since 1.8, to be removed in 2.0. Use {@link AbstractRequestBodyParamConverter::configureContext()} instead.
      */
     protected function getDeserializationContext()
     {
+        @trigger_error(sprintf('%s is deprecated since version 1.8 and will be removed in 2.0. Use %s::configureContext() instead.', __METHOD__, get_class($this)), E_USER_DEPRECATED);
+
         return DeserializationContext::create();
+    }
+
+    /**
+     * @param Context $context
+     * @param array   $options
+     */
+    protected function configureContext(Context $context, array $options)
+    {
+        if (isset($options['groups'])) {
+            $context->addGroups($options['groups']);
+        }
+        if (isset($options['version'])) {
+            $context->setVersion($options['version']);
+        }
     }
 
     /**
@@ -163,9 +197,13 @@ abstract class AbstractRequestBodyParamConverter implements ParamConverterInterf
      * @param array                  $options
      *
      * @return DeserializationContext
+     *
+     * @deprecated since 1.8, to be removed in 2.0. Use {@link AbstractRequestBodyParamConverter::configureContext()} instead.
      */
     protected function configureDeserializationContext(DeserializationContext $context, array $options)
     {
+        @trigger_error(sprintf('%s is deprecated since version 1.8 and will be removed in 2.0. Use %s::configureContext() instead.', __METHOD__, get_class($this)), E_USER_DEPRECATED);
+
         if (isset($options['groups'])) {
             $context->setGroups($options['groups']);
         }
