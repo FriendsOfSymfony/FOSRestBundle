@@ -32,7 +32,11 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->requestStack = new RequestStack();
         $this->request = new Request();
         $this->requestStack->push($this->request);
-        $mimeTypes = ['json' => ['application/json', 'application/json;version=1.0'], 'html' => ['text/html', 'application/xhtml+xml'], 'xml' => ['application/xml']];
+        if (method_exists(Request::class, 'getMimeTypes')) {
+            $mimeTypes = ['json' => ['application/json;version=1.0']];
+        } else {
+            $mimeTypes = ['json' => ['application/json', 'application/json;version=1.0'], 'html' => ['text/html', 'application/xhtml+xml'], 'xml' => ['application/xml']];
+        }
         $this->negotiator = new FormatNegotiator($this->requestStack, $mimeTypes);
     }
 
@@ -72,8 +76,8 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
 
     public function testGetBest()
     {
-        $this->request->headers->set('Accept', 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8');
-        $priorities = ['text/html; charset=UTF-8', 'application/json'];
+        $this->request->headers->set('Accept', 'application/xhtml+xml, text/html, application/xml;q=0.9, */*;q=0.8');
+        $priorities = ['text/html; charset=UTF-8', 'html', 'application/json'];
         $this->addRequestMatcher(true, ['priorities' => $priorities]);
 
         $this->assertEquals(
@@ -81,8 +85,9 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
             $this->negotiator->getBest('')
         );
 
+        $this->request->headers->set('Accept', 'application/xhtml+xml, application/xml;q=0.9, */*;q=0.8');
         $this->assertEquals(
-            new Accept('text/html'),
+            new Accept('application/xhtml+xml'),
             $this->negotiator->getBest('', ['html', 'json'])
         );
     }

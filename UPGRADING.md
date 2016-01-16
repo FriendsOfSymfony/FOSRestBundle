@@ -5,7 +5,7 @@ This document will be updated to list important BC breaks and behavioral changes
 
 ### upgrading to 2.0.0
 
- * it is now recommended to explicitly configure the format to mime type mapping via ``fos_rest.view.mime_types``
+ * it is now recommended to explicitly configure the format to mime type mapping via ``fos_rest.view.mime_types`` except if you're using symfony 3.1 or higher
  * dropped support for the legacy ``Symfony\Component\Validator\ValidatorInterface``
  * removed ``FOS\RestBundle\Util\Codes`` in favor of ``Symfony\Component\HttpFoundation\Response``
  * compatibility with Symfony <2.7, JMS Serializer/SerializerBundle <1.0 and SensioFrameworkExtraBundle <3.0 was dropped

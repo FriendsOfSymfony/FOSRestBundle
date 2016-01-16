@@ -170,12 +170,14 @@ return $v; })
                         ->arrayNode('mime_types')
                             ->canBeEnabled()
                             ->beforeNormalization()
-                                ->ifArray()->then(function ($v) { if (!empty($v) && empty($v['formats'])) {
-     unset($v['enabled']);
-     $v = ['enabled' => true, 'formats' => $v];
- }
+                                ->ifArray()->then(function ($v) {
+                                    if (!empty($v) && empty($v['formats'])) {
+                                        unset($v['enabled']);
+                                        $v = ['enabled' => true, 'formats' => $v];
+                                    }
 
-return $v; })
+                                    return $v;
+                                })
                             ->end()
                             ->fixXmlConfig('format', 'formats')
                             ->children()
