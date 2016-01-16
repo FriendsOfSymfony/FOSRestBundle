@@ -25,7 +25,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(array('test_case' => $testCase));
+        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
         $client->request('GET', '/serializer-error/exception.json');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -46,7 +46,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(array('test_case' => $testCase));
+        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
         $client->request('GET', '/serializer-error/exception.xml');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -81,7 +81,7 @@ XML;
      */
     public function testSerializeInvalidFormJson($testCase, $expectedContent)
     {
-        $client = $this->createClient(array('test_case' => $testCase));
+        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
         $client->request('GET', '/serializer-error/invalid-form.json');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -100,7 +100,7 @@ XML;
      */
     public function testSerializeInvalidFormXml($testCase, $expectedContent)
     {
-        $client = $this->createClient(array('test_case' => $testCase));
+        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
         $client->request('GET', '/serializer-error/invalid-form.xml');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
