@@ -23,6 +23,7 @@ use FOS\RestBundle\Controller\Annotations\Head;
 use FOS\RestBundle\Controller\Annotations\Options;
 use FOS\RestBundle\Controller\Annotations\Link;
 use FOS\RestBundle\Controller\Annotations\Unlink;
+use FOS\RestBundle\Tests\Fixtures\User;
 
 class AnnotatedConditionalUsersController extends Controller
 {
@@ -50,7 +51,7 @@ class AnnotatedConditionalUsersController extends Controller
     /**
      * @Route(requirements={"slug" = "[a-z]+"})
      */
-    public function getUserAction($slug)
+    public function getUserAction(User $slug)
     {
     }
 

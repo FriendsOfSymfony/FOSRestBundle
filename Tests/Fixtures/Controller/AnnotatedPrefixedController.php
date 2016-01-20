@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Prefix;
 
 /**
@@ -20,7 +21,7 @@ use FOS\RestBundle\Controller\Annotations\Prefix;
  */
 class AnnotatedPrefixedController extends Controller
 {
-    public function getSomethingAction()
+    public function getSomethingAction(Request $request)
     {
     }
 
