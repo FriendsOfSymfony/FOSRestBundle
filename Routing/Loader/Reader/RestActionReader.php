@@ -352,7 +352,7 @@ class RestActionReader
             if ($argumentClass) {
                 foreach ($ignoreClasses as $class) {
                     $className = $argumentClass->getName();
-                    if ($className === $class || is_subclass_of($className)) {
+                    if ($className === $class || is_subclass_of($argumentClass, $className)) {
                         continue 2;
                     }
                 }
