@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ArticleController extends FosRestController implements ClassResourceInterface
 {
@@ -23,7 +24,7 @@ class ArticleController extends FosRestController implements ClassResourceInterf
 
  // [OPTIONS] /articles
 
-    public function cgetAction()
+    public function cgetAction(ConstraintViolationList $errors)
     {
     }
 
