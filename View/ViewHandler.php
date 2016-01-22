@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -244,9 +245,9 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     /**
      * Gets the router service.
      *
-     * @return \Symfony\Component\Routing\RouterInterface
-     *
      * @deprecated since 1.8, to be removed in 2.0.
+     *
+     * @return RouterInterface
      */
     protected function getRouter()
     {
