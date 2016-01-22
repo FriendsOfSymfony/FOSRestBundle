@@ -4,7 +4,7 @@ request_body_param_converter:
 
 test_serializer_error_exception:
     path:     /serializer-error/exception.{_format}
-    defaults: { _controller: TestBundle:SerializerError:exception }
+    defaults: { _controller: TestBundle:SerializerError:logicException }
 
 test_serializer_error_invalid_form:
     path:     /serializer-error/invalid-form.{_format}

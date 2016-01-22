@@ -1,5 +1,6 @@
 imports:
     - { resource: ../config/default.yml }
+    - { resource: ../config/exception_listener.yml }
 
 framework:
     serializer:
@@ -8,5 +9,3 @@ framework:
 fos_rest:
     view:
         view_response_listener: 'force'
-    exception:
-        enabled: true

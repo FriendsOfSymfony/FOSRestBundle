@@ -192,18 +192,12 @@ class ExceptionController implements ContainerAwareInterface
     protected function isSubclassOf($exception, $exceptionMap)
     {
         $exceptionClass = $exception->getClass();
-        $reflectionExceptionClass = new \ReflectionClass($exceptionClass);
-        try {
-            foreach ($exceptionMap as $exceptionMapClass => $value) {
-                if ($value
-                    && ($exceptionClass === $exceptionMapClass || $reflectionExceptionClass->isSubclassOf($exceptionMapClass))
-                ) {
-                    return $value;
-                }
+        foreach ($exceptionMap as $exceptionMapClass => $value) {
+            if ($value
+                && ($exceptionClass === $exceptionMapClass || is_subclass_of($exceptionClass, $exceptionMapClass))
+            ) {
+                return $value;
             }
-        } catch (\ReflectionException $re) {
-            return 'FOSUserBundle: Invalid class in  fos_res.exception.messages: '
-                    .$re->getMessage();
         }
 
         return false;
