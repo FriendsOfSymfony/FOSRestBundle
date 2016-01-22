@@ -114,7 +114,7 @@ class ViewResponseListener implements EventSubscriberInterface
             $template = null !== $configuration && $configuration->getTemplate()
                 ? $configuration->getTemplate()
                 : $request->attributes->get('_template');
-            if ($template) {
+            if ($template && !$view->getTemplate()) {
                 if ($template instanceof TemplateReferenceInterface) {
                     $template->set('format', null);
                 }
