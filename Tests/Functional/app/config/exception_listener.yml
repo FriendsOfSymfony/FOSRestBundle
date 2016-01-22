@@ -1,0 +1,5 @@
+fos_rest:
+    exception:
+        enabled: true
+        messages:
+            LogicException: true

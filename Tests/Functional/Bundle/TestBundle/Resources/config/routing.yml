@@ -4,7 +4,7 @@ request_body_param_converter:
 
 test_serializer_error_exception:
     path:     /serializer-error/exception.{_format}
-    defaults: { _controller: TestBundle:SerializerError:exception }
+    defaults: { _controller: TestBundle:SerializerError:logicException }
 
 test_serializer_error_invalid_form:
     path:     /serializer-error/invalid-form.{_format}
@@ -23,3 +23,7 @@ test_param_fetcher:
 test_param_fetcher_test:
     path:     /params/test
     defaults: { _controller: TestBundle:ParamFetcher:test }
+
+test_view_response_listener:
+    resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ArticleController
+    type:     rest
