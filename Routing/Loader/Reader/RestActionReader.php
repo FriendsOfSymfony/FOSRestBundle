@@ -614,10 +614,8 @@ class RestActionReader
     {
         $annotations = [];
 
-        foreach ($this->convertAvailableHttpMethodsToAnnotationNames() as $annotationName) {
-            if ($newAnnotations = $this->readMethodAnnotations($reflectionMethod, $annotationName)) {
-                $annotations = array_merge($annotations, $newAnnotations);
-            }
+        if ($newAnnotations = $this->readMethodAnnotations($reflectionMethod, 'Route')) {
+            $annotations = array_merge($annotations, $newAnnotations);
         }
 
         return $annotations;
@@ -711,23 +709,5 @@ class RestActionReader
         } else {
             $collection->add($fullRouteName, $route);
         }
-    }
-
-    /**
-     * Converts all given http methods to their annotation names.
-     *
-     * @return string[]
-     */
-    private function convertAvailableHttpMethodsToAnnotationNames()
-    {
-        return array_merge(
-            ['Route'],
-            array_map(
-                function ($httpMethod) {
-                    return ucfirst($httpMethod);
-                },
-                $this->availableHTTPMethods
-            )
-        );
     }
 }
