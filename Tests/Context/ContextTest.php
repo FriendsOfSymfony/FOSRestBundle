@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Context;
 
-use FOS\RestBundle\Context;
+use FOS\RestBundle\Context\Context;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
@@ -22,16 +22,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->context = $this->getMock(Context\Context::class, null);
-    }
-
-    public function testInterfaces()
-    {
-        $this->assertInstanceOf(Context\ContextInterface::class, $this->context);
-        $this->assertInstanceOf(Context\GroupableContextInterface::class, $this->context);
-        $this->assertInstanceOf(Context\VersionableContextInterface::class, $this->context);
-        $this->assertInstanceOf(Context\MaxDepthContextInterface::class, $this->context);
-        $this->assertInstanceOf(Context\SerializeNullContextInterface::class, $this->context);
+        $this->context = new Context();
     }
 
     public function testDefaultValues()
@@ -56,25 +47,13 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'bar', 'foobar' => 'foo'], $this->context->getAttributes());
     }
 
-    public function testGroupsAddition()
-    {
-        $context = $this->getMock(Context\Context::class, ['addGroup']);
-        $context
-            ->expects($this->exactly(2))
-            ->method('addGroup')
-            ->withConsecutive(
-                ['Default'],
-                ['foo']
-            );
-        $this->assertEquals($context, $context->addGroups(['Default', 'foo']));
-    }
-
     public function testGroupAddition()
     {
+        $this->context->addGroups(array('quz', 'foo'));
         $this->context->addGroup('foo');
         $this->context->addGroup('bar');
 
-        $this->assertEquals(['foo', 'bar'], $this->context->getGroups());
+        $this->assertEquals(['quz', 'foo', 'bar'], $this->context->getGroups());
     }
 
     public function testAlreadyExistentGroupAddition()
@@ -83,15 +62,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->context->addGroup('foo');
         $this->context->addGroup('bar');
 
-        $this->assertEquals(['foo', 'bar'], $this->context->getGroups());
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidGroup()
-    {
-        $this->context->addGroup(new \stdClass());
+        $this->assertEquals(array('foo', 'bar'), $this->context->getGroups());
     }
 
     public function testVersion()

@@ -221,7 +221,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->listener->onKernelView($event);
 
-        $context = $view->getSerializationContext();
+        $context = $view->getContext();
         $maxDepth = $context->getMaxDepth();
 
         $this->assertEquals($expectedMaxDepth, $maxDepth);
@@ -270,7 +270,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->router = $this->getMock('Symfony\Component\Routing\RouterInterface');
-        $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
+        $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
         $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $this->requestStack = new RequestStack();
         $this->exceptionWrapperHandler = new ExceptionWrapperHandler();

@@ -35,10 +35,10 @@ class FOSRestExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('context_adapters.xml');
         $loader->load('view.xml');
         $loader->load('routing.xml');
         $loader->load('request.xml');
+        $loader->load('serializer.xml');
 
         $container->getDefinition('fos_rest.routing.loader.controller')->replaceArgument(4, $config['routing_loader']['default_format']);
         $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);

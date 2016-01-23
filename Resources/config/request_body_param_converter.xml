@@ -12,9 +12,6 @@
             <argument /> <!-- serializer exclusion strategy version -->
             <argument type="service" id="fos_rest.validator" on-invalid="ignore" />
             <argument /> <!-- request body validation errors argument -->
-            <call method="setDeserializationContextAdapter">
-                <argument type="service" id="fos_rest.context.adapter.chain_context_adapter" />
-            </call>
             <tag name="request.param_converter" converter="fos_rest.request_body" />
         </service>
 
