@@ -358,23 +358,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testContextAdaptersLoad()
-    {
-        $this->extension->load([], $this->container);
-
-        $this->assertEquals('FOS\RestBundle\Context\Adapter\JMSContextAdapter', $this->container->getDefinition('fos_rest.context.adapter.jms_context_adapter')->getClass());
-        $this->assertTrue($this->container->hasDefinition('fos_rest.context.adapter.jms_context_adapter'));
-
-        $this->assertEquals('FOS\RestBundle\Context\Adapter\ArrayContextAdapter', $this->container->getDefinition('fos_rest.context.adapter.array_context_adapter')->getClass());
-        $this->assertTrue($this->container->hasDefinition('fos_rest.context.adapter.array_context_adapter'));
-
-        $this->assertEquals('FOS\RestBundle\Context\Adapter\ChainContextAdapter', $this->container->getDefinition('fos_rest.context.adapter.chain_context_adapter')->getClass());
-        $this->assertTrue($this->container->hasDefinition('fos_rest.context.adapter.chain_context_adapter'));
-        $argument = $this->container->getDefinition('fos_rest.context.adapter.chain_context_adapter')->getArgument(0);
-        $this->assertEquals('fos_rest.context.adapter.jms_context_adapter', $argument[0]);
-        $this->assertEquals('fos_rest.context.adapter.array_context_adapter', $argument[1]);
-    }
-
     public function testIncludeFormatDisabled()
     {
         $this->extension->load(

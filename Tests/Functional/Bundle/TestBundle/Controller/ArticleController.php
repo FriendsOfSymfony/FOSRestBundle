@@ -22,6 +22,23 @@ use FOS\RestBundle\Controller\FOSRestController;
 class ArticleController extends FOSRestController
 {
     /**
+     * Create a new resource.
+     *
+     * @param Request $request
+     *
+     * @return View view instance
+     *
+     * @View()
+     */
+    public function cpostAction(Request $request)
+    {
+        $view = $this->routeRedirectView('test_redirect_endpoint', array('name' => $request->request->get('name')));
+        $view->setTemplate('TestBundle:Article:foo.html.twig');
+
+        return $view;
+    }
+
+    /**
      * Get list.
      *
      * @param Request $request

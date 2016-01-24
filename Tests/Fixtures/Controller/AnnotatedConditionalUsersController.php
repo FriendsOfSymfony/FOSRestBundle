@@ -23,6 +23,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\Unlink;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\Tests\Fixtures\User;
 
 class AnnotatedConditionalUsersController extends Controller
 {
@@ -54,7 +55,7 @@ class AnnotatedConditionalUsersController extends Controller
      *
      * @Route(requirements={"slug" = "[a-z]+"})
      */
-    public function getUserAction($slug)
+    public function getUserAction(User $slug)
     {
     }
 

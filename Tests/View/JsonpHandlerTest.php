@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Tests\View;
 
-use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
 use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\JsonpHandler;
 use FOS\RestBundle\View\View;
@@ -36,7 +35,7 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->router = $this->getMock('Symfony\Component\Routing\RouterInterface');
-        $this->serializer = $this->getMock('JMS\Serializer\SerializerInterface');
+        $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
         $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $this->requestStack = new RequestStack();
         $this->exceptionWrapperHandler = new ExceptionWrapperHandler();
@@ -52,7 +51,6 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $this->exceptionWrapperHandler, ['jsonp' => false]);
         $jsonpHandler = new JsonpHandler(key($query));
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
-        $viewHandler->setSerializationContextAdapter($this->getMock(SerializationContextAdapterInterface::class));
 
         $this->serializer
             ->expects($this->once())
@@ -89,7 +87,6 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
         $viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $this->exceptionWrapperHandler, ['jsonp' => false]);
         $jsonpHandler = new JsonpHandler('callback');
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
-        $viewHandler->setSerializationContextAdapter($this->getMock(SerializationContextAdapterInterface::class));
 
         $this->serializer
             ->expects($this->once())

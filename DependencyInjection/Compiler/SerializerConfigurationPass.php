@@ -27,6 +27,13 @@ final class SerializerConfigurationPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if ($container->has('fos_rest.serializer')) {
+            $class = $container->getParameterBag()->resolveValue(
+                $container->findDefinition('fos_rest.serializer')->getClass()
+            );
+            if (!is_subclass_of($class, 'FOS\RestBundle\Serializer\Serializer')) {
+                throw new \InvalidArgumentException(sprintf('"fos_rest.serializer" must implement FOS\RestBundle\Serializer\Serializer (instance of "%s" given).', $class));
+            }
+
             return;
         }
 
@@ -34,13 +41,31 @@ final class SerializerConfigurationPass implements CompilerPassInterface
             throw new \InvalidArgumentException('Neither a service called "jms_serializer.serializer" nor "serializer" is available and no serializer is explicitly configured. You must either enable the JMSSerializerBundle, enable the FrameworkBundle serializer or configure a custom serializer.');
         }
 
+        if ($container->has('serializer')) {
+            $class = $container->getParameterBag()->resolveValue(
+                $container->findDefinition('serializer')->getClass()
+            );
+
+            if (is_subclass_of($class, 'Symfony\Component\Serializer\SerializerInterface')) {
+                $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.symfony');
+                $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
+            } elseif (is_subclass_of($class, 'JMS\Serializer\SerializerInterface')) {
+                $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.jms');
+            } elseif (is_subclass_of($class, 'FOS\RestBundle\Serializer\Serializer')) {
+                $container->setAlias('fos_rest.serializer', 'serializer');
+            } else {
+                throw new \InvalidArgumentException(sprintf('"fos_rest.serializer" must implement FOS\RestBundle\Serializer\Serializer (instance of "%s" given).', $class));
+            }
+
+            return;
+        } else {
+            $container->removeDefinition('fos_rest.serializer.exception_wrapper_normalizer');
+        }
+
         if ($container->has('jms_serializer.serializer')) {
-            $container->setAlias('fos_rest.serializer', 'jms_serializer.serializer');
+            $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.jms');
         } else {
             $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
-        }
-        if ($container->has('serializer')) {
-            $container->setAlias('fos_rest.serializer', 'serializer');
         }
     }
 }
