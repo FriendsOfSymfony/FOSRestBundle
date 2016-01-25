@@ -101,16 +101,14 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            // Symfony sets _method to keep BC, should be removed in 3.0
-            if (method_exists('\Symfony\Component\Routing\Route', 'getPattern')) {
-                $params['requirements']['_method'] = implode('|', $params['methods']);
-            } elseif (!isset($params['requirements'])) {
-                $params['requirements'] = array();
-            }
-
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
-            $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
+
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $requirements = $route->getRequirements();
+            unset($requirements['_method']);
+            $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
+
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
@@ -124,17 +122,24 @@ class RestRouteLoaderTest extends LoaderTest
         }
     }
 
+    public function testDisabledPluralization()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedNonPluralizedArticleController');
+
+        $this->assertEquals('/article.{_format}', $collection->get('cget_article')->getPath());
+
+        $this->assertEquals('/article/{slug}.{_format}', $collection->get('get_article')->getPath());
+
+        $this->assertEquals('/article/{slug}/comment.{_format}', $collection->get('cget_article_comment')->getPath());
+
+        $this->assertEquals('/article/{slug}/comment/{comment}.{_format}', $collection->get('get_article_comment')->getPath());
+    }
+
     /**
      * Test that annotated UsersController RESTful class gets parsed correctly with condition option (expression-language).
      */
     public function testAnnotatedConditionalUsersFixture()
     {
-        if (!method_exists('Symfony\Component\Routing\Annotation\Route', 'setCondition')) {
-            $this->markTestSkipped('The "Routing" component have a version <2.4');
-
-            return;
-        }
-
         $collection = $this->loadFromControllerFixture('AnnotatedConditionalUsersController');
         $etalonRoutes = $this->loadEtalonRoutesInfo('annotated_conditional_controller.yml');
 
@@ -144,16 +149,43 @@ class RestRouteLoaderTest extends LoaderTest
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
 
-            // Symfony sets _method to keep BC, should be removed in 3.0
-            if (method_exists('\Symfony\Component\Routing\Route', 'getPattern')) {
-                $params['requirements']['_method'] = implode('|', $params['methods']);
-            } elseif (!isset($params['requirements'])) {
-                $params['requirements'] = array();
+            $this->assertNotNull($route, "no route found for '$name'");
+            $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
+
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $requirements = $route->getRequirements();
+            unset($requirements['_method']);
+            $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
+
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
+            if (isset($params['condition'])) {
+                $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
             }
+        }
+    }
+
+    /**
+     * Test that annotated UsersController RESTful class gets parsed correctly with condition option (expression-language).
+     */
+    public function testAnnotatedVersionUserFixture()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedVersionUserController');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('annotated_version_controller.yml');
+
+        $this->assertTrue($collection instanceof RestRouteCollection);
+        $this->assertEquals(2, count($collection->all()));
+
+        foreach ($etalonRoutes as $name => $params) {
+            $route = $collection->get($name);
 
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
-            $this->assertEquals($params['requirements'], $route->getRequirements(), 'requirements failed to match for '.$name);
+
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $requirements = $route->getRequirements();
+            unset($requirements['_method']);
+            $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
+
             $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
@@ -169,7 +201,7 @@ class RestRouteLoaderTest extends LoaderTest
         $collection = $this->loadFromControllerFixture(
             'AnnotatedUsersController',
             null,
-            array('json' => true, 'xml' => true, 'html' => true)
+            ['json' => true, 'xml' => true, 'html' => true]
         );
         $routeCustom = $collection->get('custom_user');
         $routeWithRequirements = $collection->get('get_user');
@@ -205,7 +237,7 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testConventionalActions()
     {
-        $expectedMethod = array('GET');
+        $expectedMethod = ['GET'];
         $collection = $this->loadFromControllerFixture('UsersController');
         $subcollection = $this->loadFromControllerFixture('UserTopicsController');
         $subsubcollection = $this->loadFromControllerFixture('UserTopicCommentsController');
@@ -261,7 +293,7 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testMediaFixture()
     {
-        $expectedMethod = array('GET');
+        $expectedMethod = ['GET'];
         $collection = $this->loadFromControllerFixture('MediaController');
 
         $this->assertCount(2, $collection->all());
@@ -319,7 +351,7 @@ class RestRouteLoaderTest extends LoaderTest
      *
      * @return RouteCollection
      */
-    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = array())
+    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = [])
     {
         $loader = $this->getControllerLoader($formats);
         $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);

@@ -11,10 +11,10 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class contains the configuration information for the bundle.
@@ -26,7 +26,7 @@ use FOS\RestBundle\Util\Codes;
  *
  * @internal
  */
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
     /**
      * Generates the configuration tree.
@@ -46,7 +46,7 @@ class Configuration implements ConfigurationInterface
                     ->beforeNormalization()
                         ->ifArray()->then(function ($v) { if (!empty($v) && empty($v['formats'])) {
      unset($v['enabled']);
-     $v = array('enabled' => true, 'formats' => $v);
+     $v = ['enabled' => true, 'formats' => $v];
  }
 
 return $v; })
@@ -64,7 +64,7 @@ return $v; })
                 ->arrayNode('param_fetcher_listener')
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function ($v) { return array('enabled' => in_array($v, array('force', 'true')), 'force' => 'force' === $v); })
+                        ->then(function ($v) { return ['enabled' => in_array($v, ['force', 'true']), 'force' => 'force' === $v]; })
                     ->end()
                     ->canBeEnabled()
                     ->children()
@@ -117,6 +117,27 @@ return $v; })
                         ->booleanNode('serialize_null')->defaultFalse()->end()
                     ->end()
                 ->end()
+                ->arrayNode('zone')
+                    ->cannotBeOverwritten()
+                    ->prototype('array')
+                    ->fixXmlConfig('ip')
+                    ->children()
+                        ->scalarNode('path')
+                            ->defaultNull()
+                            ->info('use the urldecoded format')
+                            ->example('^/path to resource/')
+                        ->end()
+                        ->scalarNode('host')->defaultNull()->end()
+                        ->arrayNode('methods')
+                            ->beforeNormalization()->ifString()->then(function ($v) { return preg_split('/\s*,\s*/', $v); })->end()
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->arrayNode('ips')
+                            ->beforeNormalization()->ifString()->then(function ($v) { return array($v); })->end()
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ->end();
 
@@ -143,7 +164,7 @@ return $v; })
                         ->scalarNode('default_engine')->defaultValue('twig')->end()
                         ->arrayNode('force_redirects')
                             ->useAttributeAsKey('name')
-                            ->defaultValue(array('html' => true))
+                            ->defaultValue(['html' => true])
                             ->prototype('boolean')->end()
                         ->end()
                         ->arrayNode('mime_types')
@@ -151,7 +172,7 @@ return $v; })
                             ->beforeNormalization()
                                 ->ifArray()->then(function ($v) { if (!empty($v) && empty($v['formats'])) {
      unset($v['enabled']);
-     $v = array('enabled' => true, 'formats' => $v);
+     $v = ['enabled' => true, 'formats' => $v];
  }
 
 return $v; })
@@ -167,18 +188,18 @@ return $v; })
                         ->end()
                         ->arrayNode('formats')
                             ->useAttributeAsKey('name')
-                            ->defaultValue(array('json' => true, 'xml' => true))
+                            ->defaultValue(['json' => true, 'xml' => true])
                             ->prototype('boolean')->end()
                         ->end()
                         ->arrayNode('templating_formats')
                             ->useAttributeAsKey('name')
-                            ->defaultValue(array('html' => true))
+                            ->defaultValue(['html' => true])
                             ->prototype('boolean')->end()
                         ->end()
                         ->arrayNode('view_response_listener')
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(function ($v) { return array('enabled' => in_array($v, array('force', 'true')), 'force' => 'force' === $v); })
+                                ->then(function ($v) { return ['enabled' => in_array($v, ['force', 'true']), 'force' => 'force' === $v]; })
                             ->end()
                             ->canBeEnabled()
                             ->children()
@@ -187,15 +208,14 @@ return $v; })
                                 ->scalarNode('service')->defaultNull()->end()
                             ->end()
                         ->end()
-                        ->scalarNode('failed_validation')->defaultValue(Codes::HTTP_BAD_REQUEST)->end()
-                        ->scalarNode('empty_content')->defaultValue(Codes::HTTP_NO_CONTENT)->end()
+                        ->scalarNode('failed_validation')->defaultValue(Response::HTTP_BAD_REQUEST)->end()
+                        ->scalarNode('empty_content')->defaultValue(Response::HTTP_NO_CONTENT)->end()
                         ->scalarNode('exception_wrapper_handler')->defaultNull()->end()
                         ->booleanNode('serialize_null')->defaultFalse()->end()
                         ->arrayNode('jsonp_handler')
                             ->canBeUnset()
                             ->children()
                                 ->scalarNode('callback_param')->defaultValue('callback')->end()
-                                ->scalarNode('callback_filter')->defaultValue('/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i')->end()
                                 ->scalarNode('mime_type')->defaultValue('application/javascript+jsonp')->end()
                             ->end()
                         ->end()
@@ -221,13 +241,13 @@ return $v; })
                         ->end()
                         ->arrayNode('decoders')
                             ->useAttributeAsKey('name')
-                            ->defaultValue(array('json' => 'fos_rest.decoder.json', 'xml' => 'fos_rest.decoder.xml'))
+                            ->defaultValue(['json' => 'fos_rest.decoder.json', 'xml' => 'fos_rest.decoder.xml'])
                             ->prototype('scalar')->end()
                         ->end()
                         ->arrayNode('array_normalizer')
                             ->addDefaultsIfNotSet()
                             ->beforeNormalization()
-                                ->ifString()->then(function ($v) { return array('service' => $v); })
+                                ->ifString()->then(function ($v) { return ['service' => $v]; })
                             ->end()
                             ->children()
                                 ->scalarNode('service')->defaultNull()->end()
@@ -255,7 +275,7 @@ return $v; })
                                 && array_keys($v['rules']) !== range(0, count($v['rules']) - 1);
                         })
                         ->then(function ($v) {
-                            $v['rules'] = array($v['rules']);
+                            $v['rules'] = [$v['rules']];
 
                             return $v;
                         })
@@ -286,15 +306,6 @@ return $v; })
                                 ->end()
                             ->end()
                         ->end()
-                        ->arrayNode('media_type')
-                            ->canBeEnabled()
-                            ->beforeNormalization()
-                                ->ifString()
-                                ->then(function ($v) { return array('enabled' => true, 'version_regex' => $v); })
-                            ->end()
-                            ->children()
-                                ->scalarNode('service')->defaultNull()->end()
-                                ->scalarNode('version_regex')->defaultValue('/(v|version)=(?P<version>[0-9\.]+)/')->end()
                     ->end()
                 ->end()
             ->end();
@@ -332,11 +343,11 @@ return $v; })
                         ->end()
                     ->end()
                     ->arrayNode('guessing_order')
-                        ->defaultValue(array('query', 'custom_header', 'media_type'))
+                        ->defaultValue(['query', 'custom_header', 'media_type'])
                         ->validate()
                             ->ifTrue(function ($v) {
                                 foreach ($v as $resolver) {
-                                    if (!in_array($resolver, array('query', 'custom_header', 'media_type'))) {
+                                    if (!in_array($resolver, ['query', 'custom_header', 'media_type'])) {
                                         return true;
                                     }
                                 }
@@ -364,8 +375,8 @@ return $v; })
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
                             ->validate()
-                                ->ifTrue(function ($v) { return 0 !== count(array_filter($v, function ($i) { return !defined('FOS\RestBundle\Util\Codes::'.$i) && !is_int($i); })); })
-                                ->thenInvalid('Invalid HTTP code in fos_rest.exception.codes, see FOS\RestBundle\Util\Codes for all valid codes.')
+                                ->ifTrue(function ($v) { return 0 !== count(array_filter($v, function ($i) { return !defined('Symfony\Component\HttpFoundation\Response::'.$i) && !is_int($i); })); })
+                                ->thenInvalid('Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.')
                             ->end()
                             ->prototype('scalar')->end()
                         ->end()

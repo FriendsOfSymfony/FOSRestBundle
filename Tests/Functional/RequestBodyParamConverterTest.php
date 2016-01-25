@@ -15,13 +15,13 @@ class RequestBodyParamConverterTest extends WebTestCase
 {
     public function testRequestBodyIsDeserialized()
     {
-        $client = $this->createClient(array('test_case' => 'RequestBodyParamConverter'));
+        $client = $this->createClient(['test_case' => 'RequestBodyParamConverter']);
         $client->request(
             'POST',
             '/body-converter',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
             '{"name": "Post 1", "body": "This is a blog post"}'
         );
 

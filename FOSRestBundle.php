@@ -11,15 +11,13 @@
 
 namespace FOS\RestBundle;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
 use FOS\RestBundle\DependencyInjection\Compiler\ExceptionWrapperHandlerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
+use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\TwigExceptionPass;
-use FOS\RestBundle\DependencyInjection\Compiler\CsrfExtensionPass;
-use FOS\RestBundle\DependencyInjection\Compiler\ParamFetcherConfigurationPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
@@ -27,6 +25,8 @@ use FOS\RestBundle\DependencyInjection\Compiler\ParamFetcherConfigurationPass;
  */
 class FOSRestBundle extends Bundle
 {
+    const ZONE_ATTRIBUTE = '_fos_rest_zone';
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +37,5 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new FormatListenerRulesPass());
         $container->addCompilerPass(new TwigExceptionPass());
         $container->addCompilerPass(new ExceptionWrapperHandlerPass());
-        $container->addCompilerPass(new CsrfExtensionPass());
-        $container->addCompilerPass(new ParamFetcherConfigurationPass());
     }
 }

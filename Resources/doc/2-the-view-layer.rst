@@ -55,6 +55,13 @@ which adds several convenience methods:
 .. versionadded:: 1.6
   The ``setTemplateData`` method was added in 1.6.
 
+There is also a trait called ``ControllerTrait`` for anyone that prefers to not
+inject the container into their controller. This requires using setter injection
+to set a ``ViewHandlerInterface`` instance via the ``setViewHandler`` method.
+
+.. versionadded:: 2.0
+    The ``ControllerTrait`` trait was added in 2.0.
+
 If you need to pass more data in template, not for serialization, you can use ``setTemplateData`` method:
 
 .. code-block:: php
@@ -126,11 +133,11 @@ a single key (default  ``'data'``), which will become the variable name of the
 object in the respective template. You can change this variable by calling
 the ``setTemplateVar()`` method on the view object.
 
-There are also two specialized ``View`` classes for handling redirects, one for
-redirecting to an URL called ``RedirectView`` and one to redirect to a route
-called ``RouteRedirectView``.  Note that whether these classes actually cause a
-redirect or not is determined by the ``force_redirects`` configuration option,
-which is only enabled for ``html`` by default (see below).
+There are also two specialized methods for redirect in the ``View`` classes.
+``View::createRedirect`` redirects to an URL called ``RedirectView`` and
+``View::createRouteRedirect`` redirects to a route. Note that whether these
+classes actually cause a redirect or not is determined by the ``force_redirects``
+configuration option, which is only enabled for ``html`` by default (see below).
 
 There are several more methods on the ``View`` class, here is a list of all
 the important ones for configuring the view:
@@ -222,7 +229,7 @@ Update the ``config.yml``:
     fos_rest:
         view:
             # ...
-            exception_wrapper_handler: My\Bundle\Handler\MyExceptionWrapperHandler
+            exception_wrapper_handler: my_exception_wrapper_handler_service
             # ...
 
 Data Transformation
@@ -273,7 +280,7 @@ case based on the id:
 Unfortunately, this form builder does not accept our serialized object as it is
 - even though it contains the necessary id. In fact, the object would have to
 contain the id directly assigned to the person field to be be accepted by the
-form validtion process:
+form validation process:
 
 .. code-block:: json
     
@@ -283,7 +290,7 @@ Well, this is somewhat useless since we not only want to display the name of the
 person but also do not want to do some client side trick to extract the id
 before updating the data, right? Instead, we rather update the data the same way
 as we received it in our GET request and thus, extend the form builder with a
-data transformer. Furtunately the FOSRestBundle comes with an
+data transformer. Fortunately, the FOSRestBundle comes with an
 ``EntityToIdObjectTransformer``, which can be applied to any form builder:
 
 .. code-block:: php
@@ -313,7 +320,7 @@ formats if needed.
 
 Finally the HTTP response status code for failed validation defaults to
 ``400``. Note when changing the default you can use name constants of
-``FOS\RestBundle\Util\Codes`` class or an integer status code.
+``Symfony\Component\HttpFoundation\Response`` class or an integer status code.
 
 You can also set the default templating engine to something different than the
 default of ``twig``:
@@ -413,13 +420,13 @@ Here is an example using a closure registered inside a Controller action:
         }
     }
 
-Jsonp custom handler
+JSONP custom handler
 ~~~~~~~~~~~~~~~~~~~~
 
-To enable the common use case of creating Jsonp responses this Bundle provides an
+To enable the common use case of creating JSONP responses this Bundle provides an
 easy solution to handle a custom handler for this use case. Enabling this setting
 also automatically uses the mime type listener (see the next chapter) to register
-a mime type for Jsonp.
+a mime type for JSONP.
 
 Simply add the following to your configuration
 

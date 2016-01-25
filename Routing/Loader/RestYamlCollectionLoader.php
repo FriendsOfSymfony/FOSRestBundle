@@ -11,19 +11,19 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
-use FOS\RestBundle\Routing\RestRouteCollection;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * RestYamlCollectionLoader YAML file collections loader.
  */
 class RestYamlCollectionLoader extends YamlFileLoader
 {
-    protected $collectionParents = array();
+    protected $collectionParents = [];
     private $processor;
     private $includeFormat;
     private $formats;
@@ -42,7 +42,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
         FileLocatorInterface $locator,
         RestRouteProcessor $processor,
         $includeFormat = true,
-        array $formats = array(),
+        array $formats = [],
         $defaultFormat = null
     ) {
         parent::__construct($locator);
@@ -73,12 +73,12 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $namePrefix = isset($config['name_prefix'])  ? $config['name_prefix']    : null;
                 $parent = isset($config['parent'])       ? $config['parent']         : null;
                 $type = isset($config['type'])         ? $config['type']           : null;
-                $requirements = isset($config['requirements']) ? $config['requirements']   : array();
-                $defaults = isset($config['defaults'])     ? $config['defaults']       : array();
-                $options = isset($config['options'])      ? $config['options']        : array();
+                $requirements = isset($config['requirements']) ? $config['requirements']   : [];
+                $defaults = isset($config['defaults'])     ? $config['defaults']       : [];
+                $options = isset($config['options'])      ? $config['options']        : [];
                 $currentDir = dirname($path);
 
-                $parents = array();
+                $parents = [];
                 if (!empty($parent)) {
                     if (!isset($this->collectionParents[$parent])) {
                         throw new \InvalidArgumentException(sprintf('Cannot find parent resource with name %s', $parent));

@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-return array(
+return [
     new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
     new \FOS\RestBundle\FOSRestBundle(),
     new \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\TestBundle(),
-);
+];

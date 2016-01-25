@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * ConfigurationCheckPass test.
@@ -20,43 +21,22 @@ use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
  */
 class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testShouldThrowRuntimeExceptionWhenFOSRestBundleAnnotations()
-    {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has'))
-            ->getMock();
-        $container->expects($this->at(0))
-            ->method('has')
-            ->with($this->equalTo('sensio_framework_extra.view.listener'))
-            ->will($this->returnValue(true));
-
-        $container->expects($this->at(1))
-            ->method('has')
-            ->with($this->equalTo('fos_rest.view_response_listener'))
-            ->will($this->returnValue(true));
-
-        $compiler = new ConfigurationCheckPass();
-        $compiler->process($container);
-    }
-
     public function testShouldThrowRuntimeExceptionWhenBodyConverterIsEnabledButParamConvertersAreNotEnabled()
     {
         $this->setExpectedException(
             'RuntimeException',
             'You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter'
         );
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->setMethods(array('has'))
+        $container = $this->getMockBuilder(ContainerBuilder::class)
+            ->setMethods(['has'])
             ->getMock();
-        $container->expects($this->at(1))
+
+        $container->expects($this->at(0))
             ->method('has')
             ->with($this->equalTo('fos_rest.converter.request_body'))
             ->will($this->returnValue(true));
 
-        $container->expects($this->at(2))
+        $container->expects($this->at(1))
             ->method('has')
             ->with($this->equalTo('sensio_framework_extra.converter.listener'))
             ->will($this->returnValue(false));

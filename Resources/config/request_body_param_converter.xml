@@ -6,12 +6,12 @@
 
     <services>
 
-        <service id="fos_rest.converter.request_body" class="%fos_rest.converter.request_body.class%">
+        <service id="fos_rest.converter.request_body" class="FOS\RestBundle\Request\RequestBodyParamConverter" public="false">
             <argument type="service" id="fos_rest.serializer"/>
-            <argument>%fos_rest.serializer.exclusion_strategy.groups%</argument>
-            <argument>%fos_rest.serializer.exclusion_strategy.version%</argument>
+            <argument type="collection" /> <!-- serializer exclusion strategy groups -->
+            <argument /> <!-- serializer exclusion strategy version -->
             <argument type="service" id="fos_rest.validator" on-invalid="ignore" />
-            <argument>%fos_rest.converter.request_body.validation_errors_argument%</argument>
+            <argument /> <!-- request body validation errors argument -->
             <tag name="request.param_converter" converter="fos_rest.request_body" />
         </service>
 

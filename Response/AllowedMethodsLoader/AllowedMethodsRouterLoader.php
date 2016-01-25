@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\Response\AllowedMethodsLoader;
 
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * AllowedMethodsRouterLoader implementation using RouterInterface to fetch
@@ -48,9 +48,7 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
             $this->warmUp(null);
         }
 
-        $path = method_exists($this->cache, 'getPath') ? $this->cache->getPath() : $this->cache;
-
-        return require $path;
+        return require $this->cache->getPath();
     }
 
     /**
@@ -66,31 +64,22 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
      */
     public function warmUp($cacheDir)
     {
-        $processedRoutes = array();
+        $processedRoutes = [];
 
         $routeCollection = $this->router->getRouteCollection();
 
         foreach ($routeCollection->all() as $name => $route) {
             if (!isset($processedRoutes[$route->getPath()])) {
-                $processedRoutes[$route->getPath()] = array(
-                    'methods' => array(),
-                    'names' => array(),
-                );
+                $processedRoutes[$route->getPath()] = [
+                    'methods' => [],
+                    'names' => [],
+                ];
             }
 
             $processedRoutes[$route->getPath()]['names'][] = $name;
-
-            $requirements = $route->getRequirements();
-            if (isset($requirements['_method'])) {
-                $methods = explode('|', $requirements['_method']);
-                $processedRoutes[$route->getPath()]['methods'] = array_merge(
-                    $processedRoutes[$route->getPath()]['methods'],
-                    $methods
-                );
-            }
         }
 
-        $allowedMethods = array();
+        $allowedMethods = [];
 
         foreach ($processedRoutes as $processedRoute) {
             if (count($processedRoute['methods']) > 0) {

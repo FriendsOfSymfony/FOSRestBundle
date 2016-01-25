@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\Form\Transformer;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class EntityToIdObjectTransformer.
@@ -63,9 +63,9 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
      *
      * @param array $idObject
      *
-     * @return object|null
-     *
      * @throws TransformationFailedException if object is not found.
+     *
+     * @return object|null
      */
     public function reverseTransform($idObject)
     {
@@ -78,8 +78,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
 
         $object = $this->om
             ->getRepository($this->entityName)
-            ->findOneBy(array($identifier => $id))
-        ;
+            ->findOneBy([$identifier => $id]);
 
         if (null === $object) {
             throw new TransformationFailedException(sprintf(

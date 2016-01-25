@@ -35,13 +35,13 @@ class ExceptionWrapperNormalizer implements NormalizerInterface
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format = null, array $context = array())
+    public function normalize($object, $format = null, array $context = [])
     {
-        return array(
+        return [
             'code' => $object->getCode(),
             'message' => $object->getMessage(),
             'errors' => $object->getErrors() ? $this->convertFormToArray($object->getErrors()) : null,
-        );
+        ];
     }
 
     /**
@@ -57,7 +57,7 @@ class ExceptionWrapperNormalizer implements NormalizerInterface
      */
     private function convertFormToArray(FormInterface $data)
     {
-        $form = $errors = array();
+        $form = $errors = [];
 
         foreach ($data->getErrors() as $error) {
             $errors[] = $this->getErrorMessage($error);
@@ -67,7 +67,7 @@ class ExceptionWrapperNormalizer implements NormalizerInterface
             $form['errors'] = $errors;
         }
 
-        $children = array();
+        $children = [];
 
         foreach ($data->all() as $child) {
             if ($child instanceof FormInterface) {

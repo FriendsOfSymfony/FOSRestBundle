@@ -25,7 +25,16 @@ Alternatively the TwigBundle configuration can be used to enable the ExceptionCo
 
     # app/config/config.yml
     twig:
-        exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
+        exception_controller: 'fos_rest.exception.twig_controller:showAction'
+
+.. note::
+
+    FOSRestBundle defines two services for exception rendering, by default it
+    configures ``fos_rest.exception.controller`` which only supports rendering
+    via a serializer. In case no explicit controller is configured by the user
+    and TwigBundle is detected it will automatically configure
+    ``fos_rest.exception.twig_controller`` which additionally also supports
+    rendering via Twig.
 
 When enabling the RestBundle view-layer-aware ExceptionController it automatically
 disables the TwigBundle exception listener and subsequent configuration.
@@ -33,7 +42,7 @@ disables the TwigBundle exception listener and subsequent configuration.
 To map Exception classes to HTTP response status codes an *exception map* may
 be configured, where the keys match a fully qualified class name and the values
 are either an integer HTTP response status code or a string matching a class
-constant of the ``FOS\RestBundle\Util\Codes`` class:
+constant of the ``Symfony\Component\HttpFoundation\Response`` class:
 
 .. code-block:: yaml
 

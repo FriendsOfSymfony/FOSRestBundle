@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\Decoder\DecoderProviderInterface;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -56,18 +57,6 @@ class BodyListener
     }
 
     /**
-     * Sets the array normalizer.
-     *
-     * @param ArrayNormalizerInterface $arrayNormalizer
-     *
-     * @deprecated To be removed in FOSRestBundle 2.0.0 (constructor injection is used instead).
-     */
-    public function setArrayNormalizer(ArrayNormalizerInterface $arrayNormalizer)
-    {
-        $this->arrayNormalizer = $arrayNormalizer;
-    }
-
-    /**
      * Sets the fallback format if there's no Content-Type in the request.
      *
      * @param string $defaultFormat
@@ -88,6 +77,11 @@ class BodyListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return;
+        }
+
         $method = $request->getMethod();
         $contentType = $request->headers->get('Content-Type');
         $normalizeRequest = $this->normalizeForms && $this->isFormRequest($request);
@@ -159,7 +153,7 @@ class BodyListener
      */
     protected function isDecodeable(Request $request)
     {
-        if (!in_array($request->getMethod(), array('POST', 'PUT', 'PATCH', 'DELETE'))) {
+        if (!in_array($request->getMethod(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             return false;
         }
 
@@ -172,15 +166,13 @@ class BodyListener
      * @param Request $request
      *
      * @return bool
-     *
-     * @internal
      */
-    protected function isFormRequest(Request $request)
+    private function isFormRequest(Request $request)
     {
         $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
 
         if (isset($contentTypeParts[0])) {
-            return in_array($contentTypeParts[0], array('multipart/form-data', 'application/x-www-form-urlencoded'));
+            return in_array($contentTypeParts[0], ['multipart/form-data', 'application/x-www-form-urlencoded']);
         }
 
         return false;

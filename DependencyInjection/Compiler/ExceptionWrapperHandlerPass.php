@@ -11,8 +11,9 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Checks if the JMS serializer is available to be able to use the ExceptionWrapperSerializeHandler.
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  *
  * @internal
  */
-class ExceptionWrapperHandlerPass implements CompilerPassInterface
+final class ExceptionWrapperHandlerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -29,7 +30,7 @@ class ExceptionWrapperHandlerPass implements CompilerPassInterface
             return;
         }
 
-        if (interface_exists('JMS\Serializer\Handler\SubscribingHandlerInterface')) {
+        if (interface_exists(SubscribingHandlerInterface::class)) {
             return;
         }
 

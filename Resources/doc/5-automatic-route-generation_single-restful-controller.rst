@@ -160,7 +160,7 @@ following would work as well:
         // ...
     }
 
-Finally, it's possible to override the resource name derived from the Controller
+It's also possible to override the resource name derived from the Controller
 name via the ``@RouteResource`` annotation:
 
 
@@ -189,6 +189,38 @@ name via the ``@RouteResource`` annotation:
         // ...
         public function getCommentsAction($slug)
         {} // "get_user_comments"    [GET] /users/{slug}/comments
+
+        // ...
+    }
+
+Finally, it's possible to have a singular resource name thanks to the ``@RouteResource`` annotation:
+
+
+.. code-block:: php
+
+    <?php
+
+    use FOS\RestBundle\Controller\Annotations\RouteResource;
+
+    /**
+     * @RouteResource("User", pluralize=false)
+     */
+    class FooController
+    {
+        // ...
+
+        public function cgetAction()
+        {} // "cget_user"     [GET] /user
+
+        public function newAction()
+        {} // "new_user"     [GET] /user/new
+
+        public function getAction($slug)
+        {} // "get_user"      [GET] /user/{slug}
+
+        // ...
+        public function getCommentAction($slug)
+        {} // "cget_user_comment"    [GET] /user/{slug}/comment
 
         // ...
     }
@@ -323,7 +355,7 @@ Changing pluralization in generated routes
 
 If you want to change pluralization in generated routes, you can do this by
 replacing ``fos_rest.inflector.doctrine`` service with your own implementation.
-Create a new class that implements ``FOS\RestBundle\Util\Inflector\InflectorInterface``.
+Create a new class that implements ``FOS\RestBundle\Inflector\InflectorInterface``.
 
 The example below will remove pluralization by implementing the interface and
 returning the ``$word`` instead of executing method ``Inflector::pluralize($word);``
@@ -334,7 +366,7 @@ Example class implementing ``InflectorInterface``:
     <?php
     namespace Acme\HelloBundle\Util\Inflector;
 
-    use FOS\RestBundle\Util\Inflector\InflectorInterface;
+    use FOS\RestBundle\Inflector\InflectorInterface;
 
     /**
      * Inflector class

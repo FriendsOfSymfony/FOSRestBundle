@@ -99,10 +99,11 @@ Versioning
 ----------
 
 This listener attemps to determine the current api version from different parameters of the ``Request``:
-    - the uri ``/{version}/users``
-    - a query parameter ``/users?version=v1``
-    - an ``Accept`` header ``Accept: appication/json; version=1.0``
-    - a custom header ``X-Accept-Version: v1``
+
+* the uri ``/{version}/users``
+* a query parameter ``/users?version=v1``
+* an ``Accept`` header ``Accept: appication/json; version=1.0``
+* a custom header ``X-Accept-Version: v1``
 
 For details see :doc:`Versioning <versioning>`.
 
@@ -191,12 +192,32 @@ You need to enable this listener as follows, as it is disabled by default:
 
 It is also recommended to enable the exception controller described in the next chapter.
 
+Zone Listener
+=============
+
+As you can see, FOSRestBundle provides multiple event listeners to enable REST-related features.
+By default, these listeners will be registered to all requests and may conflict with other parts of your application.
+
+Using the ``zone`` configuration, you can specify where the event listeners will be enabled. The zone configuration
+allows to configure multiple zones in which the above listeners will be active. If no zone is configured, it means
+that the above listeners will not be limited. If at least one zone is configured then the above listeners will
+be skipped for all requests that do not match at least one zone. For a single zone config entry can contain matching
+rules on the request ``path``, ``host``, ``methods`` and ``ip``.
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_rest:
+        zone:
+            - { path: ^/api/* }
+
 Priorities
 ----------
 
 ==========================  =====================  ========
 Listener                    Event                  Priority
 ==========================  =====================  ========
+``ZoneMatcherListener``     ``kernel.request``     248
 ``MimeTypeListener``        ``kernel.request``     200
 ``FormatListener``          ``kernel.request``     34
 ``VersionListener``         ``kernel.request``     33

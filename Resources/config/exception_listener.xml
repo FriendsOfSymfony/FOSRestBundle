@@ -4,25 +4,30 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="fos_rest.exception_listener.class">Symfony\Component\HttpKernel\EventListener\ExceptionListener</parameter>
-        <parameter key="fos_rest.controller.exception.class">FOS\RestBundle\Controller\ExceptionController</parameter>
-        <parameter key="fos_rest.exception_listener.controller">fos_rest.controller.exception:showAction</parameter>
-
-    </parameters>
-
     <services>
-        <service id="fos_rest.exception_listener" class="%fos_rest.exception_listener.class%">
+        <service id="fos_rest.exception_listener" class="Symfony\Component\HttpKernel\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
-            <argument>%fos_rest.exception_listener.controller%</argument>
+            <argument>fos_rest.exception.controller:showAction</argument>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
-        <service id="fos_rest.controller.exception" class="%fos_rest.controller.exception.class%">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
+        <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController">
+            <argument type="service" id="fos_rest.exception_handler" />
+            <argument type="service" id="fos_rest.exception_format_negotiator" />
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="collection" /> <!-- exception codes -->
+            <argument type="collection" /> <!-- exception messages -->
+            <argument>%kernel.debug%</argument>
+        </service>
+
+        <service id="fos_rest.exception.twig_controller" class="FOS\RestBundle\Controller\TwigExceptionController" parent="fos_rest.exception.controller">
+            <argument type="service" id="templating.engine.twig" />
+        </service>
+
+        <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
+            <argument type="service" id="request_stack" />
+            <argument type="collection" /> <!-- mime types -->
         </service>
     </services>
 </container>

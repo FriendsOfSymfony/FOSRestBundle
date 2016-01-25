@@ -11,61 +11,65 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use FOS\RestBundle\Controller\Annotations\Route;
-use FOS\RestBundle\Controller\Annotations\NoRoute;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Head;
+use FOS\RestBundle\Controller\Annotations\Link;
+use FOS\RestBundle\Controller\Annotations\NoRoute;
+use FOS\RestBundle\Controller\Annotations\Options;
+use FOS\RestBundle\Controller\Annotations\Patch;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\Patch;
-use FOS\RestBundle\Controller\Annotations\Delete;
-use FOS\RestBundle\Controller\Annotations\Head;
-use FOS\RestBundle\Controller\Annotations\Options;
-use FOS\RestBundle\Controller\Annotations\Link;
+use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\Unlink;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AnnotatedUsersController extends Controller
 {
+    /**
+     * [OPTIONS]     /users.
+     */
     public function optionsUsersAction()
     {
     }
 
- // [OPTIONS]     /users
-
     /**
+     * [OPTIONS]     /users.
+     *
      * @Options
      */
     public function boptionsUsersAction()
     {
     }
 
- // [OPTIONS]     /users
-
+    /**
+     * [GET]     /users.
+     */
     public function getUsersAction()
     {
     }
 
- // [GET]     /users
-
     /**
+     * [GET]     /users/{slug}.
+     *
      * @Route(requirements={"slug" = "[a-z]+"})
      */
     public function getUserAction($slug)
     {
     }
 
- // [GET]     /users/{slug}
-
     /**
+     * [GET]     /users/{slug}/posts/{id}.
+     *
      * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"}, options={"expose"=true})
      */
     public function getUserPostAction($slug, $id)
     {
     }
 
- // [GET]     /users/{slug}/posts/{id}
-
     /**
+     * [PATCH]     /users.
+     *
      * @Patch
      */
     public function patchUsersAction()
@@ -73,103 +77,103 @@ class AnnotatedUsersController extends Controller
     }
 
     /**
+     * [PATCH]     /users/{slug}.
+     *
      * @Patch(requirements={"slug" = "[a-z]+"})
      */
     public function patchUserAction($slug)
     {
     }
 
- // [GET]     /users/{slug}
-
     /**
+     * [GET]     /users/{slug}/comments/{id}.
+     *
      * @Route(requirements={"slug" = "[a-z]+", "id" = "\d+"})
      */
     public function getUserCommentAction($slug, $id)
     {
     }
 
- // [GET]     /users/{slug}/comments/{id}
-
     /**
+     * [POST]    /users/{slug}/rate.
+     *
      * @Post(requirements={"slug" = "[a-z]+"})
      */
     public function rateUserAction($slug)
     {
     }
 
- // [POST]    /users/{slug}/rate
-
     /**
+     * [PATCH, POST]     /users/{slug}/rate_comment/{id}.
+     *
      * @Route("/users/{slug}/rate_comment/{id}", requirements={"slug" = "[a-z]+", "id" = "\d+"}, methods={"PATCH", "POST"})
      */
     public function rateUserCommentAction($slug, $id)
     {
     }
 
- // [PATCH, POST]     /users/{slug}/rate_comment/{id}
-
     /**
+     * [GET]     /users/{slug}/bget.
+     *
      * @Get
      */
     public function bgetUserAction($slug)
     {
     }
 
- // [GET]     /users/{slug}/bget
-
     /**
+     * [POST]    /users/{slug}/bpost.
+     *
      * @Post
      */
     public function bpostUserAction($slug)
     {
     }
 
- // [POST]    /users/{slug}/bpost
-
     /**
+     * [PUT]     /users/{slug}/bput.
+     *
      * @Put
      */
     public function bputUserAction($slug)
     {
     }
 
- // [PUT]     /users/{slug}/bput
-
     /**
+     * [DELETE]  /users/{slug}/bdel.
+     *
      * @Delete
      */
     public function bdelUserAction($slug)
     {
     }
 
- // [DELETE]  /users/{slug}/bdel
-
     /**
+     * [HEAD]    /users/{slug}/bhead.
+     *
      * @Head
      */
     public function bheadUserAction($slug)
     {
     }
 
- // [HEAD]    /users/{slug}/bhead
-
     /**
+     * [LINK]    /users/{slug}/blink.
+     *
      * @Link
      */
     public function bLinkUserAction($slug)
     {
     }
 
- // [LINK]    /users/{slug}/blink
-
     /**
+     * [UNLINK]    /users/{slug}/bunlink.
+     *
      * @Unlink
      */
     public function bunlinkUserAction($slug)
     {
     }
-
- // [UNLINK]    /users/{slug}/bunlink
 
     /**
      * @NoRoute
@@ -179,6 +183,8 @@ class AnnotatedUsersController extends Controller
     }
 
     /**
+     * [GET]    /users/{slug}/custom.
+     *
      * @Route(requirements={"_format"="custom"})
      */
     public function customUserAction($slug)

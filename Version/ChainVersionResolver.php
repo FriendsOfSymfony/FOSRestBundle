@@ -21,7 +21,7 @@ class ChainVersionResolver implements VersionResolverInterface
     /**
      * @var VersionResolverInterface[]
      */
-    private $resolvers = array();
+    private $resolvers = [];
 
     /**
      * @var VersionResolverInterface[]

@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Decoder;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,24 +18,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ContainerDecoderProvider implements DecoderProviderInterface, ContainerAwareInterface
+class ContainerDecoderProvider implements DecoderProviderInterface
 {
+    private $container;
     private $decoders;
-
-    /**
-     * @var ContainerInterface
-     *
-     * @internal
-     */
-    protected $container;
 
     /**
      * Constructor.
      *
-     * @param array $decoders List of key (format) value (service ids) of decoders
+     * @param ContainerInterface $container The container from which the actual decoders are retrieved
+     * @param array              $decoders  List of key (format) value (service ids) of decoders
      */
-    public function __construct(array $decoders)
+    public function __construct(ContainerInterface $container, array $decoders)
     {
+        $this->container = $container;
         $this->decoders = $decoders;
     }
 
@@ -46,16 +41,6 @@ class ContainerDecoderProvider implements DecoderProviderInterface, ContainerAwa
     public function supports($format)
     {
         return isset($this->decoders[$format]);
-    }
-
-    /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     /**

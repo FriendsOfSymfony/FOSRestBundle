@@ -15,41 +15,69 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class UserTopicCommentsController extends Controller
 {
+    /**
+     * [GET] /users/{slug}/topics/{title}/comments.
+     *
+     * @param $slug
+     * @param $title
+     */
     public function getCommentsAction($slug, $title)
     {
     }
 
- // [GET] /users/{slug}/topics/{title}/comments
-
+    /**
+     * [PUT] /users/{slug}/topics/{title}/comments/{id}.
+     *
+     * @param $slug
+     * @param $title
+     * @param $id
+     */
     public function putCommentAction($slug, $title, $id)
     {
     }
 
- // [PUT] /users/{slug}/topics/{title}/comments/{id}
-
+    /**
+     * [POST] /users/{slug}/topics/{title}/comments/{id}/ban.
+     *
+     * @param $slug
+     * @param $title
+     * @param $id
+     */
     public function banCommentAction($slug, $title, $id)
     {
     }
 
- // [POST] /users/{slug}/topics/{title}/comments/{id}/ban
-
     // conventional HATEOAS actions below
 
+    /**
+     * [GET] /users/{slug}/topics/{title}/comments/new.
+     *
+     * @param $slug
+     * @param $title
+     */
     public function newCommentsAction($slug, $title)
     {
     }
 
- // [GET] /users/{slug}/topics/{title}/comments/new
-
+    /**
+     * [GET] /users/{slug}/topics/{title}/comments/edit.
+     *
+     * @param $slug
+     * @param $title
+     * @param $id
+     */
     public function editCommentAction($slug, $title, $id)
     {
     }
 
- // [GET] /users/{slug}/topics/{title}/comments/edit
-
+    /**
+     * [GET] /users/{slug}/topics/{title}/comments/remove.
+     *
+     * @param $slug
+     * @param $title
+     * @param $id
+     */
     public function removeCommentAction($slug, $title, $id)
     {
     }
-
- // [GET] /users/{slug}/topics/{title}/comments/remove
 }

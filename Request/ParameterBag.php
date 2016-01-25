@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Request;
 
 use Doctrine\Common\Util\ClassUtils;
-use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -43,12 +43,12 @@ final class ParameterBag
         return $this->params[$requestId]['params'];
     }
 
-    public function addParam(Request $request, Param $param)
+    public function addParam(Request $request, ParamInterface $param)
     {
         $requestId = spl_object_hash($request);
         $this->getParams($request);
 
-        $this->params[$requestId]['params'][$param->name] = $param;
+        $this->params[$requestId]['params'][$param->getName()] = $param;
     }
 
     public function setController(Request $request, $controller)

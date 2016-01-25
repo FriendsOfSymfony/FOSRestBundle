@@ -43,7 +43,7 @@ class JMSSerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function serialize($data, $format, $context = null)
+    public function serialize($data, $format, Context $context)
     {
         $context = $this->convertContext($context, self::SERIALIZATION);
 
@@ -53,7 +53,7 @@ class JMSSerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function deserialize($data, $type, $format, $context = null)
+    public function deserialize($data, $type, $format, Context $context)
     {
         $context = $this->convertContext($context, self::DESERIALIZATION);
 
@@ -61,46 +61,40 @@ class JMSSerializerAdapter implements Serializer
     }
 
     /**
-     * @param mixed $context
+     * @param Context $context
+     * @param int     $direction {@see self} constants
      *
      * @return JMSContext
      */
-    private function convertContext($context, $direction)
+    private function convertContext(Context $context, $direction)
     {
-        if ($context instanceof JMSContext) {
-            @trigger_error(sprintf('Support of %s is deprecated since version 1.8 and will be removed in 2.0. You should use FOS\RestBundle\Context\Context instead.', get_class($context)), E_USER_DEPRECATED);
-            $jmsContext = $context;
-        } elseif ($context instanceof Context) {
-            if ($direction === self::SERIALIZATION) {
-                $jmsContext = JMSSerializationContext::create();
-            } else {
-                $jmsContext = JMSDeserializationContext::create();
-                if (null !== $context->getMaxDepth()) {
-                    for ($i = 0; $i < $context->getMaxDepth(); ++$i) {
-                        $jmsContext->increaseDepth();
-                    }
+        if ($direction === self::SERIALIZATION) {
+            $jmsContext = JMSSerializationContext::create();
+        } else {
+            $jmsContext = JMSDeserializationContext::create();
+            if (null !== $context->getMaxDepth()) {
+                for ($i = 0; $i < $context->getMaxDepth(); ++$i) {
+                    $jmsContext->increaseDepth();
                 }
             }
+        }
 
-            foreach ($context->getAttributes() as $key => $value) {
-                $jmsContext->attributes->set($key, $value);
-            }
+        foreach ($context->getAttributes() as $key => $value) {
+            $jmsContext->attributes->set($key, $value);
+        }
 
-            if (null !== $context->getVersion()) {
-                $jmsContext->setVersion($context->getVersion());
-            }
-            $groups = $context->getGroups();
-            if (!empty($groups)) {
-                $jmsContext->setGroups($context->getGroups());
-            }
-            if (null !== $context->getMaxDepth()) {
-                $jmsContext->enableMaxDepthChecks();
-            }
-            if (null !== $context->getSerializeNull()) {
-                $jmsContext->setSerializeNull($context->getSerializeNull());
-            }
-        } else {
-            throw new \InvalidArgumentException('Invalid context object.');
+        if (null !== $context->getVersion()) {
+            $jmsContext->setVersion($context->getVersion());
+        }
+        $groups = $context->getGroups();
+        if (!empty($groups)) {
+            $jmsContext->setGroups($context->getGroups());
+        }
+        if (null !== $context->getMaxDepth()) {
+            $jmsContext->enableMaxDepthChecks();
+        }
+        if (null !== $context->getSerializeNull()) {
+            $jmsContext->setSerializeNull($context->getSerializeNull());
         }
 
         return $jmsContext;

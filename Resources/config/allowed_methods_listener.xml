@@ -4,24 +4,17 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-
-        <parameter key="fos_rest.allowed_methods_listener.class">FOS\RestBundle\EventListener\AllowedMethodsListener</parameter>
-        <parameter key="fos_rest.allowed_methods_loader.class">FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsRouterLoader</parameter>
-
-    </parameters>
-
     <services>
 
-        <service id="fos_rest.allowed_methods_listener" class="%fos_rest.allowed_methods_listener.class%">
+        <service id="fos_rest.allowed_methods_listener" class="FOS\RestBundle\EventListener\AllowedMethodsListener">
             <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" />
             <argument type="service" id="fos_rest.allowed_methods_loader" />
         </service>
 
-        <service id="fos_rest.allowed_methods_loader" class="%fos_rest.allowed_methods_loader.class%">
+        <service id="fos_rest.allowed_methods_loader" class="FOS\RestBundle\Response\AllowedMethodsLoader\AllowedMethodsRouterLoader" public="false">
             <tag name="kernel.cache_warmer" />
             <argument type="service" id="router" />
-            <argument>%fos_rest.cache_dir%</argument>
+            <argument /> <!-- cache dir -->
             <argument>%kernel.debug%</argument>
         </service>
 

@@ -11,13 +11,20 @@
 
 namespace FOS\RestBundle\Inflector;
 
-use FOS\RestBundle\Util\Inflector\DoctrineInflector as LegacyDoctrineInflector;
+use Doctrine\Common\Inflector\Inflector;
 
 /**
  * Inflector object using the Doctrine/Inflector.
  *
  * @author Mark Kazemier <Markkaz>
  */
-class DoctrineInflector extends LegacyDoctrineInflector implements InflectorInterface
+class DoctrineInflector implements InflectorInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function pluralize($word)
+    {
+        return Inflector::pluralize($word);
+    }
 }

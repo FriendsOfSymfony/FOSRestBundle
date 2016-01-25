@@ -13,10 +13,9 @@ namespace FOS\RestBundle\Examples;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
-use FOS\RestBundle\Util\Codes;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\LoggerInterface;
 
 /**
  * This is an example RSS ViewHandler.
@@ -63,14 +62,14 @@ class RssHandler
     {
         try {
             $content = $this->createFeed($view->getData());
-            $code = Codes::HTTP_OK;
+            $code = Response::HTTP_OK;
         } catch (\Exception $e) {
             if ($this->logger) {
                 $this->logger->error($e);
             }
 
             $content = sprintf('%s:<br/><pre>%s</pre>', $e->getMessage(), $e->getTraceAsString());
-            $code = Codes::HTTP_BAD_REQUEST;
+            $code = Response::HTTP_BAD_REQUEST;
         }
 
         return new Response($content, $code, $view->getHeaders());
@@ -86,10 +85,10 @@ class RssHandler
         $feed->setTitle($data['title']);
         $feed->setLink($data['link']);
         $feed->setFeedLink($data['link'], 'rss');
-        $feed->addAuthor(array(
+        $feed->addAuthor([
             'name' => 'ZeroCMS',
             'email' => 'email!',
-        ));
+        ]);
         $feed->setDateModified(time());
         $feed->setDescription('RSS feed from query');
 
@@ -99,11 +98,11 @@ class RssHandler
 
             $entry->setTitle($document['title']);
             $entry->setLink($document['url']);
-            $entry->addAuthor(array(
+            $entry->addAuthor([
                 'name' => $document['author'],
                 //'email' => '',
                 //'uri'   => '',
-            ));
+            ]);
 
             $entry->setDateModified($document['dateUpdated']->getTimestamp());
             $entry->setDateCreated($document['dateCreated']->getTimestamp());

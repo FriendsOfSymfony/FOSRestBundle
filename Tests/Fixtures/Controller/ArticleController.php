@@ -11,164 +11,239 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
+use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Validator\ConstraintViolationList;
 
-class ArticleController extends FosRestController implements ClassResourceInterface
+class ArticleController extends Controller implements ClassResourceInterface
 {
+    use ControllerTrait;
+
+    /**
+     * [OPTIONS] /articles.
+     */
     public function optionsAction()
     {
     }
 
- // [OPTIONS] /articles
-
+    /**
+     * [GET] /articles.
+     */
     public function cgetAction(ConstraintViolationList $errors)
     {
     }
 
- // [GET] /articles
-
+    /**
+     * [GET] /articles/{slug}.
+     *
+     * @param $slug
+     */
     public function getAction($slug)
     {
     }
 
- // [GET] /articles/{slug}
-
+    /**
+     * [POST] /articles.
+     */
     public function cpostAction()
     {
     }
 
- // [POST] /articles
-
+    /**
+     * [PATCH] /articles.
+     */
     public function cpatchAction()
     {
     }
 
- // [PATCH] /articles
-
+    /**
+     * [PUT] /articles/{slug}.
+     *
+     * @param $slug
+     */
     public function putAction($slug)
     {
     }
 
- // [PUT] /articles/{slug}
-
+    /**
+     * [PATCH] /articles/{slug}.
+     *
+     * @param $slug
+     */
     public function patchAction($slug)
     {
     }
 
- // [PATCH] /articles/{slug}
-
+    /**
+     * [PATCH] /articles/{slug}/lock.
+     *
+     * @param $slug
+     */
     public function lockAction($slug)
     {
     }
 
- // [PATCH] /articles/{slug}/lock
-
+    /**
+     * [GET] /articles/{slug}/comments.
+     *
+     * @param $slug
+     */
     public function getCommentsAction($slug)
     {
     }
 
- // [GET] /articles/{slug}/comments
-
+    /**
+     * [GET] /articles/{slug}/comments/{id}.
+     *
+     * @param $slug
+     * @param $id
+     */
     public function getCommentAction($slug, $id)
     {
     }
 
- // [GET] /articles/{slug}/comments/{id}
-
+    /**
+     * [DELETE] /articles/{slug}/comments/{id}.
+     *
+     * @param $slug
+     * @param $id
+     */
     public function deleteCommentAction($slug, $id)
     {
     }
 
- // [DELETE] /articles/{slug}/comments/{id}
-
+    /**
+     * [PATCH] /articles/{slug}/ban.
+     *
+     * @param $slug
+     * @param $id
+     */
     public function banAction($slug, $id)
     {
     }
 
- // [PATCH] /articles/{slug}/ban
-
+    /**
+     * [POST] /articles/{slug}/comments/{id}/vote.
+     *
+     * @param $slug
+     * @param $id
+     */
     public function postCommentVoteAction($slug, $id)
     {
     }
 
- // [POST] /articles/{slug}/comments/{id}/vote
-
+    /**
+     * NO route.
+     */
     public function _articlebarAction()
     {
     }
 
- // NO route
-
+    /**
+     * [GET] /articles/check_articlename.
+     */
     public function check_articlenameAction()
     {
     }
 
- // [GET] /articles/check_articlename
-
     // conventional HATEOAS actions below
 
+    /**
+     * [GET] /articles/new.
+     */
     public function newAction()
     {
     }
 
- // [GET] /articles/new
-
+    /**
+     * [GET] /article/{slug}/edit.
+     *
+     * @param $slug
+     */
     public function editAction($slug)
     {
     }
 
- // [GET] /article/{slug}/edit
-
+    /**
+     * [GET] /article/{slug}/remove.
+     *
+     * @param $slug
+     */
     public function removeAction($slug)
     {
     }
 
- // [GET] /article/{slug}/remove
-
+    /**
+     * [GET] /articles/{slug}/comments/new.
+     *
+     * @param $slug
+     */
     public function newCommentAction($slug)
     {
     }
 
- // [GET] /articles/{slug}/comments/new
-
+    /**
+     * [GET] /articles/{slug}/comments/{id}/edit.
+     *
+     * @param $slug
+     * @param $id
+     */
     public function editCommentAction($slug, $id)
     {
     }
 
- // [GET] /articles/{slug}/comments/{id}/edit
-
+    /**
+     * [GET] /articles/{slug}/comments/{id}/remove.
+     *
+     * @param $slug
+     * @param $id
+     */
     public function removeCommentAction($slug, $id)
     {
     }
 
- // [GET] /articles/{slug}/comments/{id}/remove
-
+    /**
+     * [PATCH] /articles/{articleId}/comments/{commentId}/hide.
+     *
+     * @param $articleId
+     * @param $commentId
+     */
     public function hideCommentAction($articleId, $commentId)
     {
     }
 
- // [PATCH] /articles/{articleId}/comments/{commentId}/hide
-
     // Parameter of type Request should be ignored
 
+    /**
+     * [GET] /articles/{slug}/votes.
+     *
+     * @param Request $request
+     * @param $slug
+     */
     public function getVotesAction(Request $request, $slug)
     {
     }
 
- // [GET] /articles/{slug}/votes
-
+    /**
+     * [GET] /articles/{slug}/votes/{id}.
+     *
+     * @param Request $request
+     * @param $slug
+     * @param $id
+     */
     public function getVoteAction(Request $request, $slug, $id)
     {
     }
 
- // [GET] /articles/{slug}/votes/{id}
-
+    /**
+     * [GET] /articles/{slug}/foos.
+     *
+     * @param $slug
+     * @param Request $request
+     */
     public function getFoosAction($slug, Request $request)
     {
     }
-
- // [GET] /articles/{slug}/foos
 }

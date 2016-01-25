@@ -11,11 +11,14 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use FOS\RestBundle\Negotiation\FormatNegotiator;
-use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\EventListener\FormatListener;
+use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Negotiation\FormatNegotiator;
+use Negotiation\Accept;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Request listener test.
@@ -38,16 +41,43 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
+            ->setMethods(['getBest'])
             ->getMock();
         $formatNegotiator->expects($this->once())
-            ->method('getBestMediaType')
-            ->will($this->returnValue('application/xml'));
+            ->method('getBest')
+            ->willReturn(new Accept('text/xml; q=1'));
 
         $listener = new FormatListener($formatNegotiator);
 
         $listener->onKernelRequest($event);
 
-        $this->assertEquals($request->getRequestFormat(), 'xml');
+        $this->assertEquals('xml', $request->getRequestFormat());
+    }
+
+    public function testOnKernelControllerNoZone()
+    {
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $formatNegotiator = new FormatNegotiator($requestStack);
+        $formatNegotiator->add(new RequestMatcher('/'), ['fallback_format' => 'json']);
+
+        $listener = new FormatListener($formatNegotiator);
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals($request->getRequestFormat(), 'html');
     }
 
     public function testOnKernelControllerNegotiationStopped()
@@ -59,13 +89,16 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->setRequestFormat('xml');
 
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $event->expects($this->once())
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = new FormatNegotiator();
-        $formatNegotiator->add(new RequestMatcher('/'), array('stop' => true));
-        $formatNegotiator->add(new RequestMatcher('/'), array('fallback_format' => 'json'));
+        $formatNegotiator = new FormatNegotiator($requestStack);
+        $formatNegotiator->add(new RequestMatcher('/'), ['stop' => true]);
+        $formatNegotiator->add(new RequestMatcher('/'), ['fallback_format' => 'json']);
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -124,10 +157,11 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
         $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
+            ->setMethods(['getBest'])
             ->getMock();
         $formatNegotiator->expects($this->any())
-            ->method('getBestMediaType')
-            ->will($this->returnValue('application/xml'));
+            ->method('getBest')
+            ->willReturn(new Accept('text/xml; q=1'));
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -138,10 +172,10 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
 
     public function useSpecifiedFormatDataProvider()
     {
-        return array(
-            array(null, 'xml'),
-            array('json', 'json'),
-        );
+        return [
+            [null, 'xml'],
+            ['json', 'json'],
+        ];
     }
 
     /**
@@ -155,9 +189,9 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $request = new Request();
-        $attributes = array('_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured');
+        $attributes = ['_locale' => 'en', '_format' => 'json', '_controller' => 'FooBundle:Index:featured'];
         $request->attributes->add($attributes);
-        $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', array()), $attributes));
+        $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', []), $attributes));
 
         $event->expects($this->once())
             ->method('getRequest')
@@ -171,7 +205,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator->expects($this->any())
-            ->method('getBestMediaType')
+            ->method('getBest')
             ->will($this->returnValue('application/json'));
 
         $listener = new FormatListener($formatNegotiator);

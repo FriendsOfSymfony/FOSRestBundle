@@ -11,11 +11,11 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Routing\Loader\XmlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
-use FOS\RestBundle\Routing\RestRouteCollection;
-use Symfony\Component\Config\Util\XmlUtils;
 
 /**
  * RestXmlCollectionLoader XML file collections loader.
@@ -24,7 +24,7 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class RestXmlCollectionLoader extends XmlFileLoader
 {
-    protected $collectionParents = array();
+    protected $collectionParents = [];
     private $processor;
     private $includeFormat;
     private $formats;
@@ -43,7 +43,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         FileLocatorInterface $locator,
         RestRouteProcessor $processor,
         $includeFormat = true,
-        array $formats = array(),
+        array $formats = [],
         $defaultFormat = null
     ) {
         parent::__construct($locator);
@@ -72,7 +72,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $type = (string) $node->getAttribute('type');
                 $currentDir = dirname($path);
 
-                $parents = array();
+                $parents = [];
                 if (!empty($parent)) {
                     if (!isset($this->collectionParents[$parent])) {
                         throw new \InvalidArgumentException(sprintf('Cannot find parent resource with name %s', $parent));
@@ -174,7 +174,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
     private function getOptions(\DOMElement $node)
     {
-        $options = array();
+        $options = [];
         foreach ($node->childNodes as $child) {
             if ($child instanceof \DOMElement && $child->tagName === 'option') {
                 $option = $node->ownerDocument->createElementNs(
@@ -222,8 +222,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     <xsd:import namespace="http://friendsofsymfony.github.com/schema/rest" schemaLocation="$restRoutinglocation" />
     <xsd:import namespace="http://symfony.com/schema/routing" schemaLocation="$routinglocation" />
 </xsd:schema>
-EOF
-        ;
+EOF;
 
         $current = libxml_use_internal_errors(true);
         libxml_clear_errors();
@@ -263,7 +262,7 @@ EOF
      */
     private function getXmlErrors_($internalErrors)
     {
-        $errors = array();
+        $errors = [];
         foreach (libxml_get_errors() as $error) {
             $errors[] = sprintf('[%s %s] %s (in %s - line %d, column %d)',
                 LIBXML_ERR_WARNING == $error->level ? 'WARNING' : 'ERROR',

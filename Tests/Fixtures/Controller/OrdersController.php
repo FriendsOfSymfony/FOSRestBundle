@@ -17,35 +17,42 @@ class OrdersController extends Controller
 {
     // conventional HATEOAS action after REST action
 
+    /**
+     * [GET] /foos.
+     */
     public function getFoosAction()
     {
     }
 
- // [GET] /foos
-
+    /**
+     * [GET] /foos/new.
+     */
     public function newFoosAction()
     {
     }
 
- // [GET] /foos/new
-
     // conventional HATEOAS action before REST action
 
+    /**
+     * [GET] /bars/new.
+     */
     public function newBarsAction()
     {
     }
 
- // [GET] /bars/new
-
+    /**
+     * [GET] /bars/custom.
+     */
     public function getBarsCustomAction()
     {
     }
 
- // [GET] /bars/custom
-
+    /**
+     * [GET] /bars/{slug}.
+     *
+     * @param $slug
+     */
     public function getBarsAction($slug)
     {
     }
-
- // [GET] /bars/{slug}
 }

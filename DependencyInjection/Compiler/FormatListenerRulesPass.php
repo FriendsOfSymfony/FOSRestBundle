@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @internal
  */
-class FormatListenerRulesPass implements CompilerPassInterface
+final class FormatListenerRulesPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -35,15 +35,15 @@ class FormatListenerRulesPass implements CompilerPassInterface
                 $path .= '|_wdt';
             }
 
-            $profilerRule = array(
+            $profilerRule = [
                 'host' => null,
                 'methods' => null,
                 'path' => "^/$path/",
-                'priorities' => array('html', 'json'),
+                'priorities' => ['html', 'json'],
                 'fallback_format' => 'html',
                 'exception_fallback_format' => 'html',
                 'prefer_extension' => true,
-            );
+            ];
 
             $this->addRule($profilerRule, $container);
         }
@@ -52,9 +52,11 @@ class FormatListenerRulesPass implements CompilerPassInterface
         foreach ($rules as $rule) {
             $this->addRule($rule, $container);
         }
+
+        $container->setParameter('fos_rest.format_listener.rules', null);
     }
 
-    protected function addRule(array $rule, ContainerBuilder $container)
+    private function addRule(array $rule, ContainerBuilder $container)
     {
         $matcher = $this->createRequestMatcher(
             $container,
@@ -71,25 +73,26 @@ class FormatListenerRulesPass implements CompilerPassInterface
         $exceptionFallbackFormat = $rule['exception_fallback_format'];
         unset($rule['exception_fallback_format']);
         $container->getDefinition('fos_rest.format_negotiator')
-            ->addMethodCall('add', array($matcher, $rule));
+            ->addMethodCall('add', [$matcher, $rule]);
 
-        $rule['fallback_format'] = $exceptionFallbackFormat;
-        $container->getDefinition('fos_rest.exception_format_negotiator')
-            ->addMethodCall('add', array($matcher, $rule));
+        if ($container->hasDefinition('fos_rest.exception_format_negotiator')) {
+            $rule['fallback_format'] = $exceptionFallbackFormat;
+            $container->getDefinition('fos_rest.exception_format_negotiator')
+                ->addMethodCall('add', [$matcher, $rule]);
+        }
     }
 
-    protected function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
+    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
     {
-        $arguments = array($path, $host, $methods);
+        $arguments = [$path, $host, $methods];
         $serialized = serialize($arguments);
         $id = 'fos_rest.request_matcher.'.md5($serialized).sha1($serialized);
 
         if (!$container->hasDefinition($id)) {
             // only add arguments that are necessary
             $container
-                ->setDefinition($id, new DefinitionDecorator('fos_rest.request_matcher'))
-                ->setArguments($arguments)
-            ;
+                ->setDefinition($id, new DefinitionDecorator('fos_rest.format_request_matcher'))
+                ->setArguments($arguments);
         }
 
         return new Reference($id);

@@ -12,12 +12,13 @@
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Symfony\Component\Yaml\Yaml;
-use FOS\RestBundle\Routing\Loader\RestRouteLoader;
-use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
-use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
-use FOS\RestBundle\Request\ParamReader;
 use FOS\RestBundle\Inflector\DoctrineInflector;
+use FOS\RestBundle\Request\ParamReader;
+use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
+use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
+use FOS\RestBundle\Routing\Loader\RestRouteLoader;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Base Loader testing class.
@@ -27,7 +28,7 @@ use FOS\RestBundle\Inflector\DoctrineInflector;
 abstract class LoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
+     * @var ContainerBuilder
      */
     protected $containerMock;
 
@@ -55,13 +56,13 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
      *
      * @return RestRouteLoader
      */
-    protected function getControllerLoader(array $formats = array())
+    protected function getControllerLoader(array $formats = [])
     {
         // This check allows to override the container
         if ($this->containerMock === null) {
-            $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
+            $this->containerMock = $this->getMockBuilder(ContainerBuilder::class)
                 ->disableOriginalConstructor()
-                ->setMethods(array('get', 'has'))
+                ->setMethods(['get', 'has'])
                 ->getMock();
         }
         $l = $this->getMockBuilder('Symfony\Component\Config\FileLocator')

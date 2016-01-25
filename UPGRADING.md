@@ -3,11 +3,21 @@ Upgrading
 
 This document will be updated to list important BC breaks and behavioral changes.
 
-### upgrading to 2.0.0 (unreleased)
+### upgrading to 2.0.0
 
- * RedirectView and RouteRedirect view were removed. Use View::createRedirect and
+ * it is now recommended to explicitly configure the format to mime type mapping via ``fos_rest.view.mime_types``
+ * dropped support for the legacy ``Symfony\Component\Validator\ValidatorInterface``
+ * removed ``FOS\RestBundle\Util\Codes`` in favor of ``Symfony\Component\HttpFoundation\Response``
+ * compatibility with Symfony <2.7, JMS Serializer/SerializerBundle <1.0 and SensioFrameworkExtraBundle <3.0 was dropped
+ * RedirectView and RouteRedirectView view were removed. Use View::createRedirect and
    View::createRouteRedirect instead. Note: the default status code for a route redirect
    has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
+ * constructor signature of DisableCSRFExtension was changed
+ * removed ``callback_filter`` configuration option for the jsonp_handler
+ * ``exception_wrapper_handler`` is now the name of a service and not the name of a class
+ * removed all ``.class`` parameters, instead overwriting services via explicit Bundle configuration is preferred
+ * renamed ``AbstractScalarParam::$array`` to ``AbstractScalarParam::$map``
+ * added `ControllerTrait` for developers that prefer to use DI for their controllers instead of extending ``FOSRestController``
 
 ### upgrading from 1.5.*
 

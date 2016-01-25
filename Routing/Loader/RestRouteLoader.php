@@ -11,12 +11,12 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Config\Loader\Loader;
-use Symfony\Component\Config\FileLocatorInterface;
-use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
@@ -85,7 +85,7 @@ class RestRouteLoader extends Loader
     {
         return is_string($resource)
             && 'rest' === $type
-            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), array('xml', 'yml')
+            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), ['xml', 'yml']
         );
     }
 
@@ -94,9 +94,9 @@ class RestRouteLoader extends Loader
      *
      * @param string $controller
      *
-     * @return array
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     private function getControllerLocator($controller)
     {
@@ -148,7 +148,7 @@ class RestRouteLoader extends Loader
             ));
         }
 
-        return array($prefix, $class);
+        return [$prefix, $class];
     }
 
     /**
@@ -157,10 +157,8 @@ class RestRouteLoader extends Loader
      * @param string $file A PHP file path
      *
      * @return string|false Full class name if found, false otherwise
-     *
-     * @internal
      */
-    protected function findClass($file)
+    private function findClass($file)
     {
         $class = false;
         $namespace = false;
@@ -181,7 +179,7 @@ class RestRouteLoader extends Loader
                 do {
                     $namespace .= $token[1];
                     $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], array(T_NS_SEPARATOR, T_STRING)));
+                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING]));
             }
 
             if (T_CLASS === $token[0]) {

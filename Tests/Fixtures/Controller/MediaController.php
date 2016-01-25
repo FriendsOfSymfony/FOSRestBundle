@@ -11,20 +11,27 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class MediaController extends FOSRestController implements ClassResourceInterface
+class MediaController extends Controller implements ClassResourceInterface
 {
+    use ControllerTrait;
+
+    /**
+     * [GET] /media.
+     */
     public function cgetAction()
     {
     }
 
- // [GET] /media
-
+    /**
+     * [GET] /media/{slug}.
+     *
+     * @param $slug
+     */
     public function getAction($slug)
     {
     }
-
- // [GET] /media/{slug}
 }

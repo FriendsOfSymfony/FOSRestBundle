@@ -1,0 +1,11 @@
+v1_user:
+  path:      /users/v1.{_format}
+  controller:   ::v1UserAction
+  methods: [GET]
+  condition: "request.attributes.get('version') == ('v1' or 'v3')"
+
+conditional_user:
+  path:      /users/conditional.{_format}
+  controller:   ::conditionalUserAction
+  methods: [GET]
+  condition: "(context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i') and request.attributes.get('version') == ('v1' or 'v3')"

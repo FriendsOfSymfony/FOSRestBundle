@@ -11,8 +11,9 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This listener handles various setup tasks related to the query fetcher.
@@ -26,18 +27,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ParamFetcherListener
 {
-    private $container;
+    private $paramFetcher;
     private $setParamsAsAttributes;
 
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container
-     * @param bool               $setParamsAsAttributes
+     * @param ParamFetcherInterface $paramFetcher
+     * @param bool                  $setParamsAsAttributes
      */
-    public function __construct(ContainerInterface $container, $setParamsAsAttributes = false)
+    public function __construct(ParamFetcherInterface $paramFetcher, $setParamsAsAttributes = false)
     {
-        $this->container = $container;
+        $this->paramFetcher = $paramFetcher;
         $this->setParamsAsAttributes = $setParamsAsAttributes;
     }
 
@@ -51,20 +52,23 @@ class ParamFetcherListener
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
-        $paramFetcher = $this->container->get('fos_rest.request.param_fetcher');
+
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return;
+        }
 
         $controller = $event->getController();
 
         if (is_callable($controller) && method_exists($controller, '__invoke')) {
-            $controller = array($controller, '__invoke');
+            $controller = [$controller, '__invoke'];
         }
 
-        $paramFetcher->setController($controller);
+        $this->paramFetcher->setController($controller);
         $attributeName = $this->getAttributeName($controller);
-        $request->attributes->set($attributeName, $paramFetcher);
+        $request->attributes->set($attributeName, $this->paramFetcher);
 
         if ($this->setParamsAsAttributes) {
-            $params = $paramFetcher->all();
+            $params = $this->paramFetcher->all();
             foreach ($params as $name => $param) {
                 if ($request->attributes->has($name) && null !== $request->attributes->get($name)) {
                     $msg = sprintf("ParamFetcher parameter conflicts with a path parameter '$name' for route '%s'", $request->attributes->get('_route'));
@@ -79,11 +83,11 @@ class ParamFetcherListener
     /**
      * Determines which attribute the ParamFetcher should be injected as.
      *
-     * @param array $controller The controller action as an "array" callable.
+     * @param callable $controller The controller action as an "array" callable.
      *
      * @return string
      */
-    private function getAttributeName(array $controller)
+    private function getAttributeName(callable $controller)
     {
         list($object, $name) = $controller;
         $method = new \ReflectionMethod($object, $name);
@@ -111,8 +115,7 @@ class ParamFetcherListener
         if (null === $type) {
             return false;
         }
-        $fetcherInterface = 'FOS\\RestBundle\\Request\\ParamFetcherInterface';
 
-        return $type->implementsInterface($fetcherInterface);
+        return $type->implementsInterface(ParamFetcherInterface::class);
     }
 }

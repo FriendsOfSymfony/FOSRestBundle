@@ -11,12 +11,12 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Util\StopFormatListenerException;
+use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use FOS\RestBundle\Util\FormatNegotiatorInterface;
-use FOS\RestBundle\Util\MediaTypeNegotiatorInterface;
 
 /**
  * This listener handles Accept header format negotiations.
@@ -34,7 +34,7 @@ class FormatListener
      *
      * @param FormatNegotiatorInterface $formatNegotiator
      */
-    public function __construct(FormatNegotiatorInterface $formatNegotiator)
+    public function __construct(FormatNegotiator $formatNegotiator)
     {
         $this->formatNegotiator = $formatNegotiator;
     }
@@ -48,19 +48,21 @@ class FormatListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        try {
-            $request = $event->getRequest();
+        $request = $event->getRequest();
 
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return;
+        }
+
+        try {
             $format = $request->getRequestFormat(null);
             if (null === $format) {
-                if ($this->formatNegotiator instanceof MediaTypeNegotiatorInterface) {
-                    $mediaType = $this->formatNegotiator->getBestMediaType($request);
-                    if ($mediaType) {
-                        $request->attributes->set('media_type', $mediaType);
-                        $format = $request->getFormat($mediaType);
+                $accept = $this->formatNegotiator->getBest('');
+                if (null !== $accept && 0.0 < $accept->getQuality()) {
+                    $format = $request->getFormat($accept->getType());
+                    if (null !== $format) {
+                        $request->attributes->set('media_type', $accept->getValue());
                     }
-                } else {
-                    $format = $this->formatNegotiator->getBestFormat($request);
                 }
             }
 

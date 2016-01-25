@@ -31,15 +31,10 @@ class SymfonySerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function serialize($data, $format, $context = null)
+    public function serialize($data, $format, Context $context)
     {
-        if (!($context instanceof Context)) {
-            @trigger_error(sprintf('You must pass a FOS\RestBundle\Context\Context instance to %s since version 1.8.', __METHOD__), E_USER_DEPRECATED);
-            $newContext = array();
-        } else {
-            $newContext = $this->convertContext($context);
-            $newContext['serializeNull'] = $context->getSerializeNull();
-        }
+        $newContext = $this->convertContext($context);
+        $newContext['serializeNull'] = $context->getSerializeNull();
 
         return $this->serializer->serialize($data, $format, $newContext);
     }
@@ -47,14 +42,9 @@ class SymfonySerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function deserialize($data, $type, $format, $context = null)
+    public function deserialize($data, $type, $format, Context $context)
     {
-        if (!($context instanceof Context)) {
-            @trigger_error(sprintf('You must pass a FOS\RestBundle\Context\Context instance to %s since version 1.8.', __METHOD__), E_USER_DEPRECATED);
-            $newContext = array();
-        } else {
-            $newContext = $this->convertContext($context);
-        }
+        $newContext = $this->convertContext($context);
 
         return $this->serializer->deserialize($data, $type, $format, $newContext);
     }

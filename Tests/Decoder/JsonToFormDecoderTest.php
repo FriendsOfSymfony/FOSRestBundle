@@ -22,17 +22,17 @@ class JsonToFormDecoderTest extends \PHPUnit_Framework_TestCase
 {
     public function testDecodeWithRemovingFalseData()
     {
-        $data = array(
-            'arrayKey' => array(
+        $data = [
+            'arrayKey' => [
                 'falseKey' => false,
                 'stringKey' => 'foo',
-            ),
+            ],
             'falseKey' => false,
             'trueKey' => true,
             'intKey' => 69,
             'floatKey' => 3.14,
             'stringKey' => 'bar',
-        );
+        ];
         $decoder = new JsonToFormDecoder();
         $decoded = $decoder->decode(json_encode($data));
 

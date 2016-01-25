@@ -11,9 +11,11 @@
 
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
-use Symfony\Component\Config\Resource\FileResource;
 use Doctrine\Common\Annotations\Reader;
+use FOS\RestBundle\Controller\Annotations;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
+use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * REST controller reader.
@@ -52,9 +54,9 @@ class RestControllerReader
      *
      * @param \ReflectionClass $reflectionClass
      *
-     * @return RestRouteCollection
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return RestRouteCollection
      */
     public function read(\ReflectionClass $reflectionClass)
     {
@@ -62,20 +64,26 @@ class RestControllerReader
         $collection->addResource(new FileResource($reflectionClass->getFileName()));
 
         // read prefix annotation
-        if ($annotation = $this->readClassAnnotation($reflectionClass, 'Prefix')) {
+        if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, Annotations\Prefix::class)) {
             $this->actionReader->setRoutePrefix($annotation->value);
         }
 
         // read name-prefix annotation
-        if ($annotation = $this->readClassAnnotation($reflectionClass, 'NamePrefix')) {
+        if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, Annotations\NamePrefix::class)) {
             $this->actionReader->setNamePrefix($annotation->value);
         }
 
-        $resource = array();
+        // read version annotation
+        if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, Annotations\Version::class)) {
+            $this->actionReader->setVersions($annotation->value);
+        }
+
+        $resource = [];
         // read route-resource annotation
-        if ($annotation = $this->readClassAnnotation($reflectionClass, 'RouteResource')) {
+        if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, Annotations\RouteResource::class)) {
             $resource = explode('_', $annotation->resource);
-        } elseif ($reflectionClass->implementsInterface('FOS\RestBundle\Routing\ClassResourceInterface')) {
+            $this->actionReader->setPluralize($annotation->pluralize);
+        } elseif ($reflectionClass->implementsInterface(ClassResourceInterface::class)) {
             $resource = preg_split(
                 '/([A-Z][^A-Z]*)Controller/', $reflectionClass->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
             );
@@ -96,25 +104,10 @@ class RestControllerReader
 
         $this->actionReader->setRoutePrefix(null);
         $this->actionReader->setNamePrefix(null);
-        $this->actionReader->setParents(array());
+        $this->actionReader->setVersions(null);
+        $this->actionReader->setPluralize(null);
+        $this->actionReader->setParents([]);
 
         return $collection;
-    }
-
-    /**
-     * Reads class annotations.
-     *
-     * @param \ReflectionClass $reflectionClass
-     * @param string           $annotationName
-     *
-     * @return object|null
-     */
-    private function readClassAnnotation(\ReflectionClass $reflectionClass, $annotationName)
-    {
-        $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
-
-        if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, $annotationClass)) {
-            return $annotation;
-        }
     }
 }

@@ -11,11 +11,9 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\Context\Context;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use JMS\Serializer\SerializationContext;
 
 /**
  * Default View implementation.
@@ -25,18 +23,58 @@ use JMS\Serializer\SerializationContext;
  */
 class View
 {
+    /**
+     * @var mixed|null
+     */
     private $data;
-    private $templateData = array();
+
+    /**
+     * @var int|null
+     */
+    private $statusCode;
+
+    /**
+     * @var mixed|null
+     */
+    private $templateData = [];
+
+    /**
+     * @var TemplateReference|string|null
+     */
     private $template;
+
+    /**
+     * @var string|null
+     */
     private $templateVar;
+
+    /**
+     * @var string|null
+     */
     private $engine;
+
+    /**
+     * @var string|null
+     */
     private $format;
+
+    /**
+     * @var string|null
+     */
     private $location;
+
+    /**
+     * @var string|null
+     */
     private $route;
+
+    /**
+     * @var array|null
+     */
     private $routeParameters;
 
     /**
-     * @var SerializationContext|Context
+     * @var Context
      */
     private $context;
 
@@ -54,7 +92,7 @@ class View
      *
      * @return static
      */
-    public static function create($data = null, $statusCode = null, array $headers = array())
+    public static function create($data = null, $statusCode = null, array $headers = [])
     {
         return new static($data, $statusCode, $headers);
     }
@@ -69,7 +107,7 @@ class View
      *
      * @return static
      */
-    public static function createRedirect($url, $statusCode = Codes::HTTP_FOUND, array $headers = array())
+    public static function createRedirect($url, $statusCode = Response::HTTP_FOUND, array $headers = [])
     {
         $view = static::create(null, $statusCode, $headers);
         $view->setLocation($url);
@@ -90,9 +128,9 @@ class View
      */
     public static function createRouteRedirect(
         $route,
-        array $parameters = array(),
-        $statusCode = Codes::HTTP_FOUND,
-        array $headers = array()
+        array $parameters = [],
+        $statusCode = Response::HTTP_FOUND,
+        array $headers = []
     ) {
         $view = static::create(null, $statusCode, $headers);
         $view->setRoute($route);
@@ -108,10 +146,10 @@ class View
      * @param int   $statusCode
      * @param array $headers
      */
-    public function __construct($data = null, $statusCode = null, array $headers = array())
+    public function __construct($data = null, $statusCode = null, array $headers = [])
     {
         $this->setData($data);
-        $this->setStatusCode($statusCode ?: 200);
+        $this->setStatusCode($statusCode);
         $this->setTemplateVar('data');
 
         if (!empty($headers)) {
@@ -140,7 +178,7 @@ class View
      *
      * @return View
      */
-    public function setTemplateData($data = array())
+    public function setTemplateData($data = [])
     {
         $this->templateData = $data;
 
@@ -179,13 +217,15 @@ class View
     /**
      * Sets the HTTP status code.
      *
-     * @param int $code
+     * @param int|null $code
      *
      * @return View
      */
     public function setStatusCode($code)
     {
-        $this->getResponse()->setStatusCode($code);
+        if (null !== $code) {
+            $this->statusCode = $code;
+        }
 
         return $this;
     }
@@ -199,23 +239,6 @@ class View
      */
     public function setContext(Context $context)
     {
-        $this->context = $context;
-
-        return $this;
-    }
-
-    /**
-     * Sets the serialization context.
-     *
-     * @param SerializationContext $context
-     *
-     * @return View
-     *
-     * @deprecated since 1.8, to be removed in 2.0. Use {@link View::setContext()} instead.
-     */
-    public function setSerializationContext(SerializationContext $context)
-    {
-        @trigger_error(sprintf('%s is deprecated since version 1.8 and will be removed in 2.0. Use %s::setContext() instead.', __METHOD__, get_class($this)), E_USER_DEPRECATED);
         $this->context = $context;
 
         return $this;
@@ -367,7 +390,7 @@ class View
      */
     public function getStatusCode()
     {
-        return $this->getResponse()->getStatusCode();
+        return $this->statusCode;
     }
 
     /**
@@ -459,6 +482,10 @@ class View
     {
         if (null === $this->response) {
             $this->response = new Response();
+
+            if (null !== ($code = $this->getStatusCode())) {
+                $this->response->setStatusCode($code);
+            }
         }
 
         return $this->response;
@@ -467,30 +494,12 @@ class View
     /**
      * Gets the serialization context.
      *
-     * @return SerializationContext|Context
+     * @return Context
      */
     public function getContext()
     {
         if (null === $this->context) {
             $this->context = new Context();
-        }
-
-        return $this->context;
-    }
-
-    /**
-     * Gets the serialization context.
-     *
-     * @return SerializationContext|Context
-     *
-     * @deprecated since 1.8, to be removed in 2.0. Use {@link View::getContext()} instead.
-     */
-    public function getSerializationContext()
-    {
-        @trigger_error(sprintf('%s is deprecated since version 1.8 and will be removed in 2.0. Use %s::getContext() instead.', __METHOD__, get_class($this)), E_USER_DEPRECATED);
-
-        if (null === $this->context) {
-            $this->context = new SerializationContext();
         }
 
         return $this->context;

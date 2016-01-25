@@ -23,9 +23,9 @@ interface ArrayNormalizerInterface
      *
      * @param array $data The array to normalize
      *
-     * @return array The normalized array
-     *
      * @throws Exception\NormalizationException
+     *
+     * @return array The normalized array
      */
     public function normalize(array $data);
 }

@@ -95,7 +95,7 @@ class View extends Template
     }
 
     /**
-     * @var array
+     * @param array $serializerGroups
      */
     public function setSerializerGroups($serializerGroups)
     {

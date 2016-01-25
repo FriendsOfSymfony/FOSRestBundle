@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Prefix;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Prefix;
 
 /**
  * @author Donald Tyler <chekote69@gmail.com>
@@ -21,9 +21,10 @@ use FOS\RestBundle\Controller\Annotations\Prefix;
  */
 class AnnotatedPrefixedController extends Controller
 {
+    /**
+     * [GET]     /aprefix/something.{_format}.
+     */
     public function getSomethingAction(Request $request)
     {
     }
-
- // [GET]     /aprefix/something.{_format}
 }

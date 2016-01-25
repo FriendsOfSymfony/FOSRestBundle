@@ -25,7 +25,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
+        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/exception.json');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -33,10 +33,10 @@ class SerializerErrorTest extends WebTestCase
 
     public function serializeExceptionJsonProvider()
     {
-        return array(
-            array('Serializer', '{"code":500,"message":"Something bad happened.","errors":null}'),
-            array('JMSSerializer', '{"code":500,"message":"Something bad happened."}'),
-        );
+        return [
+            ['Serializer', '{"code":500,"message":"Something bad happened.","errors":null}'],
+            ['JMSSerializer', '{"code":500,"message":"Something bad happened."}'],
+        ];
     }
 
     /**
@@ -46,7 +46,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
+        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/exception.xml');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -70,10 +70,10 @@ XML;
 
 XML;
 
-        return array(
-            array('Serializer', $expectedSerializerContent),
-            array('JMSSerializer', $expectedJMSContent),
-        );
+        return [
+            ['Serializer', $expectedSerializerContent],
+            ['JMSSerializer', $expectedJMSContent],
+        ];
     }
 
     /**
@@ -81,7 +81,7 @@ XML;
      */
     public function testSerializeInvalidFormJson($testCase, $expectedContent)
     {
-        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
+        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.json');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -89,10 +89,10 @@ XML;
 
     public function serializeInvalidFormJsonProvider()
     {
-        return array(
-            array('Serializer', '{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}'),
-            array('JMSSerializer', '{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}'),
-        );
+        return [
+            ['Serializer', '{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}'],
+            ['JMSSerializer', '{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}'],
+        ];
     }
 
     /**
@@ -100,7 +100,7 @@ XML;
      */
     public function testSerializeInvalidFormXml($testCase, $expectedContent)
     {
-        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
+        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.xml');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -133,9 +133,9 @@ XML;
 
 XML;
 
-        return array(
-            array('Serializer', $expectedSerializerContent),
-            array('JMSSerializer', $expectedJMSContent),
-        );
+        return [
+            ['Serializer', $expectedSerializerContent],
+            ['JMSSerializer', $expectedJMSContent],
+        ];
     }
 }

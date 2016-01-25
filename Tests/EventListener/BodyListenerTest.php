@@ -11,11 +11,16 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use FOS\RestBundle\Normalizer\Exception\NormalizationException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use FOS\RestBundle\Decoder\ContainerDecoderProvider;
+use FOS\RestBundle\Decoder\DecoderInterface;
+use FOS\RestBundle\Decoder\DecoderProviderInterface;
 use FOS\RestBundle\EventListener\BodyListener;
+use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
+use FOS\RestBundle\Normalizer\Exception\NormalizationException;
+use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * Request listener test.
@@ -37,33 +42,31 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false)
     {
-        $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->disableOriginalConstructor()->getMock();
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
         $decoder->expects($this->any())
             ->method('decode')
             ->will($this->returnValue($request->getContent()));
 
-        $decoderProvider = new ContainerDecoderProvider(array('json' => 'foo'));
+        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $decoderProvider = new ContainerDecoderProvider($container, ['json' => 'foo']);
 
         $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType);
 
         if ($decode) {
-            $container = $this->getMock('Symfony\Component\DependencyInjection\Container', array('get'));
             $container
                 ->expects($this->once())
                 ->method('get')
                 ->with('foo')
                 ->will($this->returnValue($decoder));
-
-            $decoderProvider->setContainer($container);
         }
 
         $request->setMethod($method);
 
         if ($contentType) {
-            $request->headers = new HeaderBag(array('Content-Type' => $contentType));
+            $request->headers = new HeaderBag(['Content-Type' => $contentType]);
         }
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $event = $this->getMockBuilder(GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
         $event->expects($this->once())
@@ -77,30 +80,72 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
 
     public static function testOnKernelRequestDataProvider()
     {
-        return array(
-            'Empty POST request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array('foo'), 'application/json'),
-            'Empty PUT request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PUT', array('foo'), 'application/json'),
-            'Empty PATCH request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'PATCH', array('foo'), 'application/json'),
-            'Empty DELETE request' => array(true, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'DELETE', array('foo'), 'application/json'),
-            'Empty GET request' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'GET', array(), 'application/json'),
-            'POST request with parameters' => array(false, new Request(array(), array('bar'), array(), array(), array(), array('CONTENT_TYPE' => 'application/x-www-form-urlencoded'), array('foo')), 'POST', array('bar'), 'application/x-www-form-urlencoded'),
-            'POST request with unallowed format' => array(false, new Request(array(), array(), array(), array(), array(), array(), array('foo')), 'POST', array(), 'application/fooformat'),
-            'POST request with no Content-Type' => array(true, new Request(array(), array(), array('_format' => 'json'), array(), array(), array(), array('foo')), 'POST', array('foo')),
-        );
+        return [
+            'Empty POST request' => [true, new Request([], [], [], [], [], [], ['foo']), 'POST', ['foo'], 'application/json'],
+            'Empty PUT request' => [true, new Request([], [], [], [], [], [], ['foo']), 'PUT', ['foo'], 'application/json'],
+            'Empty PATCH request' => [true, new Request([], [], [], [], [], [], ['foo']), 'PATCH', ['foo'], 'application/json'],
+            'Empty DELETE request' => [true, new Request([], [], [], [], [], [], ['foo']), 'DELETE', ['foo'], 'application/json'],
+            'Empty GET request' => [false, new Request([], [], [], [], [], [], ['foo']), 'GET', [], 'application/json'],
+            'POST request with parameters' => [false, new Request([], ['bar'], [], [], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded'], ['foo']), 'POST', ['bar'], 'application/x-www-form-urlencoded'],
+            'POST request with unallowed format' => [false, new Request([], [], [], [], [], [], ['foo']), 'POST', [], 'application/fooformat'],
+            'POST request with no Content-Type' => [true, new Request([], [], ['_format' => 'json'], [], [], [], ['foo']), 'POST', ['foo']],
+        ];
+    }
+
+    public function testOnKernelRequestNoZone()
+    {
+        $data = ['foo_bar' => 'foo_bar'];
+        $normalizedData = ['fooBar' => 'foo_bar'];
+
+        $decoder = $this->getMock(DecoderInterface::class);
+        $decoder
+            ->expects($this->never())
+            ->method('decode')
+            ->will($this->returnValue($data));
+
+        $decoderProvider = $this->getMock(DecoderProviderInterface::class);
+        $decoderProvider
+            ->expects($this->never())
+            ->method('getDecoder')
+            ->will($this->returnValue($decoder));
+
+        $normalizer = $this->getMock(ArrayNormalizerInterface::class);
+        $normalizer
+            ->expects($this->never())
+            ->method('normalize')
+            ->with($data)
+            ->will($this->returnValue($normalizedData));
+
+        $request = new Request([], [], [], [], [], [], 'foo');
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->setMethod('POST');
+
+        $event = $this->getMockBuilder(GetResponseEvent::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->once())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $listener = new BodyListener($decoderProvider, false, $normalizer);
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals([], $request->request->all());
     }
 
     public function testOnKernelRequestWithNormalizer()
     {
-        $data = array('foo_bar' => 'foo_bar');
-        $normalizedData = array('fooBar' => 'foo_bar');
+        $data = ['foo_bar' => 'foo_bar'];
+        $normalizedData = ['fooBar' => 'foo_bar'];
 
-        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
+        $decoder = $this->getMock(DecoderInterface::class);
         $decoder
             ->expects($this->any())
             ->method('decode')
             ->will($this->returnValue($data));
 
-        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $decoderProvider = $this->getMock(DecoderProviderInterface::class);
         $decoderProvider
             ->expects($this->any())
             ->method('getDecoder')
@@ -111,17 +156,17 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('supports')
             ->will($this->returnValue(true));
 
-        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer = $this->getMock(ArrayNormalizerInterface::class);
         $normalizer
             ->expects($this->once())
             ->method('normalize')
             ->with($data)
             ->will($this->returnValue($normalizedData));
 
-        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request = new Request([], [], [], [], [], [], 'foo');
         $request->setMethod('POST');
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $event = $this->getMockBuilder(GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -140,11 +185,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequestNormalizationWithForms($method, $contentType, $mustBeNormalized)
     {
-        $data = array('foo_bar' => 'foo_bar');
-        $normalizedData = array('fooBar' => 'foo_bar');
-        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $data = ['foo_bar' => 'foo_bar'];
+        $normalizedData = ['fooBar' => 'foo_bar'];
+        $decoderProvider = $this->getMock(DecoderProviderInterface::class);
 
-        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer = $this->getMock(ArrayNormalizerInterface::class);
 
         if ($mustBeNormalized) {
             $normalizer
@@ -158,11 +203,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
                 ->method('normalize');
         }
 
-        $request = new Request(array(), $data, array(), array(), array(), array(), 'foo');
+        $request = new Request([], $data, [], [], [], [], 'foo');
         $request->headers->set('Content-Type', $contentType);
         $request->setMethod($method);
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $event = $this->getMockBuilder(GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -182,14 +227,14 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
 
     public function formNormalizationProvider()
     {
-        $cases = array();
+        $cases = [];
 
-        foreach (array('POST', 'PUT', 'PATCH', 'DELETE') as $method) {
-            $cases[] = array($method, 'multipart/form-data', true);
-            $cases[] = array($method, 'multipart/form-data; boundary=AaB03x', true);
-            $cases[] = array($method, 'application/x-www-form-urlencoded', true);
-            $cases[] = array($method, 'application/x-www-form-urlencoded; charset=utf-8', true);
-            $cases[] = array($method, 'unknown', false);
+        foreach (['POST', 'PUT', 'PATCH', 'DELETE'] as $method) {
+            $cases[] = [$method, 'multipart/form-data', true];
+            $cases[] = [$method, 'multipart/form-data; boundary=AaB03x', true];
+            $cases[] = [$method, 'application/x-www-form-urlencoded', true];
+            $cases[] = [$method, 'application/x-www-form-urlencoded; charset=utf-8', true];
+            $cases[] = [$method, 'unknown', false];
         }
 
         return $cases;
@@ -200,13 +245,13 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequestNormalizationException()
     {
-        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
+        $decoder = $this->getMock(DecoderInterface::class);
         $decoder
             ->expects($this->any())
             ->method('decode')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
-        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
+        $decoderProvider = $this->getMock(DecoderProviderInterface::class);
         $decoderProvider
             ->expects($this->any())
             ->method('getDecoder')
@@ -217,16 +262,16 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('supports')
             ->will($this->returnValue(true));
 
-        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
+        $normalizer = $this->getMock(ArrayNormalizerInterface::class);
         $normalizer
             ->expects($this->once())
             ->method('normalize')
             ->will($this->throwException(new NormalizationException()));
 
-        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request = new Request([], [], [], [], [], [], 'foo');
         $request->setMethod('POST');
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $event = $this->getMockBuilder(GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -244,7 +289,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public function testBadRequestExceptionOnMalformedContent()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
-        $this->testOnKernelRequest(true, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/json');
+        $this->testOnKernelRequest(true, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/json');
     }
 
     /**
@@ -253,11 +298,11 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
-        $this->testOnKernelRequest(false, new Request(array(), array(), array(), array(), array(), array(), 'foo'), 'POST', array(), 'application/foo', true);
+        $this->testOnKernelRequest(false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/foo', true);
     }
 
     public function testShouldNotThrowUnsupportedMediaTypeHttpExceptionWhenIsAnEmptyDeleteRequest()
     {
-        $this->testOnKernelRequest(false, new Request(), 'DELETE', array(), null, true);
+        $this->testOnKernelRequest(false, new Request(), 'DELETE', [], null, true);
     }
 }

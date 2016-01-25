@@ -27,8 +27,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultValues()
     {
-        $this->assertEquals(array(), $this->context->getAttributes());
-        $this->assertEquals(array(), $this->context->getGroups());
+        $this->assertEquals([], $this->context->getAttributes());
+        $this->assertEquals([], $this->context->getGroups());
     }
 
     public function testAttributes()
@@ -44,7 +44,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $this->context->getAttribute('foo'));
         $this->assertEquals('foo', $this->context->getAttribute('foobar'));
 
-        $this->assertEquals(array('foo' => 'bar', 'foobar' => 'foo'), $this->context->getAttributes());
+        $this->assertEquals(['foo' => 'bar', 'foobar' => 'foo'], $this->context->getAttributes());
     }
 
     public function testGroupAddition()
@@ -53,7 +53,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->context->addGroup('foo');
         $this->context->addGroup('bar');
 
-        $this->assertEquals(array('quz', 'foo', 'bar'), $this->context->getGroups());
+        $this->assertEquals(['quz', 'foo', 'bar'], $this->context->getGroups());
     }
 
     public function testAlreadyExistentGroupAddition()

@@ -73,7 +73,6 @@ Full default configuration
             serialize_null:       false
             jsonp_handler:
                 callback_param:       callback
-                callback_filter:      '/(^[a-z0-9_]+$)|(^YUI\.Env\.JSONP\._[0-9]+$)/i'
                 mime_type:            application/javascript+jsonp
         exception:
             enabled:              false
@@ -134,7 +133,6 @@ Full default configuration
                     enabled: true
                     regex: /(v|version)=(?P<version>[0-9\.]+)/
             guessing_order:
-                - uri
                 - query
                 - custom_header
                 - media_type

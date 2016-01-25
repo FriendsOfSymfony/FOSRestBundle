@@ -11,47 +11,62 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
 class ParamFetcherTest extends WebTestCase
 {
-    private $validRaw = 'fooraw';
-    private $validMap = array(
+    private $validRaw = [
+        'foo' => 'raw',
+        'bar' => 'foo',
+    ];
+    private $validMap = [
         'foo' => 'map',
         'foobar' => 'foo',
-    );
+    ];
 
     public function setUp()
     {
-        $this->client = $this->createClient(array('test_case' => 'ParamFetcher'));
+        $this->client = $this->createClient(['test_case' => 'ParamFetcher']);
     }
 
     public function testDefaultParameters()
     {
         $this->client->request('POST', '/params');
 
-        $this->assertEquals(array('raw' => 'invalid', 'map' => array('invalid2')), $this->getData());
+        $this->assertEquals(['raw' => 'invalid', 'map' => 'invalid2 %', 'bar' => null], $this->getData());
     }
 
     public function testValidRawParameter()
     {
-        $this->client->request('POST', '/params', array('raw' => $this->validRaw, 'map' => $this->validMap));
+        $this->client->request('POST', '/params', ['raw' => $this->validRaw, 'map' => $this->validMap]);
 
-        $this->assertEquals(array('raw' => $this->validRaw, 'map' => array('foo' => 'invalid2', 'foobar' => 'invalid2')), $this->getData());
+        $this->assertEquals(['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null], $this->getData());
     }
 
     public function testValidMapParameter()
     {
+        $map = [
+            'foo' => $this->validMap,
+            'bar' => $this->validMap,
+        ];
+        $this->client->request('POST', '/params', ['raw' => 'bar', 'map' => $map]);
+
+        $this->assertEquals(['raw' => 'invalid', 'map' => $map, 'bar' => null], $this->getData());
+    }
+
+    public function testFooParameter()
+    {
+        $value = ['bar foo', 'bar foo'];
+        $this->client->request('POST', '/params', ['foo' => $value]);
+
         $map = array(
             'foo' => $this->validMap,
             'bar' => $this->validMap,
         );
         $this->client->request('POST', '/params', array('raw' => 'bar', 'map' => $map));
 
-        $this->assertEquals(array('raw' => 'invalid', 'map' => $map), $this->getData());
+        $this->assertEquals(array('raw' => 'invalid', 'map' => $map, 'bar' => null), $this->getData());
     }
 
     public function testWithSubRequests()
@@ -59,7 +74,7 @@ class ParamFetcherTest extends WebTestCase
         $this->client->request('POST', '/params/test?foo=quz', array('raw' => $this->validRaw));
         $this->assertEquals(array(
             'before' => array('foo' => 'quz', 'bar' => 'foo'),
-            'during' => array('raw' => $this->validRaw, 'map' => array('invalid2')),
+            'during' => array('raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null),
             'after' => array('foo' => 'quz', 'bar' => 'foo'),
         ), $this->getData());
     }

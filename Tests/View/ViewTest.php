@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use FOS\RestBundle\Util\Codes;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * View test.
@@ -35,7 +35,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $view->setTemplate($template = new TemplateReference());
         $this->assertEquals($template, $view->getTemplate());
 
-        $view->setTemplate(array());
+        $view->setTemplate([]);
     }
 
     public function testSetLocation()
@@ -58,10 +58,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         $routeName = 'users';
 
-        $view = View::createRouteRedirect($routeName, array(), Codes::HTTP_CREATED);
+        $view = View::createRouteRedirect($routeName, [], Response::HTTP_CREATED);
         $this->assertAttributeEquals($routeName, 'route', $view);
         $this->assertAttributeEquals(null, 'location', $view);
-        $this->assertEquals(Codes::HTTP_CREATED, $view->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_CREATED, $view->getResponse()->getStatusCode());
 
         $view->setLocation($routeName);
         $this->assertAttributeEquals($routeName, 'location', $view);
@@ -85,10 +85,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public static function setDataDataProvider()
     {
-        return array(
-            'null as data' => array(null),
-            'array as data' => array(array('foo' => 'bar')),
-        );
+        return [
+            'null as data' => [null],
+            'array as data' => [['foo' => 'bar']],
+        ];
     }
 
     /**
@@ -103,11 +103,11 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public static function setTemplateDataDataProvider()
     {
-        return array(
-            'null as data' => array(null),
-            'array as data' => array(array('foo' => 'bar')),
-            'function as data' => array(function () {}),
-        );
+        return [
+            'null as data' => [null],
+            'array as data' => [['foo' => 'bar']],
+            'function as data' => [function () {}],
+        ];
     }
 
     public function testSetEngine()
@@ -129,16 +129,16 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testSetHeaders()
     {
         $view = new View();
-        $headers = array('foo' => 'bar');
-        $expected = array('foo' => array('bar'), 'cache-control' => array('no-cache'));
+        $headers = ['foo' => 'bar'];
+        $expected = ['foo' => ['bar'], 'cache-control' => ['no-cache']];
         $view->setHeaders($headers);
         $this->assertEquals($expected, $view->getHeaders());
     }
 
     public function testHeadersInConstructorAreAssignedToResponseObject()
     {
-        $headers = array('foo' => 'bar');
-        $expected = array('foo' => array('bar'), 'cache-control' => array('no-cache'));
+        $headers = ['foo' => 'bar'];
+        $expected = ['foo' => ['bar'], 'cache-control' => ['no-cache']];
         $view = new View(null, null, $headers);
         $this->assertEquals($expected, $view->getHeaders());
     }
@@ -149,5 +149,13 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $code = 404;
         $view->setStatusCode($code);
         $this->assertEquals($code, $view->getStatusCode());
+        $this->assertEquals($code, $view->getResponse()->getStatusCode());
+    }
+
+    public function testGetStatusCodeFromResponse()
+    {
+        $view = new View();
+        $this->assertNull($view->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $view->getResponse()->getStatusCode()); // default code of the response.
     }
 }

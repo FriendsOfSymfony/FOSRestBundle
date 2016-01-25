@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\ParamFetcherListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,11 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
-     */
-    private $container;
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -48,9 +44,9 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 'customer' => 5,
-            )));
+            ]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -69,11 +65,33 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->paramFetcherListener->onKernelController($event);
 
         $this->assertSame($this->paramFetcher, $request->attributes->get('paramFetcher'));
+    }
+
+    public function testParamFetcherOnRequestNoZone()
+    {
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+
+        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $event->expects($this->atLeastOnce())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $this->paramFetcher->expects($this->never())
+            ->method('all')
+            ->will($this->returnValue([]));
+
+        $this->paramFetcherListener->onKernelController($event);
+
+        $this->assertNull($request->attributes->get('paramFetcher'));
     }
 
     /**
@@ -90,7 +108,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -120,7 +138,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -129,22 +147,22 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setParamFetcherByTypehintProvider()
     {
-        return array(
+        return [
             // Without a typehint, the ParamFetcher should be injected as
             // $paramFetcher.
-            array('byNameAction', 'paramFetcher'),
+            ['byNameAction', 'paramFetcher'],
 
             // With a typehint, the ParamFetcher should be injected as whatever
             // the parameter name is.
-            array('byTypeAction', 'pf'),
+            ['byTypeAction', 'pf'],
 
             // The user can typehint using ParamFetcherInterface, too.
-            array('byInterfaceAction', 'pfi'),
+            ['byInterfaceAction', 'pfi'],
 
             // If there is no controller argument for the ParamFetcher, it
             // should be injected as the default name.
-            array('notProvidedAction', 'paramFetcher'),
-        );
+            ['notProvidedAction', 'paramFetcher'],
+        ];
     }
 
     protected function getEvent(Request $request, $actionMethod = 'byNameAction')
@@ -161,25 +179,16 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $event->expects($this->atLeastOnce())
             ->method('getController')
-            ->will($this->returnValue(array($controller, $actionMethod)));
+            ->will($this->returnValue([$controller, $actionMethod]));
 
         return $event;
     }
 
     public function setUp()
     {
-        $this->container = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\ContainerInterface')
-            ->getMock();
-
         $this->paramFetcher = $this->getMockBuilder('FOS\\RestBundle\\Request\\ParamFetcher')
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with('fos_rest.request.param_fetcher')
-            ->will($this->returnValue($this->paramFetcher));
-
-        $this->paramFetcherListener = new ParamFetcherListener($this->container, true);
+        $this->paramFetcherListener = new ParamFetcherListener($this->paramFetcher, true);
     }
 }
