@@ -54,13 +54,13 @@ class SerializerErrorTest extends WebTestCase
 
     public function serializeExceptionXmlProvider()
     {
-        $expectedSerializerContent = <<<XML
+        $expectedSerializerContent = <<<'XML'
 <?xml version="1.0"?>
 <response><code>500</code><message>Something bad happened.</message><errors/></response>
 
 XML;
 
-        $expectedJMSContent = <<<XML
+        $expectedJMSContent = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <code>500</code>
@@ -108,13 +108,13 @@ XML;
 
     public function serializeInvalidFormXmlProvider()
     {
-        $expectedSerializerContent = <<<XML
+        $expectedSerializerContent = <<<'XML'
 <?xml version="1.0"?>
 <response><code>400</code><message>Validation Failed</message><errors><children><name><errors>This value should not be blank.</errors></name></children></errors></response>
 
 XML;
 
-        $expectedJMSContent = <<<XML
+        $expectedJMSContent = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
 <result>
   <code>400</code>
