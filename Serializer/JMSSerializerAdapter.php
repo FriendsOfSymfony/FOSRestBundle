@@ -22,7 +22,7 @@ use JMS\Serializer\SerializerInterface;
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
  */
-final class JMSSerializerAdapter implements Serializer
+class JMSSerializerAdapter implements Serializer
 {
     /**
      * @internal
