@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
  */
-final class SymfonySerializerAdapter implements Serializer
+class SymfonySerializerAdapter implements Serializer
 {
     private $serializer;
 
