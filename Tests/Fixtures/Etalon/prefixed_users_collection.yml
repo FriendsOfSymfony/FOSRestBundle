@@ -29,8 +29,8 @@ patch_user:
   controller: ::patchUserAction
 
 lock_user:
-  methods: [PATCH]
-  path:    /resources/all/users/{slug}/lock.{_format}
+  methods: [LOCK]
+  path:    /resources/all/users/{slug}.{_format}
   controller: ::lockUserAction
 
 get_user_comments:
