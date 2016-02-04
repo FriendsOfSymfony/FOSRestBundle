@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -51,8 +52,16 @@ class MimeTypeListener
         }
 
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
-            foreach ($this->mimeTypes as $format => $mimeType) {
-                $request->setFormat($format, $mimeType);
+            foreach ($this->mimeTypes as $format => $mimeTypes) {
+                if (method_exists(Request::class, 'getMimeTypes')) {
+                    $mimeTypes = array_merge($mimeTypes, Request::getMimeTypes($format));
+                } elseif (null !== $request->getMimeType($format)) {
+                    $class = new \ReflectionClass(Request::class);
+                    $properties = $class->getStaticProperties();
+                    $mimeTypes = array_merge($mimeTypes, $properties['formats'][$format]);
+                }
+
+                $request->setFormat($format, $mimeTypes);
             }
         }
     }

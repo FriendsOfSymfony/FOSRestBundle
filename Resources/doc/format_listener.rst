@@ -84,7 +84,7 @@ in the controller action.
         // ...
     }
 
-Note that the mime types corresponding to your format need to be added using the :doc:`Mime Type Listener <3-listener-support>` (only the uncommon if you're using symfony 3.1 or higher).
+Note that if you use custom mime types, they need to be added using the :doc:`Mime Type Listener <3-listener-support>`.
 
 Disabling the Format Listener via Rules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

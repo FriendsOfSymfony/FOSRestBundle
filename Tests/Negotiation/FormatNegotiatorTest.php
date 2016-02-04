@@ -32,12 +32,7 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->requestStack = new RequestStack();
         $this->request = new Request();
         $this->requestStack->push($this->request);
-        if (method_exists(Request::class, 'getMimeTypes')) {
-            $mimeTypes = ['json' => ['application/json;version=1.0']];
-        } else {
-            $mimeTypes = ['json' => ['application/json', 'application/json;version=1.0'], 'html' => ['text/html', 'application/xhtml+xml'], 'xml' => ['application/xml']];
-        }
-        $this->negotiator = new FormatNegotiator($this->requestStack, $mimeTypes);
+        $this->negotiator = new FormatNegotiator($this->requestStack, ['json' => ['application/json;version=1.0']]);
     }
 
     public function testEmptyRequestMatcherMap()
