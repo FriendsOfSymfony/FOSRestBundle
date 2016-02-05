@@ -23,6 +23,7 @@
     "require": {
         "php":                            "^5.3.9|~7.0",
         "psr/log":                        "~1.0",
+        "symfony/finder":                 "~2.3|~3.0",
         "symfony/framework-bundle":       "~2.3|~3.0",
         "symfony/http-kernel":            "^2.3.24|~3.0",
         "doctrine/inflector":             "~1.0",

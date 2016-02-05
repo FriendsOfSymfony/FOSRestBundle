@@ -162,7 +162,7 @@ class RestRouteLoader extends Loader
      */
     protected function findClass($file)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.8 and will be removed in 2.0. Use '.__NAMESPACE__.'\ClassUtils::findClassInFile() instead.', E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s method is deprecated since version 1.8 and will be removed in 2.0.', __METHOD__), E_USER_DEPRECATED);
 
         return ClassUtils::findClassInFile($file);
     }

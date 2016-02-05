@@ -23,15 +23,9 @@ class DirectoryRouteLoaderTest extends LoaderTest
 
         $this->assertCount(9, $collection);
 
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('get_users'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('get_user'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('post_users'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('put_user'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('get_comments'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('put_comment'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('get_topics'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('get_topic'));
-        $this->assertInstanceOf('Symfony\Component\Routing\Route', $collection->get('put_topic'));
+        foreach ($collection as $route) {
+            $this->assertInstanceOf('Symfony\Component\Routing\Route', $route);
+        }
     }
 
     /**

@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Routing\Loader;
 
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -39,14 +40,10 @@ class DirectoryRouteLoader extends Loader
 
         $collection = new RouteCollection();
 
-        $directoryIterator = new \DirectoryIterator($resource);
+        $finder = new Finder();
 
-        foreach ($directoryIterator as $file) {
-            if ($file->getFilename() === '.' || $file->getFilename() === '..') {
-                continue;
-            }
-
-            $imported = $this->processor->importResource($this, ClassUtils::findClassInFile($file->getPathname()), array(), null, null, 'rest');
+        foreach ($finder->in($resource)->name('*.php')->files() as $file) {
+            $imported = $this->processor->importResource($this, ClassUtils::findClassInFile($file), array(), null, null, 'rest');
             $collection->addCollection($imported);
         }
 
