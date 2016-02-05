@@ -15,6 +15,11 @@
             <tag name="routing.loader" />
         </service>
 
+        <service id="fos_rest.routing.loader.directory" class="FOS\RestBundle\Routing\Loader\DirectoryRouteLoader">
+            <argument type="service" id="fos_rest.routing.loader.processor" />
+            <tag name="routing.loader" />
+        </service>
+
         <service id="fos_rest.routing.loader.processor" class="FOS\RestBundle\Routing\Loader\RestRouteProcessor" public="false" />
 
         <service id="fos_rest.routing.loader.yaml_collection" class="FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader" public="false">
