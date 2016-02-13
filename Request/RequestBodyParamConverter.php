@@ -96,11 +96,11 @@ class RequestBodyParamConverter implements ParamConverterInterface
                 $context
             );
         } catch (UnsupportedFormatException $e) {
-            throw new UnsupportedMediaTypeHttpException($e->getMessage(), $e);
+            return $this->throwException(new UnsupportedMediaTypeHttpException($e->getMessage(), $e), $configuration);
         } catch (JMSSerializerException $e) {
-            throw new BadRequestHttpException($e->getMessage(), $e);
+            return $this->throwException(new BadRequestHttpException($e->getMessage(), $e), $configuration);
         } catch (SymfonySerializerException $e) {
-            throw new BadRequestHttpException($e->getMessage(), $e);
+            return $this->throwException(new BadRequestHttpException($e->getMessage(), $e), $configuration);
         }
 
         $request->attributes->set($configuration->getName(), $object);
@@ -146,6 +146,18 @@ class RequestBodyParamConverter implements ParamConverterInterface
                 $context->setAttribute($key, $value);
             }
         }
+    }
+
+    /**
+     * Throws an exception or return false if a ParamConverter is optional.
+     */
+    private function throwException(\Exception $exception, ParamConverter $configuration)
+    {
+        if ($configuration->isOptional()) {
+            return false;
+        }
+
+        throw $exception;
     }
 
     /**
