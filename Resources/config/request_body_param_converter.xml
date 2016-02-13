@@ -12,7 +12,7 @@
             <argument /> <!-- serializer exclusion strategy version -->
             <argument type="service" id="fos_rest.validator" on-invalid="ignore" />
             <argument /> <!-- request body validation errors argument -->
-            <tag name="request.param_converter" converter="fos_rest.request_body" />
+            <tag name="request.param_converter" converter="fos_rest.request_body" priority="-50"/>
         </service>
 
     </services>

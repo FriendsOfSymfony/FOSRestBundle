@@ -25,6 +25,7 @@ This document will be updated to list important BC breaks and behavioral changes
    * ``PROPFIND``
    * ``PROPPATCH``
    * ``UNLOCK``
+ * ``RequestBodyParamConverter`` now has a priority of ``-50``
 
 ### upgrading from 1.5.*
 
