@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Request;
 
-use FOS\RestBundle\Context\Adapter\DeserializationContextAdapterInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Serializer\Serializer;
 use JMS\Serializer\Exception\Exception as JMSSerializerException;
@@ -40,11 +39,6 @@ class RequestBodyParamConverter implements ParamConverterInterface
      * @var null|string
      */
     private $validationErrorsArgument;
-
-    /**
-     * @var DeserializationContextAdapterInterface
-     */
-    private $contextAdapter;
 
     /**
      * @param Serializer         $serializer
