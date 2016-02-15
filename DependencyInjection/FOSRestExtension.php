@@ -100,7 +100,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
             if (!empty($config['access_denied_listener']['service'])) {
                 $service = $container->getDefinition('fos_rest.access_denied_listener');
-                $service->clearTag('kernel.event_listener');
+                $service->clearTag('kernel.event_subscriber');
             }
 
             $container->setParameter('fos_rest.access_denied_listener.formats', $config['access_denied_listener']['formats']);
@@ -330,7 +330,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
 
             if (!empty($config['exception']['service'])) {
                 $service = $container->getDefinition('fos_rest.exception_listener');
-                $service->clearTag('kernel.event_listener');
+                $service->clearTag('kernel.event_subscriber');
             }
 
             if ($config['exception']['exception_controller']) {
