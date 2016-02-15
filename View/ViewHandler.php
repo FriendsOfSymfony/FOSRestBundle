@@ -297,7 +297,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         }
 
         if (isset($this->customHandlers[$format])) {
-            return call_user_func($this->customHandlers[$format], $this, $view, $request, $format);
+            return call_user_func($this->customHandlers[$format], $view, $request, $format);
         }
 
         return $this->createResponse($view, $request, $format);
