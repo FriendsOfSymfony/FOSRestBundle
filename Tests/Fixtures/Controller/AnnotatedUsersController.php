@@ -11,21 +11,31 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use FOS\RestBundle\Controller\Annotations\Route;
-use FOS\RestBundle\Controller\Annotations\NoRoute;
+use FOS\RestBundle\Controller\Annotations\Copy;
+use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Head;
+use FOS\RestBundle\Controller\Annotations\Link;
+use FOS\RestBundle\Controller\Annotations\Lock;
+use FOS\RestBundle\Controller\Annotations\Mkcol;
+use FOS\RestBundle\Controller\Annotations\Move;
+use FOS\RestBundle\Controller\Annotations\NoRoute;
+use FOS\RestBundle\Controller\Annotations\Options;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\PropFind;
+use FOS\RestBundle\Controller\Annotations\PropPatch;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Patch;
-use FOS\RestBundle\Controller\Annotations\Delete;
-use FOS\RestBundle\Controller\Annotations\Head;
-use FOS\RestBundle\Controller\Annotations\Options;
-use FOS\RestBundle\Controller\Annotations\Link;
+use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\Unlink;
+use FOS\RestBundle\Controller\Annotations\Unlock;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AnnotatedUsersController extends Controller
 {
+    /**
+     * @Options
+     */
     public function optionsUsersAction()
     {
     }
@@ -33,8 +43,68 @@ class AnnotatedUsersController extends Controller
  // [OPTIONS]     /users
 
     /**
-     * @Options
+     * @Copy()
      */
+    public function copyUserAction($id)
+    {
+    }
+
+ // [COPY] /users/{id}
+
+    /**
+     * @PropFind()
+     */
+    public function propfindUserPropsAction($id, $property)
+    {
+    }
+
+ // [PROPFIND] /users/{id}/props/{property}
+
+    /**
+     * @PropPatch()
+     */
+    public function proppatchUserPropsAction($id, $property)
+    {
+    }
+
+ // [PROPPATCH] /users/{id}/props/{property}
+
+    /**
+     * @Move()
+     */
+    public function moveUserAction($id)
+    {
+    }
+
+ // [MOVE] /users/{id}
+
+    /**
+     * @Mkcol()
+     */
+    public function mkcolUsersAction()
+    {
+    }
+
+ // [MKCOL] /users
+
+    /**
+     * @Lock()
+     */
+    public function lockUserAction($slug)
+    {
+    }
+
+ // [LOCK] /users/{slug}
+
+    /**
+     * @Unlock()
+     */
+    public function unlockUserAction($slug)
+    {
+    }
+
+ // [UNLOCK] /users/{slug}
+
     public function boptionsUsersAction()
     {
     }

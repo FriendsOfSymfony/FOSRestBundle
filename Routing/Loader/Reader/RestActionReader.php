@@ -12,11 +12,11 @@
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
 use Doctrine\Common\Annotations\Reader;
-use Symfony\Component\Routing\Route;
 use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
-use FOS\RestBundle\Util\Inflector\InflectorInterface;
+use FOS\RestBundle\Inflector\InflectorInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use FOS\RestBundle\Request\ParamReader;
+use Symfony\Component\Routing\Route;
 
 /**
  * REST controller actions reader.
@@ -203,6 +203,14 @@ class RestActionReader
 
                 if (!empty($annoMethods)) {
                     $methods = $annoMethods;
+
+                    // workaround for new method annotations that are not supported in method
+                    // names until FOSRestBundle 2.0 for BC reasons (if this check wasn't added
+                    // the method name would have been appended to the generated path)
+                    if (!in_array(strtolower($annotation->getMethod()), $this->availableHTTPMethods)) {
+                        array_pop($urlParts);
+                        $path = implode('/', $urlParts);
+                    }
                 }
 
                 $path = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $path;
