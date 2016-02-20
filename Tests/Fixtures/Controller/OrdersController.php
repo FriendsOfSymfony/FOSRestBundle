@@ -17,17 +17,17 @@ class OrdersController extends Controller
 {
     // conventional HATEOAS action after REST action
 
-    public function getFoosAction()
-    {
-    }
-
- // [GET] /foos
-
     public function newFoosAction()
     {
     }
 
  // [GET] /foos/new
+
+    public function getFoosAction()
+    {
+    }
+
+ // [GET] /foos
 
     // conventional HATEOAS action before REST action
 
