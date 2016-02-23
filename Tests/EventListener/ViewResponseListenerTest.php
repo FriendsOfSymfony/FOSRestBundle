@@ -97,11 +97,14 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
             ->method('set')
             ->with('format', null);
 
+        $annotation = new ViewAnnotation([]);
+        $annotation->setOwner([new FooController(), 'onKernelViewAction']);
+        $annotation->setTemplate($template);
+
         $request = new Request();
-        $request->attributes->set('_template_default_vars', ['foo', 'halli']);
         $request->attributes->set('foo', 'baz');
         $request->attributes->set('halli', 'galli');
-        $request->attributes->set('_template', $template);
+        $request->attributes->set('_template', $annotation);
         $response = new Response();
 
         $view = $this->getMockBuilder('FOS\RestBundle\View\View')
@@ -160,11 +163,12 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->createViewResponseListener(['json' => true]);
 
         $viewAnnotation = new ViewAnnotation([]);
+        $viewAnnotation->setOwner([$this, 'statusCodeProvider']);
         $viewAnnotation->setStatusCode($annotationCode);
 
         $request = new Request();
         $request->setRequestFormat('json');
-        $request->attributes->set('_view', $viewAnnotation);
+        $request->attributes->set('_template', $viewAnnotation);
 
         $this->templating->expects($this->any())
             ->method('render')
@@ -230,36 +234,33 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     public function getDataForDefaultVarsCopy()
     {
         return [
-            [true, false, false],
-            [true, true, true],
-            [false, null, true],
+            [false],
+            [true],
         ];
     }
 
     /**
      * @dataProvider getDataForDefaultVarsCopy
      */
-    public function testViewWithNoCopyDefaultVars($createAnnotation, $populateDefaultVars, $shouldCopy)
+    public function testViewWithNoCopyDefaultVars($populateDefaultVars)
     {
         $this->createViewResponseListener(['html' => true]);
 
         $request = new Request();
-        $request->attributes->set('_template_default_vars', ['customer']);
         $request->attributes->set('customer', 'A person goes here');
         $view = View::create();
 
-        if ($createAnnotation) {
-            $viewAnnotation = new ViewAnnotation([]);
-            $viewAnnotation->setPopulateDefaultVars($populateDefaultVars);
-            $request->attributes->set('_view', $viewAnnotation);
-        }
+        $viewAnnotation = new ViewAnnotation([]);
+        $viewAnnotation->setOwner([new FooController(), 'viewAction']);
+        $viewAnnotation->setPopulateDefaultVars($populateDefaultVars);
+        $request->attributes->set('_template', $viewAnnotation);
 
         $event = $this->getResponseEvent($request, $view);
 
         $this->listener->onKernelView($event);
 
         $data = $view->getData();
-        if ($shouldCopy) {
+        if ($populateDefaultVars) {
             $this->assertArrayHasKey('customer', $data);
             $this->assertEquals('A person goes here', $data['customer']);
         } else {
@@ -280,5 +281,22 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $this->exceptionWrapperHandler, $formats);
         $this->listener = new ViewResponseListener($this->viewHandler, false);
+    }
+}
+
+class FooController
+{
+    /**
+     * @see testOnKernelView()
+     */
+    public function onKernelViewAction($foo, $halli)
+    {
+    }
+
+    /**
+     * @see testViewWithNoCopyDefaultVars()
+     */
+    public function viewAction($customer)
+    {
     }
 }

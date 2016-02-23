@@ -47,18 +47,6 @@ class View extends Template
     protected $serializerEnableMaxDepthChecks;
 
     /**
-     * Returns the annotation alias name.
-     *
-     * @return string
-     *
-     * @see Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface
-     */
-    public function getAliasName()
-    {
-        return 'view';
-    }
-
-    /**
      * Sets the template var name to be used for templating formats.
      *
      * @param string $templateVar

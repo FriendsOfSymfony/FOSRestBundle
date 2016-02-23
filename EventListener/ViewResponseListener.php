@@ -11,9 +11,11 @@
 
 namespace FOS\RestBundle\EventListener;
 
+use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -58,55 +60,48 @@ class ViewResponseListener implements EventSubscriberInterface
             return false;
         }
 
-        /** @var \FOS\RestBundle\Controller\Annotations\View $configuration */
-        $configuration = $request->attributes->get('_view');
+        $configuration = $request->attributes->get('_template');
 
         $view = $event->getControllerResult();
-        $customViewDefined = true;
         if (!$view instanceof View) {
-            if (!$configuration && !$this->forceView) {
+            if (!$configuration instanceof ViewAnnotation && !$this->forceView) {
                 return;
             }
 
             $view = new View($view);
-            $customViewDefined = false;
         }
 
-        if ($configuration) {
+        if ($configuration instanceof ViewAnnotation) {
             if ($configuration->getTemplateVar()) {
                 $view->setTemplateVar($configuration->getTemplateVar());
             }
-            if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Response::HTTP_OK === $view->getStatusCode())) {
+            if (null !== $configuration->getStatusCode() && (null === $view->getStatusCode() || Response::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
 
             $context = $view->getContext();
-            if ($configuration->getSerializerGroups() && !$customViewDefined) {
+            if ($configuration->getSerializerGroups()) {
                 $context->addGroups($configuration->getSerializerGroups());
             }
             if ($configuration->getSerializerEnableMaxDepthChecks()) {
                 $context->setMaxDepth(0);
             }
 
-            $populateDefaultVars = $configuration->isPopulateDefaultVars();
+            list($controller, $action) = $configuration->getOwner();
+            $vars = $this->getDefaultVars($configuration, $controller, $action);
         } else {
-            $populateDefaultVars = true;
+            $vars = null;
         }
 
         if (null === $view->getFormat()) {
             $view->setFormat($request->getRequestFormat());
         }
 
-        $vars = $request->attributes->get('_template_vars');
-        if (!$vars && $populateDefaultVars) {
-            $vars = $request->attributes->get('_template_default_vars');
-        }
-
         if ($this->viewHandler->isFormatTemplating($view->getFormat())
             && !$view->getRoute()
             && !$view->getLocation()
         ) {
-            if (!empty($vars)) {
+            if (null !== $vars && 0 !== count($vars)) {
                 $parameters = (array) $this->viewHandler->prepareTemplateParameters($view);
                 foreach ($vars as $var) {
                     if (!array_key_exists($var, $parameters)) {
@@ -116,10 +111,7 @@ class ViewResponseListener implements EventSubscriberInterface
                 $view->setData($parameters);
             }
 
-            $template = null !== $configuration && $configuration->getTemplate()
-                ? $configuration->getTemplate()
-                : $request->attributes->get('_template');
-            if ($template && !$view->getTemplate()) {
+            if ($configuration && ($template = $configuration->getTemplate()) && !$view->getTemplate()) {
                 if ($template instanceof TemplateReferenceInterface) {
                     $template->set('format', null);
                 }
@@ -135,8 +127,37 @@ class ViewResponseListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
+        // Must be executed before SensioFrameworkExtraBundle's listener
         return array(
-            KernelEvents::VIEW => 'onKernelView',
+            KernelEvents::VIEW => array('onKernelView', 30),
         );
+    }
+
+    /**
+     * @param Request  $request
+     * @param Template $template
+     * @param object   $controller
+     * @param string   $action
+     *
+     * @return array
+     *
+     * @see \Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::resolveDefaultParameters()
+     */
+    private function getDefaultVars(Template $template = null, $controller, $action)
+    {
+        if (0 !== count($arguments = $template->getVars())) {
+            return $arguments;
+        }
+
+        if (!$template instanceof ViewAnnotation || $template->isPopulateDefaultVars()) {
+            $r = new \ReflectionObject($controller);
+
+            $arguments = array();
+            foreach ($r->getMethod($action)->getParameters() as $param) {
+                $arguments[] = $param->getName();
+            }
+
+            return $arguments;
+        }
     }
 }
