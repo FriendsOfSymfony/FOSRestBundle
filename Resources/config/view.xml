@@ -11,7 +11,6 @@
             <argument type="service" id="fos_rest.serializer" />
             <argument type="service" id="fos_rest.templating" />
             <argument type="service" id="request_stack" />
-            <argument type="service" id="fos_rest.exception_handler" />
             <argument type="collection" /> <!-- formats -->
             <argument /> <!-- failed validation -->
             <argument /> <!-- empty content -->
@@ -22,17 +21,6 @@
 
         <service id="fos_rest.view_handler.jsonp" class="FOS\RestBundle\View\JsonpHandler" public="false">
             <argument /> <!-- JSONP callback parameter -->
-        </service>
-
-        <service id="fos_rest.view.exception_wrapper_handler" class="FOS\RestBundle\View\ExceptionWrapperHandler" public="false" />
-
-        <service id="fos_rest.serializer.exception_wrapper_serialize_handler" class="FOS\RestBundle\Serializer\ExceptionWrapperSerializeHandler">
-            <tag name="jms_serializer.subscribing_handler" />
-        </service>
-
-        <service id="fos_rest.serializer.exception_wrapper_normalizer" class="FOS\RestBundle\Serializer\ExceptionWrapperNormalizer" public="false">
-            <argument type="service" id="translator" />
-            <tag name="serializer.normalizer" />
         </service>
 
     </services>

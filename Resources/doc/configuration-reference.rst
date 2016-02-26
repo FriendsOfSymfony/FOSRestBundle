@@ -113,7 +113,7 @@ Full default configuration
                 stop:                 false
                 prefer_extension:     true
                 fallback_format:      html
-                exception_fallback_format:  null
+                attributes:           []
                 priorities:           []
             media_type:
                 enabled:              false

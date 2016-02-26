@@ -15,6 +15,6 @@
             <argument type="service" id="request_stack" />
         </service>
 
-        <service id="fos_rest.format_request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
+        <service id="fos_rest.format_request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" abstract="true" />
     </services>
 </container>

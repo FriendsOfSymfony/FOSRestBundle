@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Tests\View;
 
-use FOS\RestBundle\Util\ExceptionWrapper;
-use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Form\FormError;
@@ -33,7 +31,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     private $serializer;
     private $templating;
     private $requestStack;
-    private $exceptionWrapperHandler;
 
     protected function setUp()
     {
@@ -41,7 +38,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
         $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $this->requestStack = new RequestStack();
-        $this->exceptionWrapperHandler = new ExceptionWrapperHandler();
     }
 
     /**
@@ -204,8 +200,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->serializer
             ->expects($this->once())
             ->method('serialize')
-            ->will($this->returnCallback(function ($data) {
-                return serialize($data);
+            ->will($this->returnCallback(function ($data, $format, $context) {
+                return serialize(array($data, $context));
             }));
 
         //test
@@ -224,11 +220,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $view = new View($form);
         $response = $viewHandler->createResponse($view, new Request(), 'json');
 
-        $data = unserialize($response->getContent());
-        $this->assertInstanceOf('FOS\\RestBundle\\Util\\ExceptionWrapper', $data);
-        $this->assertEquals('Validation Failed', $this->readAttribute($data, 'message'));
-        $this->assertInstanceOf('Symfony\\Component\\Form\\Form', $this->readAttribute($data, 'errors'));
-        $this->assertEquals($expectedFailedValidationCode, $this->readAttribute($data, 'code'));
+        list($data, $context) = unserialize($response->getContent());
+        $this->assertInstanceOf('Symfony\\Component\\Form\\Form', $data);
+        $this->assertEquals($expectedFailedValidationCode, $context->getAttribute('status_code'));
     }
 
     /**
@@ -513,13 +507,11 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $form->get('name')->addError(new FormError('Invalid name'));
 
-        $exceptionWrapper = new ExceptionWrapper(
-            [
-                'status_code' => 400,
-                'message' => 'Validation Failed',
-                'errors' => $form,
-            ]
-        );
+        $exceptionWrapper = [
+            'status_code' => 400,
+            'message' => 'Validation Failed',
+            'errors' => $form,
+        ];
 
         $view = new View($exceptionWrapper);
         $view->getContext()->addGroups(array('Custom'));
@@ -561,7 +553,6 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             $this->serializer,
             $this->templating,
             $this->requestStack,
-            $this->exceptionWrapperHandler,
             $formats,
             $failedValidationCode,
             $emptyContentCode,

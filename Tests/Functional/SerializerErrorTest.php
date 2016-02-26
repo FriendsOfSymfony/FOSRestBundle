@@ -19,24 +19,16 @@ namespace FOS\RestBundle\Tests\Functional;
 class SerializerErrorTest extends WebTestCase
 {
     /**
-     * @dataProvider serializeExceptionJsonProvider
+     * @dataProvider testCaseProvider
      */
-    public function testSerializeExceptionJson($testCase, $expectedContent)
+    public function testSerializeExceptionJson($testCase)
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/exception.json');
 
-        $this->assertEquals($expectedContent, $client->getResponse()->getContent());
-    }
-
-    public function serializeExceptionJsonProvider()
-    {
-        return [
-            ['Serializer', '{"code":500,"message":"Something bad happened.","errors":null}'],
-            ['JMSSerializer', '{"code":500,"message":"Something bad happened."}'],
-        ];
+        $this->assertEquals('{"code":500,"message":"Something bad happened."}', $client->getResponse()->getContent());
     }
 
     /**
@@ -56,16 +48,15 @@ class SerializerErrorTest extends WebTestCase
     {
         $expectedSerializerContent = <<<'XML'
 <?xml version="1.0"?>
-<response><code>500</code><message>Something bad happened.</message><errors/></response>
+<response><code>500</code><message>Something bad happened.</message></response>
 
 XML;
 
         $expectedJMSContent = <<<'XML'
 <?xml version="1.0" encoding="UTF-8"?>
-<result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<result>
   <code>500</code>
   <message><![CDATA[Something bad happened.]]></message>
-  <errors xsi:nil="true"/>
 </result>
 
 XML;
@@ -77,21 +68,21 @@ XML;
     }
 
     /**
-     * @dataProvider serializeInvalidFormJsonProvider
+     * @dataProvider testCaseProvider
      */
-    public function testSerializeInvalidFormJson($testCase, $expectedContent)
+    public function testSerializeInvalidFormJson($testCase)
     {
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.json');
 
-        $this->assertEquals($expectedContent, $client->getResponse()->getContent());
+        $this->assertEquals('{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}', $client->getResponse()->getContent());
     }
 
-    public function serializeInvalidFormJsonProvider()
+    public function testCaseProvider()
     {
         return [
-            ['Serializer', '{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}'],
-            ['JMSSerializer', '{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}'],
+            ['Serializer'],
+            ['JMSSerializer'],
         ];
     }
 

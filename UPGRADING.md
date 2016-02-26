@@ -12,6 +12,7 @@ This document will be updated to list important BC breaks and behavioral changes
    View::createRouteRedirect instead. Note: the default status code for a route redirect
    has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
  * constructor signature of DisableCSRFExtension was changed
+ * constructor signatures of most of the classes which used the container were changed
  * removed ``callback_filter`` configuration option for the jsonp_handler
  * ``exception_wrapper_handler`` is now the name of a service and not the name of a class
  * removed all ``.class`` parameters, instead overwriting services via explicit Bundle configuration is preferred
@@ -25,9 +26,10 @@ This document will be updated to list important BC breaks and behavioral changes
    * ``PROPFIND``
    * ``PROPPATCH``
    * ``UNLOCK``
- * the ``RequestBodyParamConverter`` now has a priority of ``-50``
- * the ``RequestBodyParamConverter`` doesn't throw an exception anymore when a parameter is optional
  * removed the ability of the ``AccessDeniedListener`` to render a response. Use the FOSRestBundle or the twig exception controller in complement.
+ * changed the priority of ``RequestBodyParamConverter`` to ``-50``
+ * made silent the ``RequestBodyParamConverter`` when a parameter is optional and it can't resolve it
+ * removed the ``format_negotiator`` option ``exception_fallback_format``; you can match the ``ExceptionController`` thanks to the ``attributes`` option instead
 
 ### upgrading from 1.5.*
 

@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Tests\EventListener;
 use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\EventListener\ViewResponseListener;
 use FOS\RestBundle\FOSRestBundle;
-use FOS\RestBundle\View\ExceptionWrapperHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,7 +45,6 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
     private $router;
     private $serializer;
     private $requestStack;
-    private $exceptionWrapperHandler;
 
     /**
      * @param Request $request
@@ -274,12 +272,11 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
         $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
         $this->requestStack = new RequestStack();
-        $this->exceptionWrapperHandler = new ExceptionWrapperHandler();
     }
 
     private function createViewResponseListener($formats = null)
     {
-        $this->viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $this->exceptionWrapperHandler, $formats);
+        $this->viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $formats);
         $this->listener = new ViewResponseListener($this->viewHandler, false);
     }
 }

@@ -150,12 +150,6 @@ class FOSRestExtension extends Extension
                 $service->clearTag('kernel.event_listener');
             }
 
-            foreach ($config['format_listener']['rules'] as &$rule) {
-                if (!isset($rule['exception_fallback_format'])) {
-                    $rule['exception_fallback_format'] = $rule['fallback_format'];
-                }
-            }
-
             $container->setParameter(
                 'fos_rest.format_listener.rules',
                 $config['format_listener']['rules']
@@ -235,10 +229,6 @@ class FOSRestExtension extends Extension
 
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (!empty($config['view']['exception_wrapper_handler'])) {
-            $container->setAlias('fos_rest.view.exception_wrapper_handler', $config['view']['exception_wrapper_handler']);
-        }
-
         if (!empty($config['view']['jsonp_handler'])) {
             $handler = new DefinitionDecorator($config['service']['view_handler']);
             $handler->setPublic(true);
@@ -303,17 +293,17 @@ class FOSRestExtension extends Extension
         }
 
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');
-        $defaultViewHandler->replaceArgument(5, $formats);
-        $defaultViewHandler->replaceArgument(6, $config['view']['failed_validation']);
+        $defaultViewHandler->replaceArgument(4, $formats);
+        $defaultViewHandler->replaceArgument(5, $config['view']['failed_validation']);
 
         if (!is_numeric($config['view']['empty_content'])) {
             $config['view']['empty_content'] = constant('\Symfony\Component\HttpFoundation\Response::'.$config['view']['empty_content']);
         }
 
-        $defaultViewHandler->replaceArgument(7, $config['view']['empty_content']);
-        $defaultViewHandler->replaceArgument(8, $config['view']['serialize_null']);
-        $defaultViewHandler->replaceArgument(9, $config['view']['force_redirects']);
-        $defaultViewHandler->replaceArgument(10, $config['view']['default_engine']);
+        $defaultViewHandler->replaceArgument(6, $config['view']['empty_content']);
+        $defaultViewHandler->replaceArgument(7, $config['view']['serialize_null']);
+        $defaultViewHandler->replaceArgument(8, $config['view']['force_redirects']);
+        $defaultViewHandler->replaceArgument(9, $config['view']['default_engine']);
     }
 
     private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container)
@@ -332,13 +322,12 @@ class FOSRestExtension extends Extension
                 $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
             }
 
-            if ($config['view']['mime_types']['enabled'] && !method_exists(Request::class, 'getMimeTypes')) {
-                $container->getDefinition('fos_rest.exception_format_negotiator')->addArgument($config['view']['mime_types']['formats']);
-            }
-
-            $exceptionController = $container->getDefinition('fos_rest.exception.controller');
-            $exceptionController->replaceArgument(3, $config['exception']['codes']);
-            $exceptionController->replaceArgument(4, $config['exception']['messages']);
+            $container->getDefinition('fos_rest.exception.controller')
+                ->replaceArgument(2, $config['exception']['codes']);
+            $container->getDefinition('fos_rest.serializer.exception_normalizer.jms')
+                ->replaceArgument(0, $config['exception']['messages']);
+            $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
+                ->replaceArgument(0, $config['exception']['messages']);
         }
 
         foreach ($config['exception']['codes'] as $exception => $code) {
