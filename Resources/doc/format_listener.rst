@@ -84,7 +84,7 @@ in the controller action.
         // ...
     }
 
-Note that the format needs to be added using the :doc:`Mime Type Listener <3-listener-support>`.
+Note that if you use custom mime types, they need to be added using the :doc:`Mime Type Listener <3-listener-support>`.
 
 Disabling the Format Listener via Rules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

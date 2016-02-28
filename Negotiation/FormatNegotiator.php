@@ -138,12 +138,18 @@ class FormatNegotiator extends BaseNegotiator
                 continue;
             }
 
+            if (method_exists(Request::class, 'getMimeTypes')) {
+                $mimeTypes = array_merge($mimeTypes, Request::getMimeTypes($priority));
+            } elseif (null !== $request->getMimeType($priority)) {
+                $class = new \ReflectionClass(Request::class);
+                $properties = $class->getStaticProperties();
+                $mimeTypes = array_merge($mimeTypes, $properties['formats'][$priority]);
+            }
+
             if (isset($this->mimeTypes[$priority])) {
                 foreach ($this->mimeTypes[$priority] as $mimeType) {
                     $mimeTypes[] = $mimeType;
                 }
-            } elseif (($mimeType = $request->getMimeType($priority)) !== null) {
-                $mimeTypes[] = $mimeType;
             }
         }
 

@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class FOSRestExtension extends Extension
@@ -160,8 +161,8 @@ class FOSRestExtension extends Extension
                 $config['format_listener']['rules']
             );
 
-            if ($config['view']['mime_types']['enabled']) {
-                $container->getDefinition('fos_rest.format_negotiator')->replaceArgument(1, $config['view']['mime_types']['formats']);
+            if ($config['view']['mime_types']['enabled'] && !method_exists(Request::class, 'getMimeTypes')) {
+                $container->getDefinition('fos_rest.format_negotiator')->addArgument($config['view']['mime_types']['formats']);
             }
         }
     }
@@ -261,7 +262,7 @@ class FOSRestExtension extends Extension
                 $service->clearTag('kernel.event_listener');
             }
 
-            $container->getDefinition('fos_rest.mime_type_listener')->replaceArgument(0, $config['view']['mime_types']);
+            $container->getDefinition('fos_rest.mime_type_listener')->replaceArgument(0, $config['view']['mime_types']['formats']);
         }
 
         if ($config['view']['view_response_listener']['enabled']) {
@@ -331,8 +332,8 @@ class FOSRestExtension extends Extension
                 $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
             }
 
-            if ($config['view']['mime_types']['enabled']) {
-                $container->getDefinition('fos_rest.exception_format_negotiator')->replaceArgument(1, $config['view']['mime_types']['formats']);
+            if ($config['view']['mime_types']['enabled'] && !method_exists(Request::class, 'getMimeTypes')) {
+                $container->getDefinition('fos_rest.exception_format_negotiator')->addArgument($config['view']['mime_types']['formats']);
             }
 
             $exceptionController = $container->getDefinition('fos_rest.exception.controller');
