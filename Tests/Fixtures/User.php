@@ -9,21 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Context\Adapter;
+namespace FOS\RestBundle\Tests\Fixtures;
 
 /**
- * Defines the interface of adapters.
- *
  * @author Ener-Getick <egetick@gmail.com>
  */
-interface SerializerAwareInterface
+class User
 {
-    /**
-      * Sets the serializer used.
-      *
-      * @param mixed            $serializer
-      *
-      * @return mixed
-      */
-     public function setSerializer($serializer);
 }

@@ -18,9 +18,6 @@
             <argument /> <!-- serialize null -->
             <argument type="collection" /> <!-- force redirects -->
             <argument /> <!-- default engine -->
-            <call method="setSerializationContextAdapter">
-                <argument type="service" id="fos_rest.context.adapter.chain_context_adapter" />
-            </call>
         </service>
 
         <service id="fos_rest.view_handler.jsonp" class="FOS\RestBundle\View\JsonpHandler" public="false">

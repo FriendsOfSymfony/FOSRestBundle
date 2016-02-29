@@ -32,8 +32,7 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->requestStack = new RequestStack();
         $this->request = new Request();
         $this->requestStack->push($this->request);
-        $mimeTypes = ['json' => ['application/json', 'application/json;version=1.0'], 'html' => ['text/html', 'application/xhtml+xml'], 'xml' => ['application/xml']];
-        $this->negotiator = new FormatNegotiator($this->requestStack, $mimeTypes);
+        $this->negotiator = new FormatNegotiator($this->requestStack, ['json' => ['application/json;version=1.0']]);
     }
 
     public function testEmptyRequestMatcherMap()
@@ -61,10 +60,19 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new Accept('text/html'), $this->negotiator->getBest(''));
     }
 
+    public function testFallbackFormatWithPriorities()
+    {
+        $this->addRequestMatcher(true, ['priorities' => ['json', 'xml'], 'fallback_format' => null]);
+        $this->assertNull($this->negotiator->getBest(''));
+
+        $this->addRequestMatcher(true, ['priorities' => ['json', 'xml'], 'fallback_format' => 'json']);
+        $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
+    }
+
     public function testGetBest()
     {
-        $this->request->headers->set('Accept', 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8');
-        $priorities = ['text/html; charset=UTF-8', 'application/json'];
+        $this->request->headers->set('Accept', 'application/xhtml+xml, text/html, application/xml;q=0.9, */*;q=0.8');
+        $priorities = ['text/html; charset=UTF-8', 'html', 'application/json'];
         $this->addRequestMatcher(true, ['priorities' => $priorities]);
 
         $this->assertEquals(
@@ -72,8 +80,9 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
             $this->negotiator->getBest('')
         );
 
+        $this->request->headers->set('Accept', 'application/xhtml+xml, application/xml;q=0.9, */*;q=0.8');
         $this->assertEquals(
-            new Accept('text/html'),
+            new Accept('application/xhtml+xml'),
             $this->negotiator->getBest('', ['html', 'json'])
         );
     }

@@ -11,14 +11,10 @@
 
 namespace FOS\RestBundle\View;
 
-use FOS\RestBundle\Context\Adapter\SerializationContextAdapterInterface;
-use FOS\RestBundle\Context\Adapter\SerializerAwareInterface;
-use FOS\RestBundle\Context\ContextInterface;
-use FOS\RestBundle\Context\GroupableContextInterface;
-use FOS\RestBundle\Context\SerializeNullContextInterface;
-use FOS\RestBundle\Context\VersionableContextInterface;
+use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Serializer\Serializer;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Bundle\FrameworkBundle\Templating\TemplateReferenceInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,11 +97,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      */
     protected $serializeNullStrategy;
 
-    /**
-     * @var SerializationContextAdapterInterface
-     */
-    protected $contextAdapter;
-
     private $urlGenerator;
     private $serializer;
     private $templating;
@@ -116,7 +107,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      * Constructor.
      *
      * @param UrlGeneratorInterface            $urlGenerator            The URL generator
-     * @param object                           $serializer              An object implementing a serialize() method
+     * @param Serializer                       $serializer
      * @param EngineInterface                  $templating              The configured templating engine
      * @param RequestStack                     $requestStack            The request stack
      * @param ExceptionWrapperHandlerInterface $exceptionWrapperHandler An exception wrapper handler
@@ -129,7 +120,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
-        $serializer,
+        Serializer $serializer,
         EngineInterface $templating,
         RequestStack $requestStack,
         ExceptionWrapperHandlerInterface $exceptionWrapperHandler,
@@ -140,10 +131,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         array $forceRedirects = null,
         $defaultEngine = 'twig'
     ) {
-        if (!method_exists($serializer, 'serialize')) {
-            throw new \InvalidArgumentException('The $serializer argument must implement a serialize() method.');
-        }
-
         $this->urlGenerator = $urlGenerator;
         $this->serializer = $serializer;
         $this->templating = $templating;
@@ -164,7 +151,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      */
     public function setExclusionStrategyGroups($groups)
     {
-        $this->exclusionStrategyGroups = $groups;
+        $this->exclusionStrategyGroups = (array) $groups;
     }
 
     /**
@@ -185,16 +172,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function setSerializeNullStrategy($isEnabled)
     {
         $this->serializeNullStrategy = $isEnabled;
-    }
-
-    /**
-     * Sets context adapter.
-     *
-     * @param SerializationContextAdapterInterface $contextAdapter
-     */
-    public function setSerializationContextAdapter(SerializationContextAdapterInterface $contextAdapter)
-    {
-        $this->contextAdapter = $contextAdapter;
     }
 
     /**
@@ -246,8 +223,9 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             return $this->failedValidationCode;
         }
 
-        if (200 !== ($code = $view->getStatusCode())) {
-            return $code;
+        $statusCode = $view->getStatusCode();
+        if (null !== $statusCode) {
+            return $statusCode;
         }
 
         return null !== $content ? Response::HTTP_OK : $this->emptyContentCode;
@@ -271,24 +249,22 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      *
      * @param View $view
      *
-     * @return ContextInterface
+     * @return Context
      */
     protected function getSerializationContext(View $view)
     {
-        $context = $view->getSerializationContext();
+        $context = $view->getContext();
 
-        if ($context instanceof GroupableContextInterface) {
-            $groups = $context->getGroups();
-            if (empty($groups) && $this->exclusionStrategyGroups) {
-                $context->addGroups((array) $this->exclusionStrategyGroups);
-            }
+        $groups = $context->getGroups();
+        if (empty($groups) && $this->exclusionStrategyGroups) {
+            $context->addGroups($this->exclusionStrategyGroups);
         }
 
-        if ($context instanceof VersionableContextInterface && null === $context->getVersion() && $this->exclusionStrategyVersion) {
+        if (null === $context->getVersion() && $this->exclusionStrategyVersion) {
             $context->setVersion($this->exclusionStrategyVersion);
         }
 
-        if ($context instanceof SerializeNullContextInterface && null === $context->getSerializeNull()) {
+        if (null === $context->getSerializeNull() && null !== $this->serializeNullStrategy) {
             $context->setSerializeNull($this->serializeNullStrategy);
         }
 
@@ -372,7 +348,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $data = $this->prepareTemplateParameters($view);
 
         $template = $view->getTemplate();
-        if ($template instanceof TemplateReference) {
+        if ($template instanceof TemplateReferenceInterface) {
             if (null === $template->get('format')) {
                 $template->set('format', $format);
             }
@@ -427,6 +403,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function createResponse(View $view, Request $request, $format)
     {
         $route = $view->getRoute();
+
         $location = $route
             ? $this->urlGenerator->generate($route, (array) $view->getRouteParameters(), UrlGeneratorInterface::ABSOLUTE_URL)
             : $view->getLocation();
@@ -460,11 +437,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $data = $this->getDataFromView($view);
 
-            $standardContext = $this->getSerializationContext($view);
-            if ($this->contextAdapter instanceof SerializerAwareInterface) {
-                $this->contextAdapter->setSerializer($this->serializer);
-            }
-            $context = $this->contextAdapter->convertSerializationContext($standardContext);
+            $context = $this->getSerializationContext($view);
             $content = $this->serializer->serialize($data, $format, $context);
         }
 

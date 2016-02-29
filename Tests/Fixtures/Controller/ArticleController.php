@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ArticleController extends Controller implements ClassResourceInterface
 {
@@ -30,7 +31,7 @@ class ArticleController extends Controller implements ClassResourceInterface
     /**
      * [GET] /articles.
      */
-    public function cgetAction()
+    public function cgetAction(ConstraintViolationList $errors)
     {
     }
 
@@ -76,7 +77,7 @@ class ArticleController extends Controller implements ClassResourceInterface
     }
 
     /**
-     * [PATCH] /articles/{slug}/lock.
+     * [LOCK] /articles/{slug}.
      *
      * @param $slug
      */

@@ -15,7 +15,6 @@ fos_rest:
     view:
         view_response_listener: true
         mime_types:
-            html: ['text/html']
             json: ['application/json', 'application/json;myversion=2.3']
     versioning:
         enabled: true

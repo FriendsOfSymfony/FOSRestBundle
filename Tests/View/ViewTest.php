@@ -149,5 +149,13 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $code = 404;
         $view->setStatusCode($code);
         $this->assertEquals($code, $view->getStatusCode());
+        $this->assertEquals($code, $view->getResponse()->getStatusCode());
+    }
+
+    public function testGetStatusCodeFromResponse()
+    {
+        $view = new View();
+        $this->assertNull($view->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $view->getResponse()->getStatusCode()); // default code of the response.
     }
 }

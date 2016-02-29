@@ -5,7 +5,6 @@ This document will be updated to list important BC breaks and behavioral changes
 
 ### upgrading to 2.0.0
 
- * it is now recommended to explicitly configure the format to mime type mapping via ``fos_rest.view.mime_types``
  * dropped support for the legacy ``Symfony\Component\Validator\ValidatorInterface``
  * removed ``FOS\RestBundle\Util\Codes`` in favor of ``Symfony\Component\HttpFoundation\Response``
  * compatibility with Symfony <2.7, JMS Serializer/SerializerBundle <1.0 and SensioFrameworkExtraBundle <3.0 was dropped
@@ -18,6 +17,14 @@ This document will be updated to list important BC breaks and behavioral changes
  * removed all ``.class`` parameters, instead overwriting services via explicit Bundle configuration is preferred
  * renamed ``AbstractScalarParam::$array`` to ``AbstractScalarParam::$map``
  * added `ControllerTrait` for developers that prefer to use DI for their controllers instead of extending ``FOSRestController``
+ * when having an action called ``lockUserAction``, then it will have to use the http method ``LOCK`` (RFC-2518) instead of ``PATCH``. The following methods are affected by this change
+   * ``COPY``
+   * ``LOCK``
+   * ``MKCOL``
+   * ``MOVE``
+   * ``PROPFIND``
+   * ``PROPPATCH``
+   * ``UNLOCK``
 
 ### upgrading from 1.5.*
 

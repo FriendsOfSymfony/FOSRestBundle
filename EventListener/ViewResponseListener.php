@@ -15,8 +15,8 @@ use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
@@ -73,19 +73,21 @@ class ViewResponseListener implements EventSubscriberInterface
         }
 
         if ($configuration) {
-            $context = $view->getSerializationContext();
             if ($configuration->getTemplateVar()) {
                 $view->setTemplateVar($configuration->getTemplateVar());
             }
             if ($configuration->getStatusCode() && (null === $view->getStatusCode() || Response::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
+
+            $context = $view->getContext();
             if ($configuration->getSerializerGroups() && !$customViewDefined) {
                 $context->addGroups($configuration->getSerializerGroups());
             }
             if ($configuration->getSerializerEnableMaxDepthChecks()) {
                 $context->setMaxDepth(0);
             }
+
             $populateDefaultVars = $configuration->isPopulateDefaultVars();
         } else {
             $populateDefaultVars = true;
@@ -100,7 +102,10 @@ class ViewResponseListener implements EventSubscriberInterface
             $vars = $request->attributes->get('_template_default_vars');
         }
 
-        if ($this->viewHandler->isFormatTemplating($view->getFormat())) {
+        if ($this->viewHandler->isFormatTemplating($view->getFormat())
+            && !$view->getRoute()
+            && !$view->getLocation()
+        ) {
             if (!empty($vars)) {
                 $parameters = (array) $this->viewHandler->prepareTemplateParameters($view);
                 foreach ($vars as $var) {
@@ -114,7 +119,7 @@ class ViewResponseListener implements EventSubscriberInterface
             $template = null !== $configuration && $configuration->getTemplate()
                 ? $configuration->getTemplate()
                 : $request->attributes->get('_template');
-            if ($template) {
+            if ($template && !$view->getTemplate()) {
                 if ($template instanceof TemplateReferenceInterface) {
                     $template->set('format', null);
                 }
