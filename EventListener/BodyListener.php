@@ -131,7 +131,7 @@ class BodyListener
     }
 
     /**
-     * Check if the Request is a not a DELETE with no content and no Content-Type.
+     * Check if the Request is not a DELETE with no content and no Content-Type.
      *
      * @param $method
      * @param $content
