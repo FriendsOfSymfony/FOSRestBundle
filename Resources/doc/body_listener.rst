@@ -5,7 +5,7 @@ The Request body listener makes it possible to decode the contents of a request
 in order to populate the "request" parameter bag of the Request. This for
 example allows to receive data that normally would be sent via POST as
 ``application/x-www-form-urlencoded`` in a different format (for example
-application/json) in a PUT.
+``application/json``) in a PUT.
 
 Decoders
 ~~~~~~~~
