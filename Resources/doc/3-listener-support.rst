@@ -69,7 +69,10 @@ The Request body listener makes it possible to decode the contents of a request
 in order to populate the "request" parameter bag of the Request. This, for
 example, allows to receive data that normally would be sent via POST as
 ``application/x-www-form-urlencoded`` in a different format (for example
-``application/json``) in a PUT.
+``application/json``) in a PUT. Please note that this listener is supposed to
+allow you to decode and normalize data. If you want to deserialize data,
+meaning getting an object of your choice, you will be better off using the
+request body converter listener, documented below.
 
 For details see :doc:`Body Listener <body_listener>`.
 
