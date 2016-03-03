@@ -31,7 +31,7 @@
     },
 
     "require-dev": {
-        "sensio/framework-extra-bundle":  "~2.0|~3.0",
+        "sensio/framework-extra-bundle":  "~2.0|~3.0,<3.0.13",
         "symfony/form":                   "~2.3|~3.0",
         "symfony/validator":              "~2.3|~3.0",
         "symfony/serializer":             "~2.3|~3.0",
@@ -47,8 +47,8 @@
     },
 
     "suggest": {
-        "sensio/framework-extra-bundle":  "Add support for route annotations and the view response listener, requires ~3.0",
-        "jms/serializer-bundle":          "Add support for advanced serialization capabilities, recommended, requires ~0.12||~1.0",
+        "sensio/framework-extra-bundle":  "Add support for route annotations and the view response listener, requires ~2.0|~3.0",
+        "jms/serializer-bundle":          "Add support for advanced serialization capabilities, recommended, requires ~0.12|~1.0",
         "symfony/serializer":             "Add support for basic serialization capabilities and xml decoding, requires ~2.3",
         "symfony/validator":              "Add support for validation capabilities in the ParamFetcher, requires ~2.3"
     },
@@ -56,7 +56,8 @@
     "conflict": {
         "symfony/validator": ">=2.5.0,<2.5.5",
         "jms/serializer": "<0.13",
-        "jms/serializer-bundle": "<0.11"
+        "jms/serializer-bundle": "<0.11",
+        "sensio/framework-extra-bundle": ">=3.0.13"
     },
 
     "autoload": {
