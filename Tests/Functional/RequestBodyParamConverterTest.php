@@ -28,4 +28,17 @@ class RequestBodyParamConverterTest extends WebTestCase
         $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertSame('Post 1', $client->getResponse()->getContent());
     }
+
+    /**
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1237
+     */
+    public function testTwigErrorPage()
+    {
+        $client = $this->createClient(['test_case' => 'RequestBodyParamConverter']);
+        $client->request('GET', '/_error/404.txt');
+
+        // Status code 200 as this page describes an error but is not the result of an error.
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertContains('The server returned a "404 Not Found".', $client->getResponse()->getContent());
+    }
 }

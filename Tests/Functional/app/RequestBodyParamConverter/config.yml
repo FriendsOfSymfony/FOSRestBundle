@@ -2,8 +2,10 @@ imports:
     - { resource: ../config/default.yml }
 
 framework:
-    serializer:
-        enabled: true
+    serializer: true
+    router:
+        resource: "%kernel.root_dir%/RequestBodyParamConverter/routing.yml"
+        strict_requirements: true
 
 fos_rest:
     body_converter:

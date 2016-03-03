@@ -1,6 +1,6 @@
 request_body_param_converter:
     path:     /body-converter
-    defaults: { _controller: TestBundle:RequestBodyParamConverter:putPost }
+    defaults: { _controller: TestBundle:RequestBodyParamConverter:putPost, date: 16-06-2016 }
 
 test_serializer_error_exception:
     path:     /serializer-error/exception.{_format}

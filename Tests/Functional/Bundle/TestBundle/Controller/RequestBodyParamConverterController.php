@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RequestBodyParamConverterController extends Controller
 {
-    public function putPostAction(Post $post)
+    public function putPostAction(Post $post, \Datetime $date)
     {
         return new Response($post->getName());
     }
