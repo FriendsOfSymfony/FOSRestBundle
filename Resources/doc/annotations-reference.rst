@@ -122,7 +122,8 @@ Example syntax:
 
 .. code-block:: php
 
-    use FOS\RestBundle\Controller\Annotations\Route
+    use FOS\RestBundle\Controller\Annotations\Route;
+
     /**
     * @Route("", condition="context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'")
     */
