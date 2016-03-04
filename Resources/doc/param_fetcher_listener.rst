@@ -86,7 +86,7 @@ configured for the matched controller so that the user does not need to do this 
          * See all file possible requirements: http://symfony.com/doc/current/reference/constraints/File.html
          *
          * @FileParam(name="avatar", requirements={"mimeTypes"="application/json", "minWidth"="200"}, image=true)
-         * The ParamFetcher will throw an error if the file passed is not an image and is not larger than 2O0px.
+         * The ParamFetcher will throw an error if the file passed is not an image and is not larger than 200px.
          * See all image possible requirements: http://symfony.com/doc/current/reference/constraints/Image.html
          *
          * @FileParam(name="identityCard", image=true, default="noPicture")
