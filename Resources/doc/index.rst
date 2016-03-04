@@ -12,6 +12,7 @@ Getting Started With FOSRestBundle
     body_listener
     request_body_converter_listener
     format_listener
+    versioning
     param_fetcher_listener
     4-exception-controller-support
     5-automatic-route-generation_single-restful-controller
