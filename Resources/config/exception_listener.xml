@@ -15,7 +15,7 @@
         <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController">
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="service" id="fos_rest.exception.codes_map" />  <!-- exception codes -->
-            <argument>%kernel.debug%</argument>
+            <argument /><!-- show exception -->
         </service>
 
         <service id="fos_rest.exception.twig_controller" class="FOS\RestBundle\Controller\TwigExceptionController" parent="fos_rest.exception.controller">
@@ -32,13 +32,13 @@
 
         <service id="fos_rest.serializer.exception_normalizer.jms" class="FOS\RestBundle\Serializer\Normalizer\ExceptionHandler">
             <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
-            <argument>%kernel.debug%</argument>
+            <argument /><!-- show exception message -->
             <tag name="jms_serializer.subscribing_handler" />
         </service>
 
         <service id="fos_rest.serializer.exception_normalizer.symfony" class="FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer" public="false">
             <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
-            <argument>%kernel.debug%</argument>
+            <argument /><!-- show exception message -->
             <tag name="serializer.normalizer" />
         </service>
     </services>
