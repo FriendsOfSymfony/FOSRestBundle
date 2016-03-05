@@ -29,6 +29,21 @@ use FOS\RestBundle\Util\Codes;
 class Configuration implements ConfigurationInterface
 {
     /**
+     * Default debug mode value.
+     *
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * @param bool $debug
+     */
+    public function __construct($debug)
+    {
+        $this->debug = (bool) $debug;
+    }
+
+    /**
      * Generates the configuration tree.
      *
      * @return TreeBuilder
@@ -372,6 +387,9 @@ return $v; })
                         ->arrayNode('messages')
                             ->useAttributeAsKey('name')
                             ->prototype('boolean')->end()
+                        ->end()
+                        ->booleanNode('debug')
+                            ->defaultValue($this->debug)
                         ->end()
                     ->end()
                 ->end()

@@ -53,6 +53,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = new ContainerBuilder();
         $this->container->setParameter('kernel.bundles', array('JMSSerializerBundle' => true));
+        $this->container->setParameter('kernel.debug', false);
         $this->extension = new FOSRestExtension();
         $this->includeFormat = true;
         $this->formats = array(
@@ -577,6 +578,66 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         return array_map(function ($i) {
             return array($i);
         }, $data);
+    }
+
+    /**
+     * Test exception.debug config value uses kernel.debug value by default or provided value.
+     *
+     * @dataProvider getShowExceptionData
+     *
+     * @param bool        $kernelDebug     kernel.debug param value
+     * @param array       $exceptionConfig Exception config
+     * @param bool|string $expectedValue   Expected value of show_exception argument
+     */
+    public function testExceptionDebug($kernelDebug, $exceptionConfig, $expectedValue)
+    {
+        $this->container->setParameter('kernel.debug', $kernelDebug);
+        $extension = new FOSRestExtension();
+
+        $extension->load(array(
+            'fos_rest' => array(
+                'exception' => $exceptionConfig,
+            ),
+        ), $this->container);
+
+        $definition = $this->container->getDefinition('fos_rest.controller.exception');
+        $this->assertSame($expectedValue, $this->container->getParameter('fos_rest.exception.debug'));
+    }
+
+    public static function getShowExceptionData()
+    {
+        return array(
+            'empty config, kernel.debug is true' => array(
+                true,
+                array(),
+                true,
+            ),
+            'empty config, kernel.debug is false' => array(
+                false,
+                array(),
+                false,
+            ),
+            'config debug true' => array(
+                false,
+                array('debug' => true),
+                true,
+            ),
+            'config debug false' => array(
+                true,
+                array('debug' => false),
+                false,
+            ),
+            'config debug null, kernel.debug true' => array(
+                false,
+                array('debug' => null),
+                true,
+            ),
+            'config debug null, kernel.debug false' => array(
+                false,
+                array('debug' => null),
+                true,
+            ),
+        );
     }
 
     /**
