@@ -33,6 +33,14 @@ class SerializerErrorController extends Controller
     /**
      * @View
      */
+    public function unknownExceptionAction()
+    {
+        throw new \OutOfBoundsException('Unknown exception message.');
+    }
+
+    /**
+     * @View
+     */
     public function invalidFormAction()
     {
         // BC hack for Symfony 2.7 where FormType's didn't yet get configured via the FQN

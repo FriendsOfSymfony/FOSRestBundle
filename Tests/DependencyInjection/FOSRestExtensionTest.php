@@ -54,6 +54,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = new ContainerBuilder();
         $this->container->setParameter('kernel.bundles', ['JMSSerializerBundle' => true]);
+        $this->container->setParameter('kernel.debug', false);
         $this->extension = new FOSRestExtension();
         $this->includeFormat = true;
         $this->formats = [
@@ -534,6 +535,72 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         return array_map(function ($i) {
             return [$i];
         }, $data);
+    }
+
+    /**
+     * Test exception.debug config value uses kernel.debug value by default or provided value.
+     *
+     * @dataProvider getShowExceptionData
+     *
+     * @param bool        $kernelDebug     kernel.debug param value
+     * @param array       $exceptionConfig Exception config
+     * @param bool|string $expectedValue   Expected value of show_exception argument
+     */
+    public function testExceptionDebug($kernelDebug, $exceptionConfig, $expectedValue)
+    {
+        $this->container->setParameter('kernel.debug', $kernelDebug);
+        $extension = new FOSRestExtension();
+
+        $extension->load([
+            'fos_rest' => [
+                'exception' => $exceptionConfig,
+            ],
+        ], $this->container);
+
+        $definition = $this->container->getDefinition('fos_rest.exception.controller');
+        $this->assertSame($expectedValue, $definition->getArgument(2));
+
+        $definition = $this->container->getDefinition('fos_rest.serializer.exception_normalizer.jms');
+        $this->assertSame($expectedValue, $definition->getArgument(1));
+
+        $definition = $this->container->getDefinition('fos_rest.serializer.exception_normalizer.symfony');
+        $this->assertSame($expectedValue, $definition->getArgument(1));
+    }
+
+    public static function getShowExceptionData()
+    {
+        return [
+            'empty config, kernel.debug is true' => [
+                true,
+                [],
+                true,
+            ],
+            'empty config, kernel.debug is false' => [
+                false,
+                [],
+                false,
+            ],
+            'config debug true' => [
+                false,
+                ['debug' => true],
+                true,
+            ],
+            'config debug false' => [
+                true,
+                ['debug' => false],
+                false,
+            ],
+            'config debug null, kernel.debug true' => [
+                false,
+                ['debug' => null],
+                true,
+            ],
+            'config debug null, kernel.debug false' => [
+                false,
+                ['debug' => null],
+                true,
+            ],
+        ];
     }
 
     /**
