@@ -11,8 +11,6 @@
             <tag name="monolog.logger" channel="request" />
             <argument type="collection" /> <!-- formats -->
             <argument /> <!-- unauthorized challenge -->
-            <argument>%twig.exception_listener.controller%</argument>
-            <argument type="service" id="logger" on-invalid="null" />
         </service>
 
     </services>

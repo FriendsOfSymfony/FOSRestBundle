@@ -193,7 +193,7 @@ You need to enable this listener as follows, as it is disabled by default:
             # all requests using the 'json' format will return a 403 on an access denied violation
             json: true
 
-It is also recommended to enable the exception controller described in the next chapter.
+Note: The access_denied_listener doesn't return a response itself and must be coupled with an exception listener returning a response (see the :doc:`FOSRestBundle exception controller <4-exception-controller-support>`. or the `twig exception controller`_).
 
 Zone Listener
 =============
@@ -238,3 +238,4 @@ That was it!
 .. _`ParamConverters`: http://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 .. _`mime type listener`: http://symfony.com/doc/current/cookbook/request/mime_type.html
 .. _`Test Cases for HTTP Test Cases for the HTTP WWW-Authenticate header field`: http://greenbytes.de/tech/tc/httpauth/
+.. _`twig exception controller`: https://symfony.com/doc/current/cookbook/controller/error_pages.html

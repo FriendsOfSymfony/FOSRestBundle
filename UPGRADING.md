@@ -27,6 +27,7 @@ This document will be updated to list important BC breaks and behavioral changes
    * ``UNLOCK``
  * the ``RequestBodyParamConverter`` now has a priority of ``-50``
  * the ``RequestBodyParamConverter`` doesn't throw an exception anymore when a parameter is optional
+ * removed the ability of the ``AccessDeniedListener`` to render a response. Use the FOSRestBundle or the twig exception controller in complement.
 
 ### upgrading from 1.5.*
 
