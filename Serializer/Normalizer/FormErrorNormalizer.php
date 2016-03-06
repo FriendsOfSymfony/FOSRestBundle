@@ -9,21 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Serializer;
+namespace FOS\RestBundle\Serializer\Normalizer;
 
-use FOS\RestBundle\Util\ExceptionWrapper;
+use FOS\RestBundle\Util\FormWrapper;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Normalizer for ExceptionWrapper instances.
+ * Normalizes invalid Form instances.
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- * @author Florian Voutzinos <florian@voutzinos.com>
+ * @author Ener-Getick <egetick@gmail.com>
  */
-class ExceptionWrapperNormalizer implements NormalizerInterface
+class FormErrorNormalizer implements NormalizerInterface
 {
     private $translator;
 
@@ -37,10 +36,14 @@ class ExceptionWrapperNormalizer implements NormalizerInterface
      */
     public function normalize($object, $format = null, array $context = [])
     {
+        if ($object instanceof FormWrapper) {
+            $object = $object->form;
+        }
+
         return [
-            'code' => $object->getCode(),
-            'message' => $object->getMessage(),
-            'errors' => $object->getErrors() ? $this->convertFormToArray($object->getErrors()) : null,
+            'code' => isset($context['status_code']) ? $context['status_code'] : null,
+            'message' => 'Validation Failed',
+            'errors' => $this->convertFormToArray($object),
         ];
     }
 
@@ -49,7 +52,11 @@ class ExceptionWrapperNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof ExceptionWrapper;
+        if ($data instanceof FormWrapper) {
+            $data = $data->form;
+        }
+
+        return $data instanceof FormInterface && $data->isSubmitted() && !$data->isValid();
     }
 
     /**
@@ -68,7 +75,6 @@ class ExceptionWrapperNormalizer implements NormalizerInterface
         }
 
         $children = [];
-
         foreach ($data->all() as $child) {
             if ($child instanceof FormInterface) {
                 $children[$child->getName()] = $this->convertFormToArray($child);

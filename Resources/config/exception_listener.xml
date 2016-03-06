@@ -5,7 +5,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="fos_rest.exception_listener" class="Symfony\Component\HttpKernel\EventListener\ExceptionListener">
+        <service id="fos_rest.exception_listener" class="FOS\RestBundle\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
             <argument>fos_rest.exception.controller:showAction</argument>
@@ -13,11 +13,8 @@
         </service>
 
         <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController">
-            <argument type="service" id="fos_rest.exception_handler" />
-            <argument type="service" id="fos_rest.exception_format_negotiator" />
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="collection" /> <!-- exception codes -->
-            <argument type="collection" /> <!-- exception messages -->
             <argument>%kernel.debug%</argument>
         </service>
 
@@ -25,8 +22,16 @@
             <argument type="service" id="templating.engine.twig" />
         </service>
 
-        <service id="fos_rest.exception_format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator" >
-            <argument type="service" id="request_stack" />
+        <service id="fos_rest.serializer.exception_normalizer.jms" class="FOS\RestBundle\Serializer\Normalizer\ExceptionHandler">
+            <argument type="collection" /> <!-- exception messages -->
+            <argument>%kernel.debug%</argument>
+            <tag name="jms_serializer.subscribing_handler" />
+        </service>
+
+        <service id="fos_rest.serializer.exception_normalizer.symfony" class="FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer" public="false">
+            <argument type="collection" /> <!-- exception messages -->
+            <argument>%kernel.debug%</argument>
+            <tag name="serializer.normalizer" />
         </service>
     </services>
 </container>

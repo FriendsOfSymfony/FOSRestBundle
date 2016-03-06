@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Controller;
 
-use FOS\RestBundle\Negotiation\FormatNegotiator;
-use FOS\RestBundle\View\ExceptionWrapperHandlerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,15 +21,12 @@ abstract class TemplatingExceptionController extends ExceptionController
     protected $templating;
 
     public function __construct(
-        ExceptionWrapperHandlerInterface $exceptionWrapperHandler,
-        FormatNegotiator $formatNegotiator,
         ViewHandlerInterface $viewHandler,
         array $exceptionCodes,
-        array $exceptionMessages,
         $showException,
         EngineInterface $templating
     ) {
-        parent::__construct($exceptionWrapperHandler, $formatNegotiator, $viewHandler, $exceptionCodes, $exceptionMessages, $showException);
+        parent::__construct($viewHandler, $exceptionCodes, $showException);
 
         $this->templating = $templating;
     }

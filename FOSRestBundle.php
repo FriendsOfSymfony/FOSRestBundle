@@ -12,11 +12,12 @@
 namespace FOS\RestBundle;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
-use FOS\RestBundle\DependencyInjection\Compiler\ExceptionWrapperHandlerPass;
+use FOS\RestBundle\DependencyInjection\Compiler\JMSHandlersPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\TwigExceptionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -36,6 +37,6 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new ConfigurationCheckPass());
         $container->addCompilerPass(new FormatListenerRulesPass());
         $container->addCompilerPass(new TwigExceptionPass());
-        $container->addCompilerPass(new ExceptionWrapperHandlerPass());
+        $container->addCompilerPass(new JMSHandlersPass(), PassConfig::TYPE_REMOVE);
     }
 }

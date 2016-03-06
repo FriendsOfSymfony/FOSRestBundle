@@ -101,29 +101,26 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     private $serializer;
     private $templating;
     private $requestStack;
-    private $exceptionWrapperHandler;
 
     /**
      * Constructor.
      *
-     * @param UrlGeneratorInterface            $urlGenerator            The URL generator
-     * @param Serializer                       $serializer
-     * @param EngineInterface                  $templating              The configured templating engine
-     * @param RequestStack                     $requestStack            The request stack
-     * @param ExceptionWrapperHandlerInterface $exceptionWrapperHandler An exception wrapper handler
-     * @param array                            $formats                 the supported formats as keys and if the given formats uses templating is denoted by a true value
-     * @param int                              $failedValidationCode    The HTTP response status code for a failed validation
-     * @param int                              $emptyContentCode        HTTP response status code when the view data is null
-     * @param bool                             $serializeNull           Whether or not to serialize null view data
-     * @param array                            $forceRedirects          If to force a redirect for the given key format, with value being the status code to use
-     * @param string                           $defaultEngine           default engine (twig, php ..)
+     * @param UrlGeneratorInterface $urlGenerator         The URL generator
+     * @param Serializer            $serializer
+     * @param EngineInterface       $templating           The configured templating engine
+     * @param RequestStack          $requestStack         The request stack
+     * @param array                 $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
+     * @param int                   $failedValidationCode The HTTP response status code for a failed validation
+     * @param int                   $emptyContentCode     HTTP response status code when the view data is null
+     * @param bool                  $serializeNull        Whether or not to serialize null view data
+     * @param array                 $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
+     * @param string                $defaultEngine        default engine (twig, php ..)
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         Serializer $serializer,
         EngineInterface $templating,
         RequestStack $requestStack,
-        ExceptionWrapperHandlerInterface $exceptionWrapperHandler,
         array $formats = null,
         $failedValidationCode = Response::HTTP_BAD_REQUEST,
         $emptyContentCode = Response::HTTP_NO_CONTENT,
@@ -135,7 +132,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $this->serializer = $serializer;
         $this->templating = $templating;
         $this->requestStack = $requestStack;
-        $this->exceptionWrapperHandler = $exceptionWrapperHandler;
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
         $this->emptyContentCode = $emptyContentCode;
@@ -437,7 +433,13 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $data = $this->getDataFromView($view);
 
+            if ($data instanceof FormInterface && $data->isSubmitted() && !$data->isValid()) {
+                $view->getContext()->setAttribute('status_code', $this->failedValidationCode);
+            }
+
             $context = $this->getSerializationContext($view);
+            $context->setAttribute('template_data', $view->getTemplateData());
+
             $content = $this->serializer->serialize($data, $format, $context);
         }
 
@@ -474,7 +476,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Returns the data from a view. If the data is form with errors, it will return it wrapped in an ExceptionWrapper.
+     * Returns the data from a view.
      *
      * @param View $view
      *
@@ -488,16 +490,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             return $view->getData();
         }
 
-        if ($form->isValid() || !$form->isSubmitted()) {
-            return $form;
-        }
-
-        return $this->exceptionWrapperHandler->wrap(
-            [
-                 'status_code' => $this->failedValidationCode,
-                 'message' => 'Validation Failed',
-                 'errors' => $form,
-            ]
-        );
+        return $form;
     }
 }

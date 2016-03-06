@@ -235,7 +235,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->extension->load([], $this->container);
 
         $this->assertAlias('fos_rest.view_handler.default', 'fos_rest.view_handler');
-        $this->assertAlias('fos_rest.view.exception_wrapper_handler', 'fos_rest.exception_handler');
     }
 
     public function testDisableViewResponseListener()
@@ -273,27 +272,27 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function testForceEmptyContentDefault()
     {
         $this->extension->load([], $this->container);
-        $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
+        $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
     }
 
     public function testForceEmptyContentIs200()
     {
         $config = ['fos_rest' => ['view' => ['empty_content' => 200]]];
         $this->extension->load($config, $this->container);
-        $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
+        $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
     }
 
     public function testViewSerializeNullDefault()
     {
         $this->extension->load([], $this->container);
-        $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(8));
+        $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
     public function testViewSerializeNullIsTrue()
     {
         $config = ['fos_rest' => ['view' => ['serialize_null' => true]]];
         $this->extension->load($config, $this->container);
-        $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(8));
+        $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
     public function testValidatorAliasWhenEnabled()
@@ -597,21 +596,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(DefinitionDecorator::class, $viewHandler);
     }
 
-    public function testCheckExceptionWrapperHandler()
-    {
-        $this->extension->load([], $this->container);
-
-        $this->assertTrue($this->container->has('fos_rest.view.exception_wrapper_handler'));
-    }
-
     public function testSerializerExceptionNormalizer()
     {
-        $this->extension->load(['fos_rest' => ['view' => true]], $this->container);
+        $this->extension->load(['fos_rest' => ['exception' => true]], $this->container);
 
-        $this->assertTrue($this->container->has('fos_rest.serializer.exception_wrapper_normalizer'));
-
-        $definition = $this->container->getDefinition('fos_rest.serializer.exception_wrapper_normalizer');
-        $this->assertEquals('FOS\RestBundle\Serializer\ExceptionWrapperNormalizer', $definition->getClass());
+        $this->assertTrue($this->container->has('fos_rest.serializer.exception_normalizer.symfony'));
     }
 
     public function testZoneMatcherListenerDefault()

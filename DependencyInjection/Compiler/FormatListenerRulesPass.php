@@ -41,7 +41,7 @@ final class FormatListenerRulesPass implements CompilerPassInterface
                 'path' => "^/$path/",
                 'priorities' => ['html', 'json'],
                 'fallback_format' => 'html',
-                'exception_fallback_format' => 'html',
+                'attributes' => array(),
                 'prefer_extension' => true,
             ];
 
@@ -62,7 +62,8 @@ final class FormatListenerRulesPass implements CompilerPassInterface
             $container,
             $rule['path'],
             $rule['host'],
-            $rule['methods']
+            $rule['methods'],
+            $rule['attributes']
         );
 
         unset($rule['path'], $rule['host']);
@@ -70,21 +71,13 @@ final class FormatListenerRulesPass implements CompilerPassInterface
             $rule['prefer_extension'] = '2.0';
         }
 
-        $exceptionFallbackFormat = $rule['exception_fallback_format'];
-        unset($rule['exception_fallback_format']);
         $container->getDefinition('fos_rest.format_negotiator')
             ->addMethodCall('add', [$matcher, $rule]);
-
-        if ($container->hasDefinition('fos_rest.exception_format_negotiator')) {
-            $rule['fallback_format'] = $exceptionFallbackFormat;
-            $container->getDefinition('fos_rest.exception_format_negotiator')
-                ->addMethodCall('add', [$matcher, $rule]);
-        }
     }
 
-    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null)
+    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null, array $attributes = array())
     {
-        $arguments = [$path, $host, $methods];
+        $arguments = [$path, $host, $methods, null, $attributes];
         $serialized = serialize($arguments);
         $id = 'fos_rest.request_matcher.'.md5($serialized).sha1($serialized);
 

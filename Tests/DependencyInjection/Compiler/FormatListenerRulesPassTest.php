@@ -28,7 +28,7 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
-        $container->expects($this->exactly(5))
+        $container->expects($this->exactly(3))
             ->method('hasDefinition')
             ->will($this->returnValue(true));
 
@@ -48,19 +48,17 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'path' => '^/',
                         'priorities' => ['html', 'json'],
                         'fallback_format' => 'html',
-                        'exception_fallback_format' => 'html',
+                        'attributes' => [],
                         'prefer_extension' => true,
-                ],
-            ])
+                    ],
+                ]
+            )
         );
 
-        $container->expects($this->exactly(4))
+        $container->expects($this->exactly(2))
             ->method('getDefinition')
-            ->with($this->logicalOr(
-                $this->equalTo('fos_rest.format_negotiator'),
-                $this->equalTo('fos_rest.exception_format_negotiator')
-            ))
-            ->will($this->returnValue($definition));
+            ->with($this->equalTo('fos_rest.format_negotiator'))
+            ->willReturn($definition);
 
         $compiler = new FormatListenerRulesPass();
         $compiler->process($container);
@@ -74,7 +72,7 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'])
             ->getMock();
 
-        $container->expects($this->exactly(3))
+        $container->expects($this->exactly(2))
             ->method('hasDefinition')
             ->will($this->returnValue(true));
 
@@ -94,18 +92,15 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
                         'path' => '^/',
                         'priorities' => ['html', 'json'],
                         'fallback_format' => 'html',
-                        'exception_fallback_format' => 'html',
+                        'attributes' => [],
                         'prefer_extension' => true,
                     ],
                 ])
             );
 
-        $container->expects($this->exactly(2))
+        $container->expects($this->once())
             ->method('getDefinition')
-            ->with($this->logicalOr(
-                $this->equalTo('fos_rest.format_negotiator'),
-                $this->equalTo('fos_rest.exception_format_negotiator')
-            ))
+            ->with($this->equalTo('fos_rest.format_negotiator'))
             ->will($this->returnValue($definition));
 
         $compiler = new FormatListenerRulesPass();
