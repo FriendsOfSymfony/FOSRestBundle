@@ -59,8 +59,8 @@ lock_user:
   controller: ::lockUserAction
 
 unlock_user:
-  methods: [UNLOCK]
-  path:    /users/{slug}.{_format}
+  methods:    [UNLOCK]
+  path:       /users/{slug}.{_format}
   controller: ::unlockUserAction
 
 get_user_comments:

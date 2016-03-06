@@ -1,6 +1,6 @@
 copy_user:
-  methods: [COPY]
-  path:    /users/{id}.{_format}
+  methods:    [COPY]
+  path:       /users/{id}.{_format}
   controller: ::copyUserAction
 
 propfind_user_props:
@@ -24,13 +24,13 @@ mkcol_users:
   controller: ::mkcolUsersAction
 
 lock_user:
-  methods: [LOCK]
-  path:    /users/{slug}.{_format}
+  methods:    [LOCK]
+  path:       /users/{slug}.{_format}
   controller: ::lockUserAction
 
 unlock_user:
-  methods: [UNLOCK]
-  path:    /users/{slug}.{_format}
+  methods:    [UNLOCK]
+  path:       /users/{slug}.{_format}
   controller: ::unlockUserAction
 
 get_users:

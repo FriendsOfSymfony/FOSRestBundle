@@ -92,7 +92,7 @@ class FOSRestExtension extends Extension
             $service = $container->getDefinition('fos_rest.access_denied_listener');
 
             if (!empty($config['access_denied_listener']['service'])) {
-                $service->clearTag('kernel.event_listener');
+                $service->clearTag('kernel.event_subscriber');
             }
 
             $service->replaceArgument(0, $config['access_denied_listener']['formats']);
@@ -323,7 +323,7 @@ class FOSRestExtension extends Extension
 
             if (!empty($config['exception']['service'])) {
                 $service = $container->getDefinition('fos_rest.exception_listener');
-                $service->clearTag('kernel.event_listener');
+                $service->clearTag('kernel.event_subscriber');
             }
 
             if ($config['exception']['exception_controller']) {
