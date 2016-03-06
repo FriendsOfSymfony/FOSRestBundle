@@ -16,11 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UsersController extends Controller
 {
-    /**
-     * [COPY] /users/{id}.
-     *
-     * @param $id
-     */
     public function copyUserAction($id)
     {
     }
@@ -125,20 +120,12 @@ class UsersController extends Controller
     {
     }
 
-    /**
-     * [UNLOCK] /users/{slug}.
-     *
-     * @param $slug
-     */
     public function unlockUserAction($slug)
     {
     }
 
-    /**
-     * [GET] /users/{slug}/comments.
-     *
-     * @param $slug
-     */
+ // [PATCH] /users/{slug}/unlock
+
     public function getUserCommentsAction($slug)
     {
     }

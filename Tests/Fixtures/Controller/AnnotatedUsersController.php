@@ -34,7 +34,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AnnotatedUsersController extends Controller
 {
     /**
-     * [OPTIONS]     /users.
+     * @Options
      */
     public function optionsUsersAction()
     {
@@ -64,11 +64,6 @@ class AnnotatedUsersController extends Controller
     }
 
     /**
-     * [PROPPATCH] /users/{id}/props/{property}.
-     *
-     * @param $id
-     * @param $property
-     *
      * @PropPatch()
      */
     public function proppatchUserPropsAction($id, $property)
@@ -76,10 +71,6 @@ class AnnotatedUsersController extends Controller
     }
 
     /**
-     * [MOVE] /users/{id}.
-     *
-     * @param $id
-     *
      * @Move()
      */
     public function moveUserAction($id)
@@ -87,8 +78,6 @@ class AnnotatedUsersController extends Controller
     }
 
     /**
-     * [MKCOL] /users.
-     *
      * @Mkcol()
      */
     public function mkcolUsersAction()
@@ -96,10 +85,6 @@ class AnnotatedUsersController extends Controller
     }
 
     /**
-     * [LOCK] /users/{slug}.
-     *
-     * @param $slug
-     *
      * @Lock()
      */
     public function lockUserAction($slug)
@@ -107,21 +92,12 @@ class AnnotatedUsersController extends Controller
     }
 
     /**
-     * [UNLOCK] /users/{slug}.
-     *
-     * @param $slug
-     *
      * @Unlock()
      */
     public function unlockUserAction($slug)
     {
     }
 
-    /**
-     * [OPTIONS]     /users.
-     *
-     * @Options
-     */
     public function boptionsUsersAction()
     {
     }
