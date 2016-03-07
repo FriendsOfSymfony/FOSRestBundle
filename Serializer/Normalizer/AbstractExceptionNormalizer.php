@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Serializer\Normalizer;
 
-use FOS\RestBundle\Util\ClassMapHandlerTrait;
+use FOS\RestBundle\Util\ExceptionValueMap;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,16 +21,21 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AbstractExceptionNormalizer
 {
-    use ClassMapHandlerTrait;
-
+    /**
+     * @var ExceptionValueMap
+     */
     private $messagesMap;
+
+    /**
+     * @var bool
+     */
     private $debug;
 
     /**
      * @param array $messagesMap
      * @param bool  $debug
      */
-    public function __construct(array $messagesMap, $debug)
+    public function __construct(ExceptionValueMap $messagesMap, $debug)
     {
         $this->messagesMap = $messagesMap;
         $this->debug = $debug;
@@ -46,7 +51,7 @@ class AbstractExceptionNormalizer
      */
     protected function getExceptionMessage(\Exception $exception, $statusCode = null)
     {
-        $showMessage = $this->resolveValue(get_class($exception), $this->messagesMap);
+        $showMessage = $this->messagesMap->resolveException($exception);
 
         if ($showMessage || $this->debug) {
             return $exception->getMessage();

@@ -11,24 +11,35 @@
 
 namespace FOS\RestBundle\Util;
 
-/**
- * @author Ener-Getick <egetick@gmail.com>
- *
- * @internal do not use this trait or its functions in your code.
- */
-trait ClassMapHandlerTrait
+class ExceptionValueMap
 {
+    /**
+     * Map of values mapped to exception class
+     * key => exception class
+     * value => value associated with exception.
+     *
+     * @var array
+     */
+    private $map;
+
+    /**
+     * @param array $map
+     */
+    public function __construct(array $map)
+    {
+        $this->map = $map;
+    }
+
     /**
      * Resolves the value corresponding to a class from an array.
      *
      * @param string $class
-     * @param array  $map
      *
      * @return mixed|false if not found
      */
-    public function resolveValue($class, array $map)
+    public function resolveClass($class)
     {
-        foreach ($map as $mapClass => $value) {
+        foreach ($this->map as $mapClass => $value) {
             if (!$value) {
                 continue;
             }
@@ -39,5 +50,17 @@ trait ClassMapHandlerTrait
         }
 
         return false;
+    }
+
+    /**
+     * Get value by exception.
+     *
+     * @param \Exception $exception
+     *
+     * @return false|mixed
+     */
+    public function resolveException(\Exception $exception)
+    {
+        return $this->resolveClass(get_class($exception));
     }
 }
