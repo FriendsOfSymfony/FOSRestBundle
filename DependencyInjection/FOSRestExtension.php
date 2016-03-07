@@ -323,7 +323,7 @@ class FOSRestExtension extends Extension
             }
 
             $container->getDefinition('fos_rest.exception.controller')
-                ->replaceArgument(2, $config['exception']['codes']);
+                ->replaceArgument(1, $config['exception']['codes']);
             $container->getDefinition('fos_rest.serializer.exception_normalizer.jms')
                 ->replaceArgument(0, $config['exception']['messages']);
             $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
