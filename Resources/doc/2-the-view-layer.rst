@@ -203,7 +203,7 @@ A response example of an invalid form:
 If you don't like the default exception structure, you can provide your own
 normalizers.
 
-You can look `FOSRestBundle normalizers`_ for examples.
+You can look at `FOSRestBundle normalizers`_ for examples.
 
 .. _`FOSRestBundle normalizers`: https://github.com/FriendsOfSymfony/FOSRestBundle/tree/master/Serializer/Normalizer
 
