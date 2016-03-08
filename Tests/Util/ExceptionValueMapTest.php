@@ -50,29 +50,4 @@ class ExceptionValueMapTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertFalse($this->valueMap->resolveException(new \RuntimeException()));
     }
-
-    public function testResolveExceptionNullValueIsSkipped()
-    {
-        $this->assertFalse($this->valueMap->resolveClass(new \OutOfBoundsException()));
-    }
-
-    public function testResolveClassValueIsFound()
-    {
-        $this->assertSame('logic', $this->valueMap->resolveClass(\LogicException::class));
-    }
-
-    public function testResolveClassValueIsFoundBySubclass()
-    {
-        $this->assertSame('logic', $this->valueMap->resolveClass(\BadFunctionCallException::class));
-    }
-
-    public function testResolveClassValueNotFound()
-    {
-        $this->assertFalse($this->valueMap->resolveClass(\RuntimeException::class));
-    }
-
-    public function testResolveClassNullValueIsSkipped()
-    {
-        $this->assertFalse($this->valueMap->resolveClass(\OutOfBoundsException::class));
-    }
 }

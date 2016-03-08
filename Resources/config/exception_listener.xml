@@ -22,11 +22,11 @@
             <argument type="service" id="templating.engine.twig" />
         </service>
 
-        <service id="fos_rest.exception.codes_map" class="FOS\RestBundle\Util\ExceptionValueMap">
+        <service id="fos_rest.exception.codes_map" class="FOS\RestBundle\Util\ExceptionValueMap" public="false">
             <argument type="collection"/> <!-- exception codes -->
         </service>
 
-        <service id="fos_rest.exception.messages_map" class="FOS\RestBundle\Util\ExceptionValueMap">
+        <service id="fos_rest.exception.messages_map" class="FOS\RestBundle\Util\ExceptionValueMap" public="false">
             <argument type="collection"/> <!-- exception messages -->
         </service>
 
