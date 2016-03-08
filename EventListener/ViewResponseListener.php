@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
@@ -44,6 +45,30 @@ class ViewResponseListener implements EventSubscriberInterface
     {
         $this->viewHandler = $viewHandler;
         $this->forceView = $forceView;
+    }
+
+    /**
+     * Guesses the template name to render and its variables and adds them to
+     * the request object.
+     *
+     * @param FilterControllerEvent $event A FilterControllerEvent instance
+     */
+    public function onKernelController(FilterControllerEvent $event)
+    {
+        $request = $event->getRequest();
+        $template = $request->attributes->get('_template');
+
+        // no @View present
+        if (null === $template) {
+            return;
+        }
+
+        // we need the @View annotation object or we cannot continue
+        if (!$template instanceof ViewAnnotation) {
+            throw new \InvalidArgumentException('Request attribute "_template" is reserved for @View annotations.');
+        }
+
+        $template->setOwner($event->getController());
     }
 
     /**
@@ -129,6 +154,7 @@ class ViewResponseListener implements EventSubscriberInterface
     {
         // Must be executed before SensioFrameworkExtraBundle's listener
         return array(
+            KernelEvents::CONTROLLER => array('onKernelController'),
             KernelEvents::VIEW => array('onKernelView', 30),
         );
     }
