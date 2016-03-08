@@ -26,7 +26,7 @@ class TwigExceptionController extends TemplatingExceptionController
     protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
     {
         $view = parent::createView($exception, $code, $templateData, $request, $showException);
-        $view->setTemplate($this->findTemplate($request, $format, $code, $showException));
+        $view->setTemplate($this->findTemplate($request, $code, $showException));
 
         return $view;
     }
@@ -37,8 +37,10 @@ class TwigExceptionController extends TemplatingExceptionController
      * This code is inspired by TwigBundle and should be synchronized on a regular basis
      * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
      */
-    protected function findTemplate(Request $request, $format, $statusCode, $showException)
+    protected function findTemplate(Request $request, $statusCode, $showException)
     {
+        $format = $request->getRequestFormat();
+
         $name = $showException ? 'exception' : 'error';
         if ($showException && 'html' == $format) {
             $name = 'exception_full';
