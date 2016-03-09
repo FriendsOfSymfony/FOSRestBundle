@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Controller;
 
-use FOS\RestBundle\Util\ClassMapHandlerTrait;
+use FOS\RestBundle\Util\ExceptionValueMap;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,15 +25,24 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
  */
 class ExceptionController
 {
-    use ClassMapHandlerTrait;
-
+    /**
+     * @var ViewHandlerInterface
+     */
     private $viewHandler;
+
+    /**
+     * @var ExceptionValueMap
+     */
     private $exceptionCodes;
+
+    /**
+     * @var bool
+     */
     private $showException;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        array $exceptionCodes,
+        ExceptionValueMap $exceptionCodes,
         $showException
     ) {
         $this->viewHandler = $viewHandler;
@@ -92,7 +101,7 @@ class ExceptionController
     protected function getStatusCode(\Exception $exception)
     {
         // If matched
-        if ($statusCode = $this->resolveValue(get_class($exception), $this->exceptionCodes)) {
+        if ($statusCode = $this->exceptionCodes->resolveException($exception)) {
             return $statusCode;
         }
 

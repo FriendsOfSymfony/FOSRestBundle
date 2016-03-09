@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Util\ExceptionValueMap;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ abstract class TemplatingExceptionController extends ExceptionController
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        array $exceptionCodes,
+        ExceptionValueMap $exceptionCodes,
         $showException,
         EngineInterface $templating
     ) {

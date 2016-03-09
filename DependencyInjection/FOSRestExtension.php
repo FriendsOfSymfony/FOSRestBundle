@@ -322,11 +322,9 @@ class FOSRestExtension extends Extension
                 $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
             }
 
-            $container->getDefinition('fos_rest.exception.controller')
-                ->replaceArgument(1, $config['exception']['codes']);
-            $container->getDefinition('fos_rest.serializer.exception_normalizer.jms')
-                ->replaceArgument(0, $config['exception']['messages']);
-            $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
+            $container->getDefinition('fos_rest.exception.codes_map')
+                ->replaceArgument(0, $config['exception']['codes']);
+            $container->getDefinition('fos_rest.exception.messages_map')
                 ->replaceArgument(0, $config['exception']['messages']);
         }
 
