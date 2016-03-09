@@ -21,25 +21,30 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter
+     */
     public function testShouldThrowRuntimeExceptionWhenBodyConverterIsEnabledButParamConvertersAreNotEnabled()
     {
-        $this->setExpectedException(
-            'RuntimeException',
-            'You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter'
-        );
-        $container = $this->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['has'])
-            ->getMock();
+        $container = new ContainerBuilder();
 
-        $container->expects($this->at(0))
-            ->method('has')
-            ->with($this->equalTo('fos_rest.converter.request_body'))
-            ->will($this->returnValue(true));
+        $container->register('fos_rest.converter.request_body');
 
-        $container->expects($this->at(1))
-            ->method('has')
-            ->with($this->equalTo('sensio_framework_extra.converter.listener'))
-            ->will($this->returnValue(false));
+        $compiler = new ConfigurationCheckPass();
+        $compiler->process($container);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage SensioFrameworkExtraBundle view annotations
+     */
+    public function testExceptionWhenViewAnnotationsAreNotEnabled()
+    {
+        $container = new ContainerBuilder();
+
+        $container->register('fos_rest.view_response_listener');
+        $container->setParameter('kernel.bundles', ['SensioFrameworkExtraBundle' => '']);
 
         $compiler = new ConfigurationCheckPass();
         $compiler->process($container);
