@@ -34,11 +34,11 @@ Setting ``priorities`` to a non-empty array enables Accept header negotiations.
                 # setting fallback_format to false means that instead of considering the next rule in case of a priority mismatch, a 406 will be caused
                 - { path: '^/image', priorities: ['jpeg', 'gif'], fallback_format: false, prefer_extension: true }
                 # setting fallback_format to null means that in case of a priority mismatch the next rule will be considered
-                - { path: '^/admin', methods: [ 'GET', 'POST'], priorities: [ 'xml', 'html'], fallback_format: ~, prefer_extension: false }
+                - { path: '^/admin', methods: ['GET', 'POST'], priorities: ['xml', 'html'], fallback_format: ~, prefer_extension: false }
                 # you can specifically target the exception controller
-                - { path: '^/api', priorities: [ 'xml', 'json'], fallback_format: xml, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController }, prefer_extension: false }
+                - { path: '^/api', priorities: ['xml', 'json'], fallback_format: xml, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController }, prefer_extension: false }
                 # setting a priority to */* basically means any format will be matched
-                - { path: '^/', priorities: [ 'text/html', '*/*'], fallback_format: html, prefer_extension: true }
+                - { path: '^/', priorities: ['text/html', '*/*'], fallback_format: html, prefer_extension: true }
 
 For example using the above configuration and the following Accept header:
 
