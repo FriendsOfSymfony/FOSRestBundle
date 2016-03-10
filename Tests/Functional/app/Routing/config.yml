@@ -1,0 +1,9 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+    router: { resource: "%kernel.root_dir%/Routing/routing.yml" }
+
+fos_rest: ~
