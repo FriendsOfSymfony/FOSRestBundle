@@ -8,7 +8,7 @@ If you want to use another status code for empty responses, you can update your 
 
 .. code-block:: yaml
 
-    fost_rest:
+    fos_rest:
         view:
             empty_content: 204
 
