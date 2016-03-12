@@ -39,7 +39,7 @@ class SymfonySerializerAdapter implements Serializer
          * Bug fix, see https://github.com/symfony/symfony/pull/17984
          * will be removed in the future.
          */
-        if ($data instanceof FormInterface && $format == 'xml') {
+        if ($data instanceof FormInterface && $format === 'xml') {
             $data = new FormWrapper($data);
         }
 

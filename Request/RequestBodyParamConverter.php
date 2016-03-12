@@ -134,13 +134,13 @@ class RequestBodyParamConverter implements ParamConverterInterface
     protected function configureContext(Context $context, array $options)
     {
         foreach ($options as $key => $value) {
-            if ($key == 'groups') {
+            if ($key === 'groups') {
                 $context->addGroups($options['groups']);
-            } elseif ($key == 'version') {
+            } elseif ($key === 'version') {
                 $context->setVersion($options['version']);
-            } elseif ($key == 'maxDepth') {
+            } elseif ($key === 'maxDepth') {
                 $context->setMaxDepth($options['maxDepth']);
-            } elseif ($key == 'serializeNull') {
+            } elseif ($key === 'serializeNull') {
                 $context->setSerializeNull($options['serializeNull']);
             } else {
                 $context->setAttribute($key, $value);
