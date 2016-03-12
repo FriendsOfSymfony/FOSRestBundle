@@ -207,9 +207,10 @@ class RestXmlCollectionLoader extends XmlFileLoader
      */
     protected function validate(\DOMDocument $dom)
     {
-        $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
+        $configBasePath = realpath($this->locator->locate('../../../Resources/config'));
+        $restRoutinglocation = $configBasePath.'/schema/routing/rest_routing-1.0.xsd';
         $restRoutinglocation = rawurlencode(str_replace('\\', '/', $restRoutinglocation));
-        $routinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing-1.0.xsd');
+        $routinglocation = $configBasePath.'/schema/routing-1.0.xsd';
         $routinglocation = rawurlencode(str_replace('\\', '/', $routinglocation));
         $source = <<<EOF
 <?xml version="1.0" encoding="utf-8" ?>
