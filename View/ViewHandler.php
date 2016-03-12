@@ -285,7 +285,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     {
         // BC < 1.8
         $viewClass = 'FOS\RestBundle\View\View';
-        if (get_class($view) == $viewClass) {
+        if (get_class($view) === $viewClass) {
             $context = $view->getContext();
         } else {
             $method = new \ReflectionMethod($view, 'getSerializationContext');
@@ -370,7 +370,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        if (($view->getStatusCode() == Codes::HTTP_CREATED || $view->getStatusCode() == Codes::HTTP_ACCEPTED) && $view->getData() != null) {
+        if (($view->getStatusCode() === Codes::HTTP_CREATED || $view->getStatusCode() === Codes::HTTP_ACCEPTED) && $view->getData() !== null) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();
