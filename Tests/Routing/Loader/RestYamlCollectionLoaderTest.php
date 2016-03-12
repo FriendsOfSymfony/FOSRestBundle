@@ -173,7 +173,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $this->containerMock->expects($this->any())
             ->method('has')
             ->will($this->returnCallback(function ($serviceId) use ($controller) {
-                return $serviceId == get_class($controller);
+                return $serviceId === get_class($controller);
             }));
         $this->containerMock->expects($this->once())
             ->method('get')

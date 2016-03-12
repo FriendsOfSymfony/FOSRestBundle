@@ -311,7 +311,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        if (($view->getStatusCode() == Response::HTTP_CREATED || $view->getStatusCode() == Response::HTTP_ACCEPTED) && $view->getData() != null) {
+        if (($view->getStatusCode() === Response::HTTP_CREATED || $view->getStatusCode() === Response::HTTP_ACCEPTED) && $view->getData() !== null) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();

@@ -152,7 +152,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         $length = $node->childNodes->length;
         for ($i = 0; $i < $length; ++$i) {
             $loopNode = $node->childNodes->item($i);
-            if ($loopNode->nodeType == XML_TEXT_NODE) {
+            if ($loopNode->nodeType === XML_TEXT_NODE) {
                 continue;
             }
 
@@ -265,7 +265,7 @@ EOF;
         $errors = [];
         foreach (libxml_get_errors() as $error) {
             $errors[] = sprintf('[%s %s] %s (in %s - line %d, column %d)',
-                LIBXML_ERR_WARNING == $error->level ? 'WARNING' : 'ERROR',
+                LIBXML_ERR_WARNING === $error->level ? 'WARNING' : 'ERROR',
                 $error->code,
                 trim($error->message),
                 $error->file ? $error->file : 'n/a',
