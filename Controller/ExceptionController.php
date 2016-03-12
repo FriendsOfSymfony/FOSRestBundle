@@ -314,7 +314,7 @@ class ExceptionController implements ContainerAwareInterface
     protected function findTemplate(Request $request, $format, $statusCode, $showException)
     {
         $name = $showException ? 'exception' : 'error';
-        if ($showException && 'html' == $format) {
+        if ($showException && 'html' === $format) {
             $name = 'exception_full';
         }
 
