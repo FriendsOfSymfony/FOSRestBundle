@@ -72,8 +72,9 @@ class JMSSerializerAdapter implements Serializer
             $jmsContext = JMSSerializationContext::create();
         } else {
             $jmsContext = JMSDeserializationContext::create();
-            if (null !== $context->getMaxDepth()) {
-                for ($i = 0; $i < $context->getMaxDepth(); ++$i) {
+            $maxDepth = $context->getMaxDepth();
+            if (null !== $maxDepth) {
+                for ($i = 0; $i < $maxDepth; ++$i) {
                     $jmsContext->increaseDepth();
                 }
             }
