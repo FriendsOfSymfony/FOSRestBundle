@@ -10,6 +10,7 @@ framework:
 fos_rest:
     view:
         mime_types: true
+        view_response_listener: true
     param_fetcher_listener: true
     disable_csrf_role: foo
     allowed_methods_listener: true
