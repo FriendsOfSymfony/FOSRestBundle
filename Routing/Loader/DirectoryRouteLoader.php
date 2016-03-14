@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\RouteCollection;
@@ -22,10 +23,12 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class DirectoryRouteLoader extends Loader
 {
+    private $fileLocator;
     private $processor;
 
-    public function __construct(RestRouteProcessor $processor)
+    public function __construct(FileLocatorInterface $fileLocator, RestRouteProcessor $processor)
     {
+        $this->fileLocator = $fileLocator;
         $this->processor = $processor;
     }
 
@@ -34,6 +37,10 @@ class DirectoryRouteLoader extends Loader
      */
     public function load($resource, $type = null)
     {
+        if (isset($resource[0]) && '@' === $resource[0]) {
+            $resource = $this->fileLocator->locate($resource);
+        }
+
         if (!is_dir($resource)) {
             throw new \InvalidArgumentException(sprintf('Given resource of type "%s" is no directory.', $resource));
         }
@@ -55,6 +62,14 @@ class DirectoryRouteLoader extends Loader
      */
     public function supports($resource, $type = null)
     {
-        return 'rest' === $type && is_string($resource) && is_dir($resource);
+        if ('rest' !== $type || !is_string($resource)) {
+            return false;
+        }
+
+        if (isset($resource[0]) && '@' === $resource[0]) {
+            $resource = $this->fileLocator->locate($resource);
+        }
+
+        return is_dir($resource);
     }
 }
