@@ -5,6 +5,15 @@ This document will be updated to list important BC breaks and behavioral changes
 
 ### upgrading to 2.0.0
 
+ * The SensioFrameworkExtraBundle view annotations must be enabled to use the `ViewResponseListener`:
+
+   ```yaml
+   # app/config/config.yml
+   sensio_framework_extra:
+       view:
+           annotations: true
+   ```
+
  * dropped support for the legacy ``Symfony\Component\Validator\ValidatorInterface``
  * removed ``FOS\RestBundle\Util\Codes`` in favor of ``Symfony\Component\HttpFoundation\Response``
  * compatibility with Symfony <2.7, JMS Serializer/SerializerBundle <1.0 and SensioFrameworkExtraBundle <3.0 was dropped
