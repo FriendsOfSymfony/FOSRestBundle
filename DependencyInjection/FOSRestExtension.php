@@ -33,7 +33,8 @@ class FOSRestExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $config = $this->processConfiguration(new Configuration(), $configs);
+        $configuration = new Configuration($container->getParameter('kernel.debug'));
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
@@ -326,6 +327,13 @@ class FOSRestExtension extends Extension
                 ->replaceArgument(0, $config['exception']['codes']);
             $container->getDefinition('fos_rest.exception.messages_map')
                 ->replaceArgument(0, $config['exception']['messages']);
+
+            $container->getDefinition('fos_rest.exception.controller')
+                ->replaceArgument(2, $config['exception']['debug']);
+            $container->getDefinition('fos_rest.serializer.exception_normalizer.jms')
+                ->replaceArgument(1, $config['exception']['debug']);
+            $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
+                ->replaceArgument(1, $config['exception']['debug']);
         }
 
         foreach ($config['exception']['codes'] as $exception => $code) {
