@@ -15,7 +15,10 @@ fos_rest:
     view:
         view_response_listener: true
         mime_types:
-            json: ['application/json', 'application/json;myversion=2.3']
+            json:
+                - application/json
+                - application/vnd.foo.api+json;myversion=2.3
+                - application/vnd.foo.api+json # Fix for https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1399
     versioning:
         enabled: true
         default_version: 3.4.2
