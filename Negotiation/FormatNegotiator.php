@@ -25,12 +25,10 @@ class FormatNegotiator extends BaseNegotiator
 {
     private $map = [];
     private $requestStack;
-    private $mimeTypes;
 
-    public function __construct(RequestStack $requestStack, array $mimeTypes = array())
+    public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
-        $this->mimeTypes = $mimeTypes;
     }
 
     /**
@@ -144,12 +142,6 @@ class FormatNegotiator extends BaseNegotiator
                 $class = new \ReflectionClass(Request::class);
                 $properties = $class->getStaticProperties();
                 $mimeTypes = array_merge($mimeTypes, $properties['formats'][$priority]);
-            }
-
-            if (isset($this->mimeTypes[$priority])) {
-                foreach ($this->mimeTypes[$priority] as $mimeType) {
-                    $mimeTypes[] = $mimeType;
-                }
             }
         }
 

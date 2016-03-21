@@ -58,7 +58,9 @@ class MimeTypeListener
                 } elseif (null !== $request->getMimeType($format)) {
                     $class = new \ReflectionClass(Request::class);
                     $properties = $class->getStaticProperties();
-                    $mimeTypes = array_merge($mimeTypes, $properties['formats'][$format]);
+                    if (isset($properties['formats'][$format])) {
+                        $mimeTypes = array_merge($mimeTypes, $properties['formats'][$format]);
+                    }
                 }
 
                 $request->setFormat($format, $mimeTypes);

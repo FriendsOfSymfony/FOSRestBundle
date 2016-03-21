@@ -154,10 +154,6 @@ class FOSRestExtension extends Extension
                 'fos_rest.format_listener.rules',
                 $config['format_listener']['rules']
             );
-
-            if ($config['view']['mime_types']['enabled'] && !method_exists(Request::class, 'getMimeTypes')) {
-                $container->getDefinition('fos_rest.format_negotiator')->addArgument($config['view']['mime_types']['formats']);
-            }
         }
     }
 
