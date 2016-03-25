@@ -14,6 +14,8 @@ configured for the matched controller so that the user does not need to do this 
 
     <?php
 
+    namespace AppBundle\Controller;
+
     use FOS\RestBundle\Request\ParamFetcher;
     use FOS\RestBundle\Controller\Annotations\RequestParam;
     use FOS\RestBundle\Controller\Annotations\QueryParam;
@@ -138,6 +140,8 @@ request attributes
 
     <?php
 
+    namespace AppBundle\Controller;
+
     class FooController extends Controller
     {
         /**
@@ -163,6 +167,8 @@ Container parameters can be used in requirements and default field.
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
 
     class FooController extends Controller
     {
