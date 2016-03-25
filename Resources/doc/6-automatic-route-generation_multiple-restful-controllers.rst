@@ -53,6 +53,9 @@ In this case, your ``UsersController`` MUST always have a single resource
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
+
     class UsersController extends Controller
     {
         public function getUserAction($slug)
@@ -72,6 +75,9 @@ Define child resource controller
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
+
     class CommentsController extends Controller
     {
         public function postCommentVoteAction($slug, $id)

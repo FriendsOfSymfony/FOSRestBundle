@@ -27,6 +27,8 @@ which adds several convenience methods:
 
     <?php
 
+    namespace AppBundle\Controller;
+
     use FOS\RestBundle\Controller\FOSRestController;
 
     class UsersController extends FOSRestController
@@ -68,6 +70,8 @@ If you need to pass more data in template, not for serialization, you can use ``
 
     <?php
 
+    namespace AppBundle\Controller;
+
     use FOS\RestBundle\Controller\FOSRestController;
 
     class UsersController extends FOSRestController
@@ -94,6 +98,8 @@ or it is possible to use lazy-loading:
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
 
     use FOS\RestBundle\Controller\FOSRestController;
 
@@ -353,6 +359,8 @@ Here is an example using a closure registered inside a Controller action:
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use FOS\RestBundle\View\View;
