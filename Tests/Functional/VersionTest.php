@@ -30,7 +30,7 @@ class VersionTest extends WebTestCase
             '/version?query_version=3.2',
             [],
             [],
-            ['HTTP_Version-Header' => '2.1', 'HTTP_Accept' => 'application/json;myversion=2.3']
+            ['HTTP_Version-Header' => '2.1', 'HTTP_Accept' => 'application/vnd.foo.api+json;myversion=2.3']
         );
         $this->assertEquals('{"version":"2.1"}', $this->client->getResponse()->getContent());
     }
@@ -54,7 +54,7 @@ class VersionTest extends WebTestCase
             '/version?query_version=3.2',
             [],
             [],
-            ['HTTP_Accept' => 'application/json;myversion=2.3']
+            ['HTTP_Accept' => 'application/vnd.foo.api+json;myversion=2.3']
         );
         $this->assertEquals('{"version":"2.3"}', $this->client->getResponse()->getContent());
     }
