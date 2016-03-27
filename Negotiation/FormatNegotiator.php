@@ -25,7 +25,6 @@ class FormatNegotiator extends BaseNegotiator
 {
     private $map = [];
     private $requestStack;
-    private $mimeTypes;
 
     public function __construct(RequestStack $requestStack, array $mimeTypes = array())
     {
