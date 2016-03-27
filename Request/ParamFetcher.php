@@ -42,10 +42,6 @@ class ParamFetcher implements ParamFetcherInterface
     private $requestStack;
     private $validator;
     private $violationFormatter;
-    /**
-     * @var callable
-     */
-    private $controller;
 
     /**
      * Initializes fetcher.
