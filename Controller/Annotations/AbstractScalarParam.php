@@ -59,9 +59,9 @@ abstract class AbstractScalarParam extends AbstractParam
 
         // If the user wants to map the value, apply all constraints to every
         // value of the map
-        if ($this->map && !empty($constraints)) {
+        if ($this->map) {
             $constraints = array(
-                new All($constraints),
+                new All(array('constraints' => $constraints)),
             );
         }
 

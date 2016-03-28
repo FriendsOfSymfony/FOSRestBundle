@@ -103,6 +103,8 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
     {
         $this->param->nullable = true;
         $this->param->map = true;
-        $this->assertEmpty($this->param->getConstraints());
+        $this->assertEquals(array(new Constraints\All(array(
+            'constraints' => [],
+        ))), $this->param->getConstraints());
     }
 }
