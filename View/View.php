@@ -26,7 +26,7 @@ class View
     const FORMAT_HTML = 'html';
     const FORMAT_JSON = 'json';
     const FORMAT_XML = 'xml';
-    
+
     /**
      * @var mixed|null
      */
