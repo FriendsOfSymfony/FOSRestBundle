@@ -7,9 +7,8 @@ bundle provides an extra controller for that job. Using this custom
 ExceptionController it is possible to leverage the View layer when building
 responses for uncaught Exceptions.
 
-The ExceptionController can be enabled either via the FOSRestBundle
-configuration and optionally an explicit controller action can be configured as
-well:
+The ExceptionController can be enabled via the FOSRestBundle
+configuration:
 
 .. code-block:: yaml
 
@@ -19,13 +18,9 @@ well:
             enabled: true
             exception_controller: 'Acme\DemoBundle\Controller\ExceptionController::showAction'
 
-Alternatively the TwigBundle configuration can be used to enable the ExceptionController:
+.. note::
 
-.. code-block:: yaml
-
-    # app/config/config.yml
-    twig:
-        exception_controller: 'fos_rest.exception.twig_controller:showAction'
+    The FOSRestBundle ExceptionController is executed before the one of the TwigBundle.
 
 .. note::
 
@@ -35,9 +30,6 @@ Alternatively the TwigBundle configuration can be used to enable the ExceptionCo
     and TwigBundle is detected it will automatically configure
     ``fos_rest.exception.twig_controller`` which additionally also supports
     rendering via Twig.
-
-When enabling the RestBundle view-layer-aware ExceptionController it automatically
-disables the TwigBundle exception listener and subsequent configuration.
 
 To map Exception classes to HTTP response status codes an *exception map* may
 be configured, where the keys match a fully qualified class name and the values
@@ -76,21 +68,9 @@ mapping, you can do this in your controller:
     }
 
 In order to make the serialization format of exceptions customizable it is possible to
-configure a ``exception_handler``. Users of JMS serializer can further customize the output
-by setting a custom ``exception_wrapper_handler``.
+use serializer normalizers.
 
-.. code-block:: yaml
-
-    # app/config/config.yml
-    fos_rest:
-        service:
-            exception_handler:    fos_rest.view.exception_wrapper_handler
-        view:
-            # only relevant when using the JMS serializer for serialization
-            exception_wrapper_handler:  null
-
-
-See `this example configuration`_ for more details.
+See `how to create handlers`_ for the JMS serializer and `how to create normalizers`_ for the Symfony serializer.
 
 That was it!
 
@@ -98,6 +78,7 @@ That was it!
 
     If you are receiving a 500 error where you would expect a different response, the issue
     is likely caused by an exception inside the ExceptionController. For example a template
-    is not found or the serializer failed.
+    is not found or the serializer failed. You should take a look at the logs of your app to see if an uncaught exception has been logged.
 
-.. _`this example configuration`: https://github.com/liip-forks/symfony-standard/blob/techtalk/app/config/config.yml
+.. _`how to create handlers`: http://jmsyst.com/libs/serializer/master/handlers
+.. _`how to create normalizers`: http://thomas.jarrand.fr/blog/serialization/
