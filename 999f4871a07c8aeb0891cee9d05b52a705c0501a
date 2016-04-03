@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-04-03T07:58:53Z
+
+@Ener-Getick I am sorry. @jovobe and me missed this when updating #1410. I suggest to merge #1410 as it also adds a test to ensure that the listener behaves as expected and change this to only backport/update the documentation. What do you think?
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-04-03T09:33:19Z
+
+@xabbuh fine for me ☺
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-04-03T11:25:18Z
+
+Updated @xabbuh
