@@ -12,9 +12,10 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener as HttpKernelExceptionListener;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
@@ -38,6 +39,16 @@ class ExceptionListener extends HttpKernelExceptionListener
         }
 
         parent::onKernelException($event);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::EXCEPTION => array('onKernelException', -100),
+        );
     }
 
     /**
