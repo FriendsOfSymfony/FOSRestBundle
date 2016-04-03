@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Remove the 'twig.exception_listener' service if 'fos_rest.exception_listener' is activated.
+ * Remove the 'fos_rest.exception.twig_controller' service if twig is enabled.
  *
  * @internal
  */
