@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-03-31T20:20:55Z
+
+Do we really need this, isn't it better to rely on listeners priority?
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-03-31T20:56:16Z
+
+@xabbuh do you want to me to open a PR as I apparently forgot several changes ?
+most of the doc introduced in https://github.com/FriendsOfSymfony/FOSRestBundle/pull/908/files is irrelevant now (it isn't possible anymore to use the twig config to enable the FOSRestBundle exception listener).
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-03-31T21:16:25Z
+
+You mean updating the docs? I think that would be good (and we should check if we can trigger a deprecation in 1.8 in case someone use this way).
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-04-03T09:37:05Z
+
+LGTM :+1:
+Status: Reviewed
