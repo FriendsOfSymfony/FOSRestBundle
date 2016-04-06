@@ -21,3 +21,13 @@ test_param_fetcher_test:
 test_view_response_listener:
     resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ArticleController
     type:     rest
+
+test_allowed_methods1:
+    path:     /allowed-methods
+    methods: ['GET', 'LOCK']
+    defaults: { _controller: TestBundle:AllowedMethods:index }
+
+test_allowed_methods2:
+    path:     /allowed-methods
+    methods: ['POST', 'PUT']
+    defaults: { _controller: TestBundle:AllowedMethods:index }

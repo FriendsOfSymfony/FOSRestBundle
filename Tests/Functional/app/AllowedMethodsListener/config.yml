@@ -6,4 +6,4 @@ framework:
         enabled: true
 
 fos_rest:
-    param_fetcher_listener: true
+    allowed_methods_listener: true
