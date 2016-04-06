@@ -297,7 +297,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     {
         if (!$config instanceof QueryParam) {
             return;
-        };
+        }
 
         foreach ($config->incompatibles as $incompatibleParam) {
             $isIncompatiblePresent = $this->getRequest()->query->get(

@@ -26,8 +26,6 @@ matrix:
     - php: 7.0
       env: SYMFONY_VERSION='2.3.* symfony/expression-language:2.4.*' SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 7.0
-      env: SYMFONY_VERSION=2.6.*
-    - php: 7.0
       env: SYMFONY_VERSION=2.7.*
     - php: 7.0
       env: SYMFONY_VERSION=2.8.*
