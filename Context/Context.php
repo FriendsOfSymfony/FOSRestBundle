@@ -40,7 +40,7 @@ final class Context
     private $serializeNull;
 
     /**
-     * Create a net instance.
+     * Create a new instance.
      */
     public static function create()
     {
