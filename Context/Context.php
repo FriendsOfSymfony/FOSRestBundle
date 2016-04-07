@@ -40,6 +40,14 @@ final class Context
     private $serializeNull;
 
     /**
+     * Create a net instance.
+     */
+    public static function create()
+    {
+        return new self();
+    }
+
+    /**
      * Sets an attribute.
      *
      * @param string $key
