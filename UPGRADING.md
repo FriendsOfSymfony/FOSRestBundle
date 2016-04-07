@@ -39,6 +39,7 @@ This document will be updated to list important BC breaks and behavioral changes
  * changed the priority of ``RequestBodyParamConverter`` to ``-50``
  * made silent the ``RequestBodyParamConverter`` when a parameter is optional and it can't resolve it
  * removed the ``format_negotiator`` option ``exception_fallback_format``; you can match the ``ExceptionController`` thanks to the ``attributes`` option instead
+ * View::setSerializationContext has been removed. Use View::setContext and the new Context class instead. 
 
 ### upgrading from 1.5.*
 
