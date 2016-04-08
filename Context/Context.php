@@ -157,6 +157,18 @@ final class Context
     }
 
     /**
+     * Set the normalization groups.
+     *
+     * @param string|array $groups
+     * @return self
+     */
+    public function setGroups($groups)
+    {
+        $this->groups = is_array($groups) ? $groups : [$groups];
+        return $this;
+    }
+
+    /**
      * Sets the normalization max depth.
      *
      * @param int|null $depth
