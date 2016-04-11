@@ -166,7 +166,7 @@ final class Context
     public function setGroups($groups)
     {
         $this->groups = is_array($groups) ? $groups : [$groups];
-        
+
         return $this;
     }
 
