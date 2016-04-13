@@ -40,6 +40,14 @@ For a full list of annotations check out ``FOS/RestBundle/Controller/Annotations
      * PATCH Route annotation.
      * @Patch("/likes/{type}/{typeId}")
      */
+     
+    // Options Route Definition
+    use FOS\RestBundle\Controller\Annotations\Options;
+    
+    /**
+     * OPTIONS Route annotation.
+     * @Options("/likes/{type}/{typeId}")
+     */
 
     // Post Route Definition
     use FOS\RestBundle\Controller\Annotations\Post;
