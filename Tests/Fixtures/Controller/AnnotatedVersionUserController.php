@@ -37,4 +37,8 @@ class AnnotatedVersionUserController extends Controller
     public function conditionalUserAction()
     {
     }
+
+    public function v3UserAction()
+    {
+    }
 }

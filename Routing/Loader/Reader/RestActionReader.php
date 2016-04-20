@@ -292,7 +292,7 @@ class RestActionReader
         $requirements = [];
         $options = [];
         $host = '';
-        $condition = null;
+        $versionCondition = $this->getVersionCondition();
 
         $annotations = $this->readRouteAnnotation($method);
         if (!empty($annotations)) {
@@ -316,7 +316,7 @@ class RestActionReader
                 $defaults = array_merge($defaults, $annotation->getDefaults());
                 $host = $annotation->getHost();
                 $schemes = $annotation->getSchemes();
-                $condition = $this->getCondition($method, $annotation);
+                $condition = $this->combineConditions($versionCondition, $annotation->getCondition());
 
                 $this->includeFormatIfNeeded($path, $requirements);
 
@@ -333,39 +333,41 @@ class RestActionReader
 
             // add route to collection
             $route = new Route(
-                $path, $defaults, $requirements, $options, $host, [], $methods, $condition
+                $path, $defaults, $requirements, $options, $host, [], $methods, $versionCondition
             );
             $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable);
         }
     }
 
     /**
-     * Determine the Route condition by combining Route annotations with Version annotation.
-     *
-     * @param \ReflectionMethod $method
-     * @param RouteAnnotation   $annotation
-     *
-     * @return string
+     * @return string|null
      */
-    private function getCondition(\ReflectionMethod $method, RouteAnnotation $annotation)
+    private function getVersionCondition()
     {
-        $condition = $annotation->getCondition();
-
-        if (!empty($this->versions)) {
-            $versionCondition = "request.attributes.get('version') == (";
-            $first = true;
-            foreach ($this->versions as $version) {
-                if (!$first) {
-                    $versionCondition .= ' or ';
-                }
-                $versionCondition .= '\''.$version.'\'';
-                $first = false;
-            }
-            $versionCondition .= ')';
-            $condition = $condition ? '('.$condition.') and '.$versionCondition : $versionCondition;
+        if (empty($this->versions)) {
+            return;
         }
 
-        return $condition;
+        return sprintf("request.attributes.get('version') in ['%s']", implode("','", $this->versions));
+    }
+
+    /**
+     * @param string|null $conditionOne
+     * @param string|null $conditionTwo
+     *
+     * @return string|null
+     */
+    private function combineConditions($conditionOne, $conditionTwo)
+    {
+        if ($conditionOne === null) {
+            return $conditionTwo;
+        }
+
+        if ($conditionTwo === null) {
+            return $conditionOne;
+        }
+
+        return sprintf('(%s) and (%s)', $conditionOne, $conditionTwo);
     }
 
     /**
