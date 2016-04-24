@@ -68,7 +68,6 @@
         "sensio/framework-extra-bundle": "<3.0.13"
     },
 
-
     "extra": {
         "branch-alias": {
             "dev-master": "2.0-dev"

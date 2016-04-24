@@ -25,7 +25,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
+        $client = $this->createClient(['test_case' => $testCase]);
         $client->request('GET', '/serializer-error/exception.json');
 
         $this->assertEquals('{"code":500,"message":"Something bad happened."}', $client->getResponse()->getContent());
@@ -58,7 +58,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
+        $client = $this->createClient(['test_case' => $testCase]);
         $client->request('GET', '/serializer-error/exception.xml');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
@@ -92,7 +92,7 @@ XML;
      */
     public function testSerializeInvalidFormJson($testCase)
     {
-        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
+        $client = $this->createClient(['test_case' => $testCase]);
         $client->request('GET', '/serializer-error/invalid-form.json');
 
         $this->assertEquals('{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}', $client->getResponse()->getContent());
@@ -111,7 +111,7 @@ XML;
      */
     public function testSerializeInvalidFormXml($testCase, $expectedContent)
     {
-        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
+        $client = $this->createClient(['test_case' => $testCase]);
         $client->request('GET', '/serializer-error/invalid-form.xml');
 
         $this->assertEquals($expectedContent, $client->getResponse()->getContent());
