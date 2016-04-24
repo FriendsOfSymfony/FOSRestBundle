@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Serializer\Normalizer;
 
-use FOS\RestBundle\Util\FormWrapper;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -36,10 +35,6 @@ class FormErrorNormalizer implements NormalizerInterface
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        if ($object instanceof FormWrapper) {
-            $object = $object->form;
-        }
-
         return [
             'code' => isset($context['status_code']) ? $context['status_code'] : null,
             'message' => 'Validation Failed',
@@ -52,10 +47,6 @@ class FormErrorNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null)
     {
-        if ($data instanceof FormWrapper) {
-            $data = $data->form;
-        }
-
         return $data instanceof FormInterface && $data->isSubmitted() && !$data->isValid();
     }
 
