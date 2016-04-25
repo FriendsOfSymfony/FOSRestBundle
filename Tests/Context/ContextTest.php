@@ -62,7 +62,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(['quz', 'foo'], $this->context->getGroups());
 
-        $this->context->setGroups('foo');
+        $this->context->setGroups(['foo']);
         $this->assertEquals(['foo'], $this->context->getGroups());
     }
 
