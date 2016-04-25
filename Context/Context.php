@@ -159,13 +159,13 @@ final class Context
     /**
      * Set the normalization groups.
      *
-     * @param string|array $groups
+     * @param array $groups
      *
      * @return self
      */
-    public function setGroups($groups)
+    public function setGroups(array $groups)
     {
-        $this->groups = is_array($groups) ? $groups : [$groups];
+        $this->groups = $groups;
 
         return $this;
     }
