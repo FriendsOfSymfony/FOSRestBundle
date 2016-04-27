@@ -35,7 +35,6 @@ Full default configuration
             templating:           templating
             serializer:           null
             view_handler:         fos_rest.view_handler.default
-            exception_handler:    fos_rest.view.exception_wrapper_handler
             inflector:            fos_rest.inflector.doctrine
             validator:            validator
         serializer:
