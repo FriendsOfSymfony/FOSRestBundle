@@ -316,13 +316,13 @@ class RestActionReader
                 $defaults = array_merge($defaults, $annotation->getDefaults());
                 $host = $annotation->getHost();
                 $schemes = $annotation->getSchemes();
-                $condition = $this->combineConditions($versionCondition, $annotation->getCondition());
+                $combinedCondition = $this->combineConditions($versionCondition, $annotation->getCondition());
 
                 $this->includeFormatIfNeeded($path, $requirements);
 
                 // add route to collection
                 $route = new Route(
-                    $path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition
+                    $path, $defaults, $requirements, $options, $host, $schemes, $methods, $combinedCondition
                 );
                 $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
@@ -348,7 +348,7 @@ class RestActionReader
             return;
         }
 
-        return sprintf("request.attributes.get('version') in ['%s']", implode("','", $this->versions));
+        return sprintf("request.attributes.get('version') in ['%s']", implode("', '", $this->versions));
     }
 
     /**
@@ -359,11 +359,11 @@ class RestActionReader
      */
     private function combineConditions($conditionOne, $conditionTwo)
     {
-        if ($conditionOne === null) {
+        if (null === $conditionOne) {
             return $conditionTwo;
         }
 
-        if ($conditionTwo === null) {
+        if (null === $conditionTwo) {
             return $conditionOne;
         }
 
