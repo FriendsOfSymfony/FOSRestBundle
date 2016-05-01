@@ -23,38 +23,39 @@ use Symfony\Component\HttpFoundation\Request;
 final class ParameterBag
 {
     private $paramReader;
-    private $params = array();
+    private $params;
 
     public function __construct(ParamReaderInterface $paramReader)
     {
         $this->paramReader = $paramReader;
+        $this->params = new \SplObjectStorage();
     }
 
     public function getParams(Request $request)
     {
-        $requestId = spl_object_hash($request);
-        if (!isset($this->params[$requestId]) || empty($this->params[$requestId]['controller'])) {
+        if (!isset($this->params[$request]) || empty($this->params[$request]['controller'])) {
             throw new \InvalidArgumentException('Controller and method needs to be set via setController.');
         }
-        if ($this->params[$requestId]['params'] === null) {
-            return $this->initParams($requestId);
+        if (null === $this->params[$request]['params']) {
+            $this->initParams($request);
         }
 
-        return $this->params[$requestId]['params'];
+        return $this->params[$request]['params'];
     }
 
     public function addParam(Request $request, Param $param)
     {
-        $requestId = spl_object_hash($request);
         $this->getParams($request);
 
-        $this->params[$requestId]['params'][$param->name] = $param;
+        $data = $this->params[$request];
+        $data['params'][$param->name] = $param;
+
+        $this->params[$request] = $data;
     }
 
     public function setController(Request $request, $controller)
     {
-        $requestId = spl_object_hash($request);
-        $this->params[$requestId] = array(
+        $this->params[$request] = array(
             'controller' => $controller,
             'params' => null,
         );
@@ -63,22 +64,25 @@ final class ParameterBag
     /**
      * Initialize the parameters.
      *
-     * @param string $requestId
+     * @param Request $request
      *
      * @throws \InvalidArgumentException
      */
-    private function initParams($requestId)
+    private function initParams(Request $request)
     {
-        $controller = $this->params[$requestId]['controller'];
+        $controller = $this->params[$request]['controller'];
         if (!is_array($controller) || empty($controller[0]) || !is_object($controller[0])) {
             throw new \InvalidArgumentException(
                 'Controller needs to be set as a class instance (closures/functions are not supported)'
             );
         }
 
-        return $this->params[$requestId]['params'] = $this->paramReader->read(
+        $data = $this->params[$request];
+        $data['params'] = $this->paramReader->read(
             new \ReflectionClass(ClassUtils::getClass($controller[0])),
             $controller[1]
         );
+
+        $this->params[$request] = $data;
     }
 }
