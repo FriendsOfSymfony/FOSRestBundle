@@ -43,7 +43,7 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
 
         $formatter = new ViolationFormatter();
         $this->assertEquals(
-            "Query parameter foo value 'bar' violated a constraint (expected message)",
+            'Query parameter "foo" of value "bar" violated a constraint "expected message"',
             $formatter->format($param, $violation)
         );
     }
@@ -60,8 +60,8 @@ class ViolationFormatterTest extends \PHPUnit_Framework_TestCase
 
         $formatter = new ViolationFormatter();
         $this->assertEquals(
-            "Request parameter foo value 'bar' violated a constraint (expected message 1)"
-            ."\nRequest parameter foo value 'bar' violated a constraint (expected message 2)",
+            'Request parameter "foo" of value "bar" violated a constraint "expected message 1"'
+            ."\n".'Request parameter "foo" of value "bar" violated a constraint "expected message 2"',
             $formatter->formatList($param, $errors)
         );
     }
