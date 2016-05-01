@@ -12,11 +12,13 @@
 namespace FOS\RestBundle\Tests\Request;
 
 use Doctrine\Common\Util\ClassUtils;
+use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
-use FOS\RestBundle\Validator\ViolationFormatterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -44,11 +46,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     private $validator;
 
     /**
-     * @var ViolationFormatterInterface
-     */
-    private $violationFormatter;
-
-    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -65,8 +62,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->validator = $this->getMock(ValidatorInterface::class);
 
-        $this->violationFormatter = $this->getMock(ViolationFormatterInterface::class);
-
         $this->request = new Request();
         $this->requestStack = $this->getMock(RequestStack::class, array());
         $this->requestStack
@@ -80,7 +75,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'),
                 $this->paramReader,
                 $this->requestStack,
-                $this->violationFormatter,
                 $this->validator,
             ))
             ->setMethods(null);
@@ -186,7 +180,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'),
                 $this->paramReader,
                 $this->requestStack,
-                $this->violationFormatter,
                 null,
             )
         );
@@ -228,6 +221,36 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('default', $method->invokeArgs($fetcher, array($param, 'value', false)));
     }
 
+    public function testValidationException()
+    {
+        $param = $this->createMockedParam('foo', 'default', [], true, null, ['constraint']);
+        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+
+        $errors = new ConstraintViolationList([
+            $this->getMock(ConstraintViolationInterface::class),
+            $this->getMock(ConstraintViolationInterface::class),
+        ]);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->with('value', ['constraint'])
+            ->willReturn($errors);
+
+        try {
+            $method->invokeArgs($fetcher, array($param, 'value', true));
+            $this->fail(sprintf('An exception must be thrown in %s', __METHOD__));
+        } catch (InvalidParameterException $exception) {
+            $this->assertSame($param, $exception->getParameter());
+            $this->assertSame($errors, $exception->getViolations());
+            $this->assertEquals(
+                'Parameter "foo" of value "" violated a constraint ""'.
+                    "\n".'Parameter "foo" of value "" violated a constraint ""',
+                $exception->getMessage()
+            );
+        }
+    }
+
     /**
      * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @expectedMessage expected exception.
@@ -248,11 +271,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('validate')
             ->with('value', array('constraint'))
             ->willReturn($errors);
-        $this->violationFormatter
-            ->expects($this->once())
-            ->method('formatList')
-            ->with($param, $errors)
-            ->willReturn('expected exception.');
 
         $method->invokeArgs($fetcher, array($param, 'value', true));
     }
