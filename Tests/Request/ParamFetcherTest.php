@@ -592,7 +592,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(
             '\\Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException',
-            'foobar'
+            "Parameter \"bizoo\" of value \"\" violated a constraint \"expected message 1\"\nParameter \"bizoo\" of value \"\" violated a constraint \"expected message 2\""
         );
 
         $queryFetcher = new ParamFetcher($reader, $requestStack, $this->violationFormatter, $this->validator);
@@ -812,7 +812,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             $queryFetcher->get('fero');
             $this->fail('Fetching get() in strict mode with no default value did not throw an exception');
         } catch (HttpException $httpException) {
-            $this->assertEquals($errorMessage, $httpException->getMessage());
+            $this->assertEquals('Parameter "fero" of value "" violated a constraint "variable must be an integer"', $httpException->getMessage());
         }
     }
 }

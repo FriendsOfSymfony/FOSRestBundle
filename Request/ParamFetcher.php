@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Param;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Util\ViolationFormatterInterface;
+use FOS\RestBundle\Exception\InvalidParameterException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,11 +39,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     private $parameterBag;
     private $requestStack;
     private $validator;
-    private $violationFormatter;
-    /**
-     * @var callable
-     */
-    private $controller;
+
     /**
      * @var ContainerInterface
      *
@@ -67,7 +64,6 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
         }
 
         $this->requestStack = $requestStack;
-        $this->violationFormatter = $violationFormatter;
         $this->validator = $validator;
 
         $this->parameterBag = new ParameterBag($paramReader);
@@ -260,12 +256,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 
         if (0 !== count($errors)) {
             if ($strict) {
-                if (is_array($config->requirements) && isset($config->requirements['error_message'])) {
-                    $errorMessage = $config->requirements['error_message'];
-                } else {
-                    $errorMessage = $this->violationFormatter->formatList($config, $errors);
-                }
-                throw new BadRequestHttpException($errorMessage);
+                throw new InvalidParameterException($config, $errors);
             }
 
             return null === $default ? '' : $default;
