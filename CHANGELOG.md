@@ -1,11 +1,24 @@
 CHANGELOG
 =========
 
+* fixed the `AllowedMethodsRouteLoader` to work with Symfony 3.0
+
 1.7.8
 -----
 
+* removed uses of the reflection API in favor of faster solutions when possible
+
+* fixed the configuration to use serialization groups and versions at the same time
+
 1.7.7
 -----
+
+* when using Symfony 3.x, the bundle doesn't call methods anymore that have been deprecated in
+  Symfony 2.x and were removed in Symfony 3.0
+
+* the `ViewResponseListener` does not overwrite explicitly configured templates anymore
+
+* fixed the `ParamFetcher` class to properly handle sub requests
 
 1.7.6
 -----
