@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\EventListener\ViewResponseListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,6 +95,18 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener->onKernelController($event);
 
         $this->assertEquals('foo', $request->attributes->get('_template'));
+    }
+
+    public function testOnKernelControllerNoZone()
+    {
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->attributes->set('_view', 'foo');
+        $event = $this->getFilterEvent($request);
+
+        $this->listener->onKernelController($event);
+
+        $this->assertNull($request->attributes->get('_template'));
     }
 
     public function testOnKernelControllerNoView()

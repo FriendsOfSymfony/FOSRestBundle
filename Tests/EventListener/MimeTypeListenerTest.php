@@ -11,9 +11,10 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\EventListener\MimeTypeListener;
+use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use FOS\RestBundle\EventListener\MimeTypeListener;
 
 /**
  * Request listener test.
@@ -53,5 +54,59 @@ class MimeTypeListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals('application/javascript+jsonp', $request->getMimeType('jsonp'));
+    }
+
+    public function testOnKernelRequestNoZone()
+    {
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
+            ->disableOriginalConstructor()->getMock();
+        $formatNegotiator->expects($this->any())
+            ->method('registerFormat')
+            ->with('soap', array('application/soap+xml'), true)
+            ->will($this->returnValue(null));
+        $listener = new MimeTypeListener(array('formats' => array('soap' => array('application/soap+xml'))), $formatNegotiator);
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()->getMock();
+        $event->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $event->expects($this->never())
+            ->method('getRequestType')
+            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+
+        $listener->onKernelRequest($event);
+
+        $this->assertNull($request->getMimeType('soap'));
+    }
+
+    public function testOnKernelRequestWithZone()
+    {
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
+            ->disableOriginalConstructor()->getMock();
+        $formatNegotiator->expects($this->any())
+            ->method('registerFormat')
+            ->with('soap', array('application/soap+xml'), true)
+            ->will($this->returnValue(null));
+        $listener = new MimeTypeListener(array('formats' => array('soap' => array('application/soap+xml'))), $formatNegotiator);
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, true);
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()->getMock();
+        $event->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $event->expects($this->once())
+            ->method('getRequestType')
+            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+
+        $listener->onKernelRequest($event);
+
+        $this->assertEquals('application/soap+xml', $request->getMimeType('soap'));
     }
 }

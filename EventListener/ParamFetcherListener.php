@@ -11,8 +11,9 @@
 
 namespace FOS\RestBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 /**
  * This listener handles various setup tasks related to the query fetcher.
@@ -51,6 +52,11 @@ class ParamFetcherListener
     public function onKernelController(FilterControllerEvent $event)
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            return;
+        }
+
         $paramFetcher = $this->container->get('fos_rest.request.param_fetcher');
 
         $controller = $event->getController();

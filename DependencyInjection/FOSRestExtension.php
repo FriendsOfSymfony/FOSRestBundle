@@ -85,6 +85,7 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $this->loadParamFetcherListener($config, $loader, $container);
         $this->loadAllowedMethodsListener($config, $loader, $container);
         $this->loadAccessDeniedListener($config, $loader, $container);
+        $this->loadZoneMatcherListener($config, $loader, $container);
     }
 
     private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container)
@@ -403,6 +404,48 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
 
         $container->setParameter('fos_rest.serializer.serialize_null', $config['serializer']['serialize_null']);
+    }
+
+    private function loadZoneMatcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if (!empty($config['zone'])) {
+            $loader->load('zone_matcher_listener.xml');
+            $zoneMatcherListener = $container->getDefinition('fos_rest.zone_matcher_listener');
+
+            foreach ($config['zone'] as $zone) {
+                $matcher = $this->createZoneRequestMatcher($container,
+                    $zone['path'],
+                    $zone['host'],
+                    $zone['methods'],
+                    $zone['ips']
+                );
+
+                $zoneMatcherListener->addMethodCall('addRequestMatcher', array($matcher));
+            }
+        }
+    }
+
+    private function createZoneRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = array(), $ip = null)
+    {
+        if ($methods) {
+            $methods = array_map('strtoupper', (array) $methods);
+        }
+
+        $serialized = serialize(array($path, $host, $methods, $ip));
+        $id = 'fos_rest.zone_request_matcher.'.md5($serialized).sha1($serialized);
+
+        // only add arguments that are necessary
+        $arguments = array($path, $host, $methods, $ip);
+        while (count($arguments) > 0 && !end($arguments)) {
+            array_pop($arguments);
+        }
+
+        $container
+            ->register($id, new DefinitionDecorator('fos_rest.zone_request_matcher'))
+            ->setArguments($arguments)
+        ;
+
+        return new Reference($id);
     }
 
     /**

@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\AccessDeniedListener;
+use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,17 +27,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!class_exists('Symfony\Component\HttpFoundation\Request')) {
-            $this->markTestSkipped('The "HttpFoundation" component is not available');
-        }
-
-        if (!class_exists('Symfony\Component\Security\Core\Exception\AccessDeniedException')) {
-            $this->markTestSkipped('The "Security" component is not available');
-        }
-    }
-
     /**
      * @dataProvider getFormatsDataProvider
      *
@@ -49,6 +39,21 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
         $request->setRequestFormat($format);
 
         $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats);
+    }
+
+    /**
+     * @dataProvider getFormatsDataProvider
+     *
+     * @param array  $formats
+     * @param string $format
+     */
+    public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormatNoZone(array $formats, $format)
+    {
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->setRequestFormat($format);
+
+        $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats, 'Symfony\Component\Security\Core\Exception\AccessDeniedException');
     }
 
     /**
@@ -69,7 +74,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
      * @param Request $request
      * @param array   $formats
      */
-    private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats)
+    private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats, $exceptionClass = 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException')
     {
         $exception = new AccessDeniedException();
         $event = new GetResponseForExceptionEvent(new TestKernel(), $request, 'foo', $exception);
@@ -79,7 +84,7 @@ class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
         $listener->onKernelException($event);
         // restore the old error_log
         ini_set('error_log', $errorLog);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException', $event->getException());
+        $this->assertInstanceOf($exceptionClass, $event->getException());
     }
 
     /**
