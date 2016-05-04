@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-05-01T08:59:10Z
+
+:+1: but the tests fail.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-05-01T19:50:21Z
+
+@Ener-Getick We had an issue that led to array keys being normalised more than once (thus transforming `__username` to `Username` instead of `_Username`). This should work now.
+
+---------------------------------------------------------------------------
+
+by lsmith77 at 2016-05-04T12:40:00Z
+
+good catch .. +1
