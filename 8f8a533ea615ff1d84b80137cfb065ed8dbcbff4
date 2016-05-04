@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-05-01T08:55:21Z
+
+Weren't there any conflicts?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-05-01T18:20:36Z
+
+There were some conflicts regarding the order of use statements and the usage of the short array notation. But the feature itself didn't cause any conflicts.
+
+---------------------------------------------------------------------------
+
+by Ener-Getick at 2016-05-04T10:56:47Z
+
+Status: reviewed
+:+1:
