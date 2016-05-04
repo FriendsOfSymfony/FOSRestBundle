@@ -1,0 +1,9 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+
+fos_rest:
+    allowed_methods_listener: true

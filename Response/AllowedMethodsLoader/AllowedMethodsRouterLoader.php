@@ -77,6 +77,10 @@ class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, Cache
             }
 
             $processedRoutes[$route->getPath()]['names'][] = $name;
+            $processedRoutes[$route->getPath()]['methods'] = array_merge(
+                $processedRoutes[$route->getPath()]['methods'],
+                $route->getMethods()
+            );
         }
 
         $allowedMethods = [];

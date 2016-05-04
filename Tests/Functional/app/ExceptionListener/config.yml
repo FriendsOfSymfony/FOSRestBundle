@@ -1,0 +1,16 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+    templating:
+        engines: ['twig']
+
+fos_rest:
+    exception: ~
+    format_listener:
+        rules:
+            - { path: '^/', fallback_format: json }
+    zone:
+        - { path: ^/api/* }

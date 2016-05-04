@@ -6,17 +6,18 @@
 
     <services>
 
+        <service id="fos_rest.routing.loader.directory" class="FOS\RestBundle\Routing\Loader\DirectoryRouteLoader" public="false">
+            <argument type="service" id="file_locator" />
+            <argument type="service" id="fos_rest.routing.loader.processor" />
+            <tag name="routing.loader" />
+        </service>
+
         <service id="fos_rest.routing.loader.controller" class="FOS\RestBundle\Routing\Loader\RestRouteLoader" public="false">
             <argument type="service" id="service_container" />
             <argument type="service" id="file_locator" />
             <argument type="service" id="controller_name_converter" />
             <argument type="service" id="fos_rest.routing.loader.reader.controller" />
             <argument /> <!-- default format -->
-            <tag name="routing.loader" />
-        </service>
-
-        <service id="fos_rest.routing.loader.directory" class="FOS\RestBundle\Routing\Loader\DirectoryRouteLoader">
-            <argument type="service" id="fos_rest.routing.loader.processor" />
             <tag name="routing.loader" />
         </service>
 
