@@ -32,7 +32,10 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         $configs = $container->getExtensionConfig($this->getAlias());
         $parameterBag = $container->getParameterBag();
         $configs = $parameterBag->resolveValue($configs);
-        $config = $this->processConfiguration(new Configuration(), $configs);
+        $config = $this->processConfiguration(
+            new Configuration($container->getParameter('kernel.debug')),
+            $configs
+        );
 
         if ($config['view']['view_response_listener']['enabled']) {
             $container->prependExtensionConfig('sensio_framework_extra', array('view' => array('annotations' => false)));
@@ -50,7 +53,8 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $config = $this->processConfiguration(new Configuration(), $configs);
+        $configuration = new Configuration($container->getParameter('kernel.debug'));
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
@@ -375,6 +379,8 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             if ($config['exception']['exception_controller']) {
                 $container->setParameter('fos_rest.exception_listener.controller', $config['exception']['exception_controller']);
             }
+
+            $container->setParameter('fos_rest.exception.debug', $config['exception']['debug']);
         }
 
         foreach ($config['exception']['codes'] as $exception => $code) {

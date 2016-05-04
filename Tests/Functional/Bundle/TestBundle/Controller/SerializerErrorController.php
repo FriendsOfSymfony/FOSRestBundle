@@ -33,6 +33,14 @@ class SerializerErrorController extends Controller
     /**
      * @View
      */
+    public function unknownExceptionAction()
+    {
+        throw new \OutOfBoundsException('Unknown exception message.');
+    }
+
+    /**
+     * @View
+     */
     public function invalidFormAction()
     {
         $form = $this->createFormBuilder(null, array(

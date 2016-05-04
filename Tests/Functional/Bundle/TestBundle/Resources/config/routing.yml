@@ -6,6 +6,10 @@ test_serializer_error_exception:
     path:     /serializer-error/exception.{_format}
     defaults: { _controller: TestBundle:SerializerError:logicException }
 
+test_serializer_unknown_exception:
+    path:     /serializer-error/unknown_exception.{_format}
+    defaults: { _controller: TestBundle:SerializerError:unknownException }
+
 test_serializer_error_invalid_form:
     path:     /serializer-error/invalid-form.{_format}
     defaults: { _controller: TestBundle:SerializerError:invalidForm }

@@ -32,6 +32,8 @@ use FOS\RestBundle\Util\ExceptionWrapper;
  */
 class ExceptionController implements ContainerAwareInterface
 {
+    private $debug;
+
     /**
      * @var ContainerInterface
      *
@@ -109,8 +111,13 @@ class ExceptionController implements ContainerAwareInterface
         $currentContent = $this->getAndCleanOutputBuffering($request);
         $code = $this->getStatusCode($exception);
         $viewHandler = $this->container->get('fos_rest.view_handler');
+
+        $this->debug = $showException = $request->attributes->get('showException',
+            $this->container->hasParameter('fos_rest.exception.debug')
+            ? $this->container->getParameter('fos_rest.exception.debug')
+            : $this->container->get('kernel')->isDebug()
+        );
         $parameters = $this->getParameters($viewHandler, $currentContent, $code, $exception, $logger, $format);
-        $showException = $request->attributes->get('showException', $this->container->get('kernel')->isDebug());
 
         try {
             if (!$viewHandler->isFormatTemplating($format)) {
@@ -215,7 +222,7 @@ class ExceptionController implements ContainerAwareInterface
         $exceptionMap = $this->container->getParameter('fos_rest.exception.messages');
         $showExceptionMessage = $this->isSubclassOf($exception, $exceptionMap);
 
-        if ($showExceptionMessage || $this->container->get('kernel')->isDebug()) {
+        if ($showExceptionMessage || $this->debug) {
             return $exception->getMessage();
         }
 
