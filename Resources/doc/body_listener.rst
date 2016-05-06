@@ -93,3 +93,18 @@ If you want form data to be normalized, you can use the ``forms`` flag:
             array_normalizer:
                 service: fos_rest.normalizer.camel_keys
                 forms: true
+
+Using the ArrayNormalizer with login forms
+------------------------------------------
+
+If you use the default configuration for the csrf token fieldname (`_csrf_token`) the Array normalizer will mangle the field name. To make it work, use a name that is camelcased, like this:
+
+```yaml
+security:
+firewalls:
+    admin:
+    ...
+        form_login:
+        ..
+            csrf_parameter: _csrfToken
+```
