@@ -18,6 +18,7 @@
             <argument type="service" id="request_stack" on-invalid="null"/>
             <argument type="service" id="fos_rest.violation_formatter"/>
             <argument type="service" id="validator" on-invalid="null"/>
+            <argument>false</argument>
         </service>
 
         <service id="fos_rest.request.param_fetcher.reader" class="%fos_rest.request.param_fetcher.reader.class%">

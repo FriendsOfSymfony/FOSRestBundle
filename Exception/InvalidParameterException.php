@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Exception;
 
-use FOS\RestBundle\Controller\Annotations\Param;
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -19,26 +19,6 @@ class InvalidParameterException extends BadRequestHttpException
 {
     private $parameter;
     private $violations;
-
-    public function __construct(Param $parameter, ConstraintViolationListInterface $violations)
-    {
-        $this->parameter = $parameter;
-        $this->violations = $violations;
-
-        $message = '';
-        foreach ($violations as $key => $violation) {
-            if ($key > 0) {
-                $message .= "\n";
-            }
-            $message .= sprintf(
-                'Parameter "%s" of value "%s" violated a constraint "%s"',
-                $parameter->name,
-                $violation->getInvalidValue(),
-                $violation->getMessage()
-            );
-        }
-        parent::__construct($message);
-    }
 
     public function getParameter()
     {
@@ -48,5 +28,45 @@ class InvalidParameterException extends BadRequestHttpException
     public function getViolations()
     {
         return $this->violations;
+    }
+
+    public static function withViolations(ParamInterface $parameter, ConstraintViolationListInterface $violations)
+    {
+        $message = '';
+
+        foreach ($violations as $key => $violation) {
+            if ($key > 0) {
+                $message .= "\n";
+            }
+
+            $message .= sprintf(
+                'Parameter "%s" of value "%s" violated a constraint "%s"',
+                $parameter->getName(),
+                $violation->getInvalidValue(),
+                $violation->getMessage()
+            );
+        }
+
+        return self::withViolationsAndMessage($parameter, $violations, $message);
+    }
+
+    /**
+     * Do not use this method. It will be removed in 2.0.
+     *
+     * @param ParamInterface                   $parameter
+     * @param ConstraintViolationListInterface $violations
+     * @param string                           $message
+     *
+     * @return self
+     *
+     * @internal
+     */
+    public static function withViolationsAndMessage(ParamInterface $parameter, ConstraintViolationListInterface $violations, $message)
+    {
+        $exception = new self($message);
+        $exception->parameter = $parameter;
+        $exception->violations = $violations;
+
+        return $exception;
     }
 }

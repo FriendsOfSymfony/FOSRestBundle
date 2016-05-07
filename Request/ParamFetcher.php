@@ -39,6 +39,7 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     private $parameterBag;
     private $requestStack;
     private $validator;
+    private $violationFormatter;
 
     /**
      * @var ContainerInterface
@@ -51,11 +52,10 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
      * Initializes fetcher.
      *
      * @param ParamReader                                 $paramReader
-     * @param Request|RequestStack|null                   $request
+     * @param Request|RequestStack|null                   $requestStack
      * @param ValidatorInterface|LegacyValidatorInterface $validator
-     * @param ViolationFormatterInterface                 $violationFormatter
      */
-    public function __construct(ParamReader $paramReader, $requestStack, ViolationFormatterInterface $violationFormatter, $validator = null)
+    public function __construct(ParamReader $paramReader, $requestStack, $validator = null)
     {
         if (null === $requestStack || $requestStack instanceof Request) {
             @trigger_error('Support of Symfony\Component\HttpFoundation\Request in FOS\RestBundle\Request\ParamFetcher is deprecated since version 1.7 and will be removed in 2.0. Use Symfony\Component\HttpFoundation\RequestStack instead.', E_USER_DEPRECATED);
@@ -64,6 +64,17 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
         }
 
         $this->requestStack = $requestStack;
+
+        if ($validator instanceof ViolationFormatterInterface) {
+            $this->violationFormatter = $validator;
+            $validator = func_num_args() >= 4 ? func_get_arg(3) : null;
+            $triggerDeprecation = func_num_args() >= 5 ? func_get_arg(4) : true;
+
+            if ($triggerDeprecation) {
+                @trigger_error(sprintf('Passing a ViolationFormatterInterface instance to the constructor of the %s class is deprecated since version 1.8 and will not be supported anymore in 2.0.', __CLASS__), E_USER_DEPRECATED);
+            }
+        }
+
         $this->validator = $validator;
 
         $this->parameterBag = new ParameterBag($paramReader);
@@ -256,7 +267,17 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
 
         if (0 !== count($errors)) {
             if ($strict) {
-                throw new InvalidParameterException($config, $errors);
+                if (null === $this->violationFormatter) {
+                    throw InvalidParameterException::withViolations($config, $errors);
+                }
+
+                if (is_array($config->requirements) && isset($config->requirements['error_message'])) {
+                    $errorMessage = $config->requirements['error_message'];
+                } else {
+                    $errorMessage = $this->violationFormatter->formatList($config, $errors);
+                }
+
+                throw InvalidParameterException::withViolationsAndMessage($config, $errors, $errorMessage);
             }
 
             return null === $default ? '' : $default;
