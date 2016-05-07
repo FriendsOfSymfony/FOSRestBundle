@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+1.7.9
+-----
+
+* fixed a BC break that prevented the `CamelKeysNormalizer` from removing leading underscores
+
 * fixed the `AllowedMethodsRouteLoader` to work with Symfony 3.0
 
 1.7.8
