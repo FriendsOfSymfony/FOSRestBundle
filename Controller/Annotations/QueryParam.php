@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Controller\Annotations;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Represents a parameter that must be present in GET data.
  *
@@ -21,4 +23,11 @@ namespace FOS\RestBundle\Controller\Annotations;
  */
 class QueryParam extends Param
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getValue(Request $request, $default = null)
+    {
+        return $request->query->get($this->getKey(), $default);
+    }
 }
