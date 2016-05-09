@@ -41,6 +41,31 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
 
     public function normalizeProvider()
     {
+        $array = $this->normalizeProviderCommon();
+        $array[] = array(array('__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'), array('_Username' => 'foo', 'Password' => 'bar', 'FooBar' => 'foobar'));
+
+        return $array;
+    }
+
+    /**
+     * @dataProvider normalizeProviderLeadingUnderscore
+     */
+    public function testNormalizeLeadingUnderscore(array $array, array $expected)
+    {
+        $normalizer = new CamelKeysNormalizerWithLeadingUnderscore();
+        $this->assertEquals($expected, $normalizer->normalize($array));
+    }
+
+    public function normalizeProviderLeadingUnderscore()
+    {
+        $array = $this->normalizeProviderCommon();
+        $array[] = array(array('__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'), array('__username' => 'foo', '_password' => 'bar', '_fooBar' => 'foobar'));
+
+        return $array;
+    }
+
+    private function normalizeProviderCommon()
+    {
         return array(
             array(array(), array()),
             array(
@@ -52,22 +77,5 @@ class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
         );
-    }
-
-    /**
-     * @dataProvider normalizeProvider
-     */
-    public function testNormalizeLeadingUnderscore(array $array, array $expected)
-    {
-        $normalizer = new CamelKeysNormalizerWithLeadingUnderscore();
-        $this->assertEquals($expected, $normalizer->normalize($array));
-    }
-
-    public function normalizeProviderLeadingUnderscore()
-    {
-        $array = $this->normalizeProvider();
-        $array[] = array(array('__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'), array('__username' => 'foo', '_password' => 'bar', '_fooBar' => 'foobar'));
-
-        return $array;
     }
 }
