@@ -6,7 +6,7 @@
 
     <parameters>
         <parameter key="fos_rest.serializer.exclusion_strategy.version" />
-        <parameter key="fos_rest.serializer.exclusion_strategy.groups"/>
+        <parameter key="fos_rest.serializer.exclusion_strategy.groups" type="collection" />
         <parameter key="fos_rest.view_handler.jsonp.callback_param"/>
         <parameter key="fos_rest.view.exception_wrapper_handler">FOS\RestBundle\View\ExceptionWrapperHandler</parameter>
         <parameter key="fos_rest.view_handler.default.class">FOS\RestBundle\View\ViewHandler</parameter>
