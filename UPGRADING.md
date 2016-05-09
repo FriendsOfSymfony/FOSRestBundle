@@ -9,6 +9,11 @@ This document will be updated to list important BC breaks and behavioral changes
    View::createRouteRedirect instead. Note: the default status code for a route redirect
    has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
 
+### upgrading to 1.8 (unreleased)
+
+ * The `RedirectView` and `RouteRedirect` view classes are deprecated. Use `View::createRedirect()`
+   and `View::createRouteRedirect()` instead.
+
 ### upgrading from 1.5.*
 
   * Dropped support for Symfony 2.2 (which includes dropping support for "pattern" in favor of only supporting "path" in routes), see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/952
