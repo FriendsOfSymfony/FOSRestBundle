@@ -334,6 +334,14 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->container->has('fos_rest.validator'));
     }
 
+    public function testDefaultSerializerGroupsIsArray()
+    {
+        $config = array();
+        $this->extension->load($config, $this->container);
+
+        $this->assertInternaltype('array', $this->container->getParameter('fos_rest.serializer.exclusion_strategy.groups'));
+    }
+
     /**
      * Test that extension loads properly.
      */
