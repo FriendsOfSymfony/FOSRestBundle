@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Controller\Annotations;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Represents a parameter that must be present in POST data.
  *
@@ -24,4 +26,12 @@ class RequestParam extends Param
 {
     /** @var bool */
     public $strict = true;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getValue(Request $request, $default = null)
+    {
+        return $request->request->get($this->getKey(), $default);
+    }
 }
