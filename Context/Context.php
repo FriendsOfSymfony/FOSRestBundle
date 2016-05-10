@@ -173,7 +173,7 @@ final class Context
     /**
      * Sets the normalization max depth.
      *
-     * @param int|null $depth
+     * @param int|null $maxDepth
      *
      * @return self
      */
