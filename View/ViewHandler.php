@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -439,8 +440,14 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
             $context = $this->getSerializationContext($view);
             $context->setAttribute('template_data', $view->getTemplateData());
-
-            $content = $this->serializer->serialize($data, $format, $context);
+            
+            if (class_exists("Doctrine\DBAL\Query\QueryBuilder")
+                && $data instanceof QueryBuilder
+            ) {
+                return $this->initStreamedResponse($view, $format, $context);
+            } else {
+                $content = $this->serializer->serialize($data, $format, $context);
+            }
         }
 
         $response = $view->getResponse();
@@ -450,6 +457,78 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             $response->setContent($content);
         }
 
+        return $response; 
+    }
+    
+    /**
+     * Initialize a StreamedResponse.
+     * 
+     * @param View $view
+     * @param string $format
+     * @param unknown $context
+     * 
+     * @return StreamedResponse
+     */
+    protected function initStreamedResponse(View $view, $format, Context $context)
+    {
+        $statement = $view->getData()->execute();
+        $response= new StreamedResponse(
+            function () use ($statement, $format, $context) {
+                $fp = fopen("php://stdout", "w");
+                if (is_callable($view->getStreamedHeaderCallback())) {
+                    call_user_func_array(
+                        $view->getStreamedHeaderCallback(),
+                        [
+                            $fp,
+                            $this->serializer,
+                            $format,
+                            $context
+                        ]
+                        );
+                }
+                
+                $callback = $view->getStreamedNodeCallback();
+                $iteration = 1;
+                $totalRows = $statement->rowCount();
+                while ($data = $statement->fetch()) {
+                    if (is_callable($callback)) {
+                        call_user_func_array(
+                            $callback, 
+                            [
+                                $fp,
+                                $this->serializer,
+                                $data,
+                                $format,
+                                $context,
+                                $iteration,
+                                $totalRows
+                            ]
+                        );
+                    } else {
+                        fwrite($fp, $this->serializer->serialize($data, $format, $context));
+                        if ($format === 'json' && $iteration < $totalRows) {
+                            fwrite($fp, ",");
+                        }
+                    }
+                    $iteration++;
+                }
+                
+                if (is_callable($view->getStreamedFooterCallback())) {
+                    call_user_func_array(
+                        $view->getStreamedFooterCallback(),
+                        [
+                            $fp,
+                            $this->serializer,
+                            $format,
+                            $context
+                        ]
+                    );
+                }
+                fclose($fp);
+            },
+            $this->getStatusCode($view)
+        );
+        
         return $response;
     }
 
