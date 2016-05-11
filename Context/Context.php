@@ -149,7 +149,7 @@ final class Context
     /**
      * Gets the normalization groups.
      *
-     * @return array
+     * @return string[]
      */
     public function getGroups()
     {
@@ -159,7 +159,7 @@ final class Context
     /**
      * Set the normalization groups.
      *
-     * @param array $groups
+     * @param string[] $groups
      *
      * @return self
      */
@@ -173,7 +173,7 @@ final class Context
     /**
      * Sets the normalization max depth.
      *
-     * @param int|null $depth
+     * @param int|null $maxDepth
      *
      * @return self
      */

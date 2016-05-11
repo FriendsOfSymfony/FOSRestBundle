@@ -41,6 +41,14 @@ This document will be updated to list important BC breaks and behavioral changes
  * removed the ``format_negotiator`` option ``exception_fallback_format``; you can match the ``ExceptionController`` thanks to the ``attributes`` option instead
  * `View::setSerializationContext` and `View::getSerializationContext` have been removed. Use `View::setContext` and `View::getContext` together with the new Context class instead.
 
+### upgrading to 1.8 (unreleased)
+
+ * The `Param` class was deprecated in favor of the new `AbstractParam` and `AbstractScalarParam`
+   classes and the `ParamInterface`.
+
+ * The `RedirectView` and `RouteRedirect` view classes are deprecated. Use `View::createRedirect()`
+   and `View::createRouteRedirect()` instead.
+
 ### upgrading from 1.5.*
 
   * Dropped support for Symfony 2.2 (which includes dropping support for "pattern" in favor of only supporting "path" in routes), see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/952

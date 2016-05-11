@@ -39,27 +39,30 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
      */
     private function normalizeArray(array &$data)
     {
+        $normalizedData = array();
+
         foreach ($data as $key => $val) {
             $normalizedKey = $this->normalizeString($key);
 
             if ($normalizedKey !== $key) {
-                if (array_key_exists($normalizedKey, $data)) {
+                if (array_key_exists($normalizedKey, $normalizedData)) {
                     throw new NormalizationException(sprintf(
                         'The key "%s" is invalid as it will override the existing key "%s"',
                         $key,
                         $normalizedKey
                     ));
                 }
-
-                unset($data[$key]);
-                $data[$normalizedKey] = $val;
-                $key = $normalizedKey;
             }
+
+            $normalizedData[$normalizedKey] = $val;
+            $key = $normalizedKey;
 
             if (is_array($val)) {
-                $this->normalizeArray($data[$key]);
+                $this->normalizeArray($normalizedData[$key]);
             }
         }
+
+        $data = $normalizedData;
     }
 
     /**
@@ -75,17 +78,8 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
             return $string;
         }
 
-        if (preg_match('/^(_+)(.*)/', $string, $matches)) {
-            $underscorePrefix = $matches[1];
-            $string = $matches[2];
-        } else {
-            $underscorePrefix = '';
-        }
-
-        $string = preg_replace_callback('/_([a-zA-Z0-9])/', function ($matches) {
+        return preg_replace_callback('/_([a-zA-Z0-9])/', function ($matches) {
             return strtoupper($matches[1]);
         }, $string);
-
-        return $underscorePrefix.$string;
     }
 }
