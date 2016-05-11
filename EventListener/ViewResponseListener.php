@@ -134,6 +134,7 @@ class ViewResponseListener implements EventSubscriberInterface
         
         if (null !== $range) {
             $response->headers->set('Content-Range', $range);
+            $response->setStatusCode(206);
         }
 
         $event->setResponse($response);
