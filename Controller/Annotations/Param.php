@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Controller\Annotations;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Represents a parameter that can be present in GET or POST data.
  *
@@ -50,5 +52,10 @@ abstract class Param extends AbstractScalarParam
     public function getKey()
     {
         return $this->key ?: $this->name;
+    }
+
+    public function getValue(Request $request, $default)
+    {
+        return;
     }
 }
