@@ -87,7 +87,7 @@ class FileParamTest extends \PHPUnit_Framework_TestCase
         $this->param->requirements = $requirements = ['mimeTypes' => 'image/gif'];
         $this->assertEquals(array(new Constraints\All(array(
             new Constraints\NotNull(),
-            new Constraints\Image($requirements)
+            new Constraints\Image($requirements),
         ))), $this->param->getConstraints());
     }
 }
