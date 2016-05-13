@@ -122,7 +122,11 @@ class ExceptionController implements ContainerAwareInterface
             }
 
             $response = $viewHandler->handle($view);
-        } catch (\Exception $e) {
+        } catch (\Exception $handleException) {
+        } catch (\Throwable $handleException) {
+        }
+
+        if (isset($handleException)) {
             $message = 'An Exception was thrown while handling: ';
             $message .= $this->getExceptionMessage($exception);
             $response = $this->createPlainResponse($message, Codes::HTTP_INTERNAL_SERVER_ERROR, $exception->getHeaders());
