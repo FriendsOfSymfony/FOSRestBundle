@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Constraints\All;
 
 /**
  * Represents a file that must be present.
@@ -31,6 +32,8 @@ class FileParam extends AbstractParam
     public $requirements = null;
     /** @var bool */
     public $image = false;
+    /** @var bool */
+    public $map = false;
 
     /**
      * {@inheritdoc}
@@ -47,6 +50,13 @@ class FileParam extends AbstractParam
             $constraints[] = new Constraints\Image($options);
         } else {
             $constraints[] = new Constraints\File($options);
+        }
+
+        // If the user wants to map the value
+        if ($this->map) {
+            $constraints = array(
+                new All($constraints),
+            );
         }
 
         return $constraints;
