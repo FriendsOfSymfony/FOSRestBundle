@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -473,18 +474,19 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     {
         $statement = $view->getData()->execute();
         $response= new StreamedResponse(
-            function () use ($statement, $format, $context) {
-                $fp = fopen("php://stdout", "w");
+            function () use ($view, $statement, $format, $context) {
+                ob_end_clean();
                 if (is_callable($view->getStreamedHeaderCallback())) {
                     call_user_func_array(
                         $view->getStreamedHeaderCallback(),
                         [
-                            $fp,
                             $this->serializer,
                             $format,
                             $context
                         ]
                         );
+                } else if ($format === 'json') {
+                    echo "[";
                 }
                 
                 $callback = $view->getStreamedNodeCallback();
@@ -495,7 +497,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
                         call_user_func_array(
                             $callback, 
                             [
-                                $fp,
                                 $this->serializer,
                                 $data,
                                 $format,
@@ -505,10 +506,11 @@ class ViewHandler implements ConfigurableViewHandlerInterface
                             ]
                         );
                     } else {
-                        fwrite($fp, $this->serializer->serialize($data, $format, $context));
+                        echo  $this->serializer->serialize($data, $format, $context);
                         if ($format === 'json' && $iteration < $totalRows) {
-                            fwrite($fp, ",");
+                            echo ",";
                         }
+                        flush();
                     }
                     $iteration++;
                 }
@@ -517,16 +519,17 @@ class ViewHandler implements ConfigurableViewHandlerInterface
                     call_user_func_array(
                         $view->getStreamedFooterCallback(),
                         [
-                            $fp,
                             $this->serializer,
                             $format,
                             $context
                         ]
                     );
+                } else if ($format === "json") {
+                    echo "]";
                 }
-                fclose($fp);
+                flush();
             },
-            $this->getStatusCode($view)
+            200
         );
         
         return $response;

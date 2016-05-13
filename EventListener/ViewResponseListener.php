@@ -104,7 +104,10 @@ class ViewResponseListener implements EventSubscriberInterface
         if (class_exists("Doctrine\DBAL\Query\QueryBuilder") 
             && $view->getData() instanceof QueryBuilder
         ) {
-            $range = $this->paginateQueryBuilderResults($view, $request);
+            if (!$range = $this->paginateQueryBuilderResults($view, $request)) {
+                $data = $view->getData()->execute()->fetchAll(\PDO::FETCH_ASSOC);
+                $view->setData($data);
+            }
         }
 
         if ($this->viewHandler->isFormatTemplating($view->getFormat())
@@ -195,13 +198,17 @@ class ViewResponseListener implements EventSubscriberInterface
             return;
         }
         
-        if ((null !== ($limit = $paramFetcher->get($view->getOffsetParam(), null)))
-            && (null !== ($offset = $paramFetcher->get($view->getLimitParam(), null)))
+        $params = $paramFetcher->getParams();
+        
+        if (array_key_exists($view->getOffsetParam(), $params)
+            && (null !== ($offset = $paramFetcher->get($view->getOffsetParam(), null)))
+            && array_key_exists($view->getLimitParam(), $params)
+            && (null !== $limit = $paramFetcher->get($view->getLimitParam(), null))
         ) {
             $queryBuilder = $view->getData();
+            $count = $this->getResultCount($queryBuilder);
             $queryBuilder->setFirstResult($offset);
             $queryBuilder->setMaxResults($limit);
-            $count = $this->getResultCount($queryBuilder);
             $data = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
             $view->setData($data);
             return sprintf(
@@ -223,7 +230,7 @@ class ViewResponseListener implements EventSubscriberInterface
     {
         $outerQuery = $queryBuilder->getConnection()->createQueryBuilder();
         $outerQuery->select('count(*)')
-            ->from(sprintf("(%s)", $queryBuilder->getSQL()));
+            ->from(sprintf("(%s)", $queryBuilder->getSQL()), 'q');
         foreach ($queryBuilder->getParameters() as $key => $value) {
             $outerQuery->setParameter($key, $value);
         }

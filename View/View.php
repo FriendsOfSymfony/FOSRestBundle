@@ -176,6 +176,8 @@ class View
         $this->setData($data);
         $this->setStatusCode($statusCode);
         $this->setTemplateVar('data');
+        $this->setOffsetParam('offset');
+        $this->setLimitParam('limit');
 
         if (!empty($headers)) {
             $this->getResponse()->headers->replace($headers);
