@@ -151,6 +151,52 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($code, $view->getStatusCode());
         $this->assertEquals($code, $view->getResponse()->getStatusCode());
     }
+    
+    public function testSetOffsetParam()
+    {
+        $view = new View();
+        $offsetParam = 'myOffset';
+        $view->setOffsetParam($offsetParam);
+        $this->assertEquals($offsetParam, $view->getOffsetParam());
+    }
+    
+    public function testSetLimitParam()
+    {
+        $view = new View();
+        $limitParam = 'myLimit';
+        $view->setLimitParam($limitParam);
+        $this->assertEquals($limitParam, $view->getLimitParam());
+    }
+    
+    public function testSetStreamedHeaderCallback()
+    {
+        $view = new View();
+        $callback = function ($serializer, $format, $context) {
+            return true;
+        };
+        $view->setStreamedHeaderCallback($callback);
+        $this->assertEquals($callback, $view->getStreamedHeaderCallback());
+    }
+    
+    public function testSetStreamedNodeCallback()
+    {
+        $view = new View();
+        $callback = function ($serializer, $data, $format, $context, $iteration, $totalIterations) {
+            return true;
+        };
+        $view->setStreamedNodeCallback($callback);
+        $this->assertEquals($callback, $view->getStreamedNodeCallback());
+    }
+    
+    public function testSetStreamedFooterCallback()
+    {
+        $view = new View();
+        $callback = function ($serializer, $format, $context) {
+            return true;
+        };
+        $view->setStreamedFooterCallback($callback);
+        $this->assertEquals($callback, $view->getStreamedFooterCallback());
+    }
 
     public function testGetStatusCodeFromResponse()
     {

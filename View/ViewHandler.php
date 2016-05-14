@@ -23,7 +23,6 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -443,7 +442,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             $context->setAttribute('template_data', $view->getTemplateData());
             
             if (class_exists("Doctrine\DBAL\Query\QueryBuilder")
-                && $data instanceof QueryBuilder
+                && $data instanceof \Doctrine\DBAL\Query\QueryBuilder
             ) {
                 return $this->initStreamedResponse($view, $format, $context);
             } else {
@@ -473,7 +472,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     protected function initStreamedResponse(View $view, $format, Context $context)
     {
         $statement = $view->getData()->execute();
-        $response= new StreamedResponse(
+        $response = new StreamedResponse(
             function () use ($view, $statement, $format, $context) {
                 ob_end_clean();
                 if (is_callable($view->getStreamedHeaderCallback())) {

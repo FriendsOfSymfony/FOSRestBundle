@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Request\ParamFetcher;
 
@@ -101,8 +100,9 @@ class ViewResponseListener implements EventSubscriberInterface
         }
         
         $range = null;
+
         if (class_exists("Doctrine\DBAL\Query\QueryBuilder") 
-            && $view->getData() instanceof QueryBuilder
+            && $view->getData() instanceof \Doctrine\DBAL\Query\QueryBuilder
         ) {
             if (!$range = $this->paginateQueryBuilderResults($view, $request)) {
                 $data = $view->getData()->execute()->fetchAll(\PDO::FETCH_ASSOC);
@@ -226,7 +226,7 @@ class ViewResponseListener implements EventSubscriberInterface
      * @param QueryBuilder $queryBuilder
      * @return int
      */
-    private function getResultCount(QueryBuilder $queryBuilder)
+    private function getResultCount(\Doctrine\DBAL\Query\QueryBuilder $queryBuilder)
     {
         $outerQuery = $queryBuilder->getConnection()->createQueryBuilder();
         $outerQuery->select('count(*)')

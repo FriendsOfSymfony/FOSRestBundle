@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * View test.
@@ -376,6 +377,20 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
         $view = new View($data);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $viewHandler->handle($view));
+    }
+    
+    public function testHandleDoctrineQueryBuilder()
+    {
+        $viewHandler = $this->createViewHandler(['html' => false]);
+        
+        $this->requestStack->push(new Request());
+        $connection = $this->getMockBuilder('Doctrine\DBAL\Connection')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $data = new QueryBuilder($connection);
+        
+        $view = new View($data);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\StreamedResponse', $viewHandler->handle($view));
     }
 
     public function testHandleCustom()

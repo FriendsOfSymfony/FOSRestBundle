@@ -143,6 +143,76 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(null, $this->listener->onKernelView($event));
     }
+    
+    public function testOnKernelViewWhenControllerResultIsADoctrineQueryBuilder()
+    {
+        $template = $this->getMockBuilder('Symfony\Component\Templating\TemplateReferenceInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $template->expects($this->once())
+            ->method('set')
+            ->with('format', null);
+        
+        $annotation = new ViewAnnotation([]);
+        $annotation->setOwner([new FooController(), 'onKernelViewAction']);
+        $annotation->setTemplate($template);
+        
+        $paramFetcher = $this->getMockBuilder('FOS\RestBundle\Request\ParamFetcher')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $paramFetcher->expects($this->once())
+            ->method('getParams')
+            ->will($this->returnValue(['offset' => 0, 'limit' => 10]));
+        
+        $request = new Request();
+        $request->attributes->set('limit', 10);
+        $request->attributes->set('offset', 0);
+        $request->attributes->set('_template', $annotation);
+        $request->attributes->set('paramFetcher', $paramFetcher);
+        $response = new Response();
+        
+        $statement = $this->getMockBuilder('Doctrine\DBAL\Statement')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $statement->expects($this->once())
+            ->method('fetchAll')
+            ->will($this->returnValue([['a' => 1, 'b' => 2],['a' => 3, 'b' => 4]]));
+        
+        $queryBuilder = $this->getMockBuilder('Doctrine\DBAL\Query\QueryBuilder')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $queryBuilder->expects($this->once())
+            ->method('execute')
+            ->will($this->returnValue($statement));
+        
+        $view = $this->getMockBuilder('FOS\RestBundle\View\View')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $view->expects($this->exactly(2))
+            ->method('getFormat')
+            ->will($this->onConsecutiveCalls(null, 'html'));
+        $view->expects($this->exactly(2))
+            ->method('getData')
+            ->will($this->returnValue($queryBuilder));
+        
+        $viewHandler = $this->getMock('FOS\RestBundle\View\ViewHandlerInterface');
+        $viewHandler->expects($this->once())
+            ->method('handle')
+            ->with($this->isInstanceOf('FOS\RestBundle\View\View'), $this->equalTo($request))
+            ->will($this->returnValue($response));
+        $viewHandler->expects($this->once())
+            ->method('isFormatTemplating')
+            ->with('html')
+            ->will($this->returnValue(true));
+        
+        $this->listener = new ViewResponseListener($viewHandler, false);
+        
+        $event = $this->getResponseEvent($request, $view);
+        $event->expects($this->once())
+            ->method('setResponse');
+        
+        $this->listener->onKernelView($event);
+    }
 
     public static function statusCodeProvider()
     {
