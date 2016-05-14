@@ -4,6 +4,13 @@ CHANGELOG
 1.8.0
 -----
 
+* added a new `InvalidParameterException` as a specialization of the `BadRequestHttpException`
+
+* deprecated the `FOS\RestBundle\Util\ViolationFormatter` class and the
+  `FOS\RestBundle\Util\ViolationFormatterInterface`
+
+* deprecated the `ViolationFormatterInterface` argument of the `ParamFetcher` class constructor
+
 * deprecated the `RedirectView` and `RouteRedirectView` classes, use `View::createRedirect()` and
   `View::createRouteRedirect()` instead
 

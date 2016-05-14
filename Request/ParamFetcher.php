@@ -159,7 +159,7 @@ class ParamFetcher implements ParamFetcherInterface
 
         if (0 < count($errors)) {
             if ($strict) {
-                throw new InvalidParameterException($param, $errors);
+                throw InvalidParameterException::withViolations($param, $errors);
             }
 
             return null === $default ? '' : $default;

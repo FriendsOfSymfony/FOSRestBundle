@@ -43,6 +43,13 @@ This document will be updated to list important BC breaks and behavioral changes
 
 ### upgrading to 1.8 (unreleased)
 
+ * The `FOS\RestBundle\Util\ViolationFormatter` class and the `FOS\RestBundle\Util\ViolationFormatterInterface`
+   were deprecated. Catch specialized exception classes instead of checking specific exception
+   messages.
+
+ * The `ViolationFormatterInterface` argument of the constructor of the `ParamFetcher` class is
+   deprecated and will be removed in 2.0.
+
  * The `Param` class was deprecated in favor of the new `AbstractParam` and `AbstractScalarParam`
    classes and the `ParamInterface`.
 

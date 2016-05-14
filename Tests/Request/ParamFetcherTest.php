@@ -252,7 +252,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \FOS\RestBundle\Exception\InvalidParameterException
      * @expectedMessage expected exception.
      */
     public function testValidationErrorsInStrictMode()

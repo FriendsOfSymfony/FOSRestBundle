@@ -20,26 +20,6 @@ class InvalidParameterException extends BadRequestHttpException
     private $parameter;
     private $violations;
 
-    public function __construct(ParamInterface $parameter, ConstraintViolationListInterface $violations)
-    {
-        $this->parameter = $parameter;
-        $this->violations = $violations;
-
-        $message = '';
-        foreach ($violations as $key => $violation) {
-            if ($key > 0) {
-                $message .= "\n";
-            }
-            $message .= sprintf(
-                'Parameter "%s" of value "%s" violated a constraint "%s"',
-                $parameter->getName(),
-                $violation->getInvalidValue(),
-                $violation->getMessage()
-            );
-        }
-        parent::__construct($message);
-    }
-
     public function getParameter()
     {
         return $this->parameter;
@@ -48,5 +28,45 @@ class InvalidParameterException extends BadRequestHttpException
     public function getViolations()
     {
         return $this->violations;
+    }
+
+    public static function withViolations(ParamInterface $parameter, ConstraintViolationListInterface $violations)
+    {
+        $message = '';
+
+        foreach ($violations as $key => $violation) {
+            if ($key > 0) {
+                $message .= "\n";
+            }
+
+            $message .= sprintf(
+                'Parameter "%s" of value "%s" violated a constraint "%s"',
+                $parameter->getName(),
+                $violation->getInvalidValue(),
+                $violation->getMessage()
+            );
+        }
+
+        return self::withViolationsAndMessage($parameter, $violations, $message);
+    }
+
+    /**
+     * Do not use this method. It will be removed in 2.0.
+     *
+     * @param ParamInterface                   $parameter
+     * @param ConstraintViolationListInterface $violations
+     * @param string                           $message
+     *
+     * @return self
+     *
+     * @internal
+     */
+    public static function withViolationsAndMessage(ParamInterface $parameter, ConstraintViolationListInterface $violations, $message)
+    {
+        $exception = new self($message);
+        $exception->parameter = $parameter;
+        $exception->violations = $violations;
+
+        return $exception;
     }
 }
