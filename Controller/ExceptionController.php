@@ -25,8 +25,6 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
  */
 class ExceptionController
 {
-    private $debug;
-
     /**
      * @var ViewHandlerInterface
      */
