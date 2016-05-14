@@ -16,7 +16,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
- * @deprecated since 1.8, to be removed in 2.0. Use {@link \FOS\RestBundle\Validator\ViolationFormatterInterface} instead.
+ * @deprecated since version 1.8 and will be removed in 2.0. Catch specialized exception classes instead of relying on specific exception messages.
+ * @see FOS\RestBundle\Exception\InvalidParameterException
  */
 interface ViolationFormatterInterface
 {

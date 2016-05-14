@@ -8,7 +8,7 @@
         <parameter key="fos_rest.format_negotiator.class">FOS\RestBundle\Negotiation\FormatNegotiator</parameter>
         <parameter key="fos_rest.inflector.class">FOS\RestBundle\Inflector\DoctrineInflector</parameter>
         <parameter key="fos_rest.request_matcher.class">Symfony\Component\HttpFoundation\RequestMatcher</parameter>
-        <parameter key="fos_rest.violation_formatter.class">FOS\RestBundle\Validator\ViolationFormatter</parameter>
+        <parameter key="fos_rest.violation_formatter.class">FOS\RestBundle\Util\ViolationFormatter</parameter>
     </parameters>
 
     <services>
@@ -16,6 +16,8 @@
         <service id="fos_rest.exception_format_negotiator" class="%fos_rest.format_negotiator.class%" />
         <service id="fos_rest.inflector.doctrine" class="%fos_rest.inflector.class%" />
         <service id="fos_rest.request_matcher" class="%fos_rest.request_matcher.class%" public="false" />
-        <service id="fos_rest.violation_formatter" class="%fos_rest.violation_formatter.class%" />
+        <service id="fos_rest.violation_formatter" class="%fos_rest.violation_formatter.class%">
+            <argument>false</argument>
+        </service>
     </services>
 </container>
