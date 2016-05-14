@@ -49,6 +49,8 @@ CHANGELOG
 1.7.9
 -----
 
+* fixed that the default exclusion strategy groups for the serializer are not the empty string
+
 * fixed a BC break that prevented the `CamelKeysNormalizer` from removing leading underscores
 
 * fixed the `AllowedMethodsRouteLoader` to work with Symfony 3.0
