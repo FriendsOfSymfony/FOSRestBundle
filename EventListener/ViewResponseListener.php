@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\DBAL\PageableInterface;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -100,14 +101,8 @@ class ViewResponseListener implements EventSubscriberInterface
         }
         
         $range = null;
-
-        if (class_exists("Doctrine\DBAL\Query\QueryBuilder") 
-            && $view->getData() instanceof \Doctrine\DBAL\Query\QueryBuilder
-        ) {
-            if (!$range = $this->paginateQueryBuilderResults($view, $request)) {
-                $data = $view->getData()->execute()->fetchAll(\PDO::FETCH_ASSOC);
-                $view->setData($data);
-            }
+        if ($view->getData() instanceof PageableInterface) {
+            $range = $this->paginateResults($view, $request);
         }
 
         if ($this->viewHandler->isFormatTemplating($view->getFormat())
@@ -182,9 +177,10 @@ class ViewResponseListener implements EventSubscriberInterface
     /**
      * @param View $view
      * @param Request $request
+     * 
      * @return string|null
      */
-    private function paginateQueryBuilderResults(View $view, Request $request)
+    private function paginateResults(View $view, Request $request)
     {
         $paramFetcher = null;
         foreach ($request->attributes as $attribute) {
@@ -195,47 +191,21 @@ class ViewResponseListener implements EventSubscriberInterface
         }
         
         if (null === $paramFetcher) {
-            return;
+            return null;
         }
         
         $params = $paramFetcher->getParams();
+        $pageableInterface = $view->getData();
         
-        if (array_key_exists($view->getOffsetParam(), $params)
-            && (null !== ($offset = $paramFetcher->get($view->getOffsetParam(), null)))
-            && array_key_exists($view->getLimitParam(), $params)
-            && (null !== $limit = $paramFetcher->get($view->getLimitParam(), null))
+        if (array_key_exists($pageableInterface->getOffsetParam(), $params)
+            && (null !== ($offset = $paramFetcher->get($pageableInterface->getOffsetParam(), null)))
+            && array_key_exists($pageableInterface->getLimitParam(), $params)
+            && (null !== $limit = $paramFetcher->get($pageableInterface->getLimitParam(), null))
         ) {
-            $queryBuilder = $view->getData();
-            $count = $this->getResultCount($queryBuilder);
-            $queryBuilder->setFirstResult($offset);
-            $queryBuilder->setMaxResults($limit);
-            $data = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
-            $view->setData($data);
-            return sprintf(
-                "%d-%d/%d",
-                $offset,
-                $offset + $limit,
-                $count
-            );
+            $view->setData($pageableInterface->fetchPage($offset, $limit));
+            return $pageableInterface->getRange($offset, $limit);
         }
         
         return null;
-    }
-    
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @return int
-     */
-    private function getResultCount(\Doctrine\DBAL\Query\QueryBuilder $queryBuilder)
-    {
-        $outerQuery = $queryBuilder->getConnection()->createQueryBuilder();
-        $outerQuery->select('count(*)')
-            ->from(sprintf("(%s)", $queryBuilder->getSQL()), 'q');
-        foreach ($queryBuilder->getParameters() as $key => $value) {
-            $outerQuery->setParameter($key, $value);
-        }
-        $statement = $outerQuery->execute();
-        $result = $statement->fetch();
-        return current($result);
     }
 }

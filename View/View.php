@@ -82,31 +82,6 @@ class View
      * @var Response
      */
     private $response;
-    
-    /**
-     * @var string
-     */
-    private $offsetParam;
-    
-    /**
-     * @var string
-     */
-    private $limitParam;
-    
-    /**
-     * @var callable|null
-     */
-    private $streamedHeaderCallback;
-    
-    /**
-     * @var callable|null
-     */
-    private $streamedNodeCallback;
-    
-    /**
-     * @var callable|null
-     */
-    private $streamedFooterCallback;
 
     /**
      * Convenience method to allow for a fluent interface.
@@ -176,8 +151,6 @@ class View
         $this->setData($data);
         $this->setStatusCode($statusCode);
         $this->setTemplateVar('data');
-        $this->setOffsetParam('offset');
-        $this->setLimitParam('limit');
 
         if (!empty($headers)) {
             $this->getResponse()->headers->replace($headers);
@@ -530,125 +503,5 @@ class View
         }
 
         return $this->context;
-    }
-
-    /**
-     * Gets the offset parameter name for paginated responses.
-     * 
-     * @return string
-     */
-    public function getOffsetParam()
-    {
-        return $this->offsetParam;
-    }
-
-    /**
-     * Sets the offset parameter name for paginated responses.
-     * 
-     * @param string $offsetParam
-     * 
-     * @return View
-     */
-    public function setOffsetParam($offsetParam)
-    {
-        $this->offsetParam = $offsetParam;
-        
-        return $this;
-    }
-
-    /**
-     * Gets the limit parameter name for paginated responses.
-     * 
-     * @return string
-     */
-    public function getLimitParam()
-    {
-        return $this->limitParam;
-    }
-
-    /**
-     * Sets the limit parameter name for paginated responses.
-     * 
-     * @param string $limitParam
-     * 
-     * @return View
-     */
-    public function setLimitParam($limitParam)
-    {
-        $this->limitParam = $limitParam;
-        
-        return $this;
-    }
-
-    /**
-     * Gets the callback for rendering the header in a streamed response.
-     * 
-     * @return callable|NULL
-     */
-    public function getStreamedHeaderCallback()
-    {
-        return $this->streamedHeaderCallback;
-    }
-
-    /**
-     * Sets the callback for rendering the header in a streamed response.
-     * 
-     * @param callable $streamedHeaderCallback
-     * 
-     * @return View
-     */
-    public function setStreamedHeaderCallback($streamedHeaderCallback)
-    {
-        $this->streamedHeaderCallback = $streamedHeaderCallback;
-        
-        return $this;
-    }
-
-    /**
-     * Gets the callback for rendering a node in a streamed response.
-     * 
-     * @return callable|null
-     */
-    public function getStreamedNodeCallback()
-    {
-        return $this->streamedNodeCallback;
-    }
-
-    /**
-     * Sets the callback for rendering a node in a streamed response.
-     * 
-     * @param callable $streamedNodeCallback
-     * 
-     * @return View
-     */
-    public function setStreamedNodeCallback($streamedNodeCallback)
-    {
-        $this->streamedNodeCallback = $streamedNodeCallback;
-        
-        return $this;
-    }
-
-    /**
-     * Gets the callback for rendering the footer in a streamed response.
-     * 
-     * @return callable|null
-     */
-    public function getStreamedFooterCallback()
-    {
-        return $this->streamedFooterCallback;
-    }
-
-    /**
-     * Sets the callback for rendering the footer in a streamed response.
-     * 
-     * @param callable $streamedFooterCallback
-     * 
-     * @return View
-     */
-    public function setStreamedFooterCallback($streamedFooterCallback)
-    {
-        $this->streamedFooterCallback = $streamedFooterCallback;
-        
-        return $this;
     }
 }
