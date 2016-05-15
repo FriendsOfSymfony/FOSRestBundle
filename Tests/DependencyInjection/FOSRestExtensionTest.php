@@ -53,7 +53,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = new ContainerBuilder();
-        $this->container->setParameter('kernel.bundles', ['JMSSerializerBundle' => true]);
+        $this->container->setParameter('kernel.bundles', array('JMSSerializerBundle' => true));
         $this->container->setParameter('kernel.debug', false);
         $this->extension = new FOSRestExtension();
         $this->includeFormat = true;
@@ -551,11 +551,11 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->container->setParameter('kernel.debug', $kernelDebug);
         $extension = new FOSRestExtension();
 
-        $extension->load([
-            'fos_rest' => [
+        $extension->load(array(
+            'fos_rest' => array(
                 'exception' => $exceptionConfig,
-            ],
-        ], $this->container);
+            ),
+        ), $this->container);
 
         $definition = $this->container->getDefinition('fos_rest.exception.controller');
         $this->assertSame($expectedValue, $definition->getArgument(2));
@@ -569,38 +569,38 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
     public static function getShowExceptionData()
     {
-        return [
-            'empty config, kernel.debug is true' => [
+        return array(
+            'empty config, kernel.debug is true' => array(
                 true,
-                [],
+                array(),
                 true,
-            ],
-            'empty config, kernel.debug is false' => [
+            ),
+            'empty config, kernel.debug is false' => array(
                 false,
-                [],
+                array(),
                 false,
-            ],
-            'config debug true' => [
+            ),
+            'config debug true' => array(
                 false,
-                ['debug' => true],
+                array('debug' => true),
                 true,
-            ],
-            'config debug false' => [
+            ),
+            'config debug false' => array(
                 true,
-                ['debug' => false],
+                array('debug' => false),
                 false,
-            ],
-            'config debug null, kernel.debug true' => [
+            ),
+            'config debug null, kernel.debug true' => array(
                 false,
-                ['debug' => null],
+                array('debug' => null),
                 true,
-            ],
-            'config debug null, kernel.debug false' => [
+            ),
+            'config debug null, kernel.debug false' => array(
                 false,
-                ['debug' => null],
+                array('debug' => null),
                 true,
-            ],
-        ];
+            ),
+        );
     }
 
     /**
@@ -698,14 +698,14 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[0][0]);
         $requestMatcherFirstId = (string) $addRequestMatcherCalls[0][1][0];
         $requestMatcherFirst = $this->container->getDefinition($requestMatcherFirstId);
-        $this->assertInstanceOf(DefinitionDecorator::class, $requestMatcherFirst);
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $requestMatcherFirst);
         $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0));
 
         // Second zone
         $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[1][0]);
         $requestMatcherSecondId = (string) $addRequestMatcherCalls[1][1][0];
         $requestMatcherSecond = $this->container->getDefinition($requestMatcherSecondId);
-        $this->assertInstanceOf(DefinitionDecorator::class, $requestMatcherSecond);
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\DefinitionDecorator', $requestMatcherSecond);
         $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
         $this->assertEquals(array('127.0.0.1'), $requestMatcherSecond->getArgument(3));
     }

@@ -35,7 +35,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(['test_case' => 'Debug', 'debug' => false]);
+        $client = $this->createClient(array('test_case' => 'Debug', 'debug' => false));
         $client->request('GET', '/serializer-error/unknown_exception.json');
 
         $this->assertEquals('{"code":500,"message":"Unknown exception message."}', $client->getResponse()->getContent());
@@ -45,7 +45,7 @@ class SerializerErrorTest extends WebTestCase
     {
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
-        $client = $this->createClient(['test_case' => 'Serializer', 'debug' => false]);
+        $client = $this->createClient(array('test_case' => 'Serializer', 'debug' => false));
         $client->request('GET', '/serializer-error/unknown_exception.json');
 
         $this->assertEquals('{"code":500,"message":"Internal Server Error"}', $client->getResponse()->getContent());

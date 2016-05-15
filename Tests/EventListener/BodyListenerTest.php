@@ -94,33 +94,33 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testOnKernelRequestNoZone()
     {
-        $data = ['foo_bar' => 'foo_bar'];
-        $normalizedData = ['fooBar' => 'foo_bar'];
+        $data = array('foo_bar' => 'foo_bar');
+        $normalizedData = array('fooBar' => 'foo_bar');
 
-        $decoder = $this->getMock(DecoderInterface::class);
+        $decoder = $this->getMock('FOS\RestBundle\Decoder\DecoderInterface');
         $decoder
             ->expects($this->never())
             ->method('decode')
             ->will($this->returnValue($data));
 
-        $decoderProvider = $this->getMock(DecoderProviderInterface::class);
+        $decoderProvider = $this->getMock('FOS\RestBundle\Decoder\DecoderProviderInterface');
         $decoderProvider
             ->expects($this->never())
             ->method('getDecoder')
             ->will($this->returnValue($decoder));
 
-        $normalizer = $this->getMock(ArrayNormalizerInterface::class);
+        $normalizer = $this->getMock('FOS\RestBundle\Normalizer\ArrayNormalizerInterface');
         $normalizer
             ->expects($this->never())
             ->method('normalize')
             ->with($data)
             ->will($this->returnValue($normalizedData));
 
-        $request = new Request([], [], [], [], [], [], 'foo');
+        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $request->setMethod('POST');
 
-        $event = $this->getMockBuilder(GetResponseEvent::class)
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -131,7 +131,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $listener = new BodyListener($decoderProvider, false, $normalizer);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals([], $request->request->all());
+        $this->assertEquals(array(), $request->request->all());
     }
 
     public function testOnKernelRequestWithNormalizer()

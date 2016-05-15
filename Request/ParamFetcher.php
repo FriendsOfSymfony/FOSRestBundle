@@ -12,9 +12,9 @@
 namespace FOS\RestBundle\Request;
 
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
+use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\Util\ResolverTrait;
 use FOS\RestBundle\Validator\Constraints\ResolvableConstraintInterface;
-use FOS\RestBundle\Validator\ViolationFormatterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -41,22 +41,19 @@ class ParamFetcher implements ParamFetcherInterface
     private $parameterBag;
     private $requestStack;
     private $validator;
-    private $violationFormatter;
 
     /**
      * Initializes fetcher.
      *
-     * @param ContainerInterface          $container
-     * @param ParamReaderInterface        $paramReader
-     * @param RequestStack                $requestStack
-     * @param ValidatorInterface          $validator
-     * @param ViolationFormatterInterface $violationFormatter
+     * @param ContainerInterface   $container
+     * @param ParamReaderInterface $paramReader
+     * @param RequestStack         $requestStack
+     * @param ValidatorInterface   $validator
      */
-    public function __construct(ContainerInterface $container, ParamReaderInterface $paramReader, RequestStack $requestStack, ViolationFormatterInterface $violationFormatter, ValidatorInterface $validator = null)
+    public function __construct(ContainerInterface $container, ParamReaderInterface $paramReader, RequestStack $requestStack, ValidatorInterface $validator = null)
     {
         $this->container = $container;
         $this->requestStack = $requestStack;
-        $this->violationFormatter = $violationFormatter;
         $this->validator = $validator;
 
         $this->parameterBag = new ParameterBag($paramReader);
@@ -162,9 +159,7 @@ class ParamFetcher implements ParamFetcherInterface
 
         if (0 < count($errors)) {
             if ($strict) {
-                throw new BadRequestHttpException(
-                    $this->violationFormatter->formatList($param, $errors)
-                );
+                throw InvalidParameterException::withViolations($param, $errors);
             }
 
             return null === $default ? '' : $default;

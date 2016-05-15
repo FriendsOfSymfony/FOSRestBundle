@@ -87,7 +87,7 @@ class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->paramFetcher->expects($this->never())
             ->method('all')
-            ->will($this->returnValue([]));
+            ->will($this->returnValue(array()));
 
         $this->paramFetcherListener->onKernelController($event);
 
