@@ -54,14 +54,14 @@ class ExceptionController
      * Converts an Exception to a Response.
      *
      * @param Request                   $request
-     * @param \Exception                $exception
+     * @param \Exception|\Throwable     $exception
      * @param DebugLoggerInterface|null $logger
      *
      * @throws \InvalidArgumentException
      *
      * @return Response
      */
-    public function showAction(Request $request, \Exception $exception, DebugLoggerInterface $logger = null)
+    public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
         $code = $this->getStatusCode($exception);
