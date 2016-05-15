@@ -352,16 +352,16 @@ class RestActionReader
         $condition = $annotation->getCondition();
 
         if (!empty($this->versions)) {
-            $versionCondition = "request.attributes.get('version') == (";
+            $versionCondition = "request.attributes.get('version') in [";
             $first = true;
             foreach ($this->versions as $version) {
                 if (!$first) {
-                    $versionCondition .= ' or ';
+                    $versionCondition .= ', ';
                 }
                 $versionCondition .= '\''.$version.'\'';
                 $first = false;
             }
-            $versionCondition .= ')';
+            $versionCondition .= ']';
             $condition = $condition ? '('.$condition.') and '.$versionCondition : $versionCondition;
         }
 
