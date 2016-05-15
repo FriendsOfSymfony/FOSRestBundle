@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Templating\TemplateReferenceInterface;
+use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Request\ParamFetcher;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -96,6 +98,17 @@ class ViewResponseListener implements EventSubscriberInterface
         if (null === $view->getFormat()) {
             $view->setFormat($request->getRequestFormat());
         }
+        
+        $range = null;
+
+        if (class_exists("Doctrine\DBAL\Query\QueryBuilder") 
+            && $view->getData() instanceof \Doctrine\DBAL\Query\QueryBuilder
+        ) {
+            if (!$range = $this->paginateQueryBuilderResults($view, $request)) {
+                $data = $view->getData()->execute()->fetchAll(\PDO::FETCH_ASSOC);
+                $view->setData($data);
+            }
+        }
 
         if ($this->viewHandler->isFormatTemplating($view->getFormat())
             && !$view->getRoute()
@@ -121,6 +134,11 @@ class ViewResponseListener implements EventSubscriberInterface
         }
 
         $response = $this->viewHandler->handle($view, $request);
+        
+        if (null !== $range) {
+            $response->headers->set('Content-Range', $range);
+            $response->setStatusCode(206);
+        }
 
         $event->setResponse($response);
     }
@@ -159,5 +177,65 @@ class ViewResponseListener implements EventSubscriberInterface
 
             return $arguments;
         }
+    }
+    
+    /**
+     * @param View $view
+     * @param Request $request
+     * @return string|null
+     */
+    private function paginateQueryBuilderResults(View $view, Request $request)
+    {
+        $paramFetcher = null;
+        foreach ($request->attributes as $attribute) {
+            if ($attribute instanceof ParamFetcher) {
+                $paramFetcher = $attribute;
+                break;
+            }
+        }
+        
+        if (null === $paramFetcher) {
+            return;
+        }
+        
+        $params = $paramFetcher->getParams();
+        
+        if (array_key_exists($view->getOffsetParam(), $params)
+            && (null !== ($offset = $paramFetcher->get($view->getOffsetParam(), null)))
+            && array_key_exists($view->getLimitParam(), $params)
+            && (null !== $limit = $paramFetcher->get($view->getLimitParam(), null))
+        ) {
+            $queryBuilder = $view->getData();
+            $count = $this->getResultCount($queryBuilder);
+            $queryBuilder->setFirstResult($offset);
+            $queryBuilder->setMaxResults($limit);
+            $data = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
+            $view->setData($data);
+            return sprintf(
+                "%d-%d/%d",
+                $offset,
+                $offset + $limit,
+                $count
+            );
+        }
+        
+        return null;
+    }
+    
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @return int
+     */
+    private function getResultCount(\Doctrine\DBAL\Query\QueryBuilder $queryBuilder)
+    {
+        $outerQuery = $queryBuilder->getConnection()->createQueryBuilder();
+        $outerQuery->select('count(*)')
+            ->from(sprintf("(%s)", $queryBuilder->getSQL()), 'q');
+        foreach ($queryBuilder->getParameters() as $key => $value) {
+            $outerQuery->setParameter($key, $value);
+        }
+        $statement = $outerQuery->execute();
+        $result = $statement->fetch();
+        return current($result);
     }
 }

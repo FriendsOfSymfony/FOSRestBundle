@@ -43,6 +43,9 @@ Define resource actions
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
+
     class UsersController
     {
         public function copyUserAction($id) // RFC-2518
@@ -156,6 +159,8 @@ following would work as well:
 
     <?php
 
+    namespace AppBundle\Controller;
+
     use FOS\RestBundle\Routing\ClassResourceInterface;
 
     class UserController implements ClassResourceInterface
@@ -185,6 +190,8 @@ name via the ``@RouteResource`` annotation:
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
 
     use FOS\RestBundle\Controller\Annotations\RouteResource;
 
@@ -217,6 +224,8 @@ Finally, it's possible to have a singular resource name thanks to the ``@RouteRe
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
 
     use FOS\RestBundle\Controller\Annotations\RouteResource;
 
@@ -355,6 +364,8 @@ to limit or add a custom format, you can do so by overriding it with the
 
     <?php
 
+    namespace AppBundle\Controller;
+
     use FOS\RestBundle\Controller\Annotations\Route;
 
         // ...
@@ -382,6 +393,7 @@ Example class implementing ``InflectorInterface``:
 .. code-block:: php
 
     <?php
+
     namespace Acme\HelloBundle\Util\Inflector;
 
     use FOS\RestBundle\Inflector\InflectorInterface;
