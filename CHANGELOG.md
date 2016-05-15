@@ -4,6 +4,8 @@ CHANGELOG
 1.7.9
 -----
 
+* handle `\Throwable` instances in the `ExceptionController`
+
 * fixed that the default exclusion strategy groups for the serializer are not the empty string
 
 * fixed a BC break that prevented the `CamelKeysNormalizer` from removing leading underscores
