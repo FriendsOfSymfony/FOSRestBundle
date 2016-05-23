@@ -55,20 +55,26 @@ class Dao implements PageableInterface, StreamableInterface
     protected $limitParam;
     
     /**
+     * @var bool
+     */
+    protected $fetchAllInTemplates;
+    
+    /**
      * @param \Doctrine\DBAL\Query\QueryBuilder $queryBuilder
-     * @param string $contentRange
+     * @param string $rangeHeader
      */
     public function __construct(
         \Doctrine\DBAL\Query\QueryBuilder $queryBuilder, 
-        $contentRange = "Content-Range",
+        $rangeHeader = "Content-Range",
         $offsetParam = "offset",
         $limitParam = "limit"
     )
     {
         $this->queryBuilder = $queryBuilder;
-        $this->rangeHeader = $contentRange;
+        $this->rangeHeader = $rangeHeader;
         $this->offsetParam = $offsetParam;
         $this->limitParam = $limitParam;
+        $this->fetchAllInTemplates = false;
     }
 
     /**
@@ -211,5 +217,26 @@ class Dao implements PageableInterface, StreamableInterface
         } else if ($format === 'xml') {
             echo '</result>';
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @see \FOS\RestBundle\DBAL\PageableInterface::fetchAllInTemplates()
+     */
+    public function fetchAllInTemplates()
+    {
+        return $this->fetchAllInTemplates;
+    }
+
+    /**
+     * @param unknown $fetchAllInTemplates
+     * 
+     * @return Dao
+     */
+    public function setFetchAllInTemplates($fetchAllInTemplates)
+    {
+        $this->fetchAllInTemplates = $fetchAllInTemplates;
+        
+        return $this;
     }
 }

@@ -54,4 +54,9 @@ interface PageableInterface
      * @return string
      */
     public function getLimitParam();
+    
+    /**
+     * @return bool
+     */
+    public function fetchAllInTemplates();
 }

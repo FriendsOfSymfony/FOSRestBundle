@@ -50,4 +50,9 @@ interface StreamableInterface
      * @return int
      */
     public function rowCount();
+    
+    /**
+     * @return bool
+     */
+    public function fetchAllInTemplates();
 }

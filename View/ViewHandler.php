@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use FOS\RestBundle\DBAL\StreamableInterface;
+use FOS\RestBundle\DBAL\PageableInterface;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -370,6 +371,19 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function prepareTemplateParameters(View $view)
     {
         $data = $view->getData();
+        
+        if ($data instanceof StreamableInterface || $data instanceof PageableInterface) {
+            if ($data->fetchAllInTemplates()) {
+                $queryData = [];
+                while ($row = $data->fetch()) {
+                    $queryData[] = $row;
+                }
+                $data = $queryData;
+                $queryData = null;
+            } else {
+                $data = [];
+            }
+        }
 
         if ($data instanceof FormInterface) {
             $data = [$view->getTemplateVar() => $data->getData(), 'form' => $data];
