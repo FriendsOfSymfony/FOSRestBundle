@@ -23,6 +23,15 @@ class VersionTest extends WebTestCase
         $this->client = $this->createClient(['test_case' => 'Version']);
     }
 
+    public function testVersionAnnotation()
+    {
+        $this->client->request(
+            'GET',
+            '/version?query_version=1.2'
+          );
+        $this->assertContains('test annotation', $this->client->getResponse()->getContent());
+    }
+
     public function testCustomHeaderVersion()
     {
         $this->client->request(
