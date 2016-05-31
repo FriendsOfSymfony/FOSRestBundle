@@ -156,7 +156,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $options = [
             'groups' => ['foo', 'bar'],
             'version' => 'v1.2',
-            'maxDepth' => 5,
+            'enableMaxDepth' => true,
             'serializeNull' => false,
             'foo' => 'bar',
         ];
@@ -169,9 +169,30 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $expectedContext
             ->addGroups($options['groups'])
             ->setVersion($options['version'])
-            ->setMaxDepth($options['maxDepth'])
+            ->enableMaxDepth($options['enableMaxDepth'])
             ->setSerializeNull($options['serializeNull'])
             ->setAttribute('foo', 'bar');
+
+        $this->assertEquals($expectedContext, $context);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testMaxDepthContextConfiguration()
+    {
+        $converter = new RequestBodyParamConverter($this->serializer);
+        $options = [
+            'maxDepth' => 5,
+        ];
+
+        $contextConfigurationMethod = new \ReflectionMethod($converter, 'configureContext');
+        $contextConfigurationMethod->setAccessible(true);
+        $contextConfigurationMethod->invoke($converter, $context = new Context(), $options);
+
+        $expectedContext = new Context();
+        $expectedContext
+            ->setMaxDepth($options['maxDepth']);
 
         $this->assertEquals($expectedContext, $context);
     }

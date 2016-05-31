@@ -207,11 +207,12 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->createViewResponseListener(['json' => true]);
 
         $viewAnnotation = new ViewAnnotation([]);
+        $viewAnnotation->setOwner([$this, 'testSerializerEnableMaxDepthChecks']);
         $viewAnnotation->setSerializerEnableMaxDepthChecks($enableMaxDepthChecks);
 
         $request = new Request();
         $request->setRequestFormat('json');
-        $request->attributes->set('_view', $viewAnnotation);
+        $request->attributes->set('_template', $viewAnnotation);
 
         $this->templating->expects($this->any())
             ->method('render')
@@ -224,9 +225,9 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener->onKernelView($event);
 
         $context = $view->getContext();
-        $maxDepth = $context->getMaxDepth();
 
-        $this->assertEquals($expectedMaxDepth, $maxDepth);
+        $this->assertEquals($expectedMaxDepth, $context->getMaxDepth(false));
+        $this->assertEquals($enableMaxDepthChecks, $context->isMaxDepthEnabled());
     }
 
     public function getDataForDefaultVarsCopy()
