@@ -22,6 +22,14 @@ use Symfony\Component\HttpFoundation\Response;
 class FOSRestExtension extends Extension
 {
     /**
+     * {@inheritdoc}
+     */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($container->getParameter('kernel.debug'));
+    }
+
+    /**
      * Loads the services based on your application configuration.
      *
      * @param array            $configs
