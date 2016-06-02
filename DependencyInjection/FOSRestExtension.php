@@ -42,6 +42,14 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
     }
 
+    /*
+     * {@inheritdoc}
+     */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($container->getParameter('kernel.debug'));
+    }
+
     /**
      * Loads the services based on your application configuration.
      *
