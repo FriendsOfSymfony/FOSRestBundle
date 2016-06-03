@@ -144,7 +144,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->listener->onKernelView($event));
     }
     
-    public function testOnKernelViewWhenControllerResultIsADoctrineQueryBuilder()
+    public function testOnKernelViewWhenControllerResultIsAPageableInterface()
     {
         $template = $this->getMockBuilder('Symfony\Component\Templating\TemplateReferenceInterface')
             ->disableOriginalConstructor()
@@ -163,27 +163,36 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
         $paramFetcher->expects($this->once())
             ->method('getParams')
             ->will($this->returnValue(['offset' => 0, 'limit' => 10]));
+        $paramFetcher->expects($this->exactly(2))
+            ->method('get')
+            ->withConsecutive(
+                [$this->equalTo('offset'), null],
+                [$this->equalTo('limit'), null]
+            )
+            ->willReturnOnConsecutiveCalls(
+                0, 10
+            );
         
         $request = new Request();
-        $request->attributes->set('limit', 10);
-        $request->attributes->set('offset', 0);
         $request->attributes->set('_template', $annotation);
         $request->attributes->set('paramFetcher', $paramFetcher);
         $response = new Response();
         
-        $statement = $this->getMockBuilder('Doctrine\DBAL\Statement')
+        $doctrineDao = $this->getMockBuilder('FOS\RestBundle\DBAL\Doctrine\Dao')
             ->disableOriginalConstructor()
             ->getMock();
-        $statement->expects($this->once())
-            ->method('fetchAll')
-            ->will($this->returnValue([['a' => 1, 'b' => 2],['a' => 3, 'b' => 4]]));
-        
-        $queryBuilder = $this->getMockBuilder('Doctrine\DBAL\Query\QueryBuilder')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $queryBuilder->expects($this->once())
-            ->method('execute')
-            ->will($this->returnValue($statement));
+        $doctrineDao->expects($this->exactly(2))
+            ->method('getOffsetParam')
+            ->will($this->returnValue('offset'));
+        $doctrineDao->expects($this->exactly(2))
+            ->method('getLimitParam')
+            ->will($this->returnValue('limit'));
+        $doctrineDao->expects($this->once())
+            ->method('fetchPage')
+            ->will($this->returnValue([['a' => 1, 'b' => 2], ['a' => 3, 'b' => 4]]));
+        $doctrineDao->expects($this->once())
+            ->method('getRange')
+            ->will($this->returnValue('0-10/100'));
         
         $view = $this->getMockBuilder('FOS\RestBundle\View\View')
             ->disableOriginalConstructor()
@@ -193,7 +202,7 @@ class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
             ->will($this->onConsecutiveCalls(null, 'html'));
         $view->expects($this->exactly(2))
             ->method('getData')
-            ->will($this->returnValue($queryBuilder));
+            ->will($this->returnValue($doctrineDao));
         
         $viewHandler = $this->getMock('FOS\RestBundle\View\ViewHandlerInterface');
         $viewHandler->expects($this->once())

@@ -64,12 +64,11 @@ class Dao implements PageableInterface, StreamableInterface
      * @param string $rangeHeader
      */
     public function __construct(
-        \Doctrine\DBAL\Query\QueryBuilder $queryBuilder, 
+        \Doctrine\DBAL\Query\QueryBuilder $queryBuilder,
         $rangeHeader = "Content-Range",
         $offsetParam = "offset",
         $limitParam = "limit"
-    )
-    {
+    ) {
         $this->queryBuilder = $queryBuilder;
         $this->rangeHeader = $rangeHeader;
         $this->offsetParam = $offsetParam;
@@ -82,7 +81,7 @@ class Dao implements PageableInterface, StreamableInterface
      * @see \FOS\RestBundle\DBAL\PageableInterface::getRange()
      */
     public function getRange($offset, $limit)
-    { 
+    {
         return sprintf(
             "%d-%d/%d",
             $offset,
@@ -125,7 +124,7 @@ class Dao implements PageableInterface, StreamableInterface
      * @see \FOS\RestBundle\DBAL\PageableInterface::rowCount()
      */
     public function rowCount()
-    { 
+    {
         if (null !== $this->rowCount) {
             return $this->rowCount;
         }
@@ -151,7 +150,7 @@ class Dao implements PageableInterface, StreamableInterface
      * @see \FOS\RestBundle\DBAL\PageableInterface::getRangeHeader()
      */
     public function getRangeHeader()
-    { 
+    {
         return $this->rangeHeader;
     }
     
@@ -176,7 +175,7 @@ class Dao implements PageableInterface, StreamableInterface
     {
         if ($format === 'json') {
             echo '[';
-        } else if ($format === 'xml') {
+        } elseif ($format === 'xml') {
             echo '<?xml version="1.0" encoding="UTF-8"?><result>';
         }
     }
@@ -214,7 +213,7 @@ class Dao implements PageableInterface, StreamableInterface
     {
         if ($format === 'json') {
             echo ']';
-        } else if ($format === 'xml') {
+        } elseif ($format === 'xml') {
             echo '</result>';
         }
     }

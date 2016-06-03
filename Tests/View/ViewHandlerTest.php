@@ -379,15 +379,14 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $viewHandler->handle($view));
     }
     
-    public function testHandleDoctrineQueryBuilder()
+    public function testHandleStreamableInterface()
     {
         $viewHandler = $this->createViewHandler(['html' => false]);
         
         $this->requestStack->push(new Request());
-        $connection = $this->getMockBuilder('Doctrine\DBAL\Connection')
+        $data = $this->getMockBuilder('FOS\RestBundle\DBAL\Doctrine\Dao')
             ->disableOriginalConstructor()
             ->getMock();
-        $data = new QueryBuilder($connection);
         
         $view = new View($data);
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\StreamedResponse', $viewHandler->handle($view));

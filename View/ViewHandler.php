@@ -470,7 +470,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             $response->setContent($content);
         }
 
-        return $response; 
+        return $response;
     }
     
     /**
