@@ -642,7 +642,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testGetConfiguration()
     {
-        $configuration = $this->extension->getConfiguration([], $this->container);
+        $configuration = $this->extension->getConfiguration(array(), $this->container);
 
         $this->assertInstanceOf('FOS\RestBundle\DependencyInjection\Configuration', $configuration);
     }
