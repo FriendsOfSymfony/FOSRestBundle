@@ -256,7 +256,7 @@ an example. The serialized Task object will looks as follows:
     
     {"task_form":{"name":"Task1", "person":{"id":1, "name":"Fabien"}}}
 
-In a traditional Symfony2 application we simply define the property of the
+In a traditional Symfony application we simply define the property of the
 related class and it would perfectly assign the person to our task - in this
 case based on the id:
 
