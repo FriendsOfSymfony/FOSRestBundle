@@ -68,7 +68,6 @@ Full default configuration
                 service:              null
             failed_validation:    400
             empty_content:        204
-            exception_wrapper_handler:  null
             serialize_null:       false
             jsonp_handler:
                 callback_param:       callback
@@ -114,10 +113,6 @@ Full default configuration
                 fallback_format:      html
                 attributes:           []
                 priorities:           []
-            media_type:
-                enabled:              false
-                service:              null
-                version_regex:        '/(v|version)=(?P<version>[0-9\.]+)/'
         versioning:
             enabled: false
             default_version: ~
