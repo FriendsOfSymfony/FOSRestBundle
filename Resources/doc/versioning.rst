@@ -161,18 +161,3 @@ You can use conditions on your request to check for the version that was determi
     my_route:
         # ...
         condition: "request.attributes.get('version') == 'v2'"
-
-When using the :doc:`automatic route generation <5-automatic-route-generation_single-restful-controller>`,
-you can also use the ``@Version`` annotation to set the above condition automatically on all methods
-in the given controller.
-
-.. code-block:: php
-
-    use FOS\RestBundle\Controller\Annotations\Version;
-
-    /**
-     * @Version("v2")
-     */
-    class MyController
-    {
-    }
