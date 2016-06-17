@@ -2,7 +2,7 @@ FOSRestBundle
 =============
 
 This bundle provides various tools to rapidly develop RESTful API's &
-applications with Symfony2. Features include:
+applications with Symfony. Features include:
 
 - A View layer to enable output and format agnostic Controllers
 - A custom route loader to generate url's following REST conventions

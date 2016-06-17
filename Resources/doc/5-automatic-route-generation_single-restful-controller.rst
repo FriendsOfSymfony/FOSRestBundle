@@ -33,7 +33,7 @@ are explained in the next section.
         type:     rest
         resource: Acme\HelloBundle\Controller\UsersController
 
-This will tell Symfony2 to automatically generate proper REST routes from your
+This will tell Symfony to automatically generate proper REST routes from your
 ``UsersController`` action names. Notice ``type: rest`` option. It's required so
 that the RestBundle can find which routes are supported.
 

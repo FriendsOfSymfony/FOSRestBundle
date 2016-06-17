@@ -39,7 +39,7 @@
         <service id="fos_rest.serializer.exception_normalizer.symfony" class="FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer" public="false">
             <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
             <argument /><!-- show exception message -->
-            <tag name="serializer.normalizer" />
+            <tag name="serializer.normalizer" priority="-10" />
         </service>
     </services>
 </container>
