@@ -34,7 +34,7 @@ Bundle usage
 Before you start using the bundle it is advised you run a quick look over the
 six sections listed below. This bundle contains many features that are loosely
 coupled so you may or may not need to use all of them. This bundle is just a
-tool to help you in the job of creating a REST API with Symfony2.
+tool to help you in the job of creating a REST API with Symfony.
 
 FOSRestBundle provides several tools to assist in building REST applications:
 

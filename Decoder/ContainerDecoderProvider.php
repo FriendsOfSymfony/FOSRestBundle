@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Decoder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides encoders through the Symfony2 DIC.
+ * Provides encoders through the Symfony DIC.
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
