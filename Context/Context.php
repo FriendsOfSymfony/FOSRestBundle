@@ -37,6 +37,10 @@ final class Context
     /**
      * @var bool
      */
+    private $isMaxDepthEnabled;
+    /**
+     * @var bool
+     */
     private $serializeNull;
 
     /**
@@ -176,9 +180,14 @@ final class Context
      * @param int|null $maxDepth
      *
      * @return self
+     *
+     * @deprecated since 2.1, to be removed in 3.0. Use {@link self::enableMaxDepth()} instead.
      */
-    public function setMaxDepth($maxDepth)
+    public function setMaxDepth($maxDepth, $triggerDeprecation = true)
     {
+        if ($triggerDeprecation) {
+            @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::enabledMaxDepth() instead.', __METHOD__, __CLASS__), E_USER_DEPRECATED);
+        }
         $this->maxDepth = $maxDepth;
 
         return $this;
@@ -188,10 +197,34 @@ final class Context
      * Gets the normalization max depth.
      *
      * @return int|null
+     *
+     * @deprecated since version 2.1, to be removed in 3.0. Use {@link self::isMaxDepthEnabled()} instead.
      */
-    public function getMaxDepth()
+    public function getMaxDepth($triggerDeprecation = true)
     {
+        if ($triggerDeprecation) {
+            @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::isMaxDepthEnabled() instead.', __METHOD__, __CLASS__), E_USER_DEPRECATED);
+        }
+
         return $this->maxDepth;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function enableMaxDepth($enabled = true)
+    {
+        $this->isMaxDepthEnabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isMaxDepthEnabled()
+    {
+        return $this->isMaxDepthEnabled;
     }
 
     /**

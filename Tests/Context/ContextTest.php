@@ -82,6 +82,9 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1.3.2', $this->context->getVersion());
     }
 
+    /**
+     * @group legacy
+     */
     public function testMaxDepth()
     {
         $this->context->setMaxDepth(10);

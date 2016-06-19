@@ -139,7 +139,10 @@ class RequestBodyParamConverter implements ParamConverterInterface
             } elseif ($key === 'version') {
                 $context->setVersion($options['version']);
             } elseif ($key === 'maxDepth') {
+                @trigger_error('Context attribute "maxDepth" is deprecated since version 2.1 and will be removed in 3.0. Use "enable_max_depth" instead.', E_USER_DEPRECATED);
                 $context->setMaxDepth($options['maxDepth']);
+            } elseif ($key === 'enableMaxDepth') {
+                $context->enableMaxDepth($options['enableMaxDepth']);
             } elseif ($key === 'serializeNull') {
                 $context->setSerializeNull($options['serializeNull']);
             } else {
