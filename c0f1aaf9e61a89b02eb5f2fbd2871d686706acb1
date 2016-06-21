@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-06-17T14:41:03Z
+
+note for maintainers: this commit should be reverted in the master branch after merging 1.8 into master
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-06-21T08:03:50Z
+
+@lsmith77 @Ener-Getick I wonder if we should not rather backport #1182 to the `1.8` branch instead. The PR looks fully backwards compatible to me. What do you think?
+
+---------------------------------------------------------------------------
+
+by lsmith77 at 2016-06-21T08:05:17Z
+
+I am fine with not backporting the version annotation
