@@ -181,12 +181,12 @@ final class Context
      *
      * @return self
      *
-     * @deprecated since 2.1, to be removed in 3.0. Use {@link self::enableMaxDepth()} instead.
+     * @deprecated since 2.1, to be removed in 3.0. Use {@link self::enableMaxDepth()} and {@link self::disableMaxDepth()} instead.
      */
-    public function setMaxDepth($maxDepth, $triggerDeprecation = true)
+    public function setMaxDepth($maxDepth)
     {
-        if ($triggerDeprecation) {
-            @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::enabledMaxDepth() instead.', __METHOD__, __CLASS__), E_USER_DEPRECATED);
+        if (1 === func_num_args() || func_get_arg(1)) {
+            @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::enableMaxDepth() and %s::disableMaxDepth() instead.', __METHOD__, __CLASS__, __CLASS__), E_USER_DEPRECATED);
         }
         $this->maxDepth = $maxDepth;
 
@@ -200,21 +200,25 @@ final class Context
      *
      * @deprecated since version 2.1, to be removed in 3.0. Use {@link self::isMaxDepthEnabled()} instead.
      */
-    public function getMaxDepth($triggerDeprecation = true)
+    public function getMaxDepth()
     {
-        if ($triggerDeprecation) {
+        if (0 === func_num_args() || func_get_arg(0)) {
             @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::isMaxDepthEnabled() instead.', __METHOD__, __CLASS__), E_USER_DEPRECATED);
         }
 
         return $this->maxDepth;
     }
 
-    /**
-     * @param bool $enabled
-     */
-    public function enableMaxDepth($enabled = true)
+    public function enableMaxDepth()
     {
-        $this->isMaxDepthEnabled = $enabled;
+        $this->isMaxDepthEnabled = true;
+
+        return $this;
+    }
+
+    public function disableMaxDepth()
+    {
+        $this->isMaxDepthEnabled = false;
 
         return $this;
     }
