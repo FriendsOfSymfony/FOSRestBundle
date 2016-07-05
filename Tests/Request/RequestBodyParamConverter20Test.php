@@ -36,7 +36,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
             $this->markTestSkipped('skipping RequestBodyParamConverter20Test due to an incompatible version of the SensioFrameworkExtraBundle');
         }
 
-        $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
+        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
         $this->converter = new RequestBodyParamConverter20($this->serializer);
     }
 
@@ -47,7 +47,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
             $this->serializer,
             null,
             null,
-            $this->getMock('Symfony\Component\Validator\ValidatorInterface')
+            $this->getMockBuilder('Symfony\Component\Validator\ValidatorInterface')->getMock()
         );
     }
 
@@ -155,7 +155,9 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
 
     public function testApplyWithSerializerContextOptionsForSymfonySerializer()
     {
-        $this->serializer = $this->getMock('Symfony\Component\Serializer\SerializerInterface', array('serialize', 'deserialize'));
+        $this->serializer = $this->getMockBuilder('Symfony\Component\Serializer\SerializerInterface')
+            ->setMethods(array('serialize', 'deserialize'))
+            ->getMock();
         $this->converter = new RequestBodyParamConverter20($this->serializer);
         $requestBody = '{"name": "Post 1", "body": "This is a blog post"}';
 
@@ -180,7 +182,7 @@ class RequestBodyParamConverter20Test extends AbstractRequestBodyParamConverterT
         $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator')
             ->disableOriginalConstructor()
             ->getMock();
-        $validationErrors = $this->getMock('Symfony\Component\Validator\ConstraintViolationList');
+        $validationErrors = $this->getMockBuilder('Symfony\Component\Validator\ConstraintViolationList')->getMock();
 
         $this->converter = new RequestBodyParamConverter20($this->serializer, null, null, $validator, 'validationErrors');
 

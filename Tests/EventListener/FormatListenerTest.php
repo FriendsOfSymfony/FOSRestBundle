@@ -64,13 +64,12 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiatorInterface')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\MediaTypeNegotiatorInterface')
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator
             ->expects($this->never())
-            ->method('getBestMediaType')
-        ;
+            ->method('getBestMediaType');
 
         $listener = new FormatListener($formatNegotiator);
 
