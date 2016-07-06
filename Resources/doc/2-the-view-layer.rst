@@ -260,7 +260,7 @@ case based on the id:
 
 Unfortunately, this form builder does not accept our serialized object as it is
 - even though it contains the necessary id. In fact, the object would have to
-contain the id directly assigned to the person field to be be accepted by the
+contain the id directly assigned to the person field to be accepted by the
 form validation process:
 
 .. code-block:: json
