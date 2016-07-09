@@ -46,7 +46,7 @@ trait ControllerTrait
     protected function getViewHandler()
     {
         if (!$this->viewhandler instanceof ViewHandlerInterface) {
-            throw new \RuntimeException('A "ViewHandlerInterface" instance must be set when usign the FOSRestBundle "ControllerTrait".');
+            throw new \RuntimeException('A "ViewHandlerInterface" instance must be set when using the FOSRestBundle "ControllerTrait".');
         }
 
         return $this->viewhandler;
