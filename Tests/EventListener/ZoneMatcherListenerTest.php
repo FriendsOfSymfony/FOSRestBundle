@@ -33,7 +33,7 @@ class ZoneMatcherListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $event = $this->getGetResponseEvent($request);
 
-        $requestMatcher = $this->getMock('Symfony\Component\HttpFoundation\RequestMatcherInterface');
+        $requestMatcher = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestMatcherInterface')->getMock();
         $requestMatcher
             ->expects($this->once())
             ->method('matches')
@@ -52,7 +52,7 @@ class ZoneMatcherListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $event = $this->getGetResponseEvent($request);
 
-        $requestMatcher = $this->getMock('Symfony\Component\HttpFoundation\RequestMatcherInterface');
+        $requestMatcher = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestMatcherInterface')->getMock();
         $requestMatcher
             ->expects($this->once())
             ->method('matches')

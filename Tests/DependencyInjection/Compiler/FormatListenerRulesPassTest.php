@@ -20,7 +20,9 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
 {
     public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
     {
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', array('addMethod'));
+        $definition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
+            ->setMethods(array('addMethod'))
+            ->getMock();
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->setMethods(array('hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'))
@@ -66,7 +68,9 @@ class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
 
     public function testNoRulesAreAddedWhenProfilerToolbarAreDisabled()
     {
-        $definition = $this->getMock('Symfony\Component\DependencyInjection\Definition', array('addMethod'));
+        $definition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
+            ->setMethods(array('addMethod'))
+            ->getMock();
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
             ->setMethods(array('hasDefinition', 'getDefinition', 'hasParameter', 'getParameter'))

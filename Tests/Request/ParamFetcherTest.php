@@ -144,10 +144,10 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($annotations));
 
         if (interface_exists('Symfony\Component\Validator\Validator\ValidatorInterface')) {
-            $this->validator = $this->getMock('Symfony\Component\Validator\Validator\ValidatorInterface');
+            $this->validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
             $this->validatorMethod = 'validate';
         } else {
-            $this->validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
+            $this->validator = $this->getMockBuilder('Symfony\Component\Validator\ValidatorInterface')->getMock();
             $this->validatorMethod = 'validateValue';
         }
     }
@@ -581,7 +581,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->will($this->returnValue(array('bizoo' => $param)));
 
-        $violationFormatter = $this->getMock('FOS\RestBundle\Util\ViolationFormatterInterface');
+        $violationFormatter = $this->getMockBuilder('FOS\RestBundle\Util\ViolationFormatterInterface')->getMock();
         $violationFormatter->expects($this->once())
             ->method('formatList')
             ->will($this->returnValue('foobar'));
