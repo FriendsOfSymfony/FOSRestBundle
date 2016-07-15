@@ -31,6 +31,8 @@ class FileParam extends AbstractParam
     public $requirements = null;
     /** @var bool */
     public $image = false;
+    /** @var bool */
+    public $multiple = false;
 
     /**
      * {@inheritdoc}
@@ -43,7 +45,9 @@ class FileParam extends AbstractParam
         }
 
         $options = is_array($this->requirements) ? $this->requirements : array();
-        if ($this->image) {
+        if($this->multiple) {
+            $constraints = new Constraints\Collection($options);
+        } elseif ($this->image) {
             $constraints[] = new Constraints\Image($options);
         } else {
             $constraints[] = new Constraints\File($options);
