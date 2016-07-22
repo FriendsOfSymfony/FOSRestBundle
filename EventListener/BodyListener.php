@@ -86,12 +86,11 @@ class BodyListener
         $contentType = $request->headers->get('Content-Type');
         $normalizeRequest = $this->normalizeForms && $this->isFormRequest($request);
 
-        $format = null === $contentType
-            ? $request->getRequestFormat($this->defaultFormat)
-            : $request->getFormat($contentType);
-        $format = $format ?: $this->defaultFormat;
-
-        $contentType ?: $request->headers->set('Content-Type', $request->getMimeType($format));
+        if (null === $contentType) {
+            $format = $request->getRequestFormat($this->defaultFormat);
+            $request->headers->set('Content-Type', $request->getMimeType($format));
+        }
+        $format = $request->getContentType();
 
         if ($this->isDecodeable($request)) {
             $content = $request->getContent();
