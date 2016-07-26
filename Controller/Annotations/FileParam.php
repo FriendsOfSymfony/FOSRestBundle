@@ -46,7 +46,7 @@ class FileParam extends AbstractParam
 
         $options = is_array($this->requirements) ? $this->requirements : array();
         if($this->multiple) {
-            $constraints = new Constraints\Collection($options);
+            $constraints = new Constraints\All($options);
         } elseif ($this->image) {
             $constraints[] = new Constraints\Image($options);
         } else {
