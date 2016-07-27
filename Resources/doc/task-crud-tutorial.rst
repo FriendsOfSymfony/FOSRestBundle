@@ -286,7 +286,7 @@ For expose our REST API methods (routes) lets add the following controller:
 D) Update routing.yml
 ---------------------
 
-For expose our REST API methods (routes) lets add the following controller:
+Lte's update routing configuration:
 
 .. code-block:: yml
 
