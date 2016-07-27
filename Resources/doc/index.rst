@@ -53,6 +53,13 @@ Config reference
 - :doc:`Annotations reference <annotations-reference>` for a reference on
   the available configurations through annotations
 
+Task CRUD tutorial
+--------------------
+
+The following tutorial shows how to handle forms in the "REST" like way
+
+- :doc:`Task CRUD tutorial <task-crud-tutorial>`
+
 Example applications
 --------------------
 
