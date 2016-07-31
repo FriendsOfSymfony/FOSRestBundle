@@ -23,7 +23,7 @@ interface VersionResolverInterface
      *
      * @param Request $request
      *
-     * @return scalar|false Current version or false if not resolved.
+     * @return scalar|false Current version or false if not resolved
      */
     public function resolve(Request $request);
 }

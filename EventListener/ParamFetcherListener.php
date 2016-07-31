@@ -83,7 +83,7 @@ class ParamFetcherListener
     /**
      * Determines which attribute the ParamFetcher should be injected as.
      *
-     * @param callable $controller The controller action as an "array" callable.
+     * @param callable $controller The controller action as an "array" callable
      *
      * @return string
      */
@@ -105,7 +105,7 @@ class ParamFetcherListener
      * Returns true if the given controller parameter is type-hinted as
      * an instance of ParamFetcher.
      *
-     * @param \ReflectionParameter $controllerParam A parameter of the controller action.
+     * @param \ReflectionParameter $controllerParam A parameter of the controller action
      *
      * @return bool
      */
