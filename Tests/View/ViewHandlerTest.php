@@ -34,9 +34,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->router = $this->getMock('Symfony\Component\Routing\RouterInterface');
-        $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
-        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
+        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $this->templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface')->getMock();
         $this->requestStack = new RequestStack();
     }
 
@@ -94,7 +94,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $reflectionMethod = new \ReflectionMethod(ViewHandler::class, 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
-        $form = $this->getMock('Symfony\Component\Form\Form', ['isSubmitted', 'isValid'], [], '', false);
+        $form = $this->getMockBuilder('Symfony\Component\Form\Form')
+            ->disableOriginalConstructor()
+            ->setMethods(array('isSubmitted', 'isValid'))
+            ->getMock();
         $form
             ->expects($this->exactly($isSubmittedCalled))
             ->method('isSubmitted')
@@ -207,7 +210,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         //test
         $viewHandler = $this->createViewHandler(null, $expectedFailedValidationCode = Response::HTTP_I_AM_A_TEAPOT);
 
-        $form = $this->getMock('Symfony\\Component\\Form\\Form', ['createView', 'getData', 'isValid', 'isSubmitted'], [], '', false);
+        $form = $this->getMockBuilder('Symfony\\Component\\Form\\Form')
+            ->disableOriginalConstructor()
+            ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
+            ->getMock();
         $form
             ->expects($this->any())
             ->method('isValid')
@@ -242,7 +248,10 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         }
 
         if ($form) {
-            $data = $this->getMock('Symfony\Component\Form\Form', ['createView', 'getData', 'isValid', 'isSubmitted'], [], '', false);
+            $data = $this->getMockBuilder('Symfony\Component\Form\Form')
+                ->disableOriginalConstructor()
+                ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
+                ->getMock();
             $data
                 ->expects($this->exactly($createViewCalls))
                 ->method('createView')
@@ -516,10 +525,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $view = new View($exceptionWrapper);
         $view->getContext()->addGroups(array('Custom'));
 
-        $translatorMock = $this->getMock(
-            'Symfony\\Component\\Translation\\TranslatorInterface',
-            ['trans', 'transChoice', 'setLocale', 'getLocale']
-        );
+        $translatorMock = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->setMethods(array('trans', 'transChoice', 'setLocale', 'getLocale'))
+            ->getMock();
         $translatorMock
             ->expects($this->any())
             ->method('trans')

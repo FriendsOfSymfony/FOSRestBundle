@@ -16,6 +16,7 @@ use FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader;
 use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -166,19 +167,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $controller = new UsersController();
 
         // We register the controller in the fake container by its class name
-        $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->disableOriginalConstructor()
-            ->setMethods(['has', 'get', 'enterScope', 'leaveScope'])
-            ->getMock();
-        $this->containerMock->expects($this->any())
-            ->method('has')
-            ->will($this->returnCallback(function ($serviceId) use ($controller) {
-                return $serviceId === get_class($controller);
-            }));
-        $this->containerMock->expects($this->once())
-            ->method('get')
-            ->with(get_class($controller))
-            ->will($this->returnValue($controller));
+        $this->container = new Container();
+        $this->container->set(get_class($controller), $controller);
 
         $collection = $this->loadFromYamlCollectionFixture('users_collection.yml');
 
@@ -189,6 +179,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             'FOS\RestBundle\Tests\Fixtures\Controller\UsersController:getUsersAction',
             $route->getDefault('_controller')
         );
+
+        $this->container = null;
     }
 
     /**

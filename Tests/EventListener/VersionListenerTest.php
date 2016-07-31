@@ -37,8 +37,8 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->viewHandler = $this->getMock('FOS\RestBundle\View\ConfigurableViewHandlerInterface');
-        $this->resolver = $this->getMock('FOS\RestBundle\Version\VersionResolverInterface');
+        $this->viewHandler = $this->getMockBuilder('FOS\RestBundle\View\ConfigurableViewHandlerInterface')->getMock();
+        $this->resolver = $this->getMockBuilder('FOS\RestBundle\Version\VersionResolverInterface')->getMock();
 
         $this->listener = new VersionListener($this->viewHandler, $this->resolver);
     }
@@ -53,7 +53,9 @@ class VersionListenerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
 
-        $event = $this->getMock('Symfony\Component\HttpKernel\Event\GetResponseEvent', [], [], '', false);
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
         $event
             ->expects($this->once())
             ->method('getRequest')

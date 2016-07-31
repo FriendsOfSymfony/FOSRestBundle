@@ -40,7 +40,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
+        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
         $this->converter = new RequestBodyParamConverter($this->serializer);
     }
 
@@ -129,7 +129,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
              ->method('deserialize')
              ->willReturn('Object');
 
-        $validator = $this->getMock('Symfony\Component\Validator\Validator\ValidatorInterface');
+        $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
         $validator
             ->expects($this->once())
             ->method('validate')

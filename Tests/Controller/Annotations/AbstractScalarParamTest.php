@@ -47,7 +47,7 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
 
     public function testComplexRequirements()
     {
-        $this->param->requirements = $requirement = $this->getMock('Symfony\Component\Validator\Constraint');
+        $this->param->requirements = $requirement = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
         $this->assertEquals(array(
             new Constraints\NotNull(),
             $requirement,

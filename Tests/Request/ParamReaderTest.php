@@ -31,7 +31,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function setup()
     {
-        $annotationReader = $this->getMock(AnnotationReader::class, array());
+        $annotationReader = $this->getMockBuilder(AnnotationReader::class)->getMock();
 
         $methodAnnotations = [];
         $foo = $this->createMockedParam();
@@ -148,6 +148,6 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
 
     protected function createMockedParam()
     {
-        return $this->getMock(ParamInterface::class);
+        return $this->getMockBuilder(ParamInterface::class)->getMock();
     }
 }

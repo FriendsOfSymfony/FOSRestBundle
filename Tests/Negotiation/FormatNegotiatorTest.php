@@ -119,7 +119,7 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
      */
     private function addRequestMatcher($match, array $options = [])
     {
-        $matcher = $this->getMock('Symfony\Component\HttpFoundation\RequestMatcherInterface');
+        $matcher = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestMatcherInterface')->getMock();
 
         $matcher->expects($this->any())
             ->method('matches')
