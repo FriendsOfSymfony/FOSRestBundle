@@ -181,7 +181,7 @@ final class Context
      *
      * @return self
      *
-     * @deprecated since 2.1, to be removed in 3.0. Use {@link self::enableMaxDepth()} and {@link self::disableMaxDepth()} instead.
+     * @deprecated since 2.1, to be removed in 3.0. Use {@link self::enableMaxDepth()} and {@link self::disableMaxDepth()} instead
      */
     public function setMaxDepth($maxDepth)
     {
@@ -198,7 +198,7 @@ final class Context
      *
      * @return int|null
      *
-     * @deprecated since version 2.1, to be removed in 3.0. Use {@link self::isMaxDepthEnabled()} instead.
+     * @deprecated since version 2.1, to be removed in 3.0. Use {@link self::isMaxDepthEnabled()} instead
      */
     public function getMaxDepth()
     {
