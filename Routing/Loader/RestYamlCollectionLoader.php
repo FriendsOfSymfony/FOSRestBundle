@@ -69,7 +69,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
         foreach ($config as $name => $config) {
             if (isset($config['resource'])) {
                 $resource = $config['resource'];
-                $prefix = isset($config['prefix']) ? $config['prefix']         : null;
+                $prefix = isset($config['prefix']) ? $config['prefix'] : null;
                 $namePrefix = isset($config['name_prefix']) ? $config['name_prefix'] : null;
                 $parent = isset($config['parent']) ? $config['parent'] : null;
                 $type = isset($config['type']) ? $config['type'] : null;
