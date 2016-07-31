@@ -19,7 +19,7 @@ use JMS\Serializer\Handler\HandlerRegistryInterface;
  *
  * @author Ener-Getick <egetick@gmail.com>
  *
- * @internal do not depend on this class directly.
+ * @internal do not depend on this class directly
  */
 class JMSHandlerRegistry implements HandlerRegistryInterface
 {

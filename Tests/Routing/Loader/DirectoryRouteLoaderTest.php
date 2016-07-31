@@ -33,7 +33,7 @@ class DirectoryRouteLoaderTest extends LoaderTest
      */
     public function testSupports($resource, $type, $expected)
     {
-        $loader = new DirectoryRouteLoader($this->getMock('Symfony\Component\Config\FileLocatorInterface'), new RestRouteProcessor());
+        $loader = new DirectoryRouteLoader($this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')->getMock(), new RestRouteProcessor());
 
         if ($expected) {
             $this->assertTrue($loader->supports($resource, $type));
@@ -54,7 +54,7 @@ class DirectoryRouteLoaderTest extends LoaderTest
 
     private function loadFromDirectory($resource)
     {
-        $directoryLoader = new DirectoryRouteLoader($this->getMock('Symfony\Component\Config\FileLocatorInterface'), new RestRouteProcessor());
+        $directoryLoader = new DirectoryRouteLoader($this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')->getMock(), new RestRouteProcessor());
         $controllerLoader = $this->getControllerLoader();
 
         // LoaderResolver sets the resolvers on the loaders passed to it

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @author Ener-Getick <egetick@gmail.com>
  *
- * @internal do not use this class in your code.
+ * @internal do not use this class in your code
  */
 class AbstractExceptionNormalizer
 {
