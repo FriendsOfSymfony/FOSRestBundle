@@ -93,7 +93,7 @@ class ParamFetcherTest extends WebTestCase
         $this->client->request('POST', '/file/test', array(), array('single_file' => $image));
 
         $this->assertEquals(array(
-            'single_file' => $singleFileName
+            'single_file' => $singleFileName,
         ), $this->getData());
     }
     
@@ -102,7 +102,7 @@ class ParamFetcherTest extends WebTestCase
         $this->client->request('POST', '/file/test', array(), array());
 
         $this->assertEquals(array(
-            'single_file' => 'noFile'
+            'single_file' => 'noFile',
         ), $this->getData());
     }
 
@@ -171,7 +171,7 @@ class ParamFetcherTest extends WebTestCase
             )
         ];
 
-        $this->client->request('POST', '/image/collection/test', array(), array( 'array_images' => $images));
+        $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
 
         $this->assertEquals(array(
             'array_files' => 'NotAnImage',

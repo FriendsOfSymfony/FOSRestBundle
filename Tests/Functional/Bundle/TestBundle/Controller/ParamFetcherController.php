@@ -66,7 +66,7 @@ class ParamFetcherController extends FOSRestController
         $file = $fetcher->get('single_file');
 
         return new JsonResponse(array(
-            'single_file' => $this->printFile($file)
+            'single_file' => $this->printFile($file),
         ));
     }
 
@@ -80,7 +80,7 @@ class ParamFetcherController extends FOSRestController
         return new JsonResponse(array(
             'array_files' => [
                 $this->printFile($files[0]),
-                $this->printFile($files[1])
+                $this->printFile($files[1]),
             ]
         ));
     }
@@ -97,7 +97,7 @@ class ParamFetcherController extends FOSRestController
                 ? $files
                 : [
                     $this->printFile($files[0]),
-                    $this->printFile($files[1])
+                    $this->printFile($files[1]),
                 ]
         ));
     }
