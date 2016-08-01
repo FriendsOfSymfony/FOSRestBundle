@@ -56,7 +56,7 @@ class ParamFetcherController extends FOSRestController
             'after' => $paramsAfter,
         ));
     }
-    
+
     /**
      * @FileParam(name="single_file", strict=false, default="noFile")
      */

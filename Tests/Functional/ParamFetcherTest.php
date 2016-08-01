@@ -154,7 +154,7 @@ class ParamFetcherTest extends WebTestCase
             'array_files' => [$imageName, $imageName2],
         ), $this->getData());
     }
-    
+
     public function testFileParamImageConstraintArrayException()
     {
         $images = [
