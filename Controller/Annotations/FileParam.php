@@ -55,7 +55,7 @@ class FileParam extends AbstractParam
         // If the user wants to map the value
         if ($this->map) {
             $constraints = array(
-                new All($constraints),
+                new All(array('constraints' => $constraints))
             );
         }
 
