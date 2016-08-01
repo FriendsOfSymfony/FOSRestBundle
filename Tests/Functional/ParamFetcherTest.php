@@ -10,6 +10,7 @@
  */
 
 namespace FOS\RestBundle\Tests\Functional;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -96,7 +97,7 @@ class ParamFetcherTest extends WebTestCase
             'single_file' => $singleFileName,
         ), $this->getData());
     }
-    
+
     public function testFileParamNull()
     {
         $this->client->request('POST', '/file/test', array(), array());
@@ -153,8 +154,7 @@ class ParamFetcherTest extends WebTestCase
             'array_files' => [$imageName, $imageName2],
         ), $this->getData());
     }
-
-
+    
     public function testFileParamImageConstraintArrayException()
     {
         $images = [
@@ -178,7 +178,6 @@ class ParamFetcherTest extends WebTestCase
             'array_files' => 'NotAnImage',
         ), $this->getData());
     }
-
 
     protected function getData()
     {
