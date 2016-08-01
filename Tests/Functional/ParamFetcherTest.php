@@ -120,10 +120,10 @@ class ParamFetcherTest extends WebTestCase
                 $txtName = 'bar.txt',
                 'text/plain',
                 123
-            )]
-        ;
+            ),
+        ];
 
-        $this->client->request('POST', '/file/collection/test', array(), array( 'array_files' => $images));
+        $this->client->request('POST', '/file/collection/test', array(), array('array_files' => $images));
 
         $this->assertEquals(array(
             'array_files' => [$imageName, $txtName],
@@ -138,7 +138,8 @@ class ParamFetcherTest extends WebTestCase
                 $imageName = 'cat.jpeg',
                 'image/jpeg',
                 12345
-            ),new UploadedFile(
+            ),
+            new UploadedFile(
                 'Tests/Fixtures/Asset/cat.jpeg',
                 $imageName2 = 'cat.jpeg',
                 'image/jpeg',
@@ -146,7 +147,7 @@ class ParamFetcherTest extends WebTestCase
             ),
         ];
 
-        $this->client->request('POST', '/image/collection/test', array(), array( 'array_images' => $images));
+        $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
 
         $this->assertEquals(array(
             'array_files' => [$imageName, $imageName2],
@@ -168,7 +169,7 @@ class ParamFetcherTest extends WebTestCase
                 $file = 'bar.txt',
                 'plain/text',
                 1234
-            )
+            ),
         ];
 
         $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));

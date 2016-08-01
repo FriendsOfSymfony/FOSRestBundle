@@ -81,7 +81,7 @@ class ParamFetcherController extends FOSRestController
             'array_files' => [
                 $this->printFile($files[0]),
                 $this->printFile($files[1]),
-            ]
+            ],
         ));
     }
 
@@ -98,7 +98,7 @@ class ParamFetcherController extends FOSRestController
                 : [
                     $this->printFile($files[0]),
                     $this->printFile($files[1]),
-                ]
+                ],
         ));
     }
 
