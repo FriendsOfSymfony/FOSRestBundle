@@ -81,7 +81,6 @@ class ParamFetcherTest extends WebTestCase
         ), $this->getData());
     }
 
-
     public function testFileParam()
     {
         $image = new UploadedFile(
