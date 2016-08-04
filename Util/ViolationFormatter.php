@@ -24,7 +24,7 @@ class ViolationFormatter implements ViolationFormatterInterface
     public function format(Param $param, ConstraintViolationInterface $violation)
     {
         return sprintf(
-            "%s parameter %s value '%s' violated a constraint (%s)",
+            '%s parameter "%s" of value "%s" violated a constraint "%s"',
             $param instanceof QueryParam ? 'Query' : 'Request',
             $param->getKey(),
             $violation->getInvalidValue(),
