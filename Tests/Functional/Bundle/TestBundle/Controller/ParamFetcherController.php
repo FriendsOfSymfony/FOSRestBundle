@@ -93,7 +93,7 @@ class ParamFetcherController extends FOSRestController
         $files = $fetcher->get('array_images');
 
         return new JsonResponse(array(
-            'array_files' => (is_string($files)) // Default message on validation error
+            'array_images' => (is_string($files)) // Default message on validation error
                 ? $files
                 : [
                     $this->printFile($files[0]),

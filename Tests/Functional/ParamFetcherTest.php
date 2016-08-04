@@ -150,7 +150,7 @@ class ParamFetcherTest extends WebTestCase
         $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
 
         $this->assertEquals(array(
-            'array_files' => [$imageName, $imageName2],
+            'array_images' => [$imageName, $imageName2],
         ), $this->getData());
     }
 
@@ -174,7 +174,7 @@ class ParamFetcherTest extends WebTestCase
         $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
 
         $this->assertEquals(array(
-            'array_files' => 'NotAnImage',
+            'array_images' => 'NotAnImage',
         ), $this->getData());
     }
 
