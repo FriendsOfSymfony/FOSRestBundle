@@ -163,8 +163,13 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
             }
 
             $self = $this;
-            array_walk($param, function (&$data) use ($config, $strict, $self) {
-                $data = $self->cleanParamWithRequirements($config, $data, $strict);
+            array_walk($param, function (&$data, &$key) use ($config, $strict, $self) {
+                if ($config->withKeys) {
+                    $returnValue = $self->cleanParamWithRequirements($config, array($key => $data), $strict);
+                    $data = $returnValue[$key];
+                } else {
+                    $data = $self->cleanParamWithRequirements($config, $data, $strict);
+                }
             });
 
             return $param;
@@ -190,11 +195,11 @@ class ParamFetcher implements ParamFetcherInterface, ContainerAwareInterface
     }
 
     /**
-     * @param Param  $config
-     * @param string $param
-     * @param bool   $strict
+     * @param Param        $config
+     * @param string|array $param
+     * @param bool         $strict
      *
-     * @return string
+     * @return string|array
      *
      * @throws BadRequestHttpException
      * @throws \RuntimeException
