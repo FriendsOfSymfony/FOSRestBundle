@@ -40,6 +40,11 @@ class View
     private $serializationContext;
 
     /**
+     * @var array
+     */
+    private $simpleSerializationContext = array();
+
+    /**
      * @var Response
      */
     private $response;
@@ -199,6 +204,18 @@ class View
     public function setSerializationContext(SerializationContext $serializationContext)
     {
         $this->serializationContext = $serializationContext;
+
+        return $this;
+    }
+
+    /**
+     * @param array $context
+     *
+     * @return View
+     */
+    public function setSimpleSerializationContext(array $context)
+    {
+        $this->simpleSerializationContext = $context;
 
         return $this;
     }
@@ -458,5 +475,13 @@ class View
         }
 
         return $this->serializationContext;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSimpleSerializationContext()
+    {
+        return $this->simpleSerializationContext;
     }
 }

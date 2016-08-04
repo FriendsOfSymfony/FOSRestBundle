@@ -464,12 +464,11 @@ class ViewHandler implements ConfigurableViewHandlerInterface, ContainerAwareInt
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $data = $this->getDataFromView($view);
             $serializer = $this->getSerializer($view);
+            $context = $view->getSimpleSerializationContext();
             if ($serializer instanceof SerializerInterface) {
                 $context = $this->getSerializationContext($view);
-                $content = $serializer->serialize($data, $format, $context);
-            } else {
-                $content = $serializer->serialize($data, $format);
             }
+            $content = $serializer->serialize($data, $format, $context);
         }
 
         $response = $view->getResponse();
