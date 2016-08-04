@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Util;
+namespace FOS\RestBundle\Validator;
 
 use FOS\RestBundle\Controller\Annotations\Param;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
+use FOS\RestBundle\Util\ViolationFormatterInterface as LegacyViolationFormatterInterface;
 
-/**
- * @deprecated since 1.7, to be removed in 2.0. Use {@link \FOS\RestBundle\Validator\ViolationFormatterInterface} instead.
- */
-interface ViolationFormatterInterface
+interface ViolationFormatterInterface extends LegacyViolationFormatterInterface
 {
     /**
      * Format a Param's ConstraintViolation into a string message.

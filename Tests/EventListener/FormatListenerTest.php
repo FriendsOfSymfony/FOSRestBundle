@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
-use FOS\RestBundle\Util\FormatNegotiator;
+use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +36,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator->expects($this->once())
@@ -93,7 +93,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequestType')
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -122,7 +122,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator->expects($this->any())
@@ -167,7 +167,7 @@ class FormatListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequestType')
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Util\FormatNegotiator')
+        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
             ->disableOriginalConstructor()
             ->getMock();
         $formatNegotiator->expects($this->any())
