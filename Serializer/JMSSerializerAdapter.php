@@ -88,7 +88,7 @@ class JMSSerializerAdapter implements Serializer
             $jmsContext->setVersion($context->getVersion());
         }
         $groups = $context->getGroups();
-        if ($groups !== null) {
+        if (null !== $groups) {
             $jmsContext->setGroups($context->getGroups());
         }
         if (null !== $context->getMaxDepth(false) || null !== $context->isMaxDepthEnabled()) {

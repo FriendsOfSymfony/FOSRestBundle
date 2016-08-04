@@ -127,7 +127,7 @@ final class Context
      */
     public function addGroup($group)
     {
-        if (!is_array($this->groups)) {
+        if (null === $this->groups) {
             $this->groups = [];
         }
         if (!in_array($group, $this->groups)) {

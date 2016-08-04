@@ -60,7 +60,7 @@ class SymfonySerializerAdapter implements Serializer
         }
 
         $groups = $context->getGroups();
-        if ($groups !== null) {
+        if (null !== $groups) {
             $newContext['groups'] = $context->getGroups();
         }
         $newContext['version'] = $context->getVersion();
