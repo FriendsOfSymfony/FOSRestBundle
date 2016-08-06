@@ -11,10 +11,12 @@
 
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\FileParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -53,5 +55,55 @@ class ParamFetcherController extends FOSRestController
             'during' => json_decode($response->getContent(), true),
             'after' => $paramsAfter,
         ));
+    }
+
+    /**
+     * @FileParam(name="single_file", strict=false, default="noFile")
+     */
+    public function singleFileAction(ParamFetcherInterface $fetcher)
+    {
+        /** @var UploadedFile $file */
+        $file = $fetcher->get('single_file');
+
+        return new JsonResponse(array(
+            'single_file' => $this->printFile($file),
+        ));
+    }
+
+    /**
+     * @FileParam(name="array_files", map=true)
+     */
+    public function fileCollectionAction(ParamFetcherInterface $fetcher)
+    {
+        $files = $fetcher->get('array_files');
+
+        return new JsonResponse(array(
+            'array_files' => [
+                $this->printFile($files[0]),
+                $this->printFile($files[1]),
+            ],
+        ));
+    }
+
+    /**
+     * @FileParam(name="array_images", image=true, strict=false, map=true, default="NotAnImage")
+     */
+    public function imageCollectionAction(ParamFetcherInterface $fetcher)
+    {
+        $files = $fetcher->get('array_images');
+
+        return new JsonResponse(array(
+            'array_images' => (is_string($files)) // Default message on validation error
+                ? $files
+                : [
+                    $this->printFile($files[0]),
+                    $this->printFile($files[1]),
+                ],
+        ));
+    }
+
+    private function printFile($file)
+    {
+        return ($file instanceof UploadedFile) ? $file->getClientOriginalName() : $file;
     }
 }
