@@ -49,7 +49,7 @@ class AppKernel extends Kernel
     private $testCase;
     private $rootConfig;
 
-    public function __construct($testCase, $rootConfig, $environment, $debug)
+    public function __construct($testCase, $rootConfig, $environment)
     {
         if (!is_dir(__DIR__.'/'.$testCase)) {
             throw new \InvalidArgumentException(sprintf('The test case "%s" does not exist.', $testCase));
@@ -62,7 +62,7 @@ class AppKernel extends Kernel
         }
         $this->rootConfig = $rootConfig;
 
-        parent::__construct($environment, $debug);
+        parent::__construct($environment, true);
     }
 
     public function registerBundles()
