@@ -59,7 +59,9 @@ class SymfonySerializerAdapter implements Serializer
             $newContext[$key] = $value;
         }
 
-        $newContext['groups'] = $context->getGroups();
+        if (count($context->getGroups())) {
+            $newContext['groups'] = $context->getGroups();
+        }
         $newContext['version'] = $context->getVersion();
         $newContext['maxDepth'] = $context->getMaxDepth(false);
         $newContext['enable_max_depth'] = $context->isMaxDepthEnabled();
