@@ -166,7 +166,7 @@ final class Context
     /**
      * Set the normalization groups.
      *
-     * @param string[] $groups
+     * @param string[]|null $groups
      *
      * @return self
      */
