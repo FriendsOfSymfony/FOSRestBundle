@@ -27,9 +27,9 @@ final class Context
      */
     private $version;
     /**
-     * @var array
+     * @var array|null
      */
-    private $groups = array();
+    private $groups;
     /**
      * @var int
      */
@@ -127,6 +127,9 @@ final class Context
      */
     public function addGroup($group)
     {
+        if (null === $this->groups) {
+            $this->groups = [];
+        }
         if (!in_array($group, $this->groups)) {
             $this->groups[] = $group;
         }
@@ -153,7 +156,7 @@ final class Context
     /**
      * Gets the normalization groups.
      *
-     * @return string[]
+     * @return string[]|null
      */
     public function getGroups()
     {
@@ -163,11 +166,11 @@ final class Context
     /**
      * Set the normalization groups.
      *
-     * @param string[] $groups
+     * @param string[]|null $groups
      *
      * @return self
      */
-    public function setGroups(array $groups)
+    public function setGroups(array $groups = null)
     {
         $this->groups = $groups;
 

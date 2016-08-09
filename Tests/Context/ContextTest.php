@@ -28,7 +28,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     public function testDefaultValues()
     {
         $this->assertEquals([], $this->context->getAttributes());
-        $this->assertEquals([], $this->context->getGroups());
+        $this->assertEquals(null, $this->context->getGroups());
     }
 
     public function testAttributes()
