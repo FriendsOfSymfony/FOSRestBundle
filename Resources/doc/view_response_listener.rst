@@ -73,6 +73,7 @@ you should return a ``$view`` object with the data set by ``setTemplateData``.
 
     use FOS\RestBundle\View\View;
     use FOS\RestBundle\View\View as ViewClass;
+
     /**
      * @View()
      */
