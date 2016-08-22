@@ -152,9 +152,9 @@ You can also define your serializer options dynamically:
     use FOS\RestBundle\View\View as ViewClass;
     use FOS\RestBundle\Context\Context;
 
-    /**		
-     * @View()		
-     */		
+    /**
+     * @View()
+     */
     public function getUsersAction()
     {
         $view = ViewClass::create();
