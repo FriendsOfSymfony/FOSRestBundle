@@ -148,12 +148,16 @@ You can also define your serializer options dynamically:
 
     <?php
 
-    use FOS\RestBundle\View\View;
+    use FOS\RestBundle\Controller\Annotations\View;
+    use FOS\RestBundle\View\View as ViewClass;
     use FOS\RestBundle\Context\Context;
 
+    /**		
+     * @View()		
+     */		
     public function getUsersAction()
     {
-        $view = View::create();
+        $view = ViewClass::create();
 
         $context = new Context();
         $context->setVersion('1.0');
