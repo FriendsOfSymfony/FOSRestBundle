@@ -73,9 +73,9 @@ you should return a ``$view`` object with the data set by ``setTemplateData``.
 
     use FOS\RestBundle\View\View;
     use FOS\RestBundle\View\View as ViewClass;
-    /**		
-     * @View()		
-     */		
+    /**
+     * @View()
+     */
     public function getUsersAction()
     {
         $view = ViewClass::create();
