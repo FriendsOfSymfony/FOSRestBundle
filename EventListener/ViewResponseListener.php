@@ -84,7 +84,12 @@ class ViewResponseListener implements EventSubscriberInterface
                 $context->addGroups($configuration->getSerializerGroups());
             }
             if ($configuration->getSerializerEnableMaxDepthChecks()) {
-                $context->setMaxDepth(0);
+                $context->setMaxDepth(0, false);
+            }
+            if (true === $configuration->getSerializerEnableMaxDepthChecks()) {
+                $context->enableMaxDepth();
+            } elseif (false === $configuration->getSerializerEnableMaxDepthChecks()) {
+                $context->disableMaxDepth();
             }
 
             list($controller, $action) = $configuration->getOwner();

@@ -57,6 +57,11 @@ mapping, you can do this in your controller:
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
+
+    use Symfony\Component\HttpKernel\Exception\HttpException;
+
     class UsersController extends Controller
     {
         public function postUserCommentsAction($slug)

@@ -27,13 +27,17 @@ final class Context
      */
     private $version;
     /**
-     * @var array
+     * @var array|null
      */
-    private $groups = array();
+    private $groups;
     /**
      * @var int
      */
     private $maxDepth;
+    /**
+     * @var bool
+     */
+    private $isMaxDepthEnabled;
     /**
      * @var bool
      */
@@ -123,6 +127,9 @@ final class Context
      */
     public function addGroup($group)
     {
+        if (null === $this->groups) {
+            $this->groups = [];
+        }
         if (!in_array($group, $this->groups)) {
             $this->groups[] = $group;
         }
@@ -149,7 +156,7 @@ final class Context
     /**
      * Gets the normalization groups.
      *
-     * @return string[]
+     * @return string[]|null
      */
     public function getGroups()
     {
@@ -159,11 +166,11 @@ final class Context
     /**
      * Set the normalization groups.
      *
-     * @param string[] $groups
+     * @param string[]|null $groups
      *
      * @return self
      */
-    public function setGroups(array $groups)
+    public function setGroups(array $groups = null)
     {
         $this->groups = $groups;
 
@@ -176,9 +183,14 @@ final class Context
      * @param int|null $maxDepth
      *
      * @return self
+     *
+     * @deprecated since 2.1, to be removed in 3.0. Use {@link self::enableMaxDepth()} and {@link self::disableMaxDepth()} instead
      */
     public function setMaxDepth($maxDepth)
     {
+        if (1 === func_num_args() || func_get_arg(1)) {
+            @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::enableMaxDepth() and %s::disableMaxDepth() instead.', __METHOD__, __CLASS__, __CLASS__), E_USER_DEPRECATED);
+        }
         $this->maxDepth = $maxDepth;
 
         return $this;
@@ -188,10 +200,38 @@ final class Context
      * Gets the normalization max depth.
      *
      * @return int|null
+     *
+     * @deprecated since version 2.1, to be removed in 3.0. Use {@link self::isMaxDepthEnabled()} instead
      */
     public function getMaxDepth()
     {
+        if (0 === func_num_args() || func_get_arg(0)) {
+            @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::isMaxDepthEnabled() instead.', __METHOD__, __CLASS__), E_USER_DEPRECATED);
+        }
+
         return $this->maxDepth;
+    }
+
+    public function enableMaxDepth()
+    {
+        $this->isMaxDepthEnabled = true;
+
+        return $this;
+    }
+
+    public function disableMaxDepth()
+    {
+        $this->isMaxDepthEnabled = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isMaxDepthEnabled()
+    {
+        return $this->isMaxDepthEnabled;
     }
 
     /**

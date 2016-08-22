@@ -13,6 +13,8 @@ Now inside a controller it's possible to simply return a ``View`` instance.
 
     <?php
 
+    namespace AppBundle\Controller;
+
     use FOS\RestBundle\View\View;
 
     class UsersController
@@ -44,6 +46,8 @@ of ``force`` and ``@View()`` is not used, then rendering will be delegated to
 .. code-block:: php
 
     <?php
+
+    namespace AppBundle\Controller;
 
     use FOS\RestBundle\Controller\Annotations\View;
 

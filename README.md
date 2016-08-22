@@ -22,7 +22,7 @@ Documentation
 
 [Read the Documentation](http://symfony.com/doc/master/bundles/FOSRestBundle/index.html)
 
-Please see the [UPGRADING.md](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.0.md) for any
+Please see the [UPGRADING-2.0.md](https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/UPGRADING-2.0.md) for any
 relevant instructions when upgrading to a newer version.
 
 Installation
