@@ -71,14 +71,15 @@ you should return a ``$view`` object with the data set by ``setTemplateData``.
 
     <?php
 
-    use FOS\RestBundle\View\View;
+    use FOS\RestBundle\Controller\Annotations\View;
+    use FOS\RestBundle\View\View as ViewClass;
 
     /**
      * @View()
      */
     public function getUsersAction()
     {
-        $view = View::create();
+        $view = ViewClass::create();
 
         // ...
         $view

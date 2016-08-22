@@ -28,10 +28,6 @@ Upgrading From 1.x To 2.0
 
  * compatibility with Symfony <2.7, JMS Serializer/SerializerBundle <1.0 and SensioFrameworkExtraBundle <3.0 was dropped
 
- * RedirectView and RouteRedirectView view were removed. Use View::createRedirect and
-   View::createRouteRedirect instead. Note: the default status code for a route redirect
-   has changed from HTTP_CREATED (201) to HTTP_FOUND (302).
-
  * constructor signature of DisableCSRFExtension was changed
 
  * constructor signatures of most of the classes which used the container were changed
