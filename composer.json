@@ -56,7 +56,7 @@
 
     "conflict": {
         "symfony/validator": ">=2.5.0,<2.5.5",
-        "jms/serializer": "<0.13",
+        "jms/serializer": "<0.13 | 1.3.0",
         "jms/serializer-bundle": "<0.11",
         "sensio/framework-extra-bundle": ">=3.0.13"
     },
