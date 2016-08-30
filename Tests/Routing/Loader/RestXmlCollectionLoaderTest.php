@@ -25,6 +25,25 @@ use Symfony\Component\Routing\RouteCollection;
 class RestXmlCollectionLoaderTest extends LoaderTest
 {
     /**
+     * Test that XML files are invalid.
+     *
+     * @expectedException \InvalidArgumentException
+     * @dataProvider getPathsToInvalidFiles
+     */
+    public function testLoadThrowsExceptionWithInvalidFile($filePath)
+    {
+        $this->loadFromXmlCollectionFixture($filePath);
+    }
+
+    public function getPathsToInvalidFiles()
+    {
+        return [
+            ['invalid_route_parent.xml'],
+            ['invalid_tag.xml'],
+        ];
+    }
+
+    /**
      * Test that XML collection gets parsed correctly.
      */
     public function testUsersFixture()

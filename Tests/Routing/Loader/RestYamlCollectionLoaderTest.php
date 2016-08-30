@@ -27,6 +27,36 @@ use Symfony\Component\Routing\RouteCollection;
 class RestYamlCollectionLoaderTest extends LoaderTest
 {
     /**
+     * Test that YAML file is empty.
+     */
+    public function testLoadDoesNothingIfEmpty()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('empty.yml');
+        $this->assertEquals([], $collection->all());
+    }
+
+    /**
+     * Test that YAML files are invalid.
+     *
+     * @expectedException \InvalidArgumentException
+     * @dataProvider getPathsToInvalidFiles
+     */
+    public function testLoadThrowsExceptionWithInvalidFile($filePath)
+    {
+        $this->loadFromYamlCollectionFixture($filePath);
+    }
+
+    public function getPathsToInvalidFiles()
+    {
+        return [
+            ['nonvalid.yml'],
+            ['nonvalid2.yml'],
+            ['bad_format.yml'],
+            ['invalid_route_parent.yml'],
+        ];
+    }
+
+    /**
      * Test that YAML collection gets parsed correctly.
      */
     public function testUsersFixture()
@@ -184,6 +214,36 @@ class RestYamlCollectionLoaderTest extends LoaderTest
     }
 
     /**
+     * Test that YAML collection with named prefixes gets parsed correctly with inheritance.
+     */
+    public function testNamedPrefixedBaseReportsFixture()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
+
+        foreach ($etalonRoutes as $name => $params) {
+            $route = $collection->get($name);
+            $methods = $route->getMethods();
+
+            $this->assertNotNull($route, $name);
+            $this->assertEquals($params['path'], $route->getPath(), $name);
+            $this->assertEquals($params['method'], $methods[0], $name);
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
+        }
+
+        $name = 'api_get_billing_payments';
+        $this->assertArrayNotHasKey($name, $etalonRoutes);
+    }
+
+    public function testRoutesWithPattern()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('routes_with_pattern.yml');
+        $route = $collection->get('get_users');
+
+        $this->assertEquals('/users.{_format}', $route->getPath());
+    }
+
+    /**
      * Load routes collection from YAML fixture routes under Tests\Fixtures directory.
      *
      * @param string   $fixtureName   name of the class fixture
@@ -216,27 +276,5 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         new LoaderResolver([$collectionLoader, $controllerLoader]);
 
         return $collectionLoader->load($fixtureName, 'rest');
-    }
-
-    /**
-     * Test that YAML collection with named prefixes gets parsed correctly with inheritance.
-     */
-    public function testNamedPrefixedBaseReportsFixture()
-    {
-        $collection = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
-        $etalonRoutes = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
-
-        foreach ($etalonRoutes as $name => $params) {
-            $route = $collection->get($name);
-            $methods = $route->getMethods();
-
-            $this->assertNotNull($route, $name);
-            $this->assertEquals($params['path'], $route->getPath(), $name);
-            $this->assertEquals($params['method'], $methods[0], $name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
-        }
-
-        $name = 'api_get_billing_payments';
-        $this->assertArrayNotHasKey($name, $etalonRoutes);
     }
 }
