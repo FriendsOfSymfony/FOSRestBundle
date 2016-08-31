@@ -64,7 +64,8 @@
     },
 
     "conflict": {
-        "sensio/framework-extra-bundle": "<3.0.13"
+        "sensio/framework-extra-bundle": "<3.0.13",
+        "jms/serializer": "1.3.0"
     },
 
 
