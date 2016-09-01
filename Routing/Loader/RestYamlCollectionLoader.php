@@ -113,7 +113,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 if (!isset($config['path'])) {
                     $config['path'] = $config['pattern'];
 
-                    @trigger_error('The "pattern" option is deprecated. Use the "path" option instead.', E_USER_DEPRECATED);
+                    @trigger_error(sprintf('The "pattern" option in "%s" is deprecated. Use the "path" option instead.', $path), E_USER_DEPRECATED);
                 }
 
                 if ($this->includeFormat) {
