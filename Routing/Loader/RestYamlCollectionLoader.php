@@ -77,7 +77,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
 
         // not an array
         if (!is_array($config)) {
-            throw new \InvalidArgumentException(sprintf('The file "%s" must contain a YAML array.', $path));
+            throw new \InvalidArgumentException(sprintf('The file "%s" must contain a Yaml mapping (an array).', $path));
         }
 
         // process routes and imports

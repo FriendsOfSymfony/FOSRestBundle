@@ -28,7 +28,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
      * Test that route route not found.
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Cannot find parent resource with name*./
+     * @expectedExceptionMessage Cannot find parent resource with name
      */
     public function testLoadThrowsExceptionWithInvalidRouteParent()
     {

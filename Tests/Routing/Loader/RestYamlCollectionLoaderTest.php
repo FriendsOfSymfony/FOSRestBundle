@@ -50,7 +50,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      * Test that YAML value not an array.
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /The file "*.+\/nonvalid.yml" must contain a YAML array\./
+     * @expectedExceptionMessageRegExp /The file "*.+\/nonvalid.yml" must contain a Yaml mapping \(an array\)\./
      */
     public function testLoadThrowsExceptionWithValueNotArray()
     {
@@ -61,7 +61,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      * Test that route parent not found.
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Cannot find parent resource with name*./
+     * @expectedExceptionMessage Cannot find parent resource with name
      */
     public function testLoadThrowsExceptionWithInvalidRouteParent()
     {
