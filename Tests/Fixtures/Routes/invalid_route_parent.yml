@@ -1,0 +1,4 @@
+user_topics:
+  type:     rest
+  resource: FOS\RestBundle\Tests\Fixtures\Controller\UserTopicsController
+  parent:   users
