@@ -38,7 +38,7 @@ class InvalidParameterException extends BadRequestHttpException
             if ($key > 0) {
                 $message .= "\n";
             }
-            
+
             $invalidValue = $violation->getInvalidValue();
 
             $message .= sprintf(
