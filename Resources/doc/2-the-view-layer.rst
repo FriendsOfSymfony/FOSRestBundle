@@ -143,14 +143,15 @@ There are several more methods on the ``View`` class, here is a list of all
 the important ones for configuring the view:
 
 * ``setData($data)`` - Set the object graph or list of objects to serialize.
-* ``setTemplateData($templateData)`` - Set the template data array or anonymous function. Closure should return array.
+* ``setTemplateData($data)`` - Set the template data array or anonymous function. Closure should return array.
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
 * ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
-* ``setSerializationContext($context)`` - Set the serialization context to use.
-* ``setTemplate($name)`` - Name of the template to use in case of HTML rendering.
-* ``setTemplateVar($name)`` - Name of the variable the data is in, when passed
+* ``setStatusCode($code)`` - Set the HTTP status code.
+* ``getContext()`` - The serialization context to use.
+* ``setTemplate($template)`` - Name of the template to use in case of HTML rendering.
+* ``setTemplateVar($templateVar)`` - Name of the variable the data is in, when passed
   to HTML template. Defaults to ``'data'``.
-* ``setEngine($name)`` - Name of the engine to render HTML template. Can be
+* ``setEngine($engine)`` - Name of the engine to render HTML template. Can be
   autodetected.
 * ``setFormat($format)`` - The format the response is supposed to be rendered in.
   Can be autodetected using HTTP semantics.
