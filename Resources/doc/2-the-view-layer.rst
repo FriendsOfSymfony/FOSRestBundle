@@ -147,7 +147,7 @@ the important ones for configuring the view:
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
 * ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
 * ``setStatusCode($code)`` - Set the HTTP status code.
-* ``setContext(Context $context)`` - Set the serialization context to use.
+* ``getContext()`` - The serialization context to use.
 * ``setTemplate($template)`` - Name of the template to use in case of HTML rendering.
 * ``setTemplateVar($templateVar)`` - Name of the variable the data is in, when passed
   to HTML template. Defaults to ``'data'``.
