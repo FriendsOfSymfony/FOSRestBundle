@@ -25,22 +25,25 @@ use Symfony\Component\Routing\RouteCollection;
 class RestXmlCollectionLoaderTest extends LoaderTest
 {
     /**
-     * Test that XML files are invalid.
+     * Test that route route not found.
      *
      * @expectedException \InvalidArgumentException
-     * @dataProvider getPathsToInvalidFiles
+     * @expectedExceptionMessageRegExp /Cannot find parent resource with name*./
      */
-    public function testLoadThrowsExceptionWithInvalidFile($filePath)
+    public function testLoadThrowsExceptionWithInvalidRouteParent()
     {
-        $this->loadFromXmlCollectionFixture($filePath);
+        $this->loadFromXmlCollectionFixture('invalid_route_parent.xml');
     }
 
-    public function getPathsToInvalidFiles()
+    /**
+     * Test that invalid tag.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /This element is not expected. Expected is one of/
+     */
+    public function testLoadThrowsExceptionWithInvalidTag()
     {
-        return [
-            ['invalid_route_parent.xml'],
-            ['invalid_tag.xml'],
-        ];
+        $this->loadFromXmlCollectionFixture('invalid_tag.xml');
     }
 
     /**

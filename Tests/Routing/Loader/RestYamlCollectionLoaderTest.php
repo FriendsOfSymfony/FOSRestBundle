@@ -36,24 +36,36 @@ class RestYamlCollectionLoaderTest extends LoaderTest
     }
 
     /**
-     * Test that YAML files are invalid.
+     * Test that invalid YAML format.
      *
      * @expectedException \InvalidArgumentException
-     * @dataProvider getPathsToInvalidFiles
+     * @expectedExceptionMessageRegExp /The file "*.+\/bad_format\.yml" does not contain valid YAML\./
      */
-    public function testLoadThrowsExceptionWithInvalidFile($filePath)
+    public function testLoadThrowsExceptionWithInvalidYaml()
     {
-        $this->loadFromYamlCollectionFixture($filePath);
+        $this->loadFromYamlCollectionFixture('bad_format.yml');
     }
 
-    public function getPathsToInvalidFiles()
+    /**
+     * Test that YAML value not an array.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /The file "*.+\/nonvalid.yml" must contain a YAML array\./
+     */
+    public function testLoadThrowsExceptionWithValueNotArray()
     {
-        return [
-            ['nonvalid.yml'],
-            ['nonvalid2.yml'],
-            ['bad_format.yml'],
-            ['invalid_route_parent.yml'],
-        ];
+        $this->loadFromYamlCollectionFixture('nonvalid.yml');
+    }
+
+    /**
+     * Test that route parent not found.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Cannot find parent resource with name*./
+     */
+    public function testLoadThrowsExceptionWithInvalidRouteParent()
+    {
+        $this->loadFromYamlCollectionFixture('invalid_route_parent.yml');
     }
 
     /**
