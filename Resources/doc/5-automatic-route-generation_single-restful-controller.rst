@@ -31,6 +31,7 @@ are explained in the next section.
     # app/config/routing.yml
     users:
         type:     rest
+        host:     m.example.com
         resource: Acme\HelloBundle\Controller\UsersController
 
 This will tell Symfony to automatically generate proper REST routes from your

@@ -239,4 +239,12 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $name = 'api_get_billing_payments';
         $this->assertArrayNotHasKey($name, $etalonRoutes);
     }
+
+    public function testHostnameFixture()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('routes.yml');
+        $route = $collection->get('get_users');
+
+        $this->assertEquals('rest.local', $route->getHost());
+    }
 }

@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://friendsofsymfony.github.com/schema/rest
         http://friendsofsymfony.github.com/schema/rest/routing-1.0.xsd"
 >
-    <route id="get_users" path="/users">
+    <route id="get_users" path="/users" host="rest.local">
         <default key="_controller">FOSRestBundle:UsersController:getUsers</default>
     </route>
 </routes>
