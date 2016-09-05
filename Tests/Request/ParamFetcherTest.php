@@ -237,7 +237,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $arrayViolation->method('getInvalidValue')
             ->willReturn($arrayInvalidValue);
-        
+
         $errors = new ConstraintViolationList([
             $stringViolation,
             $arrayViolation,
