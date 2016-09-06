@@ -129,11 +129,11 @@ Define resource actions
         public function deleteUserCommentAction($slug, $id)
         {} // "delete_user_comment"  [DELETE] /users/{slug}/comments/{id}
 
-        public function linkUserAction($slug)
-        {} // "link_user_friend"     [LINK] /users/{slug}
+        public function linkUserFriendAction($slug, $id)
+        {} // "link_user_friend"     [LINK] /users/{slug}/friends/{id}
 
-        public function unlinkUserAction($slug)
-        {} // "unlink_user_friend"     [UNLINK] /users/{slug}
+        public function unlinkUserFriendAction($slug, $id)
+        {} // "unlink_user_friend"     [UNLINK] /users/{slug}/friends/{id}
     }
 
 That's all. All your resource (``UsersController``) actions will get mapped to
