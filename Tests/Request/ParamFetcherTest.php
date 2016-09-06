@@ -226,9 +226,21 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param = $this->createMockedParam('foo', 'default', [], true, null, ['constraint']);
         list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
 
+        $stringInvalidValue = '12345';
+        $stringViolation = $this->getMockBuilder(ConstraintViolationInterface::class)
+            ->getMock();
+        $stringViolation->method('getInvalidValue')
+            ->willReturn($stringInvalidValue);
+
+        $arrayInvalidValue = ['page' => 'abcde'];
+        $arrayViolation = $this->getMockBuilder(ConstraintViolationInterface::class)
+            ->getMock();
+        $arrayViolation->method('getInvalidValue')
+            ->willReturn($arrayInvalidValue);
+
         $errors = new ConstraintViolationList([
-            $this->getMockBuilder(ConstraintViolationInterface::class)->getMock(),
-            $this->getMockBuilder(ConstraintViolationInterface::class)->getMock(),
+            $stringViolation,
+            $arrayViolation,
         ]);
 
         $this->validator
@@ -244,8 +256,11 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             $this->assertSame($param, $exception->getParameter());
             $this->assertSame($errors, $exception->getViolations());
             $this->assertEquals(
-                'Parameter "foo" of value "" violated a constraint ""'.
-                    "\n".'Parameter "foo" of value "" violated a constraint ""',
+                sprintf('Parameter "foo" of value "%s" violated a constraint ""', $stringInvalidValue).
+                sprintf(
+                    "\n".'Parameter "foo" of value "%s" violated a constraint ""',
+                    var_export($arrayInvalidValue, true)
+                ),
                 $exception->getMessage()
             );
         }
