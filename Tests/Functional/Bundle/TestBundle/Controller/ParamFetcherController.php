@@ -24,8 +24,8 @@ class ParamFetcherController extends FOSRestController
 {
     /**
      * @RequestParam(name="raw", requirements=@IdenticalTo({"foo"="raw", "bar"="foo"}), default="invalid")
-     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid% %%")
-     * @RequestParam(name="bar", map=true, requirements="%foo% foo", strict=true)
+     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid2% %%")
+     * @RequestParam(name="bar", map=true, requirements="%bar% foo", strict=true)
      */
     public function paramsAction(ParamFetcherInterface $fetcher)
     {
@@ -34,7 +34,7 @@ class ParamFetcherController extends FOSRestController
 
     /**
      * @QueryParam(name="foo", default="invalid")
-     * @RequestParam(name="bar", default="foo")
+     * @RequestParam(name="bar", default="%foo%")
      */
     public function testAction(Request $request, ParamFetcherInterface $fetcher)
     {

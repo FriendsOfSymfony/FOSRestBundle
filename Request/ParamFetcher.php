@@ -101,17 +101,19 @@ class ParamFetcher implements ParamFetcherInterface
         /** @var ParamInterface $param */
         $param = $params[$name];
         $default = $param->getDefault();
+        $default = $this->resolveValue($this->container, $default);
         $strict = (null !== $strict ? $strict : $param->isStrict());
 
         $paramValue = $param->getValue($this->getRequest(), $default);
 
-        return $this->cleanParamWithRequirements($param, $paramValue, $strict);
+        return $this->cleanParamWithRequirements($param, $paramValue, $strict, $default);
     }
 
     /**
      * @param ParamInterface $param
      * @param mixed          $paramValue
      * @param bool           $strict
+     * @param mixed          $default
      *
      * @throws BadRequestHttpException
      * @throws \RuntimeException
@@ -120,11 +122,8 @@ class ParamFetcher implements ParamFetcherInterface
      *
      * @internal
      */
-    protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, $strict)
+    protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, $strict, $default)
     {
-        $default = $param->getDefault();
-        $default = $this->resolveValue($this->container, $default);
-
         $this->checkNotIncompatibleParams($param);
         if ($default !== null && $default === $paramValue) {
             return $paramValue;

@@ -139,10 +139,6 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $param = $this->getMockBuilder(\FOS\RestBundle\Controller\Annotations\ParamInterface::class)->getMock();
         $param
-            ->expects($this->once())
-            ->method('getDefault')
-            ->willReturn('default');
-        $param
             ->expects($this->never())
             ->method('getConstraints');
 
@@ -150,7 +146,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'default',
-            $method->invokeArgs($fetcher, array($param, 'default', null))
+            $method->invokeArgs($fetcher, array($param, 'default', null, 'default'))
         );
     }
 
@@ -161,7 +157,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'value',
-            $method->invokeArgs($fetcher, array($param, 'value', null))
+            $method->invokeArgs($fetcher, array($param, 'value', null, null))
         );
     }
 
@@ -198,7 +194,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('value', array('constraint'))
             ->willReturn(array());
 
-        $this->assertEquals('value', $method->invokeArgs($fetcher, array($param, 'value', null)));
+        $this->assertEquals('value', $method->invokeArgs($fetcher, array($param, 'value', null, null)));
     }
 
     public function testValidationErrors()
@@ -218,7 +214,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('value', ['constraint'])
             ->willReturn($errors);
 
-        $this->assertEquals('default', $method->invokeArgs($fetcher, array($param, 'value', false)));
+        $this->assertEquals('default', $method->invokeArgs($fetcher, array($param, 'value', false, 'default')));
     }
 
     public function testValidationException()
@@ -238,7 +234,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->willReturn($errors);
 
         try {
-            $method->invokeArgs($fetcher, array($param, 'value', true));
+            $method->invokeArgs($fetcher, array($param, 'value', true, 'default'));
             $this->fail(sprintf('An exception must be thrown in %s', __METHOD__));
         } catch (InvalidParameterException $exception) {
             $this->assertSame($param, $exception->getParameter());
@@ -272,7 +268,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('value', array('constraint'))
             ->willReturn($errors);
 
-        $method->invokeArgs($fetcher, array($param, 'value', true));
+        $method->invokeArgs($fetcher, array($param, 'value', true, null));
     }
 
     protected function getFetcherToCheckValidation($param, array $constructionArguments = null)
