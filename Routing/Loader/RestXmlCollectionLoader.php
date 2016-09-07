@@ -70,6 +70,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $namePrefix = (string) $node->getAttribute('name-prefix');
                 $parent = (string) $node->getAttribute('parent');
                 $type = (string) $node->getAttribute('type');
+                $host = isset($config['host']) ? $config['host'] : null;
                 $currentDir = dirname($path);
 
                 $parents = [];
@@ -88,6 +89,10 @@ class RestXmlCollectionLoader extends XmlFileLoader
                     $prefix = null;
 
                     $this->collectionParents[$name] = $parents;
+                }
+
+                if (!empty($host)) {
+                    $imported->setHost($host);
                 }
 
                 $imported->addPrefix($prefix);

@@ -155,4 +155,12 @@ class RestXmlCollectionLoaderTest extends LoaderTest
 
         return $collectionLoader->load($fixtureName, 'rest');
     }
+
+    public function testHostnameFixture()
+    {
+        $collection = $this->loadFromXmlCollectionFixture('routes.xml');
+        $route = $collection->get('get_users');
+
+        $this->assertEquals('rest.local', $route->getHost());
+    }
 }

@@ -1,4 +1,5 @@
 get_users:
     path: /users
+    host: rest.local
     defaults:
         _controller: FOSRestBundle:UsersController:getUsers

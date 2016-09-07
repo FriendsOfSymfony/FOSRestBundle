@@ -73,6 +73,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $namePrefix = isset($config['name_prefix']) ? $config['name_prefix'] : null;
                 $parent = isset($config['parent']) ? $config['parent'] : null;
                 $type = isset($config['type']) ? $config['type'] : null;
+                $host = isset($config['host']) ? $config['host'] : null;
                 $requirements = isset($config['requirements']) ? $config['requirements'] : [];
                 $defaults = isset($config['defaults']) ? $config['defaults'] : [];
                 $options = isset($config['options']) ? $config['options'] : [];
@@ -100,6 +101,10 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $imported->addRequirements($requirements);
                 $imported->addDefaults($defaults);
                 $imported->addOptions($options);
+
+                if (!empty($host)) {
+                    $imported->setHost($host);
+                }
 
                 $imported->addPrefix($prefix);
 

@@ -15,10 +15,12 @@ XML collection:
     # src/Acme/HelloBundle/Resources/config/users_routes.yml
     users:
         type:     rest
+        host:     hostname.example.com
         resource: Acme\HelloBundle\Controller\UsersController
 
     comments:
         type:     rest
+        host:     hostname.example.com
         parent:   users
         resource: Acme\HelloBundle\Controller\CommentsController
 
@@ -31,8 +33,8 @@ XML collection:
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://friendsofsymfony.github.com/schema/rest https://raw.github.com/FriendsOfSymfony/FOSRestBundle/master/Resources/config/schema/routing/rest_routing-1.0.xsd">
 
-        <import id="users" type="rest" resource="Acme\HelloBundle\Controller\UsersController" />
-        <import type="rest" parent="users" resource="Acme\HelloBundle\Controller\CommentsController" />
+        <import id="users" type="rest" resource="Acme\HelloBundle\Controller\UsersController" host="hostname.example.com" />
+        <import type="rest" parent="users" resource="Acme\HelloBundle\Controller\CommentsController"  host="hostname.example.com" />
     </routes>
 
 Notice ``parent: users`` option in the second case. This option specifies that
@@ -45,6 +47,7 @@ It is also necessary to add ``type: rest`` to the ``routing.yml`` file:
     # app/config/routing.yml
     acme_hello:
         type: rest
+        host:   hostname.example.com
         resource: "@AcmeHelloBundle/Resources/config/users_routes.yml"
 
 In this case, your ``UsersController`` MUST always have a single resource
