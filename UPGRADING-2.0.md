@@ -18,7 +18,7 @@ Upgrading From 1.x To 2.0
  * The SensioFrameworkExtraBundle view annotations must be enabled to
    use the `ViewResponseListener`:
 
-   ```yaml
+   ```yml
    # app/config/config.yml
    sensio_framework_extra:
        view:
@@ -39,7 +39,16 @@ Upgrading From 1.x To 2.0
  * constructor signatures of most of the classes which used the container
    were changed
 
- * removed `callback_filter` configuration option for the jsonp_handler
+ * removed `callback_filter` configuration option for the `jsonp_handler`
+
+ * removed `fos_rest.format_listener.media_type` configuration option.
+   Use the versioning section instead:
+
+   ```yml
+   # config.yml
+
+   versioning: true
+   ```
 
  * the `exception_wrapper_handler` config option was removed. Use normalizers instead.
 
