@@ -2,8 +2,9 @@ imports:
     - { resource: ../config/default.yml }
 
 parameters:
-    foo: bar
-    invalid: invalid2
+    bar: bar
+    foo: foo
+    invalid2: invalid2
 
 framework:
     serializer:
