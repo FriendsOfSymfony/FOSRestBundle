@@ -32,9 +32,9 @@ class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->router = $this->getMock('Symfony\Component\Routing\RouterInterface');
-        $this->serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
-        $this->templating = $this->getMock('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface');
+        $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
+        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $this->templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface')->getMock();
         $this->requestStack = new RequestStack();
     }
 

@@ -152,11 +152,12 @@ You can also define your serializer options dynamically:
 
     <?php
 
+    use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
     use FOS\RestBundle\View\View;
     use FOS\RestBundle\Context\Context;
 
     /**
-     * @View()
+     * @ViewAnnotation()
      */
     public function getUsersAction()
     {

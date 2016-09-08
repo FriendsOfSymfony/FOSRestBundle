@@ -30,6 +30,7 @@ class ParamsAnnotatedController
      * @QueryParam(name="filters", map=true, requirements=@NotNull)
      * @FileParam(name="avatar", requirements={"mimeTypes"="application/json"}, image=true)
      * @FileParam(name="foo", requirements=@NotNull, strict=false)
+     * @FileParam(name="bar", requirements=@NotNull, map=true)
      *
      * @param ParamFetcher $paramFetcher
      */

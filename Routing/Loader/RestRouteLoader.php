@@ -117,12 +117,13 @@ class RestRouteLoader extends Loader
         if ($this->container->has($controller)) {
             // service_id
             $prefix = $controller.':';
-            if (method_exists($this->container, 'enterScope')) {
+            $useScope = method_exists($this->container, 'enterScope') && $this->container->hasScope('request');
+            if ($useScope) {
                 $this->container->enterScope('request');
                 $this->container->set('request', new Request());
             }
             $class = get_class($this->container->get($controller));
-            if (method_exists($this->container, 'enterScope')) {
+            if ($useScope) {
                 $this->container->leaveScope('request');
             }
         } elseif (class_exists($controller)) {

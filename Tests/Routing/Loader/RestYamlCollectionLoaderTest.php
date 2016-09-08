@@ -16,6 +16,7 @@ use FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader;
 use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -25,6 +26,48 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RestYamlCollectionLoaderTest extends LoaderTest
 {
+    /**
+     * Test that YAML file is empty.
+     */
+    public function testLoadDoesNothingIfEmpty()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('empty.yml');
+        $this->assertEquals([], $collection->all());
+    }
+
+    /**
+     * Test that invalid YAML format.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /The file "*.+\/bad_format\.yml" does not contain valid YAML\./
+     */
+    public function testLoadThrowsExceptionWithInvalidYaml()
+    {
+        $this->loadFromYamlCollectionFixture('bad_format.yml');
+    }
+
+    /**
+     * Test that YAML value not an array.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /The file "*.+\/nonvalid.yml" must contain a Yaml mapping \(an array\)\./
+     */
+    public function testLoadThrowsExceptionWithValueNotArray()
+    {
+        $this->loadFromYamlCollectionFixture('nonvalid.yml');
+    }
+
+    /**
+     * Test that route parent not found.
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Cannot find parent resource with name
+     */
+    public function testLoadThrowsExceptionWithInvalidRouteParent()
+    {
+        $this->loadFromYamlCollectionFixture('invalid_route_parent.yml');
+    }
+
     /**
      * Test that YAML collection gets parsed correctly.
      */
@@ -166,19 +209,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         $controller = new UsersController();
 
         // We register the controller in the fake container by its class name
-        $this->containerMock = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-            ->disableOriginalConstructor()
-            ->setMethods(['has', 'get', 'enterScope', 'leaveScope'])
-            ->getMock();
-        $this->containerMock->expects($this->any())
-            ->method('has')
-            ->will($this->returnCallback(function ($serviceId) use ($controller) {
-                return $serviceId === get_class($controller);
-            }));
-        $this->containerMock->expects($this->once())
-            ->method('get')
-            ->with(get_class($controller))
-            ->will($this->returnValue($controller));
+        $this->container = new Container();
+        $this->container->set(get_class($controller), $controller);
 
         $collection = $this->loadFromYamlCollectionFixture('users_collection.yml');
 
@@ -189,6 +221,41 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             'FOS\RestBundle\Tests\Fixtures\Controller\UsersController:getUsersAction',
             $route->getDefault('_controller')
         );
+
+        $this->container = null;
+    }
+
+    /**
+     * Test that YAML collection with named prefixes gets parsed correctly with inheritance.
+     */
+    public function testNamedPrefixedBaseReportsFixture()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
+        $etalonRoutes = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
+
+        foreach ($etalonRoutes as $name => $params) {
+            $route = $collection->get($name);
+            $methods = $route->getMethods();
+
+            $this->assertNotNull($route, $name);
+            $this->assertEquals($params['path'], $route->getPath(), $name);
+            $this->assertEquals($params['method'], $methods[0], $name);
+            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
+        }
+
+        $name = 'api_get_billing_payments';
+        $this->assertArrayNotHasKey($name, $etalonRoutes);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testRoutesWithPattern()
+    {
+        $collection = $this->loadFromYamlCollectionFixture('routes_with_pattern.yml');
+        $route = $collection->get('get_users');
+
+        $this->assertEquals('/users.{_format}', $route->getPath());
     }
 
     /**
@@ -226,25 +293,11 @@ class RestYamlCollectionLoaderTest extends LoaderTest
         return $collectionLoader->load($fixtureName, 'rest');
     }
 
-    /**
-     * Test that YAML collection with named prefixes gets parsed correctly with inheritance.
-     */
-    public function testNamedPrefixedBaseReportsFixture()
+    public function testHostnameFixture()
     {
-        $collection = $this->loadFromYamlCollectionFixture('base_named_prefixed_reports_collection.yml');
-        $etalonRoutes = $this->loadEtalonRoutesInfo('base_named_prefixed_reports_collection.yml');
+        $collection = $this->loadFromYamlCollectionFixture('routes.yml');
+        $route = $collection->get('get_users');
 
-        foreach ($etalonRoutes as $name => $params) {
-            $route = $collection->get($name);
-            $methods = $route->getMethods();
-
-            $this->assertNotNull($route, $name);
-            $this->assertEquals($params['path'], $route->getPath(), $name);
-            $this->assertEquals($params['method'], $methods[0], $name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
-        }
-
-        $name = 'api_get_billing_payments';
-        $this->assertArrayNotHasKey($name, $etalonRoutes);
+        $this->assertEquals('rest.local', $route->getHost());
     }
 }

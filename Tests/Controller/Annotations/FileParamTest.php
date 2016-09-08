@@ -22,9 +22,9 @@ class FileParamTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMock('FOS\RestBundle\Controller\Annotations\FileParam', array(
-            'getKey',
-        ));
+        $this->param = $this->getMockBuilder('FOS\RestBundle\Controller\Annotations\FileParam')
+            ->setMethods(array('getKey'))
+            ->getMock();
     }
 
     public function testInterface()
@@ -39,8 +39,8 @@ class FileParamTest extends \PHPUnit_Framework_TestCase
             ->method('getKey')
             ->willReturn('foo');
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $parameterBag = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $parameterBag = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')->getMock();
         $parameterBag
             ->expects($this->once())
             ->method('get')
@@ -53,7 +53,7 @@ class FileParamTest extends \PHPUnit_Framework_TestCase
 
     public function testComplexRequirements()
     {
-        $this->param->requirements = $requirement = $this->getMock('Symfony\Component\Validator\Constraint');
+        $this->param->requirements = $requirement = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
         $this->assertEquals(array(
             new Constraints\NotNull(),
             $requirement,
@@ -78,5 +78,26 @@ class FileParamTest extends \PHPUnit_Framework_TestCase
             new Constraints\NotNull(),
             new Constraints\Image($requirements),
         ), $this->param->getConstraints());
+    }
+
+    public function testImageConstraintsTransformWhenParamIsAnArray()
+    {
+        $this->param->image = true;
+        $this->param->map = true;
+        $this->param->requirements = $requirements = ['mimeTypes' => 'image/gif'];
+        $this->assertEquals(array(new Constraints\All(array(
+            new Constraints\NotNull(),
+            new Constraints\Image($requirements),
+        ))), $this->param->getConstraints());
+    }
+
+    public function testFileConstraintsWhenParamIsAnArray()
+    {
+        $this->param->map = true;
+        $this->param->requirements = $requirements = ['mimeTypes' => 'application/pdf'];
+        $this->assertEquals(array(new Constraints\All(array(
+            new Constraints\NotNull(),
+            new Constraints\File($requirements),
+        ))), $this->param->getConstraints());
     }
 }

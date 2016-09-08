@@ -16,6 +16,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -60,22 +61,37 @@ class RestYamlCollectionLoader extends YamlFileLoader
     {
         $path = $this->locator->locate($file);
 
-        $config = Yaml::parse(file_get_contents($path));
+        try {
+            $config = Yaml::parse(file_get_contents($path));
+        } catch (ParseException $e) {
+            throw new \InvalidArgumentException(sprintf('The file "%s" does not contain valid YAML.', $path), 0, $e);
+        }
 
         $collection = new RouteCollection();
         $collection->addResource(new FileResource($path));
+
+        // empty file
+        if (null === $config) {
+            return $collection;
+        }
+
+        // not an array
+        if (!is_array($config)) {
+            throw new \InvalidArgumentException(sprintf('The file "%s" must contain a Yaml mapping (an array).', $path));
+        }
 
         // process routes and imports
         foreach ($config as $name => $config) {
             if (isset($config['resource'])) {
                 $resource = $config['resource'];
-                $prefix = isset($config['prefix'])       ? $config['prefix']         : null;
-                $namePrefix = isset($config['name_prefix'])  ? $config['name_prefix']    : null;
-                $parent = isset($config['parent'])       ? $config['parent']         : null;
-                $type = isset($config['type'])         ? $config['type']           : null;
-                $requirements = isset($config['requirements']) ? $config['requirements']   : [];
-                $defaults = isset($config['defaults'])     ? $config['defaults']       : [];
-                $options = isset($config['options'])      ? $config['options']        : [];
+                $prefix = isset($config['prefix']) ? $config['prefix'] : null;
+                $namePrefix = isset($config['name_prefix']) ? $config['name_prefix'] : null;
+                $parent = isset($config['parent']) ? $config['parent'] : null;
+                $type = isset($config['type']) ? $config['type'] : null;
+                $host = isset($config['host']) ? $config['host'] : null;
+                $requirements = isset($config['requirements']) ? $config['requirements'] : [];
+                $defaults = isset($config['defaults']) ? $config['defaults'] : [];
+                $options = isset($config['options']) ? $config['options'] : [];
                 $currentDir = dirname($path);
 
                 $parents = [];
@@ -101,6 +117,10 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $imported->addDefaults($defaults);
                 $imported->addOptions($options);
 
+                if (!empty($host)) {
+                    $imported->setHost($host);
+                }
+
                 $imported->addPrefix($prefix);
 
                 // Add name prefix from parent config files
@@ -112,6 +132,8 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 // the path option
                 if (!isset($config['path'])) {
                     $config['path'] = $config['pattern'];
+
+                    @trigger_error(sprintf('The "pattern" option at "%s" in file "%s" is deprecated. Use the "path" option instead.', $name, $path), E_USER_DEPRECATED);
                 }
 
                 if ($this->includeFormat) {

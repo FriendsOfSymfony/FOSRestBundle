@@ -421,7 +421,7 @@ class FOSRestExtension extends Extension
      *
      * @param string $exception Class to test
      *
-     * @throws \InvalidArgumentException if the class was not found.
+     * @throws \InvalidArgumentException if the class was not found
      */
     private function testExceptionExists($exception)
     {

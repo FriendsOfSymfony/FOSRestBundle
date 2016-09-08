@@ -58,12 +58,12 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->controller = [new \stdClass(), 'fooAction'];
 
         $this->params = [];
-        $this->paramReader = $this->getMock(ParamReaderInterface::class);
+        $this->paramReader = $this->getMockBuilder(ParamReaderInterface::class)->getMock();
 
-        $this->validator = $this->getMock(ValidatorInterface::class);
+        $this->validator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
 
         $this->request = new Request();
-        $this->requestStack = $this->getMock(RequestStack::class, array());
+        $this->requestStack = $this->getMockBuilder(RequestStack::class)->getMock();
         $this->requestStack
             ->expects($this->any())
             ->method('getCurrentRequest')
@@ -72,14 +72,14 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $this->paramFetcherBuilder = $this->getMockBuilder(ParamFetcher::class);
         $this->paramFetcherBuilder
             ->setConstructorArgs(array(
-                $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'),
+                $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock(),
                 $this->paramReader,
                 $this->requestStack,
                 $this->validator,
             ))
             ->setMethods(null);
 
-        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
     }
 
     public function testParamDynamicCreation()
@@ -137,11 +137,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
     public function testReturnBeforeGettingConstraints()
     {
-        $param = $this->getMock(\FOS\RestBundle\Controller\Annotations\ParamInterface::class);
-        $param
-            ->expects($this->once())
-            ->method('getDefault')
-            ->willReturn('default');
+        $param = $this->getMockBuilder(\FOS\RestBundle\Controller\Annotations\ParamInterface::class)->getMock();
         $param
             ->expects($this->never())
             ->method('getConstraints');
@@ -150,7 +146,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'default',
-            $method->invokeArgs($fetcher, array($param, 'default', null))
+            $method->invokeArgs($fetcher, array($param, 'default', null, 'default'))
         );
     }
 
@@ -161,7 +157,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'value',
-            $method->invokeArgs($fetcher, array($param, 'value', null))
+            $method->invokeArgs($fetcher, array($param, 'value', null, null))
         );
     }
 
@@ -177,7 +173,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         list($fetcher, $method) = $this->getFetcherToCheckValidation(
             $param,
             array(
-                $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'),
+                $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock(),
                 $this->paramReader,
                 $this->requestStack,
                 null,
@@ -198,7 +194,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('value', array('constraint'))
             ->willReturn(array());
 
-        $this->assertEquals('value', $method->invokeArgs($fetcher, array($param, 'value', null)));
+        $this->assertEquals('value', $method->invokeArgs($fetcher, array($param, 'value', null, null)));
     }
 
     public function testValidationErrors()
@@ -206,7 +202,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param = $this->createMockedParam('foo', 'default', [], false, null, ['constraint']);
         list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
 
-        $errors = $this->getMock(ConstraintViolationListInterface::class);
+        $errors = $this->getMockBuilder(ConstraintViolationListInterface::class)->getMock();
         $errors
             ->expects($this->once())
             ->method('count')
@@ -218,7 +214,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('value', ['constraint'])
             ->willReturn($errors);
 
-        $this->assertEquals('default', $method->invokeArgs($fetcher, array($param, 'value', false)));
+        $this->assertEquals('default', $method->invokeArgs($fetcher, array($param, 'value', false, 'default')));
     }
 
     public function testValidationException()
@@ -226,9 +222,21 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param = $this->createMockedParam('foo', 'default', [], true, null, ['constraint']);
         list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
 
+        $stringInvalidValue = '12345';
+        $stringViolation = $this->getMockBuilder(ConstraintViolationInterface::class)
+            ->getMock();
+        $stringViolation->method('getInvalidValue')
+            ->willReturn($stringInvalidValue);
+
+        $arrayInvalidValue = ['page' => 'abcde'];
+        $arrayViolation = $this->getMockBuilder(ConstraintViolationInterface::class)
+            ->getMock();
+        $arrayViolation->method('getInvalidValue')
+            ->willReturn($arrayInvalidValue);
+
         $errors = new ConstraintViolationList([
-            $this->getMock(ConstraintViolationInterface::class),
-            $this->getMock(ConstraintViolationInterface::class),
+            $stringViolation,
+            $arrayViolation,
         ]);
 
         $this->validator
@@ -238,14 +246,17 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->willReturn($errors);
 
         try {
-            $method->invokeArgs($fetcher, array($param, 'value', true));
+            $method->invokeArgs($fetcher, array($param, 'value', true, 'default'));
             $this->fail(sprintf('An exception must be thrown in %s', __METHOD__));
         } catch (InvalidParameterException $exception) {
             $this->assertSame($param, $exception->getParameter());
             $this->assertSame($errors, $exception->getViolations());
             $this->assertEquals(
-                'Parameter "foo" of value "" violated a constraint ""'.
-                    "\n".'Parameter "foo" of value "" violated a constraint ""',
+                sprintf('Parameter "foo" of value "%s" violated a constraint ""', $stringInvalidValue).
+                sprintf(
+                    "\n".'Parameter "foo" of value "%s" violated a constraint ""',
+                    var_export($arrayInvalidValue, true)
+                ),
                 $exception->getMessage()
             );
         }
@@ -260,7 +271,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $param = $this->createMockedParam('foo', null, [], false, null, ['constraint']);
         list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
 
-        $errors = $this->getMock(ConstraintViolationListInterface::class);
+        $errors = $this->getMockBuilder(ConstraintViolationListInterface::class)->getMock();
         $errors
             ->expects($this->once())
             ->method('count')
@@ -272,7 +283,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->with('value', array('constraint'))
             ->willReturn($errors);
 
-        $method->invokeArgs($fetcher, array($param, 'value', true));
+        $method->invokeArgs($fetcher, array($param, 'value', true, null));
     }
 
     protected function getFetcherToCheckValidation($param, array $constructionArguments = null)
@@ -426,7 +437,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
         $value = null,
         array $constraints = []
     ) {
-        $param = $this->getMock('FOS\RestBundle\Controller\Annotations\ParamInterface');
+        $param = $this->getMockBuilder('FOS\RestBundle\Controller\Annotations\ParamInterface')->getMock();
         $param
             ->expects($this->any())
             ->method('getName')

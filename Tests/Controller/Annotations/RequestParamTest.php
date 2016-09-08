@@ -21,9 +21,9 @@ class RequestParamTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMock('FOS\RestBundle\Controller\Annotations\RequestParam', array(
-            'getKey',
-        ));
+        $this->param = $this->getMockBuilder('FOS\RestBundle\Controller\Annotations\RequestParam')
+            ->setMethods(array('getKey'))
+            ->getMock();
     }
 
     public function testInterface()
@@ -38,8 +38,8 @@ class RequestParamTest extends \PHPUnit_Framework_TestCase
             ->method('getKey')
             ->willReturn('foo');
 
-        $request = $this->getMock('Symfony\Component\HttpFoundation\Request');
-        $parameterBag = $this->getMock('Symfony\Component\HttpFoundation\ParameterBag');
+        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
+        $parameterBag = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')->getMock();
         $parameterBag
             ->expects($this->once())
             ->method('get')

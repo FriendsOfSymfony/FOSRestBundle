@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * @author Ener-Getick <egetick@gmail.com>
  *
- * @internal do not use this trait or its functions in your code.
+ * @internal do not use this trait or its functions in your code
  */
 trait ResolverTrait
 {

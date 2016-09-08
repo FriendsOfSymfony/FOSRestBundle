@@ -63,7 +63,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
      *
      * @param array $idObject
      *
-     * @throws TransformationFailedException if object is not found.
+     * @throws TransformationFailedException if object is not found
      *
      * @return object|null
      */

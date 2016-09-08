@@ -31,6 +31,7 @@ are explained in the next section.
     # app/config/routing.yml
     users:
         type:     rest
+        host:     m.example.com
         resource: Acme\HelloBundle\Controller\UsersController
 
 This will tell Symfony to automatically generate proper REST routes from your
@@ -132,11 +133,11 @@ Define resource actions
         public function deleteUserCommentAction($slug, $id)
         {} // "delete_user_comment"  [DELETE] /users/{slug}/comments/{id}
 
-        public function linkUserAction($slug)
-        {} // "link_user_friend"     [LINK] /users/{slug}
+        public function linkUserFriendAction($slug, $id)
+        {} // "link_user_friend"     [LINK] /users/{slug}/friends/{id}
 
-        public function unlinkUserAction($slug)
-        {} // "unlink_user_friend"     [UNLINK] /users/{slug}
+        public function unlinkUserFriendAction($slug, $id)
+        {} // "unlink_user_friend"     [UNLINK] /users/{slug}/friends/{id}
     }
 
 That's all. All your resource (``UsersController``) actions will get mapped to

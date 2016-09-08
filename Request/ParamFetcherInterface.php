@@ -32,7 +32,7 @@ interface ParamFetcherInterface
      * @param string $name   Name of the parameter
      * @param bool   $strict Whether a requirement mismatch should cause an exception
      *
-     * @return mixed Value of the parameter.
+     * @return mixed Value of the parameter
      */
     public function get($name, $strict = null);
 
@@ -41,7 +41,7 @@ interface ParamFetcherInterface
      *
      * @param bool $strict Whether a requirement mismatch should cause an exception
      *
-     * @return array Values of all the parameters.
+     * @return array Values of all the parameters
      */
     public function all($strict = false);
 }

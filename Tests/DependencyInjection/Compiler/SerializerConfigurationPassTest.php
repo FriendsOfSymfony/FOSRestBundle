@@ -31,7 +31,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldDoNothingIfSerializerIsFound()
     {
-        $serializer = $this->getMock('FOS\RestBundle\Serializer\Serializer');
+        $serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
         $this->container->register('fos_rest.serializer', get_class($serializer));
 
         $compiler = new SerializerConfigurationPass();

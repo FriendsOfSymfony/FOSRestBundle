@@ -39,10 +39,12 @@ class InvalidParameterException extends BadRequestHttpException
                 $message .= "\n";
             }
 
+            $invalidValue = $violation->getInvalidValue();
+
             $message .= sprintf(
                 'Parameter "%s" of value "%s" violated a constraint "%s"',
                 $parameter->getName(),
-                $violation->getInvalidValue(),
+                is_scalar($invalidValue) ? $invalidValue : var_export($invalidValue, true),
                 $violation->getMessage()
             );
         }
