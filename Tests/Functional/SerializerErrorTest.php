@@ -61,7 +61,7 @@ class SerializerErrorTest extends WebTestCase
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/exception.xml');
 
-        $this->assertEquals($expectedContent, $client->getResponse()->getContent());
+        $this->assertXmlStringEqualsXmlString($expectedContent, $client->getResponse()->getContent());
     }
 
     public function serializeExceptionXmlProvider()
@@ -114,7 +114,7 @@ XML;
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.xml');
 
-        $this->assertEquals($expectedContent, $client->getResponse()->getContent());
+        $this->assertXmlStringEqualsXmlString($expectedContent, $client->getResponse()->getContent());
     }
 
     public function serializeInvalidFormXmlProvider()
