@@ -134,7 +134,7 @@ class FOSRestExtension extends Extension
             }
 
             $service->replaceArgument(1, $config['body_listener']['throw_exception_on_unsupported_content_type']);
-            $service->replaceArgument(2, $config['body_listener']['accept_form_content_type']);
+            $service->replaceArgument(4, $config['body_listener']['accept_form_content_type']);
             $service->addMethodCall('setDefaultFormat', array($config['body_listener']['default_format']));
 
             $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(1, $config['body_listener']['decoders']);
@@ -143,8 +143,8 @@ class FOSRestExtension extends Extension
 
             if (null !== $arrayNormalizer['service']) {
                 $bodyListener = $container->getDefinition('fos_rest.body_listener');
-                $bodyListener->addArgument(new Reference($arrayNormalizer['service']));
-                $bodyListener->addArgument($arrayNormalizer['forms']);
+                $bodyListener->replaceArgument(2, new Reference($arrayNormalizer['service']));
+                $bodyListener->replaceArgument(3, $arrayNormalizer['forms']);
             }
         }
     }

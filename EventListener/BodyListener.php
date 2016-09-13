@@ -41,16 +41,16 @@ class BodyListener
      *
      * @param DecoderProviderInterface $decoderProvider
      * @param bool                     $throwExceptionOnUnsupportedContentType
-     * @param bool                     $acceptFormContentType
      * @param ArrayNormalizerInterface $arrayNormalizer
      * @param bool                     $normalizeForms
+     * @param bool                     $acceptFormContentType
      */
     public function __construct(
         DecoderProviderInterface $decoderProvider,
         $throwExceptionOnUnsupportedContentType = false,
-        $acceptFormContentType = true,
         ArrayNormalizerInterface $arrayNormalizer = null,
-        $normalizeForms = false
+        $normalizeForms = false,
+        $acceptFormContentType = true
     ) {
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;

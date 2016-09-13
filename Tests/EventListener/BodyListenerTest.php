@@ -48,7 +48,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $decoderProvider = new ContainerDecoderProvider($container, ['json' => 'foo']);
 
-        $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType, $acceptFormContentType);
+        $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType, null, false, $acceptFormContentType);
 
         if ($decode) {
             $container
@@ -126,7 +126,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, true, $normalizer);
+        $listener = new BodyListener($decoderProvider, false, $normalizer, false, true);
         $listener->onKernelRequest($event);
 
         $this->assertEquals(array(), $request->request->all());
@@ -172,7 +172,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, true, $normalizer);
+        $listener = new BodyListener($decoderProvider, false, $normalizer, false, true);
         $listener->onKernelRequest($event);
 
         $this->assertEquals($normalizedData, $request->request->all());
@@ -213,7 +213,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, true, $normalizer, true);
+        $listener = new BodyListener($decoderProvider, false, $normalizer, true, true);
         $listener->onKernelRequest($event);
 
         if ($mustBeNormalized) {
@@ -277,7 +277,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, true, $normalizer);
+        $listener = new BodyListener($decoderProvider, false, $normalizer, false, true);
         $listener->onKernelRequest($event);
     }
 

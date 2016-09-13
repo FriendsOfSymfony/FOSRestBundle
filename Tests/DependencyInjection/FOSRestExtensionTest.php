@@ -91,7 +91,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition('fos_rest.body_listener'));
         $this->assertEquals($decoders, $this->container->getDefinition('fos_rest.decoder_provider')->getArgument(1));
         $this->assertFalse($this->container->getDefinition('fos_rest.body_listener')->getArgument(1));
-        $this->assertCount(3, $this->container->getDefinition('fos_rest.body_listener')->getArguments());
+        $this->assertCount(5, $this->container->getDefinition('fos_rest.body_listener')->getArguments());
     }
 
     public function testLoadBodyListenerWithNormalizerString()
@@ -103,7 +103,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->extension->load($config, $this->container);
-        $normalizerArgument = $this->container->getDefinition('fos_rest.body_listener')->getArgument(3);
+        $normalizerArgument = $this->container->getDefinition('fos_rest.body_listener')->getArgument(2);
 
         $this->assertInstanceOf(Reference::class, $normalizerArgument);
         $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
@@ -121,8 +121,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->extension->load($config, $this->container);
         $bodyListener = $this->container->getDefinition('fos_rest.body_listener');
-        $normalizerArgument = $bodyListener->getArgument(3);
-        $normalizeForms = $bodyListener->getArgument(4);
+        $normalizerArgument = $bodyListener->getArgument(2);
+        $normalizeForms = $bodyListener->getArgument(3);
 
         $this->assertCount(5, $bodyListener->getArguments());
         $this->assertInstanceOf(Reference::class, $normalizerArgument);
@@ -143,8 +143,8 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->extension->load($config, $this->container);
         $bodyListener = $this->container->getDefinition('fos_rest.body_listener');
-        $normalizerArgument = $bodyListener->getArgument(3);
-        $normalizeForms = $bodyListener->getArgument(4);
+        $normalizerArgument = $bodyListener->getArgument(2);
+        $normalizeForms = $bodyListener->getArgument(3);
 
         $this->assertCount(5, $bodyListener->getArguments());
         $this->assertInstanceOf(Reference::class, $normalizerArgument);
