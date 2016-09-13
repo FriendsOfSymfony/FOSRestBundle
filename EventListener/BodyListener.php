@@ -91,7 +91,7 @@ class BodyListener
 
         if($this->isFormRequest($request) && !$this->acceptFormContentType) {
             if($this->throwExceptionOnUnsupportedContentType) {
-                throw new UnsupportedMediaTypeHttpException("Request body format form not supported");
+                throw new UnsupportedMediaTypeHttpException('Request body format form not supported');
             }
 
             return;
