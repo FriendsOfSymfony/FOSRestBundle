@@ -40,18 +40,21 @@ class BodyListener
      * Constructor.
      *
      * @param DecoderProviderInterface $decoderProvider
-     * @param bool                     $throwExceptionOnUnsupportedContentType
+     * @param bool $throwExceptionOnUnsupportedContentType
+     * @param bool $acceptFormContentType
      * @param ArrayNormalizerInterface $arrayNormalizer
-     * @param bool                     $normalizeForms
+     * @param bool $normalizeForms
      */
     public function __construct(
         DecoderProviderInterface $decoderProvider,
         $throwExceptionOnUnsupportedContentType = false,
+        $acceptFormContentType = true,
         ArrayNormalizerInterface $arrayNormalizer = null,
         $normalizeForms = false
     ) {
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
+        $this->acceptFormContentType = $acceptFormContentType;
         $this->arrayNormalizer = $arrayNormalizer;
         $this->normalizeForms = $normalizeForms;
     }
@@ -85,6 +88,14 @@ class BodyListener
         $method = $request->getMethod();
         $contentType = $request->headers->get('Content-Type');
         $normalizeRequest = $this->normalizeForms && $this->isFormRequest($request);
+
+        if($this->isFormRequest($request) && !$this->acceptFormContentType) {
+            if($this->throwExceptionOnUnsupportedContentType) {
+                throw new UnsupportedMediaTypeHttpException("Request body format form not supported");
+            }
+
+            return;
+        }
 
         if ($this->isDecodeable($request)) {
             $format = null === $contentType

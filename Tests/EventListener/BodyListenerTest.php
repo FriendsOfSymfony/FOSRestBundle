@@ -28,16 +28,17 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class BodyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param bool    $decode                                 use decoder provider
-     * @param Request $request                                the original request
-     * @param string  $method                                 a http method (e.g. POST, GET, PUT, ...)
-     * @param array   $expectedParameters                     the http parameters of the updated request
-     * @param string  $contentType                            the request header content type
-     * @param bool    $throwExceptionOnUnsupportedContentType
+     * @param bool $decode use decoder provider
+     * @param Request $request the original request
+     * @param string $method a http method (e.g. POST, GET, PUT, ...)
+     * @param array $expectedParameters the http parameters of the updated request
+     * @param string $contentType the request header content type
+     * @param bool $throwExceptionOnUnsupportedContentType
+     * @param bool $acceptFormContentType
      *
      * @dataProvider testOnKernelRequestDataProvider
      */
-    public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false)
+    public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false, $acceptFormContentType = true)
     {
         $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->getMock();
         $decoder->expects($this->any())
@@ -47,7 +48,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
         $decoderProvider = new ContainerDecoderProvider($container, ['json' => 'foo']);
 
-        $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType);
+        $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType, $acceptFormContentType);
 
         if ($decode) {
             $container
@@ -125,7 +126,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, $normalizer);
+        $listener = new BodyListener($decoderProvider, false, true, $normalizer);
         $listener->onKernelRequest($event);
 
         $this->assertEquals(array(), $request->request->all());
@@ -171,7 +172,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, $normalizer);
+        $listener = new BodyListener($decoderProvider, false, true, $normalizer);
         $listener->onKernelRequest($event);
 
         $this->assertEquals($normalizedData, $request->request->all());
@@ -212,7 +213,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, $normalizer, true);
+        $listener = new BodyListener($decoderProvider, false, true, $normalizer, true);
         $listener->onKernelRequest($event);
 
         if ($mustBeNormalized) {
@@ -276,7 +277,7 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $listener = new BodyListener($decoderProvider, false, $normalizer);
+        $listener = new BodyListener($decoderProvider, false, true, $normalizer);
         $listener->onKernelRequest($event);
     }
 
@@ -296,6 +297,20 @@ class BodyListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
         $this->testOnKernelRequest(false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/foo', true);
+    }
+
+    /**
+     * Test that a unallowed form format will cause a UnsupportedMediaTypeHttpException to be thrown.
+     */
+    public function testUnsupportedMediaTypeHttpExceptionOnFormMediaType()
+    {
+        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
+        $this->testOnKernelRequest(false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/form', true, false);
+    }
+
+    public function testShouldNotThrowUnsupportedMediaTypeHttpExceptionWhenIsAcceptedFormContentType()
+    {
+        $this->testOnKernelRequest(false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/form', false, false);
     }
 
     public function testShouldNotThrowUnsupportedMediaTypeHttpExceptionWhenIsAnEmptyDeleteRequest()
