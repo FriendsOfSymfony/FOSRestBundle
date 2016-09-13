@@ -28,13 +28,13 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class BodyListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param bool $decode use decoder provider
-     * @param Request $request the original request
-     * @param string $method a http method (e.g. POST, GET, PUT, ...)
-     * @param array $expectedParameters the http parameters of the updated request
-     * @param string $contentType the request header content type
-     * @param bool $throwExceptionOnUnsupportedContentType
-     * @param bool $acceptFormContentType
+     * @param bool      $decode                                     use decoder provider
+     * @param Request   $request                                    the original request
+     * @param string    $method                                     a http method (e.g. POST, GET, PUT, ...)
+     * @param array     $expectedParameters                         the http parameters of the updated request
+     * @param string    $contentType                                the request header content type
+     * @param bool      $throwExceptionOnUnsupportedContentType
+     * @param bool      $acceptFormContentType
      *
      * @dataProvider testOnKernelRequestDataProvider
      */

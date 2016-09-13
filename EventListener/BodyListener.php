@@ -39,11 +39,11 @@ class BodyListener
     /**
      * Constructor.
      *
-     * @param DecoderProviderInterface $decoderProvider
-     * @param bool $throwExceptionOnUnsupportedContentType
-     * @param bool $acceptFormContentType
-     * @param ArrayNormalizerInterface $arrayNormalizer
-     * @param bool $normalizeForms
+     * @param DecoderProviderInterface  $decoderProvider
+     * @param bool                      $throwExceptionOnUnsupportedContentType
+     * @param bool                      $acceptFormContentType
+     * @param ArrayNormalizerInterface  $arrayNormalizer
+     * @param bool                      $normalizeForms
      */
     public function __construct(
         DecoderProviderInterface $decoderProvider,
