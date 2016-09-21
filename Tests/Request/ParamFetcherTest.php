@@ -299,7 +299,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             $this->assertSame($param, $exception->getParameter());
             $this->assertSame($errors, $exception->getViolations());
             $this->assertEquals(
-                sprintf('Parameter "foo" of value "%s" violated a constraint ""', $stringInvalidValue).
+                sprintf('Parameter "foo" of value "%s" violated a constraint ""', utf8_encode($stringInvalidValue)).
                 sprintf(
                     "\n".'Parameter "foo" of value "%s" violated a constraint ""',
                     var_export($arrayInvalidValue, true)
@@ -307,7 +307,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 $exception->getMessage()
             );
             $encoders = new JsonEncoder(new JsonEncode());
-            // Throw an exception : Symfony\Component\Serializer\Exception\UnexpectedValueException: Malformed UTF-8 characters, possibly incorrectly encoded
+            // Should not throw exception in case of malformed UTF-8 character
             $message = $encoders->encode($exception->getMessage(), 'json');
         }
     }
