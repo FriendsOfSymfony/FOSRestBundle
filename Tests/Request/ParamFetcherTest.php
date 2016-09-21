@@ -17,6 +17,8 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -259,6 +261,54 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 ),
                 $exception->getMessage()
             );
+        }
+    }
+
+    public function testValidationExceptionWithInvalidUTF8Character()
+    {
+        $param = $this->createMockedParam('foo', 'default', [], true, null, ['constraint']);
+        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+
+        $stringInvalidValue = urldecode('%E3%81');
+        $stringViolation = $this->getMockBuilder(ConstraintViolationInterface::class)
+            ->getMock();
+        $stringViolation->method('getInvalidValue')
+            ->willReturn($stringInvalidValue);
+
+        $arrayInvalidValue = ['page' => 'abcde'];
+        $arrayViolation = $this->getMockBuilder(ConstraintViolationInterface::class)
+            ->getMock();
+        $arrayViolation->method('getInvalidValue')
+            ->willReturn($arrayInvalidValue);
+
+        $errors = new ConstraintViolationList([
+            $stringViolation,
+            $arrayViolation,
+        ]);
+
+        $this->validator
+            ->expects($this->once())
+            ->method('validate')
+            ->with('value', ['constraint'])
+            ->willReturn($errors);
+
+        try {
+            $method->invokeArgs($fetcher, array($param, 'value', true, 'default'));
+            $this->fail(sprintf('An exception must be thrown in %s', __METHOD__));
+        } catch (InvalidParameterException $exception) {
+            $this->assertSame($param, $exception->getParameter());
+            $this->assertSame($errors, $exception->getViolations());
+            $this->assertEquals(
+                sprintf('Parameter "foo" of value "%s" violated a constraint ""', $stringInvalidValue).
+                sprintf(
+                    "\n".'Parameter "foo" of value "%s" violated a constraint ""',
+                    var_export($arrayInvalidValue, true)
+                ),
+                $exception->getMessage()
+            );
+            $encoders = new JsonEncoder(new JsonEncode());
+            // Throw an exception : Symfony\Component\Serializer\Exception\UnexpectedValueException: Malformed UTF-8 characters, possibly incorrectly encoded
+            $message = $encoders->encode($exception->getMessage(), 'json');
         }
     }
 
