@@ -263,9 +263,10 @@ final class Context
     }
 
     /**
-     * Sets the exclusion strategies
+     * Sets the exclusion strategies.
      *
      * Warning: This only applies to the JMS serializer adapter.
+     *
      * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
      *
      * @param array $exclusionStrategies
@@ -276,9 +277,10 @@ final class Context
     }
 
     /**
-     * Gets an array of exclusion strategies
+     * Gets an array of exclusion strategies.
      *
      * Warning: This only applies to the JMS serializer adapter.
+     *
      * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
      *
      * @return array
@@ -289,9 +291,10 @@ final class Context
     }
 
     /**
-     * Adds an exclusion strategy
+     * Adds an exclusion strategy.
      *
      * Warning: This only applies to the JMS serializer adapter.
+     *
      * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
      *
      * @param $exclusionStrategy
