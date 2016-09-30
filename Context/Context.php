@@ -42,6 +42,10 @@ final class Context
      * @var bool
      */
     private $serializeNull;
+    /**
+     * @var array
+     */
+    private $exclusionStrategies = array();
 
     /**
      * Sets an attribute.
@@ -256,5 +260,44 @@ final class Context
     public function getSerializeNull()
     {
         return $this->serializeNull;
+    }
+
+    /**
+     * Sets the exclusion strategies
+     *
+     * Warning: This only applies to the JMS serializer adapter.
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
+     *
+     * @param array $exclusionStrategies
+     */
+    public function setExclusionStrategies($exclusionStrategies)
+    {
+        $this->exclusionStrategies = $exclusionStrategies;
+    }
+
+    /**
+     * Gets an array of exclusion strategies
+     *
+     * Warning: This only applies to the JMS serializer adapter.
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
+     *
+     * @return array
+     */
+    public function getExclusionStrategies()
+    {
+        return $this->exclusionStrategies;
+    }
+
+    /**
+     * Adds an exclusion strategy
+     *
+     * Warning: This only applies to the JMS serializer adapter.
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
+     *
+     * @param $exclusionStrategy
+     */
+    public function addExclusionStrategy($exclusionStrategy)
+    {
+        $this->exclusionStrategies[] = $exclusionStrategy;
     }
 }

@@ -96,6 +96,11 @@ class JMSSerializerAdapter implements Serializer
         if (null !== $context->getSerializeNull()) {
             $jmsContext->setSerializeNull($context->getSerializeNull());
         }
+        if (is_array($strategies = $context->getExclusionStrategies())) {
+            foreach($strategies as $strategy) {
+                $jmsContext->addExclusionStrategy($strategy);
+            }
+        }
 
         return $jmsContext;
     }
