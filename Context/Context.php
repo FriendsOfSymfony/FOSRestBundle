@@ -11,6 +11,9 @@
 
 namespace FOS\RestBundle\Context;
 
+
+use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
+
 /**
  * Stores the serialization or deserialization context (groups, version, ...).
  *
@@ -43,7 +46,7 @@ final class Context
      */
     private $serializeNull;
     /**
-     * @var array
+     * @var ExclusionStrategyInterface[]
      */
     private $exclusionStrategies = array();
 
@@ -267,7 +270,7 @@ final class Context
      *
      * Warning: This only applies to the JMS serializer adapter.
      *
-     * @return array
+     * @return ExclusionStrategyInterface[]
      */
     public function getExclusionStrategies()
     {
@@ -281,7 +284,7 @@ final class Context
      *
      * @param $exclusionStrategy
      */
-    public function addExclusionStrategy($exclusionStrategy)
+    public function addExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy)
     {
         $this->exclusionStrategies[] = $exclusionStrategy;
     }
