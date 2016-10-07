@@ -105,7 +105,7 @@ class RequestBodyParamConverter implements ParamConverterInterface
 
         $request->attributes->set($configuration->getName(), $object);
 
-        if (null !== $this->validator) {
+        if (null !== $this->validator && (!isset($options['skipValidation']) || !$options['skipValidation'])) {
             $validatorOptions = $this->getValidatorOptions($options);
 
             $errors = $this->validator->validate($object, null, $validatorOptions['groups']);
