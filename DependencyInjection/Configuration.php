@@ -398,13 +398,13 @@ return $v; })
                                             continue;
                                         }
 
-                                        if (!defined('Symfony\Component\HttpFoundation\Response::' . $item)) {
+                                        if (!defined('Symfony\Component\HttpFoundation\Response::'.$item)) {
                                             throw new InvalidConfigurationException(
                                                 'Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.'
                                             );
                                         }
 
-                                        $item = constant('Symfony\Component\HttpFoundation\Response::' . $item);
+                                        $item = constant('Symfony\Component\HttpFoundation\Response::'.$item);
                                     }
 
                                     return $items;
