@@ -411,10 +411,30 @@ return $v; })
                                 })
                             ->end()
                             ->prototype('scalar')->end()
+                            ->validate()
+                                ->ifArray()
+                                ->then(function (array $items) {
+                                    foreach ($items as $class => $code) {
+                                        $this->testExceptionExists($class);
+                                    }
+
+                                    return $items;
+                                })
+                            ->end()
                         ->end()
                         ->arrayNode('messages')
                             ->useAttributeAsKey('name')
                             ->prototype('boolean')->end()
+                            ->validate()
+                                ->ifArray()
+                                ->then(function (array $items) {
+                                    foreach ($items as $class => $nomatter) {
+                                        $this->testExceptionExists($class);
+                                    }
+
+                                    return $items;
+                                })
+                            ->end()
                         ->end()
                         ->booleanNode('debug')
                             ->defaultValue($this->debug)
@@ -422,5 +442,19 @@ return $v; })
                     ->end()
                 ->end()
             ->end();
+    }
+
+    /**
+     * Checks if an exception is loadable.
+     *
+     * @param string $exception Class to test
+     *
+     * @throws InvalidConfigurationException if the class was not found
+     */
+    private function testExceptionExists($exception)
+    {
+        if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
+            throw new InvalidConfigurationException("FOSRestBundle exception mapper: Could not load class '$exception' or the class does not extend from '\\Exception'. Most probably this is a configuration problem.");
+        }
     }
 }

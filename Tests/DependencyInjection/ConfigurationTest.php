@@ -39,9 +39,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     private $processor;
 
     /**
-     * testAcceptsIntegers.
+     * testExceptionCodesAcceptsIntegers.
      */
-    public function testAcceptsIntegers()
+    public function testExceptionCodesAcceptsIntegers()
     {
         $expectedConfig = [
             \RuntimeException::class => 500,
@@ -102,7 +102,46 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 [
                     'exception' => [
                         'codes' => [
-                            'no-matter' => $value,
+                            \RuntimeException::class => $value,
+                        ],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     */
+    public function testLoadBadMessagesClassThrowsException()
+    {
+        $this->processor->processConfiguration(
+            $this->configuration,
+            [
+                [
+                    'exception' => [
+                        'messages' => [
+                            'UnknownException' => true,
+                        ],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedExceptionMessage Could not load class 'UnknownException' or the class does not extend from '\Exception'
+     */
+    public function testLoadBadCodesClassThrowsException()
+    {
+        $this->processor->processConfiguration(
+            $this->configuration,
+            [
+                [
+                    'exception' => [
+                        'codes' => [
+                            'UnknownException' => 404,
                         ],
                     ],
                 ],

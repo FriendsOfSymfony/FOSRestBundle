@@ -338,18 +338,6 @@ class FOSRestExtension extends Extension
             $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
                 ->replaceArgument(1, $config['exception']['debug']);
         }
-
-        foreach ($config['exception']['codes'] as $exception => $code) {
-            if (!is_numeric($code)) {
-                $config['exception']['codes'][$exception] = constant("\Symfony\Component\HttpFoundation\Response::$code");
-            }
-
-            $this->testExceptionExists($exception);
-        }
-
-        foreach ($config['exception']['messages'] as $exception => $message) {
-            $this->testExceptionExists($exception);
-        }
     }
 
     private function loadSerializer(array $config, ContainerBuilder $container)
@@ -414,19 +402,5 @@ class FOSRestExtension extends Extension
         ;
 
         return new Reference($id);
-    }
-
-    /**
-     * Checks if an exception is loadable.
-     *
-     * @param string $exception Class to test
-     *
-     * @throws \InvalidArgumentException if the class was not found
-     */
-    private function testExceptionExists($exception)
-    {
-        if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
-            throw new \InvalidArgumentException("FOSRestBundle exception mapper: Could not load class '$exception' or the class does not extend from '\Exception'. Most probably this is a configuration problem.");
-        }
     }
 }

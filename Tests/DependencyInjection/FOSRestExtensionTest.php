@@ -457,39 +457,6 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testLoadBadClassThrowsException()
-    {
-        $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'messages' => [
-                        'UnknownException' => true,
-                    ],
-                ],
-            ],
-        ], $this->container);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Could not load class 'UnknownException' or the class does not extend from '\Exception'
-     */
-    public function testLoadBadMessagesClassThrowsException()
-    {
-        $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'codes' => [
-                        'UnknownException' => 404,
-                    ],
-                ],
-            ],
-        ], $this->container);
-    }
-
     public function testLoadOkMessagesClass()
     {
         $this->extension->load([
