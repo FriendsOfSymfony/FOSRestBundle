@@ -14,6 +14,7 @@ namespace FOS\RestBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -389,9 +390,25 @@ return $v; })
                         ->scalarNode('exception_controller')->defaultNull()->end()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
-                            ->validate()
-                                ->ifTrue(function ($v) { return 0 !== count(array_filter($v, function ($i) { return !defined('Symfony\Component\HttpFoundation\Response::'.$i) && !is_int($i); })); })
-                                ->thenInvalid('Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.')
+                            ->beforeNormalization()
+                                ->ifArray()
+                                ->then(function (array $items) {
+                                    foreach ($items as &$item) {
+                                        if (is_int($item)) {
+                                            continue;
+                                        }
+
+                                        if (!defined('Symfony\Component\HttpFoundation\Response::' . $item)) {
+                                            throw new InvalidConfigurationException(
+                                                'Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.'
+                                            );
+                                        }
+
+                                        $item = constant('Symfony\Component\HttpFoundation\Response::' . $item);
+                                    }
+
+                                    return $items;
+                                })
                             ->end()
                             ->prototype('scalar')->end()
                         ->end()
