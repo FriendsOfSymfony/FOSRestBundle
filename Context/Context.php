@@ -267,8 +267,6 @@ final class Context
      *
      * Warning: This only applies to the JMS serializer adapter.
      *
-     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
-     *
      * @return array
      */
     public function getExclusionStrategies()
@@ -280,8 +278,6 @@ final class Context
      * Adds an exclusion strategy.
      *
      * Warning: This only applies to the JMS serializer adapter.
-     *
-     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1536
      *
      * @param $exclusionStrategy
      */
