@@ -266,9 +266,9 @@ final class Context
     }
 
     /**
-     * Gets an array of exclusion strategies.
+     * Gets the array of exclusion strategies.
      *
-     * Warning: This only applies to the JMS serializer adapter.
+     * Notice: This method only applies to the JMS serializer adapter.
      *
      * @return ExclusionStrategyInterface[]
      */
@@ -280,9 +280,9 @@ final class Context
     /**
      * Adds an exclusion strategy.
      *
-     * Warning: This only applies to the JMS serializer adapter.
+     * Notice: This method only applies to the JMS serializer adapter.
      *
-     * @param $exclusionStrategy
+     * @param ExclusionStrategyInterface $exclusionStrategy
      */
     public function addExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy)
     {
