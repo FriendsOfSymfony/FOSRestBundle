@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Context;
 
-
 use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 
 /**
