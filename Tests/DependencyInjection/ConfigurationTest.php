@@ -14,6 +14,8 @@ namespace FOS\RestBundle\Tests\DependencyInjection;
 use FOS\RestBundle\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 /**
  * Class ConfigurationTest.
@@ -42,7 +44,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     public function testAcceptsIntegers()
     {
         $expectedConfig = [
-            md5(microtime()) => mt_rand(200, 599),
+            \RuntimeException::class => 500,
         ];
 
         $config = $this->processor->processConfiguration(
@@ -64,20 +66,18 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function testThatResponseConstantsConvertedToCodes()
     {
-        $ref = new \ReflectionClass(Response::class);
-        $expectedResult = [];
-        $config = [];
-
-        foreach ($ref->getConstants() as $constantName => $value) {
-            if (strpos($constantName, 'HTTP_') !== 0) {
-                continue;
-            }
-
-            $fakeExceptionClassName = md5(microtime().$constantName);
-            $expectedResult[$fakeExceptionClassName] = $value;
-
-            $config['exception']['codes'][$fakeExceptionClassName] = $constantName;
-        }
+        $expectedResult = [
+            NotFoundHttpException::class => Response::HTTP_NOT_FOUND,
+            MethodNotAllowedException::class => Response::HTTP_METHOD_NOT_ALLOWED,
+        ];
+        $config = [
+            'exception' => [
+                'codes' => [
+                    NotFoundHttpException::class => 'HTTP_NOT_FOUND',
+                    MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
+                ],
+            ],
+        ];
 
         $config = $this->processor->processConfiguration($this->configuration, [$config]);
 
