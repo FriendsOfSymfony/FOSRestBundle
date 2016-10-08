@@ -101,8 +101,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function testExclusionStrategy()
     {
-        $strategy1 = $this->getMock('JMS\Serializer\Exclusion\ExclusionStrategyInterface');
-        $strategy2 = $this->getMock('JMS\Serializer\Exclusion\ExclusionStrategyInterface');
+        $strategy1 = $this->createMock('JMS\Serializer\Exclusion\ExclusionStrategyInterface');
+        $strategy2 = $this->createMock('JMS\Serializer\Exclusion\ExclusionStrategyInterface');
 
         $this->context->addExclusionStrategy($strategy1);
         $this->context->addExclusionStrategy($strategy2);
