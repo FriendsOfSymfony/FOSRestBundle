@@ -98,4 +98,20 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(true, $this->context->getSerializeNull());
     }
+
+    public function testExclusionStrategy()
+    {
+        $strategy1 = $this->getMock('JMS\Serializer\Exclusion\ExclusionStrategyInterface');
+        $strategy2 = $this->getMock('JMS\Serializer\Exclusion\ExclusionStrategyInterface');
+
+        $this->context->addExclusionStrategy($strategy1);
+        $this->context->addExclusionStrategy($strategy2);
+
+        $strategies = $this->context->getExclusionStrategies();
+
+        $this->assertEquals(true, is_array($strategies));
+        $this->assertEquals(true, !empty($strategies));
+        $this->assertEquals(true, in_array($strategy1, $strategies, true));
+        $this->assertEquals(true, in_array($strategy2, $strategies, true));
+    }
 }
