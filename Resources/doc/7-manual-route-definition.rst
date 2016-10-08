@@ -82,7 +82,7 @@ Example:
     * @Get("/users/foo", name="_foo")
     * @Get("/users/bar", name="_bar")
     */
-    public function getUsers() { /** */ }
+    public function getUsersAction() { /** */ }
 
 
 Result:
@@ -107,7 +107,7 @@ Example:
     * @Get("/users/foo", name="get_foo", options={ "method_prefix" = false })
     * @Get("/users/bar", name="get_bar", options={ "method_prefix" = false })
     */
-    public function getUsers() { /** */ }
+    public function getUsersAction() { /** */ }
 
 
 Result:
