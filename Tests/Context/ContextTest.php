@@ -108,8 +108,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->context->addExclusionStrategy($strategy1);
         $this->context->addExclusionStrategy($strategy2);
 
-        $strategies = $this->context->getExclusionStrategies();
-
-        $this->assertEquals([$strategy1, $strategy2], $strategies);
+        $this->assertEquals([$strategy1, $strategy2], $this->context->getExclusionStrategies());
     }
 }
