@@ -410,7 +410,7 @@ return $v; })
                                     return $items;
                                 })
                             ->end()
-                            ->prototype('scalar')->end()
+                            ->prototype('integer')->end()
                             ->validate()
                                 ->ifArray()
                                 ->then(function (array $items) {
