@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Context;
 
 use FOS\RestBundle\Context\Context;
+use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
@@ -97,5 +98,16 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->context->setSerializeNull(true);
 
         $this->assertEquals(true, $this->context->getSerializeNull());
+    }
+
+    public function testExclusionStrategy()
+    {
+        $strategy1 = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();
+        $strategy2 = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();
+
+        $this->context->addExclusionStrategy($strategy1);
+        $this->context->addExclusionStrategy($strategy2);
+
+        $this->assertEquals([$strategy1, $strategy2], $this->context->getExclusionStrategies());
     }
 }

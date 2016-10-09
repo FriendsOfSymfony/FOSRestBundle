@@ -97,6 +97,10 @@ class JMSSerializerAdapter implements Serializer
             $jmsContext->setSerializeNull($context->getSerializeNull());
         }
 
+        foreach($context->getExclusionStrategies() as $strategy) {
+            $jmsContext->addExclusionStrategy($strategy);
+        }
+
         return $jmsContext;
     }
 }
