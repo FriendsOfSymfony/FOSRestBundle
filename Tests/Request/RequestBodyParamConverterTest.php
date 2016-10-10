@@ -159,7 +159,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
 
         $request = $this->createRequest();
-        $configuration = $this->createConfiguration(null, null, ['skipValidation' => true]);
+        $configuration = $this->createConfiguration(null, null, ['validate' => false]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertEquals(null, $request->attributes->get('errors'));
     }
