@@ -251,12 +251,12 @@ class View
      *
      * @return View
      *
-     * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReferenceInterface
+     * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReferenceInterface|\Twig_Template
      */
     public function setTemplate($template)
     {
-        if (!(is_string($template) || $template instanceof TemplateReferenceInterface)) {
-            throw new \InvalidArgumentException('The template should be a string or implement TemplateReferenceInterface');
+        if (!(is_string($template) || $template instanceof TemplateReferenceInterface || $template instanceof \Twig_Template)) {
+            throw new \InvalidArgumentException('The template should be a string or implement TemplateReferenceInterface or \Twig_Template');
         }
         $this->template = $template;
 
