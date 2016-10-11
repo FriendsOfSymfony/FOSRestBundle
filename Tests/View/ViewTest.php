@@ -36,10 +36,10 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($template, $view->getTemplate());
 
         $template = new \Twig_TemplateTest(new \Twig_Environment($this->getMockBuilder('\Twig_LoaderInterface')->getMock()), false);
-        
+
         $view->setTemplate($template);
         $this->assertEquals($template, $view->getTemplate());
-        
+
         $view->setTemplate([]);
     }
 
