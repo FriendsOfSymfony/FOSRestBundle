@@ -23,9 +23,17 @@
     "require": {
         "php":                            "^5.5.9|~7.0",
         "psr/log":                        "^1.0",
-        "symfony/framework-bundle":       "^2.7|^3.0",
+        "symfony/config":                 "^2.7|^3.0",
+        "symfony/debug":                  "^2.7|^3.0",
+        "symfony/dependency-injection":   "^2.7|^3.0",
+        "symfony/event-dispatcher":       "^2.7|^3.0",
         "symfony/finder":                 "^2.7|^3.0",
+        "symfony/framework-bundle":       "^2.7|^3.0",
+        "symfony/http-foundation":        "^2.7|^3.0",
+        "symfony/http-kernel":            "^2.7|^3.0",
         "symfony/routing":                "^2.7|^3.0",
+        "symfony/security-core":          "^2.7|^3.0",
+        "symfony/templating":             "^2.7|^3.0",
         "doctrine/inflector":             "^1.0",
         "willdurand/negotiation":         "^2.0",
         "willdurand/jsonp-callback-validator": "^1.0"
