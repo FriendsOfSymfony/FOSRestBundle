@@ -11,10 +11,12 @@
 
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\FileParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Request\ParamFetcherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -23,13 +25,13 @@ use Symfony\Component\Validator\Constraints\IdenticalTo;
 class ParamFetcherController extends FOSRestController
 {
     /**
-     * @RequestParam(name="raw", requirements=@IdenticalTo({"foo"="raw", "bar"="foo"}), default="invalid")
-     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid2% %%")
-     * @RequestParam(name="bar", map=true, requirements="%bar% foo", strict=true)
+     * @RequestParam(name="raw", requirements=@IdenticalTo({"foo"="raw", "bar"="foo"}), default="invalid", strict=false)
+     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid2% %%", strict=false)
+     * @RequestParam(name="bar", nullable=true, requirements="%bar%\ foo")
      */
     public function paramsAction(ParamFetcherInterface $fetcher)
     {
-        return new JsonResponse($fetcher->all(false));
+        return new JsonResponse($fetcher->all());
     }
 
     /**
