@@ -17,6 +17,11 @@ applications with Symfony. Features include:
 [![Latest Stable Version](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/v/stable.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0be23389-2e85-49cf-b333-caaa36d11c62/mini.png)](https://insight.sensiolabs.com/projects/0be23389-2e85-49cf-b333-caaa36d11c62)
 
+Note
+----
+
+FOSRestBundle 1.x is not longer maintained, 1.8 only receives security fixes. Please upgrade to FOSRestBundle 2.x as soon as possible.
+
 Documentation
 -------------
 
