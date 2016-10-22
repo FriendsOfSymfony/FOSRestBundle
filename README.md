@@ -20,7 +20,7 @@ applications with Symfony. Features include:
 Note
 ----
 
-FOSRestBundle 1.x is not longer maintained, 1.8 only receives security fixes. Please upgrade to FOSRestBundle 2.x as soon as possible.
+FOSRestBundle 1.x is no longer maintained, 1.8 only receives security fixes. Please upgrade to FOSRestBundle 2.x as soon as possible.
 
 Documentation
 -------------
