@@ -3,7 +3,7 @@ Task CRUD tutorial
 
 Suppose that we have a fresh Symfony project with FOSRestBundle installed and configured in that way:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     // app/config/config.yml
     fos_rest:
@@ -19,7 +19,7 @@ Suppose that we have a fresh Symfony project with FOSRestBundle installed and co
 A) Create Task entity
 ---------------------
 
-For this tutorial we create Task entity with two simple fields ``name`` and ``completed``
+For this tutorial we create ``Task`` entity with two simple fields ``name`` and ``completed``
 
 .. code-block:: php
 
@@ -29,15 +29,11 @@ For this tutorial we create Task entity with two simple fields ``name`` and ``co
     use Doctrine\ORM\Mapping as ORM;
 
     /**
-     * Task
-     *
      * @ORM\Table(name="task")
      */
     class Task
     {
         /**
-         * @var int
-         *
          * @ORM\Column(name="id", type="integer")
          * @ORM\Id
          * @ORM\GeneratedValue(strategy="AUTO")
@@ -45,37 +41,20 @@ For this tutorial we create Task entity with two simple fields ``name`` and ``co
         private $id;
 
         /**
-         * @var string
-         *
          * @ORM\Column(name="name", type="string", length=255)
          */
         private $name;
 
         /**
-         * @var boolean
-         *
          * @ORM\Column(name="completed", type="boolean")
          */
         private $completed;
 
-
-        /**
-         * Get id
-         *
-         * @return int
-         */
         public function getId()
         {
             return $this->id;
         }
 
-        /**
-         * Set name
-         *
-         * @param string $name
-         *
-         * @return Task
-         */
         public function setName($name)
         {
             $this->name = $name;
@@ -83,23 +62,11 @@ For this tutorial we create Task entity with two simple fields ``name`` and ``co
             return $this;
         }
 
-        /**
-         * Get name
-         *
-         * @return string
-         */
         public function getName()
         {
             return $this->name;
         }
 
-        /**
-         * Set code
-         *
-         * @param string $completed
-         *
-         * @return Task
-         */
         public function setCompleted($completed)
         {
             $this->completed = $completed;
@@ -107,11 +74,6 @@ For this tutorial we create Task entity with two simple fields ``name`` and ``co
             return $this;
         }
 
-        /**
-         * Get code
-         *
-         * @return string
-         */
         public function isCompleted()
         {
             return $this->completed;
@@ -121,8 +83,8 @@ For this tutorial we create Task entity with two simple fields ``name`` and ``co
 B) Create TaskType form
 -----------------------
 
-For handling data comes from request we need to create our ``TaskType.php`` file with standard content
-(pleas note that we setup ``getName()`` method with ``'task'`` and ``'csrf_protection => false'`` - this is
+For handling data coming from the request we need to create our ``TaskType.php`` file with standard content
+(please note that we set up ``getName()`` method with ``'task'`` and ``'csrf_protection => false'`` - this is
 important for creating requests which we will do later):
 
 .. code-block:: php
@@ -136,10 +98,6 @@ important for creating requests which we will do later):
 
     class TaskType extends AbstractType
     {
-        /**
-         * @param FormBuilderInterface $builder
-         * @param array $options
-         */
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
             $builder
@@ -148,23 +106,12 @@ important for creating requests which we will do later):
             ;
         }
 
-        /**
-         * @param OptionsResolver $resolver
-         */
         public function configureOptions(OptionsResolver $resolver)
         {
             $resolver->setDefaults(array(
                 'data_class' => 'AppBundle\Entity\Task',
                 'csrf_protection' => false,
             ));
-        }
-
-        /**
-         * @return string
-         */
-        public function getName()
-        {
-            return 'task';
         }
     }
 
@@ -188,24 +135,19 @@ For expose our REST API methods (routes) lets add the following controller:
     class TaskController extends FOSRestController
     {
         /**
-         * List all tasks
-         *
          * @View
          */
         public function getTasksAction()
         {
-            return $this->getDoctrine()->getRepository('AppBundle:Task')->findAll();
+            return $this->getRepository()->findAll();
         }
 
         /**
-         * Show specific task
-         *
          * @View
          */
         public function getTaskAction(Request $request, $id)
         {
-            $em = $this->getDoctrine()->getManager();
-            $task = $em->getRepository('AppBundle:Task')->find($id);
+            $task = $this->getRepository()->find($id);
 
             if (!$task) {
                 throw $this->createNotFoundException();
@@ -215,8 +157,6 @@ For expose our REST API methods (routes) lets add the following controller:
         }
 
         /**
-         * Create new task
-         *
          * @View
          */
         public function postTasksAction(Request $request)
@@ -234,18 +174,15 @@ For expose our REST API methods (routes) lets add the following controller:
                 return $task;
             }
 
-            throw new BadRequestHttpException();
+            return $form;
         }
 
         /**
-         * Update existing task
-         *
          * @View
          */
         public function putTasksAction(Request $request, $id)
         {
-            $em = $this->getDoctrine()->getManager();
-            $task = $em->getRepository('AppBundle:Task')->find($id);
+            $task = $this->getRepository()->find($id);
             if (!$task) {
                 throw $this->createNotFoundException();
             }
@@ -256,18 +193,17 @@ For expose our REST API methods (routes) lets add the following controller:
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($task);
                 $em->flush();
 
                 return $task;
             }
 
-            throw new BadRequestHttpException();
+            return $form;
         }
 
         /**
-         * Delete existing task
-         *
          * @View
          */
         public function deleteTasksAction(Request $request, $id)
@@ -280,6 +216,11 @@ For expose our REST API methods (routes) lets add the following controller:
 
             $em->remove($task);
             $em->flush();
+        }
+
+        private function getRepository()
+        {
+            return $this->getDoctrine()->getRepository('AppBundle:Task');
         }
     }
 
@@ -300,7 +241,7 @@ E) Create database
 
 We created our entity so we have to create database and schema:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ bin/console doctrine:database:create
     $ bin/console doctrine:schema:create
@@ -308,15 +249,15 @@ We created our entity so we have to create database and schema:
 F) Test our API!
 ----------------
 
-After setup our application it's time to test our REST API, so lets run the Symfony built in server:
+After having set up our application it's time to test our REST API, so lets run the Symfony built-in server:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ bin/console server:run
 
 and test our endpoints with ``curl`` or I recommend Postman google-chrome extension:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     # get list of tasks
     $ curl -X GET -H 'Content-Type: application/json' http://localhost:8000/tasks
