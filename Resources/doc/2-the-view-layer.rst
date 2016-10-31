@@ -185,7 +185,7 @@ Then:
   leads to a "validation failed" response.
 - In a rendered template, the form is passed as 'form' and ``createView()``
   is called automatically.
-- ``$form->getData()`` is passed into the view as template as ``'data'`` if the
+- ``$form->getData()`` is passed into the view template as ``'data'`` if the
   form is the only view data.
 - An invalid form will be wrapped into an exception.
 
