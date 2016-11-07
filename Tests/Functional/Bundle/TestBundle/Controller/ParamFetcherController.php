@@ -23,13 +23,13 @@ use Symfony\Component\Validator\Constraints\IdenticalTo;
 class ParamFetcherController extends FOSRestController
 {
     /**
-     * @RequestParam(name="raw", requirements=@IdenticalTo({"foo"="raw", "bar"="foo"}), default="invalid")
-     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid2% %%")
-     * @RequestParam(name="bar", map=true, requirements="%bar% foo", strict=true)
+     * @RequestParam(name="raw", requirements=@IdenticalTo({"foo"="raw", "bar"="foo"}), default="invalid", strict=false)
+     * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid2% %%", strict=false)
+     * @RequestParam(name="bar", nullable=true, requirements="%bar%\ foo")
      */
     public function paramsAction(ParamFetcherInterface $fetcher)
     {
-        return new JsonResponse($fetcher->all(false));
+        return new JsonResponse($fetcher->all());
     }
 
     /**
