@@ -79,4 +79,16 @@ class VersionTest extends WebTestCase
         );
         $this->assertEquals('{"version":"3.4.2"}', $this->client->getResponse()->getContent());
     }
+
+    public function testVersionInPath()
+    {
+        $this->client->request(
+            'GET',
+            '/version/2.3',
+            [],
+            [],
+            ['HTTP_Accept' => 'application/json']
+        );
+        $this->assertEquals('{"version":"2.3"}', $this->client->getResponse()->getContent());
+    }
 }
