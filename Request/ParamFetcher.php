@@ -195,23 +195,25 @@ class ParamFetcher implements ParamFetcherInterface
      */
     protected function checkNotIncompatibleParams(ParamInterface $param)
     {
+        if (null === $param->getValue($this->getRequest(), null)) {
+            return;
+        }
+
         $params = $this->getParams();
-        if (null !== $param->getValue($this->getRequest(), null)) {
-            foreach ($param->getIncompatibilities() as $incompatibleParamName) {
-                if (!array_key_exists($incompatibleParamName, $params)) {
-                    throw new \InvalidArgumentException(sprintf("No @ParamInterface configuration for parameter '%s'.", $incompatibleParamName));
-                }
-                $incompatibleParam = $params[$incompatibleParamName];
+        foreach ($param->getIncompatibilities() as $incompatibleParamName) {
+            if (!array_key_exists($incompatibleParamName, $params)) {
+                throw new \InvalidArgumentException(sprintf("No @ParamInterface configuration for parameter '%s'.", $incompatibleParamName));
+            }
+            $incompatibleParam = $params[$incompatibleParamName];
 
-                if (null !== $incompatibleParam->getValue($this->getRequest(), null)) {
-                    $exceptionMessage = sprintf(
-                        "'%s' param is incompatible with %s param.",
-                        $param->getName(),
-                        $incompatibleParam->getName()
-                    );
+            if (null !== $incompatibleParam->getValue($this->getRequest(), null)) {
+                $exceptionMessage = sprintf(
+                    "'%s' param is incompatible with %s param.",
+                    $param->getName(),
+                    $incompatibleParam->getName()
+                );
 
-                    throw new BadRequestHttpException($exceptionMessage);
-                }
+                throw new BadRequestHttpException($exceptionMessage);
             }
         }
     }
