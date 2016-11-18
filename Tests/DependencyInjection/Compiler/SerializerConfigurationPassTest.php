@@ -79,7 +79,7 @@ class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);
 
-        $this->assertSame('fos_rest.serializer.symfony', (string) $this->container->getAlias('fos_rest.serializer'));
+        $this->assertSame('fos_rest.serializer.jms', (string) $this->container->getAlias('fos_rest.serializer'));
     }
 
     public function testSerializerServiceCanBeJmsSerializer()
