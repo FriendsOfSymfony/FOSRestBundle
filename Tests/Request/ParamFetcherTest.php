@@ -365,7 +365,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
             ->method('getParams')
             ->willReturn(array('foo' => $this->createMockedParam('foo')));
 
-        $param = $this->createMockedParam('bar', null, array('foobar', 'fos')); // Incompatible with foobar & fos
+        // Incompatible with foobar & fos when bar value not null
+        $param = $this->createMockedParam('bar', null, array('foobar', 'fos'), false, 'value');
 
         $reflection = new \ReflectionClass($fetcher);
         $method = $reflection->getMethod('checkNotIncompatibleParams');
@@ -391,7 +392,8 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
                 'fos' => $this->createMockedParam('fos', null, array(), false, 'value'),
             ));
 
-        $param = $this->createMockedParam('bar', null, array('foobar', 'fos')); // Incompatible with foobar & fos
+        // Incompatible with foobar & fos when bar value not null
+        $param = $this->createMockedParam('bar', null, array('foobar', 'fos'), false, 'value');
 
         $reflection = new \ReflectionClass($fetcher);
         $method = $reflection->getMethod('checkNotIncompatibleParams');
