@@ -339,7 +339,7 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('service')->defaultNull()->end()
                         ->arrayNode('rules')
-                            ->cannotBeOverwritten()
+                            ->performNoDeepMerging()
                             ->prototype('array')
                                 ->fixXmlConfig('priority', 'priorities')
                                 ->fixXmlConfig('attribute', 'attributes')
