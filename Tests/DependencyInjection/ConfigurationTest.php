@@ -149,6 +149,54 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testOverwriteFormatListenerRulesDoesNotMerge()
+    {
+        $configuration = $this->processor->processConfiguration(
+            $this->configuration,
+            [
+                [
+                    'format_listener' => [
+                        'rules' => [
+                            [
+                                'path' => '^/admin',
+                                'priorities' => ['html'],
+                            ],
+                            [
+                                'path' => '^/',
+                                'priorities' => ['html', 'json'],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'format_listener' => [
+                        'rules' => [
+                            [
+                                'path' => '^/',
+                                'priorities' => ['json'],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $expected = [
+            [
+                'path' => '^/',
+                'priorities' => ['json'],
+                'host' => null,
+                'methods' => null,
+                'attributes' => [],
+                'stop' => false,
+                'prefer_extension' => true,
+                'fallback_format' => 'html',
+            ],
+        ];
+
+        $this->assertEquals($expected, $configuration['format_listener']['rules']);
+    }
+
     /**
      * incorrectExceptionCodeProvider.
      *
