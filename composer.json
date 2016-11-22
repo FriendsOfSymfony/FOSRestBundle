@@ -61,7 +61,7 @@
         "symfony/expression-language": "~2.7|^3.0|^4.0",
         "symfony/css-selector": "^2.7|^3.0|^4.0",
         "phpoption/phpoption": "^1.1",
-        "jms/serializer-bundle": "^1.0",
+        "jms/serializer-bundle": "^1.2",
         "psr/http-message": "^1.0"
     },
     "minimum-stability": "dev",
