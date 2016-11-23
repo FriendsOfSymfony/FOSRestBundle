@@ -41,7 +41,13 @@ final class SerializerConfigurationPass implements CompilerPassInterface
             throw new \InvalidArgumentException('Neither a service called "jms_serializer.serializer" nor "serializer" is available and no serializer is explicitly configured. You must either enable the JMSSerializerBundle, enable the FrameworkBundle serializer or configure a custom serializer.');
         }
 
-        if ($container->has('serializer') || $container->has('jms_serializer.serializer')) {
+        if ($container->has('jms_serializer.serializer')) {
+            $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.jms');
+        } else {
+            $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
+        }
+
+        if ($container->has('serializer')) {
             $class = $container->getParameterBag()->resolveValue(
                 $container->findDefinition(($container->has('jms_serializer.serializer') ? 'jms_serializer.' : '').'serializer')->getClass()
             );
@@ -60,12 +66,6 @@ final class SerializerConfigurationPass implements CompilerPassInterface
             return;
         } else {
             $container->removeDefinition('fos_rest.serializer.exception_wrapper_normalizer');
-        }
-
-        if ($container->has('jms_serializer.serializer')) {
-            $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.jms');
-        } else {
-            $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
         }
     }
 }
