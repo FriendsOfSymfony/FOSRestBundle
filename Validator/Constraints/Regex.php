@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints\Regex as BaseRegex;
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
-class Regex extends BaseRegex
+class Regex extends BaseRegex implements ResolvableConstraintInterface
 {
     use ResolverTrait;
 

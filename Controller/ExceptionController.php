@@ -114,10 +114,7 @@ class ExceptionController
     }
 
     /**
-     * Determines the parameters to pass to the view layer.
-     *
-     * Overwrite it in a custom ExceptionController class to add additionally parameters
-     * that should be passed to the view layer.
+     * Determines the template parameters to pass to the view layer.
      *
      * @param string               $currentContent
      * @param int                  $code

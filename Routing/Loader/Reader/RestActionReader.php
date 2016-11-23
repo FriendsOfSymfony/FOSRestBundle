@@ -16,6 +16,7 @@ use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
 use FOS\RestBundle\Inflector\InflectorInterface;
 use FOS\RestBundle\Request\ParamReaderInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
+use Psr\Http\Message\MessageInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -476,6 +477,7 @@ class RestActionReader
             \FOS\RestBundle\Request\ParamFetcherInterface::class,
             \Symfony\Component\Validator\ConstraintViolationListInterface::class,
             \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter::class,
+            MessageInterface::class,
         ];
 
         $arguments = [];
