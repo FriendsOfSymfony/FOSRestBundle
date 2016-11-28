@@ -55,7 +55,7 @@ class MimeTypeListener
             foreach ($this->mimeTypes as $format => $mimeTypes) {
                 if (method_exists(Request::class, 'getMimeTypes')) {
                     $mimeTypesForFormat = Request::getMimeTypes($format);
-                    $mimeTypes = $mimeTypesForFormat ? array_merge($mimeTypes,$mimeTypesForFormat) : $mimeTypes;
+                    $mimeTypes = $mimeTypesForFormat ? array_merge($mimeTypes, $mimeTypesForFormat) : $mimeTypes;
                 } elseif (null !== $request->getMimeType($format)) {
                     $class = new \ReflectionClass(Request::class);
                     $properties = $class->getStaticProperties();
