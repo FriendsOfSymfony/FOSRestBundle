@@ -79,4 +79,25 @@ class FileParamTest extends \PHPUnit_Framework_TestCase
             new Constraints\Image($requirements),
         ), $this->param->getConstraints());
     }
+
+    public function testImageConstraintsTransformWhenParamIsAnArray()
+    {
+        $this->param->image = true;
+        $this->param->map = true;
+        $this->param->requirements = $requirements = ['mimeTypes' => 'image/gif'];
+        $this->assertEquals(array(new Constraints\All(array(
+            new Constraints\NotNull(),
+            new Constraints\Image($requirements),
+        ))), $this->param->getConstraints());
+    }
+
+    public function testFileConstraintsWhenParamIsAnArray()
+    {
+        $this->param->map = true;
+        $this->param->requirements = $requirements = ['mimeTypes' => 'application/pdf'];
+        $this->assertEquals(array(new Constraints\All(array(
+            new Constraints\NotNull(),
+            new Constraints\File($requirements),
+        ))), $this->param->getConstraints());
+    }
 }

@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
@@ -62,6 +64,103 @@ class ParamFetcherTest extends WebTestCase
             'before' => array('foo' => 'quz', 'bar' => 'foo'),
             'during' => array('raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null),
             'after' => array('foo' => 'quz', 'bar' => 'foo'),
+        ), $this->getData());
+    }
+
+    public function testFileParam()
+    {
+        $image = new UploadedFile(
+            'Tests/Fixtures/Asset/cat.jpeg',
+            $singleFileName = 'cat.jpeg',
+            'image/jpeg',
+            123
+        );
+
+        $this->client->request('POST', '/file/test', array(), array('single_file' => $image));
+
+        $this->assertEquals(array(
+            'single_file' => $singleFileName,
+        ), $this->getData());
+    }
+
+    public function testFileParamNull()
+    {
+        $this->client->request('POST', '/file/test', array(), array());
+
+        $this->assertEquals(array(
+            'single_file' => 'noFile',
+        ), $this->getData());
+    }
+
+    public function testFileParamArrayNullItem()
+    {
+        $images = [
+            new UploadedFile(
+                'Tests/Fixtures/Asset/cat.jpeg',
+                $imageName = 'cat.jpeg',
+                'image/jpeg',
+                1234
+            ),
+            new UploadedFile(
+                'Tests/Fixtures/Asset/bar.txt',
+                $txtName = 'bar.txt',
+                'text/plain',
+                123
+            ),
+        ];
+
+        $this->client->request('POST', '/file/collection/test', array(), array('array_files' => $images));
+
+        $this->assertEquals(array(
+            'array_files' => [$imageName, $txtName],
+        ), $this->getData());
+    }
+
+    public function testFileParamImageConstraintArray()
+    {
+        $images = [
+            new UploadedFile(
+                'Tests/Fixtures/Asset/cat.jpeg',
+                $imageName = 'cat.jpeg',
+                'image/jpeg',
+                12345
+            ),
+            new UploadedFile(
+                'Tests/Fixtures/Asset/cat.jpeg',
+                $imageName2 = 'cat.jpeg',
+                'image/jpeg',
+                1234
+            ),
+        ];
+
+        $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
+
+        $this->assertEquals(array(
+            'array_images' => [$imageName, $imageName2],
+        ), $this->getData());
+    }
+
+    public function testFileParamImageConstraintArrayException()
+    {
+        $images = [
+            new UploadedFile(
+                'Tests/Fixtures/Asset/cat.jpeg',
+                $imageName = 'cat.jpeg',
+                'image/jpeg',
+                12345
+            ),
+            new UploadedFile(
+                'Tests/Fixtures/Asset/bar.txt',
+                $file = 'bar.txt',
+                'plain/text',
+                1234
+            ),
+        ];
+
+        $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
+
+        $this->assertEquals(array(
+            'array_images' => 'NotAnImage',
         ), $this->getData());
     }
 
