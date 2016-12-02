@@ -7,7 +7,6 @@ framework:
         enabled: true
     templating:
         engines: ['twig']
-    assets: false
 
 fos_rest:
     view:
