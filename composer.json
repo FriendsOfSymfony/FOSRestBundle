@@ -41,7 +41,7 @@
 
     "require-dev": {
         "sensio/framework-extra-bundle":  "^3.0.13",
-        "symfony/phpunit-bridge":         "~2.7|^3.0",
+        "symfony/phpunit-bridge":         "^3.2",
         "symfony/form":                   "^2.7|^3.0",
         "symfony/validator":              "^2.7|^3.0",
         "symfony/serializer":             "^2.7.11|^3.0.4",
@@ -80,7 +80,7 @@
 
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1-dev"
+            "dev-master": "2.2-dev"
         }
     }
 }

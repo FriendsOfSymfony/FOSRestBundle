@@ -1,3 +1,4 @@
+.phpunit
 phpunit.xml
 vendor
 composer.lock

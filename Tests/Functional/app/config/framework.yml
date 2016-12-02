@@ -9,3 +9,4 @@ framework:
     default_locale: en
     templating:
         engines: ['php']
+    assets: false
