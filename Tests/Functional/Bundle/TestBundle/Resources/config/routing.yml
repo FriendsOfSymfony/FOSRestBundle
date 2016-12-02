@@ -25,6 +25,10 @@ test_version:
     requirements:
         version: 2.1|3.4.2|2.3
 
+test_version_path:
+    path: /version/{version}
+    defaults: { _controller: TestBundle:Version:version }
+
 test_param_fetcher:
     path:     /params
     defaults: { _controller: TestBundle:ParamFetcher:params }
