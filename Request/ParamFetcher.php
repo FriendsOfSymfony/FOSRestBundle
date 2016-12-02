@@ -195,6 +195,10 @@ class ParamFetcher implements ParamFetcherInterface
      */
     protected function checkNotIncompatibleParams(ParamInterface $param)
     {
+        if (null === $param->getValue($this->getRequest(), null)) {
+            return;
+        }
+
         $params = $this->getParams();
         foreach ($param->getIncompatibilities() as $incompatibleParamName) {
             if (!array_key_exists($incompatibleParamName, $params)) {
@@ -202,7 +206,7 @@ class ParamFetcher implements ParamFetcherInterface
             }
             $incompatibleParam = $params[$incompatibleParamName];
 
-            if ($incompatibleParam->getValue($this->getRequest(), null) !== null) {
+            if (null !== $incompatibleParam->getValue($this->getRequest(), null)) {
                 $exceptionMessage = sprintf(
                     "'%s' param is incompatible with %s param.",
                     $param->getName(),
