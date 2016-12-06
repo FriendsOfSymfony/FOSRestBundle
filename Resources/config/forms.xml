@@ -9,6 +9,7 @@
             <argument type="service" id="security.token_storage" />
             <argument /> <!-- disable CSRF role -->
             <argument type="service" id="security.authorization_checker" />
+            <tag name="form.type_extension" priority="-5" extended-type="Symfony\Component\Form\Extension\AbstractTypeExtension" />
         </service>
     </services>
 </container>
