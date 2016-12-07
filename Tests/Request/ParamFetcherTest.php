@@ -320,7 +320,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Controller and method needs to be set via setController
      */
     public function testEmptyControllerExceptionWhenInitParams()
@@ -376,7 +376,7 @@ class ParamFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @expectedExceptionMessage 'bar' param is incompatible with fos param.
      */
     public function testIncompatibleParam()
