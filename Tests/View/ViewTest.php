@@ -106,7 +106,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         return [
             'null as data' => [null],
             'array as data' => [['foo' => 'bar']],
-            'function as data' => [function () {}],
+            'function as data' => [function () {
+            }],
         ];
     }
 

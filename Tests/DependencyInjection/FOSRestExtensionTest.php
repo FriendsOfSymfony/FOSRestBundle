@@ -507,7 +507,7 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getLoadBadCodeValueThrowsExceptionData
      *
-     * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      * @expectedExceptionMessage Invalid HTTP code in fos_rest.exception.codes
      */
     public function testLoadBadCodeValueThrowsException($value)

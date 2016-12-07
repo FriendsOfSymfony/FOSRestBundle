@@ -46,7 +46,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testSupportsFormat($expected, $formats, $customFormatName)
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler($customFormatName, function () {});
+        $viewHandler->registerHandler($customFormatName, function () {
+        });
 
         $this->assertEquals($expected, $viewHandler->supports('html'));
     }
@@ -64,7 +65,8 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testRegisterHandle()
     {
         $viewHandler = $this->createViewHandler();
-        $viewHandler->registerHandler('html', ($callback = function () {}));
+        $viewHandler->registerHandler('html', ($callback = function () {
+        }));
         $this->assertAttributeEquals(['html' => $callback], 'customHandlers', $viewHandler);
     }
 
@@ -355,7 +357,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testCreateResponse($expected, $formats)
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler('html', function ($handler, $view) { return $view; });
+        $viewHandler->registerHandler('html', function ($handler, $view) {
+            return $view;
+        });
 
         $response = $viewHandler->handle(new View(null, $expected), new Request());
         $this->assertEquals($expected, $response->getStatusCode());
@@ -390,7 +394,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandleCustom()
     {
         $viewHandler = $this->createViewHandler([]);
-        $viewHandler->registerHandler('html', ($callback = function () { return 'foo'; }));
+        $viewHandler->registerHandler('html', ($callback = function () {
+            return 'foo';
+        }));
 
         $this->requestStack->push(new Request());
 
@@ -461,7 +467,9 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
             'template data is added to data' => [['foo' => 'bar'], ['baz' => 'qux'], ['foo' => 'bar', 'baz' => 'qux']],
             'lazy template data is added to data' => [
                 ['foo' => 'bar'],
-                function () { return ['baz' => 'qux']; },
+                function () {
+                    return ['baz' => 'qux'];
+                },
                 ['foo' => 'bar', 'baz' => 'qux'],
             ],
             'lazy template data have reference to viewhandler and view' => [
