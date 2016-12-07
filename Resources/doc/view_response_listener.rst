@@ -72,9 +72,10 @@ you should return a ``$view`` object with the data set by ``setTemplateData``.
     <?php
 
     use FOS\RestBundle\View\View;
+    use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 
     /**
-     * @View()
+     * @ViewAnnotation()
      */
     public function getUsersAction()
     {
