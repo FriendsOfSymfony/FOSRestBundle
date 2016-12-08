@@ -70,7 +70,8 @@
     "autoload":{
         "psr-4":{
             "FOS\\RestBundle\\": ""
-        }
+        },
+        "exclude-from-classmap": ["/Tests/"]
     },
 
     "conflict": {
