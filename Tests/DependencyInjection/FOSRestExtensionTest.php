@@ -716,4 +716,29 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
         $this->assertEquals(array('127.0.0.1'), $requestMatcherSecond->getArgument(3));
     }
+
+    public function testMimeTypesArePassedArrays()
+    {
+        $config = array(
+            'fos_rest' => array(
+                'view' => array(
+                    'mime_types' => array(
+                        'json' => array('application/json', 'application/x-json'),
+                        'jpg' => 'image/jpeg',
+                        'png' => 'image/png',
+                    ),
+                ),
+            ),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertSame(
+            array(
+                'json' => array('application/json', 'application/x-json'),
+                'jpg' => array('image/jpeg'),
+                'png' => array('image/png'),
+            ),
+            $this->container->getDefinition('fos_rest.mime_type_listener')->getArgument(0)
+        );
+    }
 }
