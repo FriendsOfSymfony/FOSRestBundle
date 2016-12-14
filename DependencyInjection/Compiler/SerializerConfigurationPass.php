@@ -46,12 +46,13 @@ final class SerializerConfigurationPass implements CompilerPassInterface
                 $container->findDefinition('serializer')->getClass()
             );
 
-            if (is_subclass_of($class, 'Symfony\Component\Serializer\SerializerInterface')) {
+            $refClass = new \ReflectionClass($class);
+            if ($refClass->implementsInterface('Symfony\Component\Serializer\SerializerInterface')) {
                 $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.symfony');
                 $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
-            } elseif (is_subclass_of($class, 'JMS\Serializer\SerializerInterface')) {
+            } elseif ($refClass->implementsInterface('JMS\Serializer\SerializerInterface')) {
                 $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.jms');
-            } elseif (is_subclass_of($class, 'FOS\RestBundle\Serializer\Serializer')) {
+            } elseif ($refClass->implementsInterface('FOS\RestBundle\Serializer\Serializer')) {
                 $container->setAlias('fos_rest.serializer', 'serializer');
             } else {
                 throw new \InvalidArgumentException(sprintf('"fos_rest.serializer" must implement FOS\RestBundle\Serializer\Serializer (instance of "%s" given).', $class));
