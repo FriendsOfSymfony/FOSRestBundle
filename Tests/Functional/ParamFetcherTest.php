@@ -170,7 +170,7 @@ class ParamFetcherTest extends WebTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @expectedExceptionMessage 'baz' param is incompatible with foz param.
      */
     public function testIncompatibleQueryParameter()

@@ -41,7 +41,7 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException FOS\RestBundle\Util\StopFormatListenerException
+     * @expectedException \FOS\RestBundle\Util\StopFormatListenerException
      * @expectedExceptionMessage Stopped
      */
     public function testStopException()

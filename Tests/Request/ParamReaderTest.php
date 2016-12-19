@@ -97,7 +97,7 @@ class ParamReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        InvalidArgumentException
+     * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage Class 'FOS\RestBundle\Tests\Request\ParamReaderTest' has no method 'foo'.
      */
     public function testExceptionOnNonExistingMethod()

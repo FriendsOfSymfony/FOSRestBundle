@@ -72,7 +72,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException
      */
     public function testExecutionInterceptsUnsupportedFormatException()
     {
@@ -85,7 +85,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      */
     public function testExecutionInterceptsJMSException()
     {
@@ -98,7 +98,7 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      */
     public function testExecutionInterceptsSymfonySerializerException()
     {
