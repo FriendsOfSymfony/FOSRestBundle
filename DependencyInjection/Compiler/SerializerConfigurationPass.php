@@ -41,31 +41,26 @@ final class SerializerConfigurationPass implements CompilerPassInterface
             throw new \InvalidArgumentException('Neither a service called "jms_serializer.serializer" nor "serializer" is available and no serializer is explicitly configured. You must either enable the JMSSerializerBundle, enable the FrameworkBundle serializer or configure a custom serializer.');
         }
 
-        if ($container->has('serializer')) {
-            $class = $container->getParameterBag()->resolveValue(
-                $container->findDefinition('serializer')->getClass()
-            );
-
-            if (is_subclass_of($class, 'Symfony\Component\Serializer\SerializerInterface')) {
-                $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.symfony');
-                $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
-            } elseif (is_subclass_of($class, 'JMS\Serializer\SerializerInterface')) {
-                $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.jms');
-            } elseif (is_subclass_of($class, 'FOS\RestBundle\Serializer\Serializer')) {
-                $container->setAlias('fos_rest.serializer', 'serializer');
-            } else {
-                throw new \InvalidArgumentException(sprintf('"fos_rest.serializer" must implement FOS\RestBundle\Serializer\Serializer (instance of "%s" given).', $class));
-            }
-
-            return;
-        } else {
-            $container->removeDefinition('fos_rest.serializer.exception_wrapper_normalizer');
-        }
-
         if ($container->has('jms_serializer.serializer')) {
             $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.jms');
+
+            return;
+        }
+
+        // Remove the exception normalizer linked to the jms normalizer
+        $container->removeDefinition('fos_rest.serializer.exception_normalizer.jms');
+
+        // As there is no `jms_serializer.serializer` service, there is a `serializer` service
+        $class = $container->getParameterBag()->resolveValue(
+            $container->findDefinition('serializer')->getClass()
+        );
+
+        if (is_subclass_of($class, 'Symfony\Component\Serializer\SerializerInterface')) {
+            $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.symfony');
+        } elseif (is_subclass_of($class, 'FOS\RestBundle\Serializer\Serializer')) {
+            $container->setAlias('fos_rest.serializer', 'serializer');
         } else {
-            $container->removeDefinition('fos_rest.serializer.exception_wrapper_serialize_handler');
+            throw new \InvalidArgumentException(sprintf('The class of the "serializer" service in use is not supported (instance of "%s" given). Please make it implement FOS\RestBundle\Serializer\Serializer or configure the service "fos_rest.serializer" with a class implementing FOS\RestBundle\Serializer\Serializer.', $class));
         }
     }
 }
