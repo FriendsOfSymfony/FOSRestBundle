@@ -43,7 +43,7 @@ class Version2Controller extends FOSRestController
 
         return array(
             'version' => 'test annotation',
-            'version_exclusion' => $versionExclusion
+            'version_exclusion' => $versionExclusion,
         );
     }
 
