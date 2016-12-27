@@ -294,6 +294,7 @@ class RestActionReader
         $options = [];
         $host = '';
         $versionCondition = $this->getVersionCondition();
+        $versionRequirement = $this->getVersionRequirement();
 
         $annotations = $this->readRouteAnnotation($method);
         if (!empty($annotations)) {
@@ -317,7 +318,13 @@ class RestActionReader
                 $defaults = array_merge($defaults, $annotation->getDefaults());
                 $host = $annotation->getHost();
                 $schemes = $annotation->getSchemes();
-                $combinedCondition = $this->combineConditions($versionCondition, $annotation->getCondition());
+
+                if ($this->hasVersionPlaceholder($path)) {
+                    $combinedCondition = $annotation->getCondition();
+                    $requirements = array_merge($versionRequirement, $requirements);
+                } else {
+                    $combinedCondition = $this->combineConditions($versionCondition, $annotation->getCondition());
+                }
 
                 $this->includeFormatIfNeeded($path, $requirements);
 
@@ -328,6 +335,11 @@ class RestActionReader
                 $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
         } else {
+            if ($this->hasVersionPlaceholder($path)) {
+                $versionCondition = null;
+                $requirements = $versionRequirement;
+            }
+
             $this->includeFormatIfNeeded($path, $requirements);
 
             $methods = explode('|', strtoupper($httpMethod));
@@ -369,6 +381,32 @@ class RestActionReader
         }
 
         return sprintf('(%s) and (%s)', $conditionOne, $conditionTwo);
+    }
+
+    /**
+     * @return array
+     */
+    private function getVersionRequirement()
+    {
+        if (empty($this->versions)) {
+            return [];
+        }
+
+        return ['version' => implode('|', $this->versions)];
+    }
+
+    /**
+     * Checks whether provided path contains {version} placeholder
+     *
+     * @return bool
+     */
+    private function hasVersionPlaceholder($path)
+    {
+        if (false === strpos($path, '{version}')) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

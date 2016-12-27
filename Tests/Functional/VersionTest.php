@@ -32,6 +32,21 @@ class VersionTest extends WebTestCase
         $this->assertContains('test annotation', $this->client->getResponse()->getContent());
     }
 
+    public function testVersionInPathWithAnnotation()
+    {
+        $this->client->request(
+            'GET',
+            '/version/1.2',
+            [],
+            [],
+            ['HTTP_Accept' => 'application/json']
+          );
+        $this->assertEquals(
+            '{"version":"test annotation","version_exclusion":"1.2"}',
+            $this->client->getResponse()->getContent()
+        );
+    }
+
     public function testCustomHeaderVersion()
     {
         $this->client->request(
@@ -41,7 +56,10 @@ class VersionTest extends WebTestCase
             [],
             ['HTTP_Version-Header' => '2.1', 'HTTP_Accept' => 'application/vnd.foo.api+json;myversion=2.3']
         );
-        $this->assertEquals('{"version":"2.1"}', $this->client->getResponse()->getContent());
+        $this->assertEquals(
+            '{"version":"2.1","version_exclusion":"2.1"}',
+            $this->client->getResponse()->getContent()
+        );
     }
 
     public function testQueryVersion()
@@ -53,7 +71,7 @@ class VersionTest extends WebTestCase
             [],
             ['HTTP_Accept' => 'text/html']
         );
-        $this->assertEquals("3.2\n", $this->client->getResponse()->getContent());
+        $this->assertEquals("3.2\n3.2\n", $this->client->getResponse()->getContent());
     }
 
     public function testAcceptHeaderVersion()
@@ -65,7 +83,10 @@ class VersionTest extends WebTestCase
             [],
             ['HTTP_Accept' => 'application/vnd.foo.api+json;myversion=2.3']
         );
-        $this->assertEquals('{"version":"2.3"}', $this->client->getResponse()->getContent());
+        $this->assertEquals(
+            '{"version":"2.3","version_exclusion":"2.3"}',
+            $this->client->getResponse()->getContent()
+        );
     }
 
     public function testDefaultVersion()
@@ -77,7 +98,10 @@ class VersionTest extends WebTestCase
             [],
             ['HTTP_Accept' => 'application/json']
         );
-        $this->assertEquals('{"version":"3.4.2"}', $this->client->getResponse()->getContent());
+        $this->assertEquals(
+            '{"version":"3.4.2","version_exclusion":"3.4.2"}',
+            $this->client->getResponse()->getContent()
+        );
     }
 
     public function testVersionInPath()
@@ -89,6 +113,9 @@ class VersionTest extends WebTestCase
             [],
             ['HTTP_Accept' => 'application/json']
         );
-        $this->assertEquals('{"version":"2.3"}', $this->client->getResponse()->getContent());
+        $this->assertEquals(
+            '{"version":"2.3","version_exclusion":"2.3"}',
+            $this->client->getResponse()->getContent()
+        );
     }
 }

@@ -12,6 +12,11 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="33"  />
         </service>
 
+        <service id="fos_rest.versioning.exclusion_listener" class="FOS\RestBundle\EventListener\VersionExclusionListener">
+            <argument type="service" id="fos_rest.view_handler" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="31"  />
+        </service>
+
         <service id="fos_rest.versioning.chain_resolver" class="FOS\RestBundle\Version\ChainVersionResolver" public="false">
             <argument type="collection" /> <!-- resolvers -->
         </service>

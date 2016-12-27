@@ -14,13 +14,15 @@ namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
  *
  * @Version({"1.2"})
  */
-class Version2Controller
+class Version2Controller extends FOSRestController
 {
     /**
      * @View("TestBundle:Version:version.html.twig")
@@ -29,5 +31,27 @@ class Version2Controller
     public function versionAction($version)
     {
         return array('version' => 'test annotation');
+    }
+
+    /**
+     * @View("TestBundle:Version:version.html.twig")
+     * @Get(path="/version/{version}")
+     */
+    public function versionPathAction(Request $request, $version)
+    {
+        $versionExclusion = $this->findExclusionStrategyVersion($request);
+
+        return array(
+            'version' => 'test annotation',
+            'version_exclusion' => $versionExclusion
+        );
+    }
+
+    private function findExclusionStrategyVersion(Request $request)
+    {
+        $view = $this->view([]);
+        $response = $this->get('fos_rest.view_handler')->createResponse($view, $request, 'json');
+
+        return $view->getContext()->getVersion();
     }
 }
