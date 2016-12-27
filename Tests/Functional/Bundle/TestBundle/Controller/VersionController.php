@@ -29,7 +29,7 @@ class VersionController extends FOSRestController
 
         return array(
             'version' => $version,
-            'version_exclusion' => $versionExclusion
+            'version_exclusion' => $versionExclusion,
         );
     }
 

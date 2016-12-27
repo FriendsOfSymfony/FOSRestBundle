@@ -396,7 +396,7 @@ class RestActionReader
     }
 
     /**
-     * Checks whether provided path contains {version} placeholder
+     * Checks whether provided path contains {version} placeholder.
      *
      * @return bool
      */
