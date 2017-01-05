@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use FOS\RestBundle\Routing\RestRouteCollection;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * RestRouteLoader test.
@@ -341,6 +340,7 @@ class RestRouteLoaderTest extends LoaderTest
         $this->assertNotNull($collection->get('post_users_foo'), 'route for "post_users_foo" does not exist');
         $this->assertNotNull($collection->get('post_users_bar'), 'route for "post_users_bar" does not exist');
     }
+
     /**
      * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1507
      */
@@ -373,9 +373,9 @@ class RestRouteLoaderTest extends LoaderTest
     /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
-     * @param string $fixtureName name of the class fixture
-     * @param string $namePrefix  route name prefix
-     * @param array  $formats     resource formats available
+     * @param string $fixtureName     name of the class fixture
+     * @param string $namePrefix      route name prefix
+     * @param array  $formats         resource formats available
      * @param bool   $hasMethodPrefix
      *
      * @return RestRouteCollection
