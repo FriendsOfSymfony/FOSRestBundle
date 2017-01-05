@@ -268,4 +268,14 @@ class AnnotatedUsersController extends Controller
     public function multiplepostUsersAction()
     {
     }
+
+    /**
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1507
+     *
+     * @POST("/users1/{foo}", name="post_users_foo")
+     * @POST("/users2/{foo}", name="post_users_bar")
+     */
+    public function multiplepostUsersWithoutDefaultMethodPrefixAction()
+    {
+    }
 }
