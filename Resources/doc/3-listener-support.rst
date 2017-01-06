@@ -196,7 +196,7 @@ You need to enable this listener as follows, as it is disabled by default:
 Note: The access_denied_listener doesn't return a response itself and must be coupled with an exception listener returning a response (see the :doc:`FOSRestBundle exception controller <4-exception-controller-support>`. or the `twig exception controller`_).
 
 Zone Listener
-=============
+-------------
 
 As you can see, FOSRestBundle provides multiple event listeners to enable REST-related features.
 By default, these listeners will be registered to all requests and may conflict with other parts of your application.
