@@ -27,6 +27,11 @@
             "Tests/"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "FOS\\RestBundle\\Tests\\": "Tests/"
+        }
+    },
     "require": {
         "php": "^5.5.9|~7.0",
         "psr/log": "^1.0",
