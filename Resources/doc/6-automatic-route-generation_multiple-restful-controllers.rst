@@ -162,7 +162,7 @@ a file loaded by the rest loader.):
     # src/Acme/HelloBundle/Resources/config/users_routes.yml
     comments:
         type:         rest
-        resource:     "@AcmeHelloBundle\Controller\CommentsController"
+        resource:     "@AcmeHelloBundle/Controller/CommentsController"
         name_prefix:  api_ # Our precious parameter
 
 With this configuration, route name would become:
