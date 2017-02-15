@@ -15,19 +15,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class OrdersController extends Controller
 {
-    // conventional HATEOAS action after REST action
-
-    public function newFoosAction()
-    {
-    }
-
-    // [GET] /foos/new
-
+    /**
+     * [GET] /foos.
+     */
     public function getFoosAction()
     {
     }
 
-    // [GET] /foos
+    // conventional HATEOAS action after REST action
+
+    /**
+     * [GET] /foos/new.
+     */
+    public function newFoosAction()
+    {
+    }
 
     // conventional HATEOAS action before REST action
 
