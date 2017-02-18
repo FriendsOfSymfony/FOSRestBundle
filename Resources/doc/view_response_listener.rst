@@ -168,7 +168,7 @@ You can also define your serializer options dynamically:
         $context->setVersion('1.0');
         $context->addGroup('user');
 
-        $view->setSerializationContext($context);
+        $view->setContext($context);
 
         // ...
         $view
