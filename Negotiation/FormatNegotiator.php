@@ -77,7 +77,7 @@ class FormatNegotiator extends BaseNegotiator
                     $extensionHeader = $request->getMimeType($extension);
 
                     if ($extensionHeader) {
-                        $header = $extensionHeader.'; q='.$options['prefer_extension'].','.$header;
+                        $header = $extensionHeader.'; q='.$options['prefer_extension'].($header ? ','.$header : '');
                     }
                 }
             }

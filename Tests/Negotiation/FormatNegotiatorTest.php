@@ -109,18 +109,18 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->addRequestMatcher(true, ['priorities' => $priorities, 'prefer_extension' => '2.0']);
 
         $reflectionClass = new \ReflectionClass(get_class($this->request));
-        $reflectionProperty = $reflectionClass->getProperty('requestUri');
+        $reflectionProperty = $reflectionClass->getProperty('pathInfo');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->request, 'http://example.com/file.json');
+        $reflectionProperty->setValue($this->request, '/file.json');
 
         // Without extension mime-type in Accept header
 
-        $this->request->headers->set('Accept', 'text/html');
+        $this->request->headers->set('Accept', 'text/html; q=1.0');
         $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
 
         // With low q extension mime-type in Accept header
 
-        $this->request->headers->set('Accept', 'text/html, application/json; q=0.1');
+        $this->request->headers->set('Accept', 'text/html; q=1.0, application/json; q=0.1');
         $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
 
         $reflectionProperty->setValue($this->request, null);
@@ -132,9 +132,9 @@ class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
         $this->addRequestMatcher(true, ['priorities' => $priorities, 'prefer_extension' => '2.0']);
 
         $reflectionClass = new \ReflectionClass(get_class($this->request));
-        $reflectionProperty = $reflectionClass->getProperty('requestUri');
+        $reflectionProperty = $reflectionClass->getProperty('pathInfo');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($this->request, 'http://example.com/file.123456789');
+        $reflectionProperty->setValue($this->request, '/file.123456789');
 
         $this->request->headers->set('Accept', 'text/html, application/json');
         $this->assertEquals(new Accept('text/html'), $this->negotiator->getBest(''));
