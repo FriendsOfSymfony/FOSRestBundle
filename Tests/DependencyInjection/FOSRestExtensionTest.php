@@ -303,6 +303,13 @@ class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertAlias('validator', 'fos_rest.validator');
     }
 
+    public function testValidatorAliasWhenDisabled()
+    {
+        $config = ['fos_rest' => ['body_converter' => ['validate' => false]]];
+        $this->extension->load($config, $this->container);
+        $this->assertFalse($this->container->has('fos_rest.validator'));
+    }
+
     public function testBodyConvertorDisabledAndSerializerVersionGiven()
     {
         $config = ['fos_rest' => ['body_converter' => ['enabled' => false], 'serializer' => ['version' => '1.0']]];
