@@ -59,11 +59,11 @@ class FOSRestExtension extends Extension
         $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(2, $config['routing_loader']['include_format']);
         $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(3, $config['routing_loader']['include_format']);
 
-        // The validator service alias is only set if validation is enabled for the request body converter
-        $validator = $config['service']['validator'];
-        unset($config['service']['validator']);
-
         foreach ($config['service'] as $key => $service) {
+            if ('validator' === $service && empty($config['body_converter']['validate'])) {
+                continue;
+            }
+
             if (null !== $service) {
                 $container->setAlias('fos_rest.'.$key, $service);
             }
@@ -71,7 +71,7 @@ class FOSRestExtension extends Extension
 
         $this->loadForm($config, $loader, $container);
         $this->loadException($config, $loader, $container);
-        $this->loadBodyConverter($config, $validator, $loader, $container);
+        $this->loadBodyConverter($config, $loader, $container);
         $this->loadView($config, $loader, $container);
 
         $this->loadBodyListener($config, $loader, $container);
@@ -223,22 +223,16 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadBodyConverter(array $config, $validator, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadBodyConverter(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
-        if (empty($config['body_converter'])) {
+        if (!$this->isConfigEnabled($container, $config['body_converter'])) {
             return;
         }
 
-        if (!empty($config['body_converter']['enabled'])) {
-            $loader->load('request_body_param_converter.xml');
+        $loader->load('request_body_param_converter.xml');
 
-            if (!empty($config['body_converter']['validation_errors_argument'])) {
-                $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(4, $config['body_converter']['validation_errors_argument']);
-            }
-        }
-
-        if (!empty($config['body_converter']['validate'])) {
-            $container->setAlias('fos_rest.validator', $validator);
+        if (!empty($config['body_converter']['validation_errors_argument'])) {
+            $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(4, $config['body_converter']['validation_errors_argument']);
         }
     }
 
