@@ -87,7 +87,7 @@ configured for the matched controller so that the user does not need to do this 
          * The ParamFetcher will throw an error if the file passed is not a json file or is bigger than 2,000 bytes.
          * See all file possible requirements: http://symfony.com/doc/current/reference/constraints/File.html
          *
-         * @FileParam(name="avatar", requirements={"mimeTypes"="application/json", "minWidth"="200"}, image=true)
+         * @FileParam(name="avatar", requirements={"mimeTypes"="image/jpeg", "minWidth"="200"}, image=true)
          * The ParamFetcher will throw an error if the file passed is not an image and is not larger than 200px.
          * See all image possible requirements: http://symfony.com/doc/current/reference/constraints/Image.html
          *
