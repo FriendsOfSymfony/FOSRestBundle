@@ -94,7 +94,9 @@ See :doc:`Format Listener <format_listener>`
     fos_rest:
         view:
             mime_types:
-                json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
+                json: ['application/json;version=1.0', 'application/json;version=1.1', 'application/json']
+
+The order of the mime_types matters, since the VersionListener looks for the first one matching.
 
 Note: If you have to handle huge versions and mime types, you can simplify the configuration with a php script:
 
