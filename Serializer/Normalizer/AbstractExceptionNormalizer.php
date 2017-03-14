@@ -29,7 +29,7 @@ class AbstractExceptionNormalizer
     /**
      * @var bool
      */
-    private $debug;
+    protected $debug;
 
     /**
      * @param array $messagesMap
