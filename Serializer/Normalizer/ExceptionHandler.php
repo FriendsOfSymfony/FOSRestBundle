@@ -107,6 +107,12 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
 
         $data['message'] = $this->getExceptionMessage($exception, isset($statusCode) ? $statusCode : null);
 
+        if ($this->debug) {
+            $data['file'] = $exception->getFile();
+            $data['line'] = $exception->getLine();
+            $data['trace'] = $exception->getTrace();
+        }
+
         return $data;
     }
 }
