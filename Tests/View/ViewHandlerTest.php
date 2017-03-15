@@ -564,7 +564,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \LogicException
-     * @expectedExceptionMessage An instance of Symfony\Bundle\FrameworkBundle\Templating\EngineInterface must be in injected in FOS\RestBundle\View\ViewHandler to render templates.
+     * @expectedExceptionMessage An instance of Symfony\Bundle\FrameworkBundle\Templating\EngineInterface must be injected in FOS\RestBundle\View\ViewHandler to render templates.
      */
     public function testTemplatingNotInjected()
     {
