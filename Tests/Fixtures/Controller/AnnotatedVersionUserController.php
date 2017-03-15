@@ -41,4 +41,13 @@ class AnnotatedVersionUserController extends Controller
     public function v3UserAction()
     {
     }
+
+    /**
+     * [GET, HEAD]     /{version}/users.
+     *
+     * @Get("/{version}/users")
+     */
+    public function getUsersAction()
+    {
+    }
 }
