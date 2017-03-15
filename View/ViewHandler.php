@@ -411,7 +411,12 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $response = $this->initResponse($view, $format);
 
         if (!$response->headers->has('Content-Type')) {
-            $response->headers->set('Content-Type', $request->getMimeType($format));
+            $mimeType = $request->attributes->get('media_type');
+            if (null === $mimeType) {
+                $mimeType = $request->getMimeType($format);
+            }
+
+            $response->headers->set('Content-Type', $mimeType);
         }
 
         return $response;
