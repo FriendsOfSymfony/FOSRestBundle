@@ -342,7 +342,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function renderTemplate(View $view, $format)
     {
         if (null === $this->templating) {
-            throw new \LogicException(sprintf('An instance of %s must be in injected in %s to render templates.', EngineInterface::class, __CLASS__));
+            throw new \LogicException(sprintf('An instance of %s must be injected in %s to render templates.', EngineInterface::class, __CLASS__));
         }
 
         $data = $this->prepareTemplateParameters($view);
