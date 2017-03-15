@@ -562,6 +562,19 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage An instance of Symfony\Bundle\FrameworkBundle\Templating\EngineInterface must be in injected in FOS\RestBundle\View\ViewHandler to render templates.
+     */
+    public function testTemplatingNotInjected()
+    {
+        $this->templating = null;
+
+        $view = (new View())->setTemplate('foo.html.twig');
+        $viewHandler = $this->createViewHandler();
+        $viewHandler->renderTemplate($view, 'html');
+    }
+
     private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false, $forceRedirects = null, $defaultEngine = 'twig')
     {
         return new ViewHandler(
