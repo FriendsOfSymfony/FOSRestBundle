@@ -65,7 +65,10 @@ class VersionTest extends WebTestCase
             [],
             ['HTTP_Accept' => 'application/vnd.foo.api+json;myversion=2.3']
         );
-        $this->assertEquals('{"version":"2.3"}', $this->client->getResponse()->getContent());
+
+        $response = $this->client->getResponse();
+        $this->assertEquals('{"version":"2.3"}', $response->getContent());
+        $this->assertEquals('application/vnd.foo.api+json;myversion=2.3', $response->headers->get('Content-Type'));
     }
 
     public function testDefaultVersion()
