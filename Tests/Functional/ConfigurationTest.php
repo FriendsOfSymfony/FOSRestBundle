@@ -16,26 +16,20 @@ namespace FOS\RestBundle\Tests\Functional;
  */
 class ConfigurationTest extends WebTestCase
 {
-    private $client;
-
-    public function setUp()
+    public function testDisabledTemplating()
     {
-        $this->client = $this->createClient(['test_case' => 'Configuration']);
-    }
-
-    public function testConfiguration()
-    {
-        // Just create a client
+        $this->createClient(['test_case' => 'Templating']);
     }
 
     public function testToolbar()
     {
-        $this->client->request(
-            'GET',
-            '/_profiler/empty/search/results?limit=10',
-            [],
-            [],
-            ['HTTP_Accept' => 'application/json']
-        );
+        $this->createClient(['test_case' => 'Configuration'])
+            ->request(
+                'GET',
+                '/_profiler/empty/search/results?limit=10',
+                [],
+                [],
+                ['HTTP_Accept' => 'application/json']
+            );
     }
 }

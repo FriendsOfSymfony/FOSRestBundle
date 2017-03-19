@@ -34,5 +34,9 @@ final class ConfigurationCheckPass implements CompilerPassInterface
                 throw new \RuntimeException('You must enable the SensioFrameworkExtraBundle view annotations to use the ViewResponseListener.');
             }
         }
+
+        if (!$container->has((string) $container->getAlias('fos_rest.templating'))) {
+            $container->removeAlias('fos_rest.templating');
+        }
     }
 }
