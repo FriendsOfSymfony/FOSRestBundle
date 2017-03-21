@@ -11,9 +11,10 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Request\RequestBodyParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
@@ -223,32 +224,14 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
         return $converter->apply($request, $configuration);
     }
 
-    protected function createConfiguration($class = null, $name = null, $options = null)
+    protected function createConfiguration($class = null, $name = null, array $options = array())
     {
-        $config = $this->getMockBuilder('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter')
-            ->disableOriginalConstructor()
-            ->setMethods(['getClass', 'getAliasName', 'getOptions', 'getName', 'allowArray'])
-            ->getMock();
-
-        if ($name !== null) {
-            $config->expects($this->any())
-                ->method('getName')
-                ->will($this->returnValue($name));
-        }
-
-        if ($class !== null) {
-            $config->expects($this->any())
-                ->method('getClass')
-                ->will($this->returnValue($class));
-        }
-
-        if ($options !== null) {
-            $config->expects($this->any())
-                ->method('getOptions')
-                ->will($this->returnValue($options));
-        }
-
-        return $config;
+        return new ParamConverter([
+            'name' => $name,
+            'class' => $class,
+            'options' => $options,
+            'converter' => 'fos_rest.request_body',
+        ]);
     }
 
     protected function createRequest($body = null, $contentType = null)
