@@ -105,7 +105,7 @@ This listener attemps to determine the current api version from different parame
 
 * the uri ``/{version}/users``
 * a query parameter ``/users?version=v1``
-* an ``Accept`` header ``Accept: appication/json; version=1.0``
+* an ``Accept`` header ``Accept: application/json; version=1.0``
 * a custom header ``X-Accept-Version: v1``
 
 For details see :doc:`Versioning <versioning>`.
