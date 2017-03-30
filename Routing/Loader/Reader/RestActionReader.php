@@ -320,6 +320,7 @@ class RestActionReader
                 $combinedCondition = $this->combineConditions($versionCondition, $annotation->getCondition());
 
                 $this->includeFormatIfNeeded($path, $requirements);
+                $this->includeMethodsIfNeeded($annoMethods, $requirements);
 
                 // add route to collection
                 $route = new Route(
@@ -329,7 +330,8 @@ class RestActionReader
             }
         } else {
             $this->includeFormatIfNeeded($path, $requirements);
-
+            $this->includeMethodsIfNeeded($methods, $requirements);
+            
             $methods = explode('|', strtoupper($httpMethod));
 
             // add route to collection
@@ -385,6 +387,18 @@ class RestActionReader
             if (!isset($requirements['_format']) && !empty($this->formats)) {
                 $requirements['_format'] = implode('|', array_keys($this->formats));
             }
+        }
+    }
+    
+    /**
+     * Include the method in the requirements 
+     * @param array $methods
+     * @param array $requirements
+     */
+    private function includeMethodsIfNeeded(array $methods, &$requirements)
+    {
+        if(!isset($requirements['_method']) && !empty($methods)) {
+            $requirements['_method'] = implode('|', $methods);
         }
     }
 
