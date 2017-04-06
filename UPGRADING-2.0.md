@@ -199,7 +199,7 @@ Upgrading From 1.x To 2.0
       format_listener:
           rules:
               - { path: ^/, fallback_format: json, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController } }
-              - { path: ^/, fallback_format: html } 
+              - { path: ^/, fallback_format: html }
    ```
 
  * `View::setSerializationContext` and `View::getSerializationContext`
