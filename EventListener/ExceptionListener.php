@@ -47,7 +47,7 @@ class ExceptionListener extends HttpKernelExceptionListener
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::EXCEPTION => array('onKernelException', -100),
+            KernelEvents::EXCEPTION => array('onKernelException', 3),
         );
     }
 
