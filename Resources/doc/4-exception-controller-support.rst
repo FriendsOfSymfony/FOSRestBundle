@@ -42,7 +42,7 @@ constant of the ``Symfony\Component\HttpFoundation\Response`` class:
     fos_rest:
         exception:
             codes:
-                'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
+                'Symfony\Component\Routing\Exception\ResourceNotFoundException': HTTP_NOT_FOUND
                 'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
             messages:
                 'Acme\HelloBundle\Exception\MyExceptionWithASafeMessage': true
