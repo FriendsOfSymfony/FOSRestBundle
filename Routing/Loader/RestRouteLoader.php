@@ -69,6 +69,10 @@ class RestRouteLoader extends Loader
      */
     public function load($controller, $type = null)
     {
+        if (substr($controller, -1) === '/') {
+            return $this->loadDirectoryResource($controller, $type);
+        }
+
         list($prefix, $class) = $this->getControllerLocator($controller);
 
         $collection = $this->controllerReader->read(new \ReflectionClass($class));
@@ -77,6 +81,42 @@ class RestRouteLoader extends Loader
 
         return $collection;
     }
+
+    /**
+     * Loads a directory resource.
+     *
+     * @param mixed  $resource The resource
+     * @param string $type     The resource type
+     */
+    private function loadDirectoryResource($resource, $type = null)
+    {
+        $dir = $this->locator->locate($resource);
+
+        $collection = new RouteCollection();
+        $collection->addResource(new DirectoryResource($dir, '/\.php$/'));
+        $files = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir), \RecursiveIteratorIterator::LEAVES_ONLY));
+        usort($files, function (\SplFileInfo $a, \SplFileInfo $b) {
+                    return (string) $a > (string) $b ? 1 : -1;
+                });
+
+        foreach ($files as $file) {
+            if (!$file->isFile() || '.php' !== substr($file->getFilename(), -4)) {
+                continue;
+            }
+
+            if ($class = $this->findClass($file)) {
+                $refl = new \ReflectionClass($class);
+                if ($refl->isAbstract()) {
+                    continue;
+                }
+
+                $collection->addCollection($this->load($class, $type));
+            }
+        }
+
+        return $collection;
+    }
+
 
     /**
      * {@inheritdoc}
