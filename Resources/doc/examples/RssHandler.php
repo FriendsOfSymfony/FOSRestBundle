@@ -64,6 +64,10 @@ class RssHandler
             $content = $this->createFeed($view->getData());
             $code = Response::HTTP_OK;
         } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+        }
+
+        if (isset($e)) {
             if ($this->logger) {
                 $this->logger->error($e);
             }
