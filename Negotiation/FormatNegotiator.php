@@ -47,7 +47,7 @@ class FormatNegotiator extends BaseNegotiator
      *
      * @throws StopFormatListenerException
      */
-    public function getBest($header, array $priorities = [])
+    public function getBest($header, array $priorities = [], $strict = false)
     {
         $request = $this->getRequest();
         $header = $header ?: $request->headers->get('Accept');
