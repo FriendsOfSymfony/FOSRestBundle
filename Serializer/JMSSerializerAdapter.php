@@ -36,13 +36,7 @@ class JMSSerializerAdapter implements Serializer
     const DESERIALIZATION = 1;
 
     private $serializer;
-    /**
-     * @var SerializationContextFactoryInterface
-     */
     private $serializationContextFactory;
-    /**
-     * @var DeserializationContextFactoryInterface
-     */
     private $deserializationContextFactory;
 
     public function __construct(
