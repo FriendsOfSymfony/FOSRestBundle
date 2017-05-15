@@ -1,7 +1,7 @@
 Upgrading From 1.x To 2.0
 =========================
 
- * The `RedirectView` and `RouteRedirect` view classes were removed. Use
+ * The `RedirectView` and `RouteRedirectView` classes were removed. Use
    `View::createRedirect()` and `View::createRouteRedirect()` instead.
 
    **Note**: the default status code for a route redirect has changed from
