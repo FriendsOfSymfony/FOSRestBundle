@@ -62,7 +62,6 @@ final class Configuration implements ConfigurationInterface
                     ->beforeNormalization()
                         ->ifArray()->then(function ($v) {
                             if (!empty($v) && empty($v['formats'])) {
-                                unset($v['enabled']);
                                 $v = ['enabled' => true, 'formats' => $v];
                             }
 
@@ -193,7 +192,6 @@ final class Configuration implements ConfigurationInterface
                             ->beforeNormalization()
                                 ->ifArray()->then(function ($v) {
                                     if (!empty($v) && empty($v['formats'])) {
-                                        unset($v['enabled']);
                                         $v = ['enabled' => true, 'formats' => $v];
                                     }
 
