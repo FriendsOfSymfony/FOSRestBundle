@@ -89,6 +89,10 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecutionInterceptsJMSException()
     {
+        if (!class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
+            $this->markTestSkipped('JMSSerializerBundle is not installed.');
+        }
+
         $converter = new RequestBodyParamConverter($this->serializer);
         $this->serializer
             ->expects($this->once())

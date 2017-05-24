@@ -18,6 +18,13 @@ namespace FOS\RestBundle\Tests\Functional;
  */
 class SerializerErrorTest extends WebTestCase
 {
+    protected function setUp()
+    {
+        if (!class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
+            $this->markTestSkipped('JMSSerializerBundle is not installed.');
+        }
+    }
+
     /**
      * @dataProvider testCaseProvider
      */
