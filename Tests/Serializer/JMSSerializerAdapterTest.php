@@ -30,6 +30,10 @@ class JMSSerializerAdapterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        if (!class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
+            $this->markTestSkipped('JMSSerializerBundle is not installed.');
+        }
+
         $this->serializer = $this->getMockBuilder(SerializerInterface::class)->getMock();
 
         $this->serializationContextFactory = $this
