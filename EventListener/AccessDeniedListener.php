@@ -70,13 +70,19 @@ class AccessDeniedListener implements EventSubscriberInterface
         $exception = $event->getException();
 
         if ($exception instanceof AccessDeniedException) {
-            $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
+            if (!($message = $exception->getMessage())){
+                $message = 'You do not have the necessary permissions';
+            }
+            $exception = new AccessDeniedHttpException($message, $exception);
             $event->setException($exception);
         } elseif ($exception instanceof AuthenticationException) {
+            if (!($message = $exception->getMessage())){
+                 $message = 'You are not authenticated';
+            }
             if ($this->challenge) {
-                $exception = new UnauthorizedHttpException($this->challenge, 'You are not authenticated', $exception);
+                $exception = new UnauthorizedHttpException($this->challenge, $message, $exception);
             } else {
-                $exception = new HttpException(401, 'You are not authenticated', $exception);
+                $exception = new HttpException(401, $message, $exception);
             }
             $event->setException($exception);
         }
