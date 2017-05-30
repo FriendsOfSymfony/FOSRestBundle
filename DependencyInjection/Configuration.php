@@ -103,6 +103,7 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('default_format')->defaultNull()->end()
+                        ->scalarNode('prefix_methods')->defaultTrue()->end()
                         ->scalarNode('include_format')->defaultTrue()->end()
                     ->end()
                 ->end()
