@@ -43,8 +43,7 @@ class JMSSerializerAdapter implements Serializer
         SerializerInterface $serializer,
         SerializationContextFactoryInterface $serializationContextFactory = null,
         DeserializationContextFactoryInterface $deserializationContextFactory = null
-    )
-    {
+    ) {
         $this->serializer = $serializer;
         $this->serializationContextFactory = $serializationContextFactory;
         $this->deserializationContextFactory = $deserializationContextFactory;
