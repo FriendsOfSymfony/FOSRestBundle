@@ -76,10 +76,10 @@ class RestRouteCollection extends RouteCollection
      */
     public function all()
     {
-        $regex = '/
-    (_|^)
-    (get|post|put|delete|patch|head|options|mkcol|propfind|proppatch|lock|unlock|move|copy|link|unlink)_ # allowed http methods
-        /i';
+        $regex = '/'.
+            '(_|^)'.
+            '(get|post|put|delete|patch|head|options|mkcol|propfind|proppatch|lock|unlock|move|copy|link|unlink)_'. // allowed http methods
+            '/i';
 
         $routes = parent::all();
         $customMethodRoutes = [];
