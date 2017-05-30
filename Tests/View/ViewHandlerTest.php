@@ -447,6 +447,7 @@ class ViewHandlerTest extends \PHPUnit_Framework_TestCase
         $form = $this->getMockBuilder('Symfony\Component\Form\Form')
             ->setMethods(['createView', 'getData'])
             ->disableOriginalConstructor()
+            ->disableOriginalClone()
             ->getMock();
         $form
             ->expects($this->once())

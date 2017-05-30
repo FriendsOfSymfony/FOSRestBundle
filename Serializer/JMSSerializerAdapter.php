@@ -13,8 +13,10 @@ namespace FOS\RestBundle\Serializer;
 
 use FOS\RestBundle\Context\Context;
 use JMS\Serializer\Context as JMSContext;
-use JMS\Serializer\DeserializationContext as JMSDeserializationContext;
-use JMS\Serializer\SerializationContext as JMSSerializationContext;
+use JMS\Serializer\ContextFactory\DeserializationContextFactoryInterface;
+use JMS\Serializer\ContextFactory\SerializationContextFactoryInterface;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 
 /**
@@ -34,10 +36,17 @@ class JMSSerializerAdapter implements Serializer
     const DESERIALIZATION = 1;
 
     private $serializer;
+    private $serializationContextFactory;
+    private $deserializationContextFactory;
 
-    public function __construct(SerializerInterface $serializer)
-    {
+    public function __construct(
+        SerializerInterface $serializer,
+        SerializationContextFactoryInterface $serializationContextFactory = null,
+        DeserializationContextFactoryInterface $deserializationContextFactory = null
+    ) {
         $this->serializer = $serializer;
+        $this->serializationContextFactory = $serializationContextFactory;
+        $this->deserializationContextFactory = $deserializationContextFactory;
     }
 
     /**
@@ -69,9 +78,13 @@ class JMSSerializerAdapter implements Serializer
     private function convertContext(Context $context, $direction)
     {
         if ($direction === self::SERIALIZATION) {
-            $jmsContext = JMSSerializationContext::create();
+            $jmsContext = $this->serializationContextFactory
+                ? $this->serializationContextFactory->createSerializationContext()
+                : SerializationContext::create();
         } else {
-            $jmsContext = JMSDeserializationContext::create();
+            $jmsContext = $this->deserializationContextFactory
+                ? $this->deserializationContextFactory->createDeserializationContext()
+                : DeserializationContext::create();
             $maxDepth = $context->getMaxDepth(false);
             if (null !== $maxDepth) {
                 for ($i = 0; $i < $maxDepth; ++$i) {
@@ -97,7 +110,7 @@ class JMSSerializerAdapter implements Serializer
             $jmsContext->setSerializeNull($context->getSerializeNull());
         }
 
-        foreach($context->getExclusionStrategies() as $strategy) {
+        foreach ($context->getExclusionStrategies() as $strategy) {
             $jmsContext->addExclusionStrategy($strategy);
         }
 
