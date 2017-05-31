@@ -22,6 +22,9 @@
         <!-- Normalizes FormInterface when using the symfony serializer -->
         <service id="fos_rest.serializer.form_error_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer" public="false">
             <argument type="service" id="translator" />
+            <call method="setTranslationDomain">
+                <argument>%validator.translation_domain%</argument>
+            </call>
             <tag name="serializer.normalizer" priority="-10" />
         </service>
     </services>

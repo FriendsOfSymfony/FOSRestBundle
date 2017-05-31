@@ -25,9 +25,18 @@ class FormErrorNormalizer implements NormalizerInterface
 {
     private $translator;
 
+    private $translationDomain = 'validators';
+
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
+    }
+
+    public function setTranslationDomain($translationDomain)
+    {
+        $this->translationDomain = $translationDomain;
+
+        return $this;
     }
 
     /**
@@ -82,9 +91,9 @@ class FormErrorNormalizer implements NormalizerInterface
     private function getErrorMessage(FormError $error)
     {
         if (null !== $error->getMessagePluralization()) {
-            return $this->translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters(), 'validators');
+            return $this->translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters(), $this->translationDomain);
         }
 
-        return $this->translator->trans($error->getMessageTemplate(), $error->getMessageParameters(), 'validators');
+        return $this->translator->trans($error->getMessageTemplate(), $error->getMessageParameters(), $this->translationDomain);
     }
 }
