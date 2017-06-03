@@ -59,7 +59,7 @@ configured for the matched controller so that the user does not need to do this 
          * resut and is likely to be considered as a bug) you can precise the parameters can't be present
          * at the same time by doing
          *
-         * @QueryParam(map=true, name="ids", requirements="\d+", default="1", description="List of ids")
+         * @QueryParam(array=true, name="ids", requirements="\d+", default="1", description="List of ids")
          * If you want to map the value as an array (apply the requirements to each element): ie. ?ids[]=1&ids[]=2&ids[]=1337.
          * (works with QueryParam and RequestParam)
          *
@@ -72,7 +72,7 @@ configured for the matched controller so that the user does not need to do this 
          * Array must have a single depth if you use a regex. It's difficult to validate with
          * preg_match each deeps of array, if you want to deal with that, you can use a constraint:
          *
-         * @QueryParam(map=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
+         * @QueryParam(array=true, name="filters", requirements=@MyComplexConstraint, description="List of complex filters")
          * In this example, the ParamFetcher will validate each value of the array with the constraint, returning the
          * default value if you are in safe mode or throw a BadRequestHttpResponse containing the constraint violation
          * messages in the message.
