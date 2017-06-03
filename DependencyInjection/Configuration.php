@@ -102,6 +102,7 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('routing_loader')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->booleanNode('cget_list')->defaultFalse()->end()
                         ->scalarNode('default_format')->defaultNull()->end()
                         ->scalarNode('include_format')->defaultTrue()->end()
                     ->end()

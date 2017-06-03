@@ -106,6 +106,11 @@ class RestActionReader
     private $availableConventionalActions = ['new', 'edit', 'remove'];
 
     /**
+     * @var bool
+     */
+    private $cgetList = false;
+
+    /**
      * Initializes controller reader.
      *
      * @param Reader               $annotationReader
@@ -224,6 +229,16 @@ class RestActionReader
     }
 
     /**
+     * Toggles using `list` as the route name for `cgetAction`.
+     *
+     * @param bool $use Use `list` as `cgetAction` route name?
+     */
+    public function useCgetList($use)
+    {
+        $this->cgetList = $use;
+    }
+
+    /**
      * Reads action route.
      *
      * @param RestRouteCollection $collection
@@ -272,7 +287,12 @@ class RestActionReader
             $resources[] = null;
         }
 
-        $routeName = $httpMethod.$this->generateRouteName($resources);
+        if ($this->cgetList && $isCollection) {
+            $routeName = 'list'.$this->generateRouteName($resources);
+        } else {
+            $routeName = $httpMethod.$this->generateRouteName($resources);
+        }
+
         $urlParts = $this->generateUrlParts($resources, $arguments, $httpMethod);
 
         // if passed method is not valid HTTP method then it's either

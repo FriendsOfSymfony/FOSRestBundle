@@ -135,6 +135,14 @@ class RestRouteLoaderTest extends LoaderTest
         $this->assertEquals('/article/{slug}/comment/{comment}.{_format}', $collection->get('get_article_comment')->getPath());
     }
 
+    public function testCgetListPrefix()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedNonPluralizedArticleController', null, [], true);
+
+        $this->assertEquals('/article.{_format}', $collection->get('list_article')->getPath());
+        $this->assertEquals('/article/{slug}.{_format}', $collection->get('get_article')->getPath());
+    }
+
     /**
      * Test that annotated UsersController RESTful class gets parsed correctly with condition option (expression-language).
      */
@@ -366,13 +374,15 @@ class RestRouteLoaderTest extends LoaderTest
      * @param string $fixtureName name of the class fixture
      * @param string $namePrefix  route name prefix
      * @param array  $formats     resource formats available
+     * @param bool   $cgetList    use `list` as `cgetAction` prefix
      *
      * @return RouteCollection
      */
-    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = [])
+    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = [], $cgetList = false)
     {
         $loader = $this->getControllerLoader($formats);
         $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
+        $loader->getControllerReader()->getActionReader()->useCgetList($cgetList);
 
         return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'.$fixtureName, 'rest');
     }
