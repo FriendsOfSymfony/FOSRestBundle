@@ -4,7 +4,6 @@ php:
   - 5.5
   - 5.6
   - 7.0
-  - hhvm
 
 sudo: false
 
@@ -33,6 +32,8 @@ matrix:
       env: SYMFONY_VERSION='3.4.*'
     - php: 7.1
       env: SYMFONY_VERSION='4.0.*'
+    - php: hhvm
+      dist: trusty
 
 before_install:
   - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then phpenv config-rm xdebug.ini; fi
