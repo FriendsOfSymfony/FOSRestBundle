@@ -126,6 +126,10 @@ class RestRouteLoader extends Loader
             if ($useScope) {
                 $this->container->leaveScope('request');
             }
+
+            if ($controller === $class) {
+                $prefix .= ':';
+            }
         } elseif (class_exists($controller)) {
             // full class name
             $class = $controller;
