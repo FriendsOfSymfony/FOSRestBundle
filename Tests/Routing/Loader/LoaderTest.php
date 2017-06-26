@@ -52,11 +52,12 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * Builds a RestRouteLoader.
      *
-     * @param array $formats available resource formats
+     * @param array $formats         available resource formats
+     * @param bool  $hasMethodPrefix
      *
      * @return RestRouteLoader
      */
-    protected function getControllerLoader(array $formats = [])
+    protected function getControllerLoader(array $formats = [], $hasMethodPrefix = true)
     {
         // This check allows to override the container
         if ($this->container === null) {
@@ -76,7 +77,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
         $paramReader = new ParamReader($annotationReader);
         $inflector = new DoctrineInflector();
 
-        $ar = new RestActionReader($annotationReader, $paramReader, $inflector, true, $formats);
+        $ar = new RestActionReader($annotationReader, $paramReader, $inflector, true, $formats, $hasMethodPrefix);
         $cr = new RestControllerReader($ar, $annotationReader);
 
         return new RestRouteLoader($this->container, $l, $p, $cr, 'html');

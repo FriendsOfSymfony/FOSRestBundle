@@ -11,11 +11,15 @@
 
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 class RequestBodyParamConverterController extends Controller
 {
+    /**
+     * @ParamConverter("post", converter="fos_rest.request_body")
+     */
     public function putPostAction(Post $post, \Datetime $date)
     {
         return new Response($post->getName());

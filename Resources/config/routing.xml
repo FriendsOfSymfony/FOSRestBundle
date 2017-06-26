@@ -52,6 +52,7 @@
             <argument type="service" id="fos_rest.inflector" />
             <argument /> <!-- include format -->
             <argument type="collection" /> <!-- formats -->
+            <argument /> <!-- prefix_methods bool -->
         </service>
 
         <service id="fos_rest.inflector.doctrine" class="FOS\RestBundle\Inflector\DoctrineInflector" public="false" />

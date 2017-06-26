@@ -26,6 +26,7 @@ Full default configuration
         routing_loader:
             default_format:       null
             include_format:       true
+            prefix_methods:       true
         body_converter:
             enabled:              false
             validate:             false
