@@ -111,7 +111,8 @@ class RestActionReader
     private $hasMethodPrefix;
 
     /**
-     * Ignore custom classes form route generator
+     * Ignore custom classes form route generator.
+     *
      * @var array
      */
     private $ignoreClasses = [];
