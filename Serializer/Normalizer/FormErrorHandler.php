@@ -86,7 +86,7 @@ class FormErrorHandler extends JMSFormErrorHandler
         return $result;
     }
 
-    private function adaptFormArray(\ArrayObject $serializedForm, Context $context = null)
+    protected function adaptFormArray(\ArrayObject $serializedForm, Context $context = null)
     {
         $statusCode = $this->getStatusCode($context);
         if (null !== $statusCode) {
@@ -100,7 +100,7 @@ class FormErrorHandler extends JMSFormErrorHandler
         return $serializedForm;
     }
 
-    private function getStatusCode(Context $context = null)
+    protected function getStatusCode(Context $context = null)
     {
         if (null === $context) {
             return;
