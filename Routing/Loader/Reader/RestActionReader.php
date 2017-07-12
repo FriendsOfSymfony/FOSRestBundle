@@ -111,6 +111,12 @@ class RestActionReader
     private $hasMethodPrefix;
 
     /**
+     * Ignore custom classes form route generator
+     * @var array
+     */
+    private $ignoreClasses = [];
+
+    /**
      * Initializes controller reader.
      *
      * @param Reader               $annotationReader
@@ -120,7 +126,7 @@ class RestActionReader
      * @param array                $formats
      * @param bool                 $hasMethodPrefix
      */
-    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [], $hasMethodPrefix = true)
+    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [], $hasMethodPrefix = true, array $ignoreClasses = [])
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
@@ -128,6 +134,7 @@ class RestActionReader
         $this->includeFormat = $includeFormat;
         $this->formats = $formats;
         $this->hasMethodPrefix = $hasMethodPrefix;
+        $this->ignoreClasses = $ignoreClasses;
     }
 
     /**
@@ -476,13 +483,13 @@ class RestActionReader
         $params = $this->paramReader->getParamsFromMethod($method);
 
         // ignore several type hinted arguments
-        $ignoreClasses = [
+        $ignoreClasses = array_merge([
             \Symfony\Component\HttpFoundation\Request::class,
             \FOS\RestBundle\Request\ParamFetcherInterface::class,
             \Symfony\Component\Validator\ConstraintViolationListInterface::class,
             \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter::class,
             MessageInterface::class,
-        ];
+        ], $this->ignoreClasses);
 
         $arguments = [];
         foreach ($method->getParameters() as $argument) {

@@ -105,6 +105,7 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('default_format')->defaultNull()->end()
                         ->scalarNode('prefix_methods')->defaultTrue()->end()
                         ->scalarNode('include_format')->defaultTrue()->end()
+                        ->scalarNode('routing_ignore_classes')->defaultValue([])->end()
                     ->end()
                 ->end()
                 ->arrayNode('body_converter')

@@ -97,3 +97,8 @@ get_article_foos:
   methods: [GET]
   path:    /articles/{slug}/foos.{_format}
   controller: ::getFoosAction
+
+get_article_exclude:
+  methods: [GET]
+  path:    /article/exclude.{_format}
+  controller: ::getExcludeAction

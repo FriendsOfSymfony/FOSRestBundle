@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -244,6 +245,16 @@ class ArticleController extends Controller implements ClassResourceInterface
      * @param Request $request
      */
     public function getFoosAction($slug, Request $request)
+    {
+    }
+
+    /**
+     * [GET] /article/exclude.
+     *
+     * @param $slug
+     * @param Request $request
+     */
+    public function getExcludeAction(LoggerInterface $loggerInterface, Request $request)
     {
     }
 }

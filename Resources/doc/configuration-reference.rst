@@ -27,6 +27,7 @@ Full default configuration
             default_format:       null
             include_format:       true
             prefix_methods:       true
+            routing_ignore_classes: []
         body_converter:
             enabled:              false
             validate:             false

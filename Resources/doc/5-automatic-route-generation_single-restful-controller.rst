@@ -380,6 +380,50 @@ to limit or add a custom format, you can do so by overriding it with the
         // ...
     }
 
+Use `controller.service_arguments` with FOS
+---------------------------
+
+By using `controller.service_arguments` tags you need to exclude classes.
+
+.. code-block:: yaml
+
+    # app/config/services.yml
+    services:
+        # ...
+
+        # controllers are imported separately to make sure they're public
+        # and have a tag that allows actions to type-hint services
+        AppBundle\Controller\:
+            resource: '../../src/AppBundle/Controller'
+            public: true
+            tags: ['controller.service_arguments']
+
+
+Your controller will be :
+
+.. code-block:: php
+
+    use Psr\Log\LoggerInterface;
+
+    class InvoiceController extends Controller
+    {
+        public function listAction(LoggerInterface $logger)
+        {
+            $logger->info('A new way to access services!');
+        }
+    }
+
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_rest:
+        routing_loader:
+            routing_ignore_classes:
+                - 'Psr\Log\LoggerInterface'
+
+
+
 Changing pluralization in generated routes
 ------------------------------------------
 
