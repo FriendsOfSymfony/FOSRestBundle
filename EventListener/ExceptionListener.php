@@ -73,6 +73,7 @@ class ExceptionListener extends ProfilerListener
 
         if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
             parent::onKernelException($event);
+            
             return;
         }
 
