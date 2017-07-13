@@ -29,8 +29,6 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
  */
 class ExceptionListener extends ProfilerListener
 {
-    private $controller;
-    private $logger;
     /**
      * @var HttpKernelExceptionListener
      */
@@ -57,8 +55,6 @@ class ExceptionListener extends ProfilerListener
         LoggerInterface $logger
     )
     {
-        $this->controller = $controller;
-        $this->logger = $logger;
         parent::__construct($profiler, $requestStack, $matcher, $onlyException, $onlyMasterRequests);
         $this->twig_exception_listener = new HttpKernelExceptionListener($controller, $logger);
     }
