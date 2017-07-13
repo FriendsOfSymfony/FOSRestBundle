@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
-use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,7 +23,7 @@ class TwigExceptionController extends TemplatingExceptionController
     /**
      * {@inheritdoc}
      */
-    protected function createView(FlattenException $exception, $code, array $templateData, Request $request, $showException)
+    protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
     {
         $view = parent::createView($exception, $code, $templateData, $request, $showException);
         $view->setTemplate($this->findTemplate($request, $code, $showException));

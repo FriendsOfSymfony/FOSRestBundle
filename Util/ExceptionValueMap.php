@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Util;
 
-use Symfony\Component\Debug\Exception\FlattenException;
-
 /**
  * Stores map of values mapped to exception class
  * Resolves value by exception.
@@ -45,9 +43,9 @@ class ExceptionValueMap
      *
      * @return mixed|false Value found or false is not found
      */
-    public function resolveException(FlattenException $exception)
+    public function resolveException(\Exception $exception)
     {
-        return $this->doResolveClass($exception->getClass());
+        return $this->doResolveClass(get_class($exception));
     }
 
     /**
