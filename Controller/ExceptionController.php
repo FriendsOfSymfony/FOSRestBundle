@@ -106,7 +106,7 @@ class ExceptionController
         }
 
         // Otherwise, default
-        if (method_exists ($exception, 'getStatusCode') && $exception->getStatusCode()) {
+        if (method_exists($exception, 'getStatusCode') && $exception->getStatusCode()) {
             return $exception->getStatusCode();
         }
 
