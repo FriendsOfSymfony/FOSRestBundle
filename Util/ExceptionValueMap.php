@@ -10,6 +10,7 @@
  */
 
 namespace FOS\RestBundle\Util;
+
 use Symfony\Component\Debug\Exception\FlattenException;
 
 /**
