@@ -82,7 +82,7 @@ class ExceptionController
      *
      * @return View
      */
-    protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
+    protected function createView(FlattenException $exception, $code, array $templateData, Request $request, $showException)
     {
         $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
         $view->setTemplateVar('raw_exception');
@@ -98,7 +98,7 @@ class ExceptionController
      *
      * @return int
      */
-    protected function getStatusCode(\Exception $exception)
+    protected function getStatusCode(FlattenException $exception)
     {
         // If matched
         if ($statusCode = $this->exceptionCodes->resolveException($exception)) {
@@ -106,7 +106,7 @@ class ExceptionController
         }
 
         // Otherwise, default
-        if ($exception instanceof HttpExceptionInterface) {
+        if (method_exists ($exception, 'getStatusCode') && $exception->getStatusCode()) {
             return $exception->getStatusCode();
         }
 
@@ -123,10 +123,10 @@ class ExceptionController
      *
      * @return array
      */
-    private function getTemplateData($currentContent, $code, \Exception $exception, DebugLoggerInterface $logger = null)
+    private function getTemplateData($currentContent, $code, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
         return [
-            'exception' => FlattenException::create($exception),
+            'exception' => $exception,
             'status' => 'error',
             'status_code' => $code,
             'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',

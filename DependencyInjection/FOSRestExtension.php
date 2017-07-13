@@ -327,9 +327,9 @@ class FOSRestExtension extends Extension
             }
 
             if ($config['exception']['exception_controller']) {
-                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $config['exception']['exception_controller']);
+                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(5, $config['exception']['exception_controller']);
             } elseif (isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
-                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
+                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(5, 'fos_rest.exception.twig_controller:showAction');
             }
 
             $container->getDefinition('fos_rest.exception.codes_map')
