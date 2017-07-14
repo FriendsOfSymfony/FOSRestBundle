@@ -8,6 +8,11 @@
         <service id="fos_rest.exception_listener" class="FOS\RestBundle\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
+            <argument type="service" id="profiler" />
+            <argument type="service" id="request_stack" />
+            <argument type="service" id="profiler.request_matcher" on-invalid="null" />
+            <argument>%profiler_listener.only_exceptions%</argument>
+            <argument>%profiler_listener.only_master_requests%</argument>
             <argument>fos_rest.exception.controller:showAction</argument>
             <argument type="service" id="logger" on-invalid="null" />
         </service>

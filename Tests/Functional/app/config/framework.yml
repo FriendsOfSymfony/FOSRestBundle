@@ -9,3 +9,5 @@ framework:
     default_locale: en
     templating:
         engines: ['php']
+    profiler:
+        enabled: true

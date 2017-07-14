@@ -12,21 +12,53 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener as HttpKernelExceptionListener;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Symfony\Component\HttpKernel\EventListener\ProfilerListener;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
 
 /**
  * ExceptionListener.
  *
  * @author Ener-Getick <egetick@gmail.com>
+ * @author Daniel West <daniel@silverback.is>
  *
  * @internal
  */
-class ExceptionListener extends HttpKernelExceptionListener
+class ExceptionListener extends ProfilerListener
 {
+    /**
+     * @var HttpKernelExceptionListener
+     */
+    private $twig_exception_listener;
+
+    /**
+     * Constructor.
+     *
+     * @param Profiler                     $profiler           A Profiler instance
+     * @param RequestStack                 $requestStack       A RequestStack instance
+     * @param RequestMatcherInterface|null $matcher            A RequestMatcher instance
+     * @param bool                         $onlyException      true if the profiler only collects data when an exception occurs, false otherwise
+     * @param bool                         $onlyMasterRequests true if the profiler only collects data when the request is a master request, false otherwise
+     * @param string                       $controller         Controller to pass into twig exception listener
+     * @param LoggerInterface              $logger             Logger to pass into twig exception listener
+     */
+    public function __construct(
+        Profiler $profiler,
+        RequestStack $requestStack,
+        RequestMatcherInterface $matcher = null,
+        $onlyException = false,
+        $onlyMasterRequests = false,
+        $controller,
+        LoggerInterface $logger = null
+    )
+    {
+        parent::__construct($profiler, $requestStack, $matcher, $onlyException, $onlyMasterRequests);
+        $this->twig_exception_listener = new HttpKernelExceptionListener($controller, $logger);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -35,35 +67,11 @@ class ExceptionListener extends HttpKernelExceptionListener
         $request = $event->getRequest();
 
         if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+            parent::onKernelException($event);
+
             return;
         }
 
-        parent::onKernelException($event);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            KernelEvents::EXCEPTION => array('onKernelException', -100),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function duplicateRequest(\Exception $exception, Request $request)
-    {
-        $attributes = array(
-            '_controller' => $this->controller,
-            'exception' => $exception,
-            'logger' => $this->logger instanceof DebugLoggerInterface ? $this->logger : null,
-        );
-        $request = $request->duplicate(null, null, $attributes);
-        $request->setMethod('GET');
-
-        return $request;
+        $this->twig_exception_listener->onKernelException($event);
     }
 }
