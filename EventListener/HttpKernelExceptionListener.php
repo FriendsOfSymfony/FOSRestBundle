@@ -3,10 +3,10 @@
 namespace FOS\RestBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener as SymfonyHttpKernelExceptionListener;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
-class HttpKernelExceptionListener extends ExceptionListener
+class HttpKernelExceptionListener extends SymfonyHttpKernelExceptionListener
 {
     /**
      * {@inheritdoc}
