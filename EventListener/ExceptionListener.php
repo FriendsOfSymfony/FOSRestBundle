@@ -52,7 +52,7 @@ class ExceptionListener extends ProfilerListener
         $onlyException = false,
         $onlyMasterRequests = false,
         $controller,
-        LoggerInterface $logger
+        LoggerInterface $logger = null
     )
     {
         parent::__construct($profiler, $requestStack, $matcher, $onlyException, $onlyMasterRequests);
