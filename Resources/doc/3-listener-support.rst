@@ -29,34 +29,12 @@ to enable a few additional listeners:
         view:
             view_response_listener: 'force'
 
-It is possible to replace the service used for each of the listener if needed.
-In this case, the Bundle listener will still be configured, however it will
-not be registered in the kernel. The custom service listener will however not
-be registered in the kernel, so it is up to the user to register it for the
-appropriate event:
-
-.. code-block:: yaml
-
-    # app/config/config.yml
-    fos_rest:
-        body_listener:
-            service: my_body_listener
-
-    my_body_listener:
-        class: Acme\BodyListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 10 }
-        arguments: ['@fos_rest.decoder_provider', '%fos_rest.throw_exception_on_unsupported_content_type%']
-        calls:
-            - [setDefaultFormat, ['%fos_rest.body_default_format%']]
-
-
 View Response Listener
 ----------------------
 
 The view response listener makes it possible to simply return a ``View``
-instance from action controllers. The final output will then automatically be
-processed via the listener by the ``fos_rest.view_handler`` service.
+instance from action controllers. It does then automatically transform your
+``View`` into a ``Response`` object.
 
 This requires adding the `SensioFrameworkExtraBundle`_ to your vendors.
 
@@ -101,12 +79,12 @@ For details see :doc:`Format Listener <format_listener>`.
 Versioning
 ----------
 
-This listener attemps to determine the current api version from different parameters of the ``Request``:
+This listener attemps to determine the current api version from the ``Request``:
 
-* the uri ``/{version}/users``
-* a query parameter ``/users?version=v1``
-* an ``Accept`` header ``Accept: application/json; version=1.0``
-* a custom header ``X-Accept-Version: v1``
+* from its uri ``/{version}/users``
+* from a query parameter ``/users?version=v1``
+* from an ``Accept`` header ``Accept: application/json; version=1.0``
+* from a custom header ``X-Accept-Version: v1``
 
 For details see :doc:`Versioning <versioning>`.
 

@@ -104,11 +104,7 @@ formats can be configured (default  ``'data'``):
         // ...
     }
 
-The status code of the view can also be configured:
-
-.. code-block:: php
-
-    <?php
+The status code of the view can also be configured::
 
     /**
      * @View(statusCode=204)
@@ -118,11 +114,7 @@ The status code of the view can also be configured:
         // ...
     }
 
-The groups for the serializer can be configured as follows:
-
-.. code-block:: php
-
-    <?php
+The groups for the serializer can be configured as follows::
 
     /**
      * @View(serializerGroups={"group1", "group2"})
@@ -133,11 +125,7 @@ The groups for the serializer can be configured as follows:
     }
 
 Enabling the MaxDepth exclusion strategy support for the serializer can be
-configured as follows:
-
-.. code-block:: php
-
-    <?php
+configured as follows::
 
     /**
      * @View(serializerEnableMaxDepthChecks=true)
@@ -147,11 +135,7 @@ configured as follows:
         // ...
     }
 
-You can also define your serializer options dynamically:
-
-.. code-block:: php
-
-    <?php
+You can also define your serializer options dynamically::
 
     use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
     use FOS\RestBundle\View\View;
@@ -164,11 +148,10 @@ You can also define your serializer options dynamically:
     {
         $view = View::create();
 
-        $context = new Context();
-        $context->setVersion('1.0');
-        $context->addGroup('user');
-
-        $view->setContext($context);
+        $view->getContext()
+            ->setVersion('1.0')
+            ->addGroup('user')
+        ;
 
         // ...
         $view

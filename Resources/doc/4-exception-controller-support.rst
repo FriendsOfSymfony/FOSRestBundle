@@ -1,22 +1,17 @@
 Step 4: ExceptionController support
 ===================================
 
-When implementing an API it is also necessary to handle exceptions in a RESTful
-way, while ensuring that no security sensitive information leaks out. This
-bundle provides an extra controller for that job. Using this custom
-ExceptionController it is possible to leverage the View layer when building
-responses for uncaught Exceptions.
+When implementing an API it is also necessary to handle exceptions, while
+ensuring that no security sensitive information leaks out. This
+bundle provides an extra controller for that job: the ExceptionController.
 
-The ExceptionController can be enabled via the FOSRestBundle
-configuration:
+The ExceptionController can be enabled via the FOSRestBundle configuration:
 
 .. code-block:: yaml
 
     # app/config/config.yml
     fos_rest:
-        exception:
-            enabled: true
-            exception_controller: 'Acme\DemoBundle\Controller\ExceptionController::showAction'
+        exception: true
 
 .. note::
 
@@ -83,7 +78,7 @@ That was it!
 
     If you are receiving a 500 error where you would expect a different response, the issue
     is likely caused by an exception inside the ExceptionController. For example a template
-    is not found or the serializer failed. You should take a look at the logs of your app to see if an uncaught exception has been logged.
+    is not found or the serialization failed. You should take a look at the logs of your app to see if an uncaught exception has been logged.
 
 .. _`how to create handlers`: http://jmsyst.com/libs/serializer/master/handlers
 .. _`how to create normalizers`: http://thomas.jarrand.fr/blog/serialization/

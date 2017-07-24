@@ -1,10 +1,8 @@
 Format Listener
 ===============
 
-The Request format listener attempts to determine the best format for the
-request based on the Request's Accept-Header and the format priority
-configuration. This way it becomes possible to leverage Accept-Headers to
-determine the request format, rather than a file extension (like foo.json).
+The Format Listener attempts to determine the best format for the
+request based on its ``Accept`` header and on your configuration.
 
 The ``priorities`` define the order of media types as the application
 prefers. Note that if a format is provided instead of a media type, the

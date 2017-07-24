@@ -376,7 +376,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
         if ($data instanceof FormInterface) {
             $data = [$view->getTemplateVar() => $data->getData(), 'form' => $data];
-        } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
+        } elseif (empty($data) || !is_array($data) || is_numeric(key($data))) {
             $data = [$view->getTemplateVar() => $data];
         }
 

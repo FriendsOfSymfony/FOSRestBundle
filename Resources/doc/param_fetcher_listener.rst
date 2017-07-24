@@ -1,7 +1,7 @@
 Param Fetcher Listener
 ======================
 
-The param fetcher listener simply sets the ParamFetcher instance as a request attribute
+The Param Fetcher Listener sets the ``ParamFetcher`` as a request attribute
 configured for the matched controller so that the user does not need to do this manually.
 
 .. code-block:: yaml
@@ -128,7 +128,7 @@ configured for the matched controller so that the user does not need to do this 
     component.
 
 Optionally the listener can also already set all configured query parameters as
-request attributes
+request attributes:
 
 .. code-block:: yaml
 
@@ -138,23 +138,17 @@ request attributes
 
 .. code-block:: php
 
-    <?php
-
-    namespace AppBundle\Controller;
-
-    class FooController extends Controller
+    /**
+     * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
+     *
+     * @param string $page
+     */
+    public function getArticlesAction($page)
     {
-        /**
-         * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
-         *
-         * @param string $page
-         */
-        public function getArticlesAction($page)
-        {
-            $articles = array('bim', 'bam', 'bingo');
+        $articles = array('bim', 'bam', 'bingo');
 
-            return array('articles' => $articles, 'page' => $page);
-        }
+        return array('articles' => $articles, 'page' => $page);
+    }
 
 Container parameters can be used in requirements and default field.
 
@@ -166,24 +160,17 @@ Container parameters can be used in requirements and default field.
 
 .. code-block:: php
 
-    <?php
-
-    namespace AppBundle\Controller;
-
-    class FooController extends Controller
+    /**
+     * Use the "locale" parameter as the default value.
+     * @QueryParam(name="language", default="%locale%")
+     *
+     * The "baz" container parameter is used here as requirements.
+     * @QueryParam(name="foo", requirements="%baz%")
+     *
+     * The percent sign must be escaped.
+     * @QueryParam(name="val", default="75 %%")
+     */
+    public function getArticlesAction(ParamFetcher $paramFetcher)
     {
-        /**
-         * Use the "locale" parameter as the default value
-         * @QueryParam(name="language", default="%locale%")
-         *
-         * The "baz" container parameter is used here as requirements
-         * Can be used for complex or auto-generated regex
-         * @QueryParam(name="foo", requirements="%baz%")
-         *
-         * The percent sign must be escaped
-         * @QueryParam(name="val", default="75 %%")
-         */
-        public function getArticlesAction(ParamFetcher $paramFetcher)
-        {
-            ...
-        }
+        // ...
+    }

@@ -9,62 +9,27 @@ For a full list of annotations check out ``FOS/RestBundle/Controller/Annotations
 
 .. code-block:: php
 
-    // Delete Route Definition
     use FOS\RestBundle\Controller\Annotations\Delete;
-
-    /**
-     * DELETE Route annotation.
-     * @Delete("/likes/{type}/{typeId}")
-     */
-
-    // Head Route Definition
     use FOS\RestBundle\Controller\Annotations\Head;
-
-    /**
-     * HEAD Route annotation.
-     * @Head("/likes/{type}/{typeId}")
-     */
-
-    // Get Route Definition
     use FOS\RestBundle\Controller\Annotations\Get;
-
-    /**
-     * GET Route annotation.
-     * @Get("/likes/{type}/{typeId}")
-     */
-
-    // Patch Route Definition
     use FOS\RestBundle\Controller\Annotations\Patch;
-
-    /**
-     * PATCH Route annotation.
-     * @Patch("/likes/{type}/{typeId}")
-     */
-     
-    // Options Route Definition
     use FOS\RestBundle\Controller\Annotations\Options;
-
-    /**
-     * OPTIONS Route annotation.
-     * @Options("/likes/{type}/{typeId}")
-     */
-     
-
-    // Post Route Definition
     use FOS\RestBundle\Controller\Annotations\Post;
-
-    /**
-     * POST Route annotation.
-     * @Post("/likes/{type}/{typeId}")
-     */
-
-    // Put Route Definition
     use FOS\RestBundle\Controller\Annotations\Put;
 
     /**
-     * PUT Route annotation.
-     * @Put("/likes/{type}/{typeId}")
+     * @Delete("/users/{id}")
+     * @Head("/users/{id}")
+     * @Get("/users/{id}")
+     * @Patch("/users/{id}")
+     * @Options("/users/{id}")
+     * @Post("/users/{id}")
+     * @Put("/users/{id}")
      */
+    public function myAction()
+    {
+        // ...
+    }
 
 Method Name Prefix
 ------------------
@@ -72,9 +37,7 @@ Method Name Prefix
 By default, the routing name defined by the annotation is appended to the
 generated routing name.
 
-Example:
-
-.. code-block:: php
+Example::
 
     use FOS\RestBundle\Controller\Annotations\Get
 
@@ -82,7 +45,10 @@ Example:
     * @Get("/users/foo", name="_foo")
     * @Get("/users/bar", name="_bar")
     */
-    public function getUsersAction() { /** */ }
+    public function getUsersAction()
+    {
+        // ...
+    }
 
 
 Result:
@@ -97,9 +63,7 @@ get_users_bar        GET     ANY     ANY   /users/bar.{_format}
 
 You can add the ``method_prefix`` option to change this behavior.
 
-Example:
-
-.. code-block:: php
+Example::
 
     use FOS\RestBundle\Controller\Annotations\Get
 
@@ -107,7 +71,10 @@ Example:
     * @Get("/users/foo", name="get_foo", options={ "method_prefix" = false })
     * @Get("/users/bar", name="get_bar", options={ "method_prefix" = false })
     */
-    public function getUsersAction() { /** */ }
+    public function getUsersAction()
+    {
+        // ...
+    }
 
 
 Result:

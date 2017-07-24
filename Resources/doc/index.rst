@@ -1,10 +1,14 @@
 Getting Started With FOSRestBundle
 ==================================
 
+`FOSRestBundle`_  is a tool to help you in the job of creating a REST API with
+Symfony.
+
+.. _`FOSRestBundle`: https://github.com/FriendsOfSymfony/FOSRestBundle
+
 .. toctree::
     :hidden:
 
-    1-setting_up_the_bundle
     2-the-view-layer
     empty-content-status-code
     3-listener-support
@@ -24,21 +28,45 @@ Getting Started With FOSRestBundle
 Installation
 ------------
 
-Installation is a quick (I promise!) one-step process:
+Before using this bundle in your project, add it to your composer.json file:
 
-1. :doc:`Setting up the bundle <1-setting_up_the_bundle>`
+.. code-block:: bash
+
+    $ composer require friendsofsymfony/rest-bundle
+
+Then, like for any other bundle, include it in your Kernel class::
+
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
+
+            new FOS\RestBundle\FOSRestBundle(),
+        );
+
+        // ...
+    }
+
+At last, make sure you have a serializer enabled. The bundle will look at these
+three possibilities **in this order** to decide which serializer to use:
+
+#. The service ``fos_rest.service.serializer`` if it is configured (must be an
+instance of ``FOS\RestBundle\Serializer``).
+#. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
+#. The `Symfony Serializer`_
+
+.. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
+.. _`Symfony Serializer`: http://symfony.com/doc/current/cookbook/serializer.html
 
 Bundle usage
 ------------
 
-Before you start using the bundle it is advised you run a quick look over the
-six sections listed below. This bundle contains many features that are loosely
-coupled so you may or may not need to use all of them. This bundle is just a
-tool to help you in the job of creating a REST API with Symfony.
+This bundle contains many features that are loosely coupled so you may or may
+not need to use all of them.
 
-FOSRestBundle provides several tools to assist in building REST applications:
+FOSRestBundle provides several tools to assist you in building REST applications:
 
-- :doc:`The view layer <2-the-view-layer>`
+- :doc:`The view layer <2-the-view-layer>`, to create format agnostic controllers
 - :doc:`Listener support <3-listener-support>`
 - :doc:`ExceptionController support <4-exception-controller-support>`
 - :doc:`Automatic route generation: single RESTful controller <5-automatic-route-generation_single-restful-controller>` (for simple resources)

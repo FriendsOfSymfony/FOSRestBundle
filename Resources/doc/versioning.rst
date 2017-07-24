@@ -47,7 +47,7 @@ If you do not want to allow all the methods described above, you should choose w
 
 .. code-block:: yaml
 
-    #app/config/config.yml
+    # app/config/config.yml
     fos_rest:
         versioning:
             enabled: true
@@ -96,9 +96,7 @@ See :doc:`Format Listener <format_listener>`
             mime_types:
                 json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
 
-Note: If you have to handle huge versions and mime types, you can simplify the configuration with a php script:
-
-.. code-block:: php
+Note: If you have to handle huge versions and mime types, you can simplify the configuration with a php script::
 
     // app/config/fos_rest_mime_types.php
     $versions = array(

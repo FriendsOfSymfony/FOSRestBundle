@@ -8,142 +8,111 @@ The view layer makes it possible to write ``format`` (html, json, xml, etc)
 agnostic controllers, by placing a layer between the Controller and the
 generation of the final output via the templating or a serializer.
 
-The bundle works both with the `Symfony Serializer Component`_ and the more
-sophisticated `serializer`_ created by Johannes Schmitt and integrated via the
-`JMSSerializerBundle`_.
+To do so, you first need to create a ``View`` instance in your controller
+action. The ``View`` object is a simple data holder that describes the response
+so it must then be processed by the ``ViewHandler`` that transforms it into a
+proper ``Response`` object.
 
-In your controller action you will then need to create a ``View`` instance that
-is then passed to the ``fos_rest.view_handler`` service for processing. The
-``View`` is somewhat modeled after the ``Response`` class, but as just stated
-it simply works as a container for all the data/configuration for the
-``ViewHandler`` class for this particular action.  So the ``View`` instance
-must always be processed by a ``ViewHandler`` (see the below section on the
-"view response listener" for how to get this processing applied automatically)
+By default, you have to manually call the ``ViewHandler`` to transform your
+``View``::
 
-FOSRestBundle ships with a controller extending the default Symfony controller,
-which adds several convenience methods:
+    use FOS\RestBundle\View\View;
 
-.. code-block:: php
-
-    <?php
-
-    namespace AppBundle\Controller;
-
-    use FOS\RestBundle\Controller\FOSRestController;
-
-    class UsersController extends FOSRestController
+    public function getUsersAction()
     {
-        public function getUsersAction()
-        {
-            $data = ...; // get data, in this case list of users.
-            $view = $this->view($data, 200)
-                ->setTemplate("MyBundle:Users:getUsers.html.twig")
-                ->setTemplateVar('users')
-            ;
+        $data = ...; // here a list of users
+        $view = (new View($data, 200))
+            ->setTemplate('@App/Users/list.html.twig')
 
-            return $this->handleView($view);
-        }
+            // $data will be exposed as `users` in your template, default is `data`
+            ->setTemplateVar('users')
+        ;
 
-        public function redirectAction()
-        {
-            $view = $this->redirectView($this->generateUrl('some_route'), 301);
-            // or
-            $view = $this->routeRedirectView('some_route', array(), 301);
-
-            return $this->handleView($view);
-        }
+        return $this->container->get('fos_rest.view_handler')->handle($view);
     }
 
-.. versionadded:: 1.6
-  The ``setTemplateData`` method was added in 1.6.
+.. note::
 
-There is also a trait called ``ControllerTrait`` for anyone that prefers to not
-inject the container into their controller. This requires using setter injection
-to set a ``ViewHandlerInterface`` instance via the ``setViewHandler`` method.
+    This bundle provides an extended base controller class that allows you to
+    simplify the code above::
 
-.. versionadded:: 2.0
-    The ``ControllerTrait`` trait was added in 2.0.
+        use FOS\RestBundle\Controller\FOSRestController;
 
-If you need to pass more data in template, not for serialization, you can use ``setTemplateData`` method:
-
-.. code-block:: php
-
-    <?php
-
-    namespace AppBundle\Controller;
-
-    use FOS\RestBundle\Controller\FOSRestController;
-
-    class UsersController extends FOSRestController
-    {
-        public function getCategoryAction($categorySlug)
+        class UsersController extends FOSRestController
         {
-            $category = $this->get('category_manager')->getBySlug($categorySlug);
-            $products = ...; // get data, in this case list of products.
+            public function getUsersAction()
+            {
+                $data = ...; // the list of users
+                $view = $this->view($data, 200)
+                    // ...
+                ;
 
-            $templateData = array('category' => $category);
-
-            $view = $this->view($products, 200)
-                ->setTemplate("MyBundle:Category:show.html.twig")
-                ->setTemplateVar('products')
-                ->setTemplateData($templateData)
-            ;
-
-            return $this->handleView($view);
+                return $this->handleView($view);
+            }
         }
+
+.. tip::
+
+    If you use a controller as a service, require an instance of
+    ``FOS\RestBundle\View\ViewHandler`` in your constructor.
+
+However, by using the ``ViewResponseListener`` in combination with
+SensioFrameworkExtraBundle, you can omit the calls to the ``ViewHandler`` and
+directly return the ``View`` object.
+
+First, make sure the SensioFrameworkExtraBundle is installed and enabled in
+your kernel. Then, update your config to activate the ``ViewResponseListener``:
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+
+    fos_rest:
+        view:
+            view_response_listener: true
+
+Enjoy being able to just return a ``View`` instance::
+
+    use FOS\RestBundle\View\View;
+
+    public function getUsersAction()
+    {
+        $data = ...;
+
+        return (new View($data))
+            // ...
+        ;
     }
 
-or it is possible to use lazy-loading:
+.. note::
 
-.. code-block:: php
+    The other examples assume you use the ``ViewResponseListener``.
 
-    <?php
+Deal with Templates
+-------------------
 
-    namespace AppBundle\Controller;
+Your data is directly passed to your template as long as it is an associative
+array. If it isn't one, your data will be passed to your template under the
+``data`` variable by default. You can change this variable name by calling
+``View::setTemplateVar()``.
 
-    use FOS\RestBundle\Controller\FOSRestController;
+You can also pass data **only** to your template by calling
+``View::setTemplateData()``::
 
-    class UsersController extends FOSRestController
+    use FOS\RestBundle\View\View;
+
+    public function fooAction()
     {
-        public function getProductsAction($categorySlug)
-        {
-            $products = ...; // get data, in this case list of products.
-            $categoryManager = $this->get('category_manager');
+        return (new View(['foo' => 'bar']))
+            ->setTemplateData(['secret' => 'thisIsSecret'])
+        ;
 
-            $view = $this->view($products, 200)
-                ->setTemplate("MyBundle:Category:show.html.twig")
-                ->setTemplateVar('products')
-                ->setTemplateData(function (ViewHandlerInterface $viewHandler, ViewInterface $view) use ($categoryManager, $categorySlug) {
-                    $category = $categoryManager->getBySlug($categorySlug);
-
-                    return array(
-                        'category' => $category,
-                    );
-                })
-            ;
-
-            return $this->handleView($view);
-        }
+        // [
+        //    'foo' => 'bar',
+        //    'secret' => 'thisIsSecret',
+        // ]
+        // will be exposed to your template
     }
-
-To simplify this even more: If you rely on the ``ViewResponseListener`` in
-combination with SensioFrameworkExtraBundle you can even omit the calls to
-``$this->handleView($view)`` and directly return the view objects. See chapter
-3 on listeners for more details on the View Response Listener.
-
-As the purpose is to create a format-agnostic controller, data assigned to the
-``View`` instance should ideally be an object graph, though any data type is
-acceptable. Note that when rendering templating formats, the ``ViewHandler``
-will wrap data types other than associative arrays in an associative array with
-a single key (default  ``'data'``), which will become the variable name of the
-object in the respective template. You can change this variable by calling
-the ``setTemplateVar()`` method on the view object.
-
-There are also two specialized methods for redirect in the ``View`` classes.
-``View::createRedirect`` redirects to an URL called ``RedirectView`` and
-``View::createRouteRedirect`` redirects to a route. Note that whether these
-classes actually cause a redirect or not is determined by the ``force_redirects``
-configuration option, which is only enabled for ``html`` by default (see below).
 
 There are several more methods on the ``View`` class, here is a list of all
 the important ones for configuring the view:
@@ -156,7 +125,7 @@ the important ones for configuring the view:
 * ``getContext()`` - The serialization context to use.
 * ``setTemplate($template)`` - Name of the template to use in case of HTML rendering.
 * ``setTemplateVar($templateVar)`` - Name of the variable the data is in, when passed
-  to HTML template. Defaults to ``'data'``.
+  to HTML template.
 * ``setEngine($engine)`` - Name of the engine to render HTML template. Can be
   autodetected.
 * ``setFormat($format)`` - The format the response is supposed to be rendered in.
@@ -175,7 +144,7 @@ Forms and Views
 Symfony Forms have special handling inside the view layer. Whenever you:
 
 - return a Form from the controller.
-- Set the form as only data of the view.
+- set the form as only data of the view.
 - return an array with a 'form' key, containing a form.
 - return a form with validation errors.
 
@@ -247,9 +216,7 @@ an example. The serialized Task object will looks as follows:
 
 In a traditional Symfony application we simply define the property of the
 related class and it would perfectly assign the person to our task - in this
-case based on the id:
-
-.. code-block:: php
+case based on the id::
 
     $builder
         ->add('name', 'text')
