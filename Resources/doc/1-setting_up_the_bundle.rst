@@ -35,26 +35,6 @@ file of your project:
             // ...
         }
     }
-    
-If you use JMSSerializerBundle (optional), make sure to include it *before*
-FOSRestBundle:
-   
-.. code-block:: php
-
-    // app/AppKernel.php
-    class AppKernel extends Kernel
-    {
-        public function registerBundles()
-        {
-            $bundles = [
-                // ...            
-                new JMS\SerializerBundle\JMSSerializerBundle(), // Must be before FOSRestBundle
-                new FOS\RestBundle\FOSRestBundle(),
-            ];
-
-            // ...
-        }
-    }
 
 C) Enable a Serializer
 ----------------------
