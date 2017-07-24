@@ -5,7 +5,7 @@ The view response listener makes it possible to simply return a ``View``
 instance from action controllers. The final output will then automatically be
 processed via the listener by the ``fos_rest.view_handler`` service.
 
-This requires adding the `SensioFrameworkExtraBundle`_ to your vendors.
+This requires adding the `SensioFrameworkExtraBundle`_ to your vendors and making sure ``sensio_framework_extra.view.annotations`` is set to ``false``.
 
 Now inside a controller it's possible to simply return a ``View`` instance.
 
