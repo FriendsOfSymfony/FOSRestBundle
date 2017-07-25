@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
@@ -82,9 +83,10 @@ final class FormatListenerRulesPass implements CompilerPassInterface
         $id = 'fos_rest.request_matcher.'.md5($serialized).sha1($serialized);
 
         if (!$container->hasDefinition($id)) {
+            $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
             // only add arguments that are necessary
             $container
-                ->setDefinition($id, new DefinitionDecorator('fos_rest.format_request_matcher'))
+                ->setDefinition($id, new $childDefinitionClass('fos_rest.format_request_matcher'))
                 ->setArguments($arguments);
         }
 

@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -240,7 +241,8 @@ class FOSRestExtension extends Extension
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if (!empty($config['view']['jsonp_handler'])) {
-            $handler = new DefinitionDecorator($config['service']['view_handler']);
+            $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
+            $handler = new $childDefinitionClass($config['service']['view_handler']);
             $handler->setPublic(true);
 
             $jsonpHandler = new Reference('fos_rest.view_handler.jsonp');
@@ -402,8 +404,9 @@ class FOSRestExtension extends Extension
             array_pop($arguments);
         }
 
+        $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
         $container
-            ->setDefinition($id, new DefinitionDecorator('fos_rest.zone_request_matcher'))
+            ->setDefinition($id, new $childDefinitionClass('fos_rest.zone_request_matcher'))
             ->setArguments($arguments)
         ;
 
