@@ -143,7 +143,7 @@ class ExceptionController
      *
      * @return string
      */
-    private function getAndCleanOutputBuffering($startObLevel)
+    protected function getAndCleanOutputBuffering($startObLevel)
     {
         if (ob_get_level() <= $startObLevel) {
             return '';
