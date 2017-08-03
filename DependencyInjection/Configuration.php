@@ -406,6 +406,7 @@ final class Configuration implements ConfigurationInterface
                     ->canBeEnabled()
                     ->children()
                         ->scalarNode('exception_controller')->defaultNull()->end()
+                        ->scalarNode('service')->defaultNull()->end()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
                             ->beforeNormalization()
