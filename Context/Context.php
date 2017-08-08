@@ -127,17 +127,22 @@ final class Context
     /**
      * Adds a normalization group.
      *
-     * @param string $group
+     * @param string      $group
+     * @param null|string $key
      *
      * @return self
      */
-    public function addGroup($group)
+    public function addGroup($group, $key = null)
     {
         if (null === $this->groups) {
             $this->groups = [];
         }
         if (!in_array($group, $this->groups)) {
-            $this->groups[] = $group;
+            if(is_string($key)){
+                $this->groups[$key] = $group;
+            } else {
+                $this->groups[] = $group;
+            }
         }
 
         return $this;
@@ -152,8 +157,8 @@ final class Context
      */
     public function addGroups(array $groups)
     {
-        foreach ($groups as $group) {
-            $this->addGroup($group);
+        foreach ($groups as $key => $group) {
+            $this->addGroup($group, is_string($key) ? $key : null);
         }
 
         return $this;
