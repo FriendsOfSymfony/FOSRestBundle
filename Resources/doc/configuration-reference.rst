@@ -76,6 +76,7 @@ Full default configuration
         exception:
             enabled:              false
             exception_controller:  null
+            service:              null
             codes:
 
                 # Prototype
