@@ -36,7 +36,11 @@ class ClassUtils
             }
 
             if (true === $class && T_STRING === $token[0]) {
-                return $namespace.'\\'.$token[1];
+                $fqcn = $namespace.'\\'.$token[1];
+
+                if (class_exists($fqcn) && !(new \ReflectionClass($fqcn))->isAbstract()) {
+                    return $fqcn;
+                }
             }
 
             if (true === $namespace && T_STRING === $token[0]) {

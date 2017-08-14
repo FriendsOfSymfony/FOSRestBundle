@@ -11,24 +11,14 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller\Directory;
 
-class UsersController extends BaseController
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+abstract class BaseController extends Controller
 {
-    public function getUsersAction()
+    public function putUserAction($slug)
     {
     }
 
- // [GET] /users
-
-    public function getUserAction($slug)
-    {
-    }
-
- // [GET] /users/{slug}
-
-    public function postUsersAction()
-    {
-    }
-
- // [POST] /users
+    // [PUT] /users/{slug}
 
 }
