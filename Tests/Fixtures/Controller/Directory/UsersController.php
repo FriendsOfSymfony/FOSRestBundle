@@ -30,5 +30,4 @@ class UsersController extends BaseController
     }
 
  // [POST] /users
-
 }

@@ -20,5 +20,4 @@ abstract class BaseController extends Controller
     }
 
     // [PUT] /users/{slug}
-
 }
