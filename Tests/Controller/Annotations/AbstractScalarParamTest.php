@@ -55,6 +55,19 @@ class AbstractScalarParamTest extends TestCase
         ), $this->param->getConstraints());
     }
 
+    public function testMultipleComplexRequirements()
+    {
+        $requirement1 = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
+        $requirement2 = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
+        $this->param->requirements = array($requirement1, $requirement2);
+
+        $this->assertEquals(array(
+            new Constraints\NotNull(),
+            $requirement1,
+            $requirement2,
+        ), $this->param->getConstraints());
+    }
+
     public function testScalarRequirements()
     {
         $this->param->name = 'bar';

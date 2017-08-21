@@ -49,6 +49,12 @@ configured for the matched controller so that the user does not need to do this 
          * Note that if the value matches the default then no validation is run.
          * So make sure the default value really matches your expectations.
          *
+         * @RequestParam(name="simpleEmail", requirements=@Constraints\Email)
+         * @RequestParam(name="complexEmail", requirements={@Constraints\Email, @Constraints\NotEqualTo("joe@example.org")})
+         * You can use one or multiple Symfony Validator constraints for more complex requirements checking. The first
+         * example above checks for a correctly formatted e-mail adress. The second example also ensures that it does not
+         * matches some default example value.
+         *
          * @RequestParam(name="search", requirements="[a-z]+", description="search")
          * @RequestParam(name="byauthor", requirements="[a-z]+", description="by author", incompatibles={"search"})
          * Imagine you have an api for a blog with to get Articles with two ways of filtering
