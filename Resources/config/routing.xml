@@ -54,6 +54,7 @@
             <argument type="collection" /> <!-- formats -->
             <argument /> <!-- prefix_methods bool -->
             <argument type="collection" /> <!-- routing_ignore_classes -->
+            <argument type="collection" /> <!-- routing_ignore_types -->
         </service>
 
         <service id="fos_rest.inflector.doctrine" class="FOS\RestBundle\Inflector\DoctrineInflector" public="false" />

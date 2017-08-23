@@ -423,6 +423,18 @@ Your controller will be :
                 - 'Psr\Log\LoggerInterface'
 
 
+If you are using php7, You can also exclude a type of variable.
+To exclude all object from your routing, you have to add :
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    fos_rest:
+        routing_loader:
+            routing_ignore_types:
+                - 'object'
+
+
 
 Changing pluralization in generated routes
 ------------------------------------------

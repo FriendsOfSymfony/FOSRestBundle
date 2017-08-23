@@ -257,4 +257,14 @@ class ArticleController extends Controller implements ClassResourceInterface
     public function getExcludeAction(LoggerInterface $loggerInterface, Request $request)
     {
     }
+
+    /**
+     * [GET] /article/excludetype.
+     *
+     * @param $slug
+     * @param Request $request
+     */
+    public function getExcludetypeAction(Request $request, array $myArray)
+    {
+    }
 }

@@ -118,6 +118,13 @@ class RestActionReader
     private $ignoreClasses = [];
 
     /**
+     * Ignore type var form route generator.
+     *
+     * @var array
+     */
+    private $ignoreTypes = [];
+
+    /**
      * Initializes controller reader.
      *
      * @param Reader               $annotationReader
@@ -126,8 +133,10 @@ class RestActionReader
      * @param bool                 $includeFormat
      * @param array                $formats
      * @param bool                 $hasMethodPrefix
+     * @param array                $ignoreClasses
+     * @param array                $ignoreTypes
      */
-    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [], $hasMethodPrefix = true, array $ignoreClasses = [])
+    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [], $hasMethodPrefix = true, array $ignoreClasses = [], array $ignoreTypes = [])
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
@@ -136,6 +145,7 @@ class RestActionReader
         $this->formats = $formats;
         $this->hasMethodPrefix = $hasMethodPrefix;
         $this->ignoreClasses = $ignoreClasses;
+        $this->ignoreTypes = $ignoreTypes;
     }
 
     /**
@@ -504,6 +514,18 @@ class RestActionReader
                 foreach ($ignoreClasses as $class) {
                     if ($className === $class || is_subclass_of($className, $class)) {
                         continue 2;
+                    }
+                }
+            }
+
+            // Dont break php5 compatibility
+            if (method_exists($argument, 'getType')) {
+                $argumentType = $argument->getType();
+                if ($argumentType) {
+                    foreach ($this->ignoreTypes as $type) {
+                        if ($argumentType === $type) {
+                            continue 2;
+                        }
                     }
                 }
             }

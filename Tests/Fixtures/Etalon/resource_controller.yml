@@ -102,3 +102,9 @@ get_article_exclude:
   methods: [GET]
   path:    /article/exclude.{_format}
   controller: ::getExcludeAction
+
+# Will fail on php5 test
+#get_article_excludetype:
+#  methods: [GET]
+#  path:    /article/excludetype.{_format}
+#  controller: ::getExcludetypeAction

@@ -47,11 +47,11 @@ class RestRouteLoaderTest extends LoaderTest
      */
     public function testResourceFixture()
     {
-        $collection = $this->loadFromControllerFixture('ArticleController', null, [], true, [\Psr\Log\LoggerInterface::class]);
+        $collection = $this->loadFromControllerFixture('ArticleController', null, [], true, [\Psr\Log\LoggerInterface::class], ['array']);
         $etalonRoutes = $this->loadEtalonRoutesInfo('resource_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(25, count($collection->all()));
+        $this->assertEquals(26, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -380,9 +380,9 @@ class RestRouteLoaderTest extends LoaderTest
      *
      * @return RestRouteCollection
      */
-    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = [], $hasMethodPrefix = true, array $ignoreClasses = [])
+    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = [], $hasMethodPrefix = true, array $ignoreClasses = [], array $ignoreTypes = [])
     {
-        $loader = $this->getControllerLoader($formats, $hasMethodPrefix, $ignoreClasses);
+        $loader = $this->getControllerLoader($formats, $hasMethodPrefix, $ignoreClasses, $ignoreTypes);
         $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
 
         return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'.$fixtureName, 'rest');
