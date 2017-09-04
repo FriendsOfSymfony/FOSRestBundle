@@ -279,7 +279,14 @@ class RestActionReader
             $resources[] = null;
         }
 
-        $routeName = $httpMethod.$this->generateRouteName($resources);
+        $baseRouteName = preg_replace(array(
+            '/(bundle|controller)_?/',
+            '/__/',
+        ), array(
+            '_',
+            '_',
+        ), strtolower(str_replace('\\', '_', $method->getDeclaringClass()->name)));
+        $routeName = $baseRouteName.$httpMethod.$this->generateRouteName($resources);
         $urlParts = $this->generateUrlParts($resources, $arguments, $httpMethod);
 
         // if passed method is not valid HTTP method then it's either
