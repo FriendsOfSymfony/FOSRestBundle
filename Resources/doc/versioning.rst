@@ -79,64 +79,64 @@ If you want to version by Accept header, you will need to do the following:
 
 #. The format listener must be enabled
 
-See :doc:`Format Listener <format_listener>`
+   See :doc:`Format Listener <format_listener>`
 
 #. The client must pass the requested version in his header like this :
 
-.. code-block:: yaml
+   .. code-block:: yaml
 
-    Accept:application/json;version=1.0
+       Accept:application/json;version=1.0
 
 #. You must configure the possible mime types for all supported versions:
 
-.. code-block:: yaml
+   .. code-block:: yaml
 
-    fos_rest:
-        view:
-            mime_types:
-                json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
+       fos_rest:
+           view:
+               mime_types:
+                   json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
 
-Note: If you have to handle huge versions and mime types, you can simplify the configuration with a php script:
+   Note: If you have to handle huge versions and mime types, you can simplify the configuration with a php script:
 
-.. code-block:: php
+   .. code-block:: php
 
-    // app/config/fos_rest_mime_types.php
-    $versions = array(
-        '1.0',
-        '1.1',
-        '2.0',
-    );
+       // app/config/fos_rest_mime_types.php
+       $versions = array(
+           '1.0',
+           '1.1',
+           '2.0',
+       );
 
-    $mimeTypes = array(
-        'json' => array(
-            'application/json',
-        ),
-        'yml'  => array(
-            'application/yaml',
-            'text/yaml',
-        ),
-    );
+       $mimeTypes = array(
+           'json' => array(
+               'application/json',
+           ),
+           'yml'  => array(
+               'application/yaml',
+               'text/yaml',
+           ),
+       );
 
-    array_walk($mimeTypes, function (&$mimeTypes, $format, $versions) {
-        $versionMimeTypes = array();
-        foreach ($mimeTypes as $mimeType) {
-            foreach ($versions as $version) {
-                array_push($versionMimeTypes, sprintf('%s;version=%s', $mimeType, $version));
-                array_push($versionMimeTypes, sprintf('%s;v=%s', $mimeType, $version));
-            }
-        }
-        $mimeTypes = array_merge($mimeTypes, $versionMimeTypes);
-    }, $versions);
+       array_walk($mimeTypes, function (&$mimeTypes, $format, $versions) {
+           $versionMimeTypes = array();
+           foreach ($mimeTypes as $mimeType) {
+               foreach ($versions as $version) {
+                   array_push($versionMimeTypes, sprintf('%s;version=%s', $mimeType, $version));
+                   array_push($versionMimeTypes, sprintf('%s;v=%s', $mimeType, $version));
+               }
+           }
+           $mimeTypes = array_merge($mimeTypes, $versionMimeTypes);
+       }, $versions);
 
-    $container->loadFromExtension('fos_rest', array(
-        'view' => array(
-            'mime_types' => $mimeTypes,
-        ),
-    ));
+       $container->loadFromExtension('fos_rest', array(
+           'view' => array(
+               'mime_types' => $mimeTypes,
+           ),
+       ));
 
-And then, import it from your config.yml file:
+   And then, import it from your config.yml file:
 
-.. code-block:: yaml
+   .. code-block:: yaml
 
     imports:
         - { resource: assets_version.php }
