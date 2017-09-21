@@ -21,14 +21,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class AnnotatedManyParentsArticleController extends Controller
 {
     /**
-     * "get_article_media_comment" [GET] /articles/{slug}/media/{mediaId}/comments/{id}.{_format}
+     * "get_article_media_comment" [GET] /articles/{slug}/media/{mediaId}/comments/{id}.{_format}.
      */
     public function getAction($slug, $mediaId, $id)
     {
     }
 
     /**
-     * "get_article_media_comments" [GET] /articles/{slug}/media/{mediaId}/comments.{_format}
+     * "get_article_media_comments" [GET] /articles/{slug}/media/{mediaId}/comments.{_format}.
      */
     public function cgetAction($slug, $mediaId)
     {

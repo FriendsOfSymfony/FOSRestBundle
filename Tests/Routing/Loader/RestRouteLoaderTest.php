@@ -371,7 +371,7 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
-     * Test parents option with one value in @FOS\RestBundle\Controller\Annotations\RouteResource annotation
+     * Test parents option with one value in @FOS\RestBundle\Controller\Annotations\RouteResource annotation.
      */
     public function testAnnotatedParentsArticleFixture()
     {
@@ -384,7 +384,7 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
-     * Test parents option with many values in @FOS\RestBundle\Controller\Annotations\RouteResource annotation
+     * Test parents option with many values in @FOS\RestBundle\Controller\Annotations\RouteResource annotation.
      */
     public function testAnnotatedManyParentsArticleFixture()
     {
