@@ -371,6 +371,32 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * Test parents option with one value in @FOS\RestBundle\Controller\Annotations\RouteResource annotation
+     */
+    public function testAnnotatedParentsArticleFixture()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedParentsArticleController');
+
+        $this->assertNotNull($collection->get('get_article_comment'), 'route for "get_article_comment" does not exist');
+        $this->assertEquals('/articles/{slug}/comments/{id}.{_format}', $collection->get('get_article_comment')->getPath());
+        $this->assertNotNull($collection->get('get_article_comments'), 'route for "get_article_comments" does not exist');
+        $this->assertEquals('/articles/{slug}/comments.{_format}', $collection->get('get_article_comments')->getPath());
+    }
+
+    /**
+     * Test parents option with many values in @FOS\RestBundle\Controller\Annotations\RouteResource annotation
+     */
+    public function testAnnotatedManyParentsArticleFixture()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedManyParentsArticleController');
+
+        $this->assertNotNull($collection->get('get_article_media_comment'), 'route for "get_article_media_comment" does not exist');
+        $this->assertEquals('/articles/{slug}/media/{mediaId}/comments/{id}.{_format}', $collection->get('get_article_media_comment')->getPath());
+        $this->assertNotNull($collection->get('get_article_media_comments'), 'route for "get_article_media_comments" does not exist');
+        $this->assertEquals('/articles/{slug}/media/{mediaId}/comments.{_format}', $collection->get('get_article_media_comments')->getPath());
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param string $fixtureName     name of the class fixture

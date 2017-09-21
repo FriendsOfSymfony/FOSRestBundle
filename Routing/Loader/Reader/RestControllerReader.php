@@ -83,6 +83,7 @@ class RestControllerReader
         if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, Annotations\RouteResource::class)) {
             $resource = explode('_', $annotation->resource);
             $this->actionReader->setPluralize($annotation->pluralize);
+            $this->actionReader->setParents($annotation->parents);
         } elseif ($reflectionClass->implementsInterface(ClassResourceInterface::class)) {
             $resource = preg_split(
                 '/([A-Z][^A-Z]*)Controller/', $reflectionClass->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE

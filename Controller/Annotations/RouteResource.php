@@ -27,4 +27,8 @@ class RouteResource
      * @var bool
      */
     public $pluralize = true;
+    /**
+     * @var array
+     */
+    public $parents = array();
 }
