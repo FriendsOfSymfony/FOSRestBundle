@@ -19,6 +19,8 @@
             <argument /> <!-- default engine -->
         </service>
 
+        <service id="FOS\RestBundle\View\ViewHandlerInterface" alias="fos_rest.view_handler.default" />
+
         <service id="fos_rest.view_handler.jsonp" class="FOS\RestBundle\View\JsonpHandler" public="false">
             <argument /> <!-- JSONP callback parameter -->
         </service>

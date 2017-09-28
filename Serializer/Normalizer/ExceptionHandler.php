@@ -42,7 +42,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param Exception                $exception
+     * @param \Exception               $exception
      * @param array                    $type
      * @param Context                  $context
      *
@@ -61,7 +61,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
 
     /**
      * @param XmlSerializationVisitor $visitor
-     * @param Exception               $exception
+     * @param \Exception              $exception
      * @param array                   $type
      * @param Context                 $context
      */
@@ -93,6 +93,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
 
     /**
      * @param \Exception $exception
+     * @param Context    $context
      *
      * @return array
      */
@@ -102,7 +103,10 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
 
         $templateData = $context->attributes->get('template_data');
         if ($templateData->isDefined()) {
-            $data['code'] = $statusCode = $templateData->get()['status_code'];
+            $templateData = $templateData->get();
+            if (array_key_exists('status_code', $templateData)) {
+                $data['code'] = $statusCode = $templateData['status_code'];
+            }
         }
 
         $data['message'] = $this->getExceptionMessage($exception, isset($statusCode) ? $statusCode : null);

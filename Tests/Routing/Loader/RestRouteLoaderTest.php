@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use FOS\RestBundle\Routing\RestRouteCollection;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * RestRouteLoader test.
@@ -96,7 +95,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes = $this->loadEtalonRoutesInfo('annotated_users_controller.yml');
 
         $this->assertTrue($collection instanceof RestRouteCollection);
-        $this->assertEquals(31, count($collection->all()));
+        $this->assertEquals(33, count($collection->all()));
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);
@@ -343,6 +342,17 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1507
+     */
+    public function testNameMethodPrefixIsPrependingCorrectlyWhenDefaultFalse()
+    {
+        $collection = $this->loadFromControllerFixture('AnnotatedUsersController', null, [], false);
+
+        $this->assertNotNull($collection->get('post_users_foo'), 'route for "post_users_foo" does not exist');
+        $this->assertNotNull($collection->get('post_users_bar'), 'route for "post_users_bar" does not exist');
+    }
+
+    /**
      * RestActionReader::getMethodArguments should ignore certain types of
      * parameters.
      */
@@ -363,15 +373,16 @@ class RestRouteLoaderTest extends LoaderTest
     /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
-     * @param string $fixtureName name of the class fixture
-     * @param string $namePrefix  route name prefix
-     * @param array  $formats     resource formats available
+     * @param string $fixtureName     name of the class fixture
+     * @param string $namePrefix      route name prefix
+     * @param array  $formats         resource formats available
+     * @param bool   $hasMethodPrefix
      *
-     * @return RouteCollection
+     * @return RestRouteCollection
      */
-    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = [])
+    protected function loadFromControllerFixture($fixtureName, $namePrefix = null, array $formats = [], $hasMethodPrefix = true)
     {
-        $loader = $this->getControllerLoader($formats);
+        $loader = $this->getControllerLoader($formats, $hasMethodPrefix);
         $loader->getControllerReader()->getActionReader()->setNamePrefix($namePrefix);
 
         return $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\\'.$fixtureName, 'rest');

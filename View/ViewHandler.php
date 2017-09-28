@@ -253,7 +253,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
         $groups = $context->getGroups();
         if (empty($groups) && $this->exclusionStrategyGroups) {
-            $context->addGroups($this->exclusionStrategyGroups);
+            $context->setGroups($this->exclusionStrategyGroups);
         }
 
         if (null === $context->getVersion() && $this->exclusionStrategyVersion) {

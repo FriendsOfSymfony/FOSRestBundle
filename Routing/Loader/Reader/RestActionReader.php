@@ -106,6 +106,11 @@ class RestActionReader
     private $availableConventionalActions = ['new', 'edit', 'remove'];
 
     /**
+     * @var bool
+     */
+    private $hasMethodPrefix;
+
+    /**
      * Initializes controller reader.
      *
      * @param Reader               $annotationReader
@@ -113,14 +118,16 @@ class RestActionReader
      * @param InflectorInterface   $inflector
      * @param bool                 $includeFormat
      * @param array                $formats
+     * @param bool                 $hasMethodPrefix
      */
-    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [])
+    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [], $hasMethodPrefix = true)
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
         $this->inflector = $inflector;
         $this->includeFormat = $includeFormat;
         $this->formats = $formats;
+        $this->hasMethodPrefix = $hasMethodPrefix;
     }
 
     /**
@@ -693,10 +700,10 @@ class RestActionReader
         if ($annotation && null !== $annotation->getName()) {
             $options = $annotation->getOptions();
 
-            if (isset($options['method_prefix']) && false === $options['method_prefix']) {
+            if (false === $this->hasMethodPrefix || (isset($options['method_prefix']) && false === $options['method_prefix'])) {
                 $routeName = $annotation->getName();
             } else {
-                $routeName = $routeName.$annotation->getName();
+                $routeName .= $annotation->getName();
             }
         }
 
