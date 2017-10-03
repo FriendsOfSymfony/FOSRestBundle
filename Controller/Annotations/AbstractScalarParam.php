@@ -15,6 +15,7 @@ use FOS\RestBundle\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * {@inheritdoc}
@@ -63,6 +64,9 @@ abstract class AbstractScalarParam extends AbstractParam
             $constraints = array(
                 new All(array('constraints' => $constraints)),
             );
+            if (false === $this->nullable) {
+                $constraints[] = new NotNull();
+            }
         }
 
         return $constraints;
