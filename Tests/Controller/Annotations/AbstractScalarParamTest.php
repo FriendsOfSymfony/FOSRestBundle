@@ -99,6 +99,16 @@ class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
         )), new Constraints\NotNull()), $this->param->getConstraints());
     }
 
+    public function testArrayWithBlankConstraintsWhenParamIsAnArray()
+    {
+        $this->param->map = true;
+        $this->param->allowBlank = false;
+        $this->assertEquals(array(new Constraints\All(array(
+            new Constraints\NotNull(),
+            new Constraints\NotBlank(),
+        )), new Constraints\NotNull(), new Constraints\NotBlank()), $this->param->getConstraints());
+    }
+
     public function testArrayWithNoConstraintsDoesNotCreateInvalidConstraint()
     {
         $this->param->nullable = true;
