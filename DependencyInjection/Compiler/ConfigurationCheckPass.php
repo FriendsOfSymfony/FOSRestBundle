@@ -30,8 +30,7 @@ final class ConfigurationCheckPass implements CompilerPassInterface
         }
 
         if ($container->has('fos_rest.view_response_listener') && isset($container->getParameter('kernel.bundles')['SensioFrameworkExtraBundle'])) {
-            $config = $container->getExtensionConfig('sensio_framework_extra');
-            if (!(true === $config[0]['view']['annotations'] || $container->has('sensio_framework_extra.view.listener')))  {
+            if (!($container->has('sensio_framework_extra.view.listener') ^ $container->hasDefinition('Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener'))) {
                 throw new \RuntimeException('You must enable the SensioFrameworkExtraBundle view annotations to use the ViewResponseListener.');
             }
         }
