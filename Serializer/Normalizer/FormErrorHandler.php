@@ -26,10 +26,10 @@ class FormErrorHandler extends JMSFormErrorHandler
 {
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, $translationDomain = 'validators')
     {
         $this->translator = $translator;
-        parent::__construct($translator);
+        parent::__construct($translator, $translationDomain);
     }
 
     public function serializeFormToXml(XmlSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
