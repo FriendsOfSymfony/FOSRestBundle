@@ -37,7 +37,7 @@ class DirectoryRouteLoader extends Loader
      */
     public function load($resource, $type = null)
     {
-        if (isset($resource[0]) && '@' === $resource[0]) {
+        if (isset($resource[0]) && in_array($resource[0], ['@', '.'], true)) {
             $resource = $this->fileLocator->locate($resource);
         }
 
@@ -68,7 +68,7 @@ class DirectoryRouteLoader extends Loader
             return false;
         }
 
-        if (isset($resource[0]) && '@' === $resource[0]) {
+        if (isset($resource[0]) && in_array($resource[0], ['@', '.'], true)) {
             $resource = $this->fileLocator->locate($resource);
         }
 
