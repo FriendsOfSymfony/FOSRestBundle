@@ -66,6 +66,7 @@ class FormatNegotiator extends BaseNegotiator
                 if (!empty($options['fallback_format'])) {
                     return new Accept($request->getMimeType($options['fallback_format']));
                 }
+
                 continue;
             }
 
@@ -89,7 +90,7 @@ class FormatNegotiator extends BaseNegotiator
 
                 $mimeType = parent::getBest($header, $mimeTypes);
 
-                if ($mimeType !== null) {
+                if (null !== $mimeType) {
                     return $mimeType;
                 }
             }
@@ -134,6 +135,7 @@ class FormatNegotiator extends BaseNegotiator
         foreach ($priorities as $priority) {
             if (strpos($priority, '/')) {
                 $mimeTypes[] = $priority;
+
                 continue;
             }
 
@@ -163,7 +165,7 @@ class FormatNegotiator extends BaseNegotiator
     private function getRequest()
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($request === null) {
+        if (null === $request) {
             throw new \RuntimeException('There is no current request.');
         }
 

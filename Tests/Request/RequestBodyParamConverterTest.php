@@ -259,10 +259,10 @@ class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
 
     protected function launchExecution($converter, $request = null, $configuration = null)
     {
-        if ($request === null) {
+        if (null === $request) {
             $request = $this->createRequest('body', 'application/json');
         }
-        if ($configuration === null) {
+        if (null === $configuration) {
             $configuration = $this->createConfiguration('FooClass', 'foo');
         }
 

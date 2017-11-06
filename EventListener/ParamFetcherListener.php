@@ -72,6 +72,7 @@ class ParamFetcherListener
             foreach ($params as $name => $param) {
                 if ($request->attributes->has($name) && null !== $request->attributes->get($name)) {
                     $msg = sprintf("ParamFetcher parameter conflicts with a path parameter '$name' for route '%s'", $request->attributes->get('_route'));
+
                     throw new \InvalidArgumentException($msg);
                 }
 

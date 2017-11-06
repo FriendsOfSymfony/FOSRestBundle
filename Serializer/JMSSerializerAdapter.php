@@ -77,7 +77,7 @@ class JMSSerializerAdapter implements Serializer
      */
     private function convertContext(Context $context, $direction)
     {
-        if ($direction === self::SERIALIZATION) {
+        if (self::SERIALIZATION === $direction) {
             $jmsContext = $this->serializationContextFactory
                 ? $this->serializationContextFactory->createSerializationContext()
                 : SerializationContext::create();

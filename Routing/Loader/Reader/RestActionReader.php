@@ -315,7 +315,7 @@ class RestActionReader
                     $methods = $annoMethods;
                 }
 
-                $path = $annotation->getPath() !== null ? $this->routePrefix.$annotation->getPath() : $path;
+                $path = null !== $annotation->getPath() ? $this->routePrefix.$annotation->getPath() : $path;
                 $requirements = array_merge($requirements, $annoRequirements);
                 $options = array_merge($options, $annotation->getOptions());
                 $defaults = array_merge($defaults, $annotation->getDefaults());
@@ -383,7 +383,7 @@ class RestActionReader
      */
     private function includeFormatIfNeeded(&$path, &$requirements)
     {
-        if ($this->includeFormat === true) {
+        if (true === $this->includeFormat) {
             $path .= '.{_format}';
 
             if (!isset($requirements['_format']) && !empty($this->formats)) {

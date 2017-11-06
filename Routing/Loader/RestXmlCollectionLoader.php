@@ -62,6 +62,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         switch ($node->tagName) {
             case 'route':
                 $this->parseRoute($collection, $node, $path);
+
                 break;
             case 'import':
                 $name = (string) $node->getAttribute('id');
@@ -97,6 +98,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
 
                 $imported->addPrefix($prefix);
                 $collection->addCollection($imported);
+
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf('Unable to parse tag "%s"', $node->tagName));
@@ -122,6 +124,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                 $item = $requirements->item($i);
                 if ($item instanceof \DOMElement && $item->hasAttribute('_format')) {
                     $format = $item->getAttribute('_format');
+
                     break;
                 }
             }
@@ -157,7 +160,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         $length = $node->childNodes->length;
         for ($i = 0; $i < $length; ++$i) {
             $loopNode = $node->childNodes->item($i);
-            if ($loopNode->nodeType === XML_TEXT_NODE) {
+            if (XML_TEXT_NODE === $loopNode->nodeType) {
                 continue;
             }
 
@@ -181,7 +184,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     {
         $options = [];
         foreach ($node->childNodes as $child) {
-            if ($child instanceof \DOMElement && $child->tagName === 'option') {
+            if ($child instanceof \DOMElement && 'option' === $child->tagName) {
                 $option = $node->ownerDocument->createElementNs(
                     self::NAMESPACE_URI,
                     'option',
