@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by derrabus at 2017-10-17T09:02:53Z
+
+The tests fail because there's apparently a similar issue with `RequestBodyParamConverter`.
+
+---------------------------------------------------------------------------
+
+by pculka at 2017-10-17T10:02:35Z
+
+The xor is there as the configuration is mutually exclusive. Either you use the old verion or a new one. There’s nothing between.
+I will check the ParamConverter too
+
+---------------------------------------------------------------------------
+
+by pculka at 2017-10-17T10:04:03Z
+
+And also will swap out FQCN
+
+---------------------------------------------------------------------------
+
+by derrabus at 2017-10-17T10:09:12Z
+
+> The xor is there as the configuration is mutually exclusive. Either you use the old verion or a new one. There’s nothing between.
+
+True, but there's no reason to force this exclusiveness. If an application (or the FrameworkExtraBundle devs) decide to add an alias to the old service ID as a compatibility layer, there's no reason for FOS REST to fail on this.
+
+Add: And __if__ this __has to__ be an xor, please use a boolean `xor` instead of a bitwise one.
+
+---------------------------------------------------------------------------
+
+by pculka at 2017-10-18T19:43:05Z
+
+Well, I've updated the code and fixed most of the build except Symfony 3.4 and 4.0, which fail due different tests, not those relevant to this PR.
+Can somebody please merge this, so we can start using also newer versions of SymfonyFrameworkExtraBundle?
+
+---------------------------------------------------------------------------
+
+by luispabon at 2017-10-26T10:11:39Z
+
+I'm very keen on this as well, just coding something up for a 2018 release and naturally we're working against the very latest
+
+---------------------------------------------------------------------------
+
+by pculka at 2017-11-03T11:19:36Z
+
+/poke anyone? Can anybody merge/decline this?
