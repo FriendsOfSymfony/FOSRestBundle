@@ -19,16 +19,19 @@ while ($dir !== $lastDir) {
 
     if (file_exists($dir.'/autoload.php')) {
         require_once $dir.'/autoload.php';
+
         break;
     }
 
     if (file_exists($dir.'/autoload.php.dist')) {
         require_once $dir.'/autoload.php.dist';
+
         break;
     }
 
     if (file_exists($dir.'/vendor/autoload.php')) {
         require_once $dir.'/vendor/autoload.php';
+
         break;
     }
 

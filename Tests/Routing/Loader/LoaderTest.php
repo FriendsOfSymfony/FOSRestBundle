@@ -60,7 +60,7 @@ abstract class LoaderTest extends \PHPUnit_Framework_TestCase
     protected function getControllerLoader(array $formats = [], $hasMethodPrefix = true)
     {
         // This check allows to override the container
-        if ($this->container === null) {
+        if (null === $this->container) {
             $this->container = $this->getMockBuilder(ContainerBuilder::class)
                 ->disableOriginalConstructor()
                 ->setMethods(['get', 'has'])

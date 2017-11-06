@@ -289,6 +289,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
         if (!$this->supports($format)) {
             $msg = "Format '$format' not supported, handler must be implemented";
+
             throw new UnsupportedMediaTypeHttpException($msg);
         }
 
@@ -311,7 +312,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format)
     {
         $content = null;
-        if (($view->getStatusCode() === Response::HTTP_CREATED || $view->getStatusCode() === Response::HTTP_ACCEPTED) && $view->getData() !== null) {
+        if ((Response::HTTP_CREATED === $view->getStatusCode() || Response::HTTP_ACCEPTED === $view->getStatusCode()) && null !== $view->getData()) {
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();

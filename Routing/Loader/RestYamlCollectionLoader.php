@@ -182,7 +182,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
      */
     public function addParentNamePrefix(RouteCollection $collection, $namePrefix)
     {
-        if (!isset($namePrefix) || ($namePrefix = trim($namePrefix)) === '') {
+        if (!isset($namePrefix) || '' === ($namePrefix = trim($namePrefix))) {
             return $collection;
         }
 

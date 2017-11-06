@@ -40,7 +40,7 @@ class ChainVersionResolver implements VersionResolverInterface
     {
         foreach ($this->resolvers as $resolver) {
             $version = $resolver->resolve($request);
-            if ($version !== false) {
+            if (false !== $version) {
                 return $version;
             }
         }
