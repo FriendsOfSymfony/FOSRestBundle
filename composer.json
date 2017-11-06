@@ -46,7 +46,7 @@
         "willdurand/jsonp-callback-validator": "^1.0"
     },
     "require-dev": {
-        "sensio/framework-extra-bundle": "^3.0.13",
+        "sensio/framework-extra-bundle": "^3.0.13|^4.0|^5.0",
         "symfony/phpunit-bridge": "^3.2|^4.0",
         "symfony/asset": "^2.7|^3.0|^4.0",
         "symfony/form": "^2.7|^3.0|^4.0",
