@@ -13,9 +13,10 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\ZoneMatcherListener;
 use FOS\RestBundle\FOSRestBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class ZoneMatcherListenerTest extends \PHPUnit_Framework_TestCase
+class ZoneMatcherListenerTest extends TestCase
 {
     public function testNoRequestMatcher()
     {

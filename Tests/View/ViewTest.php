@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Victor Berchet <victor@suumit.com>
  */
-class ViewTest extends \PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException

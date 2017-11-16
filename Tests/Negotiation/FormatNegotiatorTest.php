@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\Negotiatior;
 
 use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Negotiation\Accept;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
-class FormatNegotiatorTest extends \PHPUnit_Framework_TestCase
+class FormatNegotiatorTest extends TestCase
 {
     private $requestStack;
     private $request;

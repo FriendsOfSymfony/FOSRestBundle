@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Tests\View;
 use FOS\RestBundle\View\JsonpHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -23,7 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @author Victor Berchet <victor@suumit.com>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
-class JsonpHandlerTest extends \PHPUnit_Framework_TestCase
+class JsonpHandlerTest extends TestCase
 {
     private $router;
     private $serializer;

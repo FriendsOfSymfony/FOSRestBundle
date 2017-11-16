@@ -13,8 +13,9 @@ namespace FOS\RestBundle\Tests\Normalizer;
 
 use FOS\RestBundle\Normalizer\CamelKeysNormalizer;
 use FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore;
+use PHPUnit\Framework\TestCase;
 
-class CamelKeysNormalizerTest extends \PHPUnit_Framework_TestCase
+class CamelKeysNormalizerTest extends TestCase
 {
     /**
      * @expectedException \FOS\RestBundle\Normalizer\Exception\NormalizationException

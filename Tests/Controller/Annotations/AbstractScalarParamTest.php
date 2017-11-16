@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
 use FOS\RestBundle\Validator\Constraints\Regex;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\Validator\Constraints;
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
-class AbstractScalarParamTest extends \PHPUnit_Framework_TestCase
+class AbstractScalarParamTest extends TestCase
 {
     public function setUp()
     {

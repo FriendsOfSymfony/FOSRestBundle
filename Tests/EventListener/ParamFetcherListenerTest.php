@@ -14,12 +14,13 @@ namespace FOS\RestBundle\Tests\EventListener;
 use FOS\RestBundle\EventListener\ParamFetcherListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Param Fetcher Listener Tests.
  */
-class ParamFetcherListenerTest extends \PHPUnit_Framework_TestCase
+class ParamFetcherListenerTest extends TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject

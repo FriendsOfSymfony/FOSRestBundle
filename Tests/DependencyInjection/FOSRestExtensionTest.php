@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\DependencyInjection;
 
 use FOS\RestBundle\DependencyInjection\FOSRestExtension;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -24,7 +25,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * @author Bulat Shakirzyanov <avalanche123>
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class FOSRestExtensionTest extends \PHPUnit_Framework_TestCase
+class FOSRestExtensionTest extends TestCase
 {
     /**
      * @var ContainerBuilder

@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Validator\Constraints;
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
-class FileParamTest extends \PHPUnit_Framework_TestCase
+class FileParamTest extends TestCase
 {
     public function setUp()
     {

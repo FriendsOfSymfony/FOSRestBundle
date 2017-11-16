@@ -13,11 +13,12 @@ namespace FOS\RestBundle\Tests\Context;
 
 use FOS\RestBundle\Context\Context;
 use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
-class ContextTest extends \PHPUnit_Framework_TestCase
+class ContextTest extends TestCase
 {
     protected $context;
 

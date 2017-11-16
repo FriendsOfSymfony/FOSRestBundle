@@ -12,12 +12,13 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @author Eduardo Gulias Davis <me@egulias.com>
  */
-class FormatListenerRulesPassTest extends \PHPUnit_Framework_TestCase
+class FormatListenerRulesPassTest extends TestCase
 {
     public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
     {

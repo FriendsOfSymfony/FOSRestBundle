@@ -12,13 +12,14 @@
 namespace FOS\RestBundle\Tests\Decoder;
 
 use FOS\RestBundle\Decoder\JsonToFormDecoder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the form-like encoder.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class JsonToFormDecoderTest extends \PHPUnit_Framework_TestCase
+class JsonToFormDecoderTest extends TestCase
 {
     public function testDecodeWithRemovingFalseData()
     {

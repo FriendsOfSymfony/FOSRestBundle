@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\MimeTypeListener;
 use FOS\RestBundle\FOSRestBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -21,7 +22,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class MimeTypeListenerTest extends \PHPUnit_Framework_TestCase
+class MimeTypeListenerTest extends TestCase
 {
     public function testOnKernelRequest()
     {
