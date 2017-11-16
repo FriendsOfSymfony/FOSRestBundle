@@ -16,6 +16,7 @@ use FOS\RestBundle\EventListener\ViewResponseListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class ViewResponseListenerTest extends \PHPUnit_Framework_TestCase
+class ViewResponseListenerTest extends TestCase
 {
     /**
      * @var \FOS\RestBundle\EventListener\ViewResponseListener

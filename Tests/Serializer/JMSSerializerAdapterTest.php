@@ -20,8 +20,9 @@ use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use PhpCollection\MapInterface;
+use PHPUnit\Framework\TestCase;
 
-class JMSSerializerAdapterTest extends \PHPUnit_Framework_TestCase
+class JMSSerializerAdapterTest extends TestCase
 {
     private $serializer;
     private $serializationContextFactory;

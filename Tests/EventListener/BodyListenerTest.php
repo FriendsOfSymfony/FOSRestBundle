@@ -15,6 +15,7 @@ use FOS\RestBundle\Decoder\ContainerDecoderProvider;
 use FOS\RestBundle\EventListener\BodyListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
  * @author Alain Horner <alain.horner@liip.ch>
  * @author Stefan Paschke <stefan.paschke@liip.ch>
  */
-class BodyListenerTest extends \PHPUnit_Framework_TestCase
+class BodyListenerTest extends TestCase
 {
     /**
      * @param bool    $decode                                 use decoder provider

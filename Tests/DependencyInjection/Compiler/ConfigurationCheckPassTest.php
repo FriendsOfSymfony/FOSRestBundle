@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Eriksen Costa <eriksencosta@gmail.com>
  */
-class ConfigurationCheckPassTest extends \PHPUnit_Framework_TestCase
+class ConfigurationCheckPassTest extends TestCase
 {
     /**
      * @expectedException \RuntimeException

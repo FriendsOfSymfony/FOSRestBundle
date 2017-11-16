@@ -11,13 +11,15 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * RequestParamTest.
  *
  * @author Eduardo Oliveira <entering@gmail.com>
  * @author Ener-Getick <egetick@gmail.com>
  */
-class RequestParamTest extends \PHPUnit_Framework_TestCase
+class RequestParamTest extends TestCase
 {
     public function setUp()
     {

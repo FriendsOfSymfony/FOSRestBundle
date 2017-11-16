@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Request\ParamReader;
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
  *
  * @author Alexander <iam.asm89@gmail.com>
  */
-class ParamReaderTest extends \PHPUnit_Framework_TestCase
+class ParamReaderTest extends TestCase
 {
     private $paramReader;
 

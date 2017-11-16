@@ -15,6 +15,7 @@ use FOS\RestBundle\EventListener\FormatListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Negotiation\FormatNegotiator;
 use Negotiation\Accept;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class FormatListenerTest extends \PHPUnit_Framework_TestCase
+class FormatListenerTest extends TestCase
 {
     public function testOnKernelControllerNegotiation()
     {

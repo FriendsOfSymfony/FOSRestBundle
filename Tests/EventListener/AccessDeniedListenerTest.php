@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\AccessDeniedListener;
 use FOS\RestBundle\FOSRestBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -25,7 +26,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  *
  * @author Boris Guéry <guery.b@gmail.com>
  */
-class AccessDeniedListenerTest extends \PHPUnit_Framework_TestCase
+class AccessDeniedListenerTest extends TestCase
 {
     /**
      * @dataProvider getFormatsDataProvider

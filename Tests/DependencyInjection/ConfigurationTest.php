@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\DependencyInjection;
 
 use FOS\RestBundle\DependencyInjection\Configuration;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Exception\MethodNotAllowedException;
  *
  * @author Evgenij Efimov <edefimov.it@gmail.com>
  */
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
     /**
      * Test object.

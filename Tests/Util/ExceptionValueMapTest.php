@@ -12,13 +12,14 @@
 namespace FOS\RestBundle\Tests;
 
 use FOS\RestBundle\Util\ExceptionValueMap;
+use PHPUnit\Framework\TestCase;
 
 /**
  * ExceptionValueMap test.
  *
  * @author Mikhail Shamin <munk13@gmail.com>
  */
-class ExceptionValueMapTest extends \PHPUnit_Framework_TestCase
+class ExceptionValueMapTest extends TestCase
 {
     /**
      * @var ExceptionValueMap

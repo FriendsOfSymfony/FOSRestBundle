@@ -17,6 +17,7 @@ use FOS\RestBundle\Request\ParamReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Yaml;
 
@@ -25,7 +26,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-abstract class LoaderTest extends \PHPUnit_Framework_TestCase
+abstract class LoaderTest extends TestCase
 {
     /**
      * @var ContainerBuilder

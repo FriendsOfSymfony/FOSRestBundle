@@ -12,12 +12,13 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * SerializerConfigurationPassTest test.
  */
-class SerializerConfigurationPassTest extends \PHPUnit_Framework_TestCase
+class SerializerConfigurationPassTest extends TestCase
 {
     /**
      * @var ContainerBuilder

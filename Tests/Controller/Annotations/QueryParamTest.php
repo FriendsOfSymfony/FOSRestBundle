@@ -11,13 +11,15 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * QueryParamTest.
  *
  * @author Eduardo Oliveira <entering@gmail.com>
  * @author Ener-Getick <egetick@gmail.com>
  */
-class QueryParamTest extends \PHPUnit_Framework_TestCase
+class QueryParamTest extends TestCase
 {
     public function setUp()
     {

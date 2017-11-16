@@ -13,13 +13,14 @@ namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Request\RequestBodyParamConverter;
+use PHPUnit\Framework\TestCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
  */
-class RequestBodyParamConverterTest extends \PHPUnit_Framework_TestCase
+class RequestBodyParamConverterTest extends TestCase
 {
     protected $serializer;
     protected $converterBuilder;
