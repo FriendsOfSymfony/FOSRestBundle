@@ -12,7 +12,7 @@
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
-        <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController">
+        <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController" public="true">
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="service" id="fos_rest.exception.codes_map" />  <!-- exception codes -->
             <argument /><!-- show exception -->
