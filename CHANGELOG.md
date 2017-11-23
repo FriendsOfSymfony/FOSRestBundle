@@ -1,6 +1,26 @@
 CHANGELOG
 =========
 
+2.3.0
+-----
+
+* added support for context factories when using JMS Serializer
+
+* the `RequestBodyParamConverter` ignores unrelated controller arguments to not conflict with Symfony's built-in
+  argument resolver
+
+* made the bundle compatible with SensioFrameworkExtraBundle 4.x
+
+* added some interface aliases to support by ID autowiring
+
+* added support for custom keys for groups when using JMSSerializerBundle
+
+* allow to load FOSRestBundle inside the kernel before JMSSerializerBundle
+
+* added the `fos_rest.routing_loader.prefix_methods` option to disable method name prefixes in generated route names
+
+* removed newline characters from exception messages
+
 1.8.0
 -----
 
