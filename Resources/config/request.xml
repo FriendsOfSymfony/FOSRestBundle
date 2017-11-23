@@ -13,6 +13,8 @@
             <argument type="service" id="validator" on-invalid="null"/>
         </service>
 
+        <service id="FOS\RestBundle\Request\ParamFetcherInterface" alias="fos_rest.request.param_fetcher" />
+
         <service id="fos_rest.request.param_fetcher.reader" class="FOS\RestBundle\Request\ParamReader" public="false">
             <argument type="service" id="annotation_reader"/>
         </service>
