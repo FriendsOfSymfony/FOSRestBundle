@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by juliusstoerrle at 2017-11-20T08:59:03Z
+
+I pulled this PR and it solved my issues with the loader, i do now have a ServiceNotFoundException
+
+> The "fos_rest.view_handler" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.
+
+But I do not think its related to this pull request, but more of a new issue with the private services by default, is anybody working on that currently?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2017-11-20T09:46:04Z
+
+@juliusstoerrle Feel free to propose a PR.
+
+---------------------------------------------------------------------------
+
+by juliusstoerrle at 2017-11-20T10:30:14Z
+
+@xabbuh see issue #1790
+
+Is there a roadmap for SF4 Combatibility and what needs to happen for this PR to be merged?
+
+---------------------------------------------------------------------------
+
+by juliusstoerrle at 2017-11-24T13:25:06Z
+
+Can this please be merged!
