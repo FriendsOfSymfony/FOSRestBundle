@@ -13,6 +13,7 @@ namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -150,6 +151,17 @@ class FOSRestExtension extends Extension
             $service->addMethodCall('setDefaultFormat', array($config['body_listener']['default_format']));
 
             $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(1, $config['body_listener']['decoders']);
+
+            if (class_exists(ServiceLocatorTagPass::class)) {
+                $decoderServicesMap = array();
+
+                foreach ($config['body_listener']['decoders'] as $id) {
+                    $decoderServicesMap[$id] = new Reference($id);
+                }
+
+                $decodersServiceLocator = ServiceLocatorTagPass::register($container, $decoderServicesMap);
+                $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(0, $decodersServiceLocator);
+            }
 
             $arrayNormalizer = $config['body_listener']['array_normalizer'];
 

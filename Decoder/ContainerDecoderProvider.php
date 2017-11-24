@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Decoder;
 
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,11 +27,15 @@ class ContainerDecoderProvider implements DecoderProviderInterface
     /**
      * Constructor.
      *
-     * @param ContainerInterface $container The container from which the actual decoders are retrieved
-     * @param array              $decoders  List of key (format) value (service ids) of decoders
+     * @param PsrContainerInterface $container The container from which the actual decoders are retrieved
+     * @param array                 $decoders  List of key (format) value (service ids) of decoders
      */
-    public function __construct(ContainerInterface $container, array $decoders)
+    public function __construct($container, array $decoders)
     {
+        if (!$container instanceof PsrContainerInterface && !$container instanceof ContainerInterface) {
+            throw new \InvalidArgumentException(sprintf('The container must be an instance of %s or %s (%s given).', PsrContainerInterface::class, ContainerInterface::class, is_object($container) ? get_class($container) : gettype($container)));
+        }
+
         $this->container = $container;
         $this->decoders = $decoders;
     }
