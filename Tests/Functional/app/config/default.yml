@@ -1,2 +1,6 @@
 imports:
     - { resource: framework.yml }
+
+services:
+    logger:
+        class: Psr\Log\NullLogger
