@@ -1,0 +1,779 @@
+---------------------------------------------------------------------------
+
+by GuilhemN at 2017-11-24T20:06:09Z
+
+What noise are you talking about ?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2017-11-25T09:03:12Z
+
+Even when tests pass, we get some logging output like this (that's related to symfony/symfony#24300):
+
+```
+$ vendor/bin/simple-phpunit
+PHPUnit 5.7.25 by Sebastian Bergmann and contributors.
+
+Testing FOSRestBundle test suite
+...............................................................  63 / 389 ( 16%)
+............................................................... 126 / 389 ( 32%)
+................................................2017-11-25T09:02:02+00:00 [info] Matched route "test_allowed_methods2".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.response" to listener "FOS\RestBundle\EventListener\AllowedMethodsListener::onKernelResponse".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:02+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+..2017-11-25T09:02:11+00:00 [info] Matched route "_profiler_search_results".
+2017-11-25T09:02:11+00:00 [info] Populated the TokenStorage with an anonymous Token.
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RouterDataCollector::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RequestDataCollector::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener::onKernelControllerArguments".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:11+00:00 [info] Matched route "_profiler_search_bar".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RouterDataCollector::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RequestDataCollector::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener::onKernelControllerArguments".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "FOS\RestBundle\EventListener\AllowedMethodsListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RequestDataCollector::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\Security\Http\RememberMe\ResponseListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\Security\Http\Firewall\ContextListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ProfilerListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "FOS\RestBundle\EventListener\AllowedMethodsListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Bundle\FrameworkBundle\DataCollector\RequestDataCollector::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\Security\Http\RememberMe\ResponseListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ProfilerListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Bundle\SecurityBundle\Debug\TraceableFirewallListener::onKernelFinishRequest".
+2017-11-25T09:02:11+00:00 [debug] Notified event "kernel.terminate" to listener "Symfony\Component\HttpKernel\EventListener\ProfilerListener::onKernelTerminate".
+..2017-11-25T09:02:15+00:00 [info] Matched route "test_serializer_error_exception".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [critical] Uncaught PHP Exception LogicException: "Something bad happened." at /Users/christian/projects/FOSRestBundle/Tests/Functional/Bundle/TestBundle/Controller/SerializerErrorController.php line 30
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.exception" to listener "FOS\RestBundle\EventListener\ExceptionListener::onKernelException".
+2017-11-25T09:02:15+00:00 [debug] Listener "FOS\RestBundle\EventListener\ExceptionListener::onKernelException" stopped propagation of the event "kernel.exception".
+2017-11-25T09:02:15+00:00 [debug] Listener "Symfony\Component\HttpKernel\EventListener\ExceptionListener::onKernelException" was not called for event "kernel.exception".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:15+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:19+00:00 [error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET /api/test"" at /Users/christian/projects/FOSRestBundle/vendor/symfony/symfony/src/Symfony/Component/HttpKernel/EventListener/RouterListener.php line 139
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.exception" to listener "FOS\RestBundle\EventListener\ExceptionListener::onKernelException".
+2017-11-25T09:02:19+00:00 [debug] Listener "FOS\RestBundle\EventListener\ExceptionListener::onKernelException" stopped propagation of the event "kernel.exception".
+2017-11-25T09:02:19+00:00 [debug] Listener "Symfony\Component\HttpKernel\EventListener\ExceptionListener::onKernelException" was not called for event "kernel.exception".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:19+00:00 [error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET /test"" at /Users/christian/projects/FOSRestBundle/vendor/symfony/symfony/src/Symfony/Component/HttpKernel/EventListener/RouterListener.php line 139
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\EventDispatcher\Debug\WrappedListener::__invoke".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.exception" to listener "FOS\RestBundle\EventListener\ExceptionListener::onKernelException".
+2017-11-25T09:02:19+00:00 [debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ExceptionListener::onKernelException".
+2017-11-25T09:02:19+00:00 [debug] Listener "Symfony\Component\HttpKernel\EventListener\ExceptionListener::onKernelException" stopped propagation of the event "kernel.exception".
+2017-11-25T09:02:20+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:20+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:20+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:20+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:20+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:20+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher_test".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher_file_test".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher_file_test".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher_file_collection_test".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher_image_collection_test".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+. 189 / 389 ( 48%)
+2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher_image_collection_test".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:23+00:00 [info] Matched route "test_param_fetcher".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "FOS\RestBundle\EventListener\ParamFetcherListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:23+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:27+00:00 [info] Matched route "request_body_param_converter".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:27+00:00 [info] Matched route "_twig_error_test".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:27+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:30+00:00 [info] Matched route "get_post".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:30+00:00 [info] Matched route "get_comment".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:30+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+............2017-11-25T09:02:34+00:00 [info] Matched route "version".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:34+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:34+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:34+00:00 [info] Matched route "test_version".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:34+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:34+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:34+00:00 [info] Matched route "test_version".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:34+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:34+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:34+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:35+00:00 [info] Matched route "test_version".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:35+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:35+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:35+00:00 [info] Matched route "test_version".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:35+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:35+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:35+00:00 [info] Matched route "test_version_path".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\MimeTypeListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\VersionListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:35+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:35+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:35+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:39+00:00 [info] Matched route "post_articles".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:39+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:39+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.2017-11-25T09:02:39+00:00 [info] Matched route "get_articles".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\FormatListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Bundle\FrameworkBundle\EventListener\ResolveControllerNameSubscriber::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.request" to listener "FOS\RestBundle\EventListener\BodyListener::onKernelRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelController".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.controller_arguments" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\IsGrantedListener::onKernelControllerArguments".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.view" to listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView".
+2017-11-25T09:02:39+00:00 [debug] Listener "FOS\RestBundle\EventListener\ViewResponseListener::onKernelView" stopped propagation of the event "kernel.view".
+2017-11-25T09:02:39+00:00 [debug] Listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::onKernelView" was not called for event "kernel.view".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Sensio\Bundle\FrameworkExtraBundle\EventListener\HttpCacheListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\TestSessionListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SaveSessionListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\StreamedResponseListener::onKernelResponse".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+2017-11-25T09:02:39+00:00 [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+...................................... 252 / 389 ( 64%)
+............................................................... 315 / 389 ( 80%)
+............................................................... 378 / 389 ( 97%)
+...........                                                     389 / 389 (100%)
+
+Time: 1.64 minutes, Memory: 44.00MB
+
+OK (389 tests, 1738 assertions)
+
+Legacy deprecation notices (6)
+```
+
+---------------------------------------------------------------------------
+
+by GuilhemN at 2017-11-25T11:49:59Z
+
+Oh ok, then LGTM :+1: :)
