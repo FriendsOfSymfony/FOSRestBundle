@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
+    <php>
+        <env name="SHELL_VERBOSITY" value="-1" />
+    </php>
+
     <testsuites>
         <testsuite name="FOSRestBundle test suite">
             <directory suffix="Test.php">./Tests</directory>
