@@ -64,7 +64,6 @@
         "jms/serializer-bundle": "^1.2|^2.0",
         "psr/http-message": "^1.0"
     },
-    "minimum-stability": "dev",
     "suggest": {
         "sensio/framework-extra-bundle": "Add support for route annotations and the view response listener, requires ^3.0",
         "jms/serializer-bundle": "Add support for advanced serialization capabilities, recommended, requires ^1.0",
