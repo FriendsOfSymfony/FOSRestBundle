@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2017-11-26T20:34:29Z
+
+requires symfony/symfony#25168 to work
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2017-11-27T13:03:57Z
+
+[This information](https://travis-ci.org/FriendsOfSymfony/FOSRestBundle/jobs/307877898#L577-L603) was lost previously.
