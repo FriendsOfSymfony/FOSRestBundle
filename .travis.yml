@@ -33,6 +33,8 @@ before_install:
   - if [ "$DEPENDENCIES" != "" ]; then composer config minimum-stability $DEPENDENCIES; fi
   - if [ "$SYMFONY_VERSION" != "" ]; then composer require --dev --no-update symfony/lts=$SYMFONY_VERSION; fi
 
-install: composer update $COMPOSER_FLAGS --prefer-dist
+install:
+  - composer update $COMPOSER_FLAGS --prefer-dist
+  - ./phpunit install
 
 script: ./phpunit
