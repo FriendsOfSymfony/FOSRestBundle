@@ -4,6 +4,8 @@ CHANGELOG
 2.3.0
 -----
 
+* added support for file paths to the directory route loader
+
 * added support for context factories when using JMS Serializer
 
 * the `RequestBodyParamConverter` ignores unrelated controller arguments to not conflict with Symfony's built-in
