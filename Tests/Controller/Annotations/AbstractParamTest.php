@@ -34,12 +34,12 @@ class AbstractParamTest extends TestCase
 
     public function testDefaultValues()
     {
-        $this->assertEquals(null, $this->param->name);
-        $this->assertEquals(null, $this->param->key);
-        $this->assertEquals(null, $this->param->default);
-        $this->assertEquals(null, $this->param->description);
-        $this->assertEquals(false, $this->param->strict);
-        $this->assertEquals(false, $this->param->nullable);
+        $this->assertNull($this->param->name);
+        $this->assertNull($this->param->key);
+        $this->assertNull($this->param->default);
+        $this->assertNull($this->param->description);
+        $this->assertFalse($this->param->strict);
+        $this->assertFalse($this->param->nullable);
         $this->assertEquals(array(), $this->param->incompatibles);
     }
 

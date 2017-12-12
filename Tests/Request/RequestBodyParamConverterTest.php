@@ -167,7 +167,7 @@ class RequestBodyParamConverterTest extends TestCase
         $request = $this->createRequest();
         $configuration = $this->createConfiguration(null, null, ['validate' => false]);
         $this->launchExecution($converter, $request, $configuration);
-        $this->assertEquals(null, $request->attributes->get('errors'));
+        $this->assertNull($request->attributes->get('errors'));
     }
 
     public function testReturn()
