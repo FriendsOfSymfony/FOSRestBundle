@@ -30,7 +30,7 @@ class ContextTest extends TestCase
     public function testDefaultValues()
     {
         $this->assertEquals([], $this->context->getAttributes());
-        $this->assertEquals(null, $this->context->getGroups());
+        $this->assertNull($this->context->getGroups());
     }
 
     public function testAttributes()
@@ -98,7 +98,7 @@ class ContextTest extends TestCase
     {
         $this->context->setSerializeNull(true);
 
-        $this->assertEquals(true, $this->context->getSerializeNull());
+        $this->assertTrue($this->context->getSerializeNull());
     }
 
     public function testExclusionStrategy()

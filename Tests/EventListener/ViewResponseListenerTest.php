@@ -142,7 +142,7 @@ class ViewResponseListenerTest extends TestCase
         $event->expects($this->never())
             ->method('setResponse');
 
-        $this->assertEquals(null, $this->listener->onKernelView($event));
+        $this->assertNull($this->listener->onKernelView($event));
     }
 
     public static function statusCodeProvider()

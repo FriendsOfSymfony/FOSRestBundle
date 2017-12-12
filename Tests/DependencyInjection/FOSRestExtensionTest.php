@@ -129,7 +129,7 @@ class FOSRestExtensionTest extends TestCase
         $this->assertCount(4, $bodyListener->getArguments());
         $this->assertInstanceOf(Reference::class, $normalizerArgument);
         $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
-        $this->assertEquals(false, $normalizeForms);
+        $this->assertFalse($normalizeForms);
     }
 
     public function testLoadBodyListenerWithNormalizerArrayAndForms()
@@ -151,7 +151,7 @@ class FOSRestExtensionTest extends TestCase
         $this->assertCount(4, $bodyListener->getArguments());
         $this->assertInstanceOf(Reference::class, $normalizerArgument);
         $this->assertEquals('fos_rest.normalizer.camel_keys', (string) $normalizerArgument);
-        $this->assertEquals(true, $normalizeForms);
+        $this->assertTrue($normalizeForms);
     }
 
     public function testDisableFormatListener()
@@ -588,7 +588,7 @@ class FOSRestExtensionTest extends TestCase
     {
         $arguments = $loader->getArguments();
 
-        $this->assertEquals(5, count($arguments));
+        $this->assertCount(5, $arguments);
         $this->assertEquals('service_container', (string) $arguments[0]);
         $this->assertEquals('file_locator', (string) $arguments[1]);
         $this->assertEquals('controller_name_converter', (string) $arguments[2]);
@@ -615,7 +615,7 @@ class FOSRestExtensionTest extends TestCase
         $processorRef = new Reference('fos_rest.routing.loader.processor');
         $arguments = $loader->getArguments();
 
-        $this->assertEquals(5, count($arguments));
+        $this->assertCount(5, $arguments);
         $this->assertEquals($locatorRef, $arguments[0]);
         $this->assertEquals($processorRef, $arguments[1]);
         $this->assertSame($includeFormat, $arguments[2]);

@@ -82,7 +82,7 @@ class ConfigurationTest extends TestCase
 
         $config = $this->processor->processConfiguration($this->configuration, [$config]);
 
-        self::assertTrue(isset($config['exception']['codes']));
+        self::assertArrayHasKey('codes', $config['exception']);
         self::assertSame($expectedResult, $config['exception']['codes'], 'Response constants were not converted');
     }
 

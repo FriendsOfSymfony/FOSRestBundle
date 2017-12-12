@@ -34,7 +34,7 @@ class AbstractScalarParamTest extends TestCase
 
     public function testDefaultValues()
     {
-        $this->assertEquals(null, $this->param->requirements);
+        $this->assertNull($this->param->requirements);
         $this->assertFalse($this->param->map);
         $this->assertTrue($this->param->allowBlank);
     }

@@ -138,7 +138,7 @@ class RestXmlCollectionLoaderTest extends LoaderTest
         $collection = $this->loadFromXmlCollectionFixture('routes_with_options_requirements_and_defaults.xml');
 
         foreach ($collection as $route) {
-            $this->assertTrue('true' === $route->getOption('expose'));
+            $this->assertSame('true', $route->getOption('expose'));
             $this->assertEquals('[a-z]+', $route->getRequirement('slug'));
             $this->assertEquals('home', $route->getDefault('slug'));
         }
