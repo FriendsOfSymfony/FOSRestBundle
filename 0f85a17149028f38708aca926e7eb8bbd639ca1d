@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by juliusstoerrle at 2017-11-28T21:24:41Z
+
+@xabbuh Thanks for looking into this. I just pulled your changes and my exceptions get serialized without any problem. I currently can not see any other issues, but I guess I'm using only a small subset off the features of the bundle.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2017-11-28T21:28:39Z
+
+@juliusstoerrle Thanks for confirming. I might have to sync your example project with the other pending changes in JMS Serializer again, but IIRC I still got some errors this weekend.
