@@ -28,10 +28,13 @@ class FileParam extends AbstractParam
 {
     /** @var bool */
     public $strict = true;
+
     /** @var mixed */
     public $requirements = null;
+
     /** @var bool */
     public $image = false;
+
     /** @var bool */
     public $map = false;
 

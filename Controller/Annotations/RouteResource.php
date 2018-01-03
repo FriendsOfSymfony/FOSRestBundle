@@ -23,6 +23,7 @@ class RouteResource
      * @var string required
      */
     public $resource;
+
     /**
      * @var bool
      */

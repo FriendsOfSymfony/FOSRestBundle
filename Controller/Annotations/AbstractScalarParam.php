@@ -25,8 +25,10 @@ abstract class AbstractScalarParam extends AbstractParam
 {
     /** @var mixed */
     public $requirements = null;
+
     /** @var bool */
     public $map = false;
+
     /** @var bool */
     public $allowBlank = true;
 

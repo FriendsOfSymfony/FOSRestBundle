@@ -24,26 +24,32 @@ final class Context
      * @var array
      */
     private $attributes = array();
+
     /**
      * @var int|null
      */
     private $version;
+
     /**
      * @var array|null
      */
     private $groups;
+
     /**
      * @var int
      */
     private $maxDepth;
+
     /**
      * @var bool
      */
     private $isMaxDepthEnabled;
+
     /**
      * @var bool
      */
     private $serializeNull;
+
     /**
      * @var ExclusionStrategyInterface[]
      */
