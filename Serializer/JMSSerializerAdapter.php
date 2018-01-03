@@ -30,6 +30,7 @@ class JMSSerializerAdapter implements Serializer
      * @internal
      */
     const SERIALIZATION = 0;
+
     /**
      * @internal
      */

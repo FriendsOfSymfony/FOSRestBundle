@@ -27,10 +27,12 @@ class VersionListenerTest extends TestCase
      * @var \FOS\RestBundle\View\ConfigurableViewHandlerInterface
      */
     private $viewHandler;
+
     /**
      * @var \FOS\RestBundle\Version\VersionResolverInterface
      */
     private $resolver;
+
     /**
      * @var VersionListener
      */

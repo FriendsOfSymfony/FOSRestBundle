@@ -24,16 +24,22 @@ abstract class AbstractParam implements ParamInterface
 {
     /** @var string */
     public $name;
+
     /** @var string */
     public $key;
+
     /** @var mixed */
     public $default;
+
     /** @var string */
     public $description;
+
     /** @var bool */
     public $strict = false;
+
     /** @var bool */
     public $nullable = false;
+
     /** @var array */
     public $incompatibles = array();
 
