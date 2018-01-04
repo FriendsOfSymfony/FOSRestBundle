@@ -1,5 +1,6 @@
 imports:
     - { resource: ../config/default.yml }
+    - { resource: security.php }
 
 framework:
     serializer:
@@ -24,14 +25,6 @@ fos_rest:
         rules:
             - { path: '^/', priorities: ['xml'], fallback_format: ~ }
     versioning: true
-
-security:
-    providers:
-        in_memory:
-            memory: ~
-    firewalls:
-        default:
-            anonymous: ~
 
 web_profiler:
     toolbar: true
