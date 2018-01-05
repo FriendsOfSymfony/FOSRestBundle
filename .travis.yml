@@ -24,7 +24,12 @@ matrix:
     # Symfony 3 LTS
     - php: 7.0
       env: SYMFONY_LTS='^3'
+    # Symfony 4
+    - php: 7.1
     # development dependencies
+    - php: 7.1
+      env: DEPENDENCIES='dev'
+  allow_failures:
     - php: 7.1
       env: DEPENDENCIES='dev'
 
