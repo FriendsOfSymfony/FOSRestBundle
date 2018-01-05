@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by XWB at 2018-01-05T11:31:35Z
+
+@xabbuh Any clue why the PHP 5.5 test fails?
+
+> 1) FOS\RestBundle\Tests\Functional\SerializerErrorTest::testSerializeExceptionJson with data set #1 ('JMSSerializer')
+Doctrine\Common\Annotations\AnnotationException: [Semantical Error] The annotation "@template" in class PhpCollection\AbstractMap was never imported. Did you maybe forget to add a "use" statement for this annotation?
+
+> 2) FOS\RestBundle\Tests\Functional\SerializerErrorTest::testSerializeExceptionXml with data set #1 ('JMSSerializer', '<?xml version="1.0" encoding=...sult>\n')
+Doctrine\Common\Annotations\AnnotationException: [Semantical Error] The annotation "@template" in class PhpCollection\AbstractMap was never imported. Did you maybe forget to add a "use" statement for this annotation?
+
+As far as I can see, `sensio/framework-extra-bundle` is installed.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2018-01-05T11:36:15Z
+
+@XWB Not yet, I started to investigate locally, but didn't come to a solution right now.
+
+---------------------------------------------------------------------------
+
+by XWB at 2018-01-05T14:16:08Z
+
+@xabbuh Current status:
+
+- [ ] PHP 5.5 test fails due to error above. No clue what's going on.
+- [x]  PHP 5.6 fixed by increasing memory limit.
+- [ ] Symfony LTS 2 tests hangs, reason unknown.
+- [x] Symfony LTS 3 fixed by increasing memory limit.
+- [x] Symfony 4 stable added.
+- [ ] Symfony dev test fails. I moved it to `allow_failes` until somebody else can fix it.
