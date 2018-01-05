@@ -23,7 +23,7 @@ matrix:
       env: SYMFONY_LTS='^2'
     # Symfony 3 LTS
     - php: 7.0
-      env: SYMFONY_LTS='^3' DEPENDENCIES='dev'
+      env: SYMFONY_LTS='^3'
     # development dependencies
     - php: 7.1
       env: DEPENDENCIES='dev'
