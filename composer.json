@@ -43,7 +43,8 @@
         "symfony/templating": "^2.7|^3.0|^4.0",
         "doctrine/inflector": "^1.0",
         "willdurand/negotiation": "^2.0",
-        "willdurand/jsonp-callback-validator": "^1.0"
+        "willdurand/jsonp-callback-validator": "^1.0",
+        "doctrine/common": "^2.2"
     },
     "require-dev": {
         "sensio/framework-extra-bundle": "^3.0.13|^4.0|^5.0",
