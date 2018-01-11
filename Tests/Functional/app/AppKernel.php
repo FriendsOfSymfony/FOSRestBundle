@@ -38,7 +38,9 @@ while ($dir !== $lastDir) {
     $dir = dirname($dir);
 }
 
+use Psr\Log\NullLogger;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -95,6 +97,9 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->rootConfig);
+        $loader->load(function (ContainerBuilder $container) {
+            $container->register('logger', NullLogger::class);
+        });
     }
 
     public function serialize()
