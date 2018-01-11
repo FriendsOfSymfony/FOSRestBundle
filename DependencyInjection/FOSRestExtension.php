@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -68,7 +69,11 @@ class FOSRestExtension extends Extension
             }
 
             if (null !== $service) {
-                $container->setAlias('fos_rest.'.$key, $service);
+                if ('view_handler' === $key) {
+                    $container->setAlias('fos_rest.'.$key, new Alias($service, true));
+                } else {
+                    $container->setAlias('fos_rest.'.$key, $service);
+                }
             }
         }
 
