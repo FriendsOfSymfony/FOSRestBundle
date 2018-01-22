@@ -29,6 +29,7 @@ matrix:
     # development dependencies
     - php: 7.1
       env: DEPENDENCIES='dev'
+    - php: 7.2
   allow_failures:
     - php: 7.1
       env: DEPENDENCIES='dev'
