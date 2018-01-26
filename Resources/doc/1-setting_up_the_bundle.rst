@@ -16,8 +16,11 @@ in the `installation chapter`_ of the Composer documentation.
 
 B) Enable the Bundle
 --------------------
+Then, enable the bundle.
 
-Then, enable the bundle by adding the following line in the ``app/AppKernel.php``
+Symfony < 4.0
+~~~~~~~~~~~~~
+By adding the following line in the ``app/AppKernel.php``
 file of your project:
 
 .. code-block:: php
@@ -36,6 +39,20 @@ file of your project:
         }
     }
 
+Symfony >= 4.0
+~~~~~~~~~~~~~
+By adding the following line in the ``config/bundles.php``
+file of your project:
+
+.. code-block:: php
+
+    // config/bundles.php
+    return [
+        FOS\RestBundle\FOSRestBundle::class => ['all' => true],
+        
+        // ...
+    ];
+    
 C) Enable a Serializer
 ----------------------
 
