@@ -29,9 +29,6 @@ matrix:
     # development dependencies
     - php: 7.1
       env: DEPENDENCIES='dev'
-  allow_failures:
-    - php: 7.1
-      env: DEPENDENCIES='dev'
 
 before_install:
   - echo "memory_limit=4G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
