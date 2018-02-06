@@ -383,7 +383,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->arrayNode('guessing_order')
-                        ->defaultValue(['query', 'custom_header', 'media_type'])
+                        ->defaultValue(['query', 'custom_header', 'media_type', 'guessing_order'])
                         ->validate()
                             ->ifTrue(function ($v) {
                                 foreach ($v as $resolver) {
