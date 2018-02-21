@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -42,20 +41,20 @@ class TwigExceptionController extends TemplatingExceptionController
         $format = $request->getRequestFormat();
 
         $name = $showException ? 'exception' : 'error';
-        if ($showException && 'html' === $format) {
+        if ($showException && 'html' == $format) {
             $name = 'exception_full';
         }
 
-        // when not in debug, try to find a template for the specific HTTP status code and format
+        // For error pages, try to find a template for the specific HTTP status code and format
         if (!$showException) {
-            $template = new TemplateReference('TwigBundle', 'Exception', $name.$statusCode, $format, 'twig');
+            $template = sprintf('@Twig/Exception/%s%s.%s.twig', $name, $statusCode, $format);
             if ($this->templating->exists($template)) {
                 return $template;
             }
         }
 
         // try to find a template for the given format
-        $template = new TemplateReference('TwigBundle', 'Exception', $name, $format, 'twig');
+        $template = sprintf('@Twig/Exception/%s.%s.twig', $name, $format);
         if ($this->templating->exists($template)) {
             return $template;
         }
@@ -63,6 +62,6 @@ class TwigExceptionController extends TemplatingExceptionController
         // default to a generic HTML exception
         $request->setRequestFormat('html');
 
-        return new TemplateReference('TwigBundle', 'Exception', $showException ? 'exception_full' : $name, 'html', 'twig');
+        return sprintf('@Twig/Exception/%s.html.twig', $showException ? 'exception_full' : $name);
     }
 }
