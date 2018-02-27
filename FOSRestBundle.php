@@ -12,6 +12,7 @@
 namespace FOS\RestBundle;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+use FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\JMSFormErrorHandlerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\JMSHandlersPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
@@ -40,5 +41,6 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new TwigExceptionPass());
         $container->addCompilerPass(new JMSFormErrorHandlerPass());
         $container->addCompilerPass(new JMSHandlersPass(), PassConfig::TYPE_BEFORE_REMOVING, -10);
+        $container->addCompilerPass(new HandlerRegistryDecorationPass(), PassConfig::TYPE_AFTER_REMOVING);
     }
 }

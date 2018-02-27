@@ -11,8 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -28,7 +27,8 @@ final class JMSHandlersPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if ($container->has('jms_serializer.handler_registry')) {
-            $this->registerHandlerRegistry($container);
+            // the public alias prevents the handler registry definition from being removed
+            $container->setAlias('fos_rest.serializer.jms_handler_registry', new Alias('jms_serializer.handler_registry', true));
 
             return;
         }
@@ -36,20 +36,5 @@ final class JMSHandlersPass implements CompilerPassInterface
         $container->removeDefinition('fos_rest.serializer.handler_registry');
         $container->removeDefinition('fos_rest.serializer.exception_normalizer.jms');
         $container->getParameterBag()->remove('jms_serializer.form_error_handler.class');
-    }
-
-    /**
-     * Inlined because {@link JMS\SerializerBundle\DependencyInjection\Compiler\CustomHandlersPass}
-     * must be executed before replacing jms_serializer.handler_registry.
-     */
-    public function registerHandlerRegistry(ContainerBuilder $container)
-    {
-        $handlerRegistry = new Definition('FOS\RestBundle\Serializer\JMSHandlerRegistry', array(new Reference('fos_rest.serializer.jms_handler_registry')));
-
-        $oldRegistry = $container->getDefinition('jms_serializer.handler_registry');
-        $oldRegistry->setPublic(false);
-
-        $container->setDefinition('jms_serializer.handler_registry', $handlerRegistry);
-        $container->setDefinition('fos_rest.serializer.jms_handler_registry', $oldRegistry);
     }
 }
