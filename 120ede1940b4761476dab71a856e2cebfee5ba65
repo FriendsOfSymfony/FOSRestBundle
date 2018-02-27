@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by XWB at 2018-02-27T09:56:07Z
+
+Nice find @xabbuh
+
+Just one more test needs to be resolved:
+
+> FOS\RestBundle\Tests\Functional\DependencyInjectionTest::testSerializerRelatedServicesAreNotRemovedWhenJmsSerializerBundleIsEnabled
+Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException: The "test.jms_serializer.handler_registry" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2018-02-27T12:38:26Z
+
+@XWB here we go 🎉
+
+---------------------------------------------------------------------------
+
+by XWB at 2018-02-27T12:48:13Z
+
+All green :tada:
