@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-2.x.x
+2.3.1
 -----
 
 * improved Symfony 4 compatibility
