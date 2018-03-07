@@ -27,9 +27,10 @@ final class JMSFormErrorHandlerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        // Only overwrite if no custom class is configured
-        if (JMSFormErrorHandler::class === $container->getParameter('jms_serializer.form_error_handler.class')) {
-            $container->setParameter('jms_serializer.form_error_handler.class', FormErrorHandler::class);
+        // Only overwrite if default class is set
+        $parameter = 'jms_serializer.form_error_handler.class';
+        if ($container->hasParameter($parameter) && JMSFormErrorHandler::class === $container->getParameter($parameter)) {
+            $container->setParameter($parameter, FormErrorHandler::class);
         }
     }
 }
