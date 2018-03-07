@@ -17,7 +17,7 @@ use FOS\RestBundle\Serializer\Normalizer\FormErrorHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class JmsFormErrorHandlerPassTest extends TestCase
+class JMSFormErrorHandlerPassTest extends TestCase
 {
     private $param = 'jms_serializer.form_error_handler.class';
 
