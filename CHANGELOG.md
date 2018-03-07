@@ -1,6 +1,23 @@
 CHANGELOG
 =========
 
+2.3.1
+-----
+
+* improved Symfony 4 compatibility
+
+* manually decorate the core JMS handler registry
+
+* run checks after SensioFrameworkExtraBundle
+
+* made the view handler alias public
+
+* check for definitions before they might be removed
+
+* added Yaml routing resource support
+
+* refactored several unit tests
+
 2.3.0
 -----
 
