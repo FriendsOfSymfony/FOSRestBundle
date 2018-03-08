@@ -29,7 +29,7 @@ class DependencyInjectionTest extends KernelTestCase
         self::bootKernel();
         $container = self::$kernel->getContainer();
 
-        $this->assertSame(FormErrorHandler::class, $container->getParameter('jms_serializer.form_error_handler.class'));
+        $this->assertInstanceOf(FormErrorHandler::class, $container->get('jms_serializer.form_error_handler'));
         $this->assertInstanceOf(JMSHandlerRegistry::class, $container->get('test.jms_serializer.handler_registry'));
     }
 
