@@ -42,7 +42,7 @@ class HandlerRegistryDecorationPass implements CompilerPassInterface
             ->setPublic($public)
             ->addArgument(new Reference('fos_rest.serializer.jms_handler_registry.inner'));
 
-        // remap existing aliases (they have already been replaced with the actual definition by Symfony's ReplaceAliasByActualDefinitonPass)
+        // remap existing aliases (they have already been replaced with the actual definition by Symfony's ReplaceAliasByActualDefinitionPass)
         foreach ($container->getDefinitions() as $id => $definition) {
             if ('fos_rest.serializer.jms_handler_registry.inner' !== $id && $definition === $jmsHandlerRegistry) {
                 $container->setDefinition($id, $fosRestHandlerRegistry);
