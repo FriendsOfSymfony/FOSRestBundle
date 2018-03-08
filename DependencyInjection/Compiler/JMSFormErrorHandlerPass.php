@@ -11,9 +11,10 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
+use FOS\RestBundle\Serializer\Normalizer\FormErrorHandler;
+use JMS\Serializer\Handler\FormErrorHandler as JMSFormErrorHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use FOS\RestBundle\Serializer\Normalizer\FormErrorHandler;
 
 /**
  * Changes the JMS FormError handler.
@@ -26,6 +27,10 @@ final class JMSFormErrorHandlerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $container->setParameter('jms_serializer.form_error_handler.class', FormErrorHandler::class);
+        // Only overwrite if default class is set
+        $parameter = 'jms_serializer.form_error_handler.class';
+        if ($container->hasParameter($parameter) && JMSFormErrorHandler::class === $container->getParameter($parameter)) {
+            $container->setParameter($parameter, FormErrorHandler::class);
+        }
     }
 }
