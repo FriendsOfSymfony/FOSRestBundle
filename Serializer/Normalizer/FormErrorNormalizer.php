@@ -23,9 +23,12 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class FormErrorNormalizer implements NormalizerInterface
 {
+    /**
+     * @var TranslatorInterface|null
+     */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator = null)
     {
         $this->translator = $translator;
     }
@@ -81,6 +84,9 @@ class FormErrorNormalizer implements NormalizerInterface
 
     private function getErrorMessage(FormError $error)
     {
+        if (null === $this->translator) {
+            return $error->getMessage();
+        }
         if (null !== $error->getMessagePluralization()) {
             return $this->translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters(), 'validators');
         }
