@@ -25,7 +25,7 @@ class RoutingTest extends WebTestCase
         $this->client->request('GET', '/posts/1');
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertJsonStringEqualsJsonString('{ "id": 1 }', $this->client->getResponse()->getContent());
+        $this->assertJsonStringEqualsJsonString(json_encode(['id' => 1]), $this->client->getResponse()->getContent());
     }
 
     public function testCommentControllerRoutesAreRegistered()
@@ -33,6 +33,6 @@ class RoutingTest extends WebTestCase
         $this->client->request('GET', '/comments/3');
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertJsonStringEqualsJsonString('{ "id": 3 }', $this->client->getResponse()->getContent());
+        $this->assertJsonStringEqualsJsonString(json_encode(['id' => 3]), $this->client->getResponse()->getContent());
     }
 }

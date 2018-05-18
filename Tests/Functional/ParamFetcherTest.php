@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ParamFetcherTest extends WebTestCase
 {
+    private $client;
+
     private $validRaw = [
         'foo' => 'raw',
         'bar' => 'foo',
@@ -169,13 +171,11 @@ class ParamFetcherTest extends WebTestCase
         $this->client->request('POST', '/params?foz=val1');
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @expectedExceptionMessage 'baz' param is incompatible with foz param.
-     */
     public function testIncompatibleQueryParameter()
     {
         $this->client->request('POST', '/params?foz=val1&baz=val2');
+
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
     protected function getData()
