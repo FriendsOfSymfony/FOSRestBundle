@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Serializer\Normalizer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Normalizes invalid Form instances.
@@ -23,13 +22,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class FormErrorNormalizer implements NormalizerInterface
 {
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -58,7 +50,7 @@ class FormErrorNormalizer implements NormalizerInterface
         $form = $errors = [];
 
         foreach ($data->getErrors() as $error) {
-            $errors[] = $this->getErrorMessage($error);
+            $errors[] = $error->getMessage();
         }
 
         if ($errors) {
@@ -77,14 +69,5 @@ class FormErrorNormalizer implements NormalizerInterface
         }
 
         return $form;
-    }
-
-    private function getErrorMessage(FormError $error)
-    {
-        if (null !== $error->getMessagePluralization()) {
-            return $this->translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters(), 'validators');
-        }
-
-        return $this->translator->trans($error->getMessageTemplate(), $error->getMessageParameters(), 'validators');
     }
 }
