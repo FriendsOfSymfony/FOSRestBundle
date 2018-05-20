@@ -9,8 +9,8 @@ agnostic controllers, by placing a layer between the Controller and the
 generation of the final output via the templating or a serializer.
 
 To do so, you first need to create a ``View`` instance in your controller
-action. The ``View`` object is a simple data holder that describes the response
-so it must then be processed by the ``ViewHandler`` that transforms it into a
+action. The ``View`` object is a simple data holder that describes the response.
+So it must then be processed by the ``ViewHandler`` that transforms it into a
 proper ``Response`` object.
 
 By default, you have to manually call the ``ViewHandler`` to transform your
@@ -84,7 +84,7 @@ Enjoy being able to just return a ``View`` instance::
         ;
     }
 
-.. note::
+.. caution::
 
     The other examples assume you use the ``ViewResponseListener``.
 
