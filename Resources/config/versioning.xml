@@ -27,5 +27,9 @@
         <service id="fos_rest.versioning.query_parameter_resolver" class="FOS\RestBundle\Version\Resolver\QueryParameterVersionResolver" public="false">
             <argument /> <!-- request parameter name -->
         </service>
+
+        <service id="fos_rest.versioning.url_resolver" class="FOS\RestBundle\Version\Resolver\UrlVersionResolver" public="false">
+            <argument /> <!-- request parameter name -->
+        </service>
     </services>
 </container>
