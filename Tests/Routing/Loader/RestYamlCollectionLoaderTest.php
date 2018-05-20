@@ -216,9 +216,8 @@ class RestYamlCollectionLoaderTest extends LoaderTest
 
         $route = $collection->get('get_users');
 
-        // We check that it's "controller:method" (controller as service) and not "controller::method"
         $this->assertEquals(
-            'FOS\RestBundle\Tests\Fixtures\Controller\UsersController:getUsersAction',
+            'FOS\RestBundle\Tests\Fixtures\Controller\UsersController::getUsersAction',
             $route->getDefault('_controller')
         );
 
