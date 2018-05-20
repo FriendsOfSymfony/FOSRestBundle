@@ -30,7 +30,7 @@ Installation
 
 Before using this bundle in your project, add it to your composer.json file:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ composer require friendsofsymfony/rest-bundle
 
@@ -50,12 +50,12 @@ Then, like for any other bundle, include it in your Kernel class::
 At last, make sure you have a serializer enabled. The bundle will look at these
 three possibilities **in this order** to decide which serializer to use:
 
-#. The service ``fos_rest.service.serializer`` if it is configured (must be an
-instance of ``FOS\RestBundle\Serializer``).
-#. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
-#. The `Symfony Serializer`_
+   #. The service ``fos_rest.service.serializer`` if it is configured (must be an
+      instance of ``FOS\RestBundle\Serializer``).
+   #. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
+   #. The `Symfony Serializer`_
 
-.. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
+.. _`JMSSerializerBundle`: http://jmsyst.com/bundles/JMSSerializerBundle
 .. _`Symfony Serializer`: http://symfony.com/doc/current/cookbook/serializer.html
 
 Bundle usage
