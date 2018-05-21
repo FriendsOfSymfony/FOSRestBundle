@@ -89,6 +89,7 @@ class FOSRestExtension extends Extension
         $this->loadAllowedMethodsListener($config, $loader, $container);
         $this->loadAccessDeniedListener($config, $loader, $container);
         $this->loadZoneMatcherListener($config, $loader, $container);
+        $this->loadResolveControllerName($config, $loader, $container);
 
         // Needs RequestBodyParamConverter and View Handler loaded.
         $this->loadSerializer($config, $container);
@@ -428,5 +429,17 @@ class FOSRestExtension extends Extension
         ;
 
         return new Reference($id);
+    }
+
+    private function loadResolveControllerName(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    {
+        if ($config['resolve_controller_name_listener']['enabled']) {
+            $loader->load('resolve_controller_name_listener.xml');
+
+            if (!empty($config['resolve_controller_name_listener']['service'])) {
+                $listener = $container->getDefinition('fos_rest.resolve_controller_name_listener');
+                $listener->clearTag('kernel.event_listener');
+            }
+        }
     }
 }

@@ -168,6 +168,7 @@ final class Configuration implements ConfigurationInterface
         $this->addBodyListenerSection($rootNode);
         $this->addFormatListenerSection($rootNode);
         $this->addVersioningSection($rootNode);
+        $this->addResolveControllerNameSection($rootNode);
 
         return $treeBuilder;
     }
@@ -462,6 +463,20 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+    }
+
+    private function addResolveControllerNameSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('resolve_controller_name_listener')
+                ->canBeEnabled()
+                ->children()
+                    ->booleanNode('enabled')->defaultFalse()->end()
+                    ->scalarNode('service')->defaultNull()->end()
+                ->end()
+            ->end()
+        ;
     }
 
     /**
