@@ -11,14 +11,13 @@
 
 namespace FOS\RestBundle\Serializer\Normalizer;
 
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Normalizes invalid Form instances.
  *
- * @author Ener-Getick <egetick@gmail.com>
+ * @author Guilhem N. <guilhem.niot@gmail.com>
  */
 class FormErrorNormalizer implements NormalizerInterface
 {
