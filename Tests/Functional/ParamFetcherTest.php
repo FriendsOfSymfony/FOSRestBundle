@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Functional;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
@@ -169,13 +170,18 @@ class ParamFetcherTest extends WebTestCase
         $this->client->request('POST', '/params?foz=val1');
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @expectedExceptionMessage 'baz' param is incompatible with foz param.
-     */
     public function testIncompatibleQueryParameter()
     {
-        $this->client->request('POST', '/params?foz=val1&baz=val2');
+        try {
+            $this->client->request('POST', '/params?foz=val1&baz=val2');
+
+            // SF >= 3.0
+            $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+            $this->assertContains("'baz' param is incompatible with foz param.", $this->client->getResponse()->getContent());
+        } catch (BadRequestHttpException $e) {
+            // SF 2.x
+            $this->assertEquals("'baz' param is incompatible with foz param.", $e->getMessage());
+        }
     }
 
     protected function getData()
