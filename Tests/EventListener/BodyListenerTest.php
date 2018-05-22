@@ -283,19 +283,21 @@ class BodyListenerTest extends TestCase
 
     /**
      * Test that a malformed request will cause a BadRequestHttpException to be thrown.
+     *
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      */
     public function testBadRequestExceptionOnMalformedContent()
     {
-        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
         $this->testOnKernelRequest(true, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/json');
     }
 
     /**
      * Test that a unallowed format will cause a UnsupportedMediaTypeHttpException to be thrown.
+     *
+     * @expectedException \Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException
      */
     public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
     {
-        $this->setExpectedException('\Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException');
         $this->testOnKernelRequest(false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/foo', true);
     }
 
