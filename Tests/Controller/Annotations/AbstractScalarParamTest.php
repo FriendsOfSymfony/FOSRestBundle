@@ -46,6 +46,9 @@ class AbstractScalarParamTest extends TestCase
         ), $this->param->getConstraints());
     }
 
+    /**
+     * @group legacy
+     */
     public function testComplexRequirements()
     {
         $this->param->requirements = $requirement = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
@@ -68,6 +71,9 @@ class AbstractScalarParamTest extends TestCase
         ), $this->param->getConstraints());
     }
 
+    /**
+     * @group legacy
+     */
     public function testScalarRequirements()
     {
         $this->param->name = 'bar';
@@ -81,6 +87,9 @@ class AbstractScalarParamTest extends TestCase
         ), $this->param->getConstraints());
     }
 
+    /**
+     * @group legacy
+     */
     public function testArrayRequirements()
     {
         $this->param->requirements = array(
