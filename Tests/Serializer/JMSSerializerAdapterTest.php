@@ -19,7 +19,6 @@ use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use PhpCollection\MapInterface;
 use PHPUnit\Framework\TestCase;
 
 class JMSSerializerAdapterTest extends TestCase

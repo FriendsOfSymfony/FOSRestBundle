@@ -40,9 +40,7 @@ class FormErrorHandler implements SubscribingHandlerInterface
     public function serializeFormToXml(XmlSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
     {
         if ($context) {
-
             if ($context->hasAttribute('status_code')) {
-
                 $document = $visitor->getDocument(true);
                 if (!$visitor->getCurrentNode()) {
                     $visitor->createRoot();
@@ -86,7 +84,7 @@ class FormErrorHandler implements SubscribingHandlerInterface
 
     public function serializeFormToYml(YamlSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
     {
-        $isRoot = null === $visitor->getRoot() ;
+        $isRoot = null === $visitor->getRoot();
         $result = $this->adaptFormArray($this->formErrorHandler->serializeFormToYml($visitor, $form, $type), $context);
 
         if ($isRoot) {
