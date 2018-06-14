@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Serializer\Normalizer;
 
 use JMS\Serializer\Context;
-use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\XmlSerializationVisitor;
@@ -26,13 +26,13 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
     {
         return [
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'json',
                 'type' => \Exception::class,
                 'method' => 'serializeToJson',
             ],
             [
-                'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'xml',
                 'type' => \Exception::class,
                 'method' => 'serializeToXml',
@@ -73,12 +73,14 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
     ) {
         $data = $this->convertToArray($exception, $context);
 
-        if (null === $visitor->document) {
-            $visitor->document = $visitor->createDocument(null, null, true);
+        $document = $visitor->getDocument(true);
+
+        if (!$visitor->getCurrentNode()) {
+            $visitor->createRoot();
         }
 
         foreach ($data as $key => $value) {
-            $entryNode = $visitor->document->createElement($key);
+            $entryNode = $document->createElement($key);
             $visitor->getCurrentNode()->appendChild($entryNode);
             $visitor->setCurrentNode($entryNode);
 
@@ -101,9 +103,8 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
     {
         $data = [];
 
-        $templateData = $context->attributes->get('template_data');
-        if ($templateData->isDefined()) {
-            $templateData = $templateData->get();
+        if ($context->hasAttribute('template_data')) {
+            $templateData = $context->getAttribute('template_data');
             if (array_key_exists('status_code', $templateData)) {
                 $data['code'] = $statusCode = $templateData['status_code'];
             }

@@ -15,6 +15,7 @@ use JMS\Serializer\Context;
 use JMS\Serializer\Handler\FormErrorHandler as JMSFormErrorHandler;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use JMS\Serializer\XmlSerializationVisitor;
 use Symfony\Component\Form\Form;
 use JMS\Serializer\YamlSerializationVisitor;
@@ -39,27 +40,32 @@ class FormErrorHandler implements SubscribingHandlerInterface
     public function serializeFormToXml(XmlSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
     {
         if ($context) {
-            $statusCode = $context->attributes->get('status_code');
-            if ($statusCode->isDefined()) {
-                if (null === $visitor->document) {
-                    $visitor->document = $visitor->createDocument(null, null, true);
+
+            if ($context->hasAttribute('status_code')) {
+
+                $document = $visitor->getDocument(true);
+                if (!$visitor->getCurrentNode()) {
+                    $visitor->createRoot();
                 }
 
-                $codeNode = $visitor->document->createElement('code');
+                $codeNode = $document->createElement('code');
                 $visitor->getCurrentNode()->appendChild($codeNode);
-                $codeNode->appendChild($context->getNavigator()->accept($statusCode->get(), null, $context));
+                $codeNode->appendChild($context->getNavigator()->accept($context->getAttribute('status_code'), null, $context));
 
-                $messageNode = $visitor->document->createElement('message');
+                $messageNode = $document->createElement('message');
                 $visitor->getCurrentNode()->appendChild($messageNode);
                 $messageNode->appendChild($context->getNavigator()->accept('Validation Failed', null, $context));
 
-                $errorsNode = $visitor->document->createElement('errors');
+                $errorsNode = $document->createElement('errors');
                 $visitor->getCurrentNode()->appendChild($errorsNode);
                 $visitor->setCurrentNode($errorsNode);
-                $this->formErrorHandler->serializeFormToXml($visitor, $form, $type);
+
+                $errorNodes = $this->formErrorHandler->serializeFormToXml($visitor, $form, $type);
+                $errorsNode->appendChild($errorNodes);
+
                 $visitor->revertCurrentNode();
 
-                return;
+                return $visitor->getCurrentNode();
             }
         }
 
@@ -68,7 +74,7 @@ class FormErrorHandler implements SubscribingHandlerInterface
 
     public function serializeFormToJson(JsonSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
     {
-        $isRoot = null === $visitor->getRoot();
+        $isRoot = !interface_exists(SerializationVisitorInterface::class) && null === $visitor->getRoot();
         $result = $this->adaptFormArray($this->formErrorHandler->serializeFormToJson($visitor, $form, $type), $context);
 
         if ($isRoot) {
@@ -80,7 +86,7 @@ class FormErrorHandler implements SubscribingHandlerInterface
 
     public function serializeFormToYml(YamlSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
     {
-        $isRoot = null === $visitor->getRoot();
+        $isRoot = null === $visitor->getRoot() ;
         $result = $this->adaptFormArray($this->formErrorHandler->serializeFormToYml($visitor, $form, $type), $context);
 
         if ($isRoot) {
@@ -115,9 +121,8 @@ class FormErrorHandler implements SubscribingHandlerInterface
             return;
         }
 
-        $statusCode = $context->attributes->get('status_code');
-        if ($statusCode->isDefined()) {
-            return $statusCode->get();
+        if ($context->hasAttribute('status_code')) {
+            return $context->getAttribute('status_code');
         }
     }
 }
