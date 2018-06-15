@@ -17,6 +17,6 @@ class CommentController
 {
     public function getCommentAction($id)
     {
-        return new JsonResponse(array('id' => $id));
+        return new JsonResponse(array('id' => (int) $id));
     }
 }
