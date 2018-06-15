@@ -28,6 +28,23 @@ class ParamFetcherTest extends WebTestCase
         'foobar' => 'foo',
     ];
 
+    private function createUploadedFile($path, $originalName, $mimeType = null, $error = null, $test = false)
+    {
+        $ref = new \ReflectionClass('Symfony\Component\HttpFoundation\File\UploadedFile');
+        $params = $ref->getConstructor()->getParameters();
+
+        if ('error' === $params[3]->getName()) {
+            // symfony 4 has removed the $size param
+            return new UploadedFile(
+                $path, $originalName, $mimeType, $error, $test
+            );
+        } else {
+            return new UploadedFile(
+                $path, $originalName, $mimeType, filesize($path), $error, $test
+            );
+        }
+    }
+
     public function setUp()
     {
         $this->client = $this->createClient(['test_case' => 'ParamFetcher']);
@@ -68,13 +85,28 @@ class ParamFetcherTest extends WebTestCase
         ), $this->getData());
     }
 
-    public function testFileParam()
+    public function testFileParamWithErrors()
     {
-        $image = new UploadedFile(
+        $image = $this->createUploadedFile(
             'Tests/Fixtures/Asset/cat.jpeg',
             $singleFileName = 'cat.jpeg',
             'image/jpeg',
-            123
+            7
+        );
+
+        $this->client->request('POST', '/file/test', array(), array('single_file' => $image));
+
+        $this->assertEquals(array(
+            'single_file' => 'noFile',
+        ), $this->getData());
+    }
+
+    public function testFileParam()
+    {
+        $image = $this->createUploadedFile(
+            'Tests/Fixtures/Asset/cat.jpeg',
+            $singleFileName = 'cat.jpeg',
+            'image/jpeg'
         );
 
         $this->client->request('POST', '/file/test', array(), array('single_file' => $image));
@@ -96,17 +128,15 @@ class ParamFetcherTest extends WebTestCase
     public function testFileParamArrayNullItem()
     {
         $images = [
-            new UploadedFile(
+            $this->createUploadedFile(
                 'Tests/Fixtures/Asset/cat.jpeg',
                 $imageName = 'cat.jpeg',
-                'image/jpeg',
-                1234
+                'image/jpeg'
             ),
-            new UploadedFile(
+            $this->createUploadedFile(
                 'Tests/Fixtures/Asset/bar.txt',
                 $txtName = 'bar.txt',
-                'text/plain',
-                123
+                'text/plain'
             ),
         ];
 
@@ -120,17 +150,15 @@ class ParamFetcherTest extends WebTestCase
     public function testFileParamImageConstraintArray()
     {
         $images = [
-            new UploadedFile(
+            $this->createUploadedFile(
                 'Tests/Fixtures/Asset/cat.jpeg',
                 $imageName = 'cat.jpeg',
-                'image/jpeg',
-                12345
+                'image/jpeg'
             ),
-            new UploadedFile(
+            $this->createUploadedFile(
                 'Tests/Fixtures/Asset/cat.jpeg',
                 $imageName2 = 'cat.jpeg',
-                'image/jpeg',
-                1234
+                'image/jpeg'
             ),
         ];
 
@@ -144,17 +172,15 @@ class ParamFetcherTest extends WebTestCase
     public function testFileParamImageConstraintArrayException()
     {
         $images = [
-            new UploadedFile(
+            $this->createUploadedFile(
                 'Tests/Fixtures/Asset/cat.jpeg',
                 $imageName = 'cat.jpeg',
-                'image/jpeg',
-                12345
+                'image/jpeg'
             ),
-            new UploadedFile(
+            $this->createUploadedFile(
                 'Tests/Fixtures/Asset/bar.txt',
                 $file = 'bar.txt',
-                'plain/text',
-                1234
+                'plain/text'
             ),
         ];
 
