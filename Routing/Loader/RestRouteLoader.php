@@ -115,7 +115,6 @@ class RestRouteLoader extends Loader
             $controller = $controllerClass;
         }
 
-        
         if ($this->container->has($controller)) {
             // service_id
             $prefix = $controller.':';
