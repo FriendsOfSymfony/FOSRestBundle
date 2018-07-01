@@ -115,10 +115,16 @@ class RestRouteLoader extends Loader
             $controller = $controllerClass;
         }
 
-        // sf < 4.1 support
-        if (!method_exists(Kernel::class, 'getAnnotatedClassesToCompile') && $this->container->has($controller)) {
+        
+        if ($this->container->has($controller)) {
             // service_id
             $prefix = $controller.':';
+
+             // sf > 4.1 support
+            if (!method_exists(Kernel::class, 'getAnnotatedClassesToCompile')) {
+                $prefix .= ':';
+            }
+
             $useScope = method_exists($this->container, 'enterScope') && $this->container->hasScope('request');
             if ($useScope) {
                 $this->container->enterScope('request');
