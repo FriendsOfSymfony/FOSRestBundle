@@ -121,7 +121,7 @@ class RestRouteLoader extends Loader
             $prefix = $controller.':';
 
              // sf > 4.1 support
-            if (!method_exists(Kernel::class, 'getAnnotatedClassesToCompile')) {
+            if (method_exists(Kernel::class, 'getAnnotatedClassesToCompile')) {
                 $prefix .= ':';
             }
 
