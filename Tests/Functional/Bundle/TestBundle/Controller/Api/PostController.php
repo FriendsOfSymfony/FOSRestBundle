@@ -17,6 +17,6 @@ class PostController
 {
     public function getPostAction($id)
     {
-        return new JsonResponse(array('id' => $id));
+        return new JsonResponse(array('id' => (int) $id));
     }
 }
