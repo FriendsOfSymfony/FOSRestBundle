@@ -132,3 +132,5 @@ Full default configuration
                 - query
                 - custom_header
                 - media_type
+        zone:
+            - { path: ^/api/* }
