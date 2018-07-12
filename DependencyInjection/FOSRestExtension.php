@@ -21,8 +21,9 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\Kernel;
 
 class FOSRestExtension extends Extension
 {
@@ -349,6 +350,11 @@ class FOSRestExtension extends Extension
                 $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $config['exception']['exception_controller']);
             } elseif (isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
                 $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
+            }
+
+            // rewrite default exception controller definition for Symfony >= 4.1; can come from above or from the xml file
+            if (Kernel::VERSION_ID >= 40100 && preg_match('/^fos_rest\.exception\.(twig_)*controller:showAction$/', $container->getDefinition('fos_rest.exception_listener')->getArgument(0), $matches) > 0) {
+                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, sprintf('fos_rest.exception.%scontroller::showAction', isset($matches[1]) ? $matches[1] : ''));
             }
 
             $container->getDefinition('fos_rest.exception.codes_map')
