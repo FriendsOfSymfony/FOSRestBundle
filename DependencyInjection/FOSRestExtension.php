@@ -346,16 +346,23 @@ class FOSRestExtension extends Extension
                 $service->clearTag('kernel.event_subscriber');
             }
 
-            if ($config['exception']['exception_controller']) {
-                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $config['exception']['exception_controller']);
-            } elseif (isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
-                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
+            if (Kernel::VERSION_ID >= 40100) {
+                $controller = 'fos_rest.exception.controller::showAction';
+            } else {
+                $controller = 'fos_rest.exception.controller:showAction';
             }
 
-            // rewrite default exception controller definition for Symfony >= 4.1; can come from above or from the xml file
-            if (Kernel::VERSION_ID >= 40100 && preg_match('/^fos_rest\.exception\.(twig_)*controller:showAction$/', $container->getDefinition('fos_rest.exception_listener')->getArgument(0), $matches) > 0) {
-                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, sprintf('fos_rest.exception.%scontroller::showAction', isset($matches[1]) ? $matches[1] : ''));
+            if ($config['exception']['exception_controller']) {
+                $controller = $config['exception']['exception_controller'];
+            } elseif (isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
+                if (Kernel::VERSION_ID >= 40100) {
+                    $controller = 'fos_rest.exception.twig_controller::showAction';
+                } else {
+                    $controller = 'fos_rest.exception.twig_controller:showAction';
+                }
             }
+
+            $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $controller);
 
             $container->getDefinition('fos_rest.exception.codes_map')
                 ->replaceArgument(0, $config['exception']['codes']);

@@ -8,7 +8,7 @@
         <service id="fos_rest.exception_listener" class="FOS\RestBundle\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="request" />
-            <argument>fos_rest.exception.controller:showAction</argument>
+            <argument />
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
