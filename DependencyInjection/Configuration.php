@@ -110,7 +110,20 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('body_converter')
                     ->canBeEnabled()
                     ->children()
-                        ->scalarNode('validate')->defaultFalse()->end()
+                        ->scalarNode('validate')
+                            ->defaultFalse()
+                            ->beforeNormalization()
+                                ->ifTrue()
+                                ->then(function() {
+                                    if (!class_exists('Symfony\Component\OptionsResolver\OptionsResolver')) {
+                                        throw new InvalidConfigurationException(
+                                            "'body_converter.validate: true' require OptionsResolver component installation " .
+                                            "( composer require symfony/options-resolver )"
+                                        );
+                                    }
+                                })
+                            ->end()
+                        ->end()
                         ->scalarNode('validation_errors_argument')->defaultValue('validationErrors')->end()
                     ->end()
                 ->end()
