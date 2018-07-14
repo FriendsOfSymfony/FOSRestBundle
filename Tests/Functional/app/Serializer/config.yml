@@ -11,3 +11,6 @@ framework:
 fos_rest:
     view:
         view_response_listener: 'force'
+
+twig:
+    strict_variables: '%kernel.debug%'

@@ -34,3 +34,6 @@ fos_rest:
             - custom_header
             - media_type
             - query
+
+twig:
+    strict_variables: '%kernel.debug%'
