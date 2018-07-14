@@ -14,3 +14,6 @@ fos_rest:
             - { path: '^/', fallback_format: json }
     zone:
         - { path: ^/api/* }
+
+twig:
+    strict_variables: '%kernel.debug%'

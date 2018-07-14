@@ -16,6 +16,9 @@ sensio_framework_extra:
     request:
         converters: true
 
+twig:
+    strict_variables: '%kernel.debug%'
+
 services:
     get_set_method_normalizer:
         class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer

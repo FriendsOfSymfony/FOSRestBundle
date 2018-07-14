@@ -29,3 +29,6 @@ fos_rest:
 
 web_profiler:
     toolbar: true
+
+twig:
+    strict_variables: '%kernel.debug%'
