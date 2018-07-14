@@ -21,8 +21,9 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\Kernel;
 
 class FOSRestExtension extends Extension
 {
@@ -345,11 +346,23 @@ class FOSRestExtension extends Extension
                 $service->clearTag('kernel.event_subscriber');
             }
 
-            if ($config['exception']['exception_controller']) {
-                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $config['exception']['exception_controller']);
-            } elseif (isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
-                $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, 'fos_rest.exception.twig_controller:showAction');
+            if (Kernel::VERSION_ID >= 40100) {
+                $controller = 'fos_rest.exception.controller::showAction';
+            } else {
+                $controller = 'fos_rest.exception.controller:showAction';
             }
+
+            if ($config['exception']['exception_controller']) {
+                $controller = $config['exception']['exception_controller'];
+            } elseif (isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
+                if (Kernel::VERSION_ID >= 40100) {
+                    $controller = 'fos_rest.exception.twig_controller::showAction';
+                } else {
+                    $controller = 'fos_rest.exception.twig_controller:showAction';
+                }
+            }
+
+            $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $controller);
 
             $container->getDefinition('fos_rest.exception.codes_map')
                 ->replaceArgument(0, $config['exception']['codes']);
