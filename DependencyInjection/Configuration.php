@@ -16,6 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class contains the configuration information for the bundle.
@@ -114,12 +115,9 @@ final class Configuration implements ConfigurationInterface
                             ->defaultFalse()
                             ->beforeNormalization()
                                 ->ifTrue()
-                                ->then(function() {
-                                    if (!class_exists('Symfony\Component\OptionsResolver\OptionsResolver')) {
-                                        throw new InvalidConfigurationException(
-                                            "'body_converter.validate: true' require OptionsResolver component installation " .
-                                            "( composer require symfony/options-resolver )"
-                                        );
+                                ->then(function () {
+                                    if (!class_exists(OptionsResolver::class)) {
+                                        throw new InvalidConfigurationException("'body_converter.validate: true' require OptionsResolver component installation ( composer require symfony/options-resolver )");
                                     }
                                 })
                             ->end()
