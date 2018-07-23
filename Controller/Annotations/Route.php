@@ -11,7 +11,14 @@
 
 namespace FOS\RestBundle\Controller\Annotations;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as BaseRoute;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as LegacyBaseRoute;
+use Symfony\Component\Routing\Annotation\Route as Symfony4BaseRoute;
+
+if (class_exists(LegacyBaseRoute::class)) {
+    class BaseRoute extends LegacyBaseRoute {}
+} else {
+    class BaseRoute extends Symfony4BaseRoute {}
+}
 
 /**
  * Route annotation class.
