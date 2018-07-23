@@ -117,7 +117,7 @@ final class Configuration implements ConfigurationInterface
                                 ->ifTrue()
                                 ->then(function () {
                                     if (!class_exists(OptionsResolver::class)) {
-                                        throw new InvalidConfigurationException("'body_converter.validate: true' require OptionsResolver component installation ( composer require symfony/options-resolver )");
+                                        throw new InvalidConfigurationException("'body_converter.validate: true' requires OptionsResolver component installation ( composer require symfony/options-resolver )");
                                     }
                                 })
                             ->end()
