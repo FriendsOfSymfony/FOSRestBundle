@@ -219,7 +219,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
 
         // We check that it's "controller:method" if sf < 4.1 (controller as service) and not "controller::method"
         $this->assertEquals(
-            UsersController::class.(!method_exists(Kernel::class, 'getAnnotatedClassesToCompile') ? ':' : '::').'getUsersAction',
+            UsersController::class.(Kernel::VERSION_ID >= 40100 ? '::' : ':').'getUsersAction',
             $route->getDefault('_controller')
         );
 
