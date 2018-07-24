@@ -114,7 +114,7 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('validate')
                             ->defaultFalse()
                             ->beforeNormalization()
-                                ->ifTrue()
+                                ->always()
                                 ->then(function () {
                                     if (!class_exists(OptionsResolver::class)) {
                                         throw new InvalidConfigurationException("'body_converter.validate: true' requires OptionsResolver component installation ( composer require symfony/options-resolver )");
