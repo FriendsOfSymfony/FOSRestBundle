@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.4.0
+-----
+
+* [BC BREAK] The `@Route` annotation and all its children no longer extend SensioFrameworkExtraBundle's annotation.
+  The main effect is that `@Route::$service` is no longer available.
+
 2.3.1
 -----
 
