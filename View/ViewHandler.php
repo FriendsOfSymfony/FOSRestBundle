@@ -502,4 +502,14 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
         return $form;
     }
+
+    /**
+     * Resets internal object state at the end of the request
+     */
+    public function reset()
+    {
+        $this->exclusionStrategyGroups = [];
+        $this->exclusionStrategyVersion = null;
+        $this->serializeNullStrategy = null;
+    }
 }

@@ -17,6 +17,7 @@
             <argument /> <!-- serialize null -->
             <argument type="collection" /> <!-- force redirects -->
             <argument /> <!-- default engine -->
+            <tag name="kernel.reset" method="reset" />
         </service>
 
         <service id="FOS\RestBundle\View\ViewHandlerInterface" alias="fos_rest.view_handler.default" />
