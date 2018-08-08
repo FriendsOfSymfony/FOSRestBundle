@@ -17,6 +17,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 /**
  * This class contains the configuration information for the bundle.
@@ -269,6 +270,10 @@ final class Configuration implements ConfigurationInterface
 
     private function addBodyListenerSection(ArrayNodeDefinition $rootNode)
     {
+        $decodersDefaultValue = ['json' => 'fos_rest.decoder.json'];
+        if (class_exists(XmlEncoder::class)) {
+            $decodersDefaultValue['xml'] = 'fos_rest.decoder.xml';
+        }
         $rootNode
             ->children()
                 ->arrayNode('body_listener')
@@ -284,7 +289,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('decoders')
                             ->useAttributeAsKey('name')
-                            ->defaultValue(['json' => 'fos_rest.decoder.json', 'xml' => 'fos_rest.decoder.xml'])
+                            ->defaultValue($decodersDefaultValue)
                             ->prototype('scalar')->end()
                         ->end()
                         ->arrayNode('array_normalizer')
