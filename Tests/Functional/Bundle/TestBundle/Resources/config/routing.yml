@@ -1,0 +1,68 @@
+request_body_param_converter:
+    path:     /body-converter
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\RequestBodyParamConverterController::putPostAction, date: 16-06-2016 }
+
+test_serializer_error_exception:
+    path:     /serializer-error/exception.{_format}
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\SerializerErrorController::logicExceptionAction }
+
+test_serializer_unknown_exception:
+    path:     /serializer-error/unknown_exception.{_format}
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\SerializerErrorController::unknownExceptionAction }
+
+test_serializer_error_invalid_form:
+    path:     /serializer-error/invalid-form.{_format}
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\SerializerErrorController::invalidFormAction }
+
+# Must be defined before test_version
+test_version2:
+  resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\Version2Controller
+  type: rest
+
+test_version:
+    path: /version
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\VersionController::versionAction }
+    requirements:
+        version: 2.1|3.4.2|2.3
+
+test_version_path:
+    path: /version/{version}
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\VersionController::versionAction }
+
+test_param_fetcher:
+    path:     /params
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ParamFetcherController::paramsAction }
+
+test_param_fetcher_test:
+    path:     /params/test
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ParamFetcherController::testAction }
+
+test_param_fetcher_file_test:
+    path:     /file/test
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ParamFetcherController::singleFileAction }
+
+test_param_fetcher_file_collection_test:
+    path:     /file/collection/test
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ParamFetcherController::fileCollectionAction }
+
+test_param_fetcher_image_collection_test:
+    path:     /image/collection/test
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ParamFetcherController::imageCollectionAction }
+
+test_view_response_listener:
+    resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ArticleController
+    type:     rest
+
+test_redirect_endpoint:
+    path:     /hello/{name}
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ArticleController::redirectAction }
+
+test_allowed_methods1:
+    path:     /allowed-methods
+    methods: ['GET', 'LOCK']
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\AllowedMethodsController::indexAction }
+
+test_allowed_methods2:
+    path:     /allowed-methods
+    methods: ['POST', 'PUT']
+    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\AllowedMethodsController::indexAction }
