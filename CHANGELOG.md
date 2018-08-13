@@ -5,7 +5,8 @@ CHANGELOG
 -----
 
 * [BC BREAK] The `@Route` annotation and all its children no longer extend SensioFrameworkExtraBundle's annotation.
-  The main effect is that `@Route::$service` is no longer available.
+  The main effect is that `@Route::$service` is no longer available. Instead, define your controllers using the FQCN
+  as service IDs or create an alias in the container using the FQCN.
 
 2.3.1
 -----

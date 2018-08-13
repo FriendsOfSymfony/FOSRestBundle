@@ -65,7 +65,7 @@
         "psr/http-message": "^1.0"
     },
     "suggest": {
-        "sensio/framework-extra-bundle": "Add support for route annotations and the view response listener, requires ^3.0",
+        "sensio/framework-extra-bundle": "Add support for the request body converter and the view response listener, requires ^3.0",
         "jms/serializer-bundle": "Add support for advanced serialization capabilities, recommended, requires ^1.0",
         "symfony/expression-language": "Add support for using the expression language in the routing, requires ^2.7|^3.0",
         "symfony/serializer": "Add support for basic serialization capabilities and xml decoding, requires ^2.7|^3.0",
@@ -78,7 +78,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.3-dev"
+            "dev-master": "2.4-dev"
         }
     }
 }

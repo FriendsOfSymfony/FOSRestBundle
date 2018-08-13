@@ -112,21 +112,7 @@ Route
 
 RestBundle extends the `@Route Symfony annotation`_ from Symfony.
 
-@Delete @Get @Head @Link @Patch @Post @Put @Unlink @Lock @Unlock @PropFind @PropPatch @Move @Mkcol @Copy have the same options as @Route.
-
-When using ``symfony/routing:>=2.4`` (or the full framework) you have access to
-the expression language component and can add conditions to your routing
-configuration with annotations (see `Routing Conditions`_).
-
-Example syntax:
-
-.. code-block:: php
-
-    use FOS\RestBundle\Controller\Annotations\Route;
-
-    /**
-    * @Route("", condition="context.getMethod() in ['GET', 'HEAD'] and request.headers.get('User-Agent') matches '/firefox/i'")
-    */
+@Delete @Get @Head @Link @Patch @Post @Put @Unlink @Lock @Unlock @PropFind @PropPatch @Move @Mkcol @Copy are shortcuts to define
+routes limited to a specific HTTP method. They have the same options as @Route.
 
 .. _`@Route Symfony annotation`: https://symfony.com/doc/current/routing.html
-.. _`Routing Conditions`: http://symfony.com/doc/current/book/routing.html#book-routing-conditions
