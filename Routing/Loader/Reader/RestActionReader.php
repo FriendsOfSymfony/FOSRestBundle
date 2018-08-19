@@ -475,6 +475,17 @@ class RestActionReader
         // ignore all query params
         $params = $this->paramReader->getParamsFromMethod($method);
 
+        // check if a parameter is coming from the request body
+        $ignoreParameters = [];
+        if (class_exists('Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\ParamConverter')) {
+            $ignoreParameters = array_map(function ($annotation) {
+                return
+                    $annotation instanceof \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter &&
+                    $annotation->getConverter() === 'fos_rest.request_body'
+                    ? $annotation->getName() : null;
+            }, $this->annotationReader->getMethodAnnotations($method));
+        }
+
         // ignore several type hinted arguments
         $ignoreClasses = [
             \Symfony\Component\HttpFoundation\Request::class,
@@ -498,6 +509,10 @@ class RestActionReader
                         continue 2;
                     }
                 }
+            }
+
+            if (in_array($argument->getName(), $ignoreParameters)) {
+                continue;
             }
 
             $arguments[] = $argument;
