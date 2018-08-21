@@ -378,9 +378,7 @@ class RestRouteLoaderTest extends LoaderTest
         $collection = $this->loadFromControllerFixture('ParamConverterController');
 
         $this->assertNotNull($collection->get('post_something'), 'route for "post_something" does not exist');
-        $this->assertEquals('/somethings.{_format}', $collection->get('post_something')->getPath());
-
-        $this->assertTrue(true);
+        $this->assertSame('/somethings.{_format}', $collection->get('post_something')->getPath());
     }
 
     /**

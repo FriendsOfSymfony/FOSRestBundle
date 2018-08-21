@@ -477,7 +477,7 @@ class RestActionReader
 
         // check if a parameter is coming from the request body
         $ignoreParameters = [];
-        if (class_exists('Sensio\\Bundle\\FrameworkExtraBundle\\Configuration\\ParamConverter')) {
+        if (class_exists(\Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter::class)) {
             $ignoreParameters = array_map(function ($annotation) {
                 return
                     $annotation instanceof \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter &&
