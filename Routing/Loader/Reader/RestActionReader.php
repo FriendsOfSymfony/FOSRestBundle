@@ -240,7 +240,7 @@ class RestActionReader
      * Reads action route.
      *
      * @param RestRouteCollection $collection
-     * @param ReflectionMethod   $method
+     * @param ReflectionMethod    $method
      * @param string[]            $resource
      *
      * @throws \InvalidArgumentException
@@ -431,7 +431,7 @@ class RestActionReader
      * Returns HTTP method and resources list from method signature.
      *
      * @param ReflectionMethod $method
-     * @param string[]          $resource
+     * @param string[]         $resource
      *
      * @return bool|array
      */
@@ -565,9 +565,9 @@ class RestActionReader
     /**
      * Generates URL parts for route from resources list.
      *
-     * @param string[]               $resources
+     * @param string[]              $resources
      * @param ReflectionParameter[] $arguments
-     * @param string                 $httpMethod
+     * @param string                $httpMethod
      *
      * @return array
      */
@@ -609,8 +609,8 @@ class RestActionReader
     /**
      * Returns custom HTTP method for provided list of resources, arguments, method.
      *
-     * @param string                 $httpMethod current HTTP method
-     * @param string[]               $resources  resources list
+     * @param string                $httpMethod current HTTP method
+     * @param string[]              $resources  resources list
      * @param ReflectionParameter[] $arguments  list of method arguments
      *
      * @return string
@@ -671,7 +671,7 @@ class RestActionReader
      * Reads method annotations.
      *
      * @param ReflectionMethod $reflectionMethod
-     * @param string            $annotationName
+     * @param string           $annotationName
      *
      * @return RouteAnnotation|null
      */
@@ -688,7 +688,7 @@ class RestActionReader
      * Reads method annotations.
      *
      * @param ReflectionMethod $reflectionMethod
-     * @param string            $annotationName
+     * @param string           $annotationName
      *
      * @return RouteAnnotation[]
      */
