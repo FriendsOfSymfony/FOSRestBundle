@@ -18,8 +18,6 @@ use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Request\ParamReaderInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use Psr\Http\Message\MessageInterface;
-use ReflectionMethod;
-use ReflectionParameter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -240,14 +238,14 @@ class RestActionReader
      * Reads action route.
      *
      * @param RestRouteCollection $collection
-     * @param ReflectionMethod    $method
+     * @param \ReflectionMethod   $method
      * @param string[]            $resource
      *
      * @throws \InvalidArgumentException
      *
      * @return Route
      */
-    public function read(RestRouteCollection $collection, ReflectionMethod $method, $resource)
+    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource)
     {
         // check that every route parent has non-empty singular name
         foreach ($this->parents as $parent) {
@@ -401,11 +399,11 @@ class RestActionReader
     /**
      * Checks whether provided method is readable.
      *
-     * @param ReflectionMethod $method
+     * @param \ReflectionMethod $method
      *
      * @return bool
      */
-    private function isMethodReadable(ReflectionMethod $method)
+    private function isMethodReadable(\ReflectionMethod $method)
     {
         // if method starts with _ - skip
         if ('_' === substr($method->getName(), 0, 1)) {
@@ -430,12 +428,12 @@ class RestActionReader
     /**
      * Returns HTTP method and resources list from method signature.
      *
-     * @param ReflectionMethod $method
-     * @param string[]         $resource
+     * @param \ReflectionMethod $method
+     * @param string[]          $resource
      *
      * @return bool|array
      */
-    private function getHttpMethodAndResourcesFromMethod(ReflectionMethod $method, $resource)
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource)
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
@@ -472,11 +470,11 @@ class RestActionReader
     /**
      * Returns readable arguments from method.
      *
-     * @param ReflectionMethod $method
+     * @param \ReflectionMethod $method
      *
-     * @return ReflectionParameter[]
+     * @return \ReflectionParameter[]
      */
-    private function getMethodArguments(ReflectionMethod $method)
+    private function getMethodArguments(\ReflectionMethod $method)
     {
         // ignore all query params
         $params = $this->paramReader->getParamsFromMethod($method);
@@ -565,9 +563,9 @@ class RestActionReader
     /**
      * Generates URL parts for route from resources list.
      *
-     * @param string[]              $resources
-     * @param ReflectionParameter[] $arguments
-     * @param string                $httpMethod
+     * @param string[]               $resources
+     * @param \ReflectionParameter[] $arguments
+     * @param string                 $httpMethod
      *
      * @return array
      */
@@ -609,9 +607,9 @@ class RestActionReader
     /**
      * Returns custom HTTP method for provided list of resources, arguments, method.
      *
-     * @param string                $httpMethod current HTTP method
-     * @param string[]              $resources  resources list
-     * @param ReflectionParameter[] $arguments  list of method arguments
+     * @param string                 $httpMethod current HTTP method
+     * @param string[]               $resources  resources list
+     * @param \ReflectionParameter[] $arguments  list of method arguments
      *
      * @return string
      */
@@ -635,11 +633,11 @@ class RestActionReader
     /**
      * Returns first route annotation for method.
      *
-     * @param ReflectionMethod $reflectionMethod
+     * @param \ReflectionMethod $reflectionMethod
      *
      * @return RouteAnnotation[]
      */
-    private function readRouteAnnotation(ReflectionMethod $reflectionMethod)
+    private function readRouteAnnotation(\ReflectionMethod $reflectionMethod)
     {
         $annotations = [];
 
@@ -670,12 +668,12 @@ class RestActionReader
     /**
      * Reads method annotations.
      *
-     * @param ReflectionMethod $reflectionMethod
-     * @param string           $annotationName
+     * @param \ReflectionMethod $reflectionMethod
+     * @param string            $annotationName
      *
      * @return RouteAnnotation|null
      */
-    private function readMethodAnnotation(ReflectionMethod $reflectionMethod, $annotationName)
+    private function readMethodAnnotation(\ReflectionMethod $reflectionMethod, $annotationName)
     {
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
@@ -687,12 +685,12 @@ class RestActionReader
     /**
      * Reads method annotations.
      *
-     * @param ReflectionMethod $reflectionMethod
-     * @param string           $annotationName
+     * @param \ReflectionMethod $reflectionMethod
+     * @param string            $annotationName
      *
      * @return RouteAnnotation[]
      */
-    private function readMethodAnnotations(ReflectionMethod $reflectionMethod, $annotationName)
+    private function readMethodAnnotations(\ReflectionMethod $reflectionMethod, $annotationName)
     {
         $annotations = [];
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
