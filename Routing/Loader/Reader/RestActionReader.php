@@ -14,10 +14,14 @@ namespace FOS\RestBundle\Routing\Loader\Reader;
 use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
 use FOS\RestBundle\Inflector\InflectorInterface;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Request\ParamReaderInterface;
 use FOS\RestBundle\Routing\RestRouteCollection;
 use Psr\Http\Message\MessageInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * REST controller actions reader.
@@ -475,12 +479,23 @@ class RestActionReader
         // ignore all query params
         $params = $this->paramReader->getParamsFromMethod($method);
 
+        // check if a parameter is coming from the request body
+        $ignoreParameters = [];
+        if (class_exists(ParamConverter::class)) {
+            $ignoreParameters = array_map(function ($annotation) {
+                return
+                    $annotation instanceof ParamConverter &&
+                    'fos_rest.request_body' === $annotation->getConverter()
+                        ? $annotation->getName() : null;
+            }, $this->annotationReader->getMethodAnnotations($method));
+        }
+
         // ignore several type hinted arguments
         $ignoreClasses = [
-            \Symfony\Component\HttpFoundation\Request::class,
-            \FOS\RestBundle\Request\ParamFetcherInterface::class,
-            \Symfony\Component\Validator\ConstraintViolationListInterface::class,
-            \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter::class,
+            Request::class,
+            ParamFetcherInterface::class,
+            ConstraintViolationListInterface::class,
+            ParamConverter::class,
             MessageInterface::class,
         ];
 
@@ -498,6 +513,10 @@ class RestActionReader
                         continue 2;
                     }
                 }
+            }
+
+            if (in_array($argument->getName(), $ignoreParameters, true)) {
+                continue;
             }
 
             $arguments[] = $argument;

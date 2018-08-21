@@ -371,6 +371,17 @@ class RestRouteLoaderTest extends LoaderTest
     }
 
     /**
+     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1198
+     */
+    public function testParamConverterIsIgnoredInRouteGenerationCorrectly()
+    {
+        $collection = $this->loadFromControllerFixture('ParamConverterController');
+
+        $this->assertNotNull($collection->get('post_something'), 'route for "post_something" does not exist');
+        $this->assertSame('/somethings.{_format}', $collection->get('post_something')->getPath());
+    }
+
+    /**
      * Load routes collection from fixture class under Tests\Fixtures directory.
      *
      * @param string $fixtureName     name of the class fixture
