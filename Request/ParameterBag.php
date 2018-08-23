@@ -79,7 +79,7 @@ final class ParameterBag
             );
         }
 
-        $class = class_exists(ClassUtils::class, true)
+        $class = class_exists(ClassUtils::class)
             ? ClassUtils::getClass($controller[0])
             : get_class($controller[0]);
 
