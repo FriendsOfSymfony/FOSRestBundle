@@ -65,7 +65,10 @@ final class ParameterBag
      *
      * @param string $requestId
      *
+     * @return ParamInterface[]
+     *
      * @throws \InvalidArgumentException
+     * @throws \ReflectionException
      */
     private function initParams($requestId)
     {
@@ -76,8 +79,12 @@ final class ParameterBag
             );
         }
 
+        $class = class_exists(ClassUtils::class)
+            ? ClassUtils::getClass($controller[0])
+            : get_class($controller[0]);
+
         return $this->params[$requestId]['params'] = $this->paramReader->read(
-            new \ReflectionClass(ClassUtils::getClass($controller[0])),
+            new \ReflectionClass($class),
             $controller[1]
         );
     }
