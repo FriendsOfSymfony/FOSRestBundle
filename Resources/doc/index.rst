@@ -28,14 +28,14 @@ Symfony.
 Installation
 ------------
 
-Before using this bundle in your project, add it to your composer.json file:
+Before using this bundle in your project, download it by running this command:
 
 .. code-block:: terminal
 
     $ composer require friendsofsymfony/rest-bundle
 
-Then, like for any other bundle, include it in your Kernel class::
-
+**In case you are not using Flex**, you must also enable by adding the following line in the ``app/AppKernel.php``::
+    
     public function registerBundles()
     {
         $bundles = array(
@@ -48,10 +48,8 @@ Then, like for any other bundle, include it in your Kernel class::
     }
 
 At last, make sure you have a serializer enabled. The bundle will look at these
-three possibilities **in this order** to decide which serializer to use:
+two possibilities **in this order** to decide which serializer to use:
 
-   #. The service ``fos_rest.service.serializer`` if it is configured (must be an
-      instance of ``FOS\RestBundle\Serializer``).
    #. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
    #. The `Symfony Serializer`_
 
