@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Request;
 
+use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -77,12 +78,12 @@ final class ParameterBag
             );
         }
 
-        $cls = class_exists('\Doctrine\Common\Util\ClassUtils', true)
-            ? \Doctrine\Common\Util\ClassUtils::getClass($controller[0])
+        $class = class_exists(ClassUtils::class, true)
+            ? ClassUtils::getClass($controller[0])
             : get_class($controller[0]);
 
         return $this->params[$requestId]['params'] = $this->paramReader->read(
-            new \ReflectionClass($cls),
+            new \ReflectionClass($class),
             $controller[1]
         );
     }
