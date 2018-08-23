@@ -66,6 +66,7 @@ final class ParameterBag
      * @param string $requestId
      *
      * @return ParamInterface[]
+     *
      * @throws \InvalidArgumentException
      * @throws \ReflectionException
      */
