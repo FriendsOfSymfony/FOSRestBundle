@@ -11,8 +11,10 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use FOS\RestBundle\Controller\Annotations\AbstractScalarParam;
 use FOS\RestBundle\Validator\Constraints\Regex;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints;
 
 /**
@@ -24,12 +26,12 @@ class AbstractScalarParamTest extends TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMockForAbstractClass('FOS\RestBundle\Controller\Annotations\AbstractScalarParam');
+        $this->param = $this->getMockForAbstractClass(AbstractScalarParam::class);
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\AbstractParam', $this->param);
+        $this->assertInstanceOf(AbstractScalarParam::class, $this->param);
     }
 
     public function testDefaultValues()
@@ -51,7 +53,7 @@ class AbstractScalarParamTest extends TestCase
      */
     public function testComplexRequirements()
     {
-        $this->param->requirements = $requirement = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
+        $this->param->requirements = $requirement = $this->getMockBuilder(Constraint::class)->getMock();
         $this->assertEquals(array(
             new Constraints\NotNull(),
             $requirement,
@@ -60,8 +62,8 @@ class AbstractScalarParamTest extends TestCase
 
     public function testMultipleComplexRequirements()
     {
-        $requirement1 = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
-        $requirement2 = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
+        $requirement1 = $this->getMockBuilder(Constraint::class)->getMock();
+        $requirement2 = $this->getMockBuilder(Constraint::class)->getMock();
         $this->param->requirements = array($requirement1, $requirement2);
 
         $this->assertEquals(array(
