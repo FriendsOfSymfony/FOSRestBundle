@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\VersionExclusionListener;
 use FOS\RestBundle\FOSRestBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author juillerat <philippe.juillerat@filago.ch>
  */
-class VersionExclusionListenerTest extends \PHPUnit_Framework_TestCase
+class VersionExclusionListenerTest extends TestCase
 {
     /**
      * @var \FOS\RestBundle\View\ConfigurableViewHandlerInterface

@@ -172,7 +172,7 @@ class RestRouteLoaderTest extends LoaderTest
         $etalonRoutes = $this->loadEtalonRoutesInfo('annotated_version_controller.yml');
 
         $this->assertInstanceOf(RestRouteCollection::class, $collection);
-        $this->assertCount(3, $collection->all());
+        $this->assertCount(4, $collection->all());
 
         foreach ($etalonRoutes as $name => $params) {
             $route = $collection->get($name);

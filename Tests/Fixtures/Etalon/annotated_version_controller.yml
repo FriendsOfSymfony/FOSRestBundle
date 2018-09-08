@@ -19,5 +19,5 @@ v3_user:
 get_users:
   path:      /{version}/users.{_format}
   controller:   ::getUsersAction
-  requirements: {version: 'v1|v3'}
+  requirements: {version: v1|v3}
   methods: [GET]

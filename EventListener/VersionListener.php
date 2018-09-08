@@ -13,7 +13,6 @@ namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Version\VersionResolverInterface;
-use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
@@ -24,7 +23,7 @@ class VersionListener
     private $versionResolver;
     private $defaultVersion;
 
-    public function __construct(ViewHandlerInterface $viewHandler = null, VersionResolverInterface $versionResolver, $defaultVersion = null)
+    public function __construct(VersionResolverInterface $versionResolver, $defaultVersion = null)
     {
         $this->versionResolver = $versionResolver;
         $this->defaultVersion = $defaultVersion;

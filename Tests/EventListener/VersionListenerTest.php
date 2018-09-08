@@ -24,11 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 class VersionListenerTest extends TestCase
 {
     /**
-     * @var \FOS\RestBundle\View\ConfigurableViewHandlerInterface
-     */
-    private $viewHandler;
-
-    /**
      * @var \FOS\RestBundle\Version\VersionResolverInterface
      */
     private $resolver;
@@ -40,10 +35,9 @@ class VersionListenerTest extends TestCase
 
     public function setUp()
     {
-        $this->viewHandler = $this->getMockBuilder('FOS\RestBundle\View\ConfigurableViewHandlerInterface')->getMock();
         $this->resolver = $this->getMockBuilder('FOS\RestBundle\Version\VersionResolverInterface')->getMock();
 
-        $this->listener = new VersionListener($this->viewHandler, $this->resolver);
+        $this->listener = new VersionListener($this->resolver);
     }
 
     public function testMatchNoZone()
