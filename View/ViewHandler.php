@@ -102,6 +102,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     private $templating;
     private $requestStack;
 
+    private $options;
+
     /**
      * Constructor.
      *
@@ -126,7 +128,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $emptyContentCode = Response::HTTP_NO_CONTENT,
         $serializeNull = false,
         array $forceRedirects = null,
-        $defaultEngine = 'twig'
+        $defaultEngine = 'twig',
+        array $options
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->serializer = $serializer;
@@ -138,6 +141,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $this->serializeNull = $serializeNull;
         $this->forceRedirects = (array) $forceRedirects;
         $this->defaultEngine = $defaultEngine;
+        $this->options = $options;
+        $this->reset();
     }
 
     /**
@@ -508,8 +513,14 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      */
     public function reset()
     {
-        $this->exclusionStrategyGroups = [];
-        $this->exclusionStrategyVersion = null;
-        $this->serializeNullStrategy = null;
+        if (isset($this->options['exclusionStrategyGroups'])) {
+            $this->exclusionStrategyGroups = $this->options['exclusionStrategyGroups'];
+        }
+        if (isset($this->options['exclusionStrategyVersion'])) {
+            $this->exclusionStrategyVersion = $this->options['exclusionStrategyVersion'];
+        }
+        if (isset($this->options['serializeNullStrategy'])) {
+            $this->serializeNullStrategy = $this->options['serializeNullStrategy'];
+        }
     }
 }
