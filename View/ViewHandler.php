@@ -145,7 +145,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $this->options = $options + [
             'exclusionStrategyGroups' => [],
             'exclusionStrategyVersion' => null,
-            'serializeNullStrategy' => null
+            'serializeNullStrategy' => null,
             ];
         $this->reset();
     }
