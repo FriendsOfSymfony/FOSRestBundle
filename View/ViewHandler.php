@@ -504,7 +504,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Resets internal object state at the end of the request
+     * Resets internal object state at the end of the request.
      */
     public function reset()
     {
