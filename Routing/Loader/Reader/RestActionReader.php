@@ -406,15 +406,13 @@ class RestActionReader
     /**
      * Checks whether provided path contains {version} placeholder.
      *
+     * @param string $path
+     *
      * @return bool
      */
     private function hasVersionPlaceholder($path)
     {
-        if (false === strpos($path, '{version}')) {
-            return false;
-        }
-
-        return true;
+        return false !== strpos($path, '{version}');
     }
 
     /**
