@@ -13,40 +13,25 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\VersionExclusionListener;
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Version exclusion listener test.
  *
- * @author juillerat <philippe.juillerat@filago.ch>
+ * @author Alexandr Zolotukhin <alex@alexandrz.com>
  */
 class VersionExclusionListenerTest extends TestCase
 {
-    /**
-     * @var \FOS\RestBundle\View\ConfigurableViewHandlerInterface
-     */
-    private $viewHandler;
-    /**
-     * @var \FOS\RestBundle\Version\VersionResolverInterface
-     */
-    private $resolver;
-    /**
-     * @var VersionExclusionListener
-     */
-    private $listener;
-
-    public function setUp()
+    public function testVersionIsNotSetWhenZoneIsFalse()
     {
-        $this->viewHandler = $this->getMockBuilder('FOS\RestBundle\View\ConfigurableViewHandlerInterface')->getMock();
+        $version = 'v1';
 
-        $this->listener = new VersionExclusionListener($this->viewHandler);
-    }
-
-    public function testMatchNoZone()
-    {
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
+        $request->attributes->set('version', $version);
 
         $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
             ->disableOriginalConstructor()
@@ -56,8 +41,40 @@ class VersionExclusionListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request);
 
-        $this->listener->onKernelRequest($event);
+        $viewHandler = $this->getMockBuilder('FOS\RestBundle\View\ConfigurableViewHandlerInterface')->getMock();
+        $viewHandler
+            ->expects($this->never())
+            ->method('setExclusionStrategyVersion');
 
-        $this->assertFalse($request->attributes->has('version'));
+        $listener = new VersionExclusionListener($viewHandler);
+
+        $listener->onKernelRequest($event);
+    }
+
+    public function testVersionIsSet()
+    {
+        $version = 'v1';
+
+        $request = new Request();
+        $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, true);
+        $request->attributes->set('version', $version);
+
+        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request);
+
+        $viewHandler = $this->getMockBuilder('FOS\RestBundle\View\ConfigurableViewHandlerInterface')->getMock();
+        $viewHandler
+            ->expects($this->once())
+            ->method('setExclusionStrategyVersion')
+            ->with($version);
+
+        $listener = new VersionExclusionListener($viewHandler);
+
+        $listener->onKernelRequest($event);
     }
 }
