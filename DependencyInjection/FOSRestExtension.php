@@ -382,22 +382,24 @@ class FOSRestExtension extends Extension
     {
         $bodyConverter = $container->hasDefinition('fos_rest.converter.request_body') ? $container->getDefinition('fos_rest.converter.request_body') : null;
         $viewHandler = $container->getDefinition('fos_rest.view_handler.default');
+        $options = array();
 
         if (!empty($config['serializer']['version'])) {
             if ($bodyConverter) {
                 $bodyConverter->replaceArgument(2, $config['serializer']['version']);
             }
-            $viewHandler->addMethodCall('setExclusionStrategyVersion', array($config['serializer']['version']));
+            $options['exclusionStrategyVersion'] = $config['serializer']['version'];
         }
 
         if (!empty($config['serializer']['groups'])) {
             if ($bodyConverter) {
                 $bodyConverter->replaceArgument(1, $config['serializer']['groups']);
             }
-            $viewHandler->addMethodCall('setExclusionStrategyGroups', array($config['serializer']['groups']));
+            $options['exclusionStrategyGroups'] = $config['serializer']['groups'];
         }
 
-        $viewHandler->addMethodCall('setSerializeNullStrategy', array($config['serializer']['serialize_null']));
+        $options['serializeNullStrategy'] = $config['serializer']['serialize_null'];
+        $viewHandler->addArgument($options);
     }
 
     private function loadZoneMatcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)

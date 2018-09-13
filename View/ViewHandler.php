@@ -102,6 +102,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     private $templating;
     private $requestStack;
 
+    private $options;
+
     /**
      * Constructor.
      *
@@ -115,6 +117,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      * @param bool                  $serializeNull        Whether or not to serialize null view data
      * @param array                 $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
      * @param string                $defaultEngine        default engine (twig, php ..)
+     * @param array                 $options              config options
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
@@ -126,7 +129,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $emptyContentCode = Response::HTTP_NO_CONTENT,
         $serializeNull = false,
         array $forceRedirects = null,
-        $defaultEngine = 'twig'
+        $defaultEngine = 'twig',
+        array $options = []
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->serializer = $serializer;
@@ -138,6 +142,12 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $this->serializeNull = $serializeNull;
         $this->forceRedirects = (array) $forceRedirects;
         $this->defaultEngine = $defaultEngine;
+        $this->options = $options + [
+            'exclusionStrategyGroups' => [],
+            'exclusionStrategyVersion' => null,
+            'serializeNullStrategy' => null,
+            ];
+        $this->reset();
     }
 
     /**
@@ -501,5 +511,15 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         }
 
         return $form;
+    }
+
+    /**
+     * Resets internal object state at the end of the request.
+     */
+    public function reset()
+    {
+        $this->exclusionStrategyGroups = $this->options['exclusionStrategyGroups'];
+        $this->exclusionStrategyVersion = $this->options['exclusionStrategyVersion'];
+        $this->serializeNullStrategy = $this->options['serializeNullStrategy'];
     }
 }
