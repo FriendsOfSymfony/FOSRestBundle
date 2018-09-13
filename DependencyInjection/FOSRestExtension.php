@@ -202,7 +202,7 @@ class FOSRestExtension extends Extension
             $loader->load('versioning.xml');
 
             $versionListener = $container->getDefinition('fos_rest.versioning.listener');
-            $versionListener->replaceArgument(2, $config['versioning']['default_version']);
+            $versionListener->replaceArgument(1, $config['versioning']['default_version']);
 
             $resolvers = [];
             if ($config['versioning']['resolvers']['query']['enabled']) {
