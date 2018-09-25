@@ -45,7 +45,7 @@ the following (in the given order) to determine the serializer to use:
 
 #. The one you configured using ``fos_rest.service.serializer`` (if you did).
 #. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
-#. The `Symfony Serializer`_ if it's enabled (or any service called ``serializer``).
+#. The `Symfony Serializer`_ if it's enabled (or any service called ``fos_rest.serializer.symfony``).
 
 That was it!
 
