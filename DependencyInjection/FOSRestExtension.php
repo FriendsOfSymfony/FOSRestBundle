@@ -354,6 +354,10 @@ class FOSRestExtension extends Extension
 
             if ($config['exception']['exception_controller']) {
                 $controller = $config['exception']['exception_controller'];
+                
+                if(!$container->hasDefinition('templating.engine.twig')) {
+                    $container->removeDefinition('fos_rest.exception.twig_controller');
+                }
             } elseif (isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
                 if (Kernel::VERSION_ID >= 40100) {
                     $controller = 'fos_rest.exception.twig_controller::showAction';
