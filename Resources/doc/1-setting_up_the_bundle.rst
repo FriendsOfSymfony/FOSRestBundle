@@ -14,29 +14,25 @@ following command to download the latest stable version of this bundle:
 This command requires you to have Composer installed globally, as explained
 in the `installation chapter`_ of the Composer documentation.
 
-B) Enable the Bundle
---------------------
+.. caution::
 
-Then, enable the bundle by adding the following line in the ``app/AppKernel.php``
-file of your project:
-
-.. code-block:: php
-
-    // app/AppKernel.php
-    class AppKernel extends Kernel
-    {
-        public function registerBundles()
+    If you are not using Flex, you also have to enable the bundle by adding the following line in the ``app/AppKernel.php``::
+    
+        // app/AppKernel.php
+        class AppKernel extends Kernel
         {
-            $bundles = [
+            public function registerBundles()
+            {
+                $bundles = [
+                    // ...
+                    new FOS\RestBundle\FOSRestBundle(),
+                ];
+
                 // ...
-                new FOS\RestBundle\FOSRestBundle(),
-            ];
-
-            // ...
+            }
         }
-    }
-
-C) Enable a Serializer
+    
+B) Enable a Serializer
 ----------------------
 
 This bundle needs a serializer to work correctly. In most cases,
