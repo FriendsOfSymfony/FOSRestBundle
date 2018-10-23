@@ -18,7 +18,7 @@ is then passed to the ``fos_rest.view_handler`` service for processing. The
 it simply works as a container for all the data/configuration for the
 ``ViewHandler`` class for this particular action.  So the ``View`` instance
 must always be processed by a ``ViewHandler`` (see the below section on the
-"view response listener" for how to get this processing applied automatically)
+"view response listener" for how to get this processing applied automatically).
 
 FOSRestBundle ships with a controller extending the default Symfony controller,
 which adds several convenience methods:
@@ -149,11 +149,11 @@ There are several more methods on the ``View`` class, here is a list of all
 the important ones for configuring the view:
 
 * ``setData($data)`` - Set the object graph or list of objects to serialize.
-* ``setTemplateData($data)`` - Set the template data array or anonymous function. Closure should return array.
+* ``setTemplateData($data)`` - Set the template data array or anonymous function. Closures should return an array.
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
 * ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
 * ``setStatusCode($code)`` - Set the HTTP status code.
-* ``getContext()`` - The serialization context to use.
+* ``getContext()`` - The serialization context in use.
 * ``setTemplate($template)`` - Name of the template to use in case of HTML rendering.
 * ``setTemplateVar($templateVar)`` - Name of the variable the data is in, when passed
   to HTML template. Defaults to ``'data'``.
@@ -174,20 +174,20 @@ Forms and Views
 
 Symfony Forms have special handling inside the view layer. Whenever you:
 
-- return a Form from the controller.
-- Set the form as only data of the view.
-- return an array with a 'form' key, containing a form.
-- return a form with validation errors.
+- Return a Form from the controller,
+- Set the form as only data of the view,
+- Return an array with a ``'form'`` key, containing a form, or
+- Return a form with validation errors.
 
 Then:
 
 - If the form is bound and no status code is set explicitly, an invalid form
   leads to a "validation failed" response.
-- In a rendered template, the form is passed as 'form' and ``createView()``
+- In a rendered template, the form is passed as ``'form'`` and ``createView()``
   is called automatically.
 - ``$form->getData()`` is passed into the view template as ``'data'`` if the
   form is the only view data.
-- An invalid form will be wrapped into an exception.
+- An invalid form will be wrapped in an exception.
 
 A response example of an invalid form:
 
@@ -218,13 +218,13 @@ Data Transformation
 -------------------
 
 As we have seen in the section before, the FOSRestBundle relies on the form
-component (http://symfony.com/doc/current/components/form/introduction.html) to
+component (https://symfony.com/doc/current/components/form/introduction.html) to
 handle submission of view data. In fact, the form builder
-(http://symfony.com/doc/current/book/forms.html#building-the-form) basically
+(https://symfony.com/doc/current/book/forms.html#building-the-form) basically
 defines the structure of the expected view data which shall be used for further
 processing - which most of the time relates to a PUT or POST request. This
 brings a lot of flexibility and allows to exactly define the structure of data
-to be received by the api.
+to be received by the API.
 
 Most of the time the requirements regarding a PUT/POST request are, in
 terms of data structure, fairly simple. The payload within a PUT or POST request
@@ -247,7 +247,7 @@ an example. The serialized Task object will looks as follows:
 
 In a traditional Symfony application we simply define the property of the
 related class and it would perfectly assign the person to our task - in this
-case based on the id:
+case based on the ``id``:
 
 .. code-block:: php
 
@@ -268,9 +268,9 @@ form validation process:
 
     {"task_form":{"name":"Task1", "person":1}}
 
-Well, this is somewhat useless since we not only want to display the name of the
-person but also do not want to do some client side trick to extract the id
-before updating the data, right? Instead, we rather update the data the same way
+This is somewhat useless since we not only want to display the name of the
+person, but also do not want to do some client side trick to extract the id
+before updating the data. Instead, we rather update the data the same way
 as we received it in our GET request and thus, extend the form builder with a
 data transformer. Fortunately, the FOSRestBundle comes with an
 ``EntityToIdObjectTransformer``, which can be applied to any form builder:
@@ -297,8 +297,8 @@ rendering using the ``templating`` service, while any format listed in
 value of ``false`` means that the given format is disabled.
 
 When using ``RouteRedirectView::create()`` the default behavior of forcing a
-redirect to the route for html is enabled, but needs to be enabled for other
-formats if needed.
+redirect to the route when HTML is enabled, but this needs to be enabled for other
+formats as needed.
 
 Finally the HTTP response status code for failed validation defaults to
 ``400``. Note when changing the default you can use name constants of
@@ -327,11 +327,11 @@ See `this example configuration`_ for more details.
 Custom handler
 --------------
 
-While many things should be possible via the serializer in some cases
+While many things should be possible via the serializer, in some cases
 it might not be enough. For example you might need some custom logic to be
 executed in the ``ViewHandler``. For these cases one might want to register a
 custom handler for a specific format. The custom handler can either be
-registered by defining a custom service, via a compiler pass or it can even be
+registered by defining a custom service, via a compiler pass, or it can be
 registered from inside the controller action.
 
 The callable will receive 3 parameters:
@@ -347,7 +347,8 @@ Note there are several public methods on the ``ViewHandler`` which can be helpfu
 * ``createRedirectResponse()``
 * ``renderTemplate()``
 
-There is an example inside LiipHelloBundle to show how to register a custom handler:
+There is an example inside LiipHelloBundle to show how to register a custom handler
+(for an RSS feed):
 https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
 https://github.com/liip/LiipHelloBundle/blob/master/Resources/config/config.yml
 
@@ -407,7 +408,7 @@ Here is an example using a closure registered inside a Controller action:
 JSONP custom handler
 ~~~~~~~~~~~~~~~~~~~~
 
-To enable the common use case of creating JSONP responses this Bundle provides an
+To enable the common use case of creating JSONP responses, this Bundle provides an
 easy solution to handle a custom handler for this use case. Enabling this setting
 also automatically uses the mime type listener (see the next chapter) to register
 a mime type for JSONP.
@@ -431,7 +432,7 @@ is valid or not.
     fos_rest:
         view:
             jsonp_handler:
-               callback_param:       mycallback
+               callback_param: mycallback
 
 Finally the filter can also be disabled by setting it to false.
 
@@ -441,10 +442,10 @@ Finally the filter can also be disabled by setting it to false.
     fos_rest:
         view:
             jsonp_handler:
-                callback_param:       false
+                callback_param: false
 
 When working with JSONP, be aware of `CVE-2014-4671`_ (full explanation can be
-found here: `Abusing JSONP with Rosetta Flash`_. You SHOULD use `NelmioSecurityBundle`_
+found here: `Abusing JSONP with Rosetta Flash`_). You SHOULD use `NelmioSecurityBundle`_
 and `disable the content type sniffing for script resources`_.
 
 CSRF validation
@@ -452,7 +453,7 @@ CSRF validation
 
 When building a single application that should handle forms both via HTML forms
 as well as via a REST API, one runs into a problem with CSRF token validation.
-In most cases it is necessary to enable them for HTML forms, but it makes no
+In most cases, it is necessary to enable them for HTML forms, but it makes no
 sense to use them for a REST API. For this reason there is a form extension to
 disable CSRF validation for users with a specific role. This of course requires
 that REST API users authenticate themselves and get a special role assigned.
