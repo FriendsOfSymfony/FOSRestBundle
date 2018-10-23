@@ -5,11 +5,11 @@ Step 3: Listener support
 various events from decoding the request content in the request (body listener),
 determining the correct response format (format listener), reading parameters
 from the request (parameter fetcher listener), to formatting the response either
-with a template engine like twig or to e.g. xml or json using a serializer (view
-response listener) as well as automatically setting the accepted HTTP methods
+with a template engine like twig or (for example) to xml or json using a serializer 
+(view response listener) as well as automatically setting the accepted HTTP methods
 in the response (accept listener).
 
-With this in mind we now turn to explain each one of them.
+With this in mind we will now explain each one of them.
 
 All listeners except the ``mime_type`` listener are disabled by default. You
 can enable one or more of these listeners. For example, below you can see how
@@ -69,10 +69,11 @@ The Request body listener makes it possible to decode the contents of a request
 in order to populate the "request" parameter bag of the Request. This, for
 example, allows to receive data that normally would be sent via POST as
 ``application/x-www-form-urlencoded`` in a different format (for example
-``application/json``) in a PUT. Please note that this listener is supposed to
-allow you to decode and normalize data. If you want to deserialize data,
-meaning getting an object of your choice, you will be better off using the
-request body converter listener, documented below.
+``application/json``) in a PUT. 
+
+Please note that this listener is supposed to allow you to decode and normalize 
+data. If you want to deserialize data, meaning getting an object of your choice, 
+you will be better off using the Request Body Converter Listener, documented below.
 
 For details see :doc:`Body Listener <body_listener>`.
 
@@ -93,8 +94,8 @@ Format Listener
 
 The Request format listener attempts to determine the best format for the
 request based on the HTTP Accept header and the format priority
-configuration. This way it becomes possible to leverage Accept-Headers to
-determine the request format, rather than a file extension (like foo.json).
+configuration. This way it becomes possible to leverage ``Accept-Headers`` to
+determine the request format, rather than a file extension (like ``foo.json``).
 
 For details see :doc:`Format Listener <format_listener>`.
 
@@ -193,7 +194,7 @@ You need to enable this listener as follows, as it is disabled by default:
             # all requests using the 'json' format will return a 403 on an access denied violation
             json: true
 
-Note: The access_denied_listener doesn't return a response itself and must be coupled with an exception listener returning a response (see the :doc:`FOSRestBundle exception controller <4-exception-controller-support>`. or the `twig exception controller`_).
+Note: The access_denied_listener doesn't return a response itself and must be coupled with an exception listener returning a response (see the :doc:`FOSRestBundle exception controller <4-exception-controller-support>` or the `twig exception controller`_).
 
 Zone Listener
 -------------
