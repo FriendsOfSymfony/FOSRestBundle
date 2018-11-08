@@ -49,7 +49,7 @@ class DirectoryRouteLoader extends Loader
 
         $finder = new Finder();
 
-        foreach ($finder->in($resource)->name('*.php')->files() as $file) {
+        foreach ($finder->in($resource)->name('*.php')->sortByName()->files() as $file) {
             if ($class = ClassUtils::findClassInFile($file)) {
                 $imported = $this->processor->importResource($this, $class, array(), null, null, 'rest');
                 $collection->addCollection($imported);
