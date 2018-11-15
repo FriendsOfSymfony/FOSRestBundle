@@ -21,7 +21,7 @@ use JMS\Serializer\Handler\HandlerRegistryInterface;
  *
  * @internal do not depend on this class directly
  */
-class JMSHandlerRegistryV2 implements HandlerRegistryInterface
+final class JMSHandlerRegistryV2 implements HandlerRegistryInterface
 {
     private $registry;
 
