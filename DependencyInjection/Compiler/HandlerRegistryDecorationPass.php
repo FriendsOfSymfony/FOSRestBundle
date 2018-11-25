@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
 use FOS\RestBundle\Serializer\JMSHandlerRegistry;
+use FOS\RestBundle\Serializer\JMSHandlerRegistryV2;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -38,7 +40,7 @@ class HandlerRegistryDecorationPass implements CompilerPassInterface
         $jmsHandlerRegistry->setPublic(false);
         $container->setDefinition('fos_rest.serializer.jms_handler_registry.inner', $jmsHandlerRegistry);
 
-        $fosRestHandlerRegistry = $container->register('jms_serializer.handler_registry', JMSHandlerRegistry::class)
+        $fosRestHandlerRegistry = $container->register('jms_serializer.handler_registry', interface_exists(SerializationVisitorInterface::class) ? JMSHandlerRegistryV2::class : JMSHandlerRegistry::class)
             ->setPublic($public)
             ->addArgument(new Reference('fos_rest.serializer.jms_handler_registry.inner'));
 

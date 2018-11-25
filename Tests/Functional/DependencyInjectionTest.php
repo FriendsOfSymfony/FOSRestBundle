@@ -13,7 +13,9 @@ namespace FOS\RestBundle\Tests\Functional;
 
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Serializer\JMSHandlerRegistry;
+use FOS\RestBundle\Serializer\JMSHandlerRegistryV2;
 use FOS\RestBundle\Serializer\Normalizer\FormErrorHandler;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use JMS\SerializerBundle\JMSSerializerBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -29,8 +31,12 @@ class DependencyInjectionTest extends KernelTestCase
         self::bootKernel();
         $container = self::$kernel->getContainer();
 
-        $this->assertInstanceOf(FormErrorHandler::class, $container->get('jms_serializer.form_error_handler'));
-        $this->assertInstanceOf(JMSHandlerRegistry::class, $container->get('test.jms_serializer.handler_registry'));
+        $this->assertInstanceOf(FormErrorHandler::class, $container->get('test.jms_serializer.form_error_handler'));
+
+        $this->assertInstanceOf(
+            interface_exists(SerializationVisitorInterface::class) ? JMSHandlerRegistryV2::class : JMSHandlerRegistry::class,
+            $container->get('test.jms_serializer.handler_registry')
+        );
     }
 
     protected static function getKernelClass()
@@ -63,6 +69,7 @@ class TestKernel extends Kernel
                 'exception' => null,
             ]);
             $container->setAlias('test.jms_serializer.handler_registry', new Alias('jms_serializer.handler_registry', true));
+            $container->setAlias('test.jms_serializer.form_error_handler', new Alias('jms_serializer.form_error_handler', true));
         });
     }
 

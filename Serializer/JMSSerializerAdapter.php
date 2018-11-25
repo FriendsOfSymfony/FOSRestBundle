@@ -95,7 +95,7 @@ class JMSSerializerAdapter implements Serializer
         }
 
         foreach ($context->getAttributes() as $key => $value) {
-            $jmsContext->attributes->set($key, $value);
+            $jmsContext->setAttribute($key, $value);
         }
 
         if (null !== $context->getVersion()) {

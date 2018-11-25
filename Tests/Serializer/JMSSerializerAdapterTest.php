@@ -19,7 +19,6 @@ use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use PhpCollection\MapInterface;
 use PHPUnit\Framework\TestCase;
 
 class JMSSerializerAdapterTest extends TestCase
@@ -94,15 +93,13 @@ class JMSSerializerAdapterTest extends TestCase
         $exclusion = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();
 
         $jmsContext = $this->getMockBuilder(SerializationContext::class)->getMock();
-        $jmsContext->attributes = $this->getMockBuilder(MapInterface::class)->getMock();
 
         $jmsContext->expects($this->once())->method('setGroups')->with(['foo']);
         $jmsContext->expects($this->once())->method('setSerializeNull')->with(true);
         $jmsContext->expects($this->once())->method('enableMaxDepthChecks');
         $jmsContext->expects($this->once())->method('setVersion')->with('5.0.1');
         $jmsContext->expects($this->once())->method('addExclusionStrategy')->with($exclusion);
-
-        $jmsContext->attributes->expects($this->once())->method('set')->with('foo', 'bar');
+        $jmsContext->expects($this->once())->method('setAttribute')->with('foo', 'bar');
 
         $this->serializationContextFactory->method('createSerializationContext')->willReturn($jmsContext);
 
