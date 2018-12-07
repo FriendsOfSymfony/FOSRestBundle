@@ -12,16 +12,12 @@
 namespace FOS\RestBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Controllers using the View functionality of FOSRestBundle.
- *
- * @deprecated when used with Symfony 4.2, use {@see AbstractFOSRestController} instead.
- *
- * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-abstract class FOSRestController extends Controller
+abstract class AbstractFOSRestController extends AbstractController
 {
     use ControllerTrait;
 
