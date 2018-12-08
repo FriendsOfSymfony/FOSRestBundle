@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 /**
  * Controllers using the View functionality of FOSRestBundle.
  *
- * @deprecated when used with Symfony 4.2, use {@see AbstractFOSRestController} instead.
+ * @deprecated since FOSRestBundle 2.5, use {@see AbstractFOSRestController} instead
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */

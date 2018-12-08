@@ -34,4 +34,17 @@ abstract class AbstractFOSRestController extends AbstractController
 
         return $this->viewhandler;
     }
+
+    /**
+     *
+     *
+     * @return array
+     */
+    public static function getSubscribedServices()
+    {
+        $subscribedServices = parent::getSubscribedServices();
+        $subscribedServices['fos_rest.view_handler'] = ViewHandlerInterface::class;
+
+        return $subscribedServices;
+    }
 }
