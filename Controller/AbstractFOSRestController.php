@@ -36,7 +36,7 @@ abstract class AbstractFOSRestController extends AbstractController
     }
 
     /**
-     *
+     * @inheritdoc
      *
      * @return array
      */
