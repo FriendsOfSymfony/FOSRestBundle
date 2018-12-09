@@ -97,7 +97,17 @@ class AbstractScalarParamTest extends TestCase
         $this->param->map = true;
         $this->assertEquals(array(new Constraints\All(array(
             new Constraints\NotNull(),
-        ))), $this->param->getConstraints());
+        )), new Constraints\NotNull()), $this->param->getConstraints());
+    }
+
+    public function testArrayWithBlankConstraintsWhenParamIsAnArray()
+    {
+        $this->param->map = true;
+        $this->param->allowBlank = false;
+        $this->assertEquals(array(new Constraints\All(array(
+            new Constraints\NotNull(),
+            new Constraints\NotBlank(),
+        )), new Constraints\NotNull(), new Constraints\NotBlank()), $this->param->getConstraints());
     }
 
     public function testArrayWithNoConstraintsDoesNotCreateInvalidConstraint()
