@@ -143,7 +143,6 @@ class ViewResponseListener implements EventSubscriberInterface
     }
 
     /**
-     * @param Request  $request
      * @param Template $template
      * @param object   $controller
      * @param string   $action
