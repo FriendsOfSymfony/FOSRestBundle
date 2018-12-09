@@ -12,16 +12,12 @@
 namespace FOS\RestBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Controllers using the View functionality of FOSRestBundle.
- *
- * @deprecated since FOSRestBundle 2.5, use {@see AbstractFOSRestController} instead
- *
- * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-abstract class FOSRestController extends Controller
+abstract class AbstractFOSRestController extends AbstractController
 {
     use ControllerTrait;
 
@@ -37,5 +33,18 @@ abstract class FOSRestController extends Controller
         }
 
         return $this->viewhandler;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     */
+    public static function getSubscribedServices()
+    {
+        $subscribedServices = parent::getSubscribedServices();
+        $subscribedServices['fos_rest.view_handler'] = ViewHandlerInterface::class;
+
+        return $subscribedServices;
     }
 }
