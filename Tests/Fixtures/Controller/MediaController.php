@@ -13,9 +13,9 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class MediaController extends Controller implements ClassResourceInterface
+class MediaController extends AbstractController implements ClassResourceInterface
 {
     use ControllerTrait;
 

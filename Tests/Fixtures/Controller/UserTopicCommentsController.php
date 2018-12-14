@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class UserTopicCommentsController extends Controller
+class UserTopicCommentsController extends AbstractController
 {
     /**
      * [GET] /users/{slug}/topics/{title}/comments.

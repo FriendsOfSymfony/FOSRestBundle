@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\View;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  *
  * @author Florian Voutzinos <florian@voutzinos.com>
  */
-class SerializerErrorController extends Controller
+class SerializerErrorController extends AbstractController
 {
     /**
      * @View

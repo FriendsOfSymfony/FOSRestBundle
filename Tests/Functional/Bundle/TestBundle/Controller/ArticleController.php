@@ -11,15 +11,15 @@
 
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\View;
-use FOS\RestBundle\Controller\FOSRestController;
 
 /**
  * @RouteResource("Article")
  */
-class ArticleController extends FOSRestController
+class ArticleController extends AbstractFOSRestController
 {
     /**
      * Create a new resource.
