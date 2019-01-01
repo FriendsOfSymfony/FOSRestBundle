@@ -67,4 +67,9 @@ class DisableCSRFExtension extends AbstractTypeExtension
             : 'form' // SF <2.8 BC
             ;
     }
+
+    public static function getExtendedTypes()
+    {
+        return array(FormType::class);
+    }
 }
