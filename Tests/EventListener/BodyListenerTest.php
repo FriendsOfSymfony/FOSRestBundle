@@ -36,7 +36,7 @@ class BodyListenerTest extends TestCase
      * @param string  $contentType                            the request header content type
      * @param bool    $throwExceptionOnUnsupportedContentType
      *
-     * @dataProvider testOnKernelRequestDataProvider
+     * @dataProvider onKernelRequestDataProvider
      */
     public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false)
     {
@@ -76,7 +76,7 @@ class BodyListenerTest extends TestCase
         $this->assertEquals($request->request->all(), $expectedParameters);
     }
 
-    public static function testOnKernelRequestDataProvider()
+    public static function onKernelRequestDataProvider()
     {
         return [
             'Empty POST request' => [true, new Request([], [], [], [], [], [], ['foo']), 'POST', ['foo'], 'application/json'],

@@ -18,18 +18,23 @@ class ConfigurationTest extends WebTestCase
 {
     public function testDisabledTemplating()
     {
-        $this->createClient(['test_case' => 'Templating']);
+        $kernel = self::bootKernel(['test_case' => 'Templating']);
+        $container = $kernel->getContainer();
+
+        $this->assertFalse($container->has('fos_rest.templating'));
     }
 
     public function testToolbar()
     {
-        $this->createClient(['test_case' => 'Configuration'])
-            ->request(
+        $client = $this->createClient(['test_case' => 'Configuration']);
+        $client->request(
                 'GET',
                 '/_profiler/empty/search/results?limit=10',
                 [],
                 [],
                 ['HTTP_Accept' => 'application/json']
             );
+
+        $this->assertSame('text/html; charset=UTF-8', $client->getResponse()->headers->get('Content-Type'));
     }
 }

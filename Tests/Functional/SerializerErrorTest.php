@@ -19,7 +19,7 @@ namespace FOS\RestBundle\Tests\Functional;
 class SerializerErrorTest extends WebTestCase
 {
     /**
-     * @dataProvider testCaseProvider
+     * @dataProvider invalidFormJsonProvider
      */
     public function testSerializeExceptionJson($testCase)
     {
@@ -88,7 +88,7 @@ XML;
     }
 
     /**
-     * @dataProvider testCaseProvider
+     * @dataProvider invalidFormJsonProvider
      */
     public function testSerializeInvalidFormJson($testCase)
     {
@@ -98,7 +98,7 @@ XML;
         $this->assertEquals('{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}', $client->getResponse()->getContent());
     }
 
-    public function testCaseProvider()
+    public function invalidFormJsonProvider()
     {
         return [
             ['Serializer'],
