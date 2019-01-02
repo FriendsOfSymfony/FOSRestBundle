@@ -1,2 +1,3 @@
 imports:
     - { resource: framework.yml }
+    - { resource: services.yaml }

@@ -98,6 +98,7 @@ class AppKernel extends Kernel
     {
         $loader->load($this->rootConfig);
         $loader->load(function (ContainerBuilder $container) {
+            $container->setParameter('container.autowiring.strict_mode', true);
             $container->register('logger', NullLogger::class);
         });
     }

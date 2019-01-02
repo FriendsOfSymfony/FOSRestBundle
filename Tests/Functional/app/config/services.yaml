@@ -1,0 +1,6 @@
+services:
+    FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\:
+        resource: '../../Bundle/TestBundle/Controller/*'
+        public: true
+        autoconfigure: true
+        autowire: true

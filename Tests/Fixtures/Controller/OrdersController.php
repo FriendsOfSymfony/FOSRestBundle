@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class OrdersController extends Controller
+class OrdersController extends AbstractController
 {
     /**
      * [GET] /foos.

@@ -22,10 +22,10 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\Unlink;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Tests\Fixtures\User;
 
-class AnnotatedConditionalUsersController extends Controller
+class AnnotatedConditionalUsersController extends AbstractController
 {
     /**
      * [OPTIONS]     /users.

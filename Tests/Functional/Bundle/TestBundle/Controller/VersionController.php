@@ -11,14 +11,14 @@
 
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
-class VersionController extends FOSRestController
+class VersionController extends AbstractFOSRestController
 {
     /**
      * @View("TestBundle:Version:version.html.twig")

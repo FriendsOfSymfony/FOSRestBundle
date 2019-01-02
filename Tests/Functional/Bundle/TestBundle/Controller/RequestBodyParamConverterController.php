@@ -12,10 +12,10 @@
 namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class RequestBodyParamConverterController extends Controller
+class RequestBodyParamConverterController extends AbstractController
 {
     /**
      * @ParamConverter("post", converter="fos_rest.request_body")

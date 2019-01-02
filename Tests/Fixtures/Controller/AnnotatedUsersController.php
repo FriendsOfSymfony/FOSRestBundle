@@ -29,9 +29,9 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\Annotations\Unlink;
 use FOS\RestBundle\Controller\Annotations\Unlock;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class AnnotatedUsersController extends Controller
+class AnnotatedUsersController extends AbstractController
 {
     /**
      * @Options

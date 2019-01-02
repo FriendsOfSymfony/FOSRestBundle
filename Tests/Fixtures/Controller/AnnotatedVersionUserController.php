@@ -13,12 +13,12 @@ namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\Annotations\Get;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Version({"v1", "v3"})
  */
-class AnnotatedVersionUserController extends Controller
+class AnnotatedVersionUserController extends AbstractController
 {
     /**
      * [GET, HEAD]     /users/{slug}/v2.

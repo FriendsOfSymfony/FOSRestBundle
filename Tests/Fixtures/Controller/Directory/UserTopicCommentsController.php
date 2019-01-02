@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller\Directory;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class UserTopicCommentsController extends Controller
+class UserTopicCommentsController extends AbstractController
 {
     public function getCommentsAction($slug, $title)
     {

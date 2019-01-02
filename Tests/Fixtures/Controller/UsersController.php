@@ -11,10 +11,10 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-class UsersController extends Controller
+class UsersController extends AbstractController
 {
     public function copyUserAction($id)
     {
