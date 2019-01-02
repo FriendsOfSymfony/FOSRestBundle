@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by GuilhemN at 2018-12-15T13:28:41Z
+
+We get new notices (https://travis-ci.org/FriendsOfSymfony/FOSRestBundle/jobs/467961242), should autoconfiguration be enabled in our test suite?
