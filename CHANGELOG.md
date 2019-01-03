@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+2.5.0
+-----
+
+* compatibility with Symfony 4.2
+* deprecated the `FOSRestController` base class, use the new `AbstractFOSRestController` instead
+* dropped support for Symfony 2.7 to 3.3
+* compatibility with JMS Serializer 2 and JMSSerializerBundle 3
+* overwrite rules when they are defined in different config files instead of throwing exceptions
+* fixed using the `nullable` option of the param annotations when the `map` option is enabled
+* ensure a predictable order of routes by sorting controllers by name when loading classes from a directory
+* reset the internal state of the view handler to fix compatibility with PHP-PM
+* fix different bugs related to the handling of API versions (see #1491, #1529, #1691)
+
 2.4.0
 -----
 
