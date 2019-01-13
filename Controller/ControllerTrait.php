@@ -29,7 +29,7 @@ trait ControllerTrait
     private $viewhandler;
 
     /**
-     * Get the ViewHandler.
+     * Set the ViewHandler.
      *
      * @param ViewHandlerInterface $viewhandler
      */
