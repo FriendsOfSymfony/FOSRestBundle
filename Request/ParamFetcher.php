@@ -52,6 +52,10 @@ class ParamFetcher implements ParamFetcherInterface
      */
     public function __construct(ContainerInterface $container, ParamReaderInterface $paramReader, RequestStack $requestStack, ValidatorInterface $validator = null)
     {
+        if (null === $validator) {
+            @trigger_error(sprintf('Using no validator is deprecated since FOSRestBundle 2.6. The `$validator` constructor argument of the `%s` will become mandatory in 3.0.', __CLASS__), E_USER_DEPRECATED);
+        }
+
         $this->container = $container;
         $this->requestStack = $requestStack;
         $this->validator = $validator;
