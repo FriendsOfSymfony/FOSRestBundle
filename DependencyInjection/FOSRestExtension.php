@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Validator\Constraint;
 
 class FOSRestExtension extends Extension
 {
@@ -230,6 +231,10 @@ class FOSRestExtension extends Extension
     private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
     {
         if ($config['param_fetcher_listener']['enabled']) {
+            if (!class_exists(Constraint::class)) {
+                @trigger_error('Enabling the fos_rest.param_fetcher_listener option when the Symfony Validator component is not installed is deprecated since FOSRestBundle 2.6 and will throw an exception in 3.0. Disable the feature or install the symfony/validator package.', E_USER_DEPRECATED);
+            }
+
             $loader->load('param_fetcher_listener.xml');
 
             if (!empty($config['param_fetcher_listener']['service'])) {
