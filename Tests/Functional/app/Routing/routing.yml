@@ -1,3 +1,6 @@
 api_dir:
     resource: '@TestBundle/Controller/Api'
     type: rest
+
+imported:
+    resource: routing_imported.yml

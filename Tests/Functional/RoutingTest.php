@@ -35,4 +35,27 @@ class RoutingTest extends WebTestCase
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
         $this->assertJsonStringEqualsJsonString('{ "id": 3 }', $this->client->getResponse()->getContent());
     }
+
+    /**
+     * @dataProvider getManualRoutes
+     *
+     * @param string $method
+     * @param string $path
+     */
+    public function testManualRoutesWithTrailingSlash($method, $path)
+    {
+        $this->client->request($method, $path);
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function getManualRoutes()
+    {
+        return [
+            ['GET', '/imported-without-trailing-slash'],
+            ['GET', '/imported-with-trailing-slash/'],
+            ['POST', '/imported-without-trailing-slash'],
+            ['POST', '/imported-with-trailing-slash/'],
+        ];
+    }
 }
