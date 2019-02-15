@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.6.0
+-----
+
+* deprecated using the `ParamFetcher` class without passing a validator as the third argument, this
+  argument will become mandatory in 3.0
+
 2.5.0
 -----
 
