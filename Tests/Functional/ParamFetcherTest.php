@@ -50,9 +50,6 @@ class ParamFetcherTest extends WebTestCase
         $this->client = $this->createClient(['test_case' => 'ParamFetcher']);
     }
 
-    /**
-     * @group legacy
-     */
     public function testDefaultParameters()
     {
         $this->client->request('POST', '/params');
@@ -60,9 +57,6 @@ class ParamFetcherTest extends WebTestCase
         $this->assertArraySubset(['raw' => 'invalid', 'map' => 'invalid2 %', 'bar' => null], $this->getData());
     }
 
-    /**
-     * @group legacy
-     */
     public function testValidRawParameter()
     {
         $this->client->request('POST', '/params', ['raw' => $this->validRaw, 'map' => $this->validMap]);
@@ -70,9 +64,6 @@ class ParamFetcherTest extends WebTestCase
         $this->assertArraySubset(['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null], $this->getData());
     }
 
-    /**
-     * @group legacy
-     */
     public function testValidMapParameter()
     {
         $map = [
@@ -84,9 +75,6 @@ class ParamFetcherTest extends WebTestCase
         $this->assertArraySubset(['raw' => 'invalid', 'map' => $map, 'bar' => 'bar foo'], $this->getData());
     }
 
-    /**
-     * @group legacy
-     */
     public function testWithSubRequests()
     {
         $this->client->request('POST', '/params/test?foo=quz', array('raw' => $this->validRaw));
@@ -203,17 +191,11 @@ class ParamFetcherTest extends WebTestCase
         ), $this->getData());
     }
 
-    /**
-     * @group legacy
-     */
     public function testValidQueryParameter()
     {
         $this->client->request('POST', '/params?foz=val1');
     }
 
-    /**
-     * @group legacy
-     */
     public function testIncompatibleQueryParameter()
     {
         try {

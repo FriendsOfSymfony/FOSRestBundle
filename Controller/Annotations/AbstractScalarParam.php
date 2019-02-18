@@ -38,10 +38,8 @@ abstract class AbstractScalarParam extends AbstractParam
         $constraints = parent::getConstraints();
 
         if ($this->requirements instanceof Constraint) {
-            @trigger_error('Using a single constraint as requirements is deprecated. Use an array of constraints instead.', E_USER_DEPRECATED);
             $constraints[] = $this->requirements;
         } elseif (is_scalar($this->requirements)) {
-            @trigger_error('Using a scalar as requirements is deprecated. Use an array of constraints instead.', E_USER_DEPRECATED);
             $constraints[] = new Regex(array(
                 'pattern' => '#^(?:'.$this->requirements.')$#xsu',
                 'message' => sprintf(
@@ -51,7 +49,6 @@ abstract class AbstractScalarParam extends AbstractParam
                 ),
             ));
         } elseif (is_array($this->requirements) && isset($this->requirements['rule']) && $this->requirements['error_message']) {
-            @trigger_error('Using the "rule" and "error_message" options as requirements is deprecated. Use an array of constraints instead.', E_USER_DEPRECATED);
             $constraints[] = new Regex(array(
                 'pattern' => '#^(?:'.$this->requirements['rule'].')$#xsu',
                 'message' => $this->requirements['error_message'],
@@ -60,6 +57,8 @@ abstract class AbstractScalarParam extends AbstractParam
             foreach ($this->requirements as $requirement) {
                 if ($requirement instanceof Constraint) {
                     $constraints[] = $requirement;
+                } else {
+                    @trigger_error('Using an array not only containing `Constraint`s as requirements is deprecated since version 2.6.', E_USER_DEPRECATED);
                 }
             }
         }
