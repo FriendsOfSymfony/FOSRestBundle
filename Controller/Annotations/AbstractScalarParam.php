@@ -54,6 +54,14 @@ abstract class AbstractScalarParam extends AbstractParam
                 'pattern' => '#^(?:'.$this->requirements['rule'].')$#xsu',
                 'message' => $this->requirements['error_message'],
             ));
+        } elseif (is_array($this->requirements)) {
+            foreach ($this->requirements as $requirement) {
+                if ($requirement instanceof Constraint) {
+                    $constraints[] = $requirement;
+                } else {
+                    @trigger_error('Using an array not only containing `Constraint`s as requirements is deprecated since version 2.6.', E_USER_DEPRECATED);
+                }
+            }
         }
 
         if (false === $this->allowBlank) {
