@@ -59,7 +59,7 @@ Example applications
 The following bundles/applications use the FOSRestBundle and can be used as a
 guideline:
 
-- The `LiipHelloBundle`_ provides several examples for the RestBundle.
+- The `LiipHelloBundle`_ provides several examples for the RestBundle. (UNMAINTAINED)
 
 - There is also `a fork of the Symfony2 Standard Edition`_ that is configured to
   show the LiipHelloBundle examples.
