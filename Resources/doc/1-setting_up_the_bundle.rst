@@ -1,7 +1,30 @@
 Step 1: Setting up the bundle
 =============================
+    projets symfony flex la commande composer se casse la gueule si ya pas de serializer dans le projet
+A) Enable a Serializer
+----------------------
+.. caution::
+You must have a serializer otherwise the command fail
+::
 
-A) Download the Bundle
+This bundle needs a serializer to work correctly. In most cases,
+you'll need to enable a serializer or install one. This bundle tries
+the following (in the given order) to determine the serializer to use:
+
+#. The one you configured using ``fos_rest.service.serializer`` (if you did).
+#. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
+#. The `Symfony Serializer`_ if it's enabled (or any service called ``serializer``).
+
+That was it!
+
+.. _`installation chapter`: https://getcomposer.org/doc/00-intro.md
+.. _`JMSSerializer`: https://github.com/schmittjoh/serializer
+.. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
+.. _`Symfony Serializer`: http://symfony.com/doc/current/cookbook/serializer.html
+
+
+
+B) Download the Bundle
 ----------------------
 
 Open a command console, enter your project directory and execute the
@@ -31,21 +54,3 @@ in the `installation chapter`_ of the Composer documentation.
                 // ...
             }
         }
-    
-B) Enable a Serializer
-----------------------
-
-This bundle needs a serializer to work correctly. In most cases,
-you'll need to enable a serializer or install one. This bundle tries
-the following (in the given order) to determine the serializer to use:
-
-#. The one you configured using ``fos_rest.service.serializer`` (if you did).
-#. The JMS serializer, if the `JMSSerializerBundle`_ is available (and registered).
-#. The `Symfony Serializer`_ if it's enabled (or any service called ``serializer``).
-
-That was it!
-
-.. _`installation chapter`: https://getcomposer.org/doc/00-intro.md
-.. _`JMSSerializer`: https://github.com/schmittjoh/serializer
-.. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
-.. _`Symfony Serializer`: http://symfony.com/doc/current/cookbook/serializer.html
