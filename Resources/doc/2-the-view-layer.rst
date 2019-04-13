@@ -54,15 +54,16 @@ which adds several convenience methods:
         }
     }
 
-.. versionadded:: 1.6
-  The ``setTemplateData`` method was added in 1.6.
+.. versionadded:: 2.0
+    The ``ControllerTrait`` trait was added in 2.0.
 
 There is also a trait called ``ControllerTrait`` for anyone that prefers to not
 inject the container into their controller. This requires using setter injection
 to set a ``ViewHandlerInterface`` instance via the ``setViewHandler`` method.
 
-.. versionadded:: 2.0
-    The ``ControllerTrait`` trait was added in 2.0.
+
+.. versionadded:: 1.6
+  The ``setTemplateData`` method was added in 1.6.
 
 If you need to pass more data in template, not for serialization, you can use ``setTemplateData`` method:
 
