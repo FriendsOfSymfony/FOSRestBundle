@@ -34,7 +34,6 @@ class SymfonySerializerAdapter implements Serializer
     public function serialize($data, $format, Context $context)
     {
         $newContext = $this->convertContext($context);
-        $newContext['serializeNull'] = $context->getSerializeNull();
 
         return $this->serializer->serialize($data, $format, $newContext);
     }
@@ -65,6 +64,7 @@ class SymfonySerializerAdapter implements Serializer
         $newContext['version'] = $context->getVersion();
         $newContext['maxDepth'] = $context->getMaxDepth(false);
         $newContext['enable_max_depth'] = $context->isMaxDepthEnabled();
+        $newContext['skip_null_values'] = !$context->getSerializeNull();
 
         return $newContext;
     }
