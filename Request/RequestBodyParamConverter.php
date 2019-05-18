@@ -108,7 +108,13 @@ class RequestBodyParamConverter implements ParamConverterInterface
         if (null !== $this->validator && (!isset($options['validate']) || $options['validate'])) {
             $validatorOptions = $this->getValidatorOptions($options);
 
-            $errors = $this->validator->validate($object, null, $validatorOptions['groups']);
+            $groups = $validatorOptions['groups'];
+            if (\is_callable($groups)) {
+                // If the groups option is callable, resolve it
+                $groups = $groups($object, $request);
+            }
+
+            $errors = $this->validator->validate($object, null, $groups);
 
             $request->attributes->set(
                 $this->validationErrorsArgument,
