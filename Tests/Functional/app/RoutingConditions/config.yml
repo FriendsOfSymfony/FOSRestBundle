@@ -1,0 +1,16 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer:
+        enabled: true
+    router: { resource: "%kernel.root_dir%/RoutingConditions/routing.yml" }
+
+fos_rest:
+    versioning:
+        default_version: 3.4.2
+        resolvers:
+            path:
+                regex: '/^\/api\/(?P<version>v?[0-9\.]+)\//'
+        guessing_order:
+            - path

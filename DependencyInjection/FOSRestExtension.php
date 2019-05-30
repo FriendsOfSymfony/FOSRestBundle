@@ -218,6 +218,10 @@ class FOSRestExtension extends Extension
                 $resolvers['media_type'] = $container->getDefinition('fos_rest.versioning.media_type_resolver');
                 $resolvers['media_type']->replaceArgument(0, $config['versioning']['resolvers']['media_type']['regex']);
             }
+            if ($config['versioning']['resolvers']['path']['enabled']) {
+                $resolvers['path'] = $container->getDefinition('fos_rest.versioning.path_resolver');
+                $resolvers['path']->replaceArgument(0, $config['versioning']['resolvers']['path']['regex']);
+            }
 
             $chainResolver = $container->getDefinition('fos_rest.versioning.chain_resolver');
             foreach ($config['versioning']['guessing_order'] as $resolver) {

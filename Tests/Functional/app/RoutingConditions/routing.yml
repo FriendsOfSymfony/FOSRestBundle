@@ -1,0 +1,4 @@
+test_rest_prefix_routes:
+    resource: "@TestBundle/Resources/config/rest_routing.yml"
+    type: rest
+    prefix: /api/{version}

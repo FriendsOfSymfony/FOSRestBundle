@@ -1,0 +1,3 @@
+test_version_prefix:
+    resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\VersionPrefixController
+    type: rest

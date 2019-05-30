@@ -6,6 +6,7 @@ CHANGELOG
 
 * deprecated using the `ParamFetcher` class without passing a validator as the third argument, this
   argument will become mandatory in 3.0
+* added `PathVersionResolver` for better version resolution when version is passed via placeholder in URI
 
 2.5.0
 -----

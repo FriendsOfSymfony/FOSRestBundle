@@ -397,19 +397,28 @@ final class Configuration implements ConfigurationInterface
                                     ->scalarNode('regex')->defaultValue('/(v|version)=(?P<version>[0-9\.]+)/')->end()
                                 ->end()
                             ->end()
+                            ->arrayNode('path')
+                                ->canBeDisabled()
+                                ->children()
+                                    ->scalarNode('regex')
+                                        ->defaultValue('/\\/(?P<version>v?[0-9\.]+)\\//')
+                                        ->info('If your version is in path like so /api/{version}/action the following regex could be used: /^\\/api\/(?P<version>v?[0-9\\.]+)\\//')
+                                    ->end()
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                     ->arrayNode('guessing_order')
-                        ->defaultValue(['query', 'custom_header', 'media_type'])
+                        ->defaultValue(['query', 'custom_header', 'media_type', 'path'])
                         ->validate()
                             ->ifTrue(function ($v) {
                                 foreach ($v as $resolver) {
-                                    if (!in_array($resolver, ['query', 'custom_header', 'media_type'])) {
+                                    if (!in_array($resolver, ['query', 'custom_header', 'media_type', 'path'])) {
                                         return true;
                                     }
                                 }
                             })
-                            ->thenInvalid('Versioning guessing order can only contain "query", "custom_header", "media_type".')
+                            ->thenInvalid('Versioning guessing order can only contain "query", "custom_header", "media_type", "path".')
                         ->end()
                         ->prototype('scalar')->end()
                     ->end()
