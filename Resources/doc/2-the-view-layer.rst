@@ -29,9 +29,9 @@ which adds several convenience methods:
 
     namespace AppBundle\Controller;
 
-    use FOS\RestBundle\Controller\FOSRestController;
+    use FOS\RestBundle\Controller\AbstractFOSRestController;
 
-    class UsersController extends FOSRestController
+    class UsersController extends AbstractFOSRestController
     {
         public function getUsersAction()
         {
