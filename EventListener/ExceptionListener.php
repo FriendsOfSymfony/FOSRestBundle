@@ -34,7 +34,7 @@ class ExceptionListener extends HttpKernelExceptionListener
     {
         $request = $event->getRequest();
 
-        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
+        if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE)) {
             return;
         }
 
