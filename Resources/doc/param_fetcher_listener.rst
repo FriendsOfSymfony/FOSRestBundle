@@ -20,6 +20,7 @@ configured for the matched controller so that the user does not need to do this 
     use FOS\RestBundle\Controller\Annotations\RequestParam;
     use FOS\RestBundle\Controller\Annotations\QueryParam;
     use FOS\RestBundle\Controller\Annotations\FileParam;
+    use Symfony\Component\Validator\Constraints;
     use Acme\FooBundle\Validation\Constraints\MyComplexConstraint;
 
     class FooController extends Controller
