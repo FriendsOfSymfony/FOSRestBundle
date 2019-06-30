@@ -53,7 +53,7 @@ configured for the matched controller so that the user does not need to do this 
          * @RequestParam(name="simpleEmail", requirements=@Constraints\Email)
          * @RequestParam(name="complexEmail", requirements={@Constraints\Email, @Constraints\NotEqualTo("joe@example.org")})
          * You can use one or multiple Symfony Validator constraints for more complex requirements checking. The first
-         * example above checks for a correctly formatted e-mail adress. The second example also ensures that it does not
+         * example above checks for a correctly formatted e-mail address. The second example also ensures that it does not
          * matches some default example value.
          *
          * @RequestParam(name="search", requirements="[a-z]+", description="search")
@@ -113,7 +113,7 @@ configured for the matched controller so that the user does not need to do this 
 
             $dynamicQueryParam = new QueryParam();
             $dynamicQueryParam->name = "dynamic_query";
-            $dynamicQueryParam->requirements="[a-z]+";
+            $dynamicQueryParam->requirements = "[a-z]+";
             $paramFetcher->addParam($dynamicQueryParam);
 
             $page = $paramFetcher->get('page');
