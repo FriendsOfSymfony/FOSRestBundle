@@ -66,7 +66,9 @@ abstract class AbstractScalarParam extends AbstractParam
 
         if (false === $this->allowBlank) {
             $notBlank = new NotBlank();
-            $notBlank->allowNull = $this->nullable;
+            if (isset($notBlank->allowNull)) {
+                $notBlank->allowNull = $this->nullable;
+            }
             $constraints[] = $notBlank;
         }
 
