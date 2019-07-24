@@ -65,7 +65,9 @@ abstract class AbstractScalarParam extends AbstractParam
         }
 
         if (false === $this->allowBlank) {
-            $constraints[] = new NotBlank();
+            $notBlank = new NotBlank();
+            $notBlank->allowNull = $this->nullable;
+            $constraints[] = $notBlank;
         }
 
         // If the user wants to map the value, apply all constraints to every
