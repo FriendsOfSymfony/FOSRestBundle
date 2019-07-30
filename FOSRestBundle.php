@@ -38,7 +38,8 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new SerializerConfigurationPass());
         $container->addCompilerPass(new ConfigurationCheckPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -10);
         $container->addCompilerPass(new FormatListenerRulesPass());
-        $container->addCompilerPass(new TwigExceptionPass());
+        // must run after \Symfony\Bundle\TwigBundle\DependencyInjection\Compiler\ExtensionPass which removes the templating.engine.twig service when templating is not enabled
+        $container->addCompilerPass(new TwigExceptionPass(), PassConfig::TYPE_BEFORE_REMOVING, -10);
         $container->addCompilerPass(new JMSFormErrorHandlerPass());
         $container->addCompilerPass(new JMSHandlersPass(), PassConfig::TYPE_BEFORE_REMOVING, -10);
         $container->addCompilerPass(new HandlerRegistryDecorationPass(), PassConfig::TYPE_AFTER_REMOVING);
