@@ -1,10 +1,9 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/exception_listener.yml }
 
 framework:
-    serializer:
-        enabled: true
+    templating:
+        engines: ['twig']
 
 fos_rest:
     view:

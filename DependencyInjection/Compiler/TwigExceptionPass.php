@@ -13,9 +13,10 @@ namespace FOS\RestBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
- * Remove the 'fos_rest.exception.twig_controller' service if twig is enabled.
+ * Remove the 'fos_rest.exception.twig_controller' service if templating is not enabled and configure default exception controller.
  *
  * @internal
  */
@@ -23,6 +24,20 @@ final class TwigExceptionPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        // when no custom exception controller has been set
+        if ($container->hasDefinition('fos_rest.exception_listener') &&
+            null === $container->getDefinition('fos_rest.exception_listener')->getArgument(0)
+        ) {
+            if (isset($container->getParameter('kernel.bundles')['TwigBundle']) && $container->has('templating.engine.twig')) {
+                // only use this when TwigBundle is enabled and the deprecated SF templating integration is used
+                $controller = Kernel::VERSION_ID >= 40100 ? 'fos_rest.exception.twig_controller::showAction' : 'fos_rest.exception.twig_controller:showAction';
+            } else {
+                $controller = Kernel::VERSION_ID >= 40100 ? 'fos_rest.exception.controller::showAction' : 'fos_rest.exception.controller:showAction';
+            }
+
+            $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $controller);
+        }
+
         if (!$container->has('templating.engine.twig')) {
             $container->removeDefinition('fos_rest.exception.twig_controller');
         }

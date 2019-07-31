@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 class VersionController extends AbstractFOSRestController
 {
     /**
-     * @View("TestBundle:Version:version.html.twig")
+     * @View()
      */
     public function versionAction(Request $request, $version)
     {

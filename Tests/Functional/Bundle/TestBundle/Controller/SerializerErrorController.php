@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -22,17 +23,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class SerializerErrorController extends AbstractController
 {
-    /**
-     * @View
-     */
     public function logicExceptionAction()
     {
         throw new \LogicException('Something bad happened.');
     }
 
-    /**
-     * @View
-     */
     public function unknownExceptionAction()
     {
         throw new \OutOfBoundsException('Unknown exception message.');
@@ -43,15 +38,9 @@ class SerializerErrorController extends AbstractController
      */
     public function invalidFormAction()
     {
-        // BC hack for Symfony 2.7 where FormType's didn't yet get configured via the FQN
-        $formType = method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
-            ? 'Symfony\Component\Form\Extension\Core\Type\TextType'
-            : 'text'
-        ;
-
         $form = $this->createFormBuilder(null, [
             'csrf_protection' => false,
-        ])->add('name', $formType, [
+        ])->add('name', TextType::class, [
             'constraints' => [new NotBlank()],
         ])->getForm();
 

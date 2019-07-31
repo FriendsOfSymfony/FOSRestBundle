@@ -14,12 +14,14 @@ namespace FOS\RestBundle\Tests\View;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * View test.
@@ -37,7 +39,7 @@ class ViewHandlerTest extends TestCase
     {
         $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
         $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
-        $this->templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface')->getMock();
+        $this->templating = $this->getMockBuilder(EngineInterface::class)->getMock();
         $this->requestStack = new RequestStack();
     }
 
@@ -513,15 +515,9 @@ class ViewHandlerTest extends TestCase
      */
     public function testCreateResponseWithFormErrorsAndSerializationGroups($format)
     {
-        // BC hack for Symfony 2.7 where FormType's didn't yet get configured via the FQN
-        $formType = method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
-            ? 'Symfony\Component\Form\Extension\Core\Type\TextType'
-            : 'text'
-        ;
-
         $form = Forms::createFormFactory()->createBuilder()
-            ->add('name', $formType)
-            ->add('description', $formType)
+            ->add('name', TextType::class)
+            ->add('description', TextType::class)
             ->getForm();
 
         $form->get('name')->addError(new FormError('Invalid name'));
@@ -566,7 +562,7 @@ class ViewHandlerTest extends TestCase
 
     /**
      * @expectedException \LogicException
-     * @expectedExceptionMessage An instance of Symfony\Bundle\FrameworkBundle\Templating\EngineInterface must be injected in FOS\RestBundle\View\ViewHandler to render templates.
+     * @expectedExceptionMessage An instance of Symfony\Component\Templating\EngineInterface must be injected in FOS\RestBundle\View\ViewHandler to render templates.
      */
     public function testTemplatingNotInjected()
     {

@@ -11,26 +11,41 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+/**
+ * @group legacy
+ */
 class ExceptionListenerTest extends WebTestCase
 {
-    private $client;
+    private static $client;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->client = $this->createClient(['test_case' => 'ExceptionListener']);
+        parent::setUpBeforeClass();
+        static::$client = static::createClient(['test_case' => 'ExceptionListener']);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        self::deleteTmpDir('ExceptionListener');
+        parent::tearDownAfterClass();
+    }
+
+    protected function tearDown()
+    {
+        // prevent kernel shutdown
     }
 
     public function testBundleListenerHandlesExceptionsInRestZones()
     {
-        $this->client->request('GET', '/api/test');
+        static::$client->request('GET', '/api/test');
 
-        $this->assertEquals('application/json', $this->client->getResponse()->headers->get('Content-Type'));
+        $this->assertEquals('application/json', static::$client->getResponse()->headers->get('Content-Type'));
     }
 
     public function testSymfonyListenerHandlesExceptionsOutsideRestZones()
     {
-        $this->client->request('GET', '/test');
+        static::$client->request('GET', '/test');
 
-        $this->assertEquals('text/html; charset=UTF-8', $this->client->getResponse()->headers->get('Content-Type'));
+        $this->assertEquals('text/html; charset=UTF-8', static::$client->getResponse()->headers->get('Content-Type'));
     }
 }

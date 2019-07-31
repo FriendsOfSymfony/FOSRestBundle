@@ -18,7 +18,7 @@ class ConfigurationTest extends WebTestCase
 {
     public function testDisabledTemplating()
     {
-        $kernel = self::bootKernel(['test_case' => 'Templating']);
+        $kernel = self::bootKernel(['test_case' => 'Configuration']);
         $container = $kernel->getContainer();
 
         $this->assertFalse($container->has('fos_rest.templating'));

@@ -1,7 +1,5 @@
 language: php
 
-sudo: false
-
 cache:
   directories:
     - .phpunit
@@ -15,23 +13,19 @@ branches:
 matrix:
   fast_finish: true
   include:
-    - php: 5.5
-      dist: precise
+    # lowest dependencies
+    - php: 7.1
       env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
-    - php: 5.6
     # Symfony 3 LTS
-    - php: 7.0
+    - php: 7.2
       env: SYMFONY_LTS='^3'
     # Symfony 4
-    - php: 7.1
-      env: SYMFONY_PHPUNIT_VERSION='6.5'
-    - php: 7.2
     - php: 7.3
     # development dependencies
-    - php: 7.2
+    - php: 7.4snapshot
       env: DEPENDENCIES='dev'
   allow_failures:
-    - php: 7.2
+    - php: 7.4snapshot
       env: DEPENDENCIES='dev'
 
 before_install:

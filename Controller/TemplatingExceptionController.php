@@ -13,8 +13,8 @@ namespace FOS\RestBundle\Controller;
 
 use FOS\RestBundle\Util\ExceptionValueMap;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
 abstract class TemplatingExceptionController extends ExceptionController

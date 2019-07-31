@@ -40,7 +40,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      * Test that invalid YAML format.
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /The file "*.+\/bad_format\.yml" does not contain valid YAML\./
+     * @expectedExceptionMessageRegExp /The file "*.+bad_format\.yml" does not contain valid YAML\./
      */
     public function testLoadThrowsExceptionWithInvalidYaml()
     {
@@ -51,7 +51,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
      * Test that YAML value not an array.
      *
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /The file "*.+\/nonvalid.yml" must contain a Yaml mapping \(an array\)\./
+     * @expectedExceptionMessageRegExp /The file "*.+nonvalid.yml" must contain a Yaml mapping \(an array\)\./
      */
     public function testLoadThrowsExceptionWithValueNotArray()
     {

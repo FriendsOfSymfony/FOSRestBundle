@@ -13,26 +13,38 @@ namespace FOS\RestBundle\Tests\Functional;
 
 class RoutingTest extends WebTestCase
 {
-    private $client;
+    private static $client;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->client = $this->createClient(array('test_case' => 'Routing'));
+        parent::setUpBeforeClass();
+        static::$client = static::createClient(['test_case' => 'Routing']);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        self::deleteTmpDir('Routing');
+        parent::tearDownAfterClass();
+    }
+
+    protected function tearDown()
+    {
+        // prevent kernel shutdown
     }
 
     public function testPostControllerRoutesAreRegistered()
     {
-        $this->client->request('GET', '/posts/1');
+        static::$client->request('GET', '/posts/1');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertJsonStringEqualsJsonString('{ "id": 1 }', $this->client->getResponse()->getContent());
+        $this->assertSame(200, static::$client->getResponse()->getStatusCode());
+        $this->assertJsonStringEqualsJsonString('{ "id": 1 }', static::$client->getResponse()->getContent());
     }
 
     public function testCommentControllerRoutesAreRegistered()
     {
-        $this->client->request('GET', '/comments/3');
+        static::$client->request('GET', '/comments/3');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertJsonStringEqualsJsonString('{ "id": 3 }', $this->client->getResponse()->getContent());
+        $this->assertSame(200, static::$client->getResponse()->getStatusCode());
+        $this->assertJsonStringEqualsJsonString('{ "id": 3 }', static::$client->getResponse()->getContent());
     }
 }
