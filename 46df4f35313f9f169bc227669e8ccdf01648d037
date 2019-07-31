@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by Tobion at 2019-07-30T21:56:52Z
+
+Test failures unrelated and already failed before...
+
+---------------------------------------------------------------------------
+
+by Tobion at 2019-07-30T22:21:38Z
+
+For Symfony 4.4 compatibility we likely can remove/deprecate parts of the exception controllers and listeners etc as it will be obsolete with the new ErrorRenderer component. But that is a future topic to handle.
