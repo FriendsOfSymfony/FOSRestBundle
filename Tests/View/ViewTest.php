@@ -13,8 +13,8 @@ namespace FOS\RestBundle\Tests\View;
 
 use FOS\RestBundle\View\View;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\TemplateReference;
 
 /**
  * View test.

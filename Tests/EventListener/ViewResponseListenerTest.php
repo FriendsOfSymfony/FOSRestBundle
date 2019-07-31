@@ -13,13 +13,13 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\EventListener\ViewResponseListener;
-use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * View response listener test.
@@ -39,7 +39,7 @@ class ViewResponseListenerTest extends TestCase
     public $viewHandler;
 
     /**
-     * @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var EngineInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public $templating;
 
@@ -272,7 +272,7 @@ class ViewResponseListenerTest extends TestCase
     {
         $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
         $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
-        $this->templating = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Templating\EngineInterface')->getMock();
+        $this->templating = $this->getMockBuilder(EngineInterface::class)->getMock();
         $this->requestStack = new RequestStack();
     }
 

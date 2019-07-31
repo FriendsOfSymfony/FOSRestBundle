@@ -4,9 +4,12 @@ CHANGELOG
 2.6.0
 -----
 
+* drop support for PHP 5.5, 5.6 and 7.0
+* drop support for SF 4.0, 4.1 and 4.2 (3.4 LTS is still supported)
 * deprecated using the `ParamFetcher` class without passing a validator as the third argument, this
   argument will become mandatory in 3.0
 * fix compatiblity without the deprecated templating in Symfony 4.3; see #2012 on how to configure the FOSRestBundle
+* removed symfony/templating from the dependencies; if you still use it you need to require it in your app
 
 2.5.0
 -----
