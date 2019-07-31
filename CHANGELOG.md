@@ -6,6 +6,7 @@ CHANGELOG
 
 * deprecated using the `ParamFetcher` class without passing a validator as the third argument, this
   argument will become mandatory in 3.0
+* fix compatiblity without the deprecated templating in Symfony 4.3; see #2012 on how to configure the FOSRestBundle
 
 2.5.0
 -----
