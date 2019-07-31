@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
-use Doctrine\Common\Util\ClassUtils;
 use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
@@ -439,7 +438,7 @@ class ParamFetcherTest extends TestCase
         $this->paramReader
             ->expects($this->any())
             ->method('read')
-            ->with(new \ReflectionClass(ClassUtils::getClass($this->controller[0])), $this->controller[1])
+            ->with(new \ReflectionClass(get_class($this->controller[0])), $this->controller[1])
             ->willReturn($newParams);
     }
 
