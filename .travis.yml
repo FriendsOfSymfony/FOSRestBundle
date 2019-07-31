@@ -10,10 +10,6 @@ branches:
     - master
     - /^\d+\.\d+$/
 
-env:
-  global:
-    - SYMFONY_PHPUNIT_VERSION='7.5'
-
 matrix:
   fast_finish: true
   include:

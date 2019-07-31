@@ -2,7 +2,11 @@
 
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
     <php>
-        <env name="SHELL_VERBOSITY" value="-1" />
+        <ini name="error_reporting" value="-1" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="999999" />
+        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="7.5" />
     </php>
 
     <testsuites>
@@ -15,7 +19,6 @@
         <whitelist>
             <directory>./</directory>
             <exclude>
-                <file>./Routing/Loader/RestRouteLoader20.php</file>
                 <directory>./Resources</directory>
                 <directory>./Tests</directory>
                 <directory>./vendor</directory>
