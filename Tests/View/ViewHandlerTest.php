@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Tests\View;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\FormView;
@@ -514,15 +515,9 @@ class ViewHandlerTest extends TestCase
      */
     public function testCreateResponseWithFormErrorsAndSerializationGroups($format)
     {
-        // BC hack for Symfony 2.7 where FormType's didn't yet get configured via the FQN
-        $formType = method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
-            ? 'Symfony\Component\Form\Extension\Core\Type\TextType'
-            : 'text'
-        ;
-
         $form = Forms::createFormFactory()->createBuilder()
-            ->add('name', $formType)
-            ->add('description', $formType)
+            ->add('name', TextType::class)
+            ->add('description', TextType::class)
             ->getForm();
 
         $form->get('name')->addError(new FormError('Invalid name'));

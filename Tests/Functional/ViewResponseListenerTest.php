@@ -13,6 +13,12 @@ namespace FOS\RestBundle\Tests\Functional;
 
 class ViewResponseListenerTest extends WebTestCase
 {
+    public static function tearDownAfterClass()
+    {
+        self::deleteTmpDir('ViewResponseListener');
+        parent::tearDownAfterClass();
+    }
+
     public function testRedirect()
     {
         $client = $this->createClient(array('test_case' => 'ViewResponseListener'));
@@ -28,17 +34,5 @@ class ViewResponseListenerTest extends WebTestCase
         $this->assertSame(302, $client->getResponse()->getStatusCode());
         $this->assertSame('http://localhost/hello/Post%201', $client->getResponse()->headers->get('location'));
         $this->assertNotContains('fooo', $client->getResponse()->getContent());
-    }
-
-    public function testTemplateOverride()
-    {
-        $client = $this->createClient(array('test_case' => 'ViewResponseListener'));
-        $client->request(
-            'GET',
-            '/articles'
-        );
-
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('fooo', $client->getResponse()->getContent());
     }
 }

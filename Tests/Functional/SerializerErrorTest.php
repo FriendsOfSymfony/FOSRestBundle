@@ -18,6 +18,13 @@ namespace FOS\RestBundle\Tests\Functional;
  */
 class SerializerErrorTest extends WebTestCase
 {
+    public static function tearDownAfterClass()
+    {
+        self::deleteTmpDir('Serializer');
+        self::deleteTmpDir('JMSSerializer');
+        parent::tearDownAfterClass();
+    }
+
     /**
      * @dataProvider invalidFormJsonProvider
      */

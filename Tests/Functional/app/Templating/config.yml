@@ -1,6 +1,0 @@
-imports:
-    - { resource: ../config/default.yml }
-
-framework:
-    serializer: true
-    templating: false

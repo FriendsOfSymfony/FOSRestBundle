@@ -5,8 +5,6 @@ imports:
 framework:
     serializer:
         enabled: true
-    templating:
-        engines: ['twig']
 
 fos_rest:
     format_listener:
