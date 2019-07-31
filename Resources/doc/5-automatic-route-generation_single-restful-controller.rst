@@ -11,7 +11,7 @@ You may specify a ``default_format`` that the routing loader will use for the
 
 .. code-block:: yaml
 
-    # app/config/config.yml
+    # app/config/packages/fos_rest.yaml
     fos_rest:
         routing_loader:
             default_format: json
@@ -28,7 +28,7 @@ are explained in the next section.
 
 .. code-block:: yaml
 
-    # app/config/routing.yml
+    # app/config/packages/routing.yml
     users:
         type:     rest
         host:     m.example.com
