@@ -24,7 +24,6 @@ Setting ``priorities`` to a non-empty array enables Accept header negotiations.
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         format_listener:
             enabled: true
@@ -98,7 +97,6 @@ format will remain unchanged.
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         format_listener:
             enabled: true

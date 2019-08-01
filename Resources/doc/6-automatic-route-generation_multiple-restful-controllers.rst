@@ -40,11 +40,10 @@ XML collection:
 Notice ``parent: users`` option in the second case. This option specifies that
 the comments resource is child of the users resource.
 
-It is also necessary to add ``type: rest`` to the ``routing.yml`` file:
+It is also necessary to add ``type: rest`` to the ``routes.yaml`` file:
 
 .. code-block:: yaml
 
-    # app/config/routing.yml
     acme_hello:
         type: rest
         host:   hostname.example.com
@@ -112,11 +111,10 @@ resources of ``UsersController::getUser()`` resource.
 Include resource collections in application routing
 ---------------------------------------------------
 
-Last step is mapping of your collection routes into the application ``routing.yml``:
+Last step is mapping of your collection routes into the application ``routes.yaml``:
 
 .. code-block:: yaml
 
-    # app/config/routing.yml
     users:
         type:     rest
         resource: "@AcmeHelloBundle/Resources/config/users_routes.yml"
@@ -151,7 +149,7 @@ a file loaded by the rest loader.):
 
 .. code-block:: yaml
 
-    # app/config/routing.yml
+    # config/routes.yaml
     users:
         type: rest  # Required for ``RestYamlLoader`` to process imported routes
         prefix: /api

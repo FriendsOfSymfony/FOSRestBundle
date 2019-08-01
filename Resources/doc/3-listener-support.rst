@@ -17,7 +17,6 @@ to enable a few additional listeners:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         param_fetcher_listener: true
         body_listener: true
@@ -37,7 +36,6 @@ appropriate event:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         body_listener:
             service: my_body_listener
@@ -120,7 +118,6 @@ since 2.5.
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         view:
             mime_types: {'jsonp': ['application/javascript+jsonp']}
@@ -210,7 +207,6 @@ rules on the request ``path``, ``host``, ``methods`` and ``ip``.
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         zone:
             - { path: ^/api/* }

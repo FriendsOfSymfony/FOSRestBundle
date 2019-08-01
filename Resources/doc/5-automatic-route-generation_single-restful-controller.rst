@@ -11,13 +11,9 @@ You may specify a ``default_format`` that the routing loader will use for the
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         routing_loader:
             default_format: json
-
-Many of the features explained below are used in the following example code:
-https://github.com/liip/LiipHelloBundle/blob/master/Controller/RestController.php
 
 Single RESTful controller routes
 --------------------------------
@@ -28,7 +24,6 @@ are explained in the next section.
 
 .. code-block:: yaml
 
-    # app/config/routing.yml
     users:
         type:     rest
         host:     m.example.com
@@ -351,7 +346,6 @@ some configuration:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         routing_loader:
             include_format:       false
@@ -412,7 +406,7 @@ Example class implementing ``InflectorInterface``:
         }
     }
 
-Define your service in ``config.yml``:
+Define your service:
 
 .. code-block:: yaml
 
@@ -420,7 +414,7 @@ Define your service in ``config.yml``:
         acme.hellobundle.util.inflector:
           class: Acme\HelloBundle\Util\Inflector\NoopInflector
 
-Tell ``fos_rest`` to use your own service as inflector, also in ``config.yml``:
+Tell ``fos_rest`` to use your own service as inflector:
 
 .. code-block:: yaml
 

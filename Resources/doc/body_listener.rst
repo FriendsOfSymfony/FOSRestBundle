@@ -17,7 +17,6 @@ decoder is explicitly kept to its default service):
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         body_listener:
             decoders:
@@ -51,7 +50,6 @@ to camel cased ones, you can use the ``camel_keys`` array normalizer:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         body_listener:
             array_normalizer: fos_rest.normalizer.camel_keys
@@ -77,7 +75,6 @@ You can also create your own array normalizer by implementing the
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         body_listener:
             array_normalizer: acme.normalizer.custom
@@ -87,7 +84,6 @@ If you want form data to be normalized, you can use the ``forms`` flag:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         body_listener:
             array_normalizer:

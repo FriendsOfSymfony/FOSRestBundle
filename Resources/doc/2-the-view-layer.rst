@@ -168,8 +168,6 @@ the important ones for configuring the view:
 * ``setResponse(Response $response)`` - The response instance that is populated
   by the ``ViewHandler``.
 
-See `this example code`_ for more details.
-
 Forms and Views
 ---------------
 
@@ -310,7 +308,6 @@ default of ``twig``:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         view:
             formats:
@@ -322,8 +319,6 @@ default of ``twig``:
                 html: true
             failed_validation: HTTP_BAD_REQUEST
             default_engine: twig
-
-See `this example configuration`_ for more details.
 
 Custom handler
 --------------
@@ -348,12 +343,7 @@ Note there are several public methods on the ``ViewHandler`` which can be helpfu
 * ``createRedirectResponse()``
 * ``renderTemplate()``
 
-There is an example inside LiipHelloBundle to show how to register a custom handler
-(for an RSS feed):
-https://github.com/liip/LiipHelloBundle/blob/master/View/RSSViewHandler.php
-https://github.com/liip/LiipHelloBundle/blob/master/Resources/config/config.yml
-
-There is another example in ``Resources\doc\examples``:
+There is an example for how to register a custom handler (for an RSS feed) in ``Resources\doc\examples``:
 https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/examples/RssHandler.php
 
 Here is an example using a closure registered inside a Controller action:
@@ -418,7 +408,6 @@ Simply add the following to your configuration
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         view:
             jsonp_handler: ~
@@ -429,7 +418,6 @@ is valid or not.
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         view:
             jsonp_handler:
@@ -439,7 +427,6 @@ Finally the filter can also be disabled by setting it to false.
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         view:
             jsonp_handler:
@@ -469,8 +456,6 @@ That was it!
 .. _`Symfony Serializer Component`: http://symfony.com/doc/current/components/serializer.html
 .. _`serializer`: https://github.com/schmittjoh/serializer
 .. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
-.. _`this example code`: https://github.com/liip/LiipHelloBundle/blob/master/Controller/HelloController.php
-.. _`this example configuration`: https://github.com/liip-forks/symfony-standard/blob/techtalk/app/config/config.yml
 .. _`CVE-2014-4671`: http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2014-4671
 .. _`Abusing JSONP with Rosetta Flash`: http://miki.it/blog/2014/7/8/abusing-jsonp-with-rosetta-flash/
 .. _`NelmioSecurityBundle`: https://github.com/nelmio/NelmioSecurityBundle
