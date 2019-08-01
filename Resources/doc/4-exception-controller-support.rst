@@ -12,7 +12,6 @@ configuration:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         exception:
             enabled: true
@@ -38,7 +37,6 @@ constant of the ``Symfony\Component\HttpFoundation\Response`` class:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         exception:
             codes:

@@ -36,7 +36,7 @@ final class ParameterBag
         if (!isset($this->params[$requestId]) || empty($this->params[$requestId]['controller'])) {
             throw new \InvalidArgumentException('Controller and method needs to be set via setController.');
         }
-        if ($this->params[$requestId]['params'] === null) {
+        if (null === $this->params[$requestId]['params']) {
             return $this->initParams($requestId);
         }
 

@@ -59,17 +59,10 @@ Example applications
 The following bundles/applications use the FOSRestBundle and can be used as a
 guideline:
 
-- The `LiipHelloBundle`_ provides several examples for the RestBundle.
-
-- There is also `a fork of the Symfony2 Standard Edition`_ that is configured to
-  show the LiipHelloBundle examples.
-
 - The `FOSCommentBundle`_ uses FOSRestBundle for its API.
 
 - The `Symfony2 Rest Edition`_ provides a complete example of how to build a
   controller that works for both HTML as well as JSON/XML.
 
-.. _`LiipHelloBundle`: https://github.com/liip/LiipHelloBundle
-.. _`a fork of the Symfony2 Standard Edition`: https://github.com/liip-forks/symfony-standard/tree/techtalk
 .. _`FOSCommentBundle`: https://github.com/FriendsOfSymfony/FOSCommentBundle
 .. _`Symfony2 Rest Edition`: https://github.com/gimler/symfony-rest-edition

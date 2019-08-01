@@ -10,7 +10,6 @@ and have the converters enabled:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     sensio_framework_extra:
         request: { converters: true }
 
@@ -18,7 +17,6 @@ To enable the Request body converter, add the following configuration:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         body_converter:
             enabled: true
@@ -68,7 +66,6 @@ enabling validation:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         body_converter:
             enabled: true

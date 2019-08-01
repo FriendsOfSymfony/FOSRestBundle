@@ -25,7 +25,7 @@ If you want to version your api with the uri, you can simply use the symfony rou
 
 .. code-block:: yaml
 
-    # app/config/routing.yml
+    # config/routes.yaml
     my_route:
         # ...
         path: /{version}/foo/route
@@ -35,11 +35,10 @@ Note: this will override the ``version`` attribute of the request if you use the
 Configure ``FOSRestBundle`` to use the api versioning
 -----------------------------------------------------
 
-You should activate the versioning in your config.yml:
+You should activate the versioning:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         versioning: true
 
@@ -47,7 +46,6 @@ If you do not want to allow all the methods described above, you should choose w
 
 .. code-block:: yaml
 
-    #app/config/config.yml
     fos_rest:
         versioning:
             enabled: true
@@ -62,7 +60,6 @@ You can also choose the guessing order:
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         versioning:
             enabled: true
@@ -134,12 +131,12 @@ If you want to version by Accept header, you will need to do the following:
            ),
        ));
 
-   And then, import it from your config.yml file:
+   And then, import it from your Symfony config:
 
    .. code-block:: yaml
 
-    imports:
-        - { resource: assets_version.php }
+       imports:
+           - { resource: fos_rest_mime_types.php }
 
 Use the ``JMSSerializer`` with the API versioning
 -------------------------------------------------

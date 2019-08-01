@@ -6,7 +6,6 @@ configured for the matched controller so that the user does not need to do this 
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         param_fetcher_listener: true
 
@@ -139,7 +138,6 @@ request attributes
 
 .. code-block:: yaml
 
-    # app/config/config.yml
     fos_rest:
         param_fetcher_listener: force
 
