@@ -4,8 +4,8 @@ Step 1: Setting up the bundle
 A) Download the Bundle
 ----------------------
 
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
+Assuming you already have `set up a Symfony project`_, you can add the FOSRestBundle to it. Open a command console,
+enter your project directory and execute the following command to download the latest stable version of this bundle:
 
 .. code-block:: bash
 
@@ -45,6 +45,7 @@ the following (in the given order) to determine the serializer to use:
 
 That was it!
 
+.. _`set up a Symfony project`: https://symfony.com/download
 .. _`installation chapter`: https://getcomposer.org/doc/00-intro.md
 .. _`JMSSerializer`: https://github.com/schmittjoh/serializer
 .. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
