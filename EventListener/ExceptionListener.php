@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener as HttpKernelExceptionListener;
@@ -25,11 +27,15 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
  *
  * @internal
  */
-class ExceptionListener extends HttpKernelExceptionListener
+class ExceptionListener implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    private $exceptionListener;
+
+    public function __construct($controller, LoggerInterface $logger = null)
+    {
+        $this->exceptionListener = new HttpKernelExceptionListener($controller, $logger);
+    }
+
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $request = $event->getRequest();
@@ -38,12 +44,9 @@ class ExceptionListener extends HttpKernelExceptionListener
             return;
         }
 
-        parent::onKernelException($event);
+        $this->exceptionListener->onKernelException($event);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -51,9 +54,6 @@ class ExceptionListener extends HttpKernelExceptionListener
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function duplicateRequest(\Exception $exception, Request $request)
     {
         $attributes = array(
