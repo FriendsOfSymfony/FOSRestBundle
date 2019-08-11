@@ -53,7 +53,7 @@ class KebabKeysNormalizerTest extends TestCase
             ),
             array(
                 array('_-username' => 'foo', '-password' => 'bar', '-foo-bar' => 'foobar'),
-                array('_Username' => 'foo', 'Password' => 'bar', 'FooBar' => 'foobar')
+                array('_Username' => 'foo', 'Password' => 'bar', 'FooBar' => 'foobar'),
             ),
         );
     }
