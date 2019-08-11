@@ -11,7 +11,7 @@
 namespace FOS\RestBundle\Normalizer;
 
 /**
- * Normalizes the array by changing its keys from kebab-case to camel case
+ * Normalizes the array by changing its keys from kebab-case to camel case.
  *
  * @author Oleg Andreyev <oleg@andreyev.lv>
  */

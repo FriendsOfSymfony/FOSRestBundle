@@ -1,13 +1,19 @@
 <?php
-
+/*
+ * This file is part of the FOSRestBundle package.
+ *
+ * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace FOS\RestBundle\Normalizer;
-
 
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 
 /**
- * Abstract Keys Normalizer
+ * Abstract Keys Normalizer.
  *
  * @author Oleg Andreyev <oleg@andreyev.lv>
  */
@@ -19,6 +25,7 @@ abstract class AbstractKeysNormalizer implements ArrayNormalizerInterface
     public function normalize(array $data): array
     {
         $this->normalizeArray($data);
+
         return $data;
     }
 
