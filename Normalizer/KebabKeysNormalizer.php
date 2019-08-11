@@ -10,60 +10,13 @@
 
 namespace FOS\RestBundle\Normalizer;
 
-use FOS\RestBundle\Normalizer\Exception\NormalizationException;
-
 /**
- * Normalizes the array by changing its keys from kebab case to camel case.
+ * Normalizes the array by changing its keys from kebab-case to camel case
  *
- * @author Oleg Andreyev <oleg.andreyev@live.com>
+ * @author Oleg Andreyev <oleg@andreyev.lv>
  */
-class KebabKeysNormalizer implements ArrayNormalizerInterface
+class KebabKeysNormalizer extends AbstractKeysNormalizer
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function normalize(array $data)
-    {
-        $this->normalizeArray($data);
-
-        return $data;
-    }
-
-    /**
-     * Normalizes an array.
-     *
-     * @param array &$data
-     *
-     * @throws Exception\NormalizationException
-     */
-    private function normalizeArray(array &$data)
-    {
-        $normalizedData = array();
-
-        foreach ($data as $key => $val) {
-            $normalizedKey = $this->normalizeString($key);
-
-            if ($normalizedKey !== $key) {
-                if (array_key_exists($normalizedKey, $normalizedData)) {
-                    throw new NormalizationException(sprintf(
-                        'The key "%s" is invalid as it will override the existing key "%s"',
-                        $key,
-                        $normalizedKey
-                    ));
-                }
-            }
-
-            $normalizedData[$normalizedKey] = $val;
-            $key = $normalizedKey;
-
-            if (is_array($val)) {
-                $this->normalizeArray($normalizedData[$key]);
-            }
-        }
-
-        $data = $normalizedData;
-    }
-
     /**
      * Normalizes a string.
      *
@@ -71,7 +24,7 @@ class KebabKeysNormalizer implements ArrayNormalizerInterface
      *
      * @return string
      */
-    protected function normalizeString($string)
+    protected function normalizeString(string $string): string
     {
         if (false === strpos($string, '-')) {
             return $string;
