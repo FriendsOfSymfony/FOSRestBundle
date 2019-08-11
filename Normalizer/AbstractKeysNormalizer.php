@@ -35,6 +35,7 @@ abstract class AbstractKeysNormalizer implements ArrayNormalizerInterface
      * @param array $data
      *
      * @return array
+     *
      * @throws Exception\NormalizationException
      */
     protected function normalizeArray(array $data)
