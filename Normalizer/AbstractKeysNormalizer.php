@@ -24,9 +24,7 @@ abstract class AbstractKeysNormalizer implements ArrayNormalizerInterface
      */
     public function normalize(array $data): array
     {
-        $this->normalizeArray($data);
-
-        return $data;
+        return $this->normalizeArray($data);
     }
 
     abstract protected function normalizeString(string $string): string;
@@ -36,9 +34,10 @@ abstract class AbstractKeysNormalizer implements ArrayNormalizerInterface
      *
      * @param array $data
      *
+     * @return array
      * @throws Exception\NormalizationException
      */
-    protected function normalizeArray(array &$data)
+    protected function normalizeArray(array $data)
     {
         $normalizedData = [];
 
@@ -57,10 +56,10 @@ abstract class AbstractKeysNormalizer implements ArrayNormalizerInterface
             $key = $normalizedKey;
 
             if (is_array($val)) {
-                $this->normalizeArray($normalizedData[$key]);
+                $normalizedData[$key] = $this->normalizeArray($normalizedData[$key]);
             }
         }
 
-        $data = $normalizedData;
+        return $normalizedData;
     }
 }
