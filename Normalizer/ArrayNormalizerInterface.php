@@ -27,5 +27,5 @@ interface ArrayNormalizerInterface
      *
      * @return array The normalized array
      */
-    public function normalize(array $data);
+    public function normalize(array $data): array;
 }
