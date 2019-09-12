@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
+use Twig\Environment;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -122,7 +123,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         Serializer $serializer,
-        EngineInterface $templating = null,
+        $templating,
         RequestStack $requestStack,
         array $formats = null,
         $failedValidationCode = Response::HTTP_BAD_REQUEST,
@@ -132,6 +133,15 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $defaultEngine = 'twig',
         array $options = []
     ) {
+        if (null !== $templating && !$templating instanceof EngineInterface && !$templating instanceof Environment) {
+            throw new \TypeError(sprintf(
+                'If provided, the templating engine must be an instance of %s or %s, but %s was given.',
+                EngineInterface::class,
+                Environment::class,
+                get_class($templating)
+            ));
+        }
+
         $this->urlGenerator = $urlGenerator;
         $this->serializer = $serializer;
         $this->templating = $templating;
