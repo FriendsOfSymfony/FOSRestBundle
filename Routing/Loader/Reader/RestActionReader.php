@@ -20,7 +20,9 @@ use FOS\RestBundle\Routing\RestRouteCollection;
 use Psr\Http\Message\MessageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -528,11 +530,13 @@ class RestActionReader
 
         // ignore several type hinted arguments
         $ignoreClasses = [
-            Request::class,
-            ParamFetcherInterface::class,
             ConstraintViolationListInterface::class,
-            ParamConverter::class,
             MessageInterface::class,
+            ParamConverter::class,
+            ParamFetcherInterface::class,
+            Request::class,
+            SessionInterface::class,
+            UserInterface::class,
         ];
 
         $arguments = [];
