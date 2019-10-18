@@ -28,7 +28,7 @@ final class TwigExceptionPass implements CompilerPassInterface
         if ($container->hasDefinition('fos_rest.exception_listener') &&
             null === $container->getDefinition('fos_rest.exception_listener')->getArgument(0)
         ) {
-            if (isset($container->getParameter('kernel.bundles')['TwigBundle']) && $container->has('templating.engine.twig')) {
+            if (isset($container->getParameter('kernel.bundles')['TwigBundle']) && ($container->has('templating.engine.twig') || $container->has('twig'))) {
                 // only use this when TwigBundle is enabled and the deprecated SF templating integration is used
                 $controller = Kernel::VERSION_ID >= 40100 ? 'fos_rest.exception.twig_controller::showAction' : 'fos_rest.exception.twig_controller:showAction';
             } else {
@@ -39,7 +39,11 @@ final class TwigExceptionPass implements CompilerPassInterface
         }
 
         if (!$container->has('templating.engine.twig')) {
-            $container->removeDefinition('fos_rest.exception.twig_controller');
+            if ($container->has('twig') && $container->has('fos_rest.exception.twig_controller')) {
+                $container->findDefinition('fos_rest.exception.twig_controller')->replaceArgument(3, $container->findDefinition('twig'));
+            } else {
+                $container->removeDefinition('fos_rest.exception.twig_controller');
+            }
         }
     }
 }
