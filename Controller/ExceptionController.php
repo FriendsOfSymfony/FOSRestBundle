@@ -16,7 +16,8 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
+use Symfony\Component\ErrorRenderer\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
@@ -125,8 +126,14 @@ class ExceptionController
      */
     private function getTemplateData($currentContent, $code, \Exception $exception, DebugLoggerInterface $logger = null)
     {
+        if (class_exists(FlattenException::class)) {
+            $exception = FlattenException::createFromThrowable($exception);
+        } else {
+            $exception = LegacyFlattenException::create($exception);
+        }
+
         return [
-            'exception' => FlattenException::create($exception),
+            'exception' => $exception,
             'status' => 'error',
             'status_code' => $code,
             'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
