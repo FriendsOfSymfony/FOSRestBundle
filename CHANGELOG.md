@@ -4,6 +4,10 @@ CHANGELOG
 2.6.0
 -----
 
+* ensure compatibility with the `FlattenException` from the new ErrorRenderer component
+* fix handling the `serialize_null` option with the Symfony serializer
+* added support for using multiple constraints for the `requirements` option of the `@RequestParam`
+  annotation
 * drop support for PHP 5.5, 5.6 and 7.0
 * drop support for SF 4.0, 4.1 and 4.2 (3.4 LTS is still supported)
 * deprecated using the `ParamFetcher` class without passing a validator as the third argument, this
