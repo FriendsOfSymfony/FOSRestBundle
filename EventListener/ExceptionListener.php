@@ -13,7 +13,8 @@ namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
+use Symfony\Component\ErrorRenderer\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -51,7 +52,7 @@ class ExceptionListener implements EventSubscriberInterface
         $requestListener = function (KernelEvent $event) use (&$requestListener, $exception) {
             $request = $event->getRequest();
 
-            if (!$event->isMasterRequest() && $request->attributes->get('exception') instanceof FlattenException) {
+            if (!$event->isMasterRequest() && ($request->attributes->get('exception') instanceof FlattenException || $request->attributes->get('exception') instanceof LegacyFlattenException)) {
                 $request->attributes->set('exception', $exception);
             }
 
