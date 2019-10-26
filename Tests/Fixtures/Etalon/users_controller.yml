@@ -128,6 +128,11 @@ get_user_foos:
   path:    /users/{slug}/foos.{_format}
   controller: ::getUserFoosAction
 
+get_user_bars:
+  methods: [GET]
+  path:    /users/{slug}/bars.{_format}
+  controller: ::getUserBarsAction
+
 get_categories:
   methods: [GET]
   path:    /categories.{_format}

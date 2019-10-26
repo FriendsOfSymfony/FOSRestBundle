@@ -11,8 +11,14 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
+use FOS\RestBundle\Request\ParamFetcher;
+use Psr\Http\Message\MessageInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class UsersController extends AbstractController
 {
@@ -290,6 +296,25 @@ class UsersController extends AbstractController
      */
     public function getUserFoosAction($slug, Request $request)
     {
+    }
+
+    // Other ignored parameter types
+
+    /**
+     * [GET] /users/{slug}/bars.
+     *
+     * @param ParamFetcher $paramFetcher
+     * @param $slug
+     */
+    public function getUserBarsAction(
+        ParamFetcher $paramFetcher,
+        MessageInterface $message,
+        ParamConverter $paramConverter,
+        SessionInterface $session,
+        UserInterface $user,
+        ConstraintViolationList $constraintViolationList,
+        $slug
+    ) {
     }
 
     /**
