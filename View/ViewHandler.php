@@ -108,17 +108,17 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Constructor.
      *
-     * @param UrlGeneratorInterface $urlGenerator         The URL generator
-     * @param Serializer            $serializer
-     * @param EngineInterface       $templating           The configured templating engine
-     * @param RequestStack          $requestStack         The request stack
-     * @param array                 $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
-     * @param int                   $failedValidationCode The HTTP response status code for a failed validation
-     * @param int                   $emptyContentCode     HTTP response status code when the view data is null
-     * @param bool                  $serializeNull        Whether or not to serialize null view data
-     * @param array                 $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
-     * @param string                $defaultEngine        default engine (twig, php ..)
-     * @param array                 $options              config options
+     * @param UrlGeneratorInterface       $urlGenerator         The URL generator
+     * @param Serializer                  $serializer
+     * @param EngineInterface|Environment $templating           The configured templating engine
+     * @param RequestStack                $requestStack         The request stack
+     * @param array                       $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
+     * @param int                         $failedValidationCode The HTTP response status code for a failed validation
+     * @param int                         $emptyContentCode     HTTP response status code when the view data is null
+     * @param bool                        $serializeNull        Whether or not to serialize null view data
+     * @param array                       $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
+     * @param string                      $defaultEngine        default engine (twig, php ..)
+     * @param array                       $options              config options
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
@@ -363,7 +363,12 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function renderTemplate(View $view, $format)
     {
         if (null === $this->templating) {
-            throw new \LogicException(sprintf('An instance of %s must be injected in %s to render templates.', EngineInterface::class, __CLASS__));
+            throw new \LogicException(sprintf(
+                'An instance of %s or %s must be injected in %s to render templates.',
+                EngineInterface::class,
+                Environment::class,
+                __CLASS__
+            ));
         }
 
         $data = $this->prepareTemplateParameters($view);
