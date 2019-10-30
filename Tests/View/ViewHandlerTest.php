@@ -562,7 +562,7 @@ class ViewHandlerTest extends TestCase
 
     /**
      * @expectedException \LogicException
-     * @expectedExceptionMessage An instance of Symfony\Component\Templating\EngineInterface must be injected in FOS\RestBundle\View\ViewHandler to render templates.
+     * @expectedExceptionMessage An instance of Symfony\Component\Templating\EngineInterface or Twig\Environment must be injected in FOS\RestBundle\View\ViewHandler to render templates.
      */
     public function testTemplatingNotInjected()
     {
