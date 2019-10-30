@@ -17,7 +17,7 @@ use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Jsonp handler test.
@@ -36,7 +36,7 @@ class JsonpHandlerTest extends TestCase
     {
         $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
         $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
-        $this->templating = $this->getMockBuilder(EngineInterface::class)->getMock();
+        $this->templating = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
         $this->requestStack = new RequestStack();
     }
 
