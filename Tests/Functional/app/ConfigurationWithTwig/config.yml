@@ -1,0 +1,12 @@
+imports:
+    - { resource: ../Configuration/config.yml }
+
+fos_rest:
+    view:
+        view_response_listener: true
+
+web_profiler:
+    toolbar: false
+
+twig:
+    strict_variables: '%kernel.debug%'
