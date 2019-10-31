@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * View response listener test.
@@ -39,7 +39,7 @@ class ViewResponseListenerTest extends TestCase
     public $viewHandler;
 
     /**
-     * @var EngineInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var Environment|\PHPUnit_Framework_MockObject_MockObject
      */
     public $templating;
 
@@ -272,7 +272,7 @@ class ViewResponseListenerTest extends TestCase
     {
         $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
         $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
-        $this->templating = $this->getMockBuilder(EngineInterface::class)->getMock();
+        $this->templating = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
         $this->requestStack = new RequestStack();
     }
 
