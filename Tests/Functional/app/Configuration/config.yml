@@ -12,7 +12,7 @@ framework:
 fos_rest:
     view:
         mime_types: true
-        view_response_listener: true
+        view_response_listener: false
     param_fetcher_listener: true
     disable_csrf_role: foo
     allowed_methods_listener: true
@@ -26,9 +26,3 @@ fos_rest:
         rules:
             - { path: '^/', priorities: ['xml'], fallback_format: ~ }
     versioning: true
-
-web_profiler:
-    toolbar: true
-
-twig:
-    strict_variables: '%kernel.debug%'
