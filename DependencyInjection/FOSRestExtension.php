@@ -55,7 +55,7 @@ class FOSRestExtension extends Extension
         $loader->load('request.xml');
         $loader->load('serializer.xml');
 
-        $container->getDefinition('fos_rest.routing.loader.controller')->replaceArgument(4, $config['routing_loader']['default_format']);
+        $container->getDefinition('fos_rest.routing.loader.controller')->replaceArgument(3, $config['routing_loader']['default_format']);
         $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
         $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
 
@@ -93,6 +93,17 @@ class FOSRestExtension extends Extension
 
         // Needs RequestBodyParamConverter and View Handler loaded.
         $this->loadSerializer($config, $container);
+
+        // Compatibility Symfony
+        $controllerNameConverter = null;
+        if ($container->hasDefinition('.legacy_controller_name_converter')) { // 4.4
+            $controllerNameConverter = $container->getDefinition('.legacy_controller_name_converter');
+        } elseif ($container->hasDefinition('controller_name_converter')) { // < 4.4
+            $controllerNameConverter = $container->getDefinition('controller_name_converter');
+        }
+        if (null !== $controllerNameConverter) {
+            $container->getDefinition('fos_rest.routing.loader.controller')->setArgument(4, $controllerNameConverter);
+        }
     }
 
     private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container)

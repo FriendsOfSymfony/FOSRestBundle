@@ -585,12 +585,11 @@ class FOSRestExtensionTest extends TestCase
     {
         $arguments = $loader->getArguments();
 
-        $this->assertCount(5, $arguments);
+        $this->assertCount(4, $arguments);
         $this->assertEquals('service_container', (string) $arguments[0]);
         $this->assertEquals('file_locator', (string) $arguments[1]);
-        $this->assertEquals('controller_name_converter', (string) $arguments[2]);
-        $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[3]);
-        $this->assertNull($arguments[4]);
+        $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[2]);
+        $this->assertNull($arguments[3]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
     }
 

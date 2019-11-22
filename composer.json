@@ -74,7 +74,8 @@
     "conflict": {
         "sensio/framework-extra-bundle": "<3.0.13",
         "jms/serializer-bundle": "<2.0.0",
-        "jms/serializer": "<1.13.0"
+        "jms/serializer": "<1.13.0",
+        "twig/twig": ">=2.12.3"
     },
     "extra": {
         "branch-alias": {

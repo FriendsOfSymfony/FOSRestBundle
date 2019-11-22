@@ -2,6 +2,8 @@ imports:
     - { resource: ../config/default.yml }
 
 framework:
+    serializer:
+        enabled: true
     templating:
         engines: ['twig']
 

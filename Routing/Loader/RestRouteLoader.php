@@ -38,21 +38,22 @@ class RestRouteLoader extends Loader
      *
      * @param ContainerInterface   $container
      * @param FileLocatorInterface $locator
-     * @param ControllerNameParser $controllerParser
      * @param RestControllerReader $controllerReader
      * @param string               $defaultFormat
      */
     public function __construct(
         ContainerInterface $container,
         FileLocatorInterface $locator,
-        ControllerNameParser $controllerParser,
         RestControllerReader $controllerReader, $defaultFormat = 'html'
     ) {
         $this->container = $container;
         $this->locator = $locator;
-        $this->controllerParser = $controllerParser;
         $this->controllerReader = $controllerReader;
         $this->defaultFormat = $defaultFormat;
+
+        if (4 < \func_num_args() && func_get_arg(4) instanceof ControllerNameParser) {
+            $this->controllerParser = func_get_arg(4);
+        }
     }
 
     /**
@@ -136,23 +137,21 @@ class RestRouteLoader extends Loader
             // full class name
             $class = $controller;
             $prefix = $class.'::';
-        } elseif (false !== strpos($controller, ':')) {
+        } elseif ($this->controllerParser && false !== strpos($controller, ':')) {
             // bundle:controller notation
             try {
                 $notation = $this->controllerParser->parse($controller.':method');
                 list($class) = explode('::', $notation);
                 $prefix = $class.'::';
+
+                @trigger_error(sprintf('Referencing controllers with %s is deprecated since Symfony 4.1, use "%s" instead.', $controller, $notation), E_USER_DEPRECATED);
             } catch (\Exception $e) {
-                throw new \InvalidArgumentException(
-                    sprintf('Can\'t locate "%s" controller.', $controller)
-                );
+                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $controller));
             }
         }
 
         if (empty($class)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Class could not be determined for Controller identified by "%s".', $controller
-            ));
+            throw new \InvalidArgumentException(sprintf('Class could not be determined for Controller identified by "%s".', $controller));
         }
 
         return [$prefix, $class];
