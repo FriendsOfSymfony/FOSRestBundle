@@ -12,11 +12,15 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
+use Symfony\Component\ErrorRenderer\Exception\FlattenException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\EventListener\ExceptionListener as HttpKernelExceptionListener;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * ExceptionListener.
@@ -25,11 +29,17 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
  *
  * @internal
  */
-class ExceptionListener extends HttpKernelExceptionListener
+class ExceptionListener implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    private $exceptionListener;
+    private $dispatcher;
+
+    public function __construct($controller, ?LoggerInterface $logger, EventDispatcherInterface $dispatcher)
+    {
+        $this->exceptionListener = new HttpKernelExceptionListener($controller, $logger);
+        $this->dispatcher = $dispatcher;
+    }
+
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $request = $event->getRequest();
@@ -38,7 +48,19 @@ class ExceptionListener extends HttpKernelExceptionListener
             return;
         }
 
-        parent::onKernelException($event);
+        $exception = $event->getException();
+        $requestListener = function (KernelEvent $event) use (&$requestListener, $exception) {
+            $request = $event->getRequest();
+
+            if (!$event->isMasterRequest() && ($request->attributes->get('exception') instanceof FlattenException || $request->attributes->get('exception') instanceof LegacyFlattenException)) {
+                $request->attributes->set('exception', $exception);
+            }
+
+            $this->dispatcher->removeListener(KernelEvents::REQUEST, $requestListener);
+        };
+        $this->dispatcher->addListener(KernelEvents::REQUEST, $requestListener);
+
+        $this->exceptionListener->onKernelException($event);
     }
 
     /**
@@ -49,21 +71,5 @@ class ExceptionListener extends HttpKernelExceptionListener
         return array(
             KernelEvents::EXCEPTION => array('onKernelException', -100),
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function duplicateRequest(\Exception $exception, Request $request)
-    {
-        $attributes = array(
-            '_controller' => $this->controller,
-            'exception' => $exception,
-            'logger' => $this->logger instanceof DebugLoggerInterface ? $this->logger : null,
-        );
-        $request = $request->duplicate(null, null, $attributes);
-        $request->setMethod('GET');
-
-        return $request;
     }
 }

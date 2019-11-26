@@ -10,6 +10,7 @@
             <tag name="monolog.logger" channel="request" />
             <argument />
             <argument type="service" id="logger" on-invalid="null" />
+            <argument type="service" id="event_dispatcher" />
         </service>
 
         <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController" public="true">
