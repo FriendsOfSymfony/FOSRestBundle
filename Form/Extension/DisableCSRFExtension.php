@@ -68,7 +68,7 @@ class DisableCSRFExtension extends AbstractTypeExtension
             ;
     }
 
-    public static function getExtendedTypes() : iterable
+    public static function getExtendedTypes()
     {
         return array(FormType::class);
     }
