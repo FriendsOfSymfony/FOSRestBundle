@@ -18,8 +18,11 @@ matrix:
       env: COMPOSER_FLAGS="--prefer-lowest"
     # Symfony 3 LTS
     - php: 7.2
-      env: SYMFONY_LTS='^3'
+      env: SYMFONY_REQUIRE="3.4.*"
     # Symfony 4
+    - php: 7.3
+      env: SYMFONY_REQUIRE="4.3.*"
+    # Symfony 5
     - php: 7.3
     # development dependencies
     - php: 7.4snapshot
@@ -31,6 +34,7 @@ matrix:
 before_install:
   - echo "memory_limit=4G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - phpenv config-rm xdebug.ini || true
+  - composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-master
   - if [ "$DEPENDENCIES" != "" ]; then composer config minimum-stability $DEPENDENCIES; fi
   - if [ "$SYMFONY_LTS" != "" ]; then composer require --dev --no-update symfony/lts=$SYMFONY_LTS; fi
 
