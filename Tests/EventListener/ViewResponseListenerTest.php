@@ -19,6 +19,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Twig\Environment;
 
 /**
@@ -50,41 +55,29 @@ class ViewResponseListenerTest extends TestCase
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpKernel\Event\FilterControllerEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @return \Symfony\Component\HttpKernel\Event\ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getFilterEvent(Request $request)
     {
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\FilterControllerEvent')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $controller = new FooController();
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $eventClass = class_exists(ControllerEvent::class) ? ControllerEvent::class : FilterControllerEvent::class;
 
-        $event->expects($this->once())
-              ->method('getRequest')
-              ->will($this->returnValue($request));
-
-        return $event;
+        return new $eventClass($kernel, [$controller, 'viewAction'], $request, null);
     }
 
     /**
      * @param Request $request
      * @param mixed   $result
      *
-     * @return \Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @return \Symfony\Component\HttpKernel\Event\ViewEvent|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getResponseEvent(Request $request, $result)
     {
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $eventClass = class_exists(ViewEvent::class) ? ViewEvent::class : GetResponseForControllerResultEvent::class;
 
-        $event->expects($this->atLeastOnce())
-              ->method('getRequest')
-              ->will($this->returnValue($request));
-        $event->expects($this->any())
-              ->method('getControllerResult')
-              ->will($this->returnValue($result));
-
-        return $event;
+        return new $eventClass($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $result);
     }
 
     public function testOnKernelView()
@@ -126,10 +119,9 @@ class ViewResponseListenerTest extends TestCase
         $this->listener = new ViewResponseListener($viewHandler, false);
 
         $event = $this->getResponseEvent($request, $view);
-        $event->expects($this->once())
-            ->method('setResponse');
-
         $this->listener->onKernelView($event);
+
+        $this->assertNotNull($event->getResponse());
     }
 
     public function testOnKernelViewWhenControllerResultIsNotViewObject()
@@ -137,12 +129,10 @@ class ViewResponseListenerTest extends TestCase
         $this->createViewResponseListener();
 
         $request = new Request();
-
         $event = $this->getResponseEvent($request, []);
-        $event->expects($this->never())
-            ->method('setResponse');
 
         $this->assertNull($this->listener->onKernelView($event));
+        $this->assertNull($event->getResponse());
     }
 
     public static function statusCodeProvider()
@@ -178,15 +168,8 @@ class ViewResponseListenerTest extends TestCase
         $view->setData('foo');
 
         $event = $this->getResponseEvent($request, $view);
-
-        $response = new Response();
-        $event->expects($this->any())
-            ->method('setResponse')
-            ->will($this->returnCallback(function ($r) use (&$response) {
-                $response = $r;
-            }));
-
         $this->listener->onKernelView($event);
+        $response = $event->getResponse();
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame($expectedCode, $response->getStatusCode());

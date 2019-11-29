@@ -43,6 +43,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -73,14 +74,14 @@ class AppKernel extends Kernel implements CompilerPassInterface
 
     public function registerBundles()
     {
-        if (!file_exists($filename = $this->getRootDir().'/'.$this->testCase.'/bundles.php')) {
+        if (!file_exists($filename = $this->getProjectDir().'/'.$this->testCase.'/bundles.php')) {
             throw new \RuntimeException(sprintf('The bundles file "%s" does not exist.', $filename));
         }
 
         return include $filename;
     }
 
-    public function getRootDir()
+    public function getProjectDir()
     {
         return __DIR__;
     }
@@ -101,6 +102,22 @@ class AppKernel extends Kernel implements CompilerPassInterface
         $loader->load(function (ContainerBuilder $container) {
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->register('logger', NullLogger::class);
+
+            if (isset($this->bundles['TwigBundle'])) {
+                if (class_exists(ErrorListener::class)) {
+                    $container->loadFromExtension('twig', [
+                        'exception_controller' => null,
+                    ]);
+                }
+
+                if (Kernel::MAJOR_VERSION < 5) {
+                    $container->loadFromExtension('framework', [
+                        'templating' => [
+                            'engines' => ['twig'],
+                        ],
+                    ]);
+                }
+            }
         });
     }
 

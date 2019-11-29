@@ -17,7 +17,7 @@ use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
@@ -69,12 +69,12 @@ class BodyListener
     /**
      * Core request handler.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      *
      * @throws BadRequestHttpException
      * @throws UnsupportedMediaTypeHttpException
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest($event)
     {
         $request = $event->getRequest();
 

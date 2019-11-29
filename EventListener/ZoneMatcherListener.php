@@ -13,7 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Matches FOSRest's zones.
@@ -37,9 +37,9 @@ class ZoneMatcherListener
     /**
      * Adds an optional "_fos_rest_zone" request attribute to be checked for existence by other listeners.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest($event)
     {
         $request = $event->getRequest();
 

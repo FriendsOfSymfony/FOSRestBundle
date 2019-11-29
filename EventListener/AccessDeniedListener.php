@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -47,7 +47,10 @@ class AccessDeniedListener implements EventSubscriberInterface
         $this->challenge = $challenge;
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    /**
+     * @param ExceptionEvent $event
+     */
+    public function onKernelException($event)
     {
         static $handling;
 
@@ -67,17 +70,25 @@ class AccessDeniedListener implements EventSubscriberInterface
 
         $handling = true;
 
-        $exception = $event->getException();
+        if (method_exists($event, 'getThrowable')) {
+            $exception = $event->getThrowable();
+        } else {
+            $exception = $event->getException();
+        }
 
         if ($exception instanceof AccessDeniedException) {
             $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
-            $event->setException($exception);
         } elseif ($exception instanceof AuthenticationException) {
             if ($this->challenge) {
                 $exception = new UnauthorizedHttpException($this->challenge, 'You are not authenticated', $exception);
             } else {
                 $exception = new HttpException(401, 'You are not authenticated', $exception);
             }
+        }
+
+        if (method_exists($event, 'setThrowable')) {
+            $event->setThrowable($exception);
+        } else {
             $event->setException($exception);
         }
 

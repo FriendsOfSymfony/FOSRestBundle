@@ -273,7 +273,7 @@ class RequestBodyParamConverterTest extends TestCase
     protected function createConfiguration($class = null, $name = null, array $options = array())
     {
         return new ParamConverter([
-            'name' => $name,
+            'name' => (string) $name,
             'class' => $class,
             'options' => $options,
             'converter' => 'fos_rest.request_body',

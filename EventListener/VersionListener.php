@@ -13,7 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Version\VersionResolverInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * @internal
@@ -29,7 +29,10 @@ class VersionListener
         $this->defaultVersion = $defaultVersion;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    /**
+     * @param RequestEvent $event
+     */
+    public function onKernelRequest($event)
     {
         $request = $event->getRequest();
 

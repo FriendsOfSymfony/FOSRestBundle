@@ -6,7 +6,7 @@ imports:
 framework:
     serializer:
         enabled: true
-    router: { resource: "%kernel.root_dir%/Configuration/routing.yml" }
+    router: { resource: "%kernel.project_dir%/Configuration/routing.yml" }
     profiler: { only_exceptions: false }
 
 fos_rest:

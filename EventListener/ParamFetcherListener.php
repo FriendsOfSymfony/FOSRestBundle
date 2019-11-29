@@ -13,7 +13,7 @@ namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Request\ParamFetcherInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
  * This listener handles various setup tasks related to the query fetcher.
@@ -45,11 +45,11 @@ class ParamFetcherListener
     /**
      * Core controller handler.
      *
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      *
      * @throws \InvalidArgumentException
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController($event)
     {
         $request = $event->getRequest();
 

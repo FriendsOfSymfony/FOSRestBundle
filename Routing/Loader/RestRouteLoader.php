@@ -45,7 +45,7 @@ class RestRouteLoader extends Loader
     public function __construct(
         ContainerInterface $container,
         FileLocatorInterface $locator,
-        ControllerNameParser $controllerParser,
+        $controllerParser,
         RestControllerReader $controllerReader, $defaultFormat = 'html'
     ) {
         $this->container = $container;
@@ -136,23 +136,19 @@ class RestRouteLoader extends Loader
             // full class name
             $class = $controller;
             $prefix = $class.'::';
-        } elseif (false !== strpos($controller, ':')) {
+        } elseif ($this->controllerParser && false !== strpos($controller, ':')) {
             // bundle:controller notation
             try {
                 $notation = $this->controllerParser->parse($controller.':method');
                 list($class) = explode('::', $notation);
                 $prefix = $class.'::';
             } catch (\Exception $e) {
-                throw new \InvalidArgumentException(
-                    sprintf('Can\'t locate "%s" controller.', $controller)
-                );
+                throw new \InvalidArgumentException(sprintf('Can\'t locate "%s" controller.', $controller));
             }
         }
 
         if (empty($class)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Class could not be determined for Controller identified by "%s".', $controller
-            ));
+            throw new \InvalidArgumentException(sprintf('Class could not be determined for Controller identified by "%s".', $controller));
         }
 
         return [$prefix, $class];
