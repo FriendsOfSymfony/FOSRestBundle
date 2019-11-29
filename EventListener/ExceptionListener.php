@@ -14,12 +14,13 @@ namespace FOS\RestBundle\EventListener;
 use FOS\RestBundle\FOSRestBundle;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
-use Symfony\Component\ErrorRenderer\Exception\FlattenException;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Event\KernelEvent;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener as HttpKernelExceptionListener;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener as LegacyExceptionListener;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -36,11 +37,18 @@ class ExceptionListener implements EventSubscriberInterface
 
     public function __construct($controller, ?LoggerInterface $logger, EventDispatcherInterface $dispatcher)
     {
-        $this->exceptionListener = new HttpKernelExceptionListener($controller, $logger);
+        if (class_exists(ErrorListener::class)) {
+            $this->exceptionListener = new ErrorListener($controller, $logger);
+        } else {
+            $this->exceptionListener = new LegacyExceptionListener($controller, $logger);
+        }
         $this->dispatcher = $dispatcher;
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    /**
+     * @param ExceptionEvent $event
+     */
+    public function onKernelException($event)
     {
         $request = $event->getRequest();
 
@@ -48,17 +56,26 @@ class ExceptionListener implements EventSubscriberInterface
             return;
         }
 
-        $exception = $event->getException();
-        $requestListener = function (KernelEvent $event) use (&$requestListener, $exception) {
-            $request = $event->getRequest();
+        if (method_exists($event, 'getThrowable')) {
+            $exception = $event->getThrowable();
+        } else {
+            $exception = $event->getException();
+        }
 
-            if (!$event->isMasterRequest() && ($request->attributes->get('exception') instanceof FlattenException || $request->attributes->get('exception') instanceof LegacyFlattenException)) {
-                $request->attributes->set('exception', $exception);
+        $controllerArgsListener = function ($event) use (&$controllerArgsListener, $exception) {
+            /** @var ControllerArgumentsEvent $event */
+            $arguments = $event->getArguments();
+            foreach ($arguments as $k => $argument) {
+                if ($argument instanceof FlattenException || $argument instanceof LegacyFlattenException) {
+                    $arguments[$k] = $exception;
+                    $event->setArguments($arguments);
+
+                    break;
+                }
             }
-
-            $this->dispatcher->removeListener(KernelEvents::REQUEST, $requestListener);
+            $this->dispatcher->removeListener(KernelEvents::CONTROLLER_ARGUMENTS, $controllerArgsListener);
         };
-        $this->dispatcher->addListener(KernelEvents::REQUEST, $requestListener);
+        $this->dispatcher->addListener(KernelEvents::CONTROLLER_ARGUMENTS, $controllerArgsListener, -100);
 
         $this->exceptionListener->onKernelException($event);
     }

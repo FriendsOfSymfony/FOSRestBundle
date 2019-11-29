@@ -14,7 +14,7 @@ namespace FOS\RestBundle\EventListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * @internal
@@ -28,7 +28,10 @@ class VersionExclusionListener
         $this->viewHandler = $viewHandler;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    /**
+     * @param RequestEvent $event
+     */
+    public function onKernelRequest($event)
     {
         $request = $event->getRequest();
 

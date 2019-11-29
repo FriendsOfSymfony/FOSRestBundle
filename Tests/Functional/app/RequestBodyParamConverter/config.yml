@@ -5,7 +5,7 @@ imports:
 framework:
     serializer: true
     router:
-        resource: "%kernel.root_dir%/RequestBodyParamConverter/routing.yml"
+        resource: "%kernel.project_dir%/RequestBodyParamConverter/routing.yml"
         strict_requirements: true
 
 fos_rest:

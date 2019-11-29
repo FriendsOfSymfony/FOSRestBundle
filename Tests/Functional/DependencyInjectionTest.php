@@ -62,7 +62,7 @@ class TestKernel extends Kernel
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
                 'router' => array(
-                    'resource' => '%kernel.root_dir%/config/routing.yml',
+                    'resource' => '%kernel.project_dir%/config/routing.yml',
                 ),
             ]);
             $container->loadFromExtension('fos_rest', [

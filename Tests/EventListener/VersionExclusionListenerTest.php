@@ -15,6 +15,8 @@ use FOS\RestBundle\EventListener\VersionExclusionListener;
 use FOS\RestBundle\FOSRestBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Version exclusion listener test.
@@ -31,7 +33,7 @@ class VersionExclusionListenerTest extends TestCase
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $request->attributes->set('version', $version);
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
         $event
@@ -57,7 +59,7 @@ class VersionExclusionListenerTest extends TestCase
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, true);
         $request->attributes->set('version', $version);
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
         $event

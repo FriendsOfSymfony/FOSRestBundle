@@ -121,7 +121,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                     $imported->setHost($host);
                 }
 
-                $imported->addPrefix($prefix);
+                $imported->addPrefix((string) $prefix);
 
                 // Add name prefix from parent config files
                 $imported = $this->addParentNamePrefix($imported, $namePrefix);
