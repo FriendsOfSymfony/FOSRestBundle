@@ -134,12 +134,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         array $options = []
     ) {
         if (null !== $templating && !$templating instanceof EngineInterface && !$templating instanceof Environment) {
-            throw new \TypeError(sprintf(
-                'If provided, the templating engine must be an instance of %s or %s, but %s was given.',
-                EngineInterface::class,
-                Environment::class,
-                get_class($templating)
-            ));
+            throw new \TypeError(sprintf('If provided, the templating engine must be an instance of %s or %s, but %s was given.', EngineInterface::class, Environment::class, get_class($templating)));
         }
 
         $this->urlGenerator = $urlGenerator;
@@ -363,12 +358,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function renderTemplate(View $view, $format)
     {
         if (null === $this->templating) {
-            throw new \LogicException(sprintf(
-                'An instance of %s or %s must be injected in %s to render templates.',
-                EngineInterface::class,
-                Environment::class,
-                __CLASS__
-            ));
+            throw new \LogicException(sprintf('An instance of %s or %s must be injected in %s to render templates.', EngineInterface::class, Environment::class, __CLASS__));
         }
 
         $data = $this->prepareTemplateParameters($view);
