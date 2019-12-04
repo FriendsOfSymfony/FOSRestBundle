@@ -68,7 +68,7 @@ class FOSRestExtensionTest extends TestCase
         $this->defaultFormat = null;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->container, $this->extension);
     }
