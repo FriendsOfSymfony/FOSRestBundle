@@ -62,7 +62,7 @@ configured for the matched controller so that the user does not need to do this 
          *   2 by filtering the author
          * and you don't have yet implemented the possibility to filter by both at the same time.
          * In order to prevent clients from doing a request with both (which will produce not the expected
-         * resut and is likely to be considered as a bug) you can precise the parameters can't be present
+         * result and is likely to be considered as a bug) you can precise the parameters can't be present
          * at the same time by doing
          *
          * @QueryParam(map=true, name="ids", requirements="\d+", default="1", description="List of ids")
