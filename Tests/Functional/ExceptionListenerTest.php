@@ -30,7 +30,7 @@ class ExceptionListenerTest extends WebTestCase
         parent::tearDownAfterClass();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // prevent kernel shutdown
     }
