@@ -12,10 +12,12 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -47,8 +49,17 @@ class AccessDeniedListener implements EventSubscriberInterface
         $this->challenge = $challenge;
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    /**
+     * @param GetResponseForExceptionEvent|ExceptionEvent $event
+     *
+     * @return bool
+     */
+    public function onKernelException($event)
     {
+        if (!$event instanceof ExceptionEvent && !$event instanceof GetResponseForExceptionEvent) {
+            throw new \TypeError(sprintf('Expected an instance of %s or %s, but got %s.', ExceptionEvent::class, GetResponseForExceptionEvent::class, is_object($event) ? get_class($event) : gettype($event)));
+        }
+
         static $handling;
 
         if (true === $handling) {
@@ -67,18 +78,32 @@ class AccessDeniedListener implements EventSubscriberInterface
 
         $handling = true;
 
-        $exception = $event->getException();
+        if (Kernel::VERSION_ID >= 40400) {
+            $exception = $event->getThrowable();
+        } else {
+            $exception = $event->getException();
+        }
 
         if ($exception instanceof AccessDeniedException) {
             $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
-            $event->setException($exception);
+
+            if (Kernel::VERSION_ID >= 40400) {
+                $event->setThrowable($exception);
+            } else {
+                $event->setException($exception);
+            }
         } elseif ($exception instanceof AuthenticationException) {
             if ($this->challenge) {
                 $exception = new UnauthorizedHttpException($this->challenge, 'You are not authenticated', $exception);
             } else {
                 $exception = new HttpException(401, 'You are not authenticated', $exception);
             }
-            $event->setException($exception);
+
+            if (Kernel::VERSION_ID >= 40400) {
+                $event->setThrowable($exception);
+            } else {
+                $event->setException($exception);
+            }
         }
 
         $handling = false;

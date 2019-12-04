@@ -16,7 +16,9 @@ use FOS\RestBundle\FOSRestBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -79,14 +81,19 @@ class AccessDeniedListenerTest extends TestCase
     private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats, $exceptionClass = 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException')
     {
         $exception = new AccessDeniedException();
-        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
+        $event = $this->createEvent($request, $exception);
         $listener = new AccessDeniedListener($formats, null, 'foo');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);
         // restore the old error_log
         ini_set('error_log', $errorLog);
-        $this->assertInstanceOf($exceptionClass, $event->getException());
+
+        if (Kernel::VERSION_ID >= 40400) {
+            $this->assertInstanceOf($exceptionClass, $event->getThrowable());
+        } else {
+            $this->assertInstanceOf($exceptionClass, $event->getException());
+        }
     }
 
     /**
@@ -99,11 +106,16 @@ class AccessDeniedListenerTest extends TestCase
         $request = new Request();
         $request->setRequestFormat(key($formats));
         $exception = new \Exception('foo');
-        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
+        $event = $this->createEvent($request, $exception);
 
         $listener = new AccessDeniedListener($formats, null, 'foo');
         $listener->onKernelException($event);
-        $this->assertSame($exception, $event->getException());
+
+        if (Kernel::VERSION_ID >= 40400) {
+            $this->assertSame($exception, $event->getThrowable());
+        } else {
+            $this->assertSame($exception, $event->getException());
+        }
     }
 
     /**
@@ -141,17 +153,24 @@ class AccessDeniedListenerTest extends TestCase
     private function doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest(Request $request, array $formats)
     {
         $exception = new AuthenticationException();
-        $event = new GetResponseForExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
+        $event = $this->createEvent($request, $exception);
         $listener = new AccessDeniedListener($formats, null, 'foo');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);
         // restore the old error_log
         ini_set('error_log', $errorLog);
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\HttpException', $event->getException());
-        $this->assertEquals(401, $event->getException()->getStatusCode());
-        $this->assertEquals('You are not authenticated', $event->getException()->getMessage());
-        $this->assertArrayNotHasKey('WWW-Authenticate', $event->getException()->getHeaders());
+
+        if (Kernel::VERSION_ID >= 40400) {
+            $thrownException = $event->getThrowable();
+        } else {
+            $thrownException = $event->getException();
+        }
+
+        $this->assertInstanceOf(HttpException::class, $thrownException);
+        $this->assertEquals(401, $thrownException->getStatusCode());
+        $this->assertEquals('You are not authenticated', $thrownException->getMessage());
+        $this->assertArrayNotHasKey('WWW-Authenticate', $thrownException->getHeaders());
     }
 
     /**
@@ -173,6 +192,15 @@ class AccessDeniedListenerTest extends TestCase
         $this->assertEquals('You are not authenticated', $event->getException()->getMessage());
         $headers = $event->getException()->getHeaders();
         $this->assertEquals('Basic realm="Restricted Area"', $headers['WWW-Authenticate']);
+    }
+
+    private function createEvent(Request $request, \Exception $exception)
+    {
+        if (class_exists(ExceptionEvent::class)) {
+            return new ExceptionEvent(new TestKernel(), $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+        }
+
+        return new GetResponseForExceptionEvent(new TestKernel(), $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     }
 
     public static function getFormatsDataProvider()
