@@ -25,10 +25,10 @@ matrix:
     # Symfony 5
     - php: 7.3
     # development dependencies
-    - php: 7.4snapshot
+    - php: 7.4
       env: DEPENDENCIES='dev'
   allow_failures:
-    - php: 7.4snapshot
+    - php: 7.4
       env: DEPENDENCIES='dev'
 
 before_install:
