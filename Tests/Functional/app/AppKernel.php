@@ -103,20 +103,10 @@ class AppKernel extends Kernel implements CompilerPassInterface
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->register('logger', NullLogger::class);
 
-            if (isset($this->bundles['TwigBundle'])) {
-                if (class_exists(ErrorListener::class)) {
-                    $container->loadFromExtension('twig', [
-                        'exception_controller' => null,
-                    ]);
-                }
-
-                if (Kernel::MAJOR_VERSION < 5) {
-                    $container->loadFromExtension('framework', [
-                        'templating' => [
-                            'engines' => ['twig'],
-                        ],
-                    ]);
-                }
+            if (isset($this->bundles['TwigBundle']) && class_exists(ErrorListener::class)) {
+                $container->loadFromExtension('twig', [
+                    'exception_controller' => null,
+                ]);
             }
         });
     }

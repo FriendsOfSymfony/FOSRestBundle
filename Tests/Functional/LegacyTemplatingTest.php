@@ -11,8 +11,6 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
-use Symfony\Component\HttpKernel\Kernel;
-
 /**
  * @group legacy
  */
@@ -26,10 +24,6 @@ class LegacyTemplatingTest extends WebTestCase
 
     public function testSerializeExceptionHtml()
     {
-        if (Kernel::MAJOR_VERSION >= 5) {
-            $this->markTestSkipped();
-        }
-
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
         $client = $this->createClient(['test_case' => 'LegacyTemplating', 'debug' => false]);
@@ -41,10 +35,6 @@ class LegacyTemplatingTest extends WebTestCase
 
     public function testSerializeExceptionHtmlInDebugMode()
     {
-        if (Kernel::MAJOR_VERSION >= 5) {
-            $this->markTestSkipped();
-        }
-
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
 
         $client = $this->createClient(['test_case' => 'LegacyTemplating', 'debug' => true]);
@@ -55,10 +45,6 @@ class LegacyTemplatingTest extends WebTestCase
 
     public function testTemplateOverride()
     {
-        if (Kernel::MAJOR_VERSION >= 5) {
-            $this->markTestSkipped();
-        }
-
         $client = $this->createClient(array('test_case' => 'LegacyTemplating'));
         $client->request(
             'GET',
