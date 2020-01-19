@@ -44,10 +44,9 @@ class ParamFetcherController extends AbstractFOSRestController
     {
         $paramsBefore = $fetcher->all();
 
-        $newRequest = new Request();
-        $newRequest->query = $request->query;
-        $newRequest->request = $request->request;
-        $newRequest->attributes->set('_controller', sprintf('%s::paramsAction', __CLASS__));
+        $newRequest = $request->duplicate($request->query->all(), $request->request->all(), [
+            '_controller' => sprintf('%s::paramsAction', __CLASS__),
+        ]);
         $response = $this->container->get('http_kernel')->handle($newRequest, HttpKernelInterface::SUB_REQUEST, false);
 
         $paramsAfter = $fetcher->all(false);

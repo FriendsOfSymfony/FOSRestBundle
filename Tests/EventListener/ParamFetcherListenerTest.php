@@ -16,6 +16,9 @@ use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Param Fetcher Listener Tests.
@@ -77,14 +80,7 @@ class ParamFetcherListenerTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
-
-        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $event->expects($this->atLeastOnce())
-            ->method('getRequest')
-            ->will($this->returnValue($request));
+        $event = $this->getEvent($request);
 
         $this->paramFetcher->expects($this->never())
             ->method('all')
@@ -122,20 +118,7 @@ class ParamFetcherListenerTest extends TestCase
     public function testSettingParamFetcherForInvokable()
     {
         $request = new Request();
-
-        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $event->expects($this->atLeastOnce())
-            ->method('getRequest')
-            ->will($this->returnValue($request));
-
-        $controller = new ParamFetcherController();
-
-        $event->expects($this->atLeastOnce())
-            ->method('getController')
-            ->will($this->returnValue($controller));
+        $event = $this->getEvent($request, null);
 
         $this->paramFetcher->expects($this->once())
             ->method('all')
@@ -168,21 +151,12 @@ class ParamFetcherListenerTest extends TestCase
 
     protected function getEvent(Request $request, $actionMethod = 'byNameAction')
     {
-        $event = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Event\\FilterControllerEvent')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $event->expects($this->atLeastOnce())
-            ->method('getRequest')
-            ->will($this->returnValue($request));
-
         $controller = new ParamFetcherController();
+        $callable = $actionMethod ? [$controller, $actionMethod] : $controller;
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $eventClass = class_exists(ControllerEvent::class) ? ControllerEvent::class : FilterControllerEvent::class;
 
-        $event->expects($this->atLeastOnce())
-            ->method('getController')
-            ->will($this->returnValue([$controller, $actionMethod]));
-
-        return $event;
+        return new $eventClass($kernel, $callable, $request, null);
     }
 
     public function setUp()

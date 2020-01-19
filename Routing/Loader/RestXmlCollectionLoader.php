@@ -96,7 +96,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
                     $imported->setHost($host);
                 }
 
-                $imported->addPrefix($prefix);
+                $imported->addPrefix((string) $prefix);
                 $collection->addCollection($imported);
 
                 break;

@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Request listener test.
@@ -64,7 +65,7 @@ class BodyListenerTest extends TestCase
             $request->headers = new HeaderBag(['Content-Type' => $contentType]);
         }
 
-        $event = $this->getMockBuilder(GetResponseEvent::class)
+        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
         $event->expects($this->once())
@@ -118,7 +119,7 @@ class BodyListenerTest extends TestCase
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $request->setMethod('POST');
 
-        $event = $this->getMockBuilder('Symfony\Component\HttpKernel\Event\GetResponseEvent')
+        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -164,7 +165,7 @@ class BodyListenerTest extends TestCase
         $request = new Request([], [], [], [], [], [], 'foo');
         $request->setMethod('POST');
 
-        $event = $this->getMockBuilder(GetResponseEvent::class)
+        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -205,7 +206,7 @@ class BodyListenerTest extends TestCase
         $request->headers->set('Content-Type', $contentType);
         $request->setMethod($method);
 
-        $event = $this->getMockBuilder(GetResponseEvent::class)
+        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -269,7 +270,7 @@ class BodyListenerTest extends TestCase
         $request = new Request([], [], [], [], [], [], 'foo');
         $request->setMethod('POST');
 
-        $event = $this->getMockBuilder(GetResponseEvent::class)
+        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 

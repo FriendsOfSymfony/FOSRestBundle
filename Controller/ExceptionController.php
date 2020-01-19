@@ -17,7 +17,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
-use Symfony\Component\ErrorRenderer\Exception\FlattenException;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
