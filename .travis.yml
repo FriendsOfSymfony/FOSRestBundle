@@ -22,8 +22,6 @@ matrix:
     # Symfony 4
     - php: 7.3
       env: SYMFONY_REQUIRE="4.3.*"
-    # Symfony 5
-    - php: 7.3
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
