@@ -1,12 +1,5 @@
 <?php
 
-use Symfony\CS\Fixer\Contrib\HeaderCommentFixer;
-
-$finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->in(__DIR__)
-    ->exclude('features/fixtures/TestApp/cache')
-;
-
 $header = <<<EOF
 This file is part of the FOSRestBundle package.
 
@@ -16,10 +9,14 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 EOF;
 
-HeaderCommentFixer::setHeader($header);
-
-return Symfony\CS\Config\Config::create()
-    ->setUsingCache(true)
-    ->fixers(['-psr0'])
-    ->finder($finder)
+return PhpCsFixer\Config::create()
+    ->setRules(array(
+        'psr0' => true,
+        'header_comment' => ['header' => $header],
+    ))
+    ->setRiskyAllowed(true)
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->in(__DIR__)
+    )
 ;
