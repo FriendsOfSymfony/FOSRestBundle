@@ -163,7 +163,7 @@ following would work as well:
     {
         // ...
 
-        public function cgetAction()
+        public function getAction()
         {} // "get_users"     [GET] /users
 
         public function newAction()
