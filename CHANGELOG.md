@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+2.7.0
+-----
+
+* ignore `SessionInterface` and `UserInterface` controller action arguments
+* fixed `ExceptionListener` deprecation warning
+* fixed `ControllerNameParser` deprecation warning
+* fixed `DisableCSRFExtension::getExtendedTypes()` return type
+* improved `EngineInterface` error message in `ViewHandler`
+* improved Symfony 4.4 compatibility
+* automatically use Twig as templating engine when available
+
 2.6.0
 -----
 
