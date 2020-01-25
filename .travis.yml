@@ -19,9 +19,9 @@ matrix:
     # Symfony 3 LTS
     - php: 7.2
       env: SYMFONY_REQUIRE="3.4.*"
-    # Symfony 4
+    # Symfony 4 LTS
     - php: 7.3
-      env: SYMFONY_REQUIRE="4.3.*"
+      env: SYMFONY_REQUIRE="4.4.*"
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
