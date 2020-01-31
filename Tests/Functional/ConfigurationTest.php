@@ -40,9 +40,10 @@ class ConfigurationTest extends WebTestCase
                 '/_profiler/empty/search/results?limit=10',
                 [],
                 [],
-                ['HTTP_Accept' => 'application/json']
+                ['HTTP_Accept' => 'application/xml']
             );
 
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertSame('text/html; charset=UTF-8', $client->getResponse()->headers->get('Content-Type'));
     }
 }
