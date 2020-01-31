@@ -30,11 +30,6 @@ class VersionTest extends WebTestCase
         parent::tearDownAfterClass();
     }
 
-    protected function tearDown(): void
-    {
-        // prevent kernel shutdown
-    }
-
     public function testVersionAnnotation()
     {
         static::$client->request(

@@ -27,11 +27,6 @@ class RoutingTest extends WebTestCase
         parent::tearDownAfterClass();
     }
 
-    protected function tearDown(): void
-    {
-        // prevent kernel shutdown
-    }
-
     public function testPostControllerRoutesAreRegistered()
     {
         static::$client->request('GET', '/posts/1');
