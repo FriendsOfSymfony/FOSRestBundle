@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use Symfony\Bundle\TwigBundle\Controller\PreviewErrorController;
+
 class RequestBodyParamConverterTest extends WebTestCase
 {
     public function testRequestBodyIsDeserialized()
@@ -30,10 +32,20 @@ class RequestBodyParamConverterTest extends WebTestCase
     }
 
     /**
+     * Added to the legacy group to not trigger a deprecation. This deprecation is triggered on version 4.4 of
+     * the TwigBundle where the PreviewErrorController class is deprecated. Since we only make sure not to break
+     * that controller class, we do not have to care about the deprecations.
+     *
+     * @group legacy
+     *
      * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1237
      */
     public function testTwigErrorPage()
     {
+        if (!class_exists(PreviewErrorController::class)) {
+            $this->markTestSkipped();
+        }
+
         $client = $this->createClient(['test_case' => 'RequestBodyParamConverter']);
         $client->request('GET', '/_error/404.txt');
 
