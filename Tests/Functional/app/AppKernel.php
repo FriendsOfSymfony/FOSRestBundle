@@ -43,7 +43,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -102,12 +101,6 @@ class AppKernel extends Kernel implements CompilerPassInterface
         $loader->load(function (ContainerBuilder $container) {
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->register('logger', NullLogger::class);
-
-            if (isset($this->bundles['TwigBundle']) && class_exists(ErrorListener::class)) {
-                $container->loadFromExtension('twig', [
-                    'exception_controller' => null,
-                ]);
-            }
         });
     }
 
