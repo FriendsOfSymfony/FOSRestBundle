@@ -8,7 +8,7 @@ cache:
 branches:
   only:
     - master
-    - /^\d+\.\d+$/
+    - /^\d+\.(\d+|x)$/
 
 matrix:
   fast_finish: true
@@ -19,9 +19,12 @@ matrix:
     # Symfony 3 LTS
     - php: 7.2
       env: SYMFONY_REQUIRE="3.4.*"
-    # Symfony 4
+    # Symfony 4.3
     - php: 7.3
       env: SYMFONY_REQUIRE="4.3.*"
+    # Symfony 4.4
+    - php: 7.4
+      env: SYMFONY_REQUIRE="4.4.*"
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
