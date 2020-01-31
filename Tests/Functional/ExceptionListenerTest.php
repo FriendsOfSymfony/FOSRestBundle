@@ -30,11 +30,6 @@ class ExceptionListenerTest extends WebTestCase
         parent::tearDownAfterClass();
     }
 
-    protected function tearDown(): void
-    {
-        // prevent kernel shutdown
-    }
-
     public function testBundleListenerHandlesExceptionsInRestZones()
     {
         static::$client->request('GET', '/api/test');
