@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+3.0.0
+-----
+
+* added support for Symfony 5 compatibility
+
 2.7.0
 -----
 
