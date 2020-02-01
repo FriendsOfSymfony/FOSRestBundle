@@ -5,7 +5,7 @@ imports:
 framework:
     serializer: true
     router:
-        resource: "%kernel.project_dir%/config/routing.yml"
+        resource: "%kernel.project_dir%/RequestBodyParamConverterTwigBundle/routing.yml"
         strict_requirements: true
 
 fos_rest:
@@ -15,6 +15,9 @@ fos_rest:
 sensio_framework_extra:
     request:
         converters: true
+
+twig:
+    strict_variables: '%kernel.debug%'
 
 services:
     get_set_method_normalizer:

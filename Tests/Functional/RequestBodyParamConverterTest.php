@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use Symfony\Bundle\FrameworkBundle\Test\BrowserKitAssertionsTrait;
 use Symfony\Bundle\TwigBundle\Controller\PreviewErrorController;
 
 class RequestBodyParamConverterTest extends WebTestCase
@@ -40,17 +41,30 @@ class RequestBodyParamConverterTest extends WebTestCase
      *
      * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1237
      */
-    public function testTwigErrorPage()
+    public function testErrorPageServedByTwigBundle()
     {
         if (!class_exists(PreviewErrorController::class)) {
             $this->markTestSkipped();
         }
 
-        $client = $this->createClient(['test_case' => 'RequestBodyParamConverter']);
+        $client = $this->createClient(['test_case' => 'RequestBodyParamConverterTwigBundle']);
         $client->request('GET', '/_error/404.txt');
 
         // Status code 200 as this page describes an error but is not the result of an error.
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertContains('The server returned a "404 Not Found".', $client->getResponse()->getContent());
+    }
+
+    public function testErrorPageServedByFrameworkBundle()
+    {
+        if (!trait_exists(BrowserKitAssertionsTrait::class)) {
+            $this->markTestSkipped();
+        }
+
+        $client = $this->createClient(['test_case' => 'RequestBodyParamConverterFrameworkBundle']);
+        $client->request('GET', '/_error/404.txt');
+
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
         $this->assertContains('The server returned a "404 Not Found".', $client->getResponse()->getContent());
     }
 }
