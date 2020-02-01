@@ -3,5 +3,7 @@ imports:
     - { resource: ../config/exception_listener.yml }
 
 fos_rest:
+    routing_loader:
+        parse_controller_name: false
     view:
         view_response_listener: 'force'
