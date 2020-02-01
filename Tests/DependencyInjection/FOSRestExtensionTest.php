@@ -78,6 +78,9 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => false,
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -92,6 +95,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                'routing_loader' => [
                    'parse_controller_name' => false,
                ],
@@ -115,6 +121,9 @@ class FOSRestExtensionTest extends TestCase
                 'body_listener' => [
                     'array_normalizer' => 'fos_rest.normalizer.camel_keys',
                 ],
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -136,6 +145,9 @@ class FOSRestExtensionTest extends TestCase
                     'array_normalizer' => [
                         'service' => 'fos_rest.normalizer.camel_keys',
                     ],
+                ],
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
@@ -164,6 +176,9 @@ class FOSRestExtensionTest extends TestCase
                         'forms' => true,
                     ],
                 ],
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -185,6 +200,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'format_listener' => false,
                 'routing_loader' => [
                     'parse_controller_name' => false,
@@ -200,6 +218,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                'routing_loader' => [
                    'parse_controller_name' => false,
                ],
@@ -213,6 +234,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'format_listener' => [
                     'rules' => ['path' => '/'],
                 ],
@@ -230,6 +254,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'param_fetcher_listener' => true,
                 'routing_loader' => [
                     'parse_controller_name' => false,
@@ -246,6 +273,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'param_fetcher_listener' => 'force',
                 'routing_loader' => [
                     'parse_controller_name' => false,
@@ -262,6 +292,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'format_listener' => [
                     'rules' => [
                         ['path' => '/foo'],
@@ -285,6 +318,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'format_listener' => [
                     'media_type' => true,
                 ],
@@ -300,6 +336,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                'routing_loader' => [
                    'parse_controller_name' => false,
                ],
@@ -321,6 +360,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -336,6 +378,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -352,6 +397,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -368,6 +416,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
            'fos_rest' => [
+               'exception' => [
+                   'exception_controller' => 'fos_rest.exception.controller::showAction',
+               ],
                'routing_loader' => [
                    'parse_controller_name' => false,
                ],
@@ -380,6 +431,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -394,6 +448,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                'routing_loader' => [
                    'parse_controller_name' => false,
                ],
@@ -406,6 +463,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -423,6 +483,9 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_converter' => ['validate' => true],
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -437,6 +500,9 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_converter' => ['validate' => false],
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -462,6 +528,9 @@ class FOSRestExtensionTest extends TestCase
 
         $this->extension->load([
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                'routing_loader' => [
                    'parse_controller_name' => false,
                ],
@@ -539,6 +608,9 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load(
             [
                 'fos_rest' => [
+                    'exception' => [
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    ],
                     'routing_loader' => [
                         'include_format' => false,
                         'parse_controller_name' => false,
@@ -570,6 +642,9 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load(
             [
                 'fos_rest' => [
+                    'exception' => [
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    ],
                     'routing_loader' => [
                         'default_format' => 'xml',
                         'parse_controller_name' => false,
@@ -601,6 +676,9 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load(
             [
                 'fos_rest' => [
+                    'exception' => [
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    ],
                     'routing_loader' => [
                         'parse_controller_name' => false,
                     ],
@@ -646,6 +724,7 @@ class FOSRestExtensionTest extends TestCase
                     'codes' => [
                         'Exception' => 404,
                     ],
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
@@ -669,6 +748,7 @@ class FOSRestExtensionTest extends TestCase
                     'codes' => [
                         'Exception' => $value,
                     ],
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
@@ -729,32 +809,48 @@ class FOSRestExtensionTest extends TestCase
         return array(
             'empty config, kernel.debug is true' => array(
                 true,
-                array(),
+                [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 true,
             ),
             'empty config, kernel.debug is false' => array(
                 false,
-                array(),
+                [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 false,
             ),
             'config debug true' => array(
                 false,
-                array('debug' => true),
+                [
+                    'debug' => true,
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 true,
             ),
             'config debug false' => array(
                 true,
-                array('debug' => false),
+                [
+                    'debug' => false,
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 false,
             ),
             'config debug null, kernel.debug true' => array(
                 false,
-                array('debug' => null),
+                [
+                    'debug' => null,
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 true,
             ),
             'config debug null, kernel.debug false' => array(
                 false,
-                array('debug' => null),
+                [
+                    'debug' => null,
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 true,
             ),
         );
@@ -803,6 +899,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -822,7 +921,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
-                'exception' => true,
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -836,6 +937,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
@@ -848,6 +952,9 @@ class FOSRestExtensionTest extends TestCase
     public function testZoneMatcherListener()
     {
         $config = array('fos_rest' => array(
+            'exception' => [
+                'exception_controller' => 'fos_rest.exception.controller::showAction',
+            ],
             'routing_loader' => [
                 'parse_controller_name' => false,
             ],
@@ -888,6 +995,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = array(
             'fos_rest' => array(
+                'exception' => [
+                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                ],
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
