@@ -34,4 +34,5 @@ fos_rest:
             - query
 
 twig:
+    exception_controller: ~
     strict_variables: '%kernel.debug%'

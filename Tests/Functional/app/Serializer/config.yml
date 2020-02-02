@@ -11,4 +11,5 @@ fos_rest:
         view_response_listener: 'force'
 
 twig:
+    exception_controller: ~
     strict_variables: '%kernel.debug%'

@@ -9,4 +9,5 @@ web_profiler:
     toolbar: false
 
 twig:
+    exception_controller: ~
     strict_variables: '%kernel.debug%'
