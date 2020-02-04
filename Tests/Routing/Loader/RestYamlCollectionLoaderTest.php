@@ -249,17 +249,6 @@ class RestYamlCollectionLoaderTest extends LoaderTest
     }
 
     /**
-     * @group legacy
-     */
-    public function testRoutesWithPattern()
-    {
-        $collection = $this->loadFromYamlCollectionFixture('routes_with_pattern.yml');
-        $route = $collection->get('get_users');
-
-        $this->assertEquals('/users.{_format}', $route->getPath());
-    }
-
-    /**
      * Load routes collection from YAML fixture routes under Tests\Fixtures directory.
      *
      * @param string   $fixtureName   name of the class fixture

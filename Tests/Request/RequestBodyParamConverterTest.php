@@ -202,27 +202,6 @@ class RequestBodyParamConverterTest extends TestCase
         $this->assertEquals($expectedContext, $context);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testMaxDepthContextConfiguration()
-    {
-        $converter = new RequestBodyParamConverter($this->serializer);
-        $options = [
-            'maxDepth' => 5,
-        ];
-
-        $contextConfigurationMethod = new \ReflectionMethod($converter, 'configureContext');
-        $contextConfigurationMethod->setAccessible(true);
-        $contextConfigurationMethod->invoke($converter, $context = new Context(), $options);
-
-        $expectedContext = new Context();
-        $expectedContext
-            ->setMaxDepth($options['maxDepth']);
-
-        $this->assertEquals($expectedContext, $context);
-    }
-
     public function testValidatorOptionsGetter()
     {
         $converter = new RequestBodyParamConverter($this->serializer);

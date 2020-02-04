@@ -26,5 +26,3 @@ fos_rest:
         rules:
             - { path: '^/', priorities: ['xml'], fallback_format: ~ }
     versioning: true
-    routing_loader:
-        parse_controller_name: false

@@ -55,9 +55,6 @@ class ConfigurationTest extends TestCase
                     'exception' => [
                         'codes' => $expectedConfig,
                     ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
-                    ],
                 ],
             ]
         );
@@ -80,9 +77,6 @@ class ConfigurationTest extends TestCase
                     NotFoundHttpException::class => 'HTTP_NOT_FOUND',
                     MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
                 ],
-            ],
-            'routing_loader' => [
-                'parse_controller_name' => false,
             ],
         ];
 
@@ -112,9 +106,6 @@ class ConfigurationTest extends TestCase
                             \RuntimeException::class => $value,
                         ],
                     ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
-                    ],
                 ],
             ]
         );
@@ -133,9 +124,6 @@ class ConfigurationTest extends TestCase
                         'messages' => [
                             'UnknownException' => true,
                         ],
-                    ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
                     ],
                 ],
             ]
@@ -156,9 +144,6 @@ class ConfigurationTest extends TestCase
                         'codes' => [
                             'UnknownException' => 404,
                         ],
-                    ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
                     ],
                 ],
             ]
@@ -182,9 +167,6 @@ class ConfigurationTest extends TestCase
                                 'priorities' => ['html', 'json'],
                             ],
                         ],
-                    ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
                     ],
                 ],
                 [

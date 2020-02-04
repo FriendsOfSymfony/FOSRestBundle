@@ -55,11 +55,11 @@ abstract class AbstractScalarParam extends AbstractParam
                 'message' => $this->requirements['error_message'],
             ));
         } elseif (is_array($this->requirements)) {
-            foreach ($this->requirements as $requirement) {
+            foreach ($this->requirements as $index => $requirement) {
                 if ($requirement instanceof Constraint) {
                     $constraints[] = $requirement;
                 } else {
-                    @trigger_error('Using an array not only containing `Constraint`s as requirements is deprecated since version 2.6.', E_USER_DEPRECATED);
+                    throw new \TypeError(sprintf('Expected the requirements to be an array of %s instances but got %s at position %d.', Constraint::class, is_object($requirement) ? get_class($requirement) : gettype($requirement), $index));
                 }
             }
         }

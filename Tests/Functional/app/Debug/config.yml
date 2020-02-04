@@ -5,5 +5,3 @@ imports:
 fos_rest:
     exception:
         debug: true
-    routing_loader:
-        parse_controller_name: false

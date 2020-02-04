@@ -15,6 +15,7 @@
         <service id="fos_rest.routing.loader.controller" class="FOS\RestBundle\Routing\Loader\RestRouteLoader" public="false">
             <argument type="service" id="service_container" />
             <argument type="service" id="file_locator" />
+            <argument type="service" id="fos_rest.routing.loader.reader.controller" />
             <tag name="routing.loader" />
         </service>
 
