@@ -10,7 +10,8 @@ fos_rest:
     format_listener:
         rules:
             - { path: '^/', priorities: ['json', 'html'], fallback_format: json }
-
+    routing_loader:
+        parse_controller_name: false
     view:
         view_response_listener: true
         mime_types:

@@ -109,6 +109,21 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('routing_loader')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->booleanNode('parse_controller_name')
+                            ->defaultValue(static function () {
+                                @trigger_error('Setting the "fos_rest.routing_loader.parse_controller_name" configuration option to "true" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                return true;
+                            })
+                            ->validate()
+                                ->ifTrue(static function ($v) { return $v; })
+                                ->then(static function ($v) {
+                                    @trigger_error('Setting the "fos_rest.routing_loader.parse_controller_name" configuration option to "true" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                    return $v;
+                                })
+                            ->end()
+                        ->end()
                         ->scalarNode('default_format')->defaultNull()->end()
                         ->scalarNode('prefix_methods')->defaultTrue()->end()
                         ->scalarNode('include_format')->defaultTrue()->end()
@@ -441,9 +456,7 @@ final class Configuration implements ConfigurationInterface
                                         }
 
                                         if (!defined('Symfony\Component\HttpFoundation\Response::'.$item)) {
-                                            throw new InvalidConfigurationException(
-                                                'Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.'
-                                            );
+                                            throw new InvalidConfigurationException('Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.');
                                         }
 
                                         $item = constant('Symfony\Component\HttpFoundation\Response::'.$item);

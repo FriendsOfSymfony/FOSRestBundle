@@ -67,6 +67,9 @@ class TestKernel extends Kernel
             ]);
             $container->loadFromExtension('fos_rest', [
                 'exception' => null,
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
             ]);
             $container->setAlias('test.jms_serializer.handler_registry', new Alias('jms_serializer.handler_registry', true));
             $container->setAlias('test.jms_serializer.form_error_handler', new Alias('jms_serializer.form_error_handler', true));
