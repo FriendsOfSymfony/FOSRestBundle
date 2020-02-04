@@ -76,7 +76,12 @@ class FOSRestExtensionTest extends TestCase
     public function testDisableBodyListener()
     {
         $config = [
-            'fos_rest' => ['body_listener' => false],
+            'fos_rest' => [
+                'body_listener' => false,
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -85,7 +90,13 @@ class FOSRestExtensionTest extends TestCase
 
     public function testLoadBodyListenerWithDefaults()
     {
-        $this->extension->load([], $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+               'routing_loader' => [
+                   'parse_controller_name' => false,
+               ],
+            ],
+        ], $this->container);
         $decoders = [
             'json' => 'fos_rest.decoder.json',
             'xml' => 'fos_rest.decoder.xml',
@@ -100,9 +111,14 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadBodyListenerWithNormalizerString()
     {
         $config = [
-            'fos_rest' => ['body_listener' => [
-                'array_normalizer' => 'fos_rest.normalizer.camel_keys',
-            ]],
+            'fos_rest' => [
+                'body_listener' => [
+                    'array_normalizer' => 'fos_rest.normalizer.camel_keys',
+                ],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
 
         $this->extension->load($config, $this->container);
@@ -115,11 +131,16 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadBodyListenerWithNormalizerArray()
     {
         $config = [
-            'fos_rest' => ['body_listener' => [
-                'array_normalizer' => [
-                    'service' => 'fos_rest.normalizer.camel_keys',
+            'fos_rest' => [
+                'body_listener' => [
+                    'array_normalizer' => [
+                        'service' => 'fos_rest.normalizer.camel_keys',
+                    ],
                 ],
-            ]],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
 
         $this->extension->load($config, $this->container);
@@ -136,12 +157,17 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadBodyListenerWithNormalizerArrayAndForms()
     {
         $config = [
-            'fos_rest' => ['body_listener' => [
-                'array_normalizer' => [
-                    'service' => 'fos_rest.normalizer.camel_keys',
-                    'forms' => true,
+            'fos_rest' => [
+                'body_listener' => [
+                    'array_normalizer' => [
+                        'service' => 'fos_rest.normalizer.camel_keys',
+                        'forms' => true,
+                    ],
                 ],
-            ]],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
 
         $this->extension->load($config, $this->container);
@@ -158,7 +184,12 @@ class FOSRestExtensionTest extends TestCase
     public function testDisableFormatListener()
     {
         $config = [
-            'fos_rest' => ['format_listener' => false],
+            'fos_rest' => [
+                'format_listener' => false,
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -167,7 +198,13 @@ class FOSRestExtensionTest extends TestCase
 
     public function testLoadFormatListenerWithDefaults()
     {
-        $this->extension->load([], $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+               'routing_loader' => [
+                   'parse_controller_name' => false,
+               ],
+            ],
+        ], $this->container);
 
         $this->assertFalse($this->container->hasDefinition('fos_rest.format_listener'));
     }
@@ -175,9 +212,14 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadFormatListenerWithSingleRule()
     {
         $config = [
-            'fos_rest' => ['format_listener' => [
-                'rules' => ['path' => '/'],
-            ]],
+            'fos_rest' => [
+                'format_listener' => [
+                    'rules' => ['path' => '/'],
+                ],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -187,7 +229,12 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadParamFetcherListener()
     {
         $config = [
-            'fos_rest' => ['param_fetcher_listener' => true],
+            'fos_rest' => [
+                'param_fetcher_listener' => true,
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -198,7 +245,12 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadParamFetcherListenerForce()
     {
         $config = [
-            'fos_rest' => ['param_fetcher_listener' => 'force'],
+            'fos_rest' => [
+                'param_fetcher_listener' => 'force',
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -209,12 +261,17 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadFormatListenerWithMultipleRule()
     {
         $config = [
-            'fos_rest' => ['format_listener' => [
-                'rules' => [
-                    ['path' => '/foo'],
-                    ['path' => '/'],
+            'fos_rest' => [
+                'format_listener' => [
+                    'rules' => [
+                        ['path' => '/foo'],
+                        ['path' => '/'],
+                    ],
                 ],
-            ]],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -227,16 +284,27 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadFormatListenerMediaTypeNoRules()
     {
         $config = [
-            'fos_rest' => ['format_listener' => [
-                'media_type' => true,
-            ]],
+            'fos_rest' => [
+                'format_listener' => [
+                    'media_type' => true,
+                ],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
         ];
         $this->extension->load($config, $this->container);
     }
 
     public function testLoadServicesWithDefaults()
     {
-        $this->extension->load([], $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+               'routing_loader' => [
+                   'parse_controller_name' => false,
+               ],
+            ],
+        ], $this->container);
 
         $this->assertAlias('fos_rest.view_handler.default', 'fos_rest.view_handler');
 
@@ -252,7 +320,12 @@ class FOSRestExtensionTest extends TestCase
     public function testDisableViewResponseListener()
     {
         $config = [
-            'fos_rest' => ['view' => ['view_response_listener' => false]],
+            'fos_rest' => [
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+                'view' => ['view_response_listener' => false],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -262,7 +335,12 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadViewResponseListener()
     {
         $config = [
-            'fos_rest' => ['view' => ['view_response_listener' => true]],
+            'fos_rest' => [
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+                'view' => ['view_response_listener' => true],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -273,7 +351,12 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadViewResponseListenerForce()
     {
         $config = [
-            'fos_rest' => ['view' => ['view_response_listener' => 'force']],
+            'fos_rest' => [
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+                'view' => ['view_response_listener' => 'force'],
+            ],
         ];
         $this->extension->load($config, $this->container);
 
@@ -283,40 +366,82 @@ class FOSRestExtensionTest extends TestCase
 
     public function testForceEmptyContentDefault()
     {
-        $this->extension->load([], $this->container);
+        $this->extension->load([
+           'fos_rest' => [
+               'routing_loader' => [
+                   'parse_controller_name' => false,
+               ],
+           ],
+        ], $this->container);
         $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
     }
 
     public function testForceEmptyContentIs200()
     {
-        $config = ['fos_rest' => ['view' => ['empty_content' => 200]]];
+        $config = [
+            'fos_rest' => [
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+                'view' => ['empty_content' => 200],
+            ],
+        ];
         $this->extension->load($config, $this->container);
         $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
     }
 
     public function testViewSerializeNullDefault()
     {
-        $this->extension->load([], $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+               'routing_loader' => [
+                   'parse_controller_name' => false,
+               ],
+            ],
+        ], $this->container);
         $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
     public function testViewSerializeNullIsTrue()
     {
-        $config = ['fos_rest' => ['view' => ['serialize_null' => true]]];
+        $config = [
+            'fos_rest' => [
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+                'view' => [
+                    'serialize_null' => true,
+                ],
+            ],
+        ];
         $this->extension->load($config, $this->container);
         $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
     public function testValidatorAliasWhenEnabled()
     {
-        $config = ['fos_rest' => ['body_converter' => ['validate' => true]]];
+        $config = [
+            'fos_rest' => [
+                'body_converter' => ['validate' => true],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
+        ];
         $this->extension->load($config, $this->container);
         $this->assertAlias('validator', 'fos_rest.validator');
     }
 
     public function testValidatorAliasWhenDisabled()
     {
-        $config = ['fos_rest' => ['body_converter' => ['validate' => false]]];
+        $config = [
+            'fos_rest' => [
+                'body_converter' => ['validate' => false],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
+        ];
         $this->extension->load($config, $this->container);
         $this->assertFalse($this->container->has('fos_rest.validator'));
     }
@@ -335,10 +460,25 @@ class FOSRestExtensionTest extends TestCase
         $xmlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.xml_collection';
         $xmlCollectionLoaderClass = 'FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader';
 
-        $this->extension->load([], $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+               'routing_loader' => [
+                   'parse_controller_name' => false,
+               ],
+            ],
+        ], $this->container);
 
         $this->assertTrue($this->container->hasDefinition($controllerLoaderDefinitionName));
-        $this->assertValidRestRouteLoader($this->container->getDefinition($controllerLoaderDefinitionName));
+
+        $loader = $this->container->getDefinition($controllerLoaderDefinitionName);
+        $arguments = $loader->getArguments();
+
+        $this->assertCount(4, $arguments);
+        $this->assertEquals('service_container', (string) $arguments[0]);
+        $this->assertEquals('file_locator', (string) $arguments[1]);
+        $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[2]);
+        $this->assertNull($arguments[3]);
+        $this->assertArrayHasKey('routing.loader', $loader->getTags());
 
         $this->assertTrue($this->container->hasDefinition($yamlCollectionLoaderDefinitionName));
         $this->assertValidRestFileLoader(
@@ -357,6 +497,43 @@ class FOSRestExtensionTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     */
+    public function testConfigLoadWithControllerNameParserEnabled()
+    {
+        $this->extension->load([], $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.routing.loader.controller'));
+
+        $loader = $this->container->getDefinition('fos_rest.routing.loader.controller');
+        $arguments = $loader->getArguments();
+
+        $this->assertCount(5, $arguments);
+        $this->assertEquals('service_container', (string) $arguments[0]);
+        $this->assertEquals('file_locator', (string) $arguments[1]);
+        $this->assertEquals('controller_name_converter', (string) $arguments[2]);
+        $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[3]);
+        $this->assertNull($arguments[4]);
+        $this->assertArrayHasKey('routing.loader', $loader->getTags());
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.routing.loader.yaml_collection'));
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition('fos_rest.routing.loader.yaml_collection'),
+            $this->includeFormat,
+            $this->formats,
+            $this->defaultFormat
+        );
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.routing.loader.xml_collection'));
+        $this->assertValidRestFileLoader(
+            $this->container->getDefinition('fos_rest.routing.loader.xml_collection'),
+            $this->includeFormat,
+            $this->formats,
+            $this->defaultFormat
+        );
+    }
+
     public function testIncludeFormatDisabled()
     {
         $this->extension->load(
@@ -364,6 +541,7 @@ class FOSRestExtensionTest extends TestCase
                 'fos_rest' => [
                     'routing_loader' => [
                         'include_format' => false,
+                        'parse_controller_name' => false,
                     ],
                 ],
             ],
@@ -394,6 +572,7 @@ class FOSRestExtensionTest extends TestCase
                 'fos_rest' => [
                     'routing_loader' => [
                         'default_format' => 'xml',
+                        'parse_controller_name' => false,
                     ],
                 ],
             ],
@@ -422,6 +601,9 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load(
             [
                 'fos_rest' => [
+                    'routing_loader' => [
+                        'parse_controller_name' => false,
+                    ],
                     'view' => [
                         'formats' => [
                             'json' => false,
@@ -465,6 +647,9 @@ class FOSRestExtensionTest extends TestCase
                         'Exception' => 404,
                     ],
                 ],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
             ],
         ], $this->container);
         $this->assertFalse($this->container->hasDefinition('fos_rest.exception.codes'));
@@ -484,6 +669,9 @@ class FOSRestExtensionTest extends TestCase
                     'codes' => [
                         'Exception' => $value,
                     ],
+                ],
+                'routing_loader' => [
+                    'parse_controller_name' => false,
                 ],
             ],
         ], $this->container);
@@ -520,6 +708,9 @@ class FOSRestExtensionTest extends TestCase
         $extension->load(array(
             'fos_rest' => array(
                 'exception' => $exceptionConfig,
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
             ),
         ), $this->container);
 
@@ -579,24 +770,6 @@ class FOSRestExtensionTest extends TestCase
     /**
      * Assert that loader definition described properly.
      *
-     * @param Definition $loader loader definition
-     */
-    private function assertValidRestRouteLoader(Definition $loader)
-    {
-        $arguments = $loader->getArguments();
-
-        $this->assertCount(5, $arguments);
-        $this->assertEquals('service_container', (string) $arguments[0]);
-        $this->assertEquals('file_locator', (string) $arguments[1]);
-        $this->assertEquals('controller_name_converter', (string) $arguments[2]);
-        $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[3]);
-        $this->assertNull($arguments[4]);
-        $this->assertArrayHasKey('routing.loader', $loader->getTags());
-    }
-
-    /**
-     * Assert that loader definition described properly.
-     *
      * @param Definition $loader        loader definition
      * @param bool       $includeFormat whether or not the requested view format must be included in the route path
      * @param string[]   $formats       supported view formats
@@ -628,7 +801,14 @@ class FOSRestExtensionTest extends TestCase
 
     public function testCheckViewHandlerWithJsonp()
     {
-        $this->extension->load(['fos_rest' => ['view' => ['jsonp_handler' => null]]], $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+                'view' => ['jsonp_handler' => null],
+            ],
+        ], $this->container);
 
         $this->assertTrue($this->container->has('fos_rest.view_handler'));
 
@@ -640,14 +820,27 @@ class FOSRestExtensionTest extends TestCase
 
     public function testSerializerExceptionNormalizer()
     {
-        $this->extension->load(['fos_rest' => ['exception' => true]], $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+                'exception' => true,
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
+        ], $this->container);
 
         $this->assertTrue($this->container->has('fos_rest.serializer.exception_normalizer.symfony'));
     }
 
     public function testZoneMatcherListenerDefault()
     {
-        $this->extension->load(array('fos_rest' => array()), $this->container);
+        $this->extension->load([
+            'fos_rest' => [
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
+            ],
+        ], $this->container);
 
         $this->assertFalse($this->container->has('fos_rest.zone_matcher_listener'));
     }
@@ -655,6 +848,9 @@ class FOSRestExtensionTest extends TestCase
     public function testZoneMatcherListener()
     {
         $config = array('fos_rest' => array(
+            'routing_loader' => [
+                'parse_controller_name' => false,
+            ],
             'zone' => array(
                 'first' => array('path' => '/api/*'),
                 'second' => array('path' => '/^second', 'ips' => '127.0.0.1'),
@@ -692,6 +888,9 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = array(
             'fos_rest' => array(
+                'routing_loader' => [
+                    'parse_controller_name' => false,
+                ],
                 'view' => array(
                     'mime_types' => array(
                         'json' => array('application/json', 'application/x-json'),

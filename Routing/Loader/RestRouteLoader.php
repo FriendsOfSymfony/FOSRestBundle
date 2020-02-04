@@ -38,21 +38,35 @@ class RestRouteLoader extends Loader
      *
      * @param ContainerInterface   $container
      * @param FileLocatorInterface $locator
-     * @param ControllerNameParser $controllerParser
      * @param RestControllerReader $controllerReader
      * @param string               $defaultFormat
      */
     public function __construct(
         ContainerInterface $container,
         FileLocatorInterface $locator,
-        $controllerParser,
-        RestControllerReader $controllerReader, $defaultFormat = 'html'
+        $controllerReader,
+        $defaultFormat = 'html'
     ) {
         $this->container = $container;
         $this->locator = $locator;
-        $this->controllerParser = $controllerParser;
-        $this->controllerReader = $controllerReader;
-        $this->defaultFormat = $defaultFormat;
+
+        if ($controllerReader instanceof ControllerNameParser || null === $controllerReader) {
+            @trigger_error(sprintf('Not passing an instance of %s as the 3rd argument of %s() is deprecated since FOSRestBundle 2.8.', RestControllerReader::class, __METHOD__), E_USER_DEPRECATED);
+
+            $this->controllerParser = $controllerReader;
+
+            if (!$defaultFormat instanceof RestControllerReader) {
+                throw new \TypeError(sprintf('Argument 4 passed to %s() must be an instance of %s, %s given.', __METHOD__, RestControllerReader::class, is_object($defaultFormat) ? get_class($defaultFormat) : gettype($defaultFormat)));
+            }
+
+            $this->controllerReader = $defaultFormat;
+            $this->defaultFormat = func_num_args() > 4 ? func_get_arg(4) : 'html';
+        } elseif (!$controllerReader instanceof RestControllerReader) {
+            throw new \TypeError(sprintf('Argument 3 passed to %s() must be an instance of %s, %s given.', __METHOD__, RestControllerReader::class, is_object($controllerReader) ? get_class($controllerReader) : gettype($controllerReader)));
+        } else {
+            $this->controllerReader = $controllerReader;
+            $this->defaultFormat = $defaultFormat;
+        }
     }
 
     /**

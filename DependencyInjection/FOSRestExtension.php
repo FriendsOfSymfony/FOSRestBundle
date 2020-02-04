@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -55,7 +56,15 @@ class FOSRestExtension extends Extension
         $loader->load('request.xml');
         $loader->load('serializer.xml');
 
-        $container->getDefinition('fos_rest.routing.loader.controller')->replaceArgument(4, $config['routing_loader']['default_format']);
+        $restRouteLoader = $container->getDefinition('fos_rest.routing.loader.controller');
+
+        if ($config['routing_loader']['parse_controller_name']) {
+            $restRouteLoader->addArgument(new Reference('controller_name_converter', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        }
+
+        $restRouteLoader->addArgument(new Reference('fos_rest.routing.loader.reader.controller'));
+        $restRouteLoader->addArgument($config['routing_loader']['default_format']);
+
         $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
         $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
 
