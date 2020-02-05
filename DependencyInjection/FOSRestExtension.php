@@ -351,9 +351,7 @@ class FOSRestExtension extends Extension
                 $service->clearTag('kernel.event_subscriber');
             }
 
-            $controller = $config['exception']['exception_controller'] ?? null;
-
-            $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $controller);
+            $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $config['exception']['exception_controller']);
 
             $container->getDefinition('fos_rest.exception.codes_map')
                 ->replaceArgument(0, $config['exception']['codes']);

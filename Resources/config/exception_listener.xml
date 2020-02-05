@@ -19,11 +19,6 @@
             <argument /><!-- show exception -->
         </service>
 
-        <service id="fos_rest.exception.twig_controller" class="FOS\RestBundle\Controller\TwigExceptionController" parent="fos_rest.exception.controller">
-            <argument type="service" id="templating.engine.twig" />
-            <deprecated>The "%service_id%" service is deprecated since FOSRestBundle 2.8.</deprecated>
-        </service>
-
         <service id="fos_rest.exception.codes_map" class="FOS\RestBundle\Util\ExceptionValueMap" public="false">
             <argument type="collection"/> <!-- exception codes -->
         </service>

@@ -17,7 +17,6 @@ use FOS\RestBundle\DependencyInjection\Compiler\JMSFormErrorHandlerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\JMSHandlersPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
-use FOS\RestBundle\DependencyInjection\Compiler\TwigExceptionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -38,8 +37,6 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new SerializerConfigurationPass());
         $container->addCompilerPass(new ConfigurationCheckPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -10);
         $container->addCompilerPass(new FormatListenerRulesPass());
-        // must run after \Symfony\Bundle\TwigBundle\DependencyInjection\Compiler\ExtensionPass which removes the templating.engine.twig service when templating is not enabled
-        $container->addCompilerPass(new TwigExceptionPass(), PassConfig::TYPE_BEFORE_REMOVING, -10);
         $container->addCompilerPass(new JMSFormErrorHandlerPass());
         $container->addCompilerPass(new JMSHandlersPass(), PassConfig::TYPE_BEFORE_REMOVING, -10);
         $container->addCompilerPass(new HandlerRegistryDecorationPass(), PassConfig::TYPE_AFTER_REMOVING);
