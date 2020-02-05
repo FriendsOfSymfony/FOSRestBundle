@@ -4,6 +4,7 @@ CHANGELOG
 3.0.0
 -----
 
+* dropped support for Symfony components < 4.4
 * added support for Symfony 5 compatibility
 
 2.7.0

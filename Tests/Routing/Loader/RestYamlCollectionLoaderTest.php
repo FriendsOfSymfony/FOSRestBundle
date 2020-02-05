@@ -17,7 +17,6 @@ use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -217,11 +216,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
 
         $route = $collection->get('get_users');
 
-        // We check that it's "controller:method" if sf < 4.1 (controller as service) and not "controller::method"
-        $this->assertEquals(
-            UsersController::class.(Kernel::VERSION_ID >= 40100 ? '::' : ':').'getUsersAction',
-            $route->getDefault('_controller')
-        );
+        $this->assertEquals(UsersController::class.'::getUsersAction', $route->getDefault('_controller'));
 
         $this->container = null;
     }
