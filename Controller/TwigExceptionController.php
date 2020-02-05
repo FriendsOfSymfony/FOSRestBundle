@@ -20,6 +20,8 @@ use Twig\Loader\ExistsLoaderInterface;
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
  * It additionally is able to prepare the template parameters for the core EngineInterface.
+ *
+ * @deprecated since FOSRestBundle 2.8
  */
 class TwigExceptionController extends TemplatingExceptionController
 {

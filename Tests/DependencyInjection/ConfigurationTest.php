@@ -54,6 +54,7 @@ class ConfigurationTest extends TestCase
                 [
                     'exception' => [
                         'codes' => $expectedConfig,
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
                 ],
             ]
@@ -77,6 +78,7 @@ class ConfigurationTest extends TestCase
                     NotFoundHttpException::class => 'HTTP_NOT_FOUND',
                     MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
                 ],
+                'exception_controller' => 'fos_rest.exception.controller::showAction',
             ],
         ];
 
@@ -105,6 +107,7 @@ class ConfigurationTest extends TestCase
                         'codes' => [
                             \RuntimeException::class => $value,
                         ],
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
                 ],
             ]
@@ -121,6 +124,7 @@ class ConfigurationTest extends TestCase
             [
                 [
                     'exception' => [
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
                         'messages' => [
                             'UnknownException' => true,
                         ],
@@ -144,6 +148,7 @@ class ConfigurationTest extends TestCase
                         'codes' => [
                             'UnknownException' => 404,
                         ],
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
                 ],
             ]
@@ -156,6 +161,9 @@ class ConfigurationTest extends TestCase
             $this->configuration,
             [
                 [
+                    'exception' => [
+                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    ],
                     'format_listener' => [
                         'rules' => [
                             [

@@ -31,7 +31,9 @@ test_version_path:
 
 test_param_fetcher:
     path:     /params
-    defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ParamFetcherController::paramsAction }
+    defaults:
+        _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ParamFetcherController::paramsAction
+        _format: json
 
 test_param_fetcher_test:
     path:     /params/test

@@ -431,7 +431,21 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->canBeEnabled()
                     ->children()
-                        ->scalarNode('exception_controller')->defaultNull()->end()
+                        ->scalarNode('exception_controller')
+                            ->defaultValue(static function () {
+                                @trigger_error('Not setting the "fos_rest.exception.exception_controller" configuration option is deprecated since FOSRestBundle 2.8. Its default value will be set to "fos_rest.exception.controller::showAction" in 3.0.', E_USER_DEPRECATED);
+
+                                return null;
+                            })
+                            ->validate()
+                                ->ifTrue(static function ($v) { return null === $v; })
+                                ->then(static function ($v) {
+                                    @trigger_error('Not setting the "fos_rest.exception.exception_controller" configuration option is deprecated since FOSRestBundle 2.8. Its default value will be set to "fos_rest.exception.controller::showAction" in 3.0.', E_USER_DEPRECATED);
+
+                                    return $v;
+                                })
+                            ->end()
+                        ->end()
                         ->scalarNode('service')->defaultNull()->end()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
