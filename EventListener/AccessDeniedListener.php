@@ -70,11 +70,7 @@ class AccessDeniedListener implements EventSubscriberInterface
 
         $handling = true;
 
-        if (method_exists($event, 'getThrowable')) {
-            $exception = $event->getThrowable();
-        } else {
-            $exception = $event->getException();
-        }
+        $exception = $event->getThrowable();
 
         if ($exception instanceof AccessDeniedException) {
             $exception = new AccessDeniedHttpException('You do not have the necessary permissions', $exception);
@@ -86,11 +82,7 @@ class AccessDeniedListener implements EventSubscriberInterface
             }
         }
 
-        if (method_exists($event, 'setThrowable')) {
-            $event->setThrowable($exception);
-        } else {
-            $event->setException($exception);
-        }
+        $event->setThrowable($exception);
 
         $handling = false;
     }

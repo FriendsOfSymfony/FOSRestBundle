@@ -55,11 +55,7 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('fos_rest');
 
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            $rootNode = $treeBuilder->root('fos_rest');
-        }
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

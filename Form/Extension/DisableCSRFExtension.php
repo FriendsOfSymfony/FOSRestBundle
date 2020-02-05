@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\Form\Extension;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -62,10 +61,7 @@ class DisableCSRFExtension extends AbstractTypeExtension
 
     public function getExtendedType()
     {
-        return method_exists(AbstractType::class, 'getBlockPrefix')
-            ? FormType::class
-            : 'form' // SF <2.8 BC
-            ;
+        return FormType::class;
     }
 
     public static function getExtendedTypes(): iterable

@@ -15,7 +15,6 @@ use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
@@ -106,15 +105,7 @@ class RestRouteLoader extends Loader
             // service_id
             $prefix = $controller.'::';
 
-            $useScope = method_exists($this->container, 'enterScope') && $this->container->hasScope('request');
-            if ($useScope) {
-                $this->container->enterScope('request');
-                $this->container->set('request', new Request());
-            }
             $class = get_class($this->container->get($controller));
-            if ($useScope) {
-                $this->container->leaveScope('request');
-            }
         } elseif (class_exists($controller)) {
             // full class name
             $class = $controller;
