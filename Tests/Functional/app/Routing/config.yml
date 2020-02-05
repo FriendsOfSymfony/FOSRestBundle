@@ -1,6 +1,5 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/default.php }
 
 framework:
     serializer:

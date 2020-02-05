@@ -1,6 +1,5 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/default.php }
     - { resource: ../config/exception_listener.yml }
 
 framework:
