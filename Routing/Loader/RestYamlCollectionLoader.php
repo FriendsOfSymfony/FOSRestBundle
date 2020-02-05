@@ -127,15 +127,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
                 $imported = $this->addParentNamePrefix($imported, $namePrefix);
 
                 $collection->addCollection($imported);
-            } elseif (isset($config['pattern']) || isset($config['path'])) {
-                // the YamlFileLoader of the Routing component only checks for
-                // the path option
-                if (!isset($config['path'])) {
-                    $config['path'] = $config['pattern'];
-
-                    @trigger_error(sprintf('The "pattern" option at "%s" in file "%s" is deprecated. Use the "path" option instead.', $name, $path), E_USER_DEPRECATED);
-                }
-
+            } elseif (isset($config['path'])) {
                 if ($this->includeFormat) {
                     // append format placeholder if not present
                     if (false === strpos($config['path'], '{_format}')) {

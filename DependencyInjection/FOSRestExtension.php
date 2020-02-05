@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -56,14 +55,7 @@ class FOSRestExtension extends Extension
         $loader->load('request.xml');
         $loader->load('serializer.xml');
 
-        $restRouteLoader = $container->getDefinition('fos_rest.routing.loader.controller');
-
-        if ($config['routing_loader']['parse_controller_name']) {
-            $restRouteLoader->addArgument(new Reference('controller_name_converter', ContainerInterface::NULL_ON_INVALID_REFERENCE));
-        }
-
-        $restRouteLoader->addArgument(new Reference('fos_rest.routing.loader.reader.controller'));
-        $restRouteLoader->addArgument($config['routing_loader']['default_format']);
+        $container->getDefinition('fos_rest.routing.loader.controller')->addArgument($config['routing_loader']['default_format']);
 
         $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
         $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
@@ -240,7 +232,7 @@ class FOSRestExtension extends Extension
     {
         if ($config['param_fetcher_listener']['enabled']) {
             if (!class_exists(Constraint::class)) {
-                @trigger_error('Enabling the fos_rest.param_fetcher_listener option when the Symfony Validator component is not installed is deprecated since FOSRestBundle 2.6 and will throw an exception in 3.0. Disable the feature or install the symfony/validator package.', E_USER_DEPRECATED);
+                throw new \LogicException('Enabling the fos_rest.param_fetcher_listener option when the Symfony Validator component is not installed is not supported. Try installing the symfony/validator package.');
             }
 
             $loader->load('param_fetcher_listener.xml');

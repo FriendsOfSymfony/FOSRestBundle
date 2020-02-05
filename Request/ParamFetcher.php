@@ -50,12 +50,8 @@ class ParamFetcher implements ParamFetcherInterface
      * @param RequestStack         $requestStack
      * @param ValidatorInterface   $validator
      */
-    public function __construct(ContainerInterface $container, ParamReaderInterface $paramReader, RequestStack $requestStack, ValidatorInterface $validator = null)
+    public function __construct(ContainerInterface $container, ParamReaderInterface $paramReader, RequestStack $requestStack, ValidatorInterface $validator)
     {
-        if (null === $validator) {
-            @trigger_error(sprintf('Using no validator is deprecated since FOSRestBundle 2.6. The `$validator` constructor argument of the `%s` will become mandatory in 3.0.', __CLASS__), E_USER_DEPRECATED);
-        }
-
         $this->container = $container;
         $this->requestStack = $requestStack;
         $this->validator = $validator;
@@ -131,12 +127,6 @@ class ParamFetcher implements ParamFetcherInterface
         $this->checkNotIncompatibleParams($param);
         if (null !== $default && $default === $paramValue) {
             return $paramValue;
-        }
-
-        if (null === $this->validator) {
-            throw new \RuntimeException(
-                'The ParamFetcher requirements feature requires the symfony/validator component.'
-            );
         }
 
         $constraints = $param->getConstraints();

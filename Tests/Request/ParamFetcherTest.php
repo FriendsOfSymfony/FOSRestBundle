@@ -82,15 +82,6 @@ class ParamFetcherTest extends TestCase
         $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
     }
 
-    /**
-     * @expectedDeprecation Using no validator is deprecated since FOSRestBundle 2.6. The `$validator` constructor argument of the `FOS\RestBundle\Request\ParamFetcher` will become mandatory in 3.0.
-     * @group legacy
-     */
-    public function testConstructorCallWithNullValidatorShouldTriggerDeprecation()
-    {
-        new ParamFetcher($this->container, $this->paramReader, $this->requestStack, null);
-    }
-
     public function testParamDynamicCreation()
     {
         $fetcher = $this->paramFetcherBuilder->getMock();
@@ -168,31 +159,6 @@ class ParamFetcherTest extends TestCase
             'value',
             $method->invokeArgs($fetcher, array($param, 'value', null, null))
         );
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage The ParamFetcher requirements feature requires the symfony/validator component.
-     *
-     * @group legacy
-     */
-    public function testEmptyValidator()
-    {
-        $param = $this->createMockedParam('none', null, array(), false, null, array('constraint'));
-        $this->setParams([$param]);
-
-        list($fetcher, $method) = $this->getFetcherToCheckValidation(
-            $param,
-            array(
-                $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock(),
-                $this->paramReader,
-                $this->requestStack,
-                null,
-            )
-        );
-
-        $fetcher->setController($this->controller);
-        $fetcher->get('none', '42');
     }
 
     public function testNoValidationErrors()

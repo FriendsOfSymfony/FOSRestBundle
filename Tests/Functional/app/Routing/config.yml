@@ -6,6 +6,4 @@ framework:
         enabled: true
     router: { resource: "%kernel.project_dir%/Routing/routing.yml" }
 
-fos_rest:
-    routing_loader:
-        parse_controller_name: false
+fos_rest: ~

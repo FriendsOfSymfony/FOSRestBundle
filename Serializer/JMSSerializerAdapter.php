@@ -86,12 +86,6 @@ class JMSSerializerAdapter implements Serializer
             $jmsContext = $this->deserializationContextFactory
                 ? $this->deserializationContextFactory->createDeserializationContext()
                 : DeserializationContext::create();
-            $maxDepth = $context->getMaxDepth(false);
-            if (null !== $maxDepth) {
-                for ($i = 0; $i < $maxDepth; ++$i) {
-                    $jmsContext->increaseDepth();
-                }
-            }
         }
 
         foreach ($context->getAttributes() as $key => $value) {
@@ -104,7 +98,7 @@ class JMSSerializerAdapter implements Serializer
         if (null !== $context->getGroups()) {
             $jmsContext->setGroups($context->getGroups());
         }
-        if (null !== $context->getMaxDepth(false) || null !== $context->isMaxDepthEnabled()) {
+        if (null !== $context->isMaxDepthEnabled()) {
             $jmsContext->enableMaxDepthChecks();
         }
         if (null !== $context->getSerializeNull()) {

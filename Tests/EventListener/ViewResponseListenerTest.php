@@ -210,7 +210,6 @@ class ViewResponseListenerTest extends TestCase
 
         $context = $view->getContext();
 
-        $this->assertEquals($expectedMaxDepth, $context->getMaxDepth(false));
         $this->assertEquals($enableMaxDepthChecks, $context->isMaxDepthEnabled());
     }
 
