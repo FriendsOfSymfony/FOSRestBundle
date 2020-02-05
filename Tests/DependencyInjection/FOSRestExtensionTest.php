@@ -13,7 +13,6 @@ namespace FOS\RestBundle\Tests\DependencyInjection;
 
 use FOS\RestBundle\DependencyInjection\FOSRestExtension;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -311,10 +310,7 @@ class FOSRestExtensionTest extends TestCase
         $viewHandlerAlias = $this->container->getAlias('fos_rest.view_handler');
 
         $this->assertTrue($viewHandlerAlias->isPublic());
-
-        if (method_exists(Alias::class, 'isPrivate')) {
-            $this->assertFalse($viewHandlerAlias->isPrivate());
-        }
+        $this->assertFalse($viewHandlerAlias->isPrivate());
     }
 
     public function testDisableViewResponseListener()

@@ -56,11 +56,7 @@ class ExceptionListener implements EventSubscriberInterface
             return;
         }
 
-        if (method_exists($event, 'getThrowable')) {
-            $exception = $event->getThrowable();
-        } else {
-            $exception = $event->getException();
-        }
+        $exception = $event->getThrowable();
 
         $controllerArgsListener = function ($event) use (&$controllerArgsListener, $exception) {
             /** @var ControllerArgumentsEvent $event */

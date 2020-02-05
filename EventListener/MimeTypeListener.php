@@ -53,15 +53,7 @@ class MimeTypeListener
 
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
             foreach ($this->mimeTypes as $format => $mimeTypes) {
-                if (method_exists(Request::class, 'getMimeTypes')) {
-                    $mimeTypes = array_merge($mimeTypes, Request::getMimeTypes($format));
-                } elseif (null !== $request->getMimeType($format)) {
-                    $class = new \ReflectionClass(Request::class);
-                    $properties = $class->getStaticProperties();
-                    if (isset($properties['formats'][$format])) {
-                        $mimeTypes = array_merge($mimeTypes, $properties['formats'][$format]);
-                    }
-                }
+                $mimeTypes = array_merge($mimeTypes, Request::getMimeTypes($format));
 
                 $request->setFormat($format, $mimeTypes);
             }

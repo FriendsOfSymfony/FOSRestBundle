@@ -19,7 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -103,13 +102,7 @@ class FOSRestExtension extends Extension
 
             $definition = $container->getDefinition('fos_rest.form.extension.csrf_disable');
             $definition->replaceArgument(1, $config['disable_csrf_role']);
-
-            // BC for Symfony < 2.8: the extended_type attribute is used on higher versions
-            if (!method_exists(AbstractType::class, 'getBlockPrefix')) {
-                $definition->addTag('form.type_extension', ['alias' => 'form']);
-            } else {
-                $definition->addTag('form.type_extension', ['extended_type' => FormType::class]);
-            }
+            $definition->addTag('form.type_extension', ['extended_type' => FormType::class]);
         }
     }
 
