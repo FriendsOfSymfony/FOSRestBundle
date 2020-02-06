@@ -369,7 +369,7 @@ class FOSRestExtensionTest extends TestCase
                ],
            ],
         ], $this->container);
-        $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
+        $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(5));
     }
 
     public function testForceEmptyContentIs200()
@@ -383,7 +383,7 @@ class FOSRestExtensionTest extends TestCase
             ],
         ];
         $this->extension->load($config, $this->container);
-        $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
+        $this->assertEquals(200, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(5));
     }
 
     public function testViewSerializeNullDefault()
@@ -395,7 +395,7 @@ class FOSRestExtensionTest extends TestCase
                 ],
             ],
         ], $this->container);
-        $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
+        $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
     }
 
     public function testViewSerializeNullIsTrue()
@@ -411,7 +411,7 @@ class FOSRestExtensionTest extends TestCase
             ],
         ];
         $this->extension->load($config, $this->container);
-        $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
+        $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
     }
 
     public function testValidatorAliasWhenEnabled()

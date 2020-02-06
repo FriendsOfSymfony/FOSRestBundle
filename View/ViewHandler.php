@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -108,7 +107,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      *
      * @param UrlGeneratorInterface $urlGenerator         The URL generator
      * @param Serializer            $serializer
-     * @param Environment           $templating           The configured templating engine
      * @param RequestStack          $requestStack         The request stack
      * @param array                 $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
      * @param int                   $failedValidationCode The HTTP response status code for a failed validation
@@ -121,7 +119,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         Serializer $serializer,
-        $templating,
         RequestStack $requestStack,
         array $formats = null,
         $failedValidationCode = Response::HTTP_BAD_REQUEST,
@@ -131,13 +128,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $defaultEngine = 'twig',
         array $options = []
     ) {
-        if (null !== $templating && !$templating instanceof Environment) {
-            throw new \TypeError(sprintf('If provided, the templating engine must be an instance of %s, but %s was given.', Environment::class, get_class($templating)));
-        }
-
         $this->urlGenerator = $urlGenerator;
         $this->serializer = $serializer;
-        $this->templating = $templating;
         $this->requestStack = $requestStack;
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
@@ -249,7 +241,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      */
     public function isFormatTemplating($format)
     {
-        return !empty($this->formats[$format]);
+        return false;
     }
 
     /**
@@ -355,44 +347,11 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      */
     public function renderTemplate(View $view, $format)
     {
-        if (null === $this->templating) {
-            throw new \LogicException(sprintf('An instance of %s must be injected in %s to render templates.', Environment::class, __CLASS__));
-        }
-
         $data = $this->prepareTemplateParameters($view);
 
         $template = $view->getTemplate();
 
         return $this->templating->render($template, $data);
-    }
-
-    /**
-     * Prepares view data for use by templating engine.
-     *
-     * @param View $view
-     *
-     * @return array
-     */
-    public function prepareTemplateParameters(View $view)
-    {
-        $data = $view->getData();
-
-        if ($data instanceof FormInterface) {
-            $data = [$view->getTemplateVar() => $data->getData(), 'form' => $data];
-        } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
-            $data = [$view->getTemplateVar() => $data];
-        }
-
-        if (isset($data['form']) && $data['form'] instanceof FormInterface) {
-            $data['form'] = $data['form']->createView();
-        }
-
-        $templateData = $view->getTemplateData();
-        if (is_callable($templateData)) {
-            $templateData = call_user_func($templateData, $this, $view);
-        }
-
-        return array_merge($data, $templateData);
     }
 
     /**

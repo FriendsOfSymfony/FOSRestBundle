@@ -17,7 +17,6 @@ use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Twig\Environment;
 
 /**
  * Jsonp handler test.
@@ -29,14 +28,12 @@ class JsonpHandlerTest extends TestCase
 {
     private $router;
     private $serializer;
-    private $templating;
     private $requestStack;
 
     protected function setUp()
     {
         $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
         $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
-        $this->templating = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
         $this->requestStack = new RequestStack();
     }
 
@@ -47,7 +44,7 @@ class JsonpHandlerTest extends TestCase
     {
         $data = ['foo' => 'bar'];
 
-        $viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, ['jsonp' => false]);
+        $viewHandler = new ViewHandler($this->router, $this->serializer, $this->requestStack, ['jsonp' => false]);
         $jsonpHandler = new JsonpHandler(key($query));
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
 
@@ -83,7 +80,7 @@ class JsonpHandlerTest extends TestCase
     {
         $data = ['foo' => 'bar'];
 
-        $viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, ['jsonp' => false]);
+        $viewHandler = new ViewHandler($this->router, $this->serializer, $this->requestStack, ['jsonp' => false]);
         $jsonpHandler = new JsonpHandler('callback');
         $viewHandler->registerHandler('jsonp', [$jsonpHandler, 'createResponse']);
 

@@ -321,17 +321,17 @@ class FOSRestExtension extends Extension
         }
 
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');
-        $defaultViewHandler->replaceArgument(4, $formats);
-        $defaultViewHandler->replaceArgument(5, $config['view']['failed_validation']);
+        $defaultViewHandler->replaceArgument(3, $formats);
+        $defaultViewHandler->replaceArgument(4, $config['view']['failed_validation']);
 
         if (!is_numeric($config['view']['empty_content'])) {
             $config['view']['empty_content'] = constant('\Symfony\Component\HttpFoundation\Response::'.$config['view']['empty_content']);
         }
 
-        $defaultViewHandler->replaceArgument(6, $config['view']['empty_content']);
-        $defaultViewHandler->replaceArgument(7, $config['view']['serialize_null']);
-        $defaultViewHandler->replaceArgument(8, $config['view']['force_redirects']);
-        $defaultViewHandler->replaceArgument(9, $config['view']['default_engine']);
+        $defaultViewHandler->replaceArgument(5, $config['view']['empty_content']);
+        $defaultViewHandler->replaceArgument(6, $config['view']['serialize_null']);
+        $defaultViewHandler->replaceArgument(7, $config['view']['force_redirects']);
+        $defaultViewHandler->replaceArgument(8, $config['view']['default_engine']);
     }
 
     private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container)

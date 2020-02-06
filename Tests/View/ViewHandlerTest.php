@@ -17,11 +17,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment;
 
 /**
  * View test.
@@ -32,14 +30,12 @@ class ViewHandlerTest extends TestCase
 {
     private $router;
     private $serializer;
-    private $templating;
     private $requestStack;
 
     protected function setUp()
     {
         $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
         $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
-        $this->templating = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
         $this->requestStack = new RequestStack();
     }
 
@@ -243,14 +239,7 @@ class ViewHandlerTest extends TestCase
     {
         $viewHandler = $this->createViewHandler(['html' => true, 'json' => false]);
 
-        if ('html' === $format) {
-            $this->templating
-                ->expects($this->once())
-                ->method('render')
-                ->will($this->returnValue(var_export($expected, true)));
-        } else {
-            $this->setupMockedSerializer($expected);
-        }
+        $this->setupMockedSerializer($expected);
 
         if ($form) {
             $data = $this->getMockBuilder('Symfony\Component\Form\Form')
@@ -294,8 +283,6 @@ class ViewHandlerTest extends TestCase
     {
         return [
             'not templating aware no form' => ['json', ['foo' => 'bar']],
-            'templating aware no form' => ['html', ['foo' => 'bar']],
-            'templating aware and form' => ['html', ['data' => ['bla' => 'toto']], 1, true, true],
             'not templating aware and invalid form' => ['json', ['data' => [0 => 'error', 1 => 'error']], 0, false, true],
         ];
     }
@@ -377,23 +364,6 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
-    public function testHandle()
-    {
-        $viewHandler = $this->createViewHandler(['html' => true]);
-
-        $this->templating
-            ->expects($this->once())
-            ->method('render')
-            ->will($this->returnValue(''));
-
-        $this->requestStack->push(new Request());
-
-        $data = ['foo' => 'bar'];
-
-        $view = new View($data);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $viewHandler->handle($view));
-    }
-
     public function testHandleCustom()
     {
         $viewHandler = $this->createViewHandler([]);
@@ -422,72 +392,6 @@ class ViewHandlerTest extends TestCase
 
         $view = new View($data);
         $viewHandler->handle($view);
-    }
-
-    /**
-     * @dataProvider prepareTemplateParametersDataProvider
-     */
-    public function testPrepareTemplateParametersWithProvider($viewData, $templateData, $expected)
-    {
-        $handler = $this->createViewHandler(['html' => true]);
-
-        $view = new View();
-        $view->setFormat('html');
-        $view->setData($viewData);
-
-        if (null !== $templateData) {
-            $view->setTemplateData($templateData);
-        }
-
-        $this->assertEquals($expected, $handler->prepareTemplateParameters($view));
-    }
-
-    public function prepareTemplateParametersDataProvider()
-    {
-        $object = new \stdClass();
-
-        $formView = new FormView();
-        $form = $this->getMockBuilder('Symfony\Component\Form\Form')
-            ->setMethods(['createView', 'getData'])
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->getMock();
-        $form
-            ->expects($this->once())
-            ->method('createView')
-            ->will($this->returnValue($formView));
-        $form
-            ->expects($this->once())
-            ->method('getData')
-            ->will($this->returnValue($formView));
-
-        $self = $this;
-
-        return [
-            'assoc array does not change' => [['foo' => 'bar'], null, ['foo' => 'bar']],
-            'ordered array is wrapped as data key' => [['foo', 'bar'], null, ['data' => ['foo', 'bar']]],
-            'object is wrapped as data key' => [$object, null, ['data' => $object]],
-            'form is wrapped as form key' => [$form, null, ['form' => $formView, 'data' => $formView]],
-            'template data is added to data' => [['foo' => 'bar'], ['baz' => 'qux'], ['foo' => 'bar', 'baz' => 'qux']],
-            'lazy template data is added to data' => [
-                ['foo' => 'bar'],
-                function () {
-                    return ['baz' => 'qux'];
-                },
-                ['foo' => 'bar', 'baz' => 'qux'],
-            ],
-            'lazy template data have reference to viewhandler and view' => [
-                ['foo' => 'bar'],
-                function ($handler, $view) use ($self) {
-                    $self->assertInstanceOf('FOS\\RestBundle\\View\\ViewHandlerInterface', $handler);
-                    $self->assertInstanceOf('FOS\\RestBundle\\View\\View', $view);
-                    $self->assertTrue($handler->isFormatTemplating($view->getFormat()));
-
-                    return ['format' => $view->getFormat()];
-                },
-                ['foo' => 'bar', 'format' => 'html'],
-            ],
-        ];
     }
 
     public function testConfigurableViewHandlerInterface()
@@ -560,25 +464,11 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Twig\Environment must be injected in FOS\RestBundle\View\ViewHandler to render templates.
-     */
-    public function testTemplatingNotInjected()
-    {
-        $this->templating = null;
-
-        $view = (new View())->setTemplate('foo.html.twig');
-        $viewHandler = $this->createViewHandler();
-        $viewHandler->renderTemplate($view, 'html');
-    }
-
     private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false, $forceRedirects = null, $defaultEngine = 'twig')
     {
         return new ViewHandler(
             $this->router,
             $this->serializer,
-            $this->templating,
             $this->requestStack,
             $formats,
             $failedValidationCode,

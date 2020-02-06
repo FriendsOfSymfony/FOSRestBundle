@@ -23,27 +23,4 @@ class ConfigurationTest extends WebTestCase
 
         $this->assertFalse($container->has('fos_rest.templating'));
     }
-
-    public function testEnabledTemplatingWithTwig()
-    {
-        $kernel = self::bootKernel(['test_case' => 'ConfigurationWithTwig']);
-        $container = $kernel->getContainer();
-
-        $this->assertTrue($container->has('fos_rest.templating'));
-    }
-
-    public function testToolbar()
-    {
-        $client = $this->createClient(['test_case' => 'ConfigurationWithTwig']);
-        $client->request(
-                'GET',
-                '/_profiler/empty/search/results?limit=10',
-                [],
-                [],
-                ['HTTP_Accept' => 'application/xml']
-            );
-
-        $this->assertSame(200, $client->getResponse()->getStatusCode());
-        $this->assertSame('text/html; charset=UTF-8', $client->getResponse()->headers->get('Content-Type'));
-    }
 }
