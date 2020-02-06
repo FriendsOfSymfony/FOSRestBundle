@@ -20,7 +20,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -118,10 +117,6 @@ class ViewResponseListener implements EventSubscriberInterface
             }
 
             if ($configuration && ($template = $configuration->getTemplate()) && !$view->getTemplate()) {
-                if ($template instanceof TemplateReferenceInterface) {
-                    $template->set('format', null);
-                }
-
                 $view->setTemplate($template);
             }
         }

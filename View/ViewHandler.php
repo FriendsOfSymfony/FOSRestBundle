@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Templating\TemplateReferenceInterface;
 use Twig\Environment;
 
 /**
@@ -108,17 +106,17 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Constructor.
      *
-     * @param UrlGeneratorInterface       $urlGenerator         The URL generator
-     * @param Serializer                  $serializer
-     * @param EngineInterface|Environment $templating           The configured templating engine
-     * @param RequestStack                $requestStack         The request stack
-     * @param array                       $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
-     * @param int                         $failedValidationCode The HTTP response status code for a failed validation
-     * @param int                         $emptyContentCode     HTTP response status code when the view data is null
-     * @param bool                        $serializeNull        Whether or not to serialize null view data
-     * @param array                       $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
-     * @param string                      $defaultEngine        default engine (twig, php ..)
-     * @param array                       $options              config options
+     * @param UrlGeneratorInterface $urlGenerator         The URL generator
+     * @param Serializer            $serializer
+     * @param Environment           $templating           The configured templating engine
+     * @param RequestStack          $requestStack         The request stack
+     * @param array                 $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
+     * @param int                   $failedValidationCode The HTTP response status code for a failed validation
+     * @param int                   $emptyContentCode     HTTP response status code when the view data is null
+     * @param bool                  $serializeNull        Whether or not to serialize null view data
+     * @param array                 $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
+     * @param string                $defaultEngine        default engine (twig, php ..)
+     * @param array                 $options              config options
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
@@ -133,8 +131,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $defaultEngine = 'twig',
         array $options = []
     ) {
-        if (null !== $templating && !$templating instanceof EngineInterface && !$templating instanceof Environment) {
-            throw new \TypeError(sprintf('If provided, the templating engine must be an instance of %s or %s, but %s was given.', EngineInterface::class, Environment::class, get_class($templating)));
+        if (null !== $templating && !$templating instanceof Environment) {
+            throw new \TypeError(sprintf('If provided, the templating engine must be an instance of %s, but %s was given.', Environment::class, get_class($templating)));
         }
 
         $this->urlGenerator = $urlGenerator;
@@ -358,22 +356,12 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function renderTemplate(View $view, $format)
     {
         if (null === $this->templating) {
-            throw new \LogicException(sprintf('An instance of %s or %s must be injected in %s to render templates.', EngineInterface::class, Environment::class, __CLASS__));
+            throw new \LogicException(sprintf('An instance of %s must be injected in %s to render templates.', Environment::class, __CLASS__));
         }
 
         $data = $this->prepareTemplateParameters($view);
 
         $template = $view->getTemplate();
-        if ($template instanceof TemplateReferenceInterface) {
-            if (null === $template->get('format')) {
-                $template->set('format', $format);
-            }
-
-            if (null === $template->get('engine')) {
-                $engine = $view->getEngine() ?: $this->defaultEngine;
-                $template->set('engine', $engine);
-            }
-        }
 
         return $this->templating->render($template, $data);
     }

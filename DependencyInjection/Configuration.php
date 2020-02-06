@@ -136,7 +136,7 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('router')->defaultValue('router')->end()
-                        ->scalarNode('templating')->defaultValue('templating')->end()
+                        ->scalarNode('templating')->defaultValue('twig')->end()
                         ->scalarNode('serializer')->defaultNull()->end()
                         ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
                         ->scalarNode('inflector')->defaultValue('fos_rest.inflector.doctrine')->end()

@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Tests\View;
 use FOS\RestBundle\View\View;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\TemplateReference;
 
 /**
  * View test.
@@ -32,9 +31,6 @@ class ViewTest extends TestCase
 
         $view->setTemplate('foo');
         $this->assertEquals('foo', $view->getTemplate());
-
-        $view->setTemplate($template = new TemplateReference());
-        $this->assertEquals($template, $view->getTemplate());
 
         $view->setTemplate([]);
     }

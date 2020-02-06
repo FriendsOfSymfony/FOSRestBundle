@@ -82,16 +82,9 @@ class ViewResponseListenerTest extends TestCase
 
     public function testOnKernelView()
     {
-        $template = $this->getMockBuilder('Symfony\Component\Templating\TemplateReferenceInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $template->expects($this->once())
-            ->method('set')
-            ->with('format', null);
-
         $annotation = new ViewAnnotation([]);
         $annotation->setOwner([new FooController(), 'onKernelViewAction']);
-        $annotation->setTemplate($template);
+        $annotation->setTemplate('');
 
         $request = new Request();
         $request->attributes->set('foo', 'baz');

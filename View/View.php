@@ -13,7 +13,6 @@ namespace FOS\RestBundle\View;
 
 use FOS\RestBundle\Context\Context;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
  * Default View implementation.
@@ -39,7 +38,7 @@ class View
     private $templateData = [];
 
     /**
-     * @var TemplateReference|string|null
+     * @var string|null
      */
     private $template;
 
@@ -247,16 +246,16 @@ class View
     /**
      * Sets template to use for the encoding.
      *
-     * @param string|TemplateReferenceInterface $template
+     * @param string $template
      *
      * @return View
      *
-     * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReferenceInterface
+     * @throws \InvalidArgumentException if the template is not a string
      */
     public function setTemplate($template)
     {
-        if (!(is_string($template) || $template instanceof TemplateReferenceInterface)) {
-            throw new \InvalidArgumentException('The template should be a string or implement TemplateReferenceInterface');
+        if (!is_string($template)) {
+            throw new \InvalidArgumentException('The template should be a string');
         }
         $this->template = $template;
 
@@ -406,7 +405,7 @@ class View
     /**
      * Gets the template.
      *
-     * @return TemplateReferenceInterface|string|null
+     * @return string|null
      */
     public function getTemplate()
     {
