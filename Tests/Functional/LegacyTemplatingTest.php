@@ -11,11 +11,22 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 /**
  * @group legacy
  */
 class LegacyTemplatingTest extends WebTestCase
 {
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        if (!class_exists(Controller::class)) {
+            self::markTestSkipped('The templating integration was dropped from Symfony 5.');
+        }
+    }
+
     public static function tearDownAfterClass()
     {
         self::deleteTmpDir('LegacyTemplating');
