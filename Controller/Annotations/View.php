@@ -22,11 +22,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class View extends Template
 {
     /**
-     * @var string
-     */
-    protected $templateVar;
-
-    /**
      * @var int
      */
     protected $statusCode;
@@ -39,44 +34,7 @@ class View extends Template
     /**
      * @var bool
      */
-    protected $populateDefaultVars = true;
-
-    /**
-     * @var bool
-     */
     protected $serializerEnableMaxDepthChecks;
-
-    /**
-     * Sets the template var name to be used for templating formats.
-     *
-     * @deprecated since 2.8
-     *
-     * @param string $templateVar
-     */
-    public function setTemplateVar($templateVar)
-    {
-        if (1 === func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        $this->templateVar = $templateVar;
-    }
-
-    /**
-     * Returns the template var name to be used for templating formats.
-     *
-     * @deprecated since 2.8
-     *
-     * @return string
-     */
-    public function getTemplateVar()
-    {
-        if (0 === func_num_args() || func_get_arg(0)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        return $this->templateVar;
-    }
 
     /**
      * @param int $statusCode
@@ -108,34 +66,6 @@ class View extends Template
     public function getSerializerGroups()
     {
         return $this->serializerGroups;
-    }
-
-    /**
-     * @deprecated since 2.8
-     *
-     * @param bool $populateDefaultVars
-     */
-    public function setPopulateDefaultVars($populateDefaultVars)
-    {
-        if (1 === func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        $this->populateDefaultVars = (bool) $populateDefaultVars;
-    }
-
-    /**
-     * @deprecated since 2.8
-     *
-     * @return bool
-     */
-    public function isPopulateDefaultVars()
-    {
-        if (0 === func_num_args() || func_get_arg(0)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        return $this->populateDefaultVars;
     }
 
     /**

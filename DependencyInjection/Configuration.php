@@ -137,18 +137,10 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('router')->defaultValue('router')->end()
                         ->scalarNode('templating')
-                            ->defaultValue(static function () {
-                                @trigger_error('Not setting the "fos_rest.service.templating" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                return 'templating';
-                            })
+                            ->defaultNull()
                             ->validate()
-                                ->ifTrue(static function ($v) { return $v; })
-                                ->then(static function ($v) {
-                                    @trigger_error('Not setting the "fos_rest.service.templating" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                    return $v;
-                                })
+                                ->ifString()
+                                ->thenInvalid('only null is supported')
                             ->end()
                         ->end()
                         ->scalarNode('serializer')->defaultNull()->end()
@@ -211,28 +203,23 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('view')
                     ->fixXmlConfig('format', 'formats')
                     ->fixXmlConfig('mime_type', 'mime_types')
-                    ->fixXmlConfig('templating_format', 'templating_formats')
                     ->fixXmlConfig('force_redirect', 'force_redirects')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('default_engine')
-                            ->defaultValue(static function () {
-                                @trigger_error('Not setting the "fos_rest.view.default_engine" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                return 'twig';
-                            })
+                            ->defaultNull()
                             ->validate()
-                                ->ifTrue(static function ($v) { return $v; })
-                                ->then(static function ($v) {
-                                    @trigger_error('Not setting the "fos_rest.view.default_engine" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                    return $v;
-                                })
+                                ->ifString()
+                                ->thenInvalid('only null is supported')
                             ->end()
                         ->end()
                         ->arrayNode('force_redirects')
                             ->useAttributeAsKey('name')
-                            ->defaultValue(['html' => true])
+                            ->defaultValue([])
+                            ->validate()
+                                ->ifTrue(function ($v) { return [] !== $v; })
+                                ->thenInvalid('only the empty array is supported')
+                            ->end()
                             ->prototype('boolean')->end()
                         ->end()
                         ->arrayNode('mime_types')
@@ -265,12 +252,6 @@ final class Configuration implements ConfigurationInterface
                         ->arrayNode('formats')
                             ->useAttributeAsKey('name')
                             ->defaultValue(['json' => true, 'xml' => true])
-                            ->prototype('boolean')->end()
-                        ->end()
-                        ->arrayNode('templating_formats')
-                            ->setDeprecated('The "%path%.%node%" configuration key has been deprecated in FOSRestBundle 2.8.')
-                            ->useAttributeAsKey('name')
-                            ->defaultValue(['html' => true])
                             ->prototype('boolean')->end()
                         ->end()
                         ->arrayNode('view_response_listener')

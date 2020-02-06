@@ -64,46 +64,6 @@ of ``force`` and ``@View()`` is not used, then rendering will be delegated to
         }
     }
 
-If you need to pass additional data to the template, not for serialization,
-you should return a ``$view`` object with the data set by ``setTemplateData``.
-
-.. code-block:: php
-
-    <?php
-
-    use FOS\RestBundle\View\View;
-    use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
-
-    /**
-     * @ViewAnnotation()
-     */
-    public function getUsersAction()
-    {
-        $view = View::create();
-
-        // ...
-        $view
-            ->setData($data)
-            ->setTemplateData($templateData)
-        ;
-        return $view;
-    }
-
-If ``@View()`` is used, the template variable name used to render templating
-formats can be configured (default  ``'data'``):
-
-.. code-block:: php
-
-    <?php
-
-    /**
-     * @View(templateVar="users")
-     */
-    public function getUsersAction()
-    {
-        // ...
-    }
-
 The status code of the view can also be configured:
 
 .. code-block:: php
@@ -173,28 +133,8 @@ You can also define your serializer options dynamically:
         // ...
         $view
             ->setData($data)
-            ->setTemplateData($templateData)
         ;
         return $view;
-    }
-
-The ViewResponse listener will automatically populate your view with request
-attributes if you do not provide any data when returning a view object. This
-behaviour comes from `SensioFrameworkExtraBundle`_ and will automatically add
-any variables listed in the ``_template_default_vars`` request attribute when no
-data is supplied. In some cases, this is not desirable and can be disabled by
-either supplying the data you want or disabling the automatic population of data
-with the ``@View`` annotation:
-
-.. code-block:: php
-
-    /**
-     * $user will no longer end up in the View's data.
-     *
-     * @View(populateDefaultVars=false)
-     */
-    public function getUserDetails(User $user)
-    {
     }
 
 .. _`SensioFrameworkExtraBundle`: http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html

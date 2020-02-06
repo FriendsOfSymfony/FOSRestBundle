@@ -35,24 +35,4 @@ class ViewResponseListenerTest extends WebTestCase
         $this->assertSame('http://localhost/hello/Post%201', $client->getResponse()->headers->get('location'));
         $this->assertNotContains('fooo', $client->getResponse()->getContent());
     }
-
-    /**
-     * @group legacy
-     */
-    public function testForceRedirect()
-    {
-        $client = $this->createClient(array('test_case' => 'ViewResponseListenerForceRedirect'));
-        $client->request(
-            'POST',
-            '/articles.html',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            '{"name": "Post 1", "body": "This is a blog post"}'
-        );
-
-        $this->assertSame(302, $client->getResponse()->getStatusCode());
-        $this->assertSame('http://localhost/hello/Post%201', $client->getResponse()->headers->get('location'));
-        $this->assertNotContains('fooo', $client->getResponse()->getContent());
-    }
 }

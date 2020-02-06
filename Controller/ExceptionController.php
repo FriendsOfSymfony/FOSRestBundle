@@ -16,8 +16,6 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
-use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
@@ -66,9 +64,8 @@ class ExceptionController
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
         $code = $this->getStatusCode($exception);
-        $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
 
-        $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
+        $view = $this->createView($exception, $code, $request, $this->showException);
         $response = $this->viewHandler->handle($view);
 
         return $response;
@@ -77,17 +74,14 @@ class ExceptionController
     /**
      * @param \Exception $exception
      * @param int        $code
-     * @param array      $templateData
      * @param Request    $request
      * @param bool       $showException
      *
      * @return View
      */
-    protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
+    protected function createView(\Exception $exception, $code, Request $request, $showException)
     {
         $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
-        $view->setTemplateVar('raw_exception', false);
-        $view->setTemplateData($templateData, false);
 
         return $view;
     }
@@ -112,34 +106,6 @@ class ExceptionController
         }
 
         return 500;
-    }
-
-    /**
-     * Determines the template parameters to pass to the view layer.
-     *
-     * @param string               $currentContent
-     * @param int                  $code
-     * @param \Exception           $exception
-     * @param DebugLoggerInterface $logger
-     *
-     * @return array
-     */
-    private function getTemplateData($currentContent, $code, \Exception $exception, DebugLoggerInterface $logger = null)
-    {
-        if (class_exists(FlattenException::class)) {
-            $exception = FlattenException::createFromThrowable($exception);
-        } else {
-            $exception = LegacyFlattenException::create($exception);
-        }
-
-        return [
-            'exception' => $exception,
-            'status' => 'error',
-            'status_code' => $code,
-            'status_text' => array_key_exists($code, Response::$statusTexts) ? Response::$statusTexts[$code] : 'error',
-            'currentContent' => $currentContent,
-            'logger' => $logger,
-        ];
     }
 
     /**

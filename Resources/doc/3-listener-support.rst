@@ -4,10 +4,9 @@ Step 3: Listener support
 `Listeners`_ are a way to hook into the request handling. This Bundle provides
 various events from decoding the request content in the request (body listener),
 determining the correct response format (format listener), reading parameters
-from the request (parameter fetcher listener), to formatting the response either
-with a template engine like twig or (for example) to xml or json using a serializer 
-(view response listener) as well as automatically setting the accepted HTTP methods
-in the response (accept listener).
+from the request (parameter fetcher listener), to formatting the response to xml
+or json using a serializer (view response listener) as well as automatically setting
+the accepted HTTP methods in the response (accept listener).
 
 With this in mind we will now explain each one of them.
 

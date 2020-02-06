@@ -15,12 +15,10 @@ use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
  * The ViewResponseListener class handles the View core event as well as the "@extra:Template" annotation.
@@ -47,7 +45,7 @@ class ViewResponseListener implements EventSubscriberInterface
     }
 
     /**
-     * Renders the parameters and template and initializes a new response object with the
+     * Renders the parameters and initializes a new response object with the
      * rendered content.
      *
      * @param ViewEvent $event
@@ -72,9 +70,6 @@ class ViewResponseListener implements EventSubscriberInterface
         }
 
         if ($configuration instanceof ViewAnnotation) {
-            if ($configuration->getTemplateVar(false)) {
-                $view->setTemplateVar($configuration->getTemplateVar(false), false);
-            }
             if (null !== $configuration->getStatusCode() && (null === $view->getStatusCode() || Response::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
             }
@@ -92,38 +87,10 @@ class ViewResponseListener implements EventSubscriberInterface
             } elseif (false === $configuration->getSerializerEnableMaxDepthChecks()) {
                 $context->disableMaxDepth();
             }
-
-            list($controller, $action) = $configuration->getOwner();
-            $vars = $this->getDefaultVars($configuration, $controller, $action);
-        } else {
-            $vars = null;
         }
 
         if (null === $view->getFormat()) {
             $view->setFormat($request->getRequestFormat());
-        }
-
-        if ($this->viewHandler->isFormatTemplating($view->getFormat(), false)
-            && !$view->getRoute()
-            && !$view->getLocation()
-        ) {
-            if (null !== $vars && 0 !== count($vars)) {
-                $parameters = (array) $this->viewHandler->prepareTemplateParameters($view, false);
-                foreach ($vars as $var) {
-                    if (!array_key_exists($var, $parameters)) {
-                        $parameters[$var] = $request->attributes->get($var);
-                    }
-                }
-                $view->setData($parameters);
-            }
-
-            if ($configuration && ($template = $configuration->getTemplate()) && !$view->getTemplate(false)) {
-                if ($template instanceof TemplateReferenceInterface) {
-                    $template->set('format', null);
-                }
-
-                $view->setTemplate($template, false);
-            }
         }
 
         $response = $this->viewHandler->handle($view, $request);
@@ -137,32 +104,5 @@ class ViewResponseListener implements EventSubscriberInterface
         return array(
             KernelEvents::VIEW => array('onKernelView', 30),
         );
-    }
-
-    /**
-     * @param Template $template
-     * @param object   $controller
-     * @param string   $action
-     *
-     * @return array
-     *
-     * @see \Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::resolveDefaultParameters()
-     */
-    private function getDefaultVars(Template $template = null, $controller, $action)
-    {
-        if (0 !== count($arguments = $template->getVars())) {
-            return $arguments;
-        }
-
-        if (!$template instanceof ViewAnnotation || $template->isPopulateDefaultVars(false)) {
-            $r = new \ReflectionObject($controller);
-
-            $arguments = array();
-            foreach ($r->getMethod($action)->getParameters() as $param) {
-                $arguments[] = $param->getName();
-            }
-
-            return $arguments;
-        }
     }
 }

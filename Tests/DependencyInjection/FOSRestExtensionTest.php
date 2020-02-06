@@ -62,7 +62,6 @@ class FOSRestExtensionTest extends TestCase
         $this->formats = [
             'json' => false,
             'xml' => false,
-            'html' => true,
         ];
         $this->defaultFormat = null;
     }
@@ -80,13 +79,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -100,13 +92,6 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ], $this->container);
@@ -131,13 +116,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
 
@@ -159,13 +137,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ];
@@ -194,13 +165,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
 
@@ -223,13 +187,6 @@ class FOSRestExtensionTest extends TestCase
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
                 'format_listener' => false,
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -243,13 +200,6 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ], $this->container);
@@ -267,13 +217,6 @@ class FOSRestExtensionTest extends TestCase
                 'format_listener' => [
                     'rules' => ['path' => '/'],
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -289,13 +232,6 @@ class FOSRestExtensionTest extends TestCase
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
                 'param_fetcher_listener' => true,
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -312,13 +248,6 @@ class FOSRestExtensionTest extends TestCase
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
                 'param_fetcher_listener' => 'force',
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -340,13 +269,6 @@ class FOSRestExtensionTest extends TestCase
                         ['path' => '/'],
                     ],
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -367,13 +289,6 @@ class FOSRestExtensionTest extends TestCase
                 'format_listener' => [
                     'media_type' => true,
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -385,13 +300,6 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ], $this->container);
@@ -411,12 +319,7 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                     'view_response_listener' => false,
                 ],
             ],
@@ -433,12 +336,7 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                     'view_response_listener' => true,
                 ],
             ],
@@ -456,12 +354,7 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                     'view_response_listener' => 'force',
                 ],
             ],
@@ -479,13 +372,6 @@ class FOSRestExtensionTest extends TestCase
                'exception' => [
                    'exception_controller' => 'fos_rest.exception.controller::showAction',
                ],
-               'service' => [
-                   'templating' => null,
-               ],
-               'view' => [
-                   'default_engine' => null,
-                   'force_redirects' => [],
-               ],
            ],
         ], $this->container);
         $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(5));
@@ -498,13 +384,8 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
-                    'default_engine' => null,
                     'empty_content' => 200,
-                    'force_redirects' => [],
                 ],
             ],
         ];
@@ -519,13 +400,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
         $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
@@ -538,12 +412,7 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                     'serialize_null' => true,
                 ],
             ],
@@ -560,13 +429,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -580,13 +442,6 @@ class FOSRestExtensionTest extends TestCase
                 'body_converter' => ['validate' => false],
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ];
@@ -612,13 +467,6 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ], $this->container);
@@ -663,13 +511,6 @@ class FOSRestExtensionTest extends TestCase
                     'routing_loader' => [
                         'include_format' => false,
                     ],
-                    'service' => [
-                        'templating' => null,
-                    ],
-                    'view' => [
-                        'default_engine' => null,
-                        'force_redirects' => [],
-                    ],
                 ],
             ],
             $this->container
@@ -703,13 +544,6 @@ class FOSRestExtensionTest extends TestCase
                     'routing_loader' => [
                         'default_format' => 'xml',
                     ],
-                    'service' => [
-                        'templating' => null,
-                    ],
-                    'view' => [
-                        'default_engine' => null,
-                        'force_redirects' => [],
-                    ],
                 ],
             ],
             $this->container
@@ -740,12 +574,7 @@ class FOSRestExtensionTest extends TestCase
                     'exception' => [
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
-                    'service' => [
-                        'templating' => null,
-                    ],
                     'view' => [
-                        'default_engine' => null,
-                        'force_redirects' => [],
                         'formats' => [
                             'json' => false,
                             'xml' => true,
@@ -762,7 +591,6 @@ class FOSRestExtensionTest extends TestCase
             $this->includeFormat,
             [
                 'xml' => false,
-                'html' => true,
             ],
             $this->defaultFormat
         );
@@ -773,7 +601,6 @@ class FOSRestExtensionTest extends TestCase
             $this->includeFormat,
             [
                 'xml' => false,
-                'html' => true,
             ],
             $this->defaultFormat
         );
@@ -788,13 +615,6 @@ class FOSRestExtensionTest extends TestCase
                         'Exception' => 404,
                     ],
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ], $this->container);
@@ -816,13 +636,6 @@ class FOSRestExtensionTest extends TestCase
                         'Exception' => $value,
                     ],
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ],
         ], $this->container);
@@ -859,13 +672,6 @@ class FOSRestExtensionTest extends TestCase
         $extension->load(array(
             'fos_rest' => array(
                 'exception' => $exceptionConfig,
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ),
         ), $this->container);
 
@@ -977,12 +783,7 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                     'jsonp_handler' => null,
                 ],
             ],
@@ -1003,13 +804,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -1023,13 +817,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -1041,13 +828,6 @@ class FOSRestExtensionTest extends TestCase
         $config = array('fos_rest' => array(
             'exception' => [
                 'exception_controller' => 'fos_rest.exception.controller::showAction',
-            ],
-            'service' => [
-                'templating' => null,
-            ],
-            'view' => [
-                'default_engine' => null,
-                'force_redirects' => [],
             ],
             'zone' => array(
                 'first' => array('path' => '/api/*'),
@@ -1089,12 +869,7 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                     'mime_types' => array(
                         'json' => array('application/json', 'application/x-json'),
                         'jpg' => 'image/jpeg',

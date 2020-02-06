@@ -103,14 +103,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
     {
         $data = [];
 
-        if ($context->hasAttribute('template_data')) {
-            $templateData = $context->getAttribute('template_data');
-            if (array_key_exists('status_code', $templateData)) {
-                $data['code'] = $statusCode = $templateData['status_code'];
-            } elseif ($context->hasAttribute('status_code')) {
-                $data['code'] = $context->getAttribute('status_code');
-            }
-        } elseif ($context->hasAttribute('status_code')) {
+        if ($context->hasAttribute('status_code')) {
             $data['code'] = $context->getAttribute('status_code');
         }
 
