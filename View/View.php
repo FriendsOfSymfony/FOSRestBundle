@@ -20,6 +20,8 @@ use Symfony\Component\Templating\TemplateReferenceInterface;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author Lukas K. Smith <smith@pooteeweet.org>
+ *
+ * @final since 2.8
  */
 class View
 {

@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author Ener-Getick <energetick.guigui@gmail.com>
+ *
+ * @final since 2.8
  */
 class FormatNegotiator extends BaseNegotiator
 {

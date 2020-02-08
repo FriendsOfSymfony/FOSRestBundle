@@ -32,6 +32,8 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry <guery.b@gmail.com>
+ *
+ * @final since 2.8
  */
 class ParamFetcher implements ParamFetcherInterface
 {

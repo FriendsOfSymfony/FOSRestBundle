@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
+ *
+ * @final since 2.8
  */
 class QueryParameterVersionResolver implements VersionResolverInterface
 {
