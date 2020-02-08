@@ -14,6 +14,11 @@ fos_rest:
         enabled: true
     routing_loader:
         parse_controller_name: false
+    service:
+        templating: ~
+    view:
+        default_engine: ~
+        force_redirects: []
 
 sensio_framework_extra:
     request:

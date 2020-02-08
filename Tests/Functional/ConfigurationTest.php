@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\Tests\Functional;
 
 /**
+ * @group legacy
+ *
  * @author Ener-Getick <egetick@gmail.com>
  */
 class ConfigurationTest extends WebTestCase

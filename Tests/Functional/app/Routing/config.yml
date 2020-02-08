@@ -10,3 +10,8 @@ framework:
 fos_rest:
     routing_loader:
         parse_controller_name: false
+    service:
+        templating: ~
+    view:
+        default_engine: ~
+        force_redirects: []

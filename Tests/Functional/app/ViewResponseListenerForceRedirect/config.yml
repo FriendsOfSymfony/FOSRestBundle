@@ -14,10 +14,9 @@ fos_rest:
         formats:
             xml:  true
             json: true
-        force_redirects: []
     format_listener:
         rules:
-            - { path: ^/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }
+            - { path: ^/, priorities: [ html, json, xml ], fallback_format: ~, prefer_extension: true }
     routing_loader:
         parse_controller_name: false
     service:

@@ -46,6 +46,8 @@ interface ViewHandlerInterface
     /**
      * If the given format uses the templating system for rendering.
      *
+     * @deprecated since 2.8
+     *
      * @param string $format
      *
      * @return bool
@@ -78,6 +80,8 @@ interface ViewHandlerInterface
     /**
      * Render the view data with the given template.
      *
+     * @deprecated since 2.8
+     *
      * @param View   $view
      * @param string $format
      *
@@ -87,6 +91,8 @@ interface ViewHandlerInterface
 
     /**
      * Prepare view data for use by templating engine.
+     *
+     * @deprecated since 2.8
      *
      * @param View $view
      *

@@ -33,7 +33,6 @@ class ArticleController extends AbstractFOSRestController
     public function cpostAction(Request $request)
     {
         $view = $this->routeRedirectView('test_redirect_endpoint', array('name' => $request->request->get('name')));
-        $view->setTemplate('TestBundle:Article:foo.html.twig');
 
         return $view;
     }

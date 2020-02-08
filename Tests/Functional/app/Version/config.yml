@@ -13,7 +13,11 @@ fos_rest:
             - { path: '^/', priorities: ['json', 'html'], fallback_format: json }
     routing_loader:
         parse_controller_name: false
+    service:
+        templating: ~
     view:
+        default_engine: ~
+        force_redirects: []
         view_response_listener: true
         mime_types:
             json:
