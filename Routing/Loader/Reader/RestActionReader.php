@@ -67,6 +67,31 @@ class RestActionReader
     private $availableConventionalActions = ['new', 'edit', 'remove'];
     private $hasMethodPrefix;
 
+    /**
+     * ignore several type hinted arguments.
+     *
+     * @var array
+     */
+    private $ignoredClasses = [
+        ConstraintViolationListInterface::class,
+        MessageInterface::class,
+        ParamConverter::class,
+        ParamFetcherInterface::class,
+        Request::class,
+        SessionInterface::class,
+        UserInterface::class,
+    ];
+
+    /**
+     * Initializes controller reader.
+     *
+     * @param Reader               $annotationReader
+     * @param ParamReaderInterface $paramReader
+     * @param InflectorInterface   $inflector
+     * @param bool                 $includeFormat
+     * @param array                $formats
+     * @param bool                 $hasMethodPrefix
+     */
     public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, bool $includeFormat, array $formats = [], bool $hasMethodPrefix = true)
     {
         $this->annotationReader = $annotationReader;
@@ -158,6 +183,26 @@ class RestActionReader
     }
 
     /**
+     * Set ignored classes.
+     *
+     * @param array $ignoredClasses
+     */
+    public function setIgnoredClasses(array $ignoredClasses)
+    {
+        $this->ignoredClasses = $ignoredClasses;
+    }
+
+    /**
+     * Get ignored classes.
+     *
+     * @return array
+     */
+    public function getIgnoredClasses()
+    {
+        return $this->ignoredClasses;
+    }
+
+    /**
      * @param string[] $resource
      *
      * @throws \InvalidArgumentException
@@ -184,7 +229,7 @@ class RestActionReader
             return;
         }
 
-        list($httpMethod, $resources, $isCollection, $isInflectable) = $httpMethodAndResources;
+        [$httpMethod, $resources, $isCollection, $isInflectable] = $httpMethodAndResources;
         $arguments = $this->getMethodArguments($method);
 
         // if we have only 1 resource & 1 argument passed, then it's object call, so
@@ -423,17 +468,6 @@ class RestActionReader
             }, $this->annotationReader->getMethodAnnotations($method));
         }
 
-        // ignore several type hinted arguments
-        $ignoreClasses = [
-            ConstraintViolationListInterface::class,
-            MessageInterface::class,
-            ParamConverter::class,
-            ParamFetcherInterface::class,
-            Request::class,
-            SessionInterface::class,
-            UserInterface::class,
-        ];
-
         $arguments = [];
         foreach ($method->getParameters() as $argument) {
             if (isset($params[$argument->getName()])) {
@@ -443,7 +477,7 @@ class RestActionReader
             $argumentClass = $argument->getClass();
             if ($argumentClass) {
                 $className = $argumentClass->getName();
-                foreach ($ignoreClasses as $class) {
+                foreach ($this->getIgnoredClasses() as $class) {
                     if ($className === $class || is_subclass_of($className, $class)) {
                         continue 2;
                     }
