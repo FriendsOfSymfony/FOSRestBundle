@@ -8,3 +8,8 @@ framework:
 
 fos_rest:
     allowed_methods_listener: true
+    service:
+        templating: ~
+    view:
+        default_engine: ~
+        force_redirects: []

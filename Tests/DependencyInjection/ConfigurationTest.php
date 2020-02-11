@@ -56,6 +56,12 @@ class ConfigurationTest extends TestCase
                         'codes' => $expectedConfig,
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
+                    ],
                 ],
             ]
         );
@@ -79,6 +85,12 @@ class ConfigurationTest extends TestCase
                     MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
                 ],
                 'exception_controller' => 'fos_rest.exception.controller::showAction',
+            ],
+            'service' => [
+                'templating' => null,
+            ],
+            'view' => [
+                'default_engine' => null,
             ],
         ];
 
@@ -109,6 +121,12 @@ class ConfigurationTest extends TestCase
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
+                    ],
                 ],
             ]
         );
@@ -128,6 +146,12 @@ class ConfigurationTest extends TestCase
                         'messages' => [
                             'UnknownException' => true,
                         ],
+                    ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
                     ],
                 ],
             ]
@@ -149,6 +173,12 @@ class ConfigurationTest extends TestCase
                             'UnknownException' => 404,
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
                     ],
                 ],
             ]
@@ -175,6 +205,12 @@ class ConfigurationTest extends TestCase
                                 'priorities' => ['html', 'json'],
                             ],
                         ],
+                    ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
                     ],
                 ],
                 [

@@ -3,5 +3,9 @@ imports:
     - { resource: ../config/exception_listener.yml }
 
 fos_rest:
+    service:
+        templating: ~
     view:
+        default_engine: ~
+        force_redirects: []
         view_response_listener: 'force'

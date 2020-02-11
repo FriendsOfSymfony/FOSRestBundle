@@ -134,12 +134,24 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
+    public function testCreateResponseWithLocation()
+    {
+        $viewHandler = $this->createViewHandler(['html' => false, 'json' => false, 'xml' => false], Response::HTTP_BAD_REQUEST, Response::HTTP_OK, false);
+        $view = new View();
+        $view->setLocation('foo');
+        $returnedResponse = $viewHandler->createResponse($view, new Request(), 'json');
+
+        $this->assertEquals(Response::HTTP_OK, $returnedResponse->getStatusCode());
+        $this->assertEquals('foo', $returnedResponse->headers->get('location'));
+    }
+
     /**
+     * @group legacy
      * @dataProvider createResponseWithLocationDataProvider
      */
-    public function testCreateResponseWithLocation($expected, $format, $forceRedirects, $noContentCode)
+    public function testCreateResponseWithLocationAndForceRedirects($expected, $format, $forceRedirects, $noContentCode)
     {
-        $viewHandler = $this->createViewHandler(['html' => true, 'json' => false, 'xml' => false], Response::HTTP_BAD_REQUEST, $noContentCode, false, $forceRedirects);
+        $viewHandler = $this->createViewHandlerWithTemplatingSupport(['html' => true, 'json' => false, 'xml' => false], Response::HTTP_BAD_REQUEST, $noContentCode, false, $forceRedirects);
         $view = new View();
         $view->setLocation('foo');
         $returnedResponse = $viewHandler->createResponse($view, new Request(), $format);
@@ -153,7 +165,6 @@ class ViewHandlerTest extends TestCase
         return [
             'empty force redirects' => [200, 'xml', ['json' => 403], Response::HTTP_OK],
             'empty force redirects with 204' => [204, 'xml', ['json' => 403], Response::HTTP_NO_CONTENT],
-            'force redirects response is redirect' => [200, 'json', [], Response::HTTP_OK],
             'force redirects response not redirect' => [403, 'json', ['json' => 403], Response::HTTP_OK],
             'html and redirect' => [301, 'html', ['html' => 301], Response::HTTP_OK],
         ];
@@ -282,6 +293,50 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals(var_export($expected, true), $response->getContent());
     }
 
+    /**
+     * @group legacy
+     *
+     * @dataProvider createResponseWithoutLocationDataProviderWithTemplatingSupport
+     */
+    public function testCreateResponseWithoutLocationWithTemplatingSupport($expected, $createViewCalls = 0, $formIsValid = false, $form = false)
+    {
+        $viewHandler = $this->createViewHandlerWithTemplatingSupport(['html' => true, 'json' => false]);
+
+        $this->templating
+            ->expects($this->once())
+            ->method('render')
+            ->will($this->returnValue(var_export($expected, true)));
+
+        if ($form) {
+            $data = $this->getMockBuilder('Symfony\Component\Form\Form')
+                ->disableOriginalConstructor()
+                ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
+                ->getMock();
+            $data
+                ->expects($this->exactly($createViewCalls))
+                ->method('createView')
+                ->will($this->returnValue(['bla' => 'toto']));
+            $data
+                ->expects($this->exactly($createViewCalls))
+                ->method('getData')
+                ->will($this->returnValue(['bla' => 'toto']));
+            $data
+                ->expects($this->any())
+                ->method('isValid')
+                ->will($this->returnValue($formIsValid));
+            $data
+                ->expects($this->any())
+                ->method('isSubmitted')
+                ->will($this->returnValue(true));
+        } else {
+            $data = ['foo' => 'bar'];
+        }
+
+        $view = new View($data);
+        $response = $viewHandler->createResponse($view, new Request(), 'html');
+        $this->assertEquals(var_export($expected, true), $response->getContent());
+    }
+
     private function setupMockedSerializer($expected)
     {
         $this->serializer
@@ -294,9 +349,15 @@ class ViewHandlerTest extends TestCase
     {
         return [
             'not templating aware no form' => ['json', ['foo' => 'bar']],
-            'templating aware no form' => ['html', ['foo' => 'bar']],
-            'templating aware and form' => ['html', ['data' => ['bla' => 'toto']], 1, true, true],
             'not templating aware and invalid form' => ['json', ['data' => [0 => 'error', 1 => 'error']], 0, false, true],
+        ];
+    }
+
+    public static function createResponseWithoutLocationDataProviderWithTemplatingSupport()
+    {
+        return [
+            'templating aware no form' => [['foo' => 'bar']],
+            'templating aware and form' => [['data' => ['bla' => 'toto']], 1, true, true],
         ];
     }
 
@@ -377,9 +438,12 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     */
     public function testHandle()
     {
-        $viewHandler = $this->createViewHandler(['html' => true]);
+        $viewHandler = $this->createViewHandlerWithTemplatingSupport(['html' => true]);
 
         $this->templating
             ->expects($this->once())
@@ -425,6 +489,7 @@ class ViewHandlerTest extends TestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider prepareTemplateParametersDataProvider
      */
     public function testPrepareTemplateParametersWithProvider($viewData, $templateData, $expected)
@@ -561,6 +626,7 @@ class ViewHandlerTest extends TestCase
     }
 
     /**
+     * @group legacy
      * @expectedException \LogicException
      * @expectedExceptionMessage An instance of Symfony\Component\Templating\EngineInterface or Twig\Environment must be injected in FOS\RestBundle\View\ViewHandler to render templates.
      */
@@ -573,7 +639,20 @@ class ViewHandlerTest extends TestCase
         $viewHandler->renderTemplate($view, 'html');
     }
 
-    private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false, $forceRedirects = null, $defaultEngine = 'twig')
+    private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false)
+    {
+        return ViewHandler::create(
+            $this->router,
+            $this->serializer,
+            $this->requestStack,
+            $formats,
+            $failedValidationCode,
+            $emptyContentCode,
+            $serializeNull
+        );
+    }
+
+    private function createViewHandlerWithTemplatingSupport($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false, $forceRedirects = null, $defaultEngine = 'twig')
     {
         return new ViewHandler(
             $this->router,

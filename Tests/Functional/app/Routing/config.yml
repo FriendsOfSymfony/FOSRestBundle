@@ -6,4 +6,9 @@ framework:
         enabled: true
     router: { resource: "%kernel.project_dir%/Routing/routing.yml" }
 
-fos_rest: ~
+fos_rest:
+    service:
+        templating: ~
+    view:
+        default_engine: ~
+        force_redirects: []

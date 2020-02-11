@@ -24,6 +24,7 @@ use Symfony\Component\Templating\TemplateReference;
 class ViewTest extends TestCase
 {
     /**
+     * @group legacy
      * @expectedException \InvalidArgumentException
      */
     public function testSetTemplateTemplateFormat()
@@ -93,6 +94,7 @@ class ViewTest extends TestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider setTemplateDataDataProvider
      */
     public function testSetTemplateData($templateData)
@@ -112,6 +114,9 @@ class ViewTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetEngine()
     {
         $view = new View();
