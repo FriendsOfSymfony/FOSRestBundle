@@ -37,7 +37,7 @@ final class ConfigurationCheckPass implements CompilerPassInterface
             }
         }
 
-        if (!$container->has((string) $container->getAlias('fos_rest.templating'))) {
+        if ($container->hasAlias('fos_rest.templating') && !$container->has((string) $container->getAlias('fos_rest.templating'))) {
             if ($container->has('twig')) {
                 $container->setAlias('fos_rest.templating', 'twig');
             } else {

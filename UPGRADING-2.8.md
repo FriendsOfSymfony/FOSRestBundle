@@ -1,6 +1,28 @@
 Upgrading From 2.7 To 2.8
 =========================
 
+ * The `isFormatTemplating()`, `renderTemplate()`, and `prepareTemplateParameters()` methods of the
+   `ViewHandler` class and the `ViewHandlerInterface` have been deprecated.
+
+ * The constructor of the `ViewHandler` class has been deprecated. Use the static `create()` factory
+   method instead.
+
+ * The `setTemplateVar()`, `setPopulateDefaultVars()`, `getTemplateVar()`, and `isPopulateDefaultVars()`
+   methods of the `Controller\Annotations\View` class have been deprecated.
+
+ * The `setEngine()`, `setTemplate()`, `setTemplateData()`, `setTemplateVar()`, `getEngine()`,
+   `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
+   have been deprecated.
+
+ * The `fos_rest.templating` alias has been deprecated.
+
+ * The `fos_rest.view.templating_formats` option has been deprecated.
+
+ * Not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options to
+   `null` has been deprecated.
+
+ * Not setting the `fos_rest.view.force_redirects` option to the empty array has been deprecated.
+
  * Not configuring the `fos_rest.exception.exception_controller` option is deprecated. Its default
    value will be changed to `fos_rest.exception.controller::showAction` in 3.0.
 

@@ -72,8 +72,8 @@ class ViewResponseListener implements EventSubscriberInterface
         }
 
         if ($configuration instanceof ViewAnnotation) {
-            if ($configuration->getTemplateVar()) {
-                $view->setTemplateVar($configuration->getTemplateVar());
+            if ($configuration->getTemplateVar(false)) {
+                $view->setTemplateVar($configuration->getTemplateVar(false), false);
             }
             if (null !== $configuration->getStatusCode() && (null === $view->getStatusCode() || Response::HTTP_OK === $view->getStatusCode())) {
                 $view->setStatusCode($configuration->getStatusCode());
@@ -106,12 +106,12 @@ class ViewResponseListener implements EventSubscriberInterface
             $view->setFormat($request->getRequestFormat());
         }
 
-        if ($this->viewHandler->isFormatTemplating($view->getFormat())
+        if ($this->viewHandler->isFormatTemplating($view->getFormat(), false)
             && !$view->getRoute()
             && !$view->getLocation()
         ) {
             if (null !== $vars && 0 !== count($vars)) {
-                $parameters = (array) $this->viewHandler->prepareTemplateParameters($view);
+                $parameters = (array) $this->viewHandler->prepareTemplateParameters($view, false);
                 foreach ($vars as $var) {
                     if (!array_key_exists($var, $parameters)) {
                         $parameters[$var] = $request->attributes->get($var);
@@ -120,12 +120,12 @@ class ViewResponseListener implements EventSubscriberInterface
                 $view->setData($parameters);
             }
 
-            if ($configuration && ($template = $configuration->getTemplate()) && !$view->getTemplate()) {
+            if ($configuration && ($template = $configuration->getTemplate()) && !$view->getTemplate(false)) {
                 if ($template instanceof TemplateReferenceInterface) {
                     $template->set('format', null);
                 }
 
-                $view->setTemplate($template);
+                $view->setTemplate($template, false);
             }
         }
 
@@ -157,7 +157,7 @@ class ViewResponseListener implements EventSubscriberInterface
             return $arguments;
         }
 
-        if (!$template instanceof ViewAnnotation || $template->isPopulateDefaultVars()) {
+        if (!$template instanceof ViewAnnotation || $template->isPopulateDefaultVars(false)) {
             $r = new \ReflectionObject($controller);
 
             $arguments = array();

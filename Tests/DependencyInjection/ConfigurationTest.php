@@ -59,6 +59,12 @@ class ConfigurationTest extends TestCase
                     'routing_loader' => [
                         'parse_controller_name' => false,
                     ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
+                    ],
                 ],
             ]
         );
@@ -85,6 +91,12 @@ class ConfigurationTest extends TestCase
             ],
             'routing_loader' => [
                 'parse_controller_name' => false,
+            ],
+            'service' => [
+                'templating' => null,
+            ],
+            'view' => [
+                'default_engine' => null,
             ],
         ];
 
@@ -118,6 +130,12 @@ class ConfigurationTest extends TestCase
                     'routing_loader' => [
                         'parse_controller_name' => false,
                     ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
+                    ],
                 ],
             ]
         );
@@ -140,6 +158,12 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => [
                         'parse_controller_name' => false,
+                    ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
                     ],
                 ],
             ]
@@ -164,6 +188,12 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => [
                         'parse_controller_name' => false,
+                    ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
                     ],
                 ],
             ]
@@ -193,6 +223,12 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => [
                         'parse_controller_name' => false,
+                    ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
                     ],
                 ],
                 [

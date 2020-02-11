@@ -86,8 +86,8 @@ class ExceptionController
     protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
     {
         $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
-        $view->setTemplateVar('raw_exception');
-        $view->setTemplateData($templateData);
+        $view->setTemplateVar('raw_exception', false);
+        $view->setTemplateData($templateData, false);
 
         return $view;
     }

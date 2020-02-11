@@ -72,6 +72,13 @@ class TestKernel extends Kernel
                 'routing_loader' => [
                     'parse_controller_name' => false,
                 ],
+                'service' => [
+                    'templating' => null,
+                ],
+                'view' => [
+                    'default_engine' => null,
+                    'force_redirects' => [],
+                ],
             ]);
             $container->setAlias('test.jms_serializer.handler_registry', new Alias('jms_serializer.handler_registry', true));
             $container->setAlias('test.jms_serializer.form_error_handler', new Alias('jms_serializer.form_error_handler', true));

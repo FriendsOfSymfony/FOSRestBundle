@@ -29,6 +29,8 @@ class ExceptionNormalizer extends AbstractExceptionNormalizer implements Normali
 
         if (isset($context['template_data']['status_code'])) {
             $data['code'] = $statusCode = $context['template_data']['status_code'];
+        } elseif (isset($context['status_code'])) {
+            $data['code'] = $statusCode = $context['status_code'];
         }
 
         $data['message'] = $this->getExceptionMessage($object, isset($statusCode) ? $statusCode : null);

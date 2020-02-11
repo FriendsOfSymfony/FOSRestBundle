@@ -80,6 +80,9 @@ class ViewResponseListenerTest extends TestCase
         return new $eventClass($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $result);
     }
 
+    /**
+     * @group legacy
+     */
     public function testOnKernelView()
     {
         $template = $this->getMockBuilder('Symfony\Component\Templating\TemplateReferenceInterface')
@@ -149,7 +152,36 @@ class ViewResponseListenerTest extends TestCase
      */
     public function testStatusCode($annotationCode, $viewCode, $expectedCode)
     {
-        $this->createViewResponseListener(['json' => true]);
+        $this->createViewResponseListener(['json' => false]);
+
+        $viewAnnotation = new ViewAnnotation([]);
+        $viewAnnotation->setOwner([$this, 'statusCodeProvider']);
+        $viewAnnotation->setStatusCode($annotationCode);
+
+        $request = new Request();
+        $request->setRequestFormat('json');
+        $request->attributes->set('_template', $viewAnnotation);
+
+        $view = new View();
+        $view->setStatusCode($viewCode);
+        $view->setData('foo');
+
+        $event = $this->getResponseEvent($request, $view);
+        $this->listener->onKernelView($event);
+        $response = $event->getResponse();
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertSame($expectedCode, $response->getStatusCode());
+    }
+
+    /**
+     * @group legacy
+     *
+     * @dataProvider statusCodeProvider
+     */
+    public function testStatusCodeWithTemplatingEnabled($annotationCode, $viewCode, $expectedCode)
+    {
+        $this->createViewResponseListenerWithTemplatingSupport(['json' => true]);
 
         $viewAnnotation = new ViewAnnotation([]);
         $viewAnnotation->setOwner([$this, 'statusCodeProvider']);
@@ -188,7 +220,36 @@ class ViewResponseListenerTest extends TestCase
      */
     public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedMaxDepth)
     {
-        $this->createViewResponseListener(['json' => true]);
+        $this->createViewResponseListener(['json' => false]);
+
+        $viewAnnotation = new ViewAnnotation([]);
+        $viewAnnotation->setOwner([$this, 'testSerializerEnableMaxDepthChecks']);
+        $viewAnnotation->setSerializerEnableMaxDepthChecks($enableMaxDepthChecks);
+
+        $request = new Request();
+        $request->setRequestFormat('json');
+        $request->attributes->set('_template', $viewAnnotation);
+
+        $view = new View();
+
+        $event = $this->getResponseEvent($request, $view);
+
+        $this->listener->onKernelView($event);
+
+        $context = $view->getContext();
+
+        $this->assertEquals($expectedMaxDepth, $context->getMaxDepth(false));
+        $this->assertEquals($enableMaxDepthChecks, $context->isMaxDepthEnabled());
+    }
+
+    /**
+     * @group legacy
+     *
+     * @dataProvider serializerEnableMaxDepthChecksProvider
+     */
+    public function testSerializerEnableMaxDepthChecksWithTemplatingEnabled($enableMaxDepthChecks, $expectedMaxDepth)
+    {
+        $this->createViewResponseListenerWithTemplatingSupport(['json' => true]);
 
         $viewAnnotation = new ViewAnnotation([]);
         $viewAnnotation->setOwner([$this, 'testSerializerEnableMaxDepthChecks']);
@@ -223,11 +284,14 @@ class ViewResponseListenerTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getDataForDefaultVarsCopy
      */
     public function testViewWithNoCopyDefaultVars($populateDefaultVars)
     {
-        $this->createViewResponseListener(['html' => true]);
+        $this->viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, ['html' => true]);
+        $this->listener = new ViewResponseListener($this->viewHandler, false);
 
         $request = new Request();
         $request->attributes->set('customer', 'A person goes here');
@@ -235,7 +299,7 @@ class ViewResponseListenerTest extends TestCase
 
         $viewAnnotation = new ViewAnnotation([]);
         $viewAnnotation->setOwner([new FooController(), 'viewAction']);
-        $viewAnnotation->setPopulateDefaultVars($populateDefaultVars);
+        $viewAnnotation->setPopulateDefaultVars($populateDefaultVars, false);
         $request->attributes->set('_template', $viewAnnotation);
 
         $event = $this->getResponseEvent($request, $view);
@@ -260,6 +324,12 @@ class ViewResponseListenerTest extends TestCase
     }
 
     private function createViewResponseListener($formats = null)
+    {
+        $this->viewHandler = ViewHandler::create($this->router, $this->serializer, $this->requestStack, $formats);
+        $this->listener = new ViewResponseListener($this->viewHandler, false);
+    }
+
+    private function createViewResponseListenerWithTemplatingSupport($formats = null)
     {
         $this->viewHandler = new ViewHandler($this->router, $this->serializer, $this->templating, $this->requestStack, $formats);
         $this->listener = new ViewResponseListener($this->viewHandler, false);

@@ -133,6 +133,10 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $defaultEngine = 'twig',
         array $options = []
     ) {
+        if (11 >= func_num_args() || func_get_arg(11)) {
+            @trigger_error(sprintf('The constructor of the %s class is deprecated, use the static create() factory method instead.', __CLASS__), E_USER_DEPRECATED);
+        }
+
         if (null !== $templating && !$templating instanceof EngineInterface && !$templating instanceof Environment) {
             throw new \TypeError(sprintf('If provided, the templating engine must be an instance of %s or %s, but %s was given.', EngineInterface::class, Environment::class, get_class($templating)));
         }
@@ -153,6 +157,20 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             'serializeNullStrategy' => null,
             ];
         $this->reset();
+    }
+
+    public static function create(
+        UrlGeneratorInterface $urlGenerator,
+        Serializer $serializer,
+        RequestStack $requestStack,
+        array $formats = null,
+        int $failedValidationCode = Response::HTTP_BAD_REQUEST,
+        int $emptyContentCode = Response::HTTP_NO_CONTENT,
+        bool $serializeNull = false,
+        array $options = []
+    ): self
+    {
+        return new self($urlGenerator, $serializer, null, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, [], 'twig', $options, false);
     }
 
     /**
@@ -245,12 +263,18 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * If the given format uses the templating system for rendering.
      *
+     * @deprecated since 2.8
+     *
      * @param string $format
      *
      * @return bool
      */
     public function isFormatTemplating($format)
     {
+        if (1 === func_num_args() || func_get_arg(1)) {
+            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         return !empty($this->formats[$format]);
     }
 
@@ -277,6 +301,10 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
         if (null === $context->getSerializeNull() && null !== $this->serializeNullStrategy) {
             $context->setSerializeNull($this->serializeNullStrategy);
+        }
+
+        if (null !== $view->getStatusCode()) {
+            $context->setAttribute('status_code', $view->getStatusCode());
         }
 
         return $context;
@@ -350,6 +378,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Renders the view data with the given template.
      *
+     * @deprecated since 2.8
+     *
      * @param View   $view
      * @param string $format
      *
@@ -357,13 +387,17 @@ class ViewHandler implements ConfigurableViewHandlerInterface
      */
     public function renderTemplate(View $view, $format)
     {
+        if (2 === func_num_args() || func_get_arg(2)) {
+            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         if (null === $this->templating) {
             throw new \LogicException(sprintf('An instance of %s or %s must be injected in %s to render templates.', EngineInterface::class, Environment::class, __CLASS__));
         }
 
-        $data = $this->prepareTemplateParameters($view);
+        $data = $this->prepareTemplateParameters($view, false);
 
-        $template = $view->getTemplate();
+        $template = $view->getTemplate(false);
         if ($template instanceof TemplateReferenceInterface) {
             if (null === $template->get('format')) {
                 $template->set('format', $format);
@@ -381,25 +415,31 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Prepares view data for use by templating engine.
      *
+     * @deprecated since 2.8
+     *
      * @param View $view
      *
      * @return array
      */
     public function prepareTemplateParameters(View $view)
     {
+        if (1 === func_num_args() || func_get_arg(1)) {
+            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         $data = $view->getData();
 
         if ($data instanceof FormInterface) {
-            $data = [$view->getTemplateVar() => $data->getData(), 'form' => $data];
+            $data = [$view->getTemplateVar(false) => $data->getData(), 'form' => $data];
         } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
-            $data = [$view->getTemplateVar() => $data];
+            $data = [$view->getTemplateVar(false) => $data];
         }
 
         if (isset($data['form']) && $data['form'] instanceof FormInterface) {
             $data['form'] = $data['form']->createView();
         }
 
-        $templateData = $view->getTemplateData();
+        $templateData = $view->getTemplateData(false);
         if (is_callable($templateData)) {
             $templateData = call_user_func($templateData, $this, $view);
         }
@@ -453,8 +493,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     private function initResponse(View $view, $format)
     {
         $content = null;
-        if ($this->isFormatTemplating($format)) {
-            $content = $this->renderTemplate($view, $format);
+        if ($this->isFormatTemplating($format, false)) {
+            $content = $this->renderTemplate($view, $format, false);
         } elseif ($this->serializeNull || null !== $view->getData()) {
             $data = $this->getDataFromView($view);
 
@@ -463,7 +503,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             }
 
             $context = $this->getSerializationContext($view);
-            $context->setAttribute('template_data', $view->getTemplateData());
+            $context->setAttribute('template_data', $view->getTemplateData(false));
 
             $content = $this->serializer->serialize($data, $format, $context);
         }
