@@ -185,9 +185,12 @@ class RestActionReader
     /**
      * Set ignored classes.
      *
+     * These classes will be ignored for route construction when
+     * type hinted as method argument.
+     *
      * @param array $ignoredClasses
      */
-    public function setIgnoredClasses(array $ignoredClasses)
+    public function setIgnoredClasses(array $ignoredClasses): void
     {
         $this->ignoredClasses = $ignoredClasses;
     }
@@ -197,7 +200,7 @@ class RestActionReader
      *
      * @return array
      */
-    public function getIgnoredClasses()
+    public function getIgnoredClasses(): array
     {
         return $this->ignoredClasses;
     }
