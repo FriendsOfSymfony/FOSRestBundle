@@ -69,8 +69,6 @@ class RestActionReader
 
     /**
      * ignore several type hinted arguments.
-     *
-     * @var array
      */
     private $ignoredClasses = [
         ConstraintViolationListInterface::class,
@@ -188,7 +186,7 @@ class RestActionReader
      * These classes will be ignored for route construction when
      * type hinted as method argument.
      *
-     * @param array $ignoredClasses
+     * @param string[] $ignoredClasses
      */
     public function setIgnoredClasses(array $ignoredClasses): void
     {
@@ -198,7 +196,7 @@ class RestActionReader
     /**
      * Get ignored classes.
      *
-     * @return array
+     * @return string[]
      */
     public function getIgnoredClasses(): array
     {
