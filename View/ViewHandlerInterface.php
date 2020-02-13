@@ -44,17 +44,6 @@ interface ViewHandlerInterface
     public function registerHandler($format, $callable);
 
     /**
-     * If the given format uses the templating system for rendering.
-     *
-     * @deprecated since 2.8
-     *
-     * @param string $format
-     *
-     * @return bool
-     */
-    public function isFormatTemplating($format);
-
-    /**
      * Handles a request with the proper handler.
      *
      * Decides on which handler to use based on the request format
@@ -78,30 +67,7 @@ interface ViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format);
 
     /**
-     * Render the view data with the given template.
-     *
-     * @deprecated since 2.8
-     *
-     * @param View   $view
-     * @param string $format
-     *
-     * @return string
-     */
-    public function renderTemplate(View $view, $format);
-
-    /**
-     * Prepare view data for use by templating engine.
-     *
-     * @deprecated since 2.8
-     *
-     * @param View $view
-     *
-     * @return array
-     */
-    public function prepareTemplateParameters(View $view);
-
-    /**
-     * Handles creation of a Response using either redirection or the templating/serializer service.
+     * Handles creation of a Response using either redirection or the serializer service.
      *
      * @param View    $view
      * @param Request $request

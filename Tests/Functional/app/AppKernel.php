@@ -40,7 +40,6 @@ while ($dir !== $lastDir) {
 
 use Psr\Log\NullLogger;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
@@ -50,7 +49,7 @@ use Symfony\Component\HttpKernel\Kernel;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class AppKernel extends Kernel implements CompilerPassInterface
+class AppKernel extends Kernel
 {
     private $testCase;
     private $rootConfig;
@@ -121,13 +120,5 @@ class AppKernel extends Kernel implements CompilerPassInterface
         $parameters['kernel.test_case'] = $this->testCase;
 
         return $parameters;
-    }
-
-    public function process(ContainerBuilder $container)
-    {
-        // Avoid inlining of fos_rest.templating service to test if service really exist
-        if ($container->has('fos_rest.templating')) {
-            $container->getAlias('fos_rest.templating')->setPublic(true);
-        }
     }
 }

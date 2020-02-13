@@ -5,8 +5,3 @@ imports:
 fos_rest:
     exception:
         debug: true
-    service:
-        templating: ~
-    view:
-        default_engine: ~
-        force_redirects: []

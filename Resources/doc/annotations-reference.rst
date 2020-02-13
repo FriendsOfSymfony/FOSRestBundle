@@ -74,10 +74,8 @@ View
 
     /**
      * @View(
-     *  templateVar="",
      *  statusCode=null,
      *  serializerGroups={},
-     *  populateDefaultVars=true,
      *  serializerEnableMaxDepthChecks=false
      * )
      */

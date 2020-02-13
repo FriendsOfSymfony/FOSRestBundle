@@ -10,11 +10,7 @@ fos_rest:
     format_listener:
         rules:
             - { path: '^/', priorities: ['json', 'html'], fallback_format: json }
-    service:
-        templating: ~
     view:
-        default_engine: ~
-        force_redirects: []
         view_response_listener: true
         mime_types:
             json:

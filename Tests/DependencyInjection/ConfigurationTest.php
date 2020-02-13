@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\DependencyInjection;
 
 use FOS\RestBundle\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -56,12 +57,6 @@ class ConfigurationTest extends TestCase
                         'codes' => $expectedConfig,
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
-                    'service' => [
-                        'templating' => null,
-                    ],
-                    'view' => [
-                        'default_engine' => null,
-                    ],
                 ],
             ]
         );
@@ -85,12 +80,6 @@ class ConfigurationTest extends TestCase
                     MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
                 ],
                 'exception_controller' => 'fos_rest.exception.controller::showAction',
-            ],
-            'service' => [
-                'templating' => null,
-            ],
-            'view' => [
-                'default_engine' => null,
             ],
         ];
 
@@ -121,12 +110,6 @@ class ConfigurationTest extends TestCase
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
-                    'service' => [
-                        'templating' => null,
-                    ],
-                    'view' => [
-                        'default_engine' => null,
-                    ],
                 ],
             ]
         );
@@ -146,12 +129,6 @@ class ConfigurationTest extends TestCase
                         'messages' => [
                             'UnknownException' => true,
                         ],
-                    ],
-                    'service' => [
-                        'templating' => null,
-                    ],
-                    'view' => [
-                        'default_engine' => null,
                     ],
                 ],
             ]
@@ -173,12 +150,6 @@ class ConfigurationTest extends TestCase
                             'UnknownException' => 404,
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
-                    ],
-                    'service' => [
-                        'templating' => null,
-                    ],
-                    'view' => [
-                        'default_engine' => null,
                     ],
                 ],
             ]
@@ -205,12 +176,6 @@ class ConfigurationTest extends TestCase
                                 'priorities' => ['html', 'json'],
                             ],
                         ],
-                    ],
-                    'service' => [
-                        'templating' => null,
-                    ],
-                    'view' => [
-                        'default_engine' => null,
                     ],
                 ],
                 [
@@ -256,6 +221,50 @@ class ConfigurationTest extends TestCase
             [false],
             [null],
         ];
+    }
+
+    public function testTemplatingServiceMustBeNull()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('only null is supported');
+
+        $this->processor->processConfiguration($this->configuration, [
+            [
+                'service' => [
+                    'templating' => 'twig',
+                ],
+            ],
+        ]);
+    }
+
+    public function testDefaultEngineMustBeNull()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('only null is supported');
+
+        $this->processor->processConfiguration($this->configuration, [
+            [
+                'view' => [
+                    'default_engine' => 'twig',
+                ],
+            ],
+        ]);
+    }
+
+    public function testForceRedirectsMustBeEmptyArray()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('only the empty array is supported');
+
+        $this->processor->processConfiguration($this->configuration, [
+            [
+                'view' => [
+                    'force_redirects' => [
+                        'html' => true,
+                    ],
+                ],
+            ],
+        ]);
     }
 
     /**

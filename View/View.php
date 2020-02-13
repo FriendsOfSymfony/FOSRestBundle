@@ -13,7 +13,6 @@ namespace FOS\RestBundle\View;
 
 use FOS\RestBundle\Context\Context;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\TemplateReferenceInterface;
 
 /**
  * Default View implementation.
@@ -32,26 +31,6 @@ class View
      * @var int|null
      */
     private $statusCode;
-
-    /**
-     * @var mixed|null
-     */
-    private $templateData = [];
-
-    /**
-     * @var TemplateReference|string|null
-     */
-    private $template;
-
-    /**
-     * @var string|null
-     */
-    private $templateVar;
-
-    /**
-     * @var string|null
-     */
-    private $engine;
 
     /**
      * @var string|null
@@ -150,7 +129,6 @@ class View
     {
         $this->setData($data);
         $this->setStatusCode($statusCode);
-        $this->setTemplateVar('data', false);
 
         if (!empty($headers)) {
             $this->getResponse()->headers->replace($headers);
@@ -167,26 +145,6 @@ class View
     public function setData($data)
     {
         $this->data = $data;
-
-        return $this;
-    }
-
-    /**
-     * Set template variable.
-     *
-     * @deprecated since 2.8
-     *
-     * @param array|callable $data
-     *
-     * @return View
-     */
-    public function setTemplateData($data = [])
-    {
-        if (1 === func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        $this->templateData = $data;
 
         return $this;
     }
@@ -246,69 +204,6 @@ class View
     public function setContext(Context $context)
     {
         $this->context = $context;
-
-        return $this;
-    }
-
-    /**
-     * Sets template to use for the encoding.
-     *
-     * @deprecated since 2.8
-     *
-     * @param string|TemplateReferenceInterface $template
-     *
-     * @return View
-     *
-     * @throws \InvalidArgumentException if the template is neither a string nor an instance of TemplateReferenceInterface
-     */
-    public function setTemplate($template)
-    {
-        if (1 === func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        if (!(is_string($template) || $template instanceof TemplateReferenceInterface)) {
-            throw new \InvalidArgumentException('The template should be a string or implement TemplateReferenceInterface');
-        }
-        $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * Sets template variable name to be used in templating formats.
-     *
-     * @deprecated since 2.8
-     *
-     * @param string $templateVar
-     *
-     * @return View
-     */
-    public function setTemplateVar($templateVar)
-    {
-        if (1 === func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        $this->templateVar = $templateVar;
-
-        return $this;
-    }
-
-    /**
-     * Sets the engine.
-     *
-     * @deprecated since 2.8
-     *
-     * @param string $engine
-     *
-     * @return View
-     */
-    public function setEngine($engine)
-    {
-        @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-
-        $this->engine = $engine;
 
         return $this;
     }
@@ -396,22 +291,6 @@ class View
     }
 
     /**
-     * Gets the template data.
-     *
-     * @deprecated since 2.8
-     *
-     * @return mixed|null
-     */
-    public function getTemplateData()
-    {
-        if (0 === func_num_args() || func_get_arg(0)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        return $this->templateData;
-    }
-
-    /**
      * Gets the HTTP status code.
      *
      * @return int|null
@@ -429,52 +308,6 @@ class View
     public function getHeaders()
     {
         return $this->getResponse()->headers->all();
-    }
-
-    /**
-     * Gets the template.
-     *
-     * @deprecated since 2.8
-     *
-     * @return TemplateReferenceInterface|string|null
-     */
-    public function getTemplate()
-    {
-        if (0 === func_num_args() || func_get_arg(0)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        return $this->template;
-    }
-
-    /**
-     * Gets the template variable name.
-     *
-     * @deprecated since 2.8
-     *
-     * @return string|null
-     */
-    public function getTemplateVar()
-    {
-        if (0 === func_num_args() || func_get_arg(0)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        return $this->templateVar;
-    }
-
-    /**
-     * Gets the engine.
-     *
-     * @deprecated since 2.8
-     *
-     * @return string|null
-     */
-    public function getEngine()
-    {
-        @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-
-        return $this->engine;
     }
 
     /**

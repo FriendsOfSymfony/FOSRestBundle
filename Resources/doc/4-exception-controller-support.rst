@@ -71,8 +71,8 @@ That was it!
 .. note::
 
     If you are receiving a 500 error where you would expect a different response, the issue
-    is likely caused by an exception inside the ExceptionController. For example a template
-    is not found or the serializer failed. You should take a look at the logs of your app to see if an uncaught exception has been logged.
+    is likely caused by an exception inside the ExceptionController (for example the serializer
+    failed). You should take a look at the logs of your app to see if an uncaught exception has been logged.
 
 .. _`how to create handlers`: http://jmsyst.com/libs/serializer/master/handlers
 .. _`how to create normalizers`: http://thomas.jarrand.fr/blog/serialization/

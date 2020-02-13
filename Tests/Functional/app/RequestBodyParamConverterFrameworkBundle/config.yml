@@ -11,11 +11,6 @@ framework:
 fos_rest:
     body_converter:
         enabled: true
-    service:
-        templating: ~
-    view:
-        default_engine: ~
-        force_redirects: []
 
 sensio_framework_extra:
     request:

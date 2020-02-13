@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Tests\View;
 use FOS\RestBundle\View\View;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\TemplateReference;
 
 /**
  * View test.
@@ -23,23 +22,6 @@ use Symfony\Component\Templating\TemplateReference;
  */
 class ViewTest extends TestCase
 {
-    /**
-     * @group legacy
-     * @expectedException \InvalidArgumentException
-     */
-    public function testSetTemplateTemplateFormat()
-    {
-        $view = new View();
-
-        $view->setTemplate('foo');
-        $this->assertEquals('foo', $view->getTemplate());
-
-        $view->setTemplate($template = new TemplateReference());
-        $this->assertEquals($template, $view->getTemplate());
-
-        $view->setTemplate([]);
-    }
-
     public function testSetLocation()
     {
         $url = 'users';
@@ -91,38 +73,6 @@ class ViewTest extends TestCase
             'null as data' => [null],
             'array as data' => [['foo' => 'bar']],
         ];
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider setTemplateDataDataProvider
-     */
-    public function testSetTemplateData($templateData)
-    {
-        $view = new View();
-        $view->setTemplateData($templateData);
-        $this->assertEquals($templateData, $view->getTemplateData());
-    }
-
-    public static function setTemplateDataDataProvider()
-    {
-        return [
-            'null as data' => [null],
-            'array as data' => [['foo' => 'bar']],
-            'function as data' => [function () {
-            }],
-        ];
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testSetEngine()
-    {
-        $view = new View();
-        $engine = 'bar';
-        $view->setEngine($engine);
-        $this->assertEquals($engine, $view->getEngine());
     }
 
     public function testSetFormat()

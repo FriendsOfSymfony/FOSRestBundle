@@ -20,14 +20,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Templating\TemplateReferenceInterface;
-use Twig\Environment;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
- * The View class takes care of encoding your data in json, xml, or renders a
- * template for html via the Serializer component.
+ * The View class takes care of encoding your data in json, xml via the Serializer
+ * component.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
@@ -42,8 +39,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     protected $customHandlers = [];
 
     /**
-     * The supported formats as keys and if the given formats
-     * uses templating is denoted by a true value.
+     * The supported formats as keys.
      *
      * @var array
      */
@@ -100,7 +96,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
     private $urlGenerator;
     private $serializer;
-    private $templating;
     private $requestStack;
 
     private $options;
@@ -108,49 +103,35 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Constructor.
      *
-     * @param UrlGeneratorInterface       $urlGenerator         The URL generator
-     * @param Serializer                  $serializer
-     * @param EngineInterface|Environment $templating           The configured templating engine
-     * @param RequestStack                $requestStack         The request stack
-     * @param array                       $formats              the supported formats as keys and if the given formats uses templating is denoted by a true value
-     * @param int                         $failedValidationCode The HTTP response status code for a failed validation
-     * @param int                         $emptyContentCode     HTTP response status code when the view data is null
-     * @param bool                        $serializeNull        Whether or not to serialize null view data
-     * @param array                       $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
-     * @param string                      $defaultEngine        default engine (twig, php ..)
-     * @param array                       $options              config options
+     * @param UrlGeneratorInterface $urlGenerator         The URL generator
+     * @param Serializer            $serializer
+     * @param RequestStack          $requestStack         The request stack
+     * @param array                 $formats              the supported formats as keys
+     * @param int                   $failedValidationCode The HTTP response status code for a failed validation
+     * @param int                   $emptyContentCode     HTTP response status code when the view data is null
+     * @param bool                  $serializeNull        Whether or not to serialize null view data
+     * @param array                 $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
+     * @param array                 $options              config options
      */
-    public function __construct(
+    private function __construct(
         UrlGeneratorInterface $urlGenerator,
         Serializer $serializer,
-        $templating,
         RequestStack $requestStack,
         array $formats = null,
         $failedValidationCode = Response::HTTP_BAD_REQUEST,
         $emptyContentCode = Response::HTTP_NO_CONTENT,
         $serializeNull = false,
         array $forceRedirects = null,
-        $defaultEngine = 'twig',
         array $options = []
     ) {
-        if (11 >= func_num_args() || func_get_arg(11)) {
-            @trigger_error(sprintf('The constructor of the %s class is deprecated, use the static create() factory method instead.', __CLASS__), E_USER_DEPRECATED);
-        }
-
-        if (null !== $templating && !$templating instanceof EngineInterface && !$templating instanceof Environment) {
-            throw new \TypeError(sprintf('If provided, the templating engine must be an instance of %s or %s, but %s was given.', EngineInterface::class, Environment::class, get_class($templating)));
-        }
-
         $this->urlGenerator = $urlGenerator;
         $this->serializer = $serializer;
-        $this->templating = $templating;
         $this->requestStack = $requestStack;
         $this->formats = (array) $formats;
         $this->failedValidationCode = $failedValidationCode;
         $this->emptyContentCode = $emptyContentCode;
         $this->serializeNull = $serializeNull;
         $this->forceRedirects = (array) $forceRedirects;
-        $this->defaultEngine = $defaultEngine;
         $this->options = $options + [
             'exclusionStrategyGroups' => [],
             'exclusionStrategyVersion' => null,
@@ -170,7 +151,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         array $options = []
     ): self
     {
-        return new self($urlGenerator, $serializer, null, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, [], 'twig', $options, false);
+        return new self($urlGenerator, $serializer, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, [], $options, false);
     }
 
     /**
@@ -258,24 +239,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         }
 
         return null !== $content ? Response::HTTP_OK : $this->emptyContentCode;
-    }
-
-    /**
-     * If the given format uses the templating system for rendering.
-     *
-     * @deprecated since 2.8
-     *
-     * @param string $format
-     *
-     * @return bool
-     */
-    public function isFormatTemplating($format)
-    {
-        if (1 === func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        return !empty($this->formats[$format]);
     }
 
     /**
@@ -376,79 +339,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Renders the view data with the given template.
-     *
-     * @deprecated since 2.8
-     *
-     * @param View   $view
-     * @param string $format
-     *
-     * @return string
-     */
-    public function renderTemplate(View $view, $format)
-    {
-        if (2 === func_num_args() || func_get_arg(2)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        if (null === $this->templating) {
-            throw new \LogicException(sprintf('An instance of %s or %s must be injected in %s to render templates.', EngineInterface::class, Environment::class, __CLASS__));
-        }
-
-        $data = $this->prepareTemplateParameters($view, false);
-
-        $template = $view->getTemplate(false);
-        if ($template instanceof TemplateReferenceInterface) {
-            if (null === $template->get('format')) {
-                $template->set('format', $format);
-            }
-
-            if (null === $template->get('engine')) {
-                $engine = $view->getEngine() ?: $this->defaultEngine;
-                $template->set('engine', $engine);
-            }
-        }
-
-        return $this->templating->render($template, $data);
-    }
-
-    /**
-     * Prepares view data for use by templating engine.
-     *
-     * @deprecated since 2.8
-     *
-     * @param View $view
-     *
-     * @return array
-     */
-    public function prepareTemplateParameters(View $view)
-    {
-        if (1 === func_num_args() || func_get_arg(1)) {
-            @trigger_error(sprintf('The %s() method is deprecated since FOSRestBundle 2.8.', __METHOD__), E_USER_DEPRECATED);
-        }
-
-        $data = $view->getData();
-
-        if ($data instanceof FormInterface) {
-            $data = [$view->getTemplateVar(false) => $data->getData(), 'form' => $data];
-        } elseif (empty($data) || !is_array($data) || is_numeric((key($data)))) {
-            $data = [$view->getTemplateVar(false) => $data];
-        }
-
-        if (isset($data['form']) && $data['form'] instanceof FormInterface) {
-            $data['form'] = $data['form']->createView();
-        }
-
-        $templateData = $view->getTemplateData(false);
-        if (is_callable($templateData)) {
-            $templateData = call_user_func($templateData, $this, $view);
-        }
-
-        return array_merge($data, $templateData);
-    }
-
-    /**
-     * Handles creation of a Response using either redirection or the templating/serializer service.
+     * Handles creation of a Response using either redirection or the serializer service.
      *
      * @param View    $view
      * @param Request $request
@@ -493,9 +384,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     private function initResponse(View $view, $format)
     {
         $content = null;
-        if ($this->isFormatTemplating($format, false)) {
-            $content = $this->renderTemplate($view, $format, false);
-        } elseif ($this->serializeNull || null !== $view->getData()) {
+        if ($this->serializeNull || null !== $view->getData()) {
             $data = $this->getDataFromView($view);
 
             if ($data instanceof FormInterface && $data->isSubmitted() && !$data->isValid()) {
@@ -503,7 +392,6 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             }
 
             $context = $this->getSerializationContext($view);
-            $context->setAttribute('template_data', $view->getTemplateData(false));
 
             $content = $this->serializer->serialize($data, $format, $context);
         }

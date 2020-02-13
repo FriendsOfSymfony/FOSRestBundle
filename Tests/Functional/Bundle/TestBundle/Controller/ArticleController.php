@@ -49,7 +49,6 @@ class ArticleController extends AbstractFOSRestController
     public function cgetAction(Request $request)
     {
         $view = $this->view();
-        $view->setTemplate('TestBundle:Article:foo.html.twig');
 
         return $view;
     }

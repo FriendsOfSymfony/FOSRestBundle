@@ -36,13 +36,5 @@ final class ConfigurationCheckPass implements CompilerPassInterface
                 throw new \RuntimeException('You must enable the SensioFrameworkExtraBundle view annotations to use the ViewResponseListener. Did you forget to install and enable the TwigBundle?');
             }
         }
-
-        if ($container->hasAlias('fos_rest.templating') && !$container->has((string) $container->getAlias('fos_rest.templating'))) {
-            if ($container->has('twig')) {
-                $container->setAlias('fos_rest.templating', 'twig');
-            } else {
-                $container->removeAlias('fos_rest.templating');
-            }
-        }
     }
 }

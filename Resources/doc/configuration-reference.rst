@@ -33,7 +33,7 @@ Full default configuration
             validation_errors_argument:  validationErrors
         service:
             router:               router
-            templating:           templating
+            templating:           ~
             serializer:           null
             view_handler:         fos_rest.view_handler.default
             inflector:            fos_rest.inflector.doctrine
@@ -43,7 +43,6 @@ Full default configuration
             groups:               []
             serialize_null:       false
         view:
-            default_engine:       twig
             force_redirects:
 
                 # Prototype
@@ -59,7 +58,6 @@ Full default configuration
 
                 # Prototype
                 name:                 ~
-            templating_formats:
 
                 # Prototype
                 name:                 ~
