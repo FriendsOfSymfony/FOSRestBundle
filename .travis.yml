@@ -10,10 +10,6 @@ branches:
     - master
     - /^\d+\.(\d+|x)$/
 
-env:
-  # to be removed when tests succeed with Symfony 5.0 (see https://github.com/FriendsOfSymfony/FOSRestBundle/pull/2072)
-  - SYMFONY_REQUIRE="4.4.*"
-
 matrix:
   fast_finish: true
   include:
@@ -25,6 +21,9 @@ matrix:
     # Symfony 4.4
     - php: 7.4
       env: SYMFONY_REQUIRE="4.4.*"
+    # Symfony 5.0
+    - php: 7.4
+      env: SYMFONY_REQUIRE="5.0.*"
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
