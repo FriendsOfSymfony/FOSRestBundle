@@ -65,7 +65,7 @@ class ExceptionController
     public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-        
+
         if ($exception instanceof \Exception) {
             $code = $this->getStatusCode($exception);
         } else {
