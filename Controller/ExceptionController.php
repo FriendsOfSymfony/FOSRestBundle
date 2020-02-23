@@ -80,15 +80,15 @@ class ExceptionController
     }
 
     /**
-     * @param \Throwable $exception
-     * @param int        $code
-     * @param array      $templateData
-     * @param Request    $request
-     * @param bool       $showException
+     * @param \Exception|\Throwable     $exception
+     * @param int                       $code
+     * @param array                     $templateData
+     * @param Request                   $request
+     * @param bool                      $showException
      *
      * @return View
      */
-    protected function createView(\Throwable $exception, $code, array $templateData, Request $request, $showException)
+    protected function createView($exception, $code, array $templateData, Request $request, $showException)
     {
         if (class_exists(FlattenException::class)) {
             $exception = FlattenException::createFromThrowable($exception);
@@ -118,14 +118,14 @@ class ExceptionController
     /**
      * Determines the template parameters to pass to the view layer.
      *
-     * @param string               $currentContent
-     * @param int                  $code
-     * @param \Throwable           $exception
-     * @param DebugLoggerInterface $logger
+     * @param string                    $currentContent
+     * @param int                       $code
+     * @param \Exception|\Throwable     $exception
+     * @param DebugLoggerInterface      $logger
      *
      * @return array
      */
-    private function getTemplateData($currentContent, $code, \Throwable $exception, DebugLoggerInterface $logger = null)
+    private function getTemplateData($currentContent, $code, $exception, DebugLoggerInterface $logger = null)
     {
         if (class_exists(FlattenException::class)) {
             $exception = FlattenException::createFromThrowable($exception);
