@@ -65,7 +65,12 @@ class ExceptionController
     public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-        $code = $this->getStatusCode($exception);
+
+        if ($exception instanceof \Exception) {
+            $code = $this->getStatusCode($exception);
+        } else {
+            $code = $this->getStatusCodeFromThrowable($exception);
+        }
         $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
 
         $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
@@ -101,17 +106,7 @@ class ExceptionController
      */
     protected function getStatusCode(\Exception $exception)
     {
-        // If matched
-        if ($statusCode = $this->exceptionCodes->resolveException($exception)) {
-            return $statusCode;
-        }
-
-        // Otherwise, default
-        if ($exception instanceof HttpExceptionInterface) {
-            return $exception->getStatusCode();
-        }
-
-        return 500;
+        return $this->getStatusCodeFromThrowable($exception);
     }
 
     /**
@@ -158,5 +153,27 @@ class ExceptionController
         Response::closeOutputBuffers($startObLevel + 1, true);
 
         return ob_get_clean();
+    }
+
+    /**
+     * Determines the status code to use for the response.
+     *
+     * @param \Throwable $exception
+     *
+     * @return int
+     */
+    private function getStatusCodeFromThrowable(\Throwable $exception)
+    {
+        // If matched
+        if ($statusCode = $this->exceptionCodes->resolveThrowable($exception)) {
+            return $statusCode;
+        }
+
+        // Otherwise, default
+        if ($exception instanceof HttpExceptionInterface) {
+            return $exception->getStatusCode();
+        }
+
+        return 500;
     }
 }
