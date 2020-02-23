@@ -80,7 +80,7 @@ class ExceptionController
     }
 
     /**
-     * @param \Exception $exception
+     * @param \Throwable $exception
      * @param int        $code
      * @param array      $templateData
      * @param Request    $request
@@ -88,8 +88,14 @@ class ExceptionController
      *
      * @return View
      */
-    protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
+    protected function createView(\Throwable $exception, $code, array $templateData, Request $request, $showException)
     {
+        if (class_exists(FlattenException::class)) {
+            $exception = FlattenException::createFromThrowable($exception);
+        } else {
+            $exception = LegacyFlattenException::create($exception);
+        }
+
         $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
         $view->setTemplateVar('raw_exception', false);
         $view->setTemplateData($templateData, false);
@@ -114,12 +120,12 @@ class ExceptionController
      *
      * @param string               $currentContent
      * @param int                  $code
-     * @param \Exception           $exception
+     * @param \Throwable           $exception
      * @param DebugLoggerInterface $logger
      *
      * @return array
      */
-    private function getTemplateData($currentContent, $code, \Exception $exception, DebugLoggerInterface $logger = null)
+    private function getTemplateData($currentContent, $code, \Throwable $exception, DebugLoggerInterface $logger = null)
     {
         if (class_exists(FlattenException::class)) {
             $exception = FlattenException::createFromThrowable($exception);

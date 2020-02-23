@@ -28,7 +28,7 @@ class TwigExceptionController extends TemplatingExceptionController
     /**
      * {@inheritdoc}
      */
-    protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
+    protected function createView(\Throwable $exception, $code, array $templateData, Request $request, $showException)
     {
         $view = parent::createView($exception, $code, $templateData, $request, $showException);
         $view->setTemplate($this->findTemplate($request, $code, $showException), false);
