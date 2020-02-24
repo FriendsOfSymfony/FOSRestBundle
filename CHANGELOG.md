@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.7.1
+-----
+
+* fixed handling all `Throwable` objects in `ExceptionController::showAction()` (#2093)
+* fixed `ViewHandlerInterface` alias definition (#2085)
+
 2.7.0
 -----
 
