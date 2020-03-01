@@ -55,22 +55,24 @@ class ExceptionController
      * Converts an Exception to a Response.
      *
      * @param Request                   $request
-     * @param \Exception|\Throwable     $exception
+     * @param \Exception|\Throwable     $throwable
      * @param DebugLoggerInterface|null $logger
      *
      * @throws \InvalidArgumentException
      *
      * @return Response
      */
-    public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
+    public function showAction(Request $request, $throwable, DebugLoggerInterface $logger = null)
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
-        if ($exception instanceof \Exception) {
-            $code = $this->getStatusCode($exception);
+        if (!$throwable instanceof \Exception) {
+            $exception = FlattenException::createFromThrowable($throwable);
         } else {
-            $code = $this->getStatusCodeFromThrowable($exception);
+            $exception = $throwable;
         }
+
+        $code = $this->getStatusCode($exception);
         $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
 
         $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
@@ -106,7 +108,17 @@ class ExceptionController
      */
     protected function getStatusCode(\Exception $exception)
     {
-        return $this->getStatusCodeFromThrowable($exception);
+        // If matched
+        if ($statusCode = $this->exceptionCodes->resolveThrowable($exception)) {
+            return $statusCode;
+        }
+
+        // Otherwise, default
+        if ($exception instanceof HttpExceptionInterface) {
+            return $exception->getStatusCode();
+        }
+
+        return 500;
     }
 
     /**
@@ -153,27 +165,5 @@ class ExceptionController
         Response::closeOutputBuffers($startObLevel + 1, true);
 
         return ob_get_clean();
-    }
-
-    /**
-     * Determines the status code to use for the response.
-     *
-     * @param \Throwable $exception
-     *
-     * @return int
-     */
-    private function getStatusCodeFromThrowable(\Throwable $exception)
-    {
-        // If matched
-        if ($statusCode = $this->exceptionCodes->resolveThrowable($exception)) {
-            return $statusCode;
-        }
-
-        // Otherwise, default
-        if ($exception instanceof HttpExceptionInterface) {
-            return $exception->getStatusCode();
-        }
-
-        return 500;
     }
 }
