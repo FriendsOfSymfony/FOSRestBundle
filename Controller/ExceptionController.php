@@ -70,15 +70,11 @@ class ExceptionController
             $code = $this->getStatusCode($exception);
         } else {
             $code = $this->getStatusCodeFromThrowable($exception);
+            $exception = new \Exception($exception->getMessage(), $code);
         }
         $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
-
-        if ($exception instanceof \Exception) {
-            $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
-        } else {
-            $view = $this->createViewFromThrowable($exception, $code, $templateData, $request, $this->showException);
-        }
-
+        $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
+        
         $response = $this->viewHandler->handle($view);
 
         return $response;
