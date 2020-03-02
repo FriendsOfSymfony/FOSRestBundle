@@ -16,6 +16,8 @@ namespace FOS\RestBundle\Util;
  * Resolves value by exception.
  *
  * @author Mikhail Shamin <munk13@gmail.com>
+ *
+ * @final since 2.8
  */
 class ExceptionValueMap
 {
@@ -54,6 +56,8 @@ class ExceptionValueMap
      * @param \Throwable $exception
      *
      * @return mixed|false Value found or false is not found
+     *
+     * @internal since 2.8
      */
     public function resolveThrowable(\Throwable $exception)
     {
