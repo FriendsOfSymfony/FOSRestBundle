@@ -81,10 +81,7 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
             ->findOneBy([$identifier => $id]);
 
         if (null === $object) {
-            throw new TransformationFailedException(sprintf(
-                'An object with identifier key "%s" and value "%s" does not exist!',
-                $identifier, $id
-            ));
+            throw new TransformationFailedException(sprintf('An object with identifier key "%s" and value "%s" does not exist!', $identifier, $id));
         }
 
         return $object;

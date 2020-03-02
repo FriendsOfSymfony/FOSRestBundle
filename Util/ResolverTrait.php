@@ -51,12 +51,7 @@ trait ResolverTrait
                 return (string) $resolved;
             }
 
-            throw new \RuntimeException(sprintf(
-                    'The container parameter "%s" must be a string or numeric, but it is of type %s.',
-                    $match[1],
-                    gettype($resolved)
-                )
-            );
+            throw new \RuntimeException(sprintf('The container parameter "%s" must be a string or numeric, but it is of type %s.', $match[1], gettype($resolved)));
         }, $value);
 
         return str_replace('%%', '%', $escapedValue);

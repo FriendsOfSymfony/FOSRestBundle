@@ -46,11 +46,7 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
 
             if ($normalizedKey !== $key) {
                 if (array_key_exists($normalizedKey, $normalizedData)) {
-                    throw new NormalizationException(sprintf(
-                        'The key "%s" is invalid as it will override the existing key "%s"',
-                        $key,
-                        $normalizedKey
-                    ));
+                    throw new NormalizationException(sprintf('The key "%s" is invalid as it will override the existing key "%s"', $key, $normalizedKey));
                 }
             }
 
