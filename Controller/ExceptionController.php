@@ -133,7 +133,7 @@ class ExceptionController
     private function getStatusCodeFromThrowable(\Throwable $exception)
     {
         // If matched
-        if ($statusCode = $this->exceptionCodes->resolveThrowable($exception)) {
+        if ($statusCode = $this->exceptionCodes->resolveException($exception)) {
             return $statusCode;
         }
 
