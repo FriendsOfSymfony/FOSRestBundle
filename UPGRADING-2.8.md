@@ -1,6 +1,9 @@
 Upgrading From 2.7 To 2.8
 =========================
 
+ * The `ExceptionValueMap` class is marked as `final`. Extending it will not be supported as of 3.0.
+   Its `resolveThrowable()` method is marked as internal and will be removed in 3.0.
+
  * The `isFormatTemplating()`, `renderTemplate()`, and `prepareTemplateParameters()` methods of the
    `ViewHandler` class and the `ViewHandlerInterface` have been deprecated.
 
