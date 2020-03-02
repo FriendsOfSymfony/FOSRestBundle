@@ -11,12 +11,12 @@
 
 namespace FOS\RestBundle\Controller;
 
+use FOS\RestBundle\Exception\FlattenException as FosFlattenException;
 use FOS\RestBundle\Util\ExceptionValueMap;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
@@ -73,7 +73,12 @@ class ExceptionController
         }
         $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
 
-        $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
+        if ($exception instanceof \Exception) {
+            $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
+        } else {
+            $view = $this->createViewFromThrowable($exception, $code, $templateData, $request, $this->showException);
+        }
+
         $response = $this->viewHandler->handle($view);
 
         return $response;
@@ -90,11 +95,7 @@ class ExceptionController
      */
     protected function createView(\Exception $exception, $code, array $templateData, Request $request, $showException)
     {
-        $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
-        $view->setTemplateVar('raw_exception', false);
-        $view->setTemplateData($templateData, false);
-
-        return $view;
+        return $this->createViewFromThrowable($exception, $code, $templateData);
     }
 
     /**
@@ -109,22 +110,31 @@ class ExceptionController
         return $this->getStatusCodeFromThrowable($exception);
     }
 
+    private function createViewFromThrowable(\Throwable $exception, $code, array $templateData): View
+    {
+        $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
+        $view->setTemplateVar('raw_exception', false);
+        $view->setTemplateData($templateData, false);
+
+        return $view;
+    }
+
     /**
      * Determines the template parameters to pass to the view layer.
      *
      * @param string               $currentContent
      * @param int                  $code
-     * @param \Exception           $exception
+     * @param \Throwable           $throwable
      * @param DebugLoggerInterface $logger
      *
      * @return array
      */
-    private function getTemplateData($currentContent, $code, \Exception $exception, DebugLoggerInterface $logger = null)
+    private function getTemplateData($currentContent, $code, \Throwable $throwable, DebugLoggerInterface $logger = null)
     {
         if (class_exists(FlattenException::class)) {
-            $exception = FlattenException::createFromThrowable($exception);
+            $exception = FlattenException::createFromThrowable($throwable);
         } else {
-            $exception = LegacyFlattenException::create($exception);
+            $exception = FosFlattenException::createFromThrowable($throwable);
         }
 
         return [

@@ -96,7 +96,14 @@ class ViewResponseListener implements EventSubscriberInterface
                 $context->disableMaxDepth();
             }
 
-            list($controller, $action) = $configuration->getOwner();
+            $owner = $configuration->getOwner();
+
+            if ([] === $owner || null === $owner) {
+                $controller = $action = null;
+            } else {
+                [$controller, $action] = $owner;
+            }
+
             $vars = $this->getDefaultVars($configuration, $controller, $action);
         } else {
             $vars = null;
