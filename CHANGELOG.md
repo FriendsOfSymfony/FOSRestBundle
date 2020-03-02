@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+2.7.2
+-----
+
+* fix compatibility with `null` owner returned by SensioFrameworkExtraBundle (#2097)
+* completely fixed handling `Throwable` objects in `ExceptionController::showAction()`,
+  continues #2093 (#2096)
+
 2.7.1
 -----
 
