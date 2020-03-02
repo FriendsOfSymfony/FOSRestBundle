@@ -54,9 +54,7 @@ class ContainerDecoderProvider implements DecoderProviderInterface
     public function getDecoder($format)
     {
         if (!$this->supports($format)) {
-            throw new \InvalidArgumentException(
-                sprintf("Format '%s' is not supported by ContainerDecoderProvider.", $format)
-            );
+            throw new \InvalidArgumentException(sprintf("Format '%s' is not supported by ContainerDecoderProvider.", $format));
         }
 
         return $this->container->get($this->decoders[$format]);
