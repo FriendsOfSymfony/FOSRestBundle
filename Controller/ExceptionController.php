@@ -11,13 +11,11 @@
 
 namespace FOS\RestBundle\Controller;
 
-use FOS\RestBundle\Exception\FlattenException as FosFlattenException;
 use FOS\RestBundle\Util\ExceptionValueMap;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
@@ -65,9 +63,18 @@ class ExceptionController
     public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-        $code = $this->getStatusCode($exception);
 
-        $view = $this->createView($exception, $code, $request, $this->showException);
+        if ($exception instanceof \Exception) {
+            $code = $this->getStatusCode($exception);
+        } else {
+            $code = $this->getStatusCodeFromThrowable($exception);
+        }
+        if ($exception instanceof \Exception) {
+            $view = $this->createView($exception, $code, $request, $this->showException);
+        } else {
+            $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
+        }
+
         $response = $this->viewHandler->handle($view);
 
         return $response;
@@ -83,7 +90,7 @@ class ExceptionController
      */
     protected function createView(\Exception $exception, $code, Request $request, $showException)
     {
-        return $this->createViewFromThrowable($exception, $code, $templateData);
+        return new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
     }
 
     /**
@@ -96,35 +103,6 @@ class ExceptionController
     protected function getStatusCode(\Exception $exception)
     {
         return $this->getStatusCodeFromThrowable($exception);
-    }
-
-    private function createViewFromThrowable(\Throwable $exception, $code, array $templateData): View
-    {
-        $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
-
-        return $view;
-    }
-
-    /**
-     * Determines the status code to use for the response.
-     *
-     * @param \Exception $exception
-     *
-     * @return int
-     */
-    protected function getStatusCode(\Exception $exception)
-    {
-        // If matched
-        if ($statusCode = $this->exceptionCodes->resolveException($exception)) {
-            return $statusCode;
-        }
-
-        // Otherwise, default
-        if ($exception instanceof HttpExceptionInterface) {
-            return $exception->getStatusCode();
-        }
-
-        return 500;
     }
 
     /**
