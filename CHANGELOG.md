@@ -7,6 +7,19 @@ CHANGELOG
 * dropped support for Symfony components < 4.4
 * added support for Symfony 5 compatibility
 
+2.7.2
+-----
+
+* fix compatibility with `null` owner returned by SensioFrameworkExtraBundle (#2097)
+* completely fixed handling `Throwable` objects in `ExceptionController::showAction()`,
+  continues #2093 (#2096)
+
+2.7.1
+-----
+
+* fixed handling all `Throwable` objects in `ExceptionController::showAction()` (#2093)
+* fixed `ViewHandlerInterface` alias definition (#2085)
+
 2.7.0
 -----
 
