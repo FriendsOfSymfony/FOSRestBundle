@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-03-02T13:36:47Z
+
+This will allow us to add type declarations for method arguments without breaking BC (see https://3v4l.org/Vt3bJ).
