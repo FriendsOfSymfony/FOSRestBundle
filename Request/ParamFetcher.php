@@ -134,9 +134,7 @@ class ParamFetcher implements ParamFetcherInterface
         }
 
         if (null === $this->validator) {
-            throw new \RuntimeException(
-                'The ParamFetcher requirements feature requires the symfony/validator component.'
-            );
+            throw new \RuntimeException('The ParamFetcher requirements feature requires the symfony/validator component.');
         }
 
         $constraints = $param->getConstraints();

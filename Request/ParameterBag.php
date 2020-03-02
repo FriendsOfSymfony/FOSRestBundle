@@ -74,9 +74,7 @@ final class ParameterBag
     {
         $controller = $this->params[$requestId]['controller'];
         if (!is_array($controller) || empty($controller[0]) || !is_object($controller[0])) {
-            throw new \InvalidArgumentException(
-                'Controller needs to be set as a class instance (closures/functions are not supported)'
-            );
+            throw new \InvalidArgumentException('Controller needs to be set as a class instance (closures/functions are not supported)');
         }
 
         $class = class_exists(ClassUtils::class)

@@ -441,9 +441,7 @@ final class Configuration implements ConfigurationInterface
                                         }
 
                                         if (!defined('Symfony\Component\HttpFoundation\Response::'.$item)) {
-                                            throw new InvalidConfigurationException(
-                                                'Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.'
-                                            );
+                                            throw new InvalidConfigurationException('Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.');
                                         }
 
                                         $item = constant('Symfony\Component\HttpFoundation\Response::'.$item);

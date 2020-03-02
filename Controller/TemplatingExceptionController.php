@@ -29,13 +29,7 @@ abstract class TemplatingExceptionController extends ExceptionController
         $templating
     ) {
         if (!$templating instanceof EngineInterface && !$templating instanceof Environment) {
-            throw new \TypeError(sprintf(
-                'The fourth argument of %s must be an instance of %s or %s, but %s was given.',
-                __METHOD__,
-                EngineInterface::class,
-                Environment::class,
-                is_object($templating) ? get_class($templating) : gettype($templating)
-            ));
+            throw new \TypeError(sprintf('The fourth argument of %s must be an instance of %s or %s, but %s was given.', __METHOD__, EngineInterface::class, Environment::class, is_object($templating) ? get_class($templating) : gettype($templating)));
         }
 
         parent::__construct($viewHandler, $exceptionCodes, $showException);
