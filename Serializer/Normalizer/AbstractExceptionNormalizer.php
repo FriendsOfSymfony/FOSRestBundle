@@ -44,17 +44,17 @@ class AbstractExceptionNormalizer
     /**
      * Extracts the exception message.
      *
-     * @param \Exception $exception
+     * @param \Throwable $throwable
      * @param int|null   $statusCode
      *
      * @return string
      */
-    protected function getExceptionMessage(\Exception $exception, $statusCode = null)
+    protected function getMessageFromThrowable(\Throwable $throwable, $statusCode = null)
     {
-        $showMessage = $this->messagesMap->resolveException($exception);
+        $showMessage = $this->messagesMap->resolveThrowable($throwable);
 
         if ($showMessage || $this->debug) {
-            return $exception->getMessage();
+            return $throwable->getMessage();
         }
 
         return array_key_exists($statusCode, Response::$statusTexts) ? Response::$statusTexts[$statusCode] : 'error';
