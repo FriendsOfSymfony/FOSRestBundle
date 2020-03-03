@@ -80,6 +80,7 @@ class FOSRestExtensionTest extends TestCase
                 'body_listener' => false,
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ];
@@ -94,6 +95,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -117,6 +119,7 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ];
@@ -139,6 +142,7 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ];
@@ -166,6 +170,7 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ];
@@ -187,6 +192,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'format_listener' => false,
             ],
@@ -202,6 +208,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -215,6 +222,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'format_listener' => [
                     'rules' => ['path' => '/'],
@@ -232,6 +240,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'param_fetcher_listener' => true,
             ],
@@ -248,6 +257,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'param_fetcher_listener' => 'force',
             ],
@@ -264,6 +274,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'format_listener' => [
                     'rules' => [
@@ -286,6 +297,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'format_listener' => [
                     'media_type' => true,
@@ -301,6 +313,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -319,6 +332,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'view' => [
                     'view_response_listener' => false,
@@ -336,6 +350,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'view' => [
                     'view_response_listener' => true,
@@ -354,6 +369,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'view' => [
                     'view_response_listener' => 'force',
@@ -372,6 +388,7 @@ class FOSRestExtensionTest extends TestCase
            'fos_rest' => [
                'exception' => [
                    'exception_controller' => 'fos_rest.exception.controller::showAction',
+                   'forward' => true,
                ],
            ],
         ], $this->container);
@@ -384,6 +401,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'view' => [
                     'empty_content' => 200,
@@ -400,6 +418,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -412,6 +431,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'view' => [
                     'serialize_null' => true,
@@ -429,6 +449,7 @@ class FOSRestExtensionTest extends TestCase
                 'body_converter' => ['validate' => true],
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ];
@@ -443,6 +464,7 @@ class FOSRestExtensionTest extends TestCase
                 'body_converter' => ['validate' => false],
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ];
@@ -465,6 +487,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -505,6 +528,7 @@ class FOSRestExtensionTest extends TestCase
                 'fos_rest' => [
                     'exception' => [
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'forward' => true,
                     ],
                     'routing_loader' => [
                         'include_format' => false,
@@ -538,6 +562,7 @@ class FOSRestExtensionTest extends TestCase
                 'fos_rest' => [
                     'exception' => [
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'forward' => true,
                     ],
                     'routing_loader' => [
                         'default_format' => 'xml',
@@ -571,6 +596,7 @@ class FOSRestExtensionTest extends TestCase
                 'fos_rest' => [
                     'exception' => [
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'forward' => true,
                     ],
                     'view' => [
                         'formats' => [
@@ -613,6 +639,7 @@ class FOSRestExtensionTest extends TestCase
                         'Exception' => 404,
                     ],
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -634,6 +661,7 @@ class FOSRestExtensionTest extends TestCase
                         'Exception' => $value,
                     ],
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -690,6 +718,7 @@ class FOSRestExtensionTest extends TestCase
                 true,
                 [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 true,
             ),
@@ -697,6 +726,7 @@ class FOSRestExtensionTest extends TestCase
                 false,
                 [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 false,
             ),
@@ -705,6 +735,7 @@ class FOSRestExtensionTest extends TestCase
                 [
                     'debug' => true,
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 true,
             ),
@@ -713,6 +744,7 @@ class FOSRestExtensionTest extends TestCase
                 [
                     'debug' => false,
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 false,
             ),
@@ -721,6 +753,7 @@ class FOSRestExtensionTest extends TestCase
                 [
                     'debug' => null,
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 true,
             ),
@@ -729,6 +762,7 @@ class FOSRestExtensionTest extends TestCase
                 [
                     'debug' => null,
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 true,
             ),
@@ -780,6 +814,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'view' => [
                     'jsonp_handler' => null,
@@ -800,6 +835,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -813,6 +849,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
             ],
         ], $this->container);
@@ -825,6 +862,7 @@ class FOSRestExtensionTest extends TestCase
         $config = array('fos_rest' => array(
             'exception' => [
                 'exception_controller' => 'fos_rest.exception.controller::showAction',
+                'forward' => true,
             ],
             'zone' => array(
                 'first' => array('path' => '/api/*'),
@@ -864,6 +902,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => array(
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'view' => [
                     'mime_types' => array(

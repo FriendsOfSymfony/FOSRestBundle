@@ -6,7 +6,8 @@ framework:
         enabled: true
 
 fos_rest:
-    exception: ~
+    exception:
+        forward: true
     format_listener:
         rules:
             - { path: '^/', fallback_format: json }
