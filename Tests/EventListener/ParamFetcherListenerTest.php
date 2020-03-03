@@ -11,20 +11,29 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\EventListener\ParamFetcherListener;
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\Request\ParamReaderInterface;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Param Fetcher Listener Tests.
  */
 class ParamFetcherListenerTest extends TestCase
 {
+    private $requestStack;
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
      */
@@ -42,15 +51,9 @@ class ParamFetcherListenerTest extends TestCase
      */
     public function testSettingAttributes()
     {
-        $request = new Request();
+        $request = new Request(['customer' => '5']);
         $request->attributes->set('customer', null);
         $event = $this->getEvent($request);
-
-        $this->paramFetcher->expects($this->once())
-            ->method('all')
-            ->will($this->returnValue([
-                'customer' => 5,
-            ]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -67,10 +70,6 @@ class ParamFetcherListenerTest extends TestCase
         $request = new Request();
         $event = $this->getEvent($request);
 
-        $this->paramFetcher->expects($this->once())
-            ->method('all')
-            ->will($this->returnValue([]));
-
         $this->paramFetcherListener->onKernelController($event);
 
         $this->assertSame($this->paramFetcher, $request->attributes->get('paramFetcher'));
@@ -81,10 +80,6 @@ class ParamFetcherListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $event = $this->getEvent($request);
-
-        $this->paramFetcher->expects($this->never())
-            ->method('all')
-            ->will($this->returnValue(array()));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -103,10 +98,6 @@ class ParamFetcherListenerTest extends TestCase
 
         $event = $this->getEvent($request, $actionName);
 
-        $this->paramFetcher->expects($this->once())
-            ->method('all')
-            ->will($this->returnValue([]));
-
         $this->paramFetcherListener->onKernelController($event);
 
         $this->assertSame($this->paramFetcher, $request->attributes->get($expectedAttribute));
@@ -119,10 +110,6 @@ class ParamFetcherListenerTest extends TestCase
     {
         $request = new Request();
         $event = $this->getEvent($request, null);
-
-        $this->paramFetcher->expects($this->once())
-            ->method('all')
-            ->will($this->returnValue([]));
 
         $this->paramFetcherListener->onKernelController($event);
 
@@ -151,6 +138,8 @@ class ParamFetcherListenerTest extends TestCase
 
     protected function getEvent(Request $request, $actionMethod = 'byNameAction')
     {
+        $this->requestStack->push($request);
+
         $controller = new ParamFetcherController();
         $callable = $actionMethod ? [$controller, $actionMethod] : $controller;
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -161,9 +150,28 @@ class ParamFetcherListenerTest extends TestCase
 
     public function setUp()
     {
-        $this->paramFetcher = $this->getMockBuilder('FOS\\RestBundle\\Request\\ParamFetcher')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->requestStack = new RequestStack();
+
+        $queryParam = new QueryParam();
+        $queryParam->key = 'customer';
+
+        $paramReader = $this->createMock(ParamReaderInterface::class);
+        $paramReader
+            ->method('read')
+            ->willReturn([
+                'customer' => $queryParam,
+            ]);
+
+        $validator = $this->createMock(ValidatorInterface::class);
+        $validator->method('validate')
+            ->willReturn(new ConstraintViolationList());
+
+        $this->paramFetcher = new ParamFetcher(
+            $this->createMock(ContainerInterface::class),
+            $paramReader,
+            $this->requestStack,
+            $validator
+        );
         $this->paramFetcherListener = new ParamFetcherListener($this->paramFetcher, true);
     }
 }
