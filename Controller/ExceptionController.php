@@ -21,10 +21,8 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
- *
- * @final since 2.8
  */
-class ExceptionController
+final class ExceptionController
 {
     /**
      * @var ViewHandlerInterface

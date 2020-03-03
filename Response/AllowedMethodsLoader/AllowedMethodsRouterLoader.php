@@ -20,10 +20,8 @@ use Symfony\Component\Routing\RouterInterface;
  * allowed http methods.
  *
  * @author Boris Guéry <guery.b@gmail.com>
- *
- * @final since 2.8
  */
-class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, CacheWarmerInterface
+final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface, CacheWarmerInterface
 {
     private $router;
     private $cache;

@@ -17,10 +17,8 @@ use Doctrine\Common\Inflector\Inflector;
  * Inflector object using the Doctrine/Inflector.
  *
  * @author Mark Kazemier <Markkaz>
- *
- * @final since 2.8
  */
-class DoctrineInflector implements InflectorInterface
+final class DoctrineInflector implements InflectorInterface
 {
     /**
      * {@inheritdoc}

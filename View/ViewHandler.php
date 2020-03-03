@@ -28,10 +28,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
- *
- * @final since 2.8
  */
-class ViewHandler implements ConfigurableViewHandlerInterface
+final class ViewHandler implements ConfigurableViewHandlerInterface
 {
     /**
      * Key format, value a callable that returns a Response instance.

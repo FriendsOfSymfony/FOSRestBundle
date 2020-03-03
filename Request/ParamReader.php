@@ -20,10 +20,8 @@ use FOS\RestBundle\Controller\Annotations\ParamInterface;
  * @author Alexander <iam.asm89@gmail.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author Boris Guéry  <guery.b@gmail.com>
- *
- * @final since 2.8
  */
-class ParamReader implements ParamReaderInterface
+final class ParamReader implements ParamReaderInterface
 {
     private $annotationReader;
 

@@ -18,10 +18,8 @@ use Symfony\Component\Serializer\SerializerInterface;
  * Adapter to plug the Symfony serializer into the FOSRestBundle Serializer API.
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
- *
- * @final since 2.8
  */
-class SymfonySerializerAdapter implements Serializer
+final class SymfonySerializerAdapter implements Serializer
 {
     private $serializer;
 
