@@ -30,24 +30,14 @@ class ParamFetcherListener
     private $paramFetcher;
     private $setParamsAsAttributes;
 
-    /**
-     * Constructor.
-     *
-     * @param ParamFetcherInterface $paramFetcher
-     * @param bool                  $setParamsAsAttributes
-     */
-    public function __construct(ParamFetcherInterface $paramFetcher, $setParamsAsAttributes = false)
+    public function __construct(ParamFetcherInterface $paramFetcher, bool $setParamsAsAttributes = false)
     {
         $this->paramFetcher = $paramFetcher;
         $this->setParamsAsAttributes = $setParamsAsAttributes;
     }
 
     /**
-     * Core controller handler.
-     *
      * @param ControllerEvent $event
-     *
-     * @throws \InvalidArgumentException
      */
     public function onKernelController($event)
     {
@@ -81,14 +71,7 @@ class ParamFetcherListener
         }
     }
 
-    /**
-     * Determines which attribute the ParamFetcher should be injected as.
-     *
-     * @param callable $controller The controller action as an "array" callable
-     *
-     * @return string
-     */
-    private function getAttributeName(callable $controller)
+    private function getAttributeName(callable $controller): string
     {
         list($object, $name) = $controller;
         $method = new \ReflectionMethod($object, $name);
@@ -102,15 +85,7 @@ class ParamFetcherListener
         return 'paramFetcher';
     }
 
-    /**
-     * Returns true if the given controller parameter is type-hinted as
-     * an instance of ParamFetcher.
-     *
-     * @param \ReflectionParameter $controllerParam A parameter of the controller action
-     *
-     * @return bool
-     */
-    private function isParamFetcherType(\ReflectionParameter $controllerParam)
+    private function isParamFetcherType(\ReflectionParameter $controllerParam): bool
     {
         $type = $controllerParam->getClass();
         if (null === $type) {

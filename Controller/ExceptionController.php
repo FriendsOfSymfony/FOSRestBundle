@@ -28,25 +28,14 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
  */
 class ExceptionController
 {
-    /**
-     * @var ViewHandlerInterface
-     */
     private $viewHandler;
-
-    /**
-     * @var ExceptionValueMap
-     */
     private $exceptionCodes;
-
-    /**
-     * @var bool
-     */
     private $showException;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
         ExceptionValueMap $exceptionCodes,
-        $showException
+        bool $showException
     ) {
         $this->viewHandler = $viewHandler;
         $this->exceptionCodes = $exceptionCodes;
@@ -54,15 +43,7 @@ class ExceptionController
     }
 
     /**
-     * Converts an Exception to a Response.
-     *
-     * @param Request                   $request
-     * @param \Exception|\Throwable     $exception
-     * @param DebugLoggerInterface|null $logger
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return Response
+     * @param \Throwable $exception
      */
     public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
@@ -87,11 +68,8 @@ class ExceptionController
     }
 
     /**
-     * @param \Exception $exception
-     * @param int        $code
-     * @param array      $templateData
-     * @param Request    $request
-     * @param bool       $showException
+     * @param int  $code
+     * @param bool $showException
      *
      * @return View
      */
@@ -101,10 +79,6 @@ class ExceptionController
     }
 
     /**
-     * Determines the status code to use for the response.
-     *
-     * @param \Exception $exception
-     *
      * @return int
      */
     protected function getStatusCode(\Exception $exception)
@@ -121,17 +95,7 @@ class ExceptionController
         return $view;
     }
 
-    /**
-     * Determines the template parameters to pass to the view layer.
-     *
-     * @param string               $currentContent
-     * @param int                  $code
-     * @param \Throwable           $throwable
-     * @param DebugLoggerInterface $logger
-     *
-     * @return array
-     */
-    private function getTemplateData($currentContent, $code, \Throwable $throwable, DebugLoggerInterface $logger = null)
+    private function getTemplateData(string $currentContent, int $code, \Throwable $throwable, DebugLoggerInterface $logger = null): array
     {
         if (class_exists(FlattenException::class)) {
             $exception = FlattenException::createFromThrowable($throwable);
@@ -154,10 +118,8 @@ class ExceptionController
      *
      * This code comes from Symfony and should be synchronized on a regular basis
      * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
-     *
-     * @return string
      */
-    private function getAndCleanOutputBuffering($startObLevel)
+    private function getAndCleanOutputBuffering($startObLevel): string
     {
         if (ob_get_level() <= $startObLevel) {
             return '';
@@ -167,14 +129,7 @@ class ExceptionController
         return ob_get_clean();
     }
 
-    /**
-     * Determines the status code to use for the response.
-     *
-     * @param \Throwable $exception
-     *
-     * @return int
-     */
-    private function getStatusCodeFromThrowable(\Throwable $exception)
+    private function getStatusCodeFromThrowable(\Throwable $exception): int
     {
         // If matched
         if ($statusCode = $this->exceptionCodes->resolveThrowable($exception)) {

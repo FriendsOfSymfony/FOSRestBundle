@@ -36,19 +36,11 @@ class BodyListener
     private $arrayNormalizer;
     private $normalizeForms;
 
-    /**
-     * Constructor.
-     *
-     * @param DecoderProviderInterface $decoderProvider
-     * @param bool                     $throwExceptionOnUnsupportedContentType
-     * @param ArrayNormalizerInterface $arrayNormalizer
-     * @param bool                     $normalizeForms
-     */
     public function __construct(
         DecoderProviderInterface $decoderProvider,
-        $throwExceptionOnUnsupportedContentType = false,
+        bool $throwExceptionOnUnsupportedContentType = false,
         ArrayNormalizerInterface $arrayNormalizer = null,
-        $normalizeForms = false
+        bool $normalizeForms = false
     ) {
         $this->decoderProvider = $decoderProvider;
         $this->throwExceptionOnUnsupportedContentType = $throwExceptionOnUnsupportedContentType;
@@ -56,23 +48,13 @@ class BodyListener
         $this->normalizeForms = $normalizeForms;
     }
 
-    /**
-     * Sets the fallback format if there's no Content-Type in the request.
-     *
-     * @param string $defaultFormat
-     */
-    public function setDefaultFormat($defaultFormat)
+    public function setDefaultFormat(?string $defaultFormat)
     {
         $this->defaultFormat = $defaultFormat;
     }
 
     /**
-     * Core request handler.
-     *
      * @param RequestEvent $event
-     *
-     * @throws BadRequestHttpException
-     * @throws UnsupportedMediaTypeHttpException
      */
     public function onKernelRequest($event)
     {
@@ -95,7 +77,7 @@ class BodyListener
 
             $content = $request->getContent();
 
-            if (!$this->decoderProvider->supports($format)) {
+            if (null === $format || !$this->decoderProvider->supports($format)) {
                 if ($this->throwExceptionOnUnsupportedContentType
                     && $this->isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
                 ) {
@@ -130,24 +112,13 @@ class BodyListener
         }
     }
 
-    /**
-     * Check if the Request is not a DELETE with no content and no Content-Type.
-     *
-     * @param $method
-     * @param $content
-     * @param $contentType
-     *
-     * @return bool
-     */
-    private function isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
+    private function isNotAnEmptyDeleteRequestWithNoSetContentType(string $method, $content, $contentType): bool
     {
         return false === ('DELETE' === $method && empty($content) && empty($contentType));
     }
 
     /**
      * Check if we should try to decode the body.
-     *
-     * @param Request $request
      *
      * @return bool
      */
@@ -160,14 +131,7 @@ class BodyListener
         return !$this->isFormRequest($request);
     }
 
-    /**
-     * Check if the content type indicates a form submission.
-     *
-     * @param Request $request
-     *
-     * @return bool
-     */
-    private function isFormRequest(Request $request)
+    private function isFormRequest(Request $request): bool
     {
         $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
 

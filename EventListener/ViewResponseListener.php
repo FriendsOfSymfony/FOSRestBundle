@@ -34,22 +34,13 @@ class ViewResponseListener implements EventSubscriberInterface
     private $viewHandler;
     private $forceView;
 
-    /**
-     * Constructor.
-     *
-     * @param ViewHandlerInterface $viewHandler
-     * @param bool                 $forceView
-     */
-    public function __construct(ViewHandlerInterface $viewHandler, $forceView)
+    public function __construct(ViewHandlerInterface $viewHandler, bool $forceView)
     {
         $this->viewHandler = $viewHandler;
         $this->forceView = $forceView;
     }
 
     /**
-     * Renders the parameters and template and initializes a new response object with the
-     * rendered content.
-     *
      * @param ViewEvent $event
      */
     public function onKernelView($event)
@@ -106,7 +97,7 @@ class ViewResponseListener implements EventSubscriberInterface
 
             $vars = $this->getDefaultVars($configuration, $controller, $action);
         } else {
-            $vars = null;
+            $vars = [];
         }
 
         if (null === $view->getFormat()) {
@@ -117,7 +108,7 @@ class ViewResponseListener implements EventSubscriberInterface
             && !$view->getRoute()
             && !$view->getLocation()
         ) {
-            if (null !== $vars && 0 !== count($vars)) {
+            if (0 !== count($vars)) {
                 $parameters = (array) $this->viewHandler->prepareTemplateParameters($view, false);
                 foreach ($vars as $var) {
                     if (!array_key_exists($var, $parameters)) {
@@ -141,7 +132,7 @@ class ViewResponseListener implements EventSubscriberInterface
         $event->setResponse($response);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         // Must be executed before SensioFrameworkExtraBundle's listener
         return array(
@@ -150,15 +141,9 @@ class ViewResponseListener implements EventSubscriberInterface
     }
 
     /**
-     * @param Template $template
-     * @param object   $controller
-     * @param string   $action
-     *
-     * @return array
-     *
-     * @see \Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener::resolveDefaultParameters()
+     * @param object $controller
      */
-    private function getDefaultVars(Template $template = null, $controller, $action)
+    private function getDefaultVars(Template $template = null, $controller, string $action): array
     {
         if (0 !== count($arguments = $template->getVars())) {
             return $arguments;
@@ -174,5 +159,7 @@ class ViewResponseListener implements EventSubscriberInterface
 
             return $arguments;
         }
+
+        return [];
     }
 }

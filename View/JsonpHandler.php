@@ -46,10 +46,7 @@ class JsonpHandler
     /**
      * Handles wrapping a JSON response into a JSONP response.
      *
-     * @param ViewHandler $handler
-     * @param View        $view
-     * @param Request     $request
-     * @param string      $format
+     * @param string $format
      *
      * @return Response
      */
