@@ -70,7 +70,7 @@ class ExceptionController
             $code = $this->getStatusCode($exception);
         } else {
             $code = $this->getStatusCodeFromThrowable($exception);
-            $exception = new \Exception($exception->getMessage(), $code);
+            $exception = new \Exception($exception->getMessage(), $code, $exception->getPrevious());
         }
         $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
         $view = $this->createView($exception, $code, $templateData, $request, $this->showException);
