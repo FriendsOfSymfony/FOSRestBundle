@@ -20,7 +20,8 @@ fos_rest:
     body_converter:
         enabled: true
         validate: true
-    exception: true
+    exception:
+        forward: true
     body_listener: true
     format_listener:
         enabled: true

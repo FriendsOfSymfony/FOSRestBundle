@@ -1,5 +1,6 @@
 fos_rest:
     exception:
         enabled: true
+        forward: true
         messages:
             LogicException: true

@@ -6,6 +6,7 @@ imports:
 fos_rest:
     exception:
         debug: true
+        forward: true
     routing_loader:
         parse_controller_name: false
     service:

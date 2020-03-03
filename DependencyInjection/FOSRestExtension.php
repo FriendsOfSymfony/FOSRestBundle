@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
+use FOS\RestBundle\EventListener\LegacyExceptionListener;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
@@ -385,6 +386,12 @@ class FOSRestExtension extends Extension
             if (!empty($config['exception']['service'])) {
                 $service = $container->getDefinition('fos_rest.exception_listener');
                 $service->clearTag('kernel.event_subscriber');
+            }
+
+            $container->setParameter('fos_rest.exception.forward', $config['exception']['forward']);
+
+            if (!$config['exception']['forward']) {
+                $container->getDefinition('fos_rest.exception_listener')->setClass(LegacyExceptionListener::class);
             }
 
             $controller = $config['exception']['exception_controller'] ?? null;

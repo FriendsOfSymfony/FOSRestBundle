@@ -479,6 +479,22 @@ final class Configuration implements ConfigurationInterface
                                 })
                             ->end()
                         ->end()
+                        ->booleanNode('forward')
+                            ->defaultValue(static function () {
+                                @trigger_error('Not setting the "fos_rest.exception.forward" configuration option is deprecated since FOSRestBundle 2.8. Its default value will be set to "true" in 3.0.', E_USER_DEPRECATED);
+
+                                return false;
+                            })
+                            ->validate()
+                                ->ifTrue(static function ($v) { return true !== $v; })
+                                ->then(static function ($v) {
+                                    @trigger_error('Not setting the "fos_rest.exception.forward" configuration option to "true" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                    return $v;
+                                })
+                            ->end()
+                            ->info('Forward exceptions for requests not matching any configured REST zone to the core exception listener.')
+                        ->end()
                         ->scalarNode('service')->defaultNull()->end()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')

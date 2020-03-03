@@ -68,6 +68,7 @@ class TestKernel extends Kernel
             $container->loadFromExtension('fos_rest', [
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
+                    'forward' => true,
                 ],
                 'routing_loader' => [
                     'parse_controller_name' => false,

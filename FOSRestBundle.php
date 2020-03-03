@@ -12,6 +12,7 @@
 namespace FOS\RestBundle;
 
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
+use FOS\RestBundle\DependencyInjection\Compiler\ErrorListenerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\JMSFormErrorHandlerPass;
 use FOS\RestBundle\DependencyInjection\Compiler\JMSHandlersPass;
@@ -35,6 +36,8 @@ class FOSRestBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
+        // ErrorListenerPass must be executed after the ExceptionListenerPass from TwigBundle
+        $container->addCompilerPass(new ErrorListenerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -10);
         $container->addCompilerPass(new SerializerConfigurationPass());
         $container->addCompilerPass(new ConfigurationCheckPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -10);
         $container->addCompilerPass(new FormatListenerRulesPass());
