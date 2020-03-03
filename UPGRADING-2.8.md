@@ -1,6 +1,9 @@
 Upgrading From 2.7 To 2.8
 =========================
 
+ * Passing version number as integers to `Context::setVersion()` is deprecated. Strings will be
+   enforced as of 3.0.
+ 
  * The following classes are marked as `internal`:
 
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
