@@ -17,6 +17,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  * Normalizes Exception instances.
  *
  * @author Ener-Getick <egetick@gmail.com>
+ *
+ * @final since 2.8
  */
 class ExceptionNormalizer extends AbstractExceptionNormalizer implements NormalizerInterface
 {

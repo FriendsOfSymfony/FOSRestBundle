@@ -23,6 +23,8 @@ use JMS\Serializer\SerializerInterface;
  * Adapter to plug the JMS serializer into the FOSRestBundle Serializer API.
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
+ *
+ * @final since 2.8
  */
 class JMSSerializerAdapter implements Serializer
 {

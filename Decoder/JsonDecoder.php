@@ -15,6 +15,8 @@ namespace FOS\RestBundle\Decoder;
  * Decodes JSON data.
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * @final since 2.8
  */
 class JsonDecoder implements DecoderInterface
 {
