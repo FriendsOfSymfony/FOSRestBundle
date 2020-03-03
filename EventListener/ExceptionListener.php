@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener as LegacyExceptionListener;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -34,15 +34,20 @@ class ExceptionListener implements EventSubscriberInterface
 {
     private $exceptionListener;
     private $dispatcher;
+    private $innerExceptionListener;
 
-    public function __construct($controller, ?LoggerInterface $logger, EventDispatcherInterface $dispatcher)
+    public function __construct($controller, ?LoggerInterface $logger, $debug = false, EventDispatcherInterface $dispatcher, $innerExceptionListener = null)
     {
-        if (class_exists(ErrorListener::class)) {
-            $this->exceptionListener = new ErrorListener($controller, $logger);
-        } else {
-            $this->exceptionListener = new LegacyExceptionListener($controller, $logger);
-        }
+        $this->exceptionListener = new ErrorListener($controller, $logger, $debug);
         $this->dispatcher = $dispatcher;
+        $this->innerExceptionListener = $innerExceptionListener;
+    }
+
+    public function logKernelException(ExceptionEvent $event)
+    {
+        if ($this->innerExceptionListener) {
+            $this->innerExceptionListener->logKernelException($event);
+        }
     }
 
     /**
@@ -53,7 +58,11 @@ class ExceptionListener implements EventSubscriberInterface
         $request = $event->getRequest();
 
         if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
-            return;
+            if (null === $this->innerExceptionListener) {
+                return;
+            }
+
+            return $this->innerExceptionListener->onKernelException($event);
         }
 
         $exception = $event->getThrowable();
@@ -61,6 +70,7 @@ class ExceptionListener implements EventSubscriberInterface
         $controllerArgsListener = function ($event) use (&$controllerArgsListener, $exception) {
             /** @var ControllerArgumentsEvent $event */
             $arguments = $event->getArguments();
+
             foreach ($arguments as $k => $argument) {
                 if ($argument instanceof FlattenException || $argument instanceof LegacyFlattenException) {
                     $arguments[$k] = $exception;
@@ -69,11 +79,27 @@ class ExceptionListener implements EventSubscriberInterface
                     break;
                 }
             }
+
             $this->dispatcher->removeListener(KernelEvents::CONTROLLER_ARGUMENTS, $controllerArgsListener);
         };
-        $this->dispatcher->addListener(KernelEvents::CONTROLLER_ARGUMENTS, $controllerArgsListener, -100);
+
+        $this->dispatcher->addListener(KernelEvents::CONTROLLER_ARGUMENTS, $controllerArgsListener);
 
         $this->exceptionListener->onKernelException($event);
+    }
+
+    public function removeCspHeader(ResponseEvent $event): void
+    {
+        if ($this->innerExceptionListener instanceof ErrorListener) {
+            $this->innerExceptionListener->removeCspHeader($event);
+        }
+    }
+
+    public function onControllerArguments(ControllerArgumentsEvent $event)
+    {
+        if ($this->innerExceptionListener instanceof ErrorListener) {
+            $this->innerExceptionListener->onControllerArguments($event);
+        }
     }
 
     /**
@@ -81,8 +107,6 @@ class ExceptionListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            KernelEvents::EXCEPTION => array('onKernelException', -100),
-        );
+        return ErrorListener::getSubscribedEvents();
     }
 }
