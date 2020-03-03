@@ -20,6 +20,8 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author John Wards <jwards@whiteoctober.co.uk>
  * @author Fabian Vogler <fabian@equivalence.ch>
+ *
+ * @final since 2.8
  */
 class XmlDecoder implements DecoderInterface
 {

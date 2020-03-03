@@ -1,8 +1,36 @@
 Upgrading From 2.7 To 2.8
 =========================
 
- * The `ExceptionValueMap` class is marked as `final`. Extending it will not be supported as of 3.0.
-   Its `resolveThrowable()` method is marked as internal and will be removed in 3.0.
+ * The following classes are marked as `final`. Extending them will not be supported as of 3.0:
+
+   * `FOS\RestBundle\Controller\ExceptionController`
+   * `FOS\RestBundle\Decoder\ContainerDecoderProvider`
+   * `FOS\RestBundle\Decoder\JsonDecoder`
+   * `FOS\RestBundle\Decoder\JsonToFormDecoder`
+   * `FOS\RestBundle\Decoder\XmlDecoder`
+   * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
+   * `FOS\RestBundle\Inflector\DoctrineInflector`
+   * `FOS\RestBundle\Negotiation\FormatNegotiator`
+   * `FOS\RestBundle\Request\ParamFetcher`
+   * `FOS\RestBundle\Request\ParamReader`
+   * `FOS\RestBundle\Request\RequestBodyParamConverter`
+   * `FOS\RestBundle\Response\AllowMethodsLoader\AllowedMethodsRouterLoader`
+   * `FOS\RestBundle\Serializer\JMSSerializerAdapter`
+   * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
+   * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
+   * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`
+   * `FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer`
+   * `FOS\RestBundle\Serializer\SymfonySerializerAdapter`
+   * `FOS\RestBundle\Util\ExceptionValueMap`
+   * `FOS\RestBundle\Version\ChainVersionResolver`
+   * `FOS\RestBundle\Version\Resolver\HeaderVersionResolver`
+   * `FOS\RestBundle\Version\Resolver\MediaTypeVersionResolver`
+   * `FOS\RestBundle\Version\Resolver\QueryParameterVersionResolver`
+   * `FOS\RestBundle\View\JsonpHandler`
+   * `FOS\RestBundle\View\View`
+   * `FOS\RestBundle\View\ViewHandler`
+
+ * The `ExceptionValueMap::resolveThrowable()` method is marked as internal and will be removed in 3.0.
 
  * The `isFormatTemplating()`, `renderTemplate()`, and `prepareTemplateParameters()` methods of the
    `ViewHandler` class and the `ViewHandlerInterface` have been deprecated.
