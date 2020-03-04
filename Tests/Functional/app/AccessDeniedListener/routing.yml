@@ -1,0 +1,11 @@
+api:
+    path:     /api/comments
+    defaults:
+        _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\Api\CommentController::getComments
+        _format: json
+
+admin:
+    path:     /admin/comments
+    defaults:
+        _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\CommentController::getComments
+        _format: html
