@@ -10,7 +10,9 @@ CHANGELOG
 2.7.2
 -----
 
-* fix compatibility with `null` owner returned by SensioFrameworkExtraBundle (#2097)
+* fixed serializing Error instances when the Symfony Serializer is used (#2110)
+* fixed serializing Error instances when JMS Serializer is used (#2105)
+* fixed compatibility with `null` owner returned by SensioFrameworkExtraBundle (#2097)
 * completely fixed handling `Throwable` objects in `ExceptionController::showAction()`,
   continues #2093 (#2096)
 
