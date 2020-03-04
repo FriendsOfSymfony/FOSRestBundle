@@ -31,8 +31,20 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
             [
                 'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
                 'format' => 'json',
+                'type' => \Error::class,
+                'method' => 'serializeErrorToJson',
+            ],
+            [
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
+                'format' => 'json',
                 'type' => \Exception::class,
                 'method' => 'serializeToJson',
+            ],
+            [
+                'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
+                'format' => 'xml',
+                'type' => \Error::class,
+                'method' => 'serializeErrorToXml',
             ],
             [
                 'direction' => GraphNavigatorInterface::DIRECTION_SERIALIZATION,
@@ -58,6 +70,17 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         Context $context
     ) {
         $data = $this->convertToArray($exception, $context);
+
+        return $visitor->visitArray($data, $type, $context);
+    }
+
+    public function serializeErrorToJson(
+        JsonSerializationVisitor $visitor,
+        \Throwable $exception,
+        array $type,
+        Context $context
+    ) {
+        $data = $this->convertThrowableToArray($exception, $context);
 
         return $visitor->visitArray($data, $type, $context);
     }
@@ -96,6 +119,34 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         }
     }
 
+    public function serializeErrorToXml(
+        XmlSerializationVisitor $visitor,
+        \Throwable $exception,
+        array $type,
+        Context $context
+    ) {
+        $data = $this->convertThrowableToArray($exception, $context);
+
+        $document = $visitor->getDocument(true);
+
+        if (!$visitor->getCurrentNode()) {
+            $visitor->createRoot();
+        }
+
+        foreach ($data as $key => $value) {
+            $entryNode = $document->createElement($key);
+            $visitor->getCurrentNode()->appendChild($entryNode);
+            $visitor->setCurrentNode($entryNode);
+
+            $node = $context->getNavigator()->accept($value, null, $context);
+            if (null !== $node) {
+                $visitor->getCurrentNode()->appendChild($node);
+            }
+
+            $visitor->revertCurrentNode();
+        }
+    }
+
     /**
      * @param \Exception $exception
      * @param Context    $context
@@ -104,10 +155,16 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
      */
     protected function convertToArray(\Exception $exception, Context $context)
     {
+        return $this->convertThrowableToArray($exception, $context);
+    }
+
+    private function convertThrowableToArray(\Throwable $throwable, Context $context): array
+    {
         $data = [];
 
         if ($context->hasAttribute('template_data')) {
             $templateData = $context->getAttribute('template_data');
+
             if (array_key_exists('status_code', $templateData)) {
                 $data['code'] = $statusCode = $templateData['status_code'];
             } elseif ($context->hasAttribute('status_code')) {
@@ -117,7 +174,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
             $data['code'] = $context->getAttribute('status_code');
         }
 
-        $data['message'] = $this->getExceptionMessage($exception, isset($statusCode) ? $statusCode : null);
+        $data['message'] = $this->getMessageFromThrowable($throwable, isset($statusCode) ? $statusCode : null);
 
         return $data;
     }
