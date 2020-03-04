@@ -41,13 +41,13 @@ class ExceptionValueMap
     /**
      * Resolves the value corresponding to an exception object.
      *
-     * @param \Exception $exception
+     * @param \Throwable $throwable
      *
      * @return mixed|false Value found or false is not found
      */
-    public function resolveException(\Throwable $exception)
+    public function resolveException(\Throwable $throwable)
     {
-        return $this->doResolveClass(get_class($exception));
+        return $this->doResolveClass(get_class($throwable));
     }
 
     /**
