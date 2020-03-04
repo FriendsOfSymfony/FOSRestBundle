@@ -41,6 +41,6 @@ class ExceptionNormalizer extends AbstractExceptionNormalizer implements Normali
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof \Exception;
+        return $data instanceof \Throwable;
     }
 }
