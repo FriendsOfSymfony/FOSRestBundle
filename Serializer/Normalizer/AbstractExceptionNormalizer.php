@@ -51,7 +51,7 @@ class AbstractExceptionNormalizer
      */
     protected function getMessageFromThrowable(\Throwable $throwable, $statusCode = null)
     {
-        $showMessage = $this->messagesMap->resolveThrowable($throwable);
+        $showMessage = $this->messagesMap->resolveException($throwable);
 
         if ($showMessage || $this->debug) {
             return $throwable->getMessage();
