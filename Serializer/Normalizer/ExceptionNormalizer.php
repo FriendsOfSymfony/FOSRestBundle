@@ -33,7 +33,7 @@ class ExceptionNormalizer extends AbstractExceptionNormalizer implements Normali
             $data['code'] = $statusCode = $context['status_code'];
         }
 
-        $data['message'] = $this->getExceptionMessage($object, isset($statusCode) ? $statusCode : null);
+        $data['message'] = $this->getMessageFromThrowable($object, isset($statusCode) ? $statusCode : null);
 
         return $data;
     }
