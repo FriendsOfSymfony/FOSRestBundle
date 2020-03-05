@@ -61,16 +61,26 @@ class RequestBodyParamConverterTest extends TestCase
             ],
         ];
         $configuration = $this->createConfiguration(null, null, $options);
-        $converter = $this->getMockBuilder(RequestBodyParamConverter::class)
-             ->setConstructorArgs([$this->serializer, ['foogroup'], 'fooversion'])
-             ->setMethods(['configureContext'])
-             ->getMock();
-        $converter
+        $converter = new RequestBodyParamConverter($this->serializer, ['foogroup'], 'fooversion');
+
+        $request = $this->createRequest('body', 'application/json');
+
+        $expectedContext = new Context();
+        $expectedContext->setGroups(['foo', 'bar']);
+        $expectedContext->setVersion('fooversion');
+        $expectedContext->setAttribute('foobar', 'foo');
+
+        $this->serializer
             ->expects($this->once())
-            ->method('configureContext')
-            ->with($this->anything(), ['groups' => ['foo', 'bar'], 'foobar' => 'foo', 'version' => 'fooversion'])
-            ->willReturn(new Context());
-        $this->launchExecution($converter, null, $configuration);
+            ->method('deserialize')
+            ->with(
+                'body',
+                null,
+                'json',
+                $expectedContext
+            );
+
+        return $converter->apply($request, $configuration);
     }
 
     /**
