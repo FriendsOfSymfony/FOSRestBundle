@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @author Guilhem N. <guilhem.niot@gmail.com>
  *
- * @internal since 2.8
+ * @internal
  */
 class FormErrorNormalizer implements NormalizerInterface
 {
