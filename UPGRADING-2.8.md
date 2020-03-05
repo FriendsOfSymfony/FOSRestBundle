@@ -10,6 +10,7 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
    * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`
    * `FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer`
+   * `FOS\RestBundle\Util\ExceptionValueMap`
 
  * The following classes are marked as `final`. Extending them will not be supported as of 3.0:
 
@@ -27,7 +28,6 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Response\AllowMethodsLoader\AllowedMethodsRouterLoader`
    * `FOS\RestBundle\Serializer\JMSSerializerAdapter`
    * `FOS\RestBundle\Serializer\SymfonySerializerAdapter`
-   * `FOS\RestBundle\Util\ExceptionValueMap`
    * `FOS\RestBundle\Version\ChainVersionResolver`
    * `FOS\RestBundle\Version\Resolver\HeaderVersionResolver`
    * `FOS\RestBundle\Version\Resolver\MediaTypeVersionResolver`
