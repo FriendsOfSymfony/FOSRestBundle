@@ -108,17 +108,9 @@ final class Context
 
     /**
      * Sets the normalization version.
-     *
-     * @param int|null $version
-     *
-     * @return self
      */
-    public function setVersion($version)
+    public function setVersion(string $version): self
     {
-        if (is_int($version)) {
-            @trigger_error(sprintf('Passing integers as version numbers to %s() is deprecated since FOSRestBundle 2.8. Starting with 3.0 strings will be enforced.', __METHOD__), E_USER_DEPRECATED);
-        }
-
         $this->version = $version;
 
         return $this;
