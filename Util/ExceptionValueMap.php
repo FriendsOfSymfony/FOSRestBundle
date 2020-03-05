@@ -17,7 +17,7 @@ namespace FOS\RestBundle\Util;
  *
  * @author Mikhail Shamin <munk13@gmail.com>
  *
- * @final since 2.8
+ * @internal since 2.8
  */
 class ExceptionValueMap
 {
@@ -25,13 +25,11 @@ class ExceptionValueMap
      * Map of values mapped to exception class
      * key => exception class
      * value => value associated with exception.
-     *
-     * @var array
      */
     private $map;
 
     /**
-     * @param array $map
+     * @param array<string,bool>|array<string,int> $map
      */
     public function __construct(array $map)
     {

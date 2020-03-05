@@ -1,6 +1,8 @@
 Upgrading From 2.x To 3.0
 =========================
 
+ * `Context::setVersion()` does not accept integers anymore.
+
  * The `ExceptionValueMap` class is `final`. Extending it is no longer supported. The `resolveThrowable()`
    method has been removed.
 

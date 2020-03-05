@@ -23,7 +23,7 @@ use JMS\Serializer\YamlSerializationVisitor;
 /**
  * Extend the JMS FormErrorHandler to include more informations when using the ViewHandler.
  *
- * @final since 2.8
+ * @internal since 2.8
  */
 class FormErrorHandler implements SubscribingHandlerInterface
 {

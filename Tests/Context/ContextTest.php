@@ -84,6 +84,16 @@ class ContextTest extends TestCase
         $this->assertEquals('1.3.2', $this->context->getVersion());
     }
 
+    /**
+     * @group legacy
+     */
+    public function testVersionAsInteger()
+    {
+        $this->context->setVersion(2);
+
+        $this->assertEquals(2, $this->context->getVersion());
+    }
+
     public function testSerializeNull()
     {
         $this->context->setSerializeNull(true);

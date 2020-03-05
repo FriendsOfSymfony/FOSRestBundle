@@ -1,6 +1,17 @@
 Upgrading From 2.7 To 2.8
 =========================
 
+ * Passing version number as integers to `Context::setVersion()` is deprecated. Strings will be
+   enforced as of 3.0.
+ 
+ * The following classes are marked as `internal`:
+
+   * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
+   * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
+   * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`
+   * `FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer`
+   * `FOS\RestBundle\Util\ExceptionValueMap`
+
  * The following classes are marked as `final`. Extending them will not be supported as of 3.0:
 
    * `FOS\RestBundle\Controller\ExceptionController`
@@ -16,12 +27,7 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Request\RequestBodyParamConverter`
    * `FOS\RestBundle\Response\AllowMethodsLoader\AllowedMethodsRouterLoader`
    * `FOS\RestBundle\Serializer\JMSSerializerAdapter`
-   * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
-   * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
-   * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`
-   * `FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer`
    * `FOS\RestBundle\Serializer\SymfonySerializerAdapter`
-   * `FOS\RestBundle\Util\ExceptionValueMap`
    * `FOS\RestBundle\Version\ChainVersionResolver`
    * `FOS\RestBundle\Version\Resolver\HeaderVersionResolver`
    * `FOS\RestBundle\Version\Resolver\MediaTypeVersionResolver`
