@@ -11,12 +11,15 @@
 
 namespace FOS\RestBundle\Tests\Request;
 
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -50,6 +53,8 @@ class ParamFetcherTest extends TestCase
      */
     private $requestStack;
 
+    private $paramFetcher;
+
     /**
      * Test setup.
      */
@@ -62,22 +67,15 @@ class ParamFetcherTest extends TestCase
 
         $this->validator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
 
-        $this->request = new Request();
-        $this->requestStack = $this->getMockBuilder(RequestStack::class)->getMock();
-        $this->requestStack
-            ->expects($this->any())
-            ->method('getCurrentRequest')
-            ->willReturn($this->request);
+        $this->requestStack = new RequestStack();
+        $this->requestStack->push(new Request());
 
-        $this->paramFetcherBuilder = $this->getMockBuilder(ParamFetcher::class);
-        $this->paramFetcherBuilder
-            ->setConstructorArgs(array(
-                $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock(),
-                $this->paramReader,
-                $this->requestStack,
-                $this->validator,
-            ))
-            ->setMethods(null);
+        $this->paramFetcher = new ParamFetcher(
+            $this->createMock(ContainerInterface::class),
+            $this->paramReader,
+            $this->requestStack,
+            $this->validator
+        );
 
         $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
     }
@@ -93,17 +91,16 @@ class ParamFetcherTest extends TestCase
 
     public function testParamDynamicCreation()
     {
-        $fetcher = $this->paramFetcherBuilder->getMock();
-        $fetcher->setController($this->controller);
+        $this->paramFetcher->setController($this->controller);
 
-        $param1 = $this->createMockedParam('foo');
-        $param2 = $this->createMockedParam('foobar');
-        $param3 = $this->createMockedParam('bar');
+        $param1 = $this->createParam('foo');
+        $param2 = $this->createParam('foobar');
+        $param3 = $this->createParam('bar');
         $this->setParams(array($param1)); // Controller params
-        $fetcher->addParam($param2);
-        $fetcher->addParam($param3);
+        $this->paramFetcher->addParam($param2);
+        $this->paramFetcher->addParam($param3);
 
-        $this->assertEquals(array('foo' => $param1, 'foobar' => $param2, 'bar' => $param3), $fetcher->getParams());
+        $this->assertEquals(array('foo' => $param1, 'foobar' => $param2, 'bar' => $param3), $this->paramFetcher->getParams());
     }
 
     /**
@@ -112,62 +109,51 @@ class ParamFetcherTest extends TestCase
      */
     public function testInexistentParam()
     {
-        $fetcher = $this->paramFetcherBuilder
-            ->setMethods(array('getParams'))
-            ->getMock();
-        $fetcher
-            ->expects($this->once())
-            ->method('getParams')
-            ->willReturn(array(
-                'bar' => $this->createMockedParam('bar'),
-            ));
-        $fetcher->get('foo');
+        $this->paramFetcher->setController($this->controller);
+        $this->setParams([$this->createParam('bar')]);
+        $this->paramFetcher->get('foo');
     }
 
     public function testDefaultReplacement()
     {
-        $fetcher = $this->paramFetcherBuilder
-            ->setMethods(['getParams', 'cleanParamWithRequirements'])
-            ->getMock();
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('foo', 'foooo');
 
-        $param = $this->createMockedParam('foo', 'bar'); // Default value: bar
-        $fetcher
-            ->expects($this->once())
-            ->method('getParams')
-            ->willReturn(['foo' => $param]);
-        $fetcher
-            ->expects($this->once())
-            ->method('cleanParamWithRequirements')
-            ->with($param, 'bar', true)
-            ->willReturn('foooo');
+        $this->setParams([
+            $this->createParam('foo', 'bar'), // Default value: bar
+        ]);
 
-        $this->assertEquals('foooo', $fetcher->get('foo', true));
+        $this->paramFetcher->setController($this->controller);
+
+        $this->assertEquals('foooo', $this->paramFetcher->get('foo', true));
     }
 
     public function testReturnBeforeGettingConstraints()
     {
-        $param = $this->getMockBuilder(\FOS\RestBundle\Controller\Annotations\ParamInterface::class)->getMock();
-        $param
+        $this->setParams([
+            $this->createParamWithConstraints('foo', 'default'),
+        ]);
+
+        $this->validator
             ->expects($this->never())
-            ->method('getConstraints');
+            ->method('validate');
 
-        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
-
-        $this->assertEquals(
-            'default',
-            $method->invokeArgs($fetcher, array($param, 'default', null, 'default'))
-        );
+        $this->paramFetcher->setController($this->controller);
+        $this->assertSame('default', $this->paramFetcher->get('foo'));
     }
 
     public function testReturnWhenEmptyConstraints()
     {
-        $param = $this->createMockedParam('foo');
-        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+        $this->setParams([
+            $this->createParam('foo'),
+        ]);
 
-        $this->assertEquals(
-            'value',
-            $method->invokeArgs($fetcher, array($param, 'value', null, null))
-        );
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('foo', 'value');
+
+        $this->paramFetcher->setController($this->controller);
+
+        $this->assertSame('value', $this->paramFetcher->get('foo'));
     }
 
     /**
@@ -178,18 +164,11 @@ class ParamFetcherTest extends TestCase
      */
     public function testEmptyValidator()
     {
-        $param = $this->createMockedParam('none', null, array(), false, null, array('constraint'));
-        $this->setParams([$param]);
+        $this->setParams([
+            $this->createParamWithConstraints('none'),
+        ]);
 
-        list($fetcher, $method) = $this->getFetcherToCheckValidation(
-            $param,
-            array(
-                $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock(),
-                $this->paramReader,
-                $this->requestStack,
-                null,
-            )
-        );
+        $fetcher = new ParamFetcher($this->createMock(ContainerInterface::class), $this->paramReader, $this->requestStack);
 
         $fetcher->setController($this->controller);
         $fetcher->get('none', '42');
@@ -197,21 +176,32 @@ class ParamFetcherTest extends TestCase
 
     public function testNoValidationErrors()
     {
-        $param = $this->createMockedParam('foo', null, array(), false, null, array('constraint'));
-        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('foo', 'value');
+
+        $this->setParams([
+            $this->createParamWithConstraints('foo'),
+        ]);
+
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->with('value', array('constraint'))
+            ->with('value', [new NotBlank()])
             ->willReturn(array());
 
-        $this->assertEquals('value', $method->invokeArgs($fetcher, array($param, 'value', null, null)));
+        $this->paramFetcher->setController($this->controller);
+
+        $this->assertSame('value', $this->paramFetcher->get('foo'));
     }
 
     public function testValidationErrors()
     {
-        $param = $this->createMockedParam('foo', 'default', [], false, null, ['constraint']);
-        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('foo', 'value');
+
+        $this->setParams([
+            $this->createParamWithConstraints('foo', 'default'),
+        ]);
 
         $errors = $this->getMockBuilder(ConstraintViolationListInterface::class)->getMock();
         $errors
@@ -222,16 +212,23 @@ class ParamFetcherTest extends TestCase
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->with('value', ['constraint'])
+            ->with('value', [new NotBlank()])
             ->willReturn($errors);
 
-        $this->assertEquals('default', $method->invokeArgs($fetcher, array($param, 'value', false, 'default')));
+        $this->paramFetcher->setController($this->controller);
+
+        $this->assertSame('default', $this->paramFetcher->get('foo'));
     }
 
     public function testValidationException()
     {
-        $param = $this->createMockedParam('foo', 'default', [], true, null, ['constraint']);
-        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('foo', 'value');
+
+        $param = $this->createParamWithConstraints('foo', 'default');
+        $param->strict = true;
+
+        $this->setParams([$param]);
 
         $stringInvalidValue = '12345';
         $stringViolation = $this->getMockBuilder(ConstraintViolationInterface::class)
@@ -253,11 +250,12 @@ class ParamFetcherTest extends TestCase
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->with('value', ['constraint'])
+            ->with('value', [new NotBlank()])
             ->willReturn($errors);
 
         try {
-            $method->invokeArgs($fetcher, array($param, 'value', true, 'default'));
+            $this->paramFetcher->setController($this->controller);
+            $this->paramFetcher->get('foo');
             $this->fail(sprintf('An exception must be thrown in %s', __METHOD__));
         } catch (InvalidParameterException $exception) {
             $this->assertSame($param, $exception->getParameter());
@@ -279,8 +277,13 @@ class ParamFetcherTest extends TestCase
      */
     public function testValidationErrorsInStrictMode()
     {
-        $param = $this->createMockedParam('foo', null, [], false, null, ['constraint']);
-        list($fetcher, $method) = $this->getFetcherToCheckValidation($param);
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('foo', 'value');
+
+        $param = $this->createParamWithConstraints('foo', 'default');
+        $param->strict = true;
+
+        $this->setParams([$param]);
 
         $errors = $this->getMockBuilder(ConstraintViolationListInterface::class)->getMock();
         $errors
@@ -291,58 +294,27 @@ class ParamFetcherTest extends TestCase
         $this->validator
             ->expects($this->once())
             ->method('validate')
-            ->with('value', array('constraint'))
+            ->with('value', [new NotBlank()])
             ->willReturn($errors);
 
-        $method->invokeArgs($fetcher, array($param, 'value', true, null));
-    }
-
-    protected function getFetcherToCheckValidation($param, array $constructionArguments = null)
-    {
-        $this->paramFetcherBuilder->setMethods(array('checkNotIncompatibleParams'));
-
-        if (null !== $constructionArguments) {
-            $this->paramFetcherBuilder->setConstructorArgs($constructionArguments);
-        }
-
-        $fetcher = $this->paramFetcherBuilder->getMock();
-
-        $fetcher
-            ->expects($this->once())
-            ->method('checkNotIncompatibleParams')
-            ->with($param);
-
-        $reflection = new \ReflectionClass($fetcher);
-        $method = $reflection->getMethod('cleanParamWithRequirements');
-        $method->setAccessible(true);
-
-        return [$fetcher, $method];
+        $this->paramFetcher->setController($this->controller);
+        $this->paramFetcher->get('foo');
     }
 
     public function testAllGetter()
     {
-        $fetcher = $this->paramFetcherBuilder
-            ->setMethods(array('getParams', 'get'))
-            ->getMock();
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('foo', 'first');
+        $request->query->set('bar', 'second');
 
-        $fetcher
-            ->expects($this->once())
-            ->method('getParams')
-            ->willReturn(array(
-                'foo' => $this->createMockedParam('foo', null, array(), true), // strict
-                'bar' => $this->createMockedParam('bar'),
-            ));
+        $this->setParams([
+            $this->createStrictParam('foo'), // strict
+            $this->createParam('bar'),
+        ]);
 
-        $fetcher
-            ->expects($this->exactly(2))
-            ->method('get')
-            ->with(
-                $this->logicalOr('foo', 'bar'),
-                $this->logicalOr(true, false)
-            )
-            ->will($this->onConsecutiveCalls('first', 'second'));
+        $this->paramFetcher->setController($this->controller);
 
-        $this->assertEquals(array('foo' => 'first', 'bar' => 'second'), $fetcher->all());
+        $this->assertEquals(array('foo' => 'first', 'bar' => 'second'), $this->paramFetcher->all());
     }
 
     /**
@@ -351,8 +323,14 @@ class ParamFetcherTest extends TestCase
      */
     public function testEmptyControllerExceptionWhenInitParams()
     {
-        $fetcher = $this->paramFetcherBuilder->getMock();
-        $fetcher->all();
+        $this->validator
+            ->method('validate')
+            ->willReturn(new ConstraintViolationList());
+
+        $this->setParams([
+            $this->createParam('foo'),
+        ]);
+        $this->paramFetcher->all();
     }
 
     /**
@@ -362,10 +340,9 @@ class ParamFetcherTest extends TestCase
      */
     public function testNotCallableControllerExceptionWhenInitParams($controller)
     {
-        $fetcher = $this->paramFetcherBuilder->getMock();
-        $fetcher->setController($controller);
+        $this->paramFetcher->setController($controller);
 
-        $fetcher->all();
+        $this->paramFetcher->all();
     }
 
     public function invalidControllerProvider()
@@ -383,22 +360,16 @@ class ParamFetcherTest extends TestCase
      */
     public function testInexistentIncompatibleParam()
     {
-        $fetcher = $this->paramFetcherBuilder
-            ->setMethods(array('getParams'))
-            ->getMock();
-        $fetcher
-            ->expects($this->once())
-            ->method('getParams')
-            ->willReturn(array('foo' => $this->createMockedParam('foo')));
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('bar', 'value');
 
-        // Incompatible with foobar & fos when bar value not null
-        $param = $this->createMockedParam('bar', null, array('foobar', 'fos'), false, 'value');
+        $this->setParams([
+            $this->createParam('fos'),
+            $this->createIncompatibleParam('bar', ['foobar', 'fos']),
+        ]);
 
-        $reflection = new \ReflectionClass($fetcher);
-        $method = $reflection->getMethod('checkNotIncompatibleParams');
-        $method->setAccessible(true);
-
-        $method->invokeArgs($fetcher, array($param));
+        $this->paramFetcher->setController($this->controller);
+        $this->paramFetcher->get('bar');
     }
 
     /**
@@ -407,25 +378,18 @@ class ParamFetcherTest extends TestCase
      */
     public function testIncompatibleParam()
     {
-        $fetcher = $this->paramFetcherBuilder
-            ->setMethods(array('getParams'))
-            ->getMock();
-        $fetcher
-            ->expects($this->once())
-            ->method('getParams')
-            ->willReturn(array(
-                'foobar' => $this->createMockedParam('foobar'),
-                'fos' => $this->createMockedParam('fos', null, array(), false, 'value'),
-            ));
+        $request = $this->requestStack->getCurrentRequest();
+        $request->query->set('fos', 'value');
+        $request->query->set('bar', 'value');
 
-        // Incompatible with foobar & fos when bar value not null
-        $param = $this->createMockedParam('bar', null, array('foobar', 'fos'), false, 'value');
+        $this->setParams([
+            $this->createParam('foobar'),
+            $this->createParam('fos'),
+            $this->createIncompatibleParam('bar', ['foobar', 'fos']),
+        ]);
 
-        $reflection = new \ReflectionClass($fetcher);
-        $method = $reflection->getMethod('checkNotIncompatibleParams');
-        $method->setAccessible(true);
-
-        $method->invokeArgs($fetcher, array($param));
+        $this->paramFetcher->setController($this->controller);
+        $this->paramFetcher->get('bar');
     }
 
     protected function setParams(array $params = array())
@@ -442,40 +406,37 @@ class ParamFetcherTest extends TestCase
             ->willReturn($newParams);
     }
 
-    protected function createMockedParam(
-        $name,
-        $default = null,
-        array $incompatibles = [],
-        $strict = false,
-        $value = null,
-        array $constraints = []
-    ) {
-        $param = $this->getMockBuilder('FOS\RestBundle\Controller\Annotations\ParamInterface')->getMock();
-        $param
-            ->expects($this->any())
-            ->method('getName')
-            ->willReturn($name);
-        $param
-            ->expects($this->any())
-            ->method('getDefault')
-            ->willReturn($default);
-        $param
-            ->expects($this->any())
-            ->method('getIncompatibilities')
-            ->willReturn($incompatibles);
-        $param
-            ->expects($this->any())
-            ->method('getConstraints')
-            ->willReturn($constraints);
-        $param
-            ->expects($this->any())
-            ->method('isStrict')
-            ->willReturn($strict);
-        $param
-            ->expects($this->any())
-            ->method('getValue')
-            ->with($this->request, $default)
-            ->will(null !== $value ? $this->returnValue($value) : $this->returnArgument(1));
+    private function createParam(string $name, ?string $default = null): QueryParam
+    {
+        $param = new QueryParam();
+        $param->nullable = true;
+        $param->name = $name;
+        $param->key = $name;
+        $param->default = $default;
+
+        return $param;
+    }
+
+    private function createStrictParam(string $name, ?string $default = null): QueryParam
+    {
+        $param = $this->createParam($name, $default);
+        $param->strict = true;
+
+        return $param;
+    }
+
+    private function createIncompatibleParam(string $name, array $incompatibles): QueryParam
+    {
+        $param = $this->createParam($name);
+        $param->incompatibles = $incompatibles;
+
+        return $param;
+    }
+
+    private function createParamWithConstraints(string $name, ?string $default = null): QueryParam
+    {
+        $param = $this->createParam($name, $default);
+        $param->requirements = new NotBlank();
 
         return $param;
     }
