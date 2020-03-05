@@ -18,7 +18,7 @@ use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\XmlSerializationVisitor;
 
 /**
- * @final since 2.8
+ * @internal since 2.8
  */
 class ExceptionHandler extends AbstractExceptionNormalizer implements SubscribingHandlerInterface
 {
