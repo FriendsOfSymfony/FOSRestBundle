@@ -99,7 +99,7 @@ final class ExceptionController
     private function getStatusCodeFromThrowable(\Throwable $exception): int
     {
         // If matched
-        if ($statusCode = $this->exceptionCodes->resolveException($exception)) {
+        if (null !== $statusCode = $this->exceptionCodes->resolveException($exception)) {
             return $statusCode;
         }
 

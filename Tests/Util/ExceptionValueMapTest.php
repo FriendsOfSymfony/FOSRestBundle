@@ -49,6 +49,6 @@ class ExceptionValueMapTest extends TestCase
 
     public function testResolveExceptionValueNotFound()
     {
-        $this->assertFalse($this->valueMap->resolveException(new \RuntimeException()));
+        $this->assertNull($this->valueMap->resolveException(new \RuntimeException()));
     }
 }
