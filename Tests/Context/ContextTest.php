@@ -87,6 +87,16 @@ class ContextTest extends TestCase
     /**
      * @group legacy
      */
+    public function testVersionAsInteger()
+    {
+        $this->context->setVersion(2);
+
+        $this->assertEquals(2, $this->context->getVersion());
+    }
+
+    /**
+     * @group legacy
+     */
     public function testMaxDepth()
     {
         $this->context->setMaxDepth(10);

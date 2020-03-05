@@ -115,6 +115,10 @@ final class Context
      */
     public function setVersion($version)
     {
+        if (is_int($version)) {
+            @trigger_error(sprintf('Passing integers as version numbers to %s() is deprecated since FOSRestBundle 2.8. Starting with 3.0 strings will be enforced.', __METHOD__), E_USER_DEPRECATED);
+        }
+
         $this->version = $version;
 
         return $this;
