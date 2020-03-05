@@ -16,10 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
- *
- * @final since 2.8
  */
-class HeaderVersionResolver implements VersionResolverInterface
+final class HeaderVersionResolver implements VersionResolverInterface
 {
     /**
      * @var string

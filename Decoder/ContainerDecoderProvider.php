@@ -18,10 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides encoders through the Symfony DIC.
  *
  * @author Igor Wiedler <igor@wiedler.ch>
- *
- * @final since 2.8
  */
-class ContainerDecoderProvider implements DecoderProviderInterface
+final class ContainerDecoderProvider implements DecoderProviderInterface
 {
     private $container;
     private $decoders;

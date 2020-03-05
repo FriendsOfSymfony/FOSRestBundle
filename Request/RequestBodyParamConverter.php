@@ -26,10 +26,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
- *
- * @final since 2.8
  */
-class RequestBodyParamConverter implements ParamConverterInterface
+final class RequestBodyParamConverter implements ParamConverterInterface
 {
     private $serializer;
     private $context = [];
