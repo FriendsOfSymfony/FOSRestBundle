@@ -4,13 +4,13 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="fos_rest.serializer.jms" class="FOS\RestBundle\Serializer\JMSSerializerAdapter" public="false" lazy="true">
+        <service id="fos_rest.serializer.jms" class="FOS\RestBundle\Serializer\JMSSerializerAdapter" public="false">
             <argument type="service" id="jms_serializer.serializer" />
             <argument type="service" id="jms_serializer.serialization_context_factory" />
             <argument type="service" id="jms_serializer.deserialization_context_factory" />
         </service>
 
-        <service id="fos_rest.serializer.symfony" class="FOS\RestBundle\Serializer\SymfonySerializerAdapter" public="false" lazy="true">
+        <service id="fos_rest.serializer.symfony" class="FOS\RestBundle\Serializer\SymfonySerializerAdapter" public="false">
             <argument type="service" id="serializer" />
         </service>
 
