@@ -17,7 +17,7 @@ namespace FOS\RestBundle\Util;
  *
  * @author Mikhail Shamin <munk13@gmail.com>
  *
- * @internal since 2.8
+ * @internal
  */
 class ExceptionValueMap
 {
