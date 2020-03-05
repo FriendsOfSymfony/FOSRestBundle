@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Tests\EventListener;
 use FOS\RestBundle\EventListener\FormatListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Negotiation\FormatNegotiator;
-use Negotiation\Accept;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -42,13 +41,12 @@ class FormatListenerTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
-            ->disableOriginalConstructor()
-            ->setMethods(['getBest'])
-            ->getMock();
-        $formatNegotiator->expects($this->once())
-            ->method('getBest')
-            ->willReturn(new Accept('text/xml; q=1'));
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $formatNegotiator = new FormatNegotiator($requestStack);
+        $formatNegotiator->add(new RequestMatcher('/'), [
+            'fallback_format' => 'xml',
+        ]);
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -129,11 +127,10 @@ class FormatListenerTest extends TestCase
             ->method('getRequestType')
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
 
-        $listener = new FormatListener($formatNegotiator);
+        $listener = new FormatListener(new FormatNegotiator($requestStack));
 
         $listener->onKernelRequest($event);
     }
@@ -158,13 +155,12 @@ class FormatListenerTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
-            ->disableOriginalConstructor()
-            ->setMethods(['getBest'])
-            ->getMock();
-        $formatNegotiator->expects($this->any())
-            ->method('getBest')
-            ->willReturn(new Accept('text/xml; q=1'));
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $formatNegotiator = new FormatNegotiator($requestStack);
+        $formatNegotiator->add(new RequestMatcher('/'), [
+            'fallback_format' => 'xml',
+        ]);
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -204,12 +200,12 @@ class FormatListenerTest extends TestCase
             ->method('getRequestType')
             ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
 
-        $formatNegotiator = $this->getMockBuilder('FOS\RestBundle\Negotiation\FormatNegotiator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $formatNegotiator->expects($this->any())
-            ->method('getBest')
-            ->will($this->returnValue('application/json'));
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+        $formatNegotiator = new FormatNegotiator($requestStack);
+        $formatNegotiator->add(new RequestMatcher('/'), [
+            'fallback_format' => 'json',
+        ]);
 
         $listener = new FormatListener($formatNegotiator);
 
