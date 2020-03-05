@@ -24,7 +24,7 @@ matrix:
       env: SYMFONY_REQUIRE="4.3.*"
     # Symfony 4.4
     - php: 7.4
-      env: SYMFONY_REQUIRE="4.4.*"
+      env: SYMFONY_REQUIRE="4.4.*" COVERAGE=yes
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
@@ -34,7 +34,7 @@ matrix:
 
 before_install:
   - echo "memory_limit=4G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - phpenv config-rm xdebug.ini || true
+  - if [ "$COVERAGE" != "yes" ]; then phpenv config-rm xdebug.ini || true; fi
   - composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-master
   - if [ "$DEPENDENCIES" != "" ]; then composer config minimum-stability $DEPENDENCIES; fi
   - if [ "$SYMFONY_LTS" != "" ]; then composer require --dev --no-update symfony/lts=$SYMFONY_LTS; fi
@@ -43,4 +43,7 @@ install:
   - composer update $COMPOSER_FLAGS --prefer-dist
   - ./phpunit install
 
-script: ./phpunit
+script:
+  - if [ "$COVERAGE" = "yes" ]; then ./phpunit --coverage-clover=coverage.clover; else ./phpunit; fi
+  - if [ "$COVERAGE" = "yes" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ "$COVERAGE" = "yes" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
