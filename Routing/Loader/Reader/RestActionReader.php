@@ -340,7 +340,14 @@ class RestActionReader
 
                 // add route to collection
                 $route = new Route(
-                    $path, $defaults, $requirements, $options, $host, $schemes, $methods, $combinedCondition
+                    $path,
+                    $defaults,
+                    $requirements,
+                    $options,
+                    $host,
+                    $schemes,
+                    $methods,
+                    $combinedCondition
                 );
                 $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable, $annotation);
             }
@@ -356,7 +363,14 @@ class RestActionReader
 
             // add route to collection
             $route = new Route(
-                $path, $defaults, $requirements, $options, $host, [], $methods, $versionCondition
+                $path,
+                $defaults,
+                $requirements,
+                $options,
+                $host,
+                [],
+                $methods,
+                $versionCondition
             );
             $this->addRoute($collection, $routeName, $route, $isCollection, $isInflectable);
         }
@@ -480,7 +494,10 @@ class RestActionReader
 
         $httpMethod = strtolower($matches[1]);
         $resources = preg_split(
-            '/([A-Z][^A-Z]*)/', $matches[2], -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+            '/([A-Z][^A-Z]*)/',
+            $matches[2],
+            -1,
+            PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
         );
         $isCollection = false;
         $isInflectable = true;

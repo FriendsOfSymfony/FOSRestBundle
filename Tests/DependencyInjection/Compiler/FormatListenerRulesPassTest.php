@@ -41,21 +41,22 @@ class FormatListenerRulesPassTest extends TestCase
 
         $container->expects($this->exactly(2))
             ->method('getParameter')
-            ->will($this->onConsecutiveCalls(
-                2,
-                [
+            ->will(
+                $this->onConsecutiveCalls(
+                    2,
                     [
-                        'host' => null,
-                        'methods' => null,
-                        'path' => '^/',
-                        'priorities' => ['html', 'json'],
-                        'fallback_format' => 'html',
-                        'attributes' => [],
-                        'prefer_extension' => true,
-                    ],
-                ]
-            )
-        );
+                        [
+                            'host' => null,
+                            'methods' => null,
+                            'path' => '^/',
+                            'priorities' => ['html', 'json'],
+                            'fallback_format' => 'html',
+                            'attributes' => [],
+                            'prefer_extension' => true,
+                        ],
+                    ]
+                )
+            );
 
         $container->expects($this->exactly(2))
             ->method('getDefinition')
@@ -88,18 +89,20 @@ class FormatListenerRulesPassTest extends TestCase
         $container->expects($this->once())
             ->method('getParameter')
             ->with('fos_rest.format_listener.rules')
-            ->will($this->returnValue(
-                [
+            ->will(
+                $this->returnValue(
                     [
-                        'host' => null,
-                        'methods' => null,
-                        'path' => '^/',
-                        'priorities' => ['html', 'json'],
-                        'fallback_format' => 'html',
-                        'attributes' => [],
-                        'prefer_extension' => true,
-                    ],
-                ])
+                        [
+                            'host' => null,
+                            'methods' => null,
+                            'path' => '^/',
+                            'priorities' => ['html', 'json'],
+                            'fallback_format' => 'html',
+                            'attributes' => [],
+                            'prefer_extension' => true,
+                        ],
+                    ]
+                )
             );
 
         $container->expects($this->once())
