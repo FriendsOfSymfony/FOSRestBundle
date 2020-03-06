@@ -69,7 +69,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         array $type,
         Context $context
     ) {
-        $data = $this->convertThrowableToArray($exception, $context);
+        $data = $this->convertToArray($exception, $context);
 
         return $visitor->visitArray($data, $type, $context);
     }
@@ -108,7 +108,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         array $type,
         Context $context
     ) {
-        $data = $this->convertThrowableToArray($exception, $context);
+        $data = $this->convertToArray($exception, $context);
 
         $document = $visitor->getDocument(true);
 
@@ -130,12 +130,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         }
     }
 
-    protected function convertToArray(\Exception $exception, Context $context): array
-    {
-        return $this->convertThrowableToArray($exception, $context);
-    }
-
-    private function convertThrowableToArray(\Throwable $throwable, Context $context): array
+    private function convertToArray(\Throwable $throwable, Context $context): array
     {
         $data = [];
 

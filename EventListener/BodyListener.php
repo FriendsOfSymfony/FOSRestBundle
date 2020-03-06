@@ -117,12 +117,7 @@ class BodyListener
         return false === ('DELETE' === $method && empty($content) && empty($contentType));
     }
 
-    /**
-     * Check if we should try to decode the body.
-     *
-     * @return bool
-     */
-    protected function isDecodeable(Request $request)
+    private function isDecodeable(Request $request): bool
     {
         if (!in_array($request->getMethod(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             return false;
