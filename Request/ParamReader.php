@@ -33,7 +33,7 @@ final class ParamReader implements ParamReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(\ReflectionClass $reflection, $method)
+    public function read(\ReflectionClass $reflection, string $method): array
     {
         if (!$reflection->hasMethod($method)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" has no method "%s".', $reflection->getName(), $method));
@@ -48,7 +48,7 @@ final class ParamReader implements ParamReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getParamsFromMethod(\ReflectionMethod $method)
+    public function getParamsFromMethod(\ReflectionMethod $method): array
     {
         $annotations = $this->annotationReader->getMethodAnnotations($method);
 
@@ -58,7 +58,7 @@ final class ParamReader implements ParamReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getParamsFromClass(\ReflectionClass $class)
+    public function getParamsFromClass(\ReflectionClass $class): array
     {
         $annotations = $this->annotationReader->getClassAnnotations($class);
 

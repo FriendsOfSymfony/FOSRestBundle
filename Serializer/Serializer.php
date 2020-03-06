@@ -19,19 +19,9 @@ use FOS\RestBundle\Context\Context;
 interface Serializer
 {
     /**
-     * @param mixed  $data
-     * @param string $format
-     *
      * @return string
      */
-    public function serialize($data, $format, Context $context);
+    public function serialize($data, string $format, Context $context);
 
-    /**
-     * @param string $data
-     * @param string $type
-     * @param string $format
-     *
-     * @return mixed
-     */
-    public function deserialize($data, $type, $format, Context $context);
+    public function deserialize(string $data, string $type, string $format, Context $context);
 }

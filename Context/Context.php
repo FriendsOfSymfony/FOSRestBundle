@@ -23,7 +23,6 @@ final class Context
     private $attributes = array();
     private $version;
     private $groups;
-    private $maxDepth;
     private $isMaxDepthEnabled;
     private $serializeNull;
 
@@ -56,9 +55,6 @@ final class Context
         return $this->attributes;
     }
 
-    /**
-     * Sets the normalization version.
-     */
     public function setVersion(string $version): self
     {
         $this->version = $version;
@@ -66,10 +62,7 @@ final class Context
         return $this;
     }
 
-    /**
-     * @return string|int|null
-     */
-    public function getVersion()
+    public function getVersion(): ?string
     {
         return $this->version;
     }
@@ -125,7 +118,7 @@ final class Context
         return $this;
     }
 
-    public function enableMaxDepth()
+    public function enableMaxDepth(): self
     {
         $this->isMaxDepthEnabled = true;
 
@@ -173,7 +166,7 @@ final class Context
      *
      * Notice: This method only applies to the JMS serializer adapter.
      */
-    public function addExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy)
+    public function addExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy): void
     {
         $this->exclusionStrategies[] = $exclusionStrategy;
     }

@@ -25,7 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener;
  */
 final class ConfigurationCheckPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->has('fos_rest.converter.request_body') && !($container->has('sensio_framework_extra.converter.listener') || $container->has(ParamConverterListener::class))) {
             throw new \RuntimeException('You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter');

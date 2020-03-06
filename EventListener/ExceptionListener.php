@@ -45,10 +45,7 @@ class ExceptionListener implements EventSubscriberInterface
         $this->dispatcher = $dispatcher;
     }
 
-    /**
-     * @param ExceptionEvent $event
-     */
-    public function onKernelException($event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -79,7 +76,7 @@ class ExceptionListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             KernelEvents::EXCEPTION => array('onKernelException', -100),

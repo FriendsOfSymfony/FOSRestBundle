@@ -22,38 +22,26 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RestRouteCollection extends RouteCollection
 {
-    private $singularName;
+    private $singularName = '';
 
-    /**
-     * @param string $name
-     */
-    public function setSingularName($name)
+    public function setSingularName(string $name): void
     {
         $this->singularName = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getSingularName()
+    public function getSingularName(): string
     {
         return $this->singularName;
     }
 
-    /**
-     * @param string $prefix
-     */
-    public function prependRouteControllersWithPrefix($prefix)
+    public function prependRouteControllersWithPrefix(string $prefix): void
     {
         foreach (parent::all() as $route) {
             $route->setDefault('_controller', $prefix.$route->getDefault('_controller'));
         }
     }
 
-    /**
-     * @param string $format
-     */
-    public function setDefaultFormat($format)
+    public function setDefaultFormat(?string $format): void
     {
         foreach (parent::all() as $route) {
             // Set default format only if not set already (could be defined in annotation)
@@ -65,10 +53,8 @@ class RestRouteCollection extends RouteCollection
 
     /**
      * Returns routes sorted by custom HTTP methods first.
-     *
-     * @return array
      */
-    public function all()
+    public function all(): array
     {
         $regex = '/'.
             '(_|^)'.

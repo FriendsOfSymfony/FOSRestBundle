@@ -25,7 +25,7 @@ class ExceptionNormalizer extends AbstractExceptionNormalizer implements Normali
     /**
      * {@inheritdoc}
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): array
     {
         $data = [];
 
@@ -41,7 +41,7 @@ class ExceptionNormalizer extends AbstractExceptionNormalizer implements Normali
     /**
      * {@inheritdoc}
      */
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof \Throwable;
     }

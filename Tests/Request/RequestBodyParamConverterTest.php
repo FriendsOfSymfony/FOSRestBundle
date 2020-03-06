@@ -68,10 +68,10 @@ class RequestBodyParamConverterTest extends TestCase
                 'foobar' => 'foo',
             ],
         ];
-        $configuration = $this->createConfiguration(null, null, $options);
+        $configuration = $this->createConfiguration('FooClass', null, $options);
         $converter = new RequestBodyParamConverter($this->serializer, ['foogroup'], 'fooversion');
 
-        $request = $this->createRequest('body', 'application/json');
+        $request = $this->createRequest('body');
 
         $expectedContext = new Context();
         $expectedContext->setGroups(['foo', 'bar']);
@@ -83,7 +83,7 @@ class RequestBodyParamConverterTest extends TestCase
             ->method('deserialize')
             ->with(
                 'body',
-                null,
+                'FooClass',
                 'json',
                 $expectedContext
             );
@@ -160,7 +160,7 @@ class RequestBodyParamConverterTest extends TestCase
         $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
 
         $request = $this->createRequest();
-        $configuration = $this->createConfiguration(null, null, ['validator' => ['groups' => ['foo']]]);
+        $configuration = $this->createConfiguration('FooClass', null, ['validator' => ['groups' => ['foo']]]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertEquals('fooError', $request->attributes->get('errors'));
     }
@@ -180,7 +180,7 @@ class RequestBodyParamConverterTest extends TestCase
         $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
 
         $request = $this->createRequest();
-        $configuration = $this->createConfiguration(null, null, ['validate' => false]);
+        $configuration = $this->createConfiguration('FooClass', null, ['validate' => false]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertNull($request->attributes->get('errors'));
     }
@@ -255,7 +255,7 @@ class RequestBodyParamConverterTest extends TestCase
     protected function launchExecution($converter, $request = null, $configuration = null)
     {
         if (null === $request) {
-            $request = $this->createRequest('body', 'application/json');
+            $request = $this->createRequest('body');
         }
         if (null === $configuration) {
             $configuration = $this->createConfiguration('FooClass', 'foo');
@@ -264,7 +264,7 @@ class RequestBodyParamConverterTest extends TestCase
         return $converter->apply($request, $configuration);
     }
 
-    protected function createConfiguration($class = null, $name = null, array $options = array())
+    protected function createConfiguration($class, $name = null, array $options = array())
     {
         return new ParamConverter([
             'name' => (string) $name,
@@ -274,7 +274,7 @@ class RequestBodyParamConverterTest extends TestCase
         ]);
     }
 
-    protected function createRequest($body = null, $contentType = null)
+    protected function createRequest($body = null)
     {
         $request = new Request(
             [],
@@ -285,7 +285,7 @@ class RequestBodyParamConverterTest extends TestCase
             [],
             $body
         );
-        $request->headers->set('CONTENT_TYPE', $contentType);
+        $request->headers->set('CONTENT_TYPE', 'application/json');
 
         return $request;
     }

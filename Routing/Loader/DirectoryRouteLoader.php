@@ -37,7 +37,7 @@ class DirectoryRouteLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): RouteCollection
     {
         if (isset($resource[0]) && in_array($resource[0], ['@', '.'], true)) {
             $resource = $this->fileLocator->locate($resource);
@@ -64,7 +64,7 @@ class DirectoryRouteLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         if ('rest' !== $type || !is_string($resource)) {
             return false;

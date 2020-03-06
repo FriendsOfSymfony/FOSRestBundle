@@ -37,7 +37,7 @@ class DisableCSRFExtension extends AbstractTypeExtension
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         if (!$this->tokenStorage->getToken()) {
             return;
@@ -50,11 +50,6 @@ class DisableCSRFExtension extends AbstractTypeExtension
         $resolver->setDefaults([
             'csrf_protection' => false,
         ]);
-    }
-
-    public function getExtendedType()
-    {
-        return FormType::class;
     }
 
     public static function getExtendedTypes(): iterable

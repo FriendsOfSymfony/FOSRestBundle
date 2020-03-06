@@ -33,7 +33,7 @@ final class ChainVersionResolver implements VersionResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(Request $request)
+    public function resolve(Request $request): ?string
     {
         foreach ($this->resolvers as $resolver) {
             $version = $resolver->resolve($request);
@@ -50,7 +50,7 @@ final class ChainVersionResolver implements VersionResolverInterface
         return null;
     }
 
-    public function addResolver(VersionResolverInterface $resolver)
+    public function addResolver(VersionResolverInterface $resolver): void
     {
         $this->resolvers[] = $resolver;
     }

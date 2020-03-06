@@ -21,18 +21,14 @@ interface DecoderProviderInterface
     /**
      * Checks if a certain format is supported.
      *
-     * @param string $format
-     *
      * @return bool
      */
-    public function supports($format);
+    public function supports(string $format);
 
     /**
      * Provides decoders, possibly lazily.
      *
-     * @param string $format
-     *
      * @return DecoderInterface
      */
-    public function getDecoder($format);
+    public function getDecoder(string $format);
 }

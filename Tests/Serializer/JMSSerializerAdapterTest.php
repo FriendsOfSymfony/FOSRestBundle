@@ -53,9 +53,13 @@ class JMSSerializerAdapterTest extends TestCase
     {
         $jmsContext = SerializationContext::create();
         $adapter = new JMSSerializerAdapter($this->serializer);
-        $this->serializer->expects($this->once())->method('serialize')->with('foo', 'json', $jmsContext);
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('foo', 'json', $jmsContext)
+            ->willReturn('bar');
 
-        $adapter->serialize('foo', 'json', new Context());
+        $this->assertSame('bar', $adapter->serialize('foo', 'json', new Context()));
     }
 
     public function testBasicDeSerializeAdapterWithoutContextFactories()
@@ -71,11 +75,16 @@ class JMSSerializerAdapterTest extends TestCase
     {
         $jmsContext = $this->getMockBuilder(SerializationContext::class)->getMock();
 
-        $this->serializer->expects($this->once())->method('serialize')->with('foo', 'json', $jmsContext);
+        $this
+            ->serializer->
+            expects($this->once())
+            ->method('serialize')
+            ->with('foo', 'json', $jmsContext)
+            ->willReturn('bar');
         $this->serializationContextFactory->expects($this->once())->method('createSerializationContext')
             ->willReturn($jmsContext);
 
-        $this->adapter->serialize('foo', 'json', new Context());
+        $this->assertSame('bar', $this->adapter->serialize('foo', 'json', new Context()));
     }
 
     public function testBasicDeserializeAdapter()
@@ -112,6 +121,12 @@ class JMSSerializerAdapterTest extends TestCase
         $fosContext->enableMaxDepth();
         $fosContext->addExclusionStrategy($exclusion);
 
-        $this->adapter->serialize('foo', 'json', $fosContext);
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('foo', 'json', $jmsContext)
+            ->willReturn('bar');
+
+        $this->assertSame('bar', $this->adapter->serialize('foo', 'json', $fosContext));
     }
 }

@@ -26,7 +26,7 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 final class SerializerConfigurationPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->has('fos_rest.serializer')) {
             $class = $container->getParameterBag()->resolveValue(

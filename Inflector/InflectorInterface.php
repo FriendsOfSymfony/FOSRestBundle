@@ -21,9 +21,7 @@ interface InflectorInterface
     /**
      * Pluralizes noun.
      *
-     * @param string $word
-     *
      * @return string
      */
-    public function pluralize($word);
+    public function pluralize(string $word);
 }

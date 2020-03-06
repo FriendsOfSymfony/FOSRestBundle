@@ -44,25 +44,22 @@ class AccessDeniedListener implements EventSubscriberInterface
         $this->challenge = $challenge;
     }
 
-    /**
-     * @param ExceptionEvent $event
-     */
-    public function onKernelException($event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         static $handling;
 
         if (true === $handling) {
-            return false;
+            return;
         }
 
         $request = $event->getRequest();
 
         if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
-            return false;
+            return;
         }
 
         if (empty($this->formats[$request->getRequestFormat()]) && empty($this->formats[$request->getContentType()])) {
-            return false;
+            return;
         }
 
         $handling = true;

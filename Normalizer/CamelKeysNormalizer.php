@@ -57,11 +57,9 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
     /**
      * Normalizes a string.
      *
-     * @param string $string
-     *
      * @return string
      */
-    protected function normalizeString($string)
+    protected function normalizeString(string $string)
     {
         if (false === strpos($string, '_')) {
             return $string;

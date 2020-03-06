@@ -30,12 +30,12 @@ class Regex extends BaseRegex implements ResolvableConstraintInterface
     /**
      * {@inheritdoc}
      */
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return RegexValidator::class;
     }
 
-    public function resolve(ContainerInterface $container)
+    public function resolve(ContainerInterface $container): void
     {
         if ($this->resolved) {
             return;

@@ -21,10 +21,7 @@ final class MediaTypeVersionResolver implements VersionResolverInterface
 {
     private $regex;
 
-    /**
-     * @param string $regex
-     */
-    public function __construct($regex)
+    public function __construct(string $regex)
     {
         $this->regex = $regex;
     }
@@ -32,7 +29,7 @@ final class MediaTypeVersionResolver implements VersionResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(Request $request)
+    public function resolve(Request $request): ?string
     {
         if (!$request->attributes->has('media_type') || false === preg_match($this->regex, $request->attributes->get('media_type'), $matches)) {
             return null;

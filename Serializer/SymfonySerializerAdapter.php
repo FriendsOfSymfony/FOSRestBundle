@@ -31,7 +31,7 @@ final class SymfonySerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function serialize($data, $format, Context $context)
+    public function serialize($data, string $format, Context $context): string
     {
         $newContext = $this->convertContext($context);
 
@@ -41,7 +41,7 @@ final class SymfonySerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function deserialize($data, $type, $format, Context $context)
+    public function deserialize(string $data, string $type, string $format, Context $context)
     {
         $newContext = $this->convertContext($context);
 

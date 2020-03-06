@@ -14,12 +14,13 @@ namespace FOS\RestBundle\Tests\EventListener;
 use FOS\RestBundle\Decoder\ContainerDecoderProvider;
 use FOS\RestBundle\Decoder\DecoderInterface;
 use FOS\RestBundle\Decoder\DecoderProviderInterface;
+use FOS\RestBundle\Decoder\JsonDecoder;
 use FOS\RestBundle\EventListener\BodyListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -52,17 +53,13 @@ class BodyListenerTest extends TestCase
             ->method('decode')
             ->will($this->returnValue($request->getContent()));
 
-        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
-        $decoderProvider = new ContainerDecoderProvider($container, ['json' => 'foo']);
+        $container = new ContainerBuilder();
+        $decoderProvider = new ContainerDecoderProvider($container, ['json' => 'json_decoder']);
 
         $listener = new BodyListener($decoderProvider, $throwExceptionOnUnsupportedContentType);
 
         if ($decode) {
-            $container
-                ->expects($this->once())
-                ->method('get')
-                ->with('foo')
-                ->will($this->returnValue($decoder));
+            $container->set('json_decoder', new JsonDecoder());
         }
 
         $request->setMethod($method);
@@ -86,14 +83,14 @@ class BodyListenerTest extends TestCase
     public static function onKernelRequestDataProvider()
     {
         return [
-            'Empty POST request' => [true, new Request([], [], [], [], [], [], ['foo']), 'POST', ['foo'], 'application/json'],
-            'Empty PUT request' => [true, new Request([], [], [], [], [], [], ['foo']), 'PUT', ['foo'], 'application/json'],
-            'Empty PATCH request' => [true, new Request([], [], [], [], [], [], ['foo']), 'PATCH', ['foo'], 'application/json'],
-            'Empty DELETE request' => [true, new Request([], [], [], [], [], [], ['foo']), 'DELETE', ['foo'], 'application/json'],
-            'Empty GET request' => [false, new Request([], [], [], [], [], [], ['foo']), 'GET', [], 'application/json'],
+            'Empty POST request' => [true, new Request([], [], [], [], [], [], '["foo"]'), 'POST', ['foo'], 'application/json'],
+            'Empty PUT request' => [true, new Request([], [], [], [], [], [], '["foo"]'), 'PUT', ['foo'], 'application/json'],
+            'Empty PATCH request' => [true, new Request([], [], [], [], [], [], '["foo"]'), 'PATCH', ['foo'], 'application/json'],
+            'Empty DELETE request' => [true, new Request([], [], [], [], [], [], '["foo"]'), 'DELETE', ['foo'], 'application/json'],
+            'Empty GET request' => [false, new Request([], [], [], [], [], [], '["foo"]'), 'GET', [], 'application/json'],
             'POST request with parameters' => [false, new Request([], ['bar'], [], [], [], ['CONTENT_TYPE' => 'application/x-www-form-urlencoded'], ['foo']), 'POST', ['bar'], 'application/x-www-form-urlencoded'],
-            'POST request with unallowed format' => [false, new Request([], [], [], [], [], [], ['foo']), 'POST', [], 'application/fooformat'],
-            'POST request with no Content-Type' => [true, new Request([], [], ['_format' => 'json'], [], [], [], ['foo']), 'POST', ['foo']],
+            'POST request with unallowed format' => [false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/fooformat'],
+            'POST request with no Content-Type' => [true, new Request([], [], ['_format' => 'json'], [], [], [], '["foo"]'), 'POST', ['foo']],
         ];
     }
 

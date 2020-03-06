@@ -28,10 +28,7 @@ class VersionExclusionListener
         $this->viewHandler = $viewHandler;
     }
 
-    /**
-     * @param RequestEvent $event
-     */
-    public function onKernelRequest($event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

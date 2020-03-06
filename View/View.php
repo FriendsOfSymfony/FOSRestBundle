@@ -22,63 +22,21 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class View
 {
-    /**
-     * @var mixed|null
-     */
     private $data;
-
-    /**
-     * @var int|null
-     */
     private $statusCode;
-
-    /**
-     * @var string|null
-     */
     private $format;
-
-    /**
-     * @var string|null
-     */
     private $location;
-
-    /**
-     * @var string|null
-     */
     private $route;
-
-    /**
-     * @var array|null
-     */
     private $routeParameters;
-
-    /**
-     * @var Context
-     */
     private $context;
-
-    /**
-     * @var Response
-     */
     private $response;
 
-    /**
-     * @param int|null $statusCode
-     *
-     * @return static
-     */
-    public static function create($data = null, $statusCode = null, array $headers = [])
+    public static function create($data = null, ?int $statusCode = null, array $headers = []): self
     {
         return new static($data, $statusCode, $headers);
     }
 
-    /**
-     * @param string $url
-     * @param int    $statusCode
-     *
-     * @return static
-     */
-    public static function createRedirect($url, $statusCode = Response::HTTP_FOUND, array $headers = [])
+    public static function createRedirect(string $url, int $statusCode = Response::HTTP_FOUND, array $headers = []): self
     {
         $view = static::create(null, $statusCode, $headers);
         $view->setLocation($url);
@@ -86,18 +44,12 @@ final class View
         return $view;
     }
 
-    /**
-     * @param string $route
-     * @param int    $statusCode
-     *
-     * @return static
-     */
     public static function createRouteRedirect(
-        $route,
+        string $route,
         array $parameters = [],
-        $statusCode = Response::HTTP_FOUND,
+        int $statusCode = Response::HTTP_FOUND,
         array $headers = []
-    ) {
+    ): self {
         $view = static::create(null, $statusCode, $headers);
         $view->setRoute($route);
         $view->setRouteParameters($parameters);
@@ -105,10 +57,7 @@ final class View
         return $view;
     }
 
-    /**
-     * @param int $statusCode
-     */
-    public function __construct($data = null, $statusCode = null, array $headers = [])
+    public function __construct($data = null, ?int $statusCode = null, array $headers = [])
     {
         $this->setData($data);
         $this->setStatusCode($statusCode);
@@ -118,45 +67,28 @@ final class View
         }
     }
 
-    /**
-     * @return View
-     */
-    public function setData($data)
+    public function setData($data): self
     {
         $this->data = $data;
 
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @param string $value
-     *
-     * @return View
-     */
-    public function setHeader($name, $value)
+    public function setHeader(string $name, string $value): self
     {
         $this->getResponse()->headers->set($name, $value);
 
         return $this;
     }
 
-    /**
-     * @return View
-     */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): self
     {
         $this->getResponse()->headers->replace($headers);
 
         return $this;
     }
 
-    /**
-     * @param int|null $code
-     *
-     * @return View
-     */
-    public function setStatusCode($code)
+    public function setStatusCode(?int $code): self
     {
         if (null !== $code) {
             $this->statusCode = $code;
@@ -165,34 +97,21 @@ final class View
         return $this;
     }
 
-    /**
-     * @return View
-     */
-    public function setContext(Context $context)
+    public function setContext(Context $context): self
     {
         $this->context = $context;
 
         return $this;
     }
 
-    /**
-     * @param string $format
-     *
-     * @return View
-     */
-    public function setFormat($format)
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 
         return $this;
     }
 
-    /**
-     * @param string $location
-     *
-     * @return View
-     */
-    public function setLocation($location)
+    public function setLocation(string $location): self
     {
         $this->location = $location;
         $this->route = null;
@@ -202,12 +121,8 @@ final class View
 
     /**
      * Sets the route (implicitly removes the location).
-     *
-     * @param string $route
-     *
-     * @return View
      */
-    public function setRoute($route)
+    public function setRoute(string $route): self
     {
         $this->route = $route;
         $this->location = null;
@@ -215,22 +130,14 @@ final class View
         return $this;
     }
 
-    /**
-     * @param array $parameters
-     *
-     * @return View
-     */
-    public function setRouteParameters($parameters)
+    public function setRouteParameters(array $parameters): self
     {
         $this->routeParameters = $parameters;
 
         return $this;
     }
 
-    /**
-     * @return View
-     */
-    public function setResponse(Response $response)
+    public function setResponse(Response $response): self
     {
         $this->response = $response;
 
@@ -242,58 +149,37 @@ final class View
         return $this->data;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getStatusCode()
+    public function getStatusCode(): ?int
     {
         return $this->statusCode;
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->getResponse()->headers->all();
     }
 
-    /**
-     * @return string|null
-     */
-    public function getFormat()
+    public function getFormat(): ?string
     {
         return $this->format;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getLocation()
+    public function getLocation(): ?string
     {
         return $this->location;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRoute()
+    public function getRoute(): ?string
     {
         return $this->route;
     }
 
-    /**
-     * @return array|null
-     */
-    public function getRouteParameters()
+    public function getRouteParameters(): ?array
     {
         return $this->routeParameters;
     }
 
-    /**
-     * @return Response
-     */
-    public function getResponse()
+    public function getResponse(): Response
     {
         if (null === $this->response) {
             $this->response = new Response();
@@ -306,10 +192,7 @@ final class View
         return $this->response;
     }
 
-    /**
-     * @return Context
-     */
-    public function getContext()
+    public function getContext(): Context
     {
         if (null === $this->context) {
             $this->context = new Context();

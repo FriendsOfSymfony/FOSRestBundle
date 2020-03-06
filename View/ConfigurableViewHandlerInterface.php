@@ -23,13 +23,7 @@ interface ConfigurableViewHandlerInterface extends ViewHandlerInterface
      */
     public function setExclusionStrategyGroups($groups);
 
-    /**
-     * @param string $version
-     */
-    public function setExclusionStrategyVersion($version);
+    public function setExclusionStrategyVersion(string $version);
 
-    /**
-     * @param bool $isEnabled
-     */
-    public function setSerializeNullStrategy($isEnabled);
+    public function setSerializeNullStrategy(bool $isEnabled);
 }

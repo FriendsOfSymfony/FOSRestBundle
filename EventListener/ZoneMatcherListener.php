@@ -24,9 +24,6 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class ZoneMatcherListener
 {
-    /**
-     * @var RequestMatcherInterface[]
-     */
     private $requestMatchers = array();
 
     public function addRequestMatcher(RequestMatcherInterface $requestMatcher)
@@ -36,10 +33,8 @@ class ZoneMatcherListener
 
     /**
      * Adds an optional "_fos_rest_zone" request attribute to be checked for existence by other listeners.
-     *
-     * @param RequestEvent $event
      */
-    public function onKernelRequest($event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

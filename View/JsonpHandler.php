@@ -24,19 +24,15 @@ final class JsonpHandler
 {
     private $callbackParam;
 
-    public function __construct($callbackParam)
+    public function __construct(string $callbackParam)
     {
         $this->callbackParam = $callbackParam;
     }
 
     /**
      * Handles wrapping a JSON response into a JSONP response.
-     *
-     * @param string $format
-     *
-     * @return Response
      */
-    public function createResponse(ViewHandler $handler, View $view, Request $request, $format)
+    public function createResponse(ViewHandler $handler, View $view, Request $request, string $format): Response
     {
         $response = $handler->createResponse($view, $request, 'json');
 
@@ -49,7 +45,7 @@ final class JsonpHandler
         return $response;
     }
 
-    private function getCallback(Request $request)
+    private function getCallback(Request $request): string
     {
         $callback = $request->query->get($this->callbackParam);
         $validator = new \JsonpCallbackValidator();

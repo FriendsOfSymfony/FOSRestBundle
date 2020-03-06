@@ -36,10 +36,7 @@ class ParamFetcherListener
         $this->setParamsAsAttributes = $setParamsAsAttributes;
     }
 
-    /**
-     * @param ControllerEvent $event
-     */
-    public function onKernelController($event)
+    public function onKernelController(ControllerEvent $event): void
     {
         $request = $event->getRequest();
 

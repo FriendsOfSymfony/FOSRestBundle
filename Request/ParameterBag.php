@@ -30,7 +30,7 @@ final class ParameterBag
         $this->paramReader = $paramReader;
     }
 
-    public function getParams(Request $request)
+    public function getParams(Request $request): array
     {
         $requestId = spl_object_hash($request);
         if (!isset($this->params[$requestId]) || empty($this->params[$requestId]['controller'])) {
@@ -43,7 +43,7 @@ final class ParameterBag
         return $this->params[$requestId]['params'];
     }
 
-    public function addParam(Request $request, ParamInterface $param)
+    public function addParam(Request $request, ParamInterface $param): void
     {
         $requestId = spl_object_hash($request);
         $this->getParams($request);
@@ -51,7 +51,7 @@ final class ParameterBag
         $this->params[$requestId]['params'][$param->getName()] = $param;
     }
 
-    public function setController(Request $request, $controller)
+    public function setController(Request $request, callable $controller): void
     {
         $requestId = spl_object_hash($request);
         $this->params[$requestId] = array(

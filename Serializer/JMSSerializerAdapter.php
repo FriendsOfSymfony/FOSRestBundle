@@ -53,7 +53,7 @@ final class JMSSerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function serialize($data, $format, Context $context)
+    public function serialize($data, string $format, Context $context): string
     {
         $context = $this->convertContext($context, self::SERIALIZATION);
 
@@ -63,7 +63,7 @@ final class JMSSerializerAdapter implements Serializer
     /**
      * {@inheritdoc}
      */
-    public function deserialize($data, $type, $format, Context $context)
+    public function deserialize(string $data, string $type, string $format, Context $context)
     {
         $context = $this->convertContext($context, self::DESERIALIZATION);
 

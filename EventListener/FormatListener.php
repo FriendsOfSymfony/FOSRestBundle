@@ -34,10 +34,7 @@ class FormatListener
         $this->formatNegotiator = $formatNegotiator;
     }
 
-    /**
-     * @param RequestEvent $event The event
-     */
-    public function onKernelRequest($event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

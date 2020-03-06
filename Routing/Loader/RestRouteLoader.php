@@ -15,6 +15,7 @@ use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * RestRouteLoader REST-enabled controller router loader.
@@ -43,10 +44,7 @@ class RestRouteLoader extends Loader
         $this->defaultFormat = $defaultFormat;
     }
 
-    /**
-     * @return RestControllerReader
-     */
-    public function getControllerReader()
+    public function getControllerReader(): RestControllerReader
     {
         return $this->controllerReader;
     }
@@ -54,7 +52,7 @@ class RestRouteLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function load($controller, $type = null)
+    public function load($controller, $type = null): RouteCollection
     {
         list($prefix, $class) = $this->getControllerLocator($controller);
 
@@ -68,7 +66,7 @@ class RestRouteLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         return is_string($resource)
             && 'rest' === $type

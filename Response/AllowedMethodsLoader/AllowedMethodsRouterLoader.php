@@ -35,7 +35,7 @@ final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface,
     /**
      * {@inheritdoc}
      */
-    public function getAllowedMethods()
+    public function getAllowedMethods(): array
     {
         if (!$this->cache->isFresh()) {
             $this->warmUp(null);
@@ -47,7 +47,7 @@ final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface,
     /**
      * {@inheritdoc}
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return true;
     }
@@ -55,7 +55,7 @@ final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface,
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): void
     {
         $processedRoutes = [];
 

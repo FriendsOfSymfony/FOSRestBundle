@@ -77,34 +77,22 @@ class RestActionReader
         $this->hasMethodPrefix = $hasMethodPrefix;
     }
 
-    /**
-     * @param string|null $prefix
-     */
-    public function setRoutePrefix($prefix = null)
+    public function setRoutePrefix(?string $prefix = null): void
     {
         $this->routePrefix = $prefix;
     }
 
-    /**
-     * @return string
-     */
-    public function getRoutePrefix()
+    public function getRoutePrefix(): ?string
     {
         return $this->routePrefix;
     }
 
-    /**
-     * @param string|null $prefix
-     */
-    public function setNamePrefix($prefix = null)
+    public function setNamePrefix(?string $prefix = null): void
     {
         $this->namePrefix = $prefix;
     }
 
-    /**
-     * @return string
-     */
-    public function getNamePrefix()
+    public function getNamePrefix(): string
     {
         return $this->namePrefix;
     }
@@ -112,7 +100,7 @@ class RestActionReader
     /**
      * @param string[]|string|null $versions
      */
-    public function setVersions($versions = null)
+    public function setVersions($versions = null): void
     {
         $this->versions = (array) $versions;
     }
@@ -120,15 +108,12 @@ class RestActionReader
     /**
      * @return string[]|null
      */
-    public function getVersions()
+    public function getVersions(): ?array
     {
         return $this->versions;
     }
 
-    /**
-     * @param bool|null $pluralize
-     */
-    public function setPluralize($pluralize)
+    public function setPluralize(?bool $pluralize): void
     {
         $this->pluralize = $pluralize;
     }
@@ -136,7 +121,7 @@ class RestActionReader
     /**
      * @return bool|null
      */
-    public function getPluralize()
+    public function getPluralize(): ?bool
     {
         return $this->pluralize;
     }
@@ -144,7 +129,7 @@ class RestActionReader
     /**
      * @param string[] $parents Array of parent resources names
      */
-    public function setParents(array $parents)
+    public function setParents(array $parents): void
     {
         $this->parents = $parents;
     }
@@ -152,7 +137,7 @@ class RestActionReader
     /**
      * @return string[]
      */
-    public function getParents()
+    public function getParents(): array
     {
         return $this->parents;
     }
@@ -161,10 +146,8 @@ class RestActionReader
      * @param string[] $resource
      *
      * @throws \InvalidArgumentException
-     *
-     * @return Route
      */
-    public function read(RestRouteCollection $collection, \ReflectionMethod $method, $resource)
+    public function read(RestRouteCollection $collection, \ReflectionMethod $method, array $resource): void
     {
         // check that every route parent has non-empty singular name
         foreach ($this->parents as $parent) {
@@ -329,7 +312,7 @@ class RestActionReader
         return false !== strpos($path, '{version}');
     }
 
-    private function includeFormatIfNeeded(string &$path, array &$requirements)
+    private function includeFormatIfNeeded(string &$path, array &$requirements): void
     {
         if (true === $this->includeFormat) {
             $path .= '.{_format}';
@@ -364,14 +347,12 @@ class RestActionReader
 
     /**
      * @param string[] $resource
-     *
-     * @return bool|array
      */
-    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, array $resource)
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, array $resource): ?array
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
-            return false;
+            return null;
         }
 
         $httpMethod = strtolower($matches[1]);
@@ -460,10 +441,7 @@ class RestActionReader
         return $arguments;
     }
 
-    /**
-     * @param string|bool $resource
-     */
-    private function generateResourceName($resource): string
+    private function generateResourceName(string $resource): string
     {
         if (false === $this->pluralize) {
             return $resource;
@@ -602,7 +580,7 @@ class RestActionReader
         return $annotations;
     }
 
-    private function addRoute(RestRouteCollection $collection, string $routeName, Route $route, bool $isCollection, bool $isInflectable, RouteAnnotation $annotation = null)
+    private function addRoute(RestRouteCollection $collection, string $routeName, Route $route, bool $isCollection, bool $isInflectable, RouteAnnotation $annotation = null): void
     {
         if ($annotation && null !== $annotation->getName()) {
             $options = $annotation->getOptions();

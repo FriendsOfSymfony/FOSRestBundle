@@ -32,12 +32,12 @@ class FOSRestExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration($container->getParameter('kernel.debug'));
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration($container->getParameter('kernel.debug'));
         $config = $this->processConfiguration($configuration, $configs);
@@ -89,7 +89,7 @@ class FOSRestExtension extends Extension
         $this->loadSerializer($config, $container);
     }
 
-    private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if (!empty($config['disable_csrf_role'])) {
             $loader->load('forms.xml');
@@ -100,7 +100,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadAccessDeniedListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadAccessDeniedListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if ($config['access_denied_listener']['enabled'] && !empty($config['access_denied_listener']['formats'])) {
             $loader->load('access_denied_listener.xml');
@@ -116,7 +116,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadAllowedMethodsListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadAllowedMethodsListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if ($config['allowed_methods_listener']['enabled']) {
             if (!empty($config['allowed_methods_listener']['service'])) {
@@ -130,7 +130,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadBodyListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadBodyListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if ($config['body_listener']['enabled']) {
             $loader->load('body_listener.xml');
@@ -167,7 +167,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadFormatListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadFormatListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if ($config['format_listener']['enabled'] && !empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
@@ -184,7 +184,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadVersioning(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadVersioning(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if (!empty($config['versioning']['enabled'])) {
             $loader->load('versioning.xml');
@@ -215,7 +215,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if ($config['param_fetcher_listener']['enabled']) {
             if (!class_exists(Constraint::class)) {
@@ -235,7 +235,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadBodyConverter(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadBodyConverter(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if (!$this->isConfigEnabled($container, $config['body_converter'])) {
             return;
@@ -248,7 +248,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if (!empty($config['view']['jsonp_handler'])) {
             $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
@@ -320,7 +320,7 @@ class FOSRestExtension extends Extension
         ]);
     }
 
-    private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if ($config['exception']['enabled']) {
             $loader->load('exception_listener.xml');
@@ -346,7 +346,7 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function loadSerializer(array $config, ContainerBuilder $container)
+    private function loadSerializer(array $config, ContainerBuilder $container): void
     {
         $bodyConverter = $container->hasDefinition('fos_rest.converter.request_body') ? $container->getDefinition('fos_rest.converter.request_body') : null;
         $viewHandler = $container->getDefinition('fos_rest.view_handler.default');
@@ -370,7 +370,7 @@ class FOSRestExtension extends Extension
         $viewHandler->addArgument($options);
     }
 
-    private function loadZoneMatcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container)
+    private function loadZoneMatcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if (!empty($config['zone'])) {
             $loader->load('zone_matcher_listener.xml');
@@ -390,17 +390,17 @@ class FOSRestExtension extends Extension
         }
     }
 
-    private function createZoneRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = array(), $ip = null)
+    private function createZoneRequestMatcher(ContainerBuilder $container, ?string $path = null, ?string $host = null, array $methods = array(), array $ips = null): Reference
     {
         if ($methods) {
             $methods = array_map('strtoupper', (array) $methods);
         }
 
-        $serialized = serialize(array($path, $host, $methods, $ip));
+        $serialized = serialize(array($path, $host, $methods, $ips));
         $id = 'fos_rest.zone_request_matcher.'.md5($serialized).sha1($serialized);
 
         // only add arguments that are necessary
-        $arguments = array($path, $host, $methods, $ip);
+        $arguments = array($path, $host, $methods, $ips);
         while (count($arguments) > 0 && !end($arguments)) {
             array_pop($arguments);
         }

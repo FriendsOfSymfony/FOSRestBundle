@@ -37,10 +37,8 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
      * Do nothing.
      *
      * @param object|null $object
-     *
-     * @return string
      */
-    public function transform($object)
+    public function transform($object): string
     {
         if (null === $object) {
             return '';
@@ -55,13 +53,11 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
      * @param array $idObject
      *
      * @throws TransformationFailedException if object is not found
-     *
-     * @return object|null
      */
-    public function reverseTransform($idObject)
+    public function reverseTransform($idObject): ?object
     {
         if (!is_array($idObject)) {
-            return;
+            return null;
         }
 
         $identifier = current(array_values($this->om->getClassMetadata($this->entityName)->getIdentifier()));

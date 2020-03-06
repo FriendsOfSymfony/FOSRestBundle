@@ -22,11 +22,9 @@ use FOS\RestBundle\Controller\Annotations\ParamInterface;
 interface ParamReaderInterface
 {
     /**
-     * @param string $method
-     *
      * @return ParamInterface[] Param annotation objects of the method. Indexed by parameter name
      */
-    public function read(\ReflectionClass $reflection, $method);
+    public function read(\ReflectionClass $reflection, string $method);
 
     /**
      * @return ParamInterface[] Param annotation objects of the method. Indexed by parameter name

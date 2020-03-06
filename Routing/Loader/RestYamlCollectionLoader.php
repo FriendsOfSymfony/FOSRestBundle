@@ -53,7 +53,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
     /**
      * {@inheritdoc}
      */
-    public function load($file, $type = null)
+    public function load($file, $type = null): RouteCollection
     {
         $path = $this->locator->locate($file);
 
@@ -153,20 +153,15 @@ class RestYamlCollectionLoader extends YamlFileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         return 'rest' === $type && is_string($resource) &&
             in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yaml', 'yml'), true);
     }
 
-    /**
-     * @param string $namePrefix
-     *
-     * @return RouteCollection
-     */
-    public function addParentNamePrefix(RouteCollection $collection, $namePrefix)
+    public function addParentNamePrefix(RouteCollection $collection, ?string $namePrefix): RouteCollection
     {
-        if (!isset($namePrefix) || '' === ($namePrefix = trim($namePrefix))) {
+        if (null === $namePrefix || '' === ($namePrefix = trim($namePrefix))) {
             return $collection;
         }
 

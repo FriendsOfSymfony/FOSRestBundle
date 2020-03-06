@@ -21,11 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
 interface ViewHandlerInterface
 {
     /**
-     * @param string $format
-     *
      * @return bool
      */
-    public function supports($format);
+    public function supports(string $format);
 
     /**
      * Registers a custom handler.
@@ -33,11 +31,8 @@ interface ViewHandlerInterface
      * The handler must have the following signature: handler($viewObject, $request, $response)
      * It can use the methods of this class to retrieve the needed data and return a
      * Response object ready to be sent.
-     *
-     * @param string   $format
-     * @param callable $callable
      */
-    public function registerHandler($format, $callable);
+    public function registerHandler(string $format, callable $callable);
 
     /**
      * Handles a request with the proper handler.
@@ -49,17 +44,12 @@ interface ViewHandlerInterface
     public function handle(View $view, Request $request = null);
 
     /**
-     * @param string $location
-     * @param string $format
-     *
      * @return Response
      */
-    public function createRedirectResponse(View $view, $location, $format);
+    public function createRedirectResponse(View $view, string $location, string $format);
 
     /**
-     * @param string $format
-     *
      * @return Response
      */
-    public function createResponse(View $view, Request $request, $format);
+    public function createResponse(View $view, Request $request, string $format);
 }

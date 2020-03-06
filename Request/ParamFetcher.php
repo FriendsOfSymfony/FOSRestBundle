@@ -54,7 +54,7 @@ final class ParamFetcher implements ParamFetcherInterface
     /**
      * {@inheritdoc}
      */
-    public function setController($controller)
+    public function setController(callable $controller): void
     {
         $this->parameterBag->setController($this->getRequest(), $controller);
     }
@@ -64,7 +64,7 @@ final class ParamFetcher implements ParamFetcherInterface
      *
      * Note that adding a param that has the same name as an existing param will override that param.
      */
-    public function addParam(ParamInterface $param)
+    public function addParam(ParamInterface $param): void
     {
         $this->parameterBag->addParam($this->getRequest(), $param);
     }
@@ -72,7 +72,7 @@ final class ParamFetcher implements ParamFetcherInterface
     /**
      * @return ParamInterface[]
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->parameterBag->getParams($this->getRequest());
     }
@@ -80,7 +80,7 @@ final class ParamFetcher implements ParamFetcherInterface
     /**
      * {@inheritdoc}
      */
-    public function get($name, $strict = null)
+    public function get(string $name, ?bool $strict = null)
     {
         $params = $this->getParams();
 
@@ -142,7 +142,7 @@ final class ParamFetcher implements ParamFetcherInterface
     /**
      * {@inheritdoc}
      */
-    public function all($strict = null)
+    public function all(?bool $strict = null): array
     {
         $configuredParams = $this->getParams();
 
@@ -154,7 +154,7 @@ final class ParamFetcher implements ParamFetcherInterface
         return $params;
     }
 
-    private function checkNotIncompatibleParams(ParamInterface $param)
+    private function checkNotIncompatibleParams(ParamInterface $param): void
     {
         if (null === $param->getValue($this->getRequest(), null)) {
             return;
@@ -182,7 +182,7 @@ final class ParamFetcher implements ParamFetcherInterface
     /**
      * @param Constraint[] $constraints
      */
-    private function resolveConstraints(array $constraints)
+    private function resolveConstraints(array $constraints): void
     {
         foreach ($constraints as $constraint) {
             if ($constraint instanceof ResolvableConstraintInterface) {
