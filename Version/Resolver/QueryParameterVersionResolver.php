@@ -19,9 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class QueryParameterVersionResolver implements VersionResolverInterface
 {
-    /**
-     * @var string
-     */
     private $parameterName;
 
     /**

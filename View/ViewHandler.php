@@ -46,22 +46,16 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     protected $formats;
 
     /**
-     *  HTTP response status code for a failed validation.
-     *
      * @var int
      */
     protected $failedValidationCode;
 
     /**
-     * HTTP response status code when the view data is null.
-     *
      * @var int
      */
     protected $emptyContentCode;
 
     /**
-     * Whether or not to serialize null view data.
-     *
      * @var bool
      */
     protected $serializeNull;
@@ -70,7 +64,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      * If to force a redirect for the given key format,
      * with value being the status code to use.
      *
-     * @var array
+     * @var array<string,int>
      */
     protected $forceRedirects;
 
@@ -142,9 +136,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Sets the default serialization groups.
-     *
-     * @param array|string $groups
+     * @param string[]|string $groups
      */
     public function setExclusionStrategyGroups($groups)
     {
@@ -152,8 +144,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Sets the default serialization version.
-     *
      * @param string $version
      */
     public function setExclusionStrategyVersion($version)
@@ -162,8 +152,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * If nulls should be serialized.
-     *
      * @param bool $isEnabled
      */
     public function setSerializeNullStrategy($isEnabled)
@@ -207,7 +195,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      * the key 'form' in the View's data it will return the failed_validation
      * configuration if the form instance has errors.
      *
-     * @param mixed $content
+     * @param string|false|null
      *
      * @return int HTTP status code
      */
@@ -228,9 +216,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Gets or creates a JMS\Serializer\SerializationContext and initializes it with
-     * the view exclusion strategies, groups & versions if a new context is created.
-     *
      * @return Context
      */
     protected function getSerializationContext(View $view)
@@ -288,8 +273,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Creates the Response from the view.
-     *
      * @param string $location
      * @param string $format
      *
@@ -352,8 +335,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Initializes a response object that represents the view and holds the view's status code.
-     *
      * @param string $format
      *
      * @return Response
@@ -384,8 +365,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Returns the form from the given view if present, false otherwise.
-     *
      * @return bool|FormInterface
      */
     protected function getFormFromView(View $view)
@@ -403,11 +382,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         return false;
     }
 
-    /**
-     * Returns the data from a view.
-     *
-     * @return mixed|null
-     */
     private function getDataFromView(View $view)
     {
         $form = $this->getFormFromView($view);
@@ -419,9 +393,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         return $form;
     }
 
-    /**
-     * Resets internal object state at the end of the request.
-     */
     public function reset()
     {
         $this->exclusionStrategyGroups = $this->options['exclusionStrategyGroups'];

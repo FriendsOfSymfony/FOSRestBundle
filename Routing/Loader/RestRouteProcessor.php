@@ -24,26 +24,16 @@ use Symfony\Component\Routing\RouteCollection;
 class RestRouteProcessor
 {
     /**
-     * Import & return routes collection from a resource.
-     *
-     * @param LoaderInterface $loader      The Loader
-     * @param mixed           $resource    A Resource
-     * @param array           $parents     Array of parent resources names
-     * @param string          $routePrefix Current routes prefix
-     * @param string          $namePrefix  Routes names prefix
-     * @param string          $type        The resource type
-     * @param string          $currentDir  Current directory of the loader
-     *
-     * @return RouteCollection A RouteCollection instance
+     * @return RouteCollection
      */
     public function importResource(
         LoaderInterface $loader,
         $resource,
         array $parents = [],
-        $routePrefix = null,
-        $namePrefix = null,
-        $type = null,
-        $currentDir = null
+        string $routePrefix = null,
+        string $namePrefix = null,
+        string $type = null,
+        string $currentDir = null
     ) {
         $loader = $loader->resolve($resource, $type);
 

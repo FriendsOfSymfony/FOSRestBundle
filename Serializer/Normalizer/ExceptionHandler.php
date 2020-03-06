@@ -22,9 +22,6 @@ use JMS\Serializer\XmlSerializationVisitor;
  */
 class ExceptionHandler extends AbstractExceptionNormalizer implements SubscribingHandlerInterface
 {
-    /**
-     * @return array
-     */
     public static function getSubscribingMethods()
     {
         return [
@@ -55,14 +52,6 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         ];
     }
 
-    /**
-     * @param JsonSerializationVisitor $visitor
-     * @param \Exception               $exception
-     * @param array                    $type
-     * @param Context                  $context
-     *
-     * @return array
-     */
     public function serializeToJson(
         JsonSerializationVisitor $visitor,
         \Exception $exception,
@@ -85,12 +74,6 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         return $visitor->visitArray($data, $type, $context);
     }
 
-    /**
-     * @param XmlSerializationVisitor $visitor
-     * @param \Exception              $exception
-     * @param array                   $type
-     * @param Context                 $context
-     */
     public function serializeToXml(
         XmlSerializationVisitor $visitor,
         \Exception $exception,
@@ -147,13 +130,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         }
     }
 
-    /**
-     * @param \Exception $exception
-     * @param Context    $context
-     *
-     * @return array
-     */
-    protected function convertToArray(\Exception $exception, Context $context)
+    protected function convertToArray(\Exception $exception, Context $context): array
     {
         return $this->convertThrowableToArray($exception, $context);
     }

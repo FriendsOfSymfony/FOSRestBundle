@@ -42,8 +42,6 @@ class RestRouteLoader extends Loader
     }
 
     /**
-     * Returns controller reader.
-     *
      * @return RestControllerReader
      */
     public function getControllerReader()
@@ -78,16 +76,7 @@ class RestRouteLoader extends Loader
             );
     }
 
-    /**
-     * Returns controller locator by it's id.
-     *
-     * @param string $controller
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return array
-     */
-    private function getControllerLocator($controller)
+    private function getControllerLocator(string $controller): array
     {
         $class = null;
         $prefix = null;
@@ -96,7 +85,7 @@ class RestRouteLoader extends Loader
             $file = $this->locator->locate($controller);
             $controllerClass = ClassUtils::findClassInFile($file);
 
-            if (false === $controllerClass) {
+            if (null === $controllerClass) {
                 throw new \InvalidArgumentException(sprintf('Can\'t find class for controller "%s"', $controller));
             }
 

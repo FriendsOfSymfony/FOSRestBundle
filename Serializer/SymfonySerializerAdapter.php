@@ -48,10 +48,7 @@ final class SymfonySerializerAdapter implements Serializer
         return $this->serializer->deserialize($data, $type, $format, $newContext);
     }
 
-    /**
-     * @param Context $context
-     */
-    private function convertContext(Context $context)
+    private function convertContext(Context $context): array
     {
         $newContext = array();
         foreach ($context->getAttributes() as $key => $value) {

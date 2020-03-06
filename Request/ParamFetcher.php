@@ -42,14 +42,6 @@ final class ParamFetcher implements ParamFetcherInterface
     private $requestStack;
     private $validator;
 
-    /**
-     * Initializes fetcher.
-     *
-     * @param ContainerInterface   $container
-     * @param ParamReaderInterface $paramReader
-     * @param RequestStack         $requestStack
-     * @param ValidatorInterface   $validator
-     */
     public function __construct(ContainerInterface $container, ParamReaderInterface $paramReader, RequestStack $requestStack, ValidatorInterface $validator)
     {
         $this->container = $container;
@@ -71,8 +63,6 @@ final class ParamFetcher implements ParamFetcherInterface
      * Add additional params to the ParamFetcher during runtime.
      *
      * Note that adding a param that has the same name as an existing param will override that param.
-     *
-     * @param ParamInterface $param
      */
     public function addParam(ParamInterface $param)
     {
@@ -110,19 +100,9 @@ final class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * @param ParamInterface $param
-     * @param mixed          $paramValue
-     * @param bool           $strict
-     * @param mixed          $default
-     *
-     * @throws BadRequestHttpException
-     * @throws \RuntimeException
-     *
-     * @return mixed
-     *
      * @internal
      */
-    protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, $strict, $default)
+    protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, bool $strict, $default)
     {
         $this->checkNotIncompatibleParams($param);
         if (null !== $default && $default === $paramValue) {
@@ -178,14 +158,6 @@ final class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * Check if current param is not in conflict with other parameters
-     * according to the "incompatibles" field.
-     *
-     * @param ParamInterface $param the configuration for the param fetcher
-     *
-     * @throws InvalidArgumentException
-     * @throws BadRequestHttpException
-     *
      * @internal
      */
     protected function checkNotIncompatibleParams(ParamInterface $param)
@@ -225,12 +197,7 @@ final class ParamFetcher implements ParamFetcherInterface
         }
     }
 
-    /**
-     * @throws \RuntimeException
-     *
-     * @return Request
-     */
-    private function getRequest()
+    private function getRequest(): Request
     {
         $request = $this->requestStack->getCurrentRequest();
         if (null === $request) {

@@ -46,7 +46,7 @@ class FormErrorNormalizer implements NormalizerInterface
     /**
      * This code has been taken from JMSSerializer.
      */
-    private function convertFormToArray(FormInterface $data)
+    private function convertFormToArray(FormInterface $data): array
     {
         $form = $errors = [];
 

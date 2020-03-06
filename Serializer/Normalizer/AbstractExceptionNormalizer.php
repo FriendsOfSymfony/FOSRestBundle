@@ -21,35 +21,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AbstractExceptionNormalizer
 {
-    /**
-     * @var ExceptionValueMap
-     */
     private $messagesMap;
-
-    /**
-     * @var bool
-     */
     private $debug;
 
-    /**
-     * @param array $messagesMap
-     * @param bool  $debug
-     */
-    public function __construct(ExceptionValueMap $messagesMap, $debug)
+    public function __construct(ExceptionValueMap $messagesMap, bool $debug)
     {
         $this->messagesMap = $messagesMap;
         $this->debug = $debug;
     }
 
-    /**
-     * Extracts the exception message.
-     *
-     * @param \Throwable $throwable
-     * @param int|null   $statusCode
-     *
-     * @return string
-     */
-    protected function getMessageFromThrowable(\Throwable $throwable, $statusCode = null)
+    protected function getMessageFromThrowable(\Throwable $throwable, ?int $statusCode = null): string
     {
         $showMessage = $this->messagesMap->resolveException($throwable);
 

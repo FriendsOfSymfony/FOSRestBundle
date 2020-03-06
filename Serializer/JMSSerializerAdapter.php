@@ -70,13 +70,7 @@ final class JMSSerializerAdapter implements Serializer
         return $this->serializer->deserialize($data, $type, $format, $context);
     }
 
-    /**
-     * @param Context $context
-     * @param int     $direction {@see self} constants
-     *
-     * @return JMSContext
-     */
-    private function convertContext(Context $context, $direction)
+    private function convertContext(Context $context, int $direction): JMSContext
     {
         if (self::SERIALIZATION === $direction) {
             $jmsContext = $this->serializationContextFactory

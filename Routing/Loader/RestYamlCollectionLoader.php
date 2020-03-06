@@ -31,20 +31,14 @@ class RestYamlCollectionLoader extends YamlFileLoader
     private $defaultFormat;
 
     /**
-     * Initializes yaml loader.
-     *
-     * @param FileLocatorInterface $locator
-     * @param RestRouteProcessor   $processor
-     * @param bool                 $includeFormat
-     * @param string[]             $formats
-     * @param string               $defaultFormat
+     * @param string[] $formats
      */
     public function __construct(
         FileLocatorInterface $locator,
         RestRouteProcessor $processor,
-        $includeFormat = true,
+        bool $includeFormat = true,
         array $formats = [],
-        $defaultFormat = null
+        string $defaultFormat = null
     ) {
         parent::__construct($locator);
 
@@ -164,10 +158,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
     }
 
     /**
-     * Adds a name prefix to the route name of all collection routes.
-     *
-     * @param RouteCollection $collection Route collection
-     * @param array           $namePrefix NamePrefix to add in each route name of the route collection
+     * @param string $namePrefix
      *
      * @return RouteCollection
      */

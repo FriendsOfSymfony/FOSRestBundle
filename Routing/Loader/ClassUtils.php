@@ -16,14 +16,7 @@ namespace FOS\RestBundle\Routing\Loader;
  */
 class ClassUtils
 {
-    /**
-     * Returns the full class name for the first class in the file.
-     *
-     * @param string $file A PHP file path
-     *
-     * @return string|false Full class name if found, false otherwise
-     */
-    public static function findClassInFile($file)
+    public static function findClassInFile(string $file): ?string
     {
         $class = false;
         $namespace = false;
@@ -56,6 +49,6 @@ class ClassUtils
             }
         }
 
-        return false;
+        return null;
     }
 }

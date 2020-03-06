@@ -25,11 +25,6 @@ final class ParamReader implements ParamReaderInterface
 {
     private $annotationReader;
 
-    /**
-     * Initializes controller reader.
-     *
-     * @param Reader $annotationReader
-     */
     public function __construct(Reader $annotationReader)
     {
         $this->annotationReader = $annotationReader;
@@ -71,13 +66,9 @@ final class ParamReader implements ParamReaderInterface
     }
 
     /**
-     * Fetches parameters from provided annotation array (fetched from annotationReader).
-     *
-     * @param array $annotations
-     *
      * @return ParamInterface[]
      */
-    private function getParamsFromAnnotationArray(array $annotations)
+    private function getParamsFromAnnotationArray(array $annotations): array
     {
         $params = array();
         foreach ($annotations as $annotation) {

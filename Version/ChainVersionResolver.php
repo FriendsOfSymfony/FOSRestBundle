@@ -18,9 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class ChainVersionResolver implements VersionResolverInterface
 {
-    /**
-     * @var VersionResolverInterface[]
-     */
     private $resolvers = [];
 
     /**
@@ -48,11 +45,6 @@ final class ChainVersionResolver implements VersionResolverInterface
         return false;
     }
 
-    /**
-     * Adds a resolver.
-     *
-     * @param VersionResolverInterface $resolver
-     */
     public function addResolver(VersionResolverInterface $resolver)
     {
         $this->resolvers[] = $resolver;

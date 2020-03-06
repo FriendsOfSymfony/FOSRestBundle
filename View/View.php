@@ -73,9 +73,6 @@ final class View
     }
 
     /**
-     * Convenience method to allow for a fluent interface while creating a redirect to a
-     * given url.
-     *
      * @param string $url
      * @param int    $statusCode
      *
@@ -90,9 +87,6 @@ final class View
     }
 
     /**
-     * Convenience method to allow for a fluent interface while creating a redirect to a
-     * given route.
-     *
      * @param string $route
      * @param int    $statusCode
      *
@@ -112,10 +106,7 @@ final class View
     }
 
     /**
-     * Constructor.
-     *
-     * @param mixed $data
-     * @param int   $statusCode
+     * @param int $statusCode
      */
     public function __construct($data = null, $statusCode = null, array $headers = [])
     {
@@ -128,10 +119,6 @@ final class View
     }
 
     /**
-     * Sets the data.
-     *
-     * @param mixed $data
-     *
      * @return View
      */
     public function setData($data)
@@ -142,8 +129,6 @@ final class View
     }
 
     /**
-     * Sets a header.
-     *
      * @param string $name
      * @param string $value
      *
@@ -157,8 +142,6 @@ final class View
     }
 
     /**
-     * Sets the headers.
-     *
      * @return View
      */
     public function setHeaders(array $headers)
@@ -169,8 +152,6 @@ final class View
     }
 
     /**
-     * Sets the HTTP status code.
-     *
      * @param int|null $code
      *
      * @return View
@@ -185,8 +166,6 @@ final class View
     }
 
     /**
-     * Sets the serialization context.
-     *
      * @return View
      */
     public function setContext(Context $context)
@@ -197,8 +176,6 @@ final class View
     }
 
     /**
-     * Sets the format.
-     *
      * @param string $format
      *
      * @return View
@@ -211,8 +188,6 @@ final class View
     }
 
     /**
-     * Sets the location (implicitly removes the route).
-     *
      * @param string $location
      *
      * @return View
@@ -241,8 +216,6 @@ final class View
     }
 
     /**
-     * Sets route data.
-     *
      * @param array $parameters
      *
      * @return View
@@ -255,8 +228,6 @@ final class View
     }
 
     /**
-     * Sets the response.
-     *
      * @return View
      */
     public function setResponse(Response $response)
@@ -266,19 +237,12 @@ final class View
         return $this;
     }
 
-    /**
-     * Gets the data.
-     *
-     * @return mixed|null
-     */
     public function getData()
     {
         return $this->data;
     }
 
     /**
-     * Gets the HTTP status code.
-     *
      * @return int|null
      */
     public function getStatusCode()
@@ -287,8 +251,6 @@ final class View
     }
 
     /**
-     * Gets the headers.
-     *
      * @return array
      */
     public function getHeaders()
@@ -297,8 +259,6 @@ final class View
     }
 
     /**
-     * Gets the format.
-     *
      * @return string|null
      */
     public function getFormat()
@@ -307,8 +267,6 @@ final class View
     }
 
     /**
-     * Gets the location.
-     *
      * @return string|null
      */
     public function getLocation()
@@ -317,8 +275,6 @@ final class View
     }
 
     /**
-     * Gets the route.
-     *
      * @return string|null
      */
     public function getRoute()
@@ -327,8 +283,6 @@ final class View
     }
 
     /**
-     * Gets route parameters.
-     *
      * @return array|null
      */
     public function getRouteParameters()
@@ -337,8 +291,6 @@ final class View
     }
 
     /**
-     * Gets the response.
-     *
      * @return Response
      */
     public function getResponse()
@@ -355,8 +307,6 @@ final class View
     }
 
     /**
-     * Gets the serialization context.
-     *
      * @return Context
      */
     public function getContext()
