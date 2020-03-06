@@ -36,29 +36,29 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      *
      * @var array
      */
-    protected $customHandlers = [];
+    private $customHandlers = [];
 
     /**
      * The supported formats as keys.
      *
      * @var array
      */
-    protected $formats;
+    private $formats;
 
     /**
      * @var int
      */
-    protected $failedValidationCode;
+    private $failedValidationCode;
 
     /**
      * @var int
      */
-    protected $emptyContentCode;
+    private $emptyContentCode;
 
     /**
      * @var bool
      */
-    protected $serializeNull;
+    private $serializeNull;
 
     /**
      * If to force a redirect for the given key format,
@@ -66,27 +66,27 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      *
      * @var array<string,int>
      */
-    protected $forceRedirects;
+    private $forceRedirects;
 
     /**
      * @var string|null
      */
-    protected $defaultEngine;
+    private $defaultEngine;
 
     /**
      * @var array
      */
-    protected $exclusionStrategyGroups = [];
+    private $exclusionStrategyGroups = [];
 
     /**
      * @var string
      */
-    protected $exclusionStrategyVersion;
+    private $exclusionStrategyVersion;
 
     /**
      * @var bool
      */
-    protected $serializeNullStrategy;
+    private $serializeNullStrategy;
 
     private $urlGenerator;
     private $serializer;
@@ -189,60 +189,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
-     * Gets a response HTTP status code from a View instance.
-     *
-     * By default it will return 200. However if there is a FormInterface stored for
-     * the key 'form' in the View's data it will return the failed_validation
-     * configuration if the form instance has errors.
-     *
-     * @param string|false|null
-     *
-     * @return int HTTP status code
-     */
-    protected function getStatusCode(View $view, $content = null)
-    {
-        $form = $this->getFormFromView($view);
-
-        if ($form && $form->isSubmitted() && !$form->isValid()) {
-            return $this->failedValidationCode;
-        }
-
-        $statusCode = $view->getStatusCode();
-        if (null !== $statusCode) {
-            return $statusCode;
-        }
-
-        return null !== $content ? Response::HTTP_OK : $this->emptyContentCode;
-    }
-
-    /**
-     * @return Context
-     */
-    protected function getSerializationContext(View $view)
-    {
-        $context = $view->getContext();
-
-        $groups = $context->getGroups();
-        if (empty($groups) && $this->exclusionStrategyGroups) {
-            $context->setGroups($this->exclusionStrategyGroups);
-        }
-
-        if (null === $context->getVersion() && $this->exclusionStrategyVersion) {
-            $context->setVersion($this->exclusionStrategyVersion);
-        }
-
-        if (null === $context->getSerializeNull() && null !== $this->serializeNullStrategy) {
-            $context->setSerializeNull($this->serializeNullStrategy);
-        }
-
-        if (null !== $view->getStatusCode()) {
-            $context->setAttribute('status_code', $view->getStatusCode());
-        }
-
-        return $context;
-    }
-
-    /**
      * Handles a request with the proper handler.
      *
      * Decides on which handler to use based on the request format.
@@ -335,6 +281,55 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     }
 
     /**
+     * Gets a response HTTP status code from a View instance.
+     *
+     * By default it will return 200. However if there is a FormInterface stored for
+     * the key 'form' in the View's data it will return the failed_validation
+     * configuration if the form instance has errors.
+     *
+     * @param string|false|null
+     */
+    private function getStatusCode(View $view, $content = null): int
+    {
+        $form = $this->getFormFromView($view);
+
+        if (null !== $form && $form->isSubmitted() && !$form->isValid()) {
+            return $this->failedValidationCode;
+        }
+
+        $statusCode = $view->getStatusCode();
+        if (null !== $statusCode) {
+            return $statusCode;
+        }
+
+        return null !== $content ? Response::HTTP_OK : $this->emptyContentCode;
+    }
+
+    private function getSerializationContext(View $view): Context
+    {
+        $context = $view->getContext();
+
+        $groups = $context->getGroups();
+        if (empty($groups) && $this->exclusionStrategyGroups) {
+            $context->setGroups($this->exclusionStrategyGroups);
+        }
+
+        if (null === $context->getVersion() && $this->exclusionStrategyVersion) {
+            $context->setVersion($this->exclusionStrategyVersion);
+        }
+
+        if (null === $context->getSerializeNull() && null !== $this->serializeNullStrategy) {
+            $context->setSerializeNull($this->serializeNullStrategy);
+        }
+
+        if (null !== $view->getStatusCode()) {
+            $context->setAttribute('status_code', $view->getStatusCode());
+        }
+
+        return $context;
+    }
+
+    /**
      * @param string $format
      *
      * @return Response
@@ -364,10 +359,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         return $response;
     }
 
-    /**
-     * @return bool|FormInterface
-     */
-    protected function getFormFromView(View $view)
+    private function getFormFromView(View $view): ?FormInterface
     {
         $data = $view->getData();
 
@@ -379,14 +371,14 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
             return $data['form'];
         }
 
-        return false;
+        return null;
     }
 
     private function getDataFromView(View $view)
     {
         $form = $this->getFormFromView($view);
 
-        if (false === $form) {
+        if (null === $form) {
             return $view->getData();
         }
 

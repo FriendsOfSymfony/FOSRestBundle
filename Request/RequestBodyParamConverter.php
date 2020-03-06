@@ -118,7 +118,7 @@ final class RequestBodyParamConverter implements ParamConverterInterface
         return null !== $configuration->getClass() && 'fos_rest.request_body' === $configuration->getConverter();
     }
 
-    protected function configureContext(Context $context, array $options)
+    private function configureContext(Context $context, array $options)
     {
         foreach ($options as $key => $value) {
             if ('groups' === $key) {

@@ -99,10 +99,7 @@ final class ParamFetcher implements ParamFetcherInterface
         return $this->cleanParamWithRequirements($param, $paramValue, $strict, $default);
     }
 
-    /**
-     * @internal
-     */
-    protected function cleanParamWithRequirements(ParamInterface $param, $paramValue, bool $strict, $default)
+    private function cleanParamWithRequirements(ParamInterface $param, $paramValue, bool $strict, $default)
     {
         $this->checkNotIncompatibleParams($param);
         if (null !== $default && $default === $paramValue) {
@@ -157,10 +154,7 @@ final class ParamFetcher implements ParamFetcherInterface
         return $params;
     }
 
-    /**
-     * @internal
-     */
-    protected function checkNotIncompatibleParams(ParamInterface $param)
+    private function checkNotIncompatibleParams(ParamInterface $param)
     {
         if (null === $param->getValue($this->getRequest(), null)) {
             return;

@@ -22,23 +22,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 final class JsonpHandler
 {
-    protected $callbackParam;
+    private $callbackParam;
 
     public function __construct($callbackParam)
     {
         $this->callbackParam = $callbackParam;
-    }
-
-    protected function getCallback(Request $request)
-    {
-        $callback = $request->query->get($this->callbackParam);
-        $validator = new \JsonpCallbackValidator();
-
-        if (!$validator->validate($callback)) {
-            throw new BadRequestHttpException('Invalid JSONP callback value');
-        }
-
-        return $callback;
     }
 
     /**
@@ -59,5 +47,17 @@ final class JsonpHandler
         }
 
         return $response;
+    }
+
+    private function getCallback(Request $request)
+    {
+        $callback = $request->query->get($this->callbackParam);
+        $validator = new \JsonpCallbackValidator();
+
+        if (!$validator->validate($callback)) {
+            throw new BadRequestHttpException('Invalid JSONP callback value');
+        }
+
+        return $callback;
     }
 }

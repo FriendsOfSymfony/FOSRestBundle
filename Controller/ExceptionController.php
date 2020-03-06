@@ -45,39 +45,11 @@ final class ExceptionController
     {
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
-        if ($exception instanceof \Exception) {
-            $code = $this->getStatusCode($exception);
-        } else {
-            $code = $this->getStatusCodeFromThrowable($exception);
-        }
-        if ($exception instanceof \Exception) {
-            $view = $this->createView($exception, $code, $request, $this->showException);
-        } else {
-            $view = new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
-        }
+        $view = new View($exception, $this->getStatusCode($exception), $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
 
         $response = $this->viewHandler->handle($view);
 
         return $response;
-    }
-
-    /**
-     * @param int  $code
-     * @param bool $showException
-     *
-     * @return View
-     */
-    protected function createView(\Exception $exception, $code, Request $request, $showException)
-    {
-        return new View($exception, $code, $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
-    }
-
-    /**
-     * @return int
-     */
-    protected function getStatusCode(\Exception $exception)
-    {
-        return $this->getStatusCodeFromThrowable($exception);
     }
 
     /**
@@ -96,7 +68,7 @@ final class ExceptionController
         return ob_get_clean();
     }
 
-    private function getStatusCodeFromThrowable(\Throwable $exception): int
+    private function getStatusCode(\Throwable $exception): int
     {
         // If matched
         if (null !== $statusCode = $this->exceptionCodes->resolveException($exception)) {
