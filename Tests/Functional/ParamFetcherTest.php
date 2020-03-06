@@ -36,11 +36,20 @@ class ParamFetcherTest extends WebTestCase
         if ('error' === $params[3]->getName()) {
             // symfony 4 has removed the $size param
             return new UploadedFile(
-                $path, $originalName, $mimeType, $error, $test
+                $path,
+                $originalName,
+                $mimeType,
+                $error,
+                $test
             );
         } else {
             return new UploadedFile(
-                $path, $originalName, $mimeType, filesize($path), $error, $test
+                $path,
+                $originalName,
+                $mimeType,
+                filesize($path),
+                $error,
+                $test
             );
         }
     }

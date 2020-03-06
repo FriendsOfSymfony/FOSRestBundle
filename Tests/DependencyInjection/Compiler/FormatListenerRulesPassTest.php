@@ -41,7 +41,8 @@ class FormatListenerRulesPassTest extends TestCase
 
         $container->expects($this->exactly(2))
             ->method('getParameter')
-            ->will($this->onConsecutiveCalls(
+            ->will(
+                $this->onConsecutiveCalls(
                 2,
                 [
                     [
@@ -55,7 +56,7 @@ class FormatListenerRulesPassTest extends TestCase
                     ],
                 ]
             )
-        );
+            );
 
         $container->expects($this->exactly(2))
             ->method('getDefinition')
@@ -88,7 +89,8 @@ class FormatListenerRulesPassTest extends TestCase
         $container->expects($this->once())
             ->method('getParameter')
             ->with('fos_rest.format_listener.rules')
-            ->will($this->returnValue(
+            ->will(
+                $this->returnValue(
                 [
                     [
                         'host' => null,
@@ -99,7 +101,8 @@ class FormatListenerRulesPassTest extends TestCase
                         'attributes' => [],
                         'prefer_extension' => true,
                     ],
-                ])
+                ]
+            )
             );
 
         $container->expects($this->once())
