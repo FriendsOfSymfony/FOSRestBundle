@@ -85,7 +85,8 @@ class FormatNegotiator extends BaseNegotiator
             }
 
             if ($header) {
-                $mimeTypes = $this->normalizePriorities($request,
+                $mimeTypes = $this->normalizePriorities(
+                    $request,
                     empty($priorities) ? $options['priorities'] : $priorities
                 );
 

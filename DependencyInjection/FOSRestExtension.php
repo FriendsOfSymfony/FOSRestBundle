@@ -399,7 +399,8 @@ class FOSRestExtension extends Extension
             $zoneMatcherListener = $container->getDefinition('fos_rest.zone_matcher_listener');
 
             foreach ($config['zone'] as $zone) {
-                $matcher = $this->createZoneRequestMatcher($container,
+                $matcher = $this->createZoneRequestMatcher(
+                    $container,
                     $zone['path'],
                     $zone['host'],
                     $zone['methods'],

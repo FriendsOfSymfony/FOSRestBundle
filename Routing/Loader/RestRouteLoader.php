@@ -46,7 +46,8 @@ class RestRouteLoader extends Loader
         ContainerInterface $container,
         FileLocatorInterface $locator,
         $controllerParser,
-        RestControllerReader $controllerReader, $defaultFormat = 'html'
+        RestControllerReader $controllerReader,
+        $defaultFormat = 'html'
     ) {
         $this->container = $container;
         $this->locator = $locator;
@@ -86,8 +87,10 @@ class RestRouteLoader extends Loader
     {
         return is_string($resource)
             && 'rest' === $type
-            && !in_array(pathinfo($resource, PATHINFO_EXTENSION), ['xml', 'yml', 'yaml']
-        );
+            && !in_array(
+                pathinfo($resource, PATHINFO_EXTENSION),
+                ['xml', 'yml', 'yaml']
+            );
     }
 
     /**
