@@ -26,11 +26,6 @@ class AllowedMethodsListener
 {
     private $loader;
 
-    /**
-     * Constructor.
-     *
-     * @param AllowedMethodsLoaderInterface $loader
-     */
     public function __construct(AllowedMethodsLoaderInterface $loader)
     {
         $this->loader = $loader;

@@ -35,13 +35,10 @@ class AccessDeniedListener implements EventSubscriberInterface
     private $challenge;
 
     /**
-     * Constructor.
-     *
-     * @param array  $formats   An array with keys corresponding to request formats or content types
-     *                          that must be processed by this listener
-     * @param string $challenge
+     * @param array $formats An array with keys corresponding to request formats or content types
+     *                       that must be processed by this listener
      */
-    public function __construct($formats, $challenge)
+    public function __construct(array $formats, ?string $challenge)
     {
         $this->formats = $formats;
         $this->challenge = $challenge;
@@ -95,7 +92,7 @@ class AccessDeniedListener implements EventSubscriberInterface
         $handling = false;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::EXCEPTION => ['onKernelException', 5],

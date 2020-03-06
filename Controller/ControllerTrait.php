@@ -28,19 +28,12 @@ trait ControllerTrait
      */
     private $viewhandler;
 
-    /**
-     * Set the ViewHandler.
-     *
-     * @param ViewHandlerInterface $viewhandler
-     */
     public function setViewHandler(ViewHandlerInterface $viewhandler)
     {
         $this->viewhandler = $viewhandler;
     }
 
     /**
-     * Get the ViewHandler.
-     *
      * @return ViewHandlerInterface
      */
     protected function getViewHandler()
@@ -59,7 +52,6 @@ trait ControllerTrait
      *
      * @param mixed $data
      * @param int   $statusCode
-     * @param array $headers
      *
      * @return View
      */
@@ -75,7 +67,6 @@ trait ControllerTrait
      *
      * @param string $url
      * @param int    $statusCode
-     * @param array  $headers
      *
      * @return View
      */
@@ -90,9 +81,7 @@ trait ControllerTrait
      * Convenience method to allow for a fluent interface.
      *
      * @param string $route
-     * @param mixed  $parameters
      * @param int    $statusCode
-     * @param array  $headers
      *
      * @return View
      */
@@ -106,8 +95,6 @@ trait ControllerTrait
      *
      * Not necessary to use, if you are using the "ViewResponseListener", which
      * does this conversion automatically in kernel event "onKernelView".
-     *
-     * @param View $view
      *
      * @return Response
      */

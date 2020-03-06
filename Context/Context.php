@@ -20,34 +20,11 @@ use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
  */
 final class Context
 {
-    /**
-     * @var array
-     */
     private $attributes = array();
-
-    /**
-     * @var int|null
-     */
     private $version;
-
-    /**
-     * @var array|null
-     */
     private $groups;
-
-    /**
-     * @var int
-     */
     private $maxDepth;
-
-    /**
-     * @var bool
-     */
     private $isMaxDepthEnabled;
-
-    /**
-     * @var bool
-     */
     private $serializeNull;
 
     /**
@@ -55,65 +32,34 @@ final class Context
      */
     private $exclusionStrategies = array();
 
-    /**
-     * Sets an attribute.
-     *
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return self
-     */
-    public function setAttribute($key, $value)
+    public function setAttribute(string $key, $value): self
     {
         $this->attributes[$key] = $value;
 
         return $this;
     }
 
-    /**
-     * Checks if contains a normalization attribute.
-     *
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function hasAttribute($key)
+    public function hasAttribute(string $key): bool
     {
         return isset($this->attributes[$key]);
     }
 
-    /**
-     * Gets an attribute.
-     *
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function getAttribute($key)
+    public function getAttribute(string $key)
     {
         if (isset($this->attributes[$key])) {
             return $this->attributes[$key];
         }
     }
 
-    /**
-     * Gets the attributes.
-     *
-     * @return array
-     */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
     /**
-     * Sets the normalization version.
-     *
-     * @param int|null $version
-     *
-     * @return self
+     * @param string|null $version
      */
-    public function setVersion($version)
+    public function setVersion($version): self
     {
         if (is_int($version)) {
             @trigger_error(sprintf('Passing integers as version numbers to %s() is deprecated since FOSRestBundle 2.8. Starting with 3.0 strings will be enforced.', __METHOD__), E_USER_DEPRECATED);
@@ -125,9 +71,7 @@ final class Context
     }
 
     /**
-     * Gets the normalization version.
-     *
-     * @return int|null
+     * @return string|int|null
      */
     public function getVersion()
     {
@@ -136,12 +80,8 @@ final class Context
 
     /**
      * Adds a normalization group.
-     *
-     * @param string $group
-     *
-     * @return self
      */
-    public function addGroup($group)
+    public function addGroup(string $group): self
     {
         if (null === $this->groups) {
             $this->groups = [];
@@ -157,10 +97,8 @@ final class Context
      * Adds normalization groups.
      *
      * @param string[] $groups
-     *
-     * @return self
      */
-    public function addGroups(array $groups)
+    public function addGroups(array $groups): self
     {
         foreach ($groups as $group) {
             $this->addGroup($group);
@@ -174,7 +112,7 @@ final class Context
      *
      * @return string[]|null
      */
-    public function getGroups()
+    public function getGroups(): ?array
     {
         return $this->groups;
     }
@@ -183,10 +121,8 @@ final class Context
      * Set the normalization groups.
      *
      * @param string[]|null $groups
-     *
-     * @return self
      */
-    public function setGroups(array $groups = null)
+    public function setGroups(array $groups = null): self
     {
         $this->groups = $groups;
 
@@ -196,13 +132,9 @@ final class Context
     /**
      * Sets the normalization max depth.
      *
-     * @param int|null $maxDepth
-     *
-     * @return self
-     *
      * @deprecated since 2.1, to be removed in 3.0. Use {@link self::enableMaxDepth()} and {@link self::disableMaxDepth()} instead
      */
-    public function setMaxDepth($maxDepth)
+    public function setMaxDepth(?int $maxDepth): self
     {
         if (1 === func_num_args() || func_get_arg(1)) {
             @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::enableMaxDepth() and %s::disableMaxDepth() instead.', __METHOD__, __CLASS__, __CLASS__), E_USER_DEPRECATED);
@@ -215,11 +147,9 @@ final class Context
     /**
      * Gets the normalization max depth.
      *
-     * @return int|null
-     *
      * @deprecated since version 2.1, to be removed in 3.0. Use {@link self::isMaxDepthEnabled()} instead
      */
-    public function getMaxDepth()
+    public function getMaxDepth(): ?int
     {
         if (0 === func_num_args() || func_get_arg(0)) {
             @trigger_error(sprintf('%s is deprecated since version 2.1 and will be removed in 3.0. Use %s::isMaxDepthEnabled() instead.', __METHOD__, __CLASS__), E_USER_DEPRECATED);
@@ -228,48 +158,33 @@ final class Context
         return $this->maxDepth;
     }
 
-    public function enableMaxDepth()
+    public function enableMaxDepth(): self
     {
         $this->isMaxDepthEnabled = true;
 
         return $this;
     }
 
-    public function disableMaxDepth()
+    public function disableMaxDepth(): self
     {
         $this->isMaxDepthEnabled = false;
 
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
-    public function isMaxDepthEnabled()
+    public function isMaxDepthEnabled(): ?bool
     {
         return $this->isMaxDepthEnabled;
     }
 
-    /**
-     * Sets serialize null.
-     *
-     * @param bool|null $serializeNull
-     *
-     * @return self
-     */
-    public function setSerializeNull($serializeNull)
+    public function setSerializeNull(?bool $serializeNull): self
     {
         $this->serializeNull = $serializeNull;
 
         return $this;
     }
 
-    /**
-     * Gets serialize null.
-     *
-     * @return bool|null
-     */
-    public function getSerializeNull()
+    public function getSerializeNull(): ?bool
     {
         return $this->serializeNull;
     }
@@ -281,7 +196,7 @@ final class Context
      *
      * @return ExclusionStrategyInterface[]
      */
-    public function getExclusionStrategies()
+    public function getExclusionStrategies(): array
     {
         return $this->exclusionStrategies;
     }
@@ -290,8 +205,6 @@ final class Context
      * Adds an exclusion strategy.
      *
      * Notice: This method only applies to the JMS serializer adapter.
-     *
-     * @param ExclusionStrategyInterface $exclusionStrategy
      */
     public function addExclusionStrategy(ExclusionStrategyInterface $exclusionStrategy)
     {

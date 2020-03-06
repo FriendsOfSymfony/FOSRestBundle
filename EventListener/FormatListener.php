@@ -29,22 +29,13 @@ class FormatListener
 {
     private $formatNegotiator;
 
-    /**
-     * Initialize FormatListener.
-     *
-     * @param FormatNegotiatorInterface $formatNegotiator
-     */
     public function __construct(FormatNegotiator $formatNegotiator)
     {
         $this->formatNegotiator = $formatNegotiator;
     }
 
     /**
-     * Determines and sets the Request format.
-     *
      * @param RequestEvent $event The event
-     *
-     * @throws NotAcceptableHttpException
      */
     public function onKernelRequest($event)
     {

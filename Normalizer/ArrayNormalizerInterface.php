@@ -21,8 +21,6 @@ interface ArrayNormalizerInterface
     /**
      * Normalizes the array.
      *
-     * @param array $data The array to normalize
-     *
      * @throws Exception\NormalizationException
      *
      * @return array The normalized array

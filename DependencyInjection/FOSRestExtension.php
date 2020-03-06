@@ -37,15 +37,6 @@ class FOSRestExtension extends Extension
         return new Configuration($container->getParameter('kernel.debug'));
     }
 
-    /**
-     * Loads the services based on your application configuration.
-     *
-     * @param array            $configs
-     * @param ContainerBuilder $container
-     *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration($container->getParameter('kernel.debug'));
@@ -440,7 +431,8 @@ class FOSRestExtension extends Extension
             $zoneMatcherListener = $container->getDefinition('fos_rest.zone_matcher_listener');
 
             foreach ($config['zone'] as $zone) {
-                $matcher = $this->createZoneRequestMatcher($container,
+                $matcher = $this->createZoneRequestMatcher(
+                    $container,
                     $zone['path'],
                     $zone['host'],
                     $zone['methods'],

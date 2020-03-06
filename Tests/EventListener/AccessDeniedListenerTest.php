@@ -82,7 +82,7 @@ class AccessDeniedListenerTest extends TestCase
         $exception = new AccessDeniedException();
         $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
         $event = new $eventClass(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
-        $listener = new AccessDeniedListener($formats, null, 'foo');
+        $listener = new AccessDeniedListener($formats, null);
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);
@@ -109,7 +109,7 @@ class AccessDeniedListenerTest extends TestCase
         $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
         $event = new $eventClass(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
 
-        $listener = new AccessDeniedListener($formats, null, 'foo');
+        $listener = new AccessDeniedListener($formats, null);
         $listener->onKernelException($event);
         if (method_exists($event, 'getThrowable')) {
             $exception = $event->getThrowable();
@@ -156,7 +156,7 @@ class AccessDeniedListenerTest extends TestCase
         $exception = new AuthenticationException();
         $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
         $event = new $eventClass(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
-        $listener = new AccessDeniedListener($formats, null, 'foo');
+        $listener = new AccessDeniedListener($formats, null);
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);
@@ -182,7 +182,7 @@ class AccessDeniedListenerTest extends TestCase
         $exception = new AuthenticationException();
         $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
         $event = new $eventClass(new TestKernel(), $request, 'foo', $exception);
-        $listener = new AccessDeniedListener($formats, 'Basic realm="Restricted Area"', 'foo');
+        $listener = new AccessDeniedListener($formats, 'Basic realm="Restricted Area"');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);

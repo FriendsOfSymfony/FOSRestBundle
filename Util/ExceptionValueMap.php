@@ -39,9 +39,7 @@ class ExceptionValueMap
     /**
      * Resolves the value corresponding to an exception object.
      *
-     * @param \Exception $exception
-     *
-     * @return mixed|false Value found or false is not found
+     * @return bool|int|false Value found or false is not found
      */
     public function resolveException(\Exception $exception)
     {
@@ -51,9 +49,9 @@ class ExceptionValueMap
     /**
      * Resolves the value corresponding to an exception object.
      *
-     * @param \Throwable $exception
+     * @return bool|int|false Value found or false is not found
      *
-     * @return mixed|false Value found or false is not found
+     * @internal since 2.8
      */
     public function resolveThrowable(\Throwable $exception)
     {
@@ -61,13 +59,9 @@ class ExceptionValueMap
     }
 
     /**
-     * Resolves the value corresponding to an exception class.
-     *
-     * @param string $class
-     *
-     * @return mixed|false if not found
+     * @return bool|int|false if not found
      */
-    private function doResolveClass($class)
+    private function doResolveClass(string $class)
     {
         foreach ($this->map as $mapClass => $value) {
             if (!$value) {

@@ -35,21 +35,11 @@ class FormatNegotiator extends BaseNegotiator
         $this->mimeTypes = $mimeTypes;
     }
 
-    /**
-     * @param RequestMatcherInterface $requestMatcher
-     * @param array                   $options
-     */
     public function add(RequestMatcherInterface $requestMatcher, array $options = [])
     {
         $this->map[] = [$requestMatcher, $options];
     }
 
-    /**
-     * {@inheritdoc}
-     * The best format is also determined in function of the bundle configuration.
-     *
-     * @throws StopFormatListenerException
-     */
     public function getBest($header, array $priorities = [])
     {
         $request = $this->getRequest();
@@ -87,7 +77,8 @@ class FormatNegotiator extends BaseNegotiator
             }
 
             if ($header) {
-                $mimeTypes = $this->normalizePriorities($request,
+                $mimeTypes = $this->normalizePriorities(
+                    $request,
                     empty($priorities) ? $options['priorities'] : $priorities
                 );
 
@@ -110,12 +101,7 @@ class FormatNegotiator extends BaseNegotiator
         }
     }
 
-    /**
-     * @param array $values
-     *
-     * @return array
-     */
-    private function sanitize(array $values)
+    private function sanitize(array $values): array
     {
         return array_map(function ($value) {
             return preg_replace('/\s+/', '', strtolower($value));
@@ -123,14 +109,11 @@ class FormatNegotiator extends BaseNegotiator
     }
 
     /**
-     * Transform the format (json, html, ...) to their mimeType form (application/json, text/html, ...).
-     *
-     * @param Request  $request
      * @param string[] $priorities
      *
      * @return string[] formatted priorities
      */
-    private function normalizePriorities(Request $request, array $priorities)
+    private function normalizePriorities(Request $request, array $priorities): array
     {
         $priorities = $this->sanitize($priorities);
 
@@ -160,12 +143,7 @@ class FormatNegotiator extends BaseNegotiator
         return $mimeTypes;
     }
 
-    /**
-     * @throws \RuntimeException
-     *
-     * @return Request
-     */
-    private function getRequest()
+    private function getRequest(): Request
     {
         $request = $this->requestStack->getCurrentRequest();
         if (null === $request) {
