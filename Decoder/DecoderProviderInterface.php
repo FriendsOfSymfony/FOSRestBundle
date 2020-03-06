@@ -32,7 +32,7 @@ interface DecoderProviderInterface
      *
      * @param string $format
      *
-     * @return \FOS\RestBundle\Decoder\DecoderInterface
+     * @return DecoderInterface
      */
     public function getDecoder($format);
 }

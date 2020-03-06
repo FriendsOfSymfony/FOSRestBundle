@@ -19,22 +19,16 @@ namespace FOS\RestBundle\View;
 interface ConfigurableViewHandlerInterface extends ViewHandlerInterface
 {
     /**
-     * Set the default serialization groups.
-     *
-     * @param array $groups
+     * @param string[]|string $groups
      */
     public function setExclusionStrategyGroups($groups);
 
     /**
-     * Set the default serialization version.
-     *
      * @param string $version
      */
     public function setExclusionStrategyVersion($version);
 
     /**
-     * If nulls should be serialized.
-     *
      * @param bool $isEnabled
      */
     public function setSerializeNullStrategy($isEnabled);

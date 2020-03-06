@@ -96,9 +96,6 @@ class View
     }
 
     /**
-     * Convenience method to allow for a fluent interface while creating a redirect to a
-     * given url.
-     *
      * @param string $url
      * @param int    $statusCode
      *
@@ -113,9 +110,6 @@ class View
     }
 
     /**
-     * Convenience method to allow for a fluent interface while creating a redirect to a
-     * given route.
-     *
      * @param string $route
      * @param int    $statusCode
      *
@@ -135,10 +129,7 @@ class View
     }
 
     /**
-     * Constructor.
-     *
-     * @param mixed $data
-     * @param int   $statusCode
+     * @param int $statusCode
      */
     public function __construct($data = null, $statusCode = null, array $headers = [])
     {
@@ -152,10 +143,6 @@ class View
     }
 
     /**
-     * Sets the data.
-     *
-     * @param mixed $data
-     *
      * @return View
      */
     public function setData($data)
@@ -166,8 +153,6 @@ class View
     }
 
     /**
-     * Set template variable.
-     *
      * @deprecated since 2.8
      *
      * @param array|callable $data
@@ -186,8 +171,6 @@ class View
     }
 
     /**
-     * Sets a header.
-     *
      * @param string $name
      * @param string $value
      *
@@ -201,8 +184,6 @@ class View
     }
 
     /**
-     * Sets the headers.
-     *
      * @return View
      */
     public function setHeaders(array $headers)
@@ -213,8 +194,6 @@ class View
     }
 
     /**
-     * Sets the HTTP status code.
-     *
      * @param int|null $code
      *
      * @return View
@@ -229,8 +208,6 @@ class View
     }
 
     /**
-     * Sets the serialization context.
-     *
      * @return View
      */
     public function setContext(Context $context)
@@ -241,8 +218,6 @@ class View
     }
 
     /**
-     * Sets template to use for the encoding.
-     *
      * @deprecated since 2.8
      *
      * @param string|TemplateReferenceInterface $template
@@ -266,8 +241,6 @@ class View
     }
 
     /**
-     * Sets template variable name to be used in templating formats.
-     *
      * @deprecated since 2.8
      *
      * @param string $templateVar
@@ -286,8 +259,6 @@ class View
     }
 
     /**
-     * Sets the engine.
-     *
      * @deprecated since 2.8
      *
      * @param string $engine
@@ -304,8 +275,6 @@ class View
     }
 
     /**
-     * Sets the format.
-     *
      * @param string $format
      *
      * @return View
@@ -318,8 +287,6 @@ class View
     }
 
     /**
-     * Sets the location (implicitly removes the route).
-     *
      * @param string $location
      *
      * @return View
@@ -348,8 +315,6 @@ class View
     }
 
     /**
-     * Sets route data.
-     *
      * @param array $parameters
      *
      * @return View
@@ -362,8 +327,6 @@ class View
     }
 
     /**
-     * Sets the response.
-     *
      * @return View
      */
     public function setResponse(Response $response)
@@ -373,19 +336,12 @@ class View
         return $this;
     }
 
-    /**
-     * Gets the data.
-     *
-     * @return mixed|null
-     */
     public function getData()
     {
         return $this->data;
     }
 
     /**
-     * Gets the template data.
-     *
      * @deprecated since 2.8
      *
      * @return mixed|null
@@ -400,8 +356,6 @@ class View
     }
 
     /**
-     * Gets the HTTP status code.
-     *
      * @return int|null
      */
     public function getStatusCode()
@@ -410,8 +364,6 @@ class View
     }
 
     /**
-     * Gets the headers.
-     *
      * @return array
      */
     public function getHeaders()
@@ -420,8 +372,6 @@ class View
     }
 
     /**
-     * Gets the template.
-     *
      * @deprecated since 2.8
      *
      * @return TemplateReferenceInterface|string|null
@@ -436,8 +386,6 @@ class View
     }
 
     /**
-     * Gets the template variable name.
-     *
      * @deprecated since 2.8
      *
      * @return string|null
@@ -452,8 +400,6 @@ class View
     }
 
     /**
-     * Gets the engine.
-     *
      * @deprecated since 2.8
      *
      * @return string|null
@@ -466,8 +412,6 @@ class View
     }
 
     /**
-     * Gets the format.
-     *
      * @return string|null
      */
     public function getFormat()
@@ -476,8 +420,6 @@ class View
     }
 
     /**
-     * Gets the location.
-     *
      * @return string|null
      */
     public function getLocation()
@@ -486,8 +428,6 @@ class View
     }
 
     /**
-     * Gets the route.
-     *
      * @return string|null
      */
     public function getRoute()
@@ -496,8 +436,6 @@ class View
     }
 
     /**
-     * Gets route parameters.
-     *
      * @return array|null
      */
     public function getRouteParameters()
@@ -506,8 +444,6 @@ class View
     }
 
     /**
-     * Gets the response.
-     *
      * @return Response
      */
     public function getResponse()
@@ -524,8 +460,6 @@ class View
     }
 
     /**
-     * Gets the serialization context.
-     *
      * @return Context
      */
     public function getContext()

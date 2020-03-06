@@ -34,59 +34,16 @@ class RestActionReader
 {
     const COLLECTION_ROUTE_PREFIX = 'c';
 
-    /**
-     * @var Reader
-     */
     private $annotationReader;
-
-    /**
-     * @var ParamReaderInterface
-     */
     private $paramReader;
-
-    /**
-     * @var InflectorInterface
-     */
     private $inflector;
-
-    /**
-     * @var array
-     */
     private $formats;
-
-    /**
-     * @var bool
-     */
     private $includeFormat;
-
-    /**
-     * @var string|null
-     */
     private $routePrefix;
-
-    /**
-     * @var string|null
-     */
     private $namePrefix;
-
-    /**
-     * @var array|string|null
-     */
     private $versions;
-
-    /**
-     * @var bool|null
-     */
     private $pluralize;
-
-    /**
-     * @var array
-     */
     private $parents = [];
-
-    /**
-     * @var array
-     */
     private $availableHTTPMethods = [
         'get',
         'post',
@@ -105,28 +62,10 @@ class RestActionReader
         'lock',
         'unlock',
     ];
-
-    /**
-     * @var array
-     */
     private $availableConventionalActions = ['new', 'edit', 'remove'];
-
-    /**
-     * @var bool
-     */
     private $hasMethodPrefix;
 
-    /**
-     * Initializes controller reader.
-     *
-     * @param Reader               $annotationReader
-     * @param ParamReaderInterface $paramReader
-     * @param InflectorInterface   $inflector
-     * @param bool                 $includeFormat
-     * @param array                $formats
-     * @param bool                 $hasMethodPrefix
-     */
-    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, $includeFormat, array $formats = [], $hasMethodPrefix = true)
+    public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, bool $includeFormat, array $formats = [], bool $hasMethodPrefix = true)
     {
         $this->annotationReader = $annotationReader;
         $this->paramReader = $paramReader;
@@ -137,9 +76,7 @@ class RestActionReader
     }
 
     /**
-     * Sets routes prefix.
-     *
-     * @param string $prefix Routes prefix
+     * @param string|null $prefix
      */
     public function setRoutePrefix($prefix = null)
     {
@@ -147,8 +84,6 @@ class RestActionReader
     }
 
     /**
-     * Returns route prefix.
-     *
      * @return string
      */
     public function getRoutePrefix()
@@ -157,9 +92,7 @@ class RestActionReader
     }
 
     /**
-     * Sets route names prefix.
-     *
-     * @param string $prefix Route names prefix
+     * @param string|null $prefix
      */
     public function setNamePrefix($prefix = null)
     {
@@ -167,8 +100,6 @@ class RestActionReader
     }
 
     /**
-     * Returns name prefix.
-     *
      * @return string
      */
     public function getNamePrefix()
@@ -177,9 +108,7 @@ class RestActionReader
     }
 
     /**
-     * Sets route names versions.
-     *
-     * @param array|string|null $versions Route names versions
+     * @param string[]|string|null $versions
      */
     public function setVersions($versions = null)
     {
@@ -187,9 +116,7 @@ class RestActionReader
     }
 
     /**
-     * Returns versions.
-     *
-     * @return array|null
+     * @return string[]|null
      */
     public function getVersions()
     {
@@ -197,9 +124,7 @@ class RestActionReader
     }
 
     /**
-     * Sets pluralize.
-     *
-     * @param bool|null $pluralize Specify if resource name must be pluralized
+     * @param bool|null $pluralize
      */
     public function setPluralize($pluralize)
     {
@@ -207,8 +132,6 @@ class RestActionReader
     }
 
     /**
-     * Returns pluralize.
-     *
      * @return bool|null
      */
     public function getPluralize()
@@ -217,9 +140,7 @@ class RestActionReader
     }
 
     /**
-     * Set parent routes.
-     *
-     * @param array $parents Array of parent resources names
+     * @param string[] $parents Array of parent resources names
      */
     public function setParents(array $parents)
     {
@@ -227,9 +148,7 @@ class RestActionReader
     }
 
     /**
-     * Returns parents.
-     *
-     * @return array
+     * @return string[]
      */
     public function getParents()
     {
@@ -237,11 +156,7 @@ class RestActionReader
     }
 
     /**
-     * Reads action route.
-     *
-     * @param RestRouteCollection $collection
-     * @param \ReflectionMethod   $method
-     * @param string[]            $resource
+     * @param string[] $resource
      *
      * @throws \InvalidArgumentException
      *
@@ -376,25 +291,16 @@ class RestActionReader
         }
     }
 
-    /**
-     * @return string|null
-     */
-    private function getVersionCondition()
+    private function getVersionCondition(): ?string
     {
         if (empty($this->versions)) {
-            return;
+            return null;
         }
 
         return sprintf("request.attributes.get('version') in ['%s']", implode("', '", $this->versions));
     }
 
-    /**
-     * @param string|null $conditionOne
-     * @param string|null $conditionTwo
-     *
-     * @return string|null
-     */
-    private function combineConditions($conditionOne, $conditionTwo)
+    private function combineConditions(?string $conditionOne, ?string $conditionTwo): ?string
     {
         if (null === $conditionOne) {
             return $conditionTwo;
@@ -407,10 +313,7 @@ class RestActionReader
         return sprintf('(%s) and (%s)', $conditionOne, $conditionTwo);
     }
 
-    /**
-     * @return array
-     */
-    private function getVersionRequirement()
+    private function getVersionRequirement(): array
     {
         if (empty($this->versions)) {
             return [];
@@ -419,25 +322,12 @@ class RestActionReader
         return ['version' => implode('|', $this->versions)];
     }
 
-    /**
-     * Checks whether provided path contains {version} placeholder.
-     *
-     * @param string $path
-     *
-     * @return bool
-     */
-    private function hasVersionPlaceholder($path)
+    private function hasVersionPlaceholder(string $path): bool
     {
         return false !== strpos($path, '{version}');
     }
 
-    /**
-     * Include the format in the path and requirements if its enabled.
-     *
-     * @param string $path
-     * @param array  $requirements
-     */
-    private function includeFormatIfNeeded(&$path, &$requirements)
+    private function includeFormatIfNeeded(string &$path, array &$requirements)
     {
         if (true === $this->includeFormat) {
             $path .= '.{_format}';
@@ -448,14 +338,7 @@ class RestActionReader
         }
     }
 
-    /**
-     * Checks whether provided method is readable.
-     *
-     * @param \ReflectionMethod $method
-     *
-     * @return bool
-     */
-    private function isMethodReadable(\ReflectionMethod $method)
+    private function isMethodReadable(\ReflectionMethod $method): bool
     {
         // if method starts with _ - skip
         if ('_' === substr($method->getName(), 0, 1)) {
@@ -478,14 +361,11 @@ class RestActionReader
     }
 
     /**
-     * Returns HTTP method and resources list from method signature.
-     *
-     * @param \ReflectionMethod $method
-     * @param string[]          $resource
+     * @param string[] $resource
      *
      * @return bool|array
      */
-    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, $resource)
+    private function getHttpMethodAndResourcesFromMethod(\ReflectionMethod $method, array $resource)
     {
         // if method doesn't match regex - skip
         if (!preg_match('/([a-z][_a-z0-9]+)(.*)Action/', $method->getName(), $matches)) {
@@ -523,13 +403,9 @@ class RestActionReader
     }
 
     /**
-     * Returns readable arguments from method.
-     *
-     * @param \ReflectionMethod $method
-     *
      * @return \ReflectionParameter[]
      */
-    private function getMethodArguments(\ReflectionMethod $method)
+    private function getMethodArguments(\ReflectionMethod $method): array
     {
         // ignore all query params
         $params = $this->paramReader->getParamsFromMethod($method);
@@ -583,13 +459,9 @@ class RestActionReader
     }
 
     /**
-     * Generates final resource name.
-     *
      * @param string|bool $resource
-     *
-     * @return string
      */
-    private function generateResourceName($resource)
+    private function generateResourceName($resource): string
     {
         if (false === $this->pluralize) {
             return $resource;
@@ -599,13 +471,9 @@ class RestActionReader
     }
 
     /**
-     * Generates route name from resources list.
-     *
      * @param string[] $resources
-     *
-     * @return string
      */
-    private function generateRouteName(array $resources)
+    private function generateRouteName(array $resources): string
     {
         $routeName = '';
         foreach ($resources as $resource) {
@@ -618,15 +486,10 @@ class RestActionReader
     }
 
     /**
-     * Generates URL parts for route from resources list.
-     *
      * @param string[]               $resources
      * @param \ReflectionParameter[] $arguments
-     * @param string                 $httpMethod
-     *
-     * @return array
      */
-    private function generateUrlParts(array $resources, array $arguments, $httpMethod)
+    private function generateUrlParts(array $resources, array $arguments, string $httpMethod): array
     {
         $urlParts = [];
         foreach ($resources as $i => $resource) {
@@ -662,15 +525,10 @@ class RestActionReader
     }
 
     /**
-     * Returns custom HTTP method for provided list of resources, arguments, method.
-     *
-     * @param string                 $httpMethod current HTTP method
-     * @param string[]               $resources  resources list
-     * @param \ReflectionParameter[] $arguments  list of method arguments
-     *
-     * @return string
+     * @param string[]               $resources
+     * @param \ReflectionParameter[] $arguments
      */
-    private function getCustomHttpMethod($httpMethod, array $resources, array $arguments)
+    private function getCustomHttpMethod(string $httpMethod, array $resources, array $arguments): string
     {
         if (in_array($httpMethod, $this->availableConventionalActions)) {
             // allow hypertext as the engine of application state
@@ -688,13 +546,9 @@ class RestActionReader
     }
 
     /**
-     * Returns first route annotation for method.
-     *
-     * @param \ReflectionMethod $reflectionMethod
-     *
      * @return RouteAnnotation[]
      */
-    private function readRouteAnnotation(\ReflectionMethod $reflectionMethod)
+    private function readRouteAnnotation(\ReflectionMethod $reflectionMethod): array
     {
         $annotations = [];
 
@@ -705,49 +559,32 @@ class RestActionReader
         return $annotations;
     }
 
-    /**
-     * Reads class annotations.
-     *
-     * @param \ReflectionClass $reflectionClass
-     * @param string           $annotationName
-     *
-     * @return RouteAnnotation|null
-     */
-    private function readClassAnnotation(\ReflectionClass $reflectionClass, $annotationName)
+    private function readClassAnnotation(\ReflectionClass $reflectionClass, string $annotationName): ?RouteAnnotation
     {
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
         if ($annotation = $this->annotationReader->getClassAnnotation($reflectionClass, $annotationClass)) {
             return $annotation;
         }
+
+        return null;
     }
 
-    /**
-     * Reads method annotations.
-     *
-     * @param \ReflectionMethod $reflectionMethod
-     * @param string            $annotationName
-     *
-     * @return RouteAnnotation|null
-     */
-    private function readMethodAnnotation(\ReflectionMethod $reflectionMethod, $annotationName)
+    private function readMethodAnnotation(\ReflectionMethod $reflectionMethod, string $annotationName): ?RouteAnnotation
     {
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
 
         if ($annotation = $this->annotationReader->getMethodAnnotation($reflectionMethod, $annotationClass)) {
             return $annotation;
         }
+
+        return null;
     }
 
     /**
-     * Reads method annotations.
-     *
-     * @param \ReflectionMethod $reflectionMethod
-     * @param string            $annotationName
-     *
      * @return RouteAnnotation[]
      */
-    private function readMethodAnnotations(\ReflectionMethod $reflectionMethod, $annotationName)
+    private function readMethodAnnotations(\ReflectionMethod $reflectionMethod, string $annotationName): array
     {
         $annotations = [];
         $annotationClass = "FOS\\RestBundle\\Controller\\Annotations\\$annotationName";
@@ -763,15 +600,7 @@ class RestActionReader
         return $annotations;
     }
 
-    /**
-     * @param RestRouteCollection $collection
-     * @param string              $routeName
-     * @param Route               $route
-     * @param bool                $isCollection
-     * @param bool                $isInflectable
-     * @param RouteAnnotation     $annotation
-     */
-    private function addRoute(RestRouteCollection $collection, $routeName, $route, $isCollection, $isInflectable, RouteAnnotation $annotation = null)
+    private function addRoute(RestRouteCollection $collection, string $routeName, Route $route, bool $isCollection, bool $isInflectable, RouteAnnotation $annotation = null)
     {
         if ($annotation && null !== $annotation->getName()) {
             $options = $annotation->getOptions();

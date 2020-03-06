@@ -23,9 +23,7 @@ class RestRouteCollection extends RouteCollection
     private $singularName;
 
     /**
-     * Sets collection singular name.
-     *
-     * @param string $name Singular name
+     * @param string $name
      */
     public function setSingularName($name)
     {
@@ -33,8 +31,6 @@ class RestRouteCollection extends RouteCollection
     }
 
     /**
-     * Returns collection singular name.
-     *
      * @return string
      */
     public function getSingularName()
@@ -43,8 +39,6 @@ class RestRouteCollection extends RouteCollection
     }
 
     /**
-     * Adds controller prefix to all collection routes.
-     *
      * @param string $prefix
      */
     public function prependRouteControllersWithPrefix($prefix)
@@ -55,8 +49,6 @@ class RestRouteCollection extends RouteCollection
     }
 
     /**
-     * Sets default format of routes.
-     *
      * @param string $format
      */
     public function setDefaultFormat($format)

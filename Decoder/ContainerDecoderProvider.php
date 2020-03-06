@@ -26,7 +26,7 @@ class ContainerDecoderProvider implements DecoderProviderInterface
     private $decoders;
 
     /**
-     * @param array $decoders List of key (format) value (service ids) of decoders
+     * @param array<string,string> $decoders List of key (format) value (service ids) of decoders
      */
     public function __construct(ContainerInterface $container, array $decoders)
     {
