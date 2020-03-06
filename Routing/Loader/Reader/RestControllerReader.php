@@ -85,7 +85,10 @@ class RestControllerReader
             $this->actionReader->setPluralize($annotation->pluralize);
         } elseif ($reflectionClass->implementsInterface(ClassResourceInterface::class)) {
             $resource = preg_split(
-                '/([A-Z][^A-Z]*)Controller/', $reflectionClass->getShortName(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
+                '/([A-Z][^A-Z]*)Controller/',
+                $reflectionClass->getShortName(),
+                -1,
+                PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE
             );
             if (empty($resource)) {
                 throw new \InvalidArgumentException("Controller '{$reflectionClass->name}' does not identify a resource");

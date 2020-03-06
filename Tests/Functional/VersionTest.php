@@ -38,7 +38,7 @@ class VersionTest extends WebTestCase
             [],
             [],
             ['HTTP_Accept' => 'application/json']
-          );
+        );
         $this->assertEquals('{"version":"test annotation"}', static::$client->getResponse()->getContent());
     }
 
@@ -50,7 +50,7 @@ class VersionTest extends WebTestCase
             [],
             [],
             ['HTTP_Accept' => 'application/json']
-          );
+        );
         $this->assertEquals(
             '{"version":"test annotation","version_exclusion":"1.2"}',
             static::$client->getResponse()->getContent()
