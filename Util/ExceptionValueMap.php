@@ -37,11 +37,9 @@ class ExceptionValueMap
     }
 
     /**
-     * Resolves the value corresponding to an exception object.
-     *
      * @param \Throwable $throwable
      *
-     * @return bool|int|false Value found or false is not found
+     * @return bool|int|null Value found or null if not found
      */
     public function resolveException(\Throwable $throwable)
     {
@@ -49,7 +47,7 @@ class ExceptionValueMap
     }
 
     /**
-     * @return bool|int|false if not found
+     * @return bool|int|null if not found
      */
     private function doResolveClass(string $class)
     {
@@ -63,6 +61,6 @@ class ExceptionValueMap
             }
         }
 
-        return false;
+        return null;
     }
 }
