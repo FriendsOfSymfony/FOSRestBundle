@@ -28,8 +28,6 @@ class MimeTypeListener
     private $mimeTypes;
 
     /**
-     * Constructor.
-     *
      * @param array $mimeTypes An array with the format as key and
      *                         the corresponding mime type as value
      */
@@ -39,8 +37,6 @@ class MimeTypeListener
     }
 
     /**
-     * Core request handler.
-     *
      * @param RequestEvent $event The event
      */
     public function onKernelRequest($event)

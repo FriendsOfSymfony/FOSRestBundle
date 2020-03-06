@@ -38,20 +38,12 @@ final class Configuration implements ConfigurationInterface
      */
     private $debug;
 
-    /**
-     * @param bool $debug
-     */
-    public function __construct($debug)
+    public function __construct(bool $debug)
     {
-        $this->debug = (bool) $debug;
+        $this->debug = $debug;
     }
 
-    /**
-     * Generates the configuration tree.
-     *
-     * @return TreeBuilder
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('fos_rest');
 
@@ -494,14 +486,7 @@ final class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    /**
-     * Checks if an exception is loadable.
-     *
-     * @param string $exception Class to test
-     *
-     * @throws InvalidConfigurationException if the class was not found
-     */
-    private function testExceptionExists($exception)
+    private function testExceptionExists(string $exception)
     {
         if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
             throw new InvalidConfigurationException("FOSRestBundle exception mapper: Could not load class '$exception' or the class does not extend from '\\Exception'. Most probably this is a configuration problem.");

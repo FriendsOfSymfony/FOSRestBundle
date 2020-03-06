@@ -26,14 +26,7 @@ final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface,
     private $router;
     private $cache;
 
-    /**
-     * Constructor.
-     *
-     * @param RouterInterface $router
-     * @param string          $cacheDir
-     * @param bool            $isDebug  Kernel debug flag
-     */
-    public function __construct(RouterInterface $router, $cacheDir, $isDebug)
+    public function __construct(RouterInterface $router, string $cacheDir, bool $isDebug)
     {
         $this->router = $router;
         $this->cache = new ConfigCache(sprintf('%s/allowed_methods.cache.php', $cacheDir), $isDebug);

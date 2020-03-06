@@ -20,12 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 trait ResolverTrait
 {
-    /**
-     * @param ContainerInterface $container
-     * @param mixed              $value
-     *
-     * @return mixed
-     */
     private function resolveValue(ContainerInterface $container, $value)
     {
         if (is_array($value)) {

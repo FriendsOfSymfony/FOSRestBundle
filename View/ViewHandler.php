@@ -75,7 +75,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     protected $forceRedirects;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $defaultEngine;
 
@@ -100,27 +100,14 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
 
     private $options;
 
-    /**
-     * Constructor.
-     *
-     * @param UrlGeneratorInterface $urlGenerator         The URL generator
-     * @param Serializer            $serializer
-     * @param RequestStack          $requestStack         The request stack
-     * @param array                 $formats              the supported formats as keys
-     * @param int                   $failedValidationCode The HTTP response status code for a failed validation
-     * @param int                   $emptyContentCode     HTTP response status code when the view data is null
-     * @param bool                  $serializeNull        Whether or not to serialize null view data
-     * @param array                 $forceRedirects       If to force a redirect for the given key format, with value being the status code to use
-     * @param array                 $options              config options
-     */
     private function __construct(
         UrlGeneratorInterface $urlGenerator,
         Serializer $serializer,
         RequestStack $requestStack,
         array $formats = null,
-        $failedValidationCode = Response::HTTP_BAD_REQUEST,
-        $emptyContentCode = Response::HTTP_NO_CONTENT,
-        $serializeNull = false,
+        int $failedValidationCode = Response::HTTP_BAD_REQUEST,
+        int $emptyContentCode = Response::HTTP_NO_CONTENT,
+        bool $serializeNull = false,
         array $forceRedirects = null,
         array $options = []
     ) {
@@ -220,7 +207,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      * the key 'form' in the View's data it will return the failed_validation
      * configuration if the form instance has errors.
      *
-     * @param View  $view
      * @param mixed $content
      *
      * @return int HTTP status code
@@ -244,8 +230,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Gets or creates a JMS\Serializer\SerializationContext and initializes it with
      * the view exclusion strategies, groups & versions if a new context is created.
-     *
-     * @param View $view
      *
      * @return Context
      */
@@ -278,9 +262,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      *
      * Decides on which handler to use based on the request format.
      *
-     * @param View    $view
-     * @param Request $request
-     *
      * @throws UnsupportedMediaTypeHttpException
      *
      * @return Response
@@ -309,7 +290,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Creates the Response from the view.
      *
-     * @param View   $view
      * @param string $location
      * @param string $format
      *
@@ -341,9 +321,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Handles creation of a Response using either redirection or the serializer service.
      *
-     * @param View    $view
-     * @param Request $request
-     * @param string  $format
+     * @param string $format
      *
      * @return Response
      */
@@ -376,7 +354,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Initializes a response object that represents the view and holds the view's status code.
      *
-     * @param View   $view
      * @param string $format
      *
      * @return Response
@@ -409,8 +386,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * Returns the form from the given view if present, false otherwise.
      *
-     * @param View $view
-     *
      * @return bool|FormInterface
      */
     protected function getFormFromView(View $view)
@@ -430,8 +405,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
 
     /**
      * Returns the data from a view.
-     *
-     * @param View $view
      *
      * @return mixed|null
      */

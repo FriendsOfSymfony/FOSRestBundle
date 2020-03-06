@@ -30,13 +30,6 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
         return $data;
     }
 
-    /**
-     * Normalizes an array.
-     *
-     * @param array &$data
-     *
-     * @throws Exception\NormalizationException
-     */
     private function normalizeArray(array &$data)
     {
         $normalizedData = array();

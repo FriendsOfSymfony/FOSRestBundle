@@ -24,25 +24,14 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
  */
 final class ExceptionController
 {
-    /**
-     * @var ViewHandlerInterface
-     */
     private $viewHandler;
-
-    /**
-     * @var ExceptionValueMap
-     */
     private $exceptionCodes;
-
-    /**
-     * @var bool
-     */
     private $showException;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
         ExceptionValueMap $exceptionCodes,
-        $showException
+        bool $showException
     ) {
         $this->viewHandler = $viewHandler;
         $this->exceptionCodes = $exceptionCodes;
@@ -50,15 +39,7 @@ final class ExceptionController
     }
 
     /**
-     * Converts an Exception to a Response.
-     *
-     * @param Request                   $request
-     * @param \Exception|\Throwable     $exception
-     * @param DebugLoggerInterface|null $logger
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return Response
+     * @param \Throwable $exception
      */
     public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
     {
@@ -81,10 +62,8 @@ final class ExceptionController
     }
 
     /**
-     * @param \Exception $exception
-     * @param int        $code
-     * @param Request    $request
-     * @param bool       $showException
+     * @param int  $code
+     * @param bool $showException
      *
      * @return View
      */
@@ -94,10 +73,6 @@ final class ExceptionController
     }
 
     /**
-     * Determines the status code to use for the response.
-     *
-     * @param \Exception $exception
-     *
      * @return int
      */
     protected function getStatusCode(\Exception $exception)
@@ -110,10 +85,8 @@ final class ExceptionController
      *
      * This code comes from Symfony and should be synchronized on a regular basis
      * see src/Symfony/Bundle/TwigBundle/Controller/ExceptionController.php
-     *
-     * @return string
      */
-    private function getAndCleanOutputBuffering($startObLevel)
+    private function getAndCleanOutputBuffering($startObLevel): string
     {
         if (ob_get_level() <= $startObLevel) {
             return '';
@@ -123,14 +96,7 @@ final class ExceptionController
         return ob_get_clean();
     }
 
-    /**
-     * Determines the status code to use for the response.
-     *
-     * @param \Throwable $exception
-     *
-     * @return int
-     */
-    private function getStatusCodeFromThrowable(\Throwable $exception)
+    private function getStatusCodeFromThrowable(\Throwable $exception): int
     {
         // If matched
         if ($statusCode = $this->exceptionCodes->resolveException($exception)) {

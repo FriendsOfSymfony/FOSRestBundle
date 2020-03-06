@@ -22,21 +22,10 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
  */
 class EntityToIdObjectTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
     private $om;
-
-    /**
-     * @var string
-     */
     private $entityName;
 
-    /**
-     * @param ObjectManager $om
-     * @param string        $entityName
-     */
-    public function __construct(ObjectManager $om, $entityName)
+    public function __construct(ObjectManager $om, string $entityName)
     {
         $this->entityName = $entityName;
         $this->om = $om;

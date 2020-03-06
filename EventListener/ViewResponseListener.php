@@ -32,22 +32,13 @@ class ViewResponseListener implements EventSubscriberInterface
     private $viewHandler;
     private $forceView;
 
-    /**
-     * Constructor.
-     *
-     * @param ViewHandlerInterface $viewHandler
-     * @param bool                 $forceView
-     */
-    public function __construct(ViewHandlerInterface $viewHandler, $forceView)
+    public function __construct(ViewHandlerInterface $viewHandler, bool $forceView)
     {
         $this->viewHandler = $viewHandler;
         $this->forceView = $forceView;
     }
 
     /**
-     * Renders the parameters and initializes a new response object with the
-     * rendered content.
-     *
      * @param ViewEvent $event
      */
     public function onKernelView($event)
@@ -98,7 +89,7 @@ class ViewResponseListener implements EventSubscriberInterface
         $event->setResponse($response);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         // Must be executed before SensioFrameworkExtraBundle's listener
         return array(

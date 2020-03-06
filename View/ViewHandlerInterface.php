@@ -48,9 +48,6 @@ interface ViewHandlerInterface
      *
      * Decides on which handler to use based on the request format
      *
-     * @param View    $view
-     * @param Request $request
-     *
      * @return Response
      */
     public function handle(View $view, Request $request = null);
@@ -58,7 +55,6 @@ interface ViewHandlerInterface
     /**
      * Create the Response from the view.
      *
-     * @param View   $view
      * @param string $location
      * @param string $format
      *
@@ -69,9 +65,7 @@ interface ViewHandlerInterface
     /**
      * Handles creation of a Response using either redirection or the serializer service.
      *
-     * @param View    $view
-     * @param Request $request
-     * @param string  $format
+     * @param string $format
      *
      * @return Response
      */

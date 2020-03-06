@@ -63,11 +63,7 @@ final class View
     private $response;
 
     /**
-     * Convenience method to allow for a fluent interface.
-     *
-     * @param mixed $data
-     * @param int   $statusCode
-     * @param array $headers
+     * @param int|null $statusCode
      *
      * @return static
      */
@@ -82,7 +78,6 @@ final class View
      *
      * @param string $url
      * @param int    $statusCode
-     * @param array  $headers
      *
      * @return static
      */
@@ -99,9 +94,7 @@ final class View
      * given route.
      *
      * @param string $route
-     * @param array  $parameters
      * @param int    $statusCode
-     * @param array  $headers
      *
      * @return static
      */
@@ -123,7 +116,6 @@ final class View
      *
      * @param mixed $data
      * @param int   $statusCode
-     * @param array $headers
      */
     public function __construct($data = null, $statusCode = null, array $headers = [])
     {
@@ -167,8 +159,6 @@ final class View
     /**
      * Sets the headers.
      *
-     * @param array $headers
-     *
      * @return View
      */
     public function setHeaders(array $headers)
@@ -196,8 +186,6 @@ final class View
 
     /**
      * Sets the serialization context.
-     *
-     * @param Context $context
      *
      * @return View
      */
@@ -268,8 +256,6 @@ final class View
 
     /**
      * Sets the response.
-     *
-     * @param Response $response
      *
      * @return View
      */
