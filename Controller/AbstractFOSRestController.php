@@ -22,8 +22,6 @@ abstract class AbstractFOSRestController extends AbstractController
     use ControllerTrait;
 
     /**
-     * Get the ViewHandler.
-     *
      * @return ViewHandlerInterface
      */
     protected function getViewHandler()
@@ -37,8 +35,6 @@ abstract class AbstractFOSRestController extends AbstractController
 
     /**
      * {@inheritdoc}
-     *
-     * @return array
      */
     public static function getSubscribedServices()
     {

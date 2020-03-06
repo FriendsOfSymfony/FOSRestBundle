@@ -27,12 +27,6 @@ class RestControllerReader
     private $actionReader;
     private $annotationReader;
 
-    /**
-     * Initializes controller reader.
-     *
-     * @param RestActionReader $actionReader     action reader
-     * @param Reader           $annotationReader annotation reader
-     */
     public function __construct(RestActionReader $actionReader, Reader $annotationReader)
     {
         $this->actionReader = $actionReader;
@@ -40,8 +34,6 @@ class RestControllerReader
     }
 
     /**
-     * Returns action reader.
-     *
      * @return RestActionReader
      */
     public function getActionReader()
@@ -50,12 +42,6 @@ class RestControllerReader
     }
 
     /**
-     * Reads controller routes.
-     *
-     * @param \ReflectionClass $reflectionClass
-     *
-     * @throws \InvalidArgumentException
-     *
      * @return RestRouteCollection
      */
     public function read(\ReflectionClass $reflectionClass)

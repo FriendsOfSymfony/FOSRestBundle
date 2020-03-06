@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class HeaderVersionResolver implements VersionResolverInterface
 {
-    /**
-     * @var string
-     */
     private $headerName;
 
     /**

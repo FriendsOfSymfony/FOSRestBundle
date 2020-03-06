@@ -23,9 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 trait ControllerTrait
 {
-    /**
-     * @var ViewHandlerInterface
-     */
     private $viewhandler;
 
     public function setViewHandler(ViewHandlerInterface $viewhandler)
@@ -33,9 +30,6 @@ trait ControllerTrait
         $this->viewhandler = $viewhandler;
     }
 
-    /**
-     * @return ViewHandlerInterface
-     */
     protected function getViewHandler()
     {
         if (!$this->viewhandler instanceof ViewHandlerInterface) {
@@ -46,12 +40,7 @@ trait ControllerTrait
     }
 
     /**
-     * Creates a view.
-     *
-     * Convenience method to allow for a fluent interface.
-     *
-     * @param mixed $data
-     * @param int   $statusCode
+     * @param int $statusCode
      *
      * @return View
      */
@@ -61,10 +50,6 @@ trait ControllerTrait
     }
 
     /**
-     * Creates a Redirect view.
-     *
-     * Convenience method to allow for a fluent interface.
-     *
      * @param string $url
      * @param int    $statusCode
      *
@@ -76,10 +61,6 @@ trait ControllerTrait
     }
 
     /**
-     * Creates a Route Redirect View.
-     *
-     * Convenience method to allow for a fluent interface.
-     *
      * @param string $route
      * @param int    $statusCode
      *

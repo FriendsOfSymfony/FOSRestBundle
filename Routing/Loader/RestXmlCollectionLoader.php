@@ -31,20 +31,14 @@ class RestXmlCollectionLoader extends XmlFileLoader
     private $defaultFormat;
 
     /**
-     * Initializes xml loader.
-     *
-     * @param FileLocatorInterface $locator
-     * @param RestRouteProcessor   $processor
-     * @param bool                 $includeFormat
-     * @param string[]             $formats
-     * @param string               $defaultFormat
+     * @param string[] $formats
      */
     public function __construct(
         FileLocatorInterface $locator,
         RestRouteProcessor $processor,
-        $includeFormat = true,
+        bool $includeFormat = true,
         array $formats = [],
-        $defaultFormat = null
+        string $defaultFormat = null
     ) {
         parent::__construct($locator);
 
@@ -208,11 +202,6 @@ class RestXmlCollectionLoader extends XmlFileLoader
             'rest' === $type;
     }
 
-    /**
-     * @param \DOMDocument $dom
-     *
-     * @throws \InvalidArgumentException When xml doesn't validate its xsd schema
-     */
     protected function validate(\DOMDocument $dom)
     {
         $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
@@ -263,12 +252,8 @@ EOF;
      *
      * Note: The underscore postfix on the method name is to ensure compatibility with versions
      *       before 2.0.16 while working around a bug in PHP https://bugs.php.net/bug.php?id=62956
-     *
-     * @param bool $internalErrors The previous state of internal errors to reset it
-     *
-     * @return array An array of libxml error strings
      */
-    private function getXmlErrors_($internalErrors)
+    private function getXmlErrors_(bool $internalErrors): array
     {
         $errors = [];
         foreach (libxml_get_errors() as $error) {

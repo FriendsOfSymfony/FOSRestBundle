@@ -15,16 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * ViewHandlerInterface.
- *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Lukas K. Smith <smith@pooteeweet.org>
  */
 interface ViewHandlerInterface
 {
     /**
-     * Verifies whether the given format is supported by this view.
-     *
      * @param string $format
      *
      * @return bool
@@ -64,8 +60,6 @@ interface ViewHandlerInterface
     public function handle(View $view, Request $request = null);
 
     /**
-     * Create the Response from the view.
-     *
      * @param string $location
      * @param string $format
      *
@@ -74,8 +68,6 @@ interface ViewHandlerInterface
     public function createRedirectResponse(View $view, $location, $format);
 
     /**
-     * Render the view data with the given template.
-     *
      * @deprecated since 2.8
      *
      * @param string $format
@@ -85,8 +77,6 @@ interface ViewHandlerInterface
     public function renderTemplate(View $view, $format);
 
     /**
-     * Prepare view data for use by templating engine.
-     *
      * @deprecated since 2.8
      *
      * @return array
@@ -94,8 +84,6 @@ interface ViewHandlerInterface
     public function prepareTemplateParameters(View $view);
 
     /**
-     * Handles creation of a Response using either redirection or the templating/serializer service.
-     *
      * @param string $format
      *
      * @return Response

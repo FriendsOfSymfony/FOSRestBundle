@@ -34,29 +34,20 @@ class RequestBodyParamConverter implements ParamConverterInterface
     private $serializer;
     private $context = [];
     private $validator;
-
-    /**
-     * The name of the argument on which the ConstraintViolationList will be set.
-     *
-     * @var null|string
-     */
     private $validationErrorsArgument;
 
     /**
-     * @param Serializer         $serializer
-     * @param array|null         $groups                   An array of groups to be used in the serialization context
-     * @param string|null        $version                  A version string to be used in the serialization context
-     * @param ValidatorInterface $validator
-     * @param string|null        $validationErrorsArgument
+     * @param string[]|null $groups  An array of groups to be used in the serialization context
+     * @param string|null   $version A version string to be used in the serialization context
      *
      * @throws \InvalidArgumentException
      */
     public function __construct(
         Serializer $serializer,
-        $groups = null,
-        $version = null,
+        ?array $groups = null,
+        ?string $version = null,
         ValidatorInterface $validator = null,
-        $validationErrorsArgument = null
+        ?string $validationErrorsArgument = null
     ) {
         $this->serializer = $serializer;
 
@@ -129,10 +120,6 @@ class RequestBodyParamConverter implements ParamConverterInterface
         return null !== $configuration->getClass() && 'fos_rest.request_body' === $configuration->getConverter();
     }
 
-    /**
-     * @param Context $context
-     * @param array   $options
-     */
     protected function configureContext(Context $context, array $options)
     {
         foreach ($options as $key => $value) {
@@ -153,9 +140,6 @@ class RequestBodyParamConverter implements ParamConverterInterface
         }
     }
 
-    /**
-     * Throws an exception or return false if a ParamConverter is optional.
-     */
     private function throwException(\Exception $exception, ParamConverter $configuration)
     {
         if ($configuration->isOptional()) {
@@ -165,12 +149,7 @@ class RequestBodyParamConverter implements ParamConverterInterface
         throw $exception;
     }
 
-    /**
-     * @param array $options
-     *
-     * @return array
-     */
-    private function getValidatorOptions(array $options)
+    private function getValidatorOptions(array $options): array
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([

@@ -20,28 +20,20 @@ namespace FOS\RestBundle\Request;
 interface ParamFetcherInterface
 {
     /**
-     * Sets the controller.
-     *
      * @param callable $controller
      */
     public function setController($controller);
 
     /**
-     * Gets a validated parameter.
-     *
-     * @param string $name   Name of the parameter
+     * @param string $name
      * @param bool   $strict Whether a requirement mismatch should cause an exception
-     *
-     * @return mixed Value of the parameter
      */
     public function get($name, $strict = null);
 
     /**
-     * Gets all validated parameter.
-     *
      * @param bool $strict Whether a requirement mismatch should cause an exception
      *
-     * @return array Values of all the parameters
+     * @return array
      */
     public function all($strict = false);
 }

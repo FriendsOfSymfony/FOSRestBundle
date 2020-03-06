@@ -19,10 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 interface VersionResolverInterface
 {
     /**
-     * Resolves the version of a request.
-     *
-     * @param Request $request
-     *
      * @return scalar|false Current version or false if not resolved
      */
     public function resolve(Request $request);

@@ -61,16 +61,9 @@ final class ParameterBag
     }
 
     /**
-     * Initialize the parameters.
-     *
-     * @param string $requestId
-     *
      * @return ParamInterface[]
-     *
-     * @throws \InvalidArgumentException
-     * @throws \ReflectionException
      */
-    private function initParams($requestId)
+    private function initParams(string $requestId): array
     {
         $controller = $this->params[$requestId]['controller'];
         if (!is_array($controller) || empty($controller[0]) || !is_object($controller[0])) {

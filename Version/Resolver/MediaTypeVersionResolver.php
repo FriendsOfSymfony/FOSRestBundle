@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MediaTypeVersionResolver implements VersionResolverInterface
 {
-    /**
-     * @var string
-     */
     private $regex;
 
     /**
