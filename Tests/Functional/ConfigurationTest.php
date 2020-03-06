@@ -38,12 +38,12 @@ class ConfigurationTest extends WebTestCase
     {
         $client = $this->createClient(['test_case' => 'ConfigurationWithTwig']);
         $client->request(
-                'GET',
-                '/_profiler/empty/search/results?limit=10',
-                [],
-                [],
-                ['HTTP_Accept' => 'application/xml']
-            );
+            'GET',
+            '/_profiler/empty/search/results?limit=10',
+            [],
+            [],
+            ['HTTP_Accept' => 'application/xml']
+        );
 
         $this->assertSame(200, $client->getResponse()->getStatusCode());
         $this->assertSame('text/html; charset=UTF-8', $client->getResponse()->headers->get('Content-Type'));
