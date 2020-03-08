@@ -8,6 +8,7 @@ cache:
 branches:
   only:
     - master
+    - decorate-error-listener
     - /^\d+\.(\d+|x)$/
 
 matrix:
