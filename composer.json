@@ -24,6 +24,7 @@
             "FOS\\RestBundle\\": ""
         },
         "exclude-from-classmap": [
+            "Resources/",
             "Tests/"
         ]
     },
