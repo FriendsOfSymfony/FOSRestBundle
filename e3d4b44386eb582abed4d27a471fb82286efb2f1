@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-03-05T16:15:48Z
+
+@GuilhemN Do you remember why we flagged these services as lazy in #1252?
+
+---------------------------------------------------------------------------
+
+by alterphp at 2020-03-05T16:57:38Z
+
+According to https://symfony.com/doc/current/service_container/lazy_services.html#why-lazy-services, I guess they are marked as **lazy** because only 1 of them is really used at last. The alias `fos_rest.serializer` points to the selected serializer. No need to instanciate them all.
