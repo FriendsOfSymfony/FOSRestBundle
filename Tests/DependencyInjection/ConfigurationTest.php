@@ -46,6 +46,7 @@ class ConfigurationTest extends TestCase
     {
         $expectedConfig = [
             \RuntimeException::class => 500,
+            \TypeError::class => 500,
         ];
 
         $config = $this->processor->processConfiguration(
@@ -132,7 +133,7 @@ class ConfigurationTest extends TestCase
 
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Could not load class 'UnknownException' or the class does not extend from '\Exception'
+     * @expectedExceptionMessage Could not load class 'UnknownException' or the class does not extend from '\Throwable'
      */
     public function testLoadBadCodesClassThrowsException()
     {
