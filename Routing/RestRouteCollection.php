@@ -17,6 +17,8 @@ use Symfony\Component\Routing\RouteCollection;
  * Restful route collection.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @internal since 2.8
  */
 class RestRouteCollection extends RouteCollection
 {

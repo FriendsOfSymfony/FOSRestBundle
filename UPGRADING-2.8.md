@@ -6,6 +6,14 @@ Upgrading From 2.7 To 2.8
  
  * The following classes are marked as `internal`:
 
+   * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
+   * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
+   * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
+   * `FOS\RestBundle\Routing\Loader\RestRouteLoader`
+   * `FOS\RestBundle\Routing\Loader\RestRouteProcessor`
+   * `FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader`
+   * `FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader`
+   * `FOS\RestBundle\Routing\RestRouteCollection`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
    * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`

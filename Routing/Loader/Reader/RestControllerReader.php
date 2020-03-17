@@ -21,6 +21,8 @@ use Symfony\Component\Config\Resource\FileResource;
  * REST controller reader.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @internal since 2.8
  */
 class RestControllerReader
 {

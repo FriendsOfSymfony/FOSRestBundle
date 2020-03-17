@@ -20,6 +20,8 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Donald Tyler <chekote69@gmail.com>
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @internal since 2.8
  */
 class RestRouteProcessor
 {

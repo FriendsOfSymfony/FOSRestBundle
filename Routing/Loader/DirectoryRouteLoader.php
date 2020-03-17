@@ -20,6 +20,8 @@ use Symfony\Component\Routing\RouteCollection;
  * Parse annotated controller classes from all files of a directory.
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
+ *
+ * @internal since 2.8
  */
 class DirectoryRouteLoader extends Loader
 {
