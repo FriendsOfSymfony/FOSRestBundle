@@ -97,12 +97,11 @@ class ParamReaderTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Class 'FOS\RestBundle\Tests\Request\ParamReaderTest' has no method 'foo'.
-     */
     public function testExceptionOnNonExistingMethod()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(sprintf('Class "%s" has no method "foo".', self::class));
+
         $this->paramReader->read(new \ReflectionClass(__CLASS__), 'foo');
     }
 

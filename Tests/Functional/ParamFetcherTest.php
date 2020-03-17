@@ -214,10 +214,10 @@ class ParamFetcherTest extends WebTestCase
 
             // SF >= 3.0
             $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
-            $this->assertContains("'baz' param is incompatible with foz param.", $this->client->getResponse()->getContent());
+            $this->assertContains('\\"baz\\" param is incompatible with foz param.', $this->client->getResponse()->getContent());
         } catch (BadRequestHttpException $e) {
             // SF 2.x
-            $this->assertEquals("'baz' param is incompatible with foz param.", $e->getMessage());
+            $this->assertEquals('\\"baz\\" param is incompatible with foz param.', $e->getMessage());
         }
     }
 

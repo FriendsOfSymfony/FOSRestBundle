@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -108,11 +109,10 @@ class FormatListenerTest extends TestCase
         $this->assertEquals($request->getRequestFormat(), 'xml');
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
-     */
     public function testOnKernelControllerException()
     {
+        $this->expectException(HttpException::class);
+
         $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
             ->disableOriginalConstructor()
             ->getMock();

@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 /**
  * Request listener test.
@@ -239,11 +241,10 @@ class BodyListenerTest extends TestCase
         return $cases;
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     */
     public function testOnKernelRequestNormalizationException()
     {
+        $this->expectException(BadRequestHttpException::class);
+
         $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->getMock();
         $decoder
             ->expects($this->any())
@@ -283,20 +284,22 @@ class BodyListenerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * Test that a malformed request will cause a BadRequestHttpException to be thrown.
      */
     public function testBadRequestExceptionOnMalformedContent()
     {
+        $this->expectException(BadRequestHttpException::class);
+
         $this->testOnKernelRequest(true, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/json');
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException
      * Test that a unallowed format will cause a UnsupportedMediaTypeHttpException to be thrown.
      */
     public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
     {
+        $this->expectException(UnsupportedMediaTypeHttpException::class);
+
         $this->testOnKernelRequest(false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/foo', true);
     }
 
