@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Tests\Negotiatior;
 
 use FOS\RestBundle\Negotiation\FormatNegotiator;
+use FOS\RestBundle\Util\StopFormatListenerException;
 use Negotiation\Accept;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -41,12 +42,11 @@ class FormatNegotiatorTest extends TestCase
         $this->assertNull($this->negotiator->getBest(''));
     }
 
-    /**
-     * @expectedException \FOS\RestBundle\Util\StopFormatListenerException
-     * @expectedExceptionMessage Stopped
-     */
     public function testStopException()
     {
+        $this->expectException(StopFormatListenerException::class);
+        $this->expectExceptionMessage('Stopped');
+
         $this->addRequestMatcher(false);
         $this->addRequestMatcher(true, ['stop' => true]);
         $this->negotiator->getBest('');

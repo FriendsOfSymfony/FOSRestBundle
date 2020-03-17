@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\DependencyInjection;
 
 use FOS\RestBundle\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -111,12 +112,13 @@ class ConfigurationTest extends TestCase
      *
      * @param mixed $value Test value
      *
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.
      * @dataProvider incorrectExceptionCodeProvider
      */
     public function testThatIfExceptionCodeIncorrectExceptionIsThrown($value)
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage(sprintf('Invalid HTTP code in fos_rest.exception.codes, see %s for all valid codes.', Response::class));
+
         $this->processor->processConfiguration(
             $this->configuration,
             [
@@ -141,11 +143,10 @@ class ConfigurationTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     */
     public function testLoadBadMessagesClassThrowsException()
     {
+        $this->expectException(InvalidConfigurationException::class);
+
         $this->processor->processConfiguration(
             $this->configuration,
             [
@@ -170,12 +171,11 @@ class ConfigurationTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Could not load class 'UnknownException' or the class does not extend from '\Exception'
-     */
     public function testLoadBadCodesClassThrowsException()
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage(sprintf('Could not load class "UnknownException" or the class does not extend from "%s"', \Exception::class));
+
         $this->processor->processConfiguration(
             $this->configuration,
             [

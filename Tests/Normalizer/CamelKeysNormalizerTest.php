@@ -13,15 +13,15 @@ namespace FOS\RestBundle\Tests\Normalizer;
 
 use FOS\RestBundle\Normalizer\CamelKeysNormalizer;
 use FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore;
+use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use PHPUnit\Framework\TestCase;
 
 class CamelKeysNormalizerTest extends TestCase
 {
-    /**
-     * @expectedException \FOS\RestBundle\Normalizer\Exception\NormalizationException
-     */
     public function testNormalizeSameValueException()
     {
+        $this->expectException(NormalizationException::class);
+
         $normalizer = new CamelKeysNormalizer();
         $normalizer->normalize([
             'foo' => [

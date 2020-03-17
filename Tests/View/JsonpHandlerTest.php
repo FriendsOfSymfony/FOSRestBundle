@@ -17,6 +17,7 @@ use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Jsonp handler test.
@@ -73,11 +74,12 @@ class JsonpHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @dataProvider getCallbackFailureDataProvider
      */
     public function testGetCallbackFailure(Request $request)
     {
+        $this->expectException(BadRequestHttpException::class);
+
         $data = ['foo' => 'bar'];
 
         $viewHandler = ViewHandler::create($this->router, $this->serializer, $this->requestStack, ['jsonp' => false]);

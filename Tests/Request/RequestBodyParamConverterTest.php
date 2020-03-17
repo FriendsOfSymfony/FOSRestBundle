@@ -16,6 +16,8 @@ use FOS\RestBundle\Request\RequestBodyParamConverter;
 use PHPUnit\Framework\TestCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
@@ -83,11 +85,10 @@ class RequestBodyParamConverterTest extends TestCase
         return $converter->apply($request, $configuration);
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException
-     */
     public function testExecutionInterceptsUnsupportedFormatException()
     {
+        $this->expectException(UnsupportedMediaTypeHttpException::class);
+
         $converter = new RequestBodyParamConverter($this->serializer);
         $this->serializer
             ->expects($this->once())
@@ -96,14 +97,13 @@ class RequestBodyParamConverterTest extends TestCase
         $this->launchExecution($converter);
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     */
     public function testExecutionInterceptsJMSException()
     {
         if (!class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
             $this->markTestSkipped('JMSSerializerBundle is not installed.');
         }
+
+        $this->expectException(BadRequestHttpException::class);
 
         $converter = new RequestBodyParamConverter($this->serializer);
         $this->serializer
@@ -113,11 +113,10 @@ class RequestBodyParamConverterTest extends TestCase
         $this->launchExecution($converter);
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     */
     public function testExecutionInterceptsSymfonySerializerException()
     {
+        $this->expectException(BadRequestHttpException::class);
+
         $converter = new RequestBodyParamConverter($this->serializer);
         $this->serializer
             ->expects($this->once())

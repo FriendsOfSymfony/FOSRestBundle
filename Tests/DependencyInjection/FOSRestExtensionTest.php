@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\DependencyInjection;
 
 use FOS\RestBundle\DependencyInjection\FOSRestExtension;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -388,11 +389,10 @@ class FOSRestExtensionTest extends TestCase
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     */
     public function testLoadFormatListenerMediaTypeNoRules()
     {
+        $this->expectException(InvalidConfigurationException::class);
+
         $config = [
             'fos_rest' => [
                 'exception' => [
@@ -921,12 +921,12 @@ class FOSRestExtensionTest extends TestCase
 
     /**
      * @dataProvider getLoadBadCodeValueThrowsExceptionData
-     *
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Invalid HTTP code in fos_rest.exception.codes
      */
     public function testLoadBadCodeValueThrowsException($value)
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid HTTP code in fos_rest.exception.codes');
+
         $this->extension->load([
             'fos_rest' => [
                 'exception' => [

@@ -21,6 +21,8 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 
 /**
@@ -473,11 +475,10 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals('foo', $viewHandler->handle($view));
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
-     */
     public function testHandleNotSupported()
     {
+        $this->expectException(HttpException::class);
+
         $viewHandler = $this->createViewHandler([]);
 
         $this->requestStack->push(new Request());
@@ -627,11 +628,12 @@ class ViewHandlerTest extends TestCase
 
     /**
      * @group legacy
-     * @expectedException \LogicException
-     * @expectedExceptionMessage An instance of Symfony\Component\Templating\EngineInterface or Twig\Environment must be injected in FOS\RestBundle\View\ViewHandler to render templates.
      */
     public function testTemplatingNotInjected()
     {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage(sprintf('An instance of %s or %s must be injected in %s to render templates.', EngineInterface::class, Environment::class, ViewHandler::class));
+
         $this->templating = null;
 
         $view = (new View())->setTemplate('foo.html.twig');

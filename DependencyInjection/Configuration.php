@@ -538,7 +538,7 @@ final class Configuration implements ConfigurationInterface
     private function testExceptionExists(string $exception)
     {
         if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
-            throw new InvalidConfigurationException("FOSRestBundle exception mapper: Could not load class '$exception' or the class does not extend from '\\Exception'. Most probably this is a configuration problem.");
+            throw new InvalidConfigurationException(sprintf('FOSRestBundle exception mapper: Could not load class "%s" or the class does not extend from "%s". Most probably this is a configuration problem.', $exception, \Exception::class));
         }
     }
 }
