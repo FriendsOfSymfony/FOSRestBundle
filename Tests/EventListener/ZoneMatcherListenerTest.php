@@ -15,6 +15,7 @@ use FOS\RestBundle\EventListener\ZoneMatcherListener;
 use FOS\RestBundle\FOSRestBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -36,7 +37,7 @@ class ZoneMatcherListenerTest extends TestCase
         $request = new Request();
         $event = $this->getGetResponseEvent($request);
 
-        $requestMatcher = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestMatcherInterface')->getMock();
+        $requestMatcher = $this->getMockBuilder(RequestMatcherInterface::class)->getMock();
         $requestMatcher
             ->expects($this->once())
             ->method('matches')
@@ -55,7 +56,7 @@ class ZoneMatcherListenerTest extends TestCase
         $request = new Request();
         $event = $this->getGetResponseEvent($request);
 
-        $requestMatcher = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestMatcherInterface')->getMock();
+        $requestMatcher = $this->getMockBuilder(RequestMatcherInterface::class)->getMock();
         $requestMatcher
             ->expects($this->once())
             ->method('matches')

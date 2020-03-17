@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\View\JsonpHandler;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
@@ -18,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Jsonp handler test.
@@ -33,8 +35,8 @@ class JsonpHandlerTest extends TestCase
 
     protected function setUp()
     {
-        $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
-        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $this->router = $this->getMockBuilder(RouterInterface::class)->getMock();
+        $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->requestStack = new RequestStack();
     }
 

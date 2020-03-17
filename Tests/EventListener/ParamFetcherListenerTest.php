@@ -40,7 +40,7 @@ class ParamFetcherListenerTest extends TestCase
     private $paramFetcher;
 
     /**
-     * @var \FOS\RestBundle\EventListener\ParamFetcherListener
+     * @var ParamFetcherListener
      */
     private $paramFetcherListener;
 

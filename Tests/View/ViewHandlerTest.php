@@ -11,10 +11,12 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\FormView;
@@ -22,7 +24,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -39,8 +43,8 @@ class ViewHandlerTest extends TestCase
 
     protected function setUp()
     {
-        $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
-        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $this->router = $this->getMockBuilder(RouterInterface::class)->getMock();
+        $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->templating = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
         $this->requestStack = new RequestStack();
     }
@@ -101,7 +105,7 @@ class ViewHandlerTest extends TestCase
         $reflectionMethod = new \ReflectionMethod(ViewHandler::class, 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
-        $form = $this->getMockBuilder('Symfony\Component\Form\Form')
+        $form = $this->getMockBuilder(Form::class)
             ->disableOriginalConstructor()
             ->setMethods(array('isSubmitted', 'isValid'))
             ->getMock();
@@ -266,7 +270,7 @@ class ViewHandlerTest extends TestCase
         }
 
         if ($form) {
-            $data = $this->getMockBuilder('Symfony\Component\Form\Form')
+            $data = $this->getMockBuilder(Form::class)
                 ->disableOriginalConstructor()
                 ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
                 ->getMock();
@@ -310,7 +314,7 @@ class ViewHandlerTest extends TestCase
             ->will($this->returnValue(var_export($expected, true)));
 
         if ($form) {
-            $data = $this->getMockBuilder('Symfony\Component\Form\Form')
+            $data = $this->getMockBuilder(Form::class)
                 ->disableOriginalConstructor()
                 ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
                 ->getMock();
@@ -457,7 +461,7 @@ class ViewHandlerTest extends TestCase
         $data = ['foo' => 'bar'];
 
         $view = new View($data);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $viewHandler->handle($view));
+        $this->assertInstanceOf(Response::class, $viewHandler->handle($view));
     }
 
     public function testHandleCustom()
@@ -513,7 +517,7 @@ class ViewHandlerTest extends TestCase
         $object = new \stdClass();
 
         $formView = new FormView();
-        $form = $this->getMockBuilder('Symfony\Component\Form\Form')
+        $form = $this->getMockBuilder(Form::class)
             ->setMethods(['createView', 'getData'])
             ->disableOriginalConstructor()
             ->disableOriginalClone()
@@ -597,7 +601,7 @@ class ViewHandlerTest extends TestCase
         $view = new View($exceptionWrapper);
         $view->getContext()->addGroups(array('Custom'));
 
-        $translatorMock = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)
             ->setMethods(array('trans', 'transChoice', 'setLocale', 'getLocale'))
             ->getMock();
         $translatorMock

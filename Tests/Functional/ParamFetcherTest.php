@@ -30,7 +30,7 @@ class ParamFetcherTest extends WebTestCase
 
     private function createUploadedFile($path, $originalName, $mimeType = null, $error = null, $test = false)
     {
-        $ref = new \ReflectionClass('Symfony\Component\HttpFoundation\File\UploadedFile');
+        $ref = new \ReflectionClass(UploadedFile::class);
         $params = $ref->getConstructor()->getParameters();
 
         if ('error' === $params[3]->getName()) {

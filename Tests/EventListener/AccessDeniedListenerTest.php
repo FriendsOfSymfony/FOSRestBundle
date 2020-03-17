@@ -18,9 +18,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException as HttpKernelAccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException as SecurityAccessDeniedException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -56,7 +59,7 @@ class AccessDeniedListenerTest extends TestCase
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $request->setRequestFormat($format);
 
-        $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats, 'Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats, SecurityAccessDeniedException::class);
     }
 
     /**
@@ -77,9 +80,9 @@ class AccessDeniedListenerTest extends TestCase
      * @param Request $request
      * @param array   $formats
      */
-    private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats, $exceptionClass = 'Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException')
+    private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats, $exceptionClass = HttpKernelAccessDeniedException::class)
     {
-        $exception = new AccessDeniedException();
+        $exception = new SecurityAccessDeniedException();
         $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
         $event = new $eventClass(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
         $listener = new AccessDeniedListener($formats, null);
@@ -167,7 +170,7 @@ class AccessDeniedListenerTest extends TestCase
         } else {
             $exception = $event->getException();
         }
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\HttpException', $exception);
+        $this->assertInstanceOf(HttpException::class, $exception);
         $this->assertEquals(401, $exception->getStatusCode());
         $this->assertEquals('You are not authenticated', $exception->getMessage());
         $this->assertArrayNotHasKey('WWW-Authenticate', $exception->getHeaders());
@@ -193,7 +196,7 @@ class AccessDeniedListenerTest extends TestCase
         } else {
             $exception = $event->getException();
         }
-        $this->assertInstanceOf('Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException', $exception);
+        $this->assertInstanceOf(UnauthorizedHttpException::class, $exception);
         $this->assertEquals(401, $exception->getStatusCode());
         $this->assertEquals('You are not authenticated', $exception->getMessage());
         $headers = $exception->getHeaders();

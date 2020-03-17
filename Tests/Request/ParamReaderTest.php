@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Request\ParamReader;
 use Doctrine\Common\Annotations\AnnotationReader;
+use FOS\RestBundle\Tests\Fixtures\Controller\ParamsAnnotatedController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -109,7 +110,7 @@ class ParamReaderTest extends TestCase
     {
         $reader = new AnnotationReader();
 
-        $method = new \ReflectionMethod('FOS\RestBundle\Tests\Fixtures\Controller\ParamsAnnotatedController', 'getArticlesAction');
+        $method = new \ReflectionMethod(ParamsAnnotatedController::class, 'getArticlesAction');
         $params = $reader->getMethodAnnotations($method);
 
         // Param 1 (query)

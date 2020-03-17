@@ -490,11 +490,11 @@ final class Configuration implements ConfigurationInterface
                                             continue;
                                         }
 
-                                        if (!defined('Symfony\Component\HttpFoundation\Response::'.$item)) {
-                                            throw new InvalidConfigurationException('Invalid HTTP code in fos_rest.exception.codes, see Symfony\Component\HttpFoundation\Response for all valid codes.');
+                                        if (!defined(sprintf('%s::%s', Response::class, $item))) {
+                                            throw new InvalidConfigurationException(sprintf('Invalid HTTP code in fos_rest.exception.codes, see %s for all valid codes.', Response::class));
                                         }
 
-                                        $item = constant('Symfony\Component\HttpFoundation\Response::'.$item);
+                                        $item = constant(sprintf('%s::%s', Response::class, $item));
                                     }
 
                                     return $items;
