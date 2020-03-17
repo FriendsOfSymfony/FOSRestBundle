@@ -29,6 +29,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * REST controller actions reader.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @internal since 2.8
  */
 class RestActionReader
 {
