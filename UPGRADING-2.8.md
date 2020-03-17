@@ -6,6 +6,8 @@ Upgrading From 2.7 To 2.8
  
  * The following classes are marked as `internal`:
 
+   * `FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass`
+   * `FOS\RestBundle\DependencyInjection\FOSRestExtension`
    * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
