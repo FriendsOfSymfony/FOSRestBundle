@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Version\ChainVersionResolver;
 use FOS\RestBundle\Version\VersionResolverInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -41,12 +42,17 @@ class VersionListener
         }
 
         $version = $this->versionResolver->resolve($request);
-        if (false === $version && null !== $this->defaultVersion) {
+
+        if (!$this->versionResolver instanceof ChainVersionResolver && null !== $version && !is_string($version)) {
+            @trigger_error(sprintf('Not returning a string or null from %s::resolve() when implementing the %s is deprecated since FOSRestBundle 2.8.', get_class($this->versionResolver), VersionResolverInterface::class), E_USER_DEPRECATED);
+        }
+
+        if ((false === $version || null === $version) && null !== $this->defaultVersion) {
             $version = $this->defaultVersion;
         }
 
         // Return if nothing to do
-        if (false === $version) {
+        if (false === $version || null === $version) {
             return;
         }
 
