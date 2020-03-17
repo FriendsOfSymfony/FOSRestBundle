@@ -8,6 +8,8 @@ Upgrading From 2.7 To 2.8
 
    * `FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass`
    * `FOS\RestBundle\DependencyInjection\FOSRestExtension`
+   * `FOS\RestBundle\Form\Extension\DisableCSRFExtension`
+   * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
    * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
