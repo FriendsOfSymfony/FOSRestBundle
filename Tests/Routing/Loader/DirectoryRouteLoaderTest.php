@@ -13,7 +13,10 @@ namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use FOS\RestBundle\Routing\Loader\DirectoryRouteLoader;
 use FOS\RestBundle\Routing\Loader\RestRouteProcessor;
+use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Routing\Route;
 
 class DirectoryRouteLoaderTest extends LoaderTest
 {
@@ -24,7 +27,7 @@ class DirectoryRouteLoaderTest extends LoaderTest
         $this->assertCount(9, $collection);
 
         foreach ($collection as $route) {
-            $this->assertInstanceOf('Symfony\Component\Routing\Route', $route);
+            $this->assertInstanceOf(Route::class, $route);
         }
     }
 
@@ -33,7 +36,7 @@ class DirectoryRouteLoaderTest extends LoaderTest
      */
     public function testSupports($resource, $type, $expected)
     {
-        $loader = new DirectoryRouteLoader($this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')->getMock(), new RestRouteProcessor());
+        $loader = new DirectoryRouteLoader($this->getMockBuilder(FileLocatorInterface::class)->getMock(), new RestRouteProcessor());
 
         if ($expected) {
             $this->assertTrue($loader->supports($resource, $type));
@@ -47,14 +50,14 @@ class DirectoryRouteLoaderTest extends LoaderTest
         return array(
             'existing-directory' => array(__DIR__.'/../../Fixtures/Controller', 'rest', true),
             'non-existing-directory' => array(__DIR__.'/Fixtures/Controller', 'rest', false),
-            'class-name' => array('FOS\RestBundle\Tests\Fixtures\Controller\UsersController', 'rest', false),
+            'class-name' => array(UsersController::class, 'rest', false),
             'null-type' => array(__DIR__.'/../../Fixtures/Controller', null, false),
         );
     }
 
     private function loadFromDirectory($resource)
     {
-        $directoryLoader = new DirectoryRouteLoader($this->getMockBuilder('Symfony\Component\Config\FileLocatorInterface')->getMock(), new RestRouteProcessor());
+        $directoryLoader = new DirectoryRouteLoader($this->getMockBuilder(FileLocatorInterface::class)->getMock(), new RestRouteProcessor());
         $controllerLoader = $this->getControllerLoader();
 
         // LoaderResolver sets the resolvers on the loaders passed to it

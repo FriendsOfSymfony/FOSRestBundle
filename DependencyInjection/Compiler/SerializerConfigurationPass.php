@@ -11,8 +11,10 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
+use FOS\RestBundle\Serializer\Serializer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Checks if a serializer is either set or can be auto-configured.
@@ -30,8 +32,8 @@ final class SerializerConfigurationPass implements CompilerPassInterface
             $class = $container->getParameterBag()->resolveValue(
                 $container->findDefinition('fos_rest.serializer')->getClass()
             );
-            if (!is_subclass_of($class, 'FOS\RestBundle\Serializer\Serializer')) {
-                throw new \InvalidArgumentException(sprintf('"fos_rest.serializer" must implement FOS\RestBundle\Serializer\Serializer (instance of "%s" given).', $class));
+            if (!is_subclass_of($class, Serializer::class)) {
+                throw new \InvalidArgumentException(sprintf('"fos_rest.serializer" must implement %s (instance of "%s" given).', Serializer::class, $class));
             }
 
             return;
@@ -55,12 +57,12 @@ final class SerializerConfigurationPass implements CompilerPassInterface
             $container->findDefinition('serializer')->getClass()
         );
 
-        if (is_subclass_of($class, 'Symfony\Component\Serializer\SerializerInterface')) {
+        if (is_subclass_of($class, SerializerInterface::class)) {
             $container->setAlias('fos_rest.serializer', 'fos_rest.serializer.symfony');
-        } elseif (is_subclass_of($class, 'FOS\RestBundle\Serializer\Serializer')) {
+        } elseif (is_subclass_of($class, Serializer::class)) {
             $container->setAlias('fos_rest.serializer', 'serializer');
         } else {
-            throw new \InvalidArgumentException(sprintf('The class of the "serializer" service in use is not supported (instance of "%s" given). Please make it implement FOS\RestBundle\Serializer\Serializer or configure the service "fos_rest.serializer" with a class implementing FOS\RestBundle\Serializer\Serializer.', $class));
+            throw new \InvalidArgumentException(sprintf('The class of the "serializer" service in use is not supported (instance of "%s" given). Please make it implement %s or configure the service "fos_rest.serializer" with a class implementing %s.', $class, Serializer::class, Serializer::class));
         }
     }
 }

@@ -11,15 +11,22 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Environment;
 
 /**
  * View test.
@@ -34,8 +41,8 @@ class ViewHandlerTest extends TestCase
 
     protected function setUp()
     {
-        $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
-        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $this->router = $this->getMockBuilder(RouterInterface::class)->getMock();
+        $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->requestStack = new RequestStack();
     }
 
@@ -95,7 +102,7 @@ class ViewHandlerTest extends TestCase
         $reflectionMethod = new \ReflectionMethod(ViewHandler::class, 'getStatusCode');
         $reflectionMethod->setAccessible(true);
 
-        $form = $this->getMockBuilder('Symfony\Component\Form\Form')
+        $form = $this->getMockBuilder(Form::class)
             ->disableOriginalConstructor()
             ->setMethods(array('isSubmitted', 'isValid'))
             ->getMock();
@@ -228,7 +235,7 @@ class ViewHandlerTest extends TestCase
         $this->setupMockedSerializer($expected);
 
         if ($form) {
-            $data = $this->getMockBuilder('Symfony\Component\Form\Form')
+            $data = $this->getMockBuilder(Form::class)
                 ->disableOriginalConstructor()
                 ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
                 ->getMock();
@@ -365,11 +372,10 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals('foo', $viewHandler->handle($view));
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\HttpException
-     */
     public function testHandleNotSupported()
     {
+        $this->expectException(HttpException::class);
+
         $viewHandler = $this->createViewHandler([]);
 
         $this->requestStack->push(new Request());
@@ -421,7 +427,7 @@ class ViewHandlerTest extends TestCase
         $view = new View($exceptionWrapper);
         $view->getContext()->addGroups(array('Custom'));
 
-        $translatorMock = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)
             ->setMethods(array('trans', 'transChoice', 'setLocale', 'getLocale'))
             ->getMock();
         $translatorMock
@@ -450,7 +456,7 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
-    private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false, $forceRedirects = null)
+    private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false)
     {
         return ViewHandler::create(
             $this->router,

@@ -13,8 +13,10 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\EventListener\ViewResponseListener;
+use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,6 +26,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * View response listener test.
@@ -33,12 +36,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class ViewResponseListenerTest extends TestCase
 {
     /**
-     * @var \FOS\RestBundle\EventListener\ViewResponseListener
+     * @var ViewResponseListener
      */
     public $listener;
 
     /**
-     * @var \FOS\RestBundle\View\ViewHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ViewHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public $viewHandler;
 
@@ -49,7 +52,7 @@ class ViewResponseListenerTest extends TestCase
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpKernel\Event\ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @return ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getFilterEvent(Request $request)
     {
@@ -64,7 +67,7 @@ class ViewResponseListenerTest extends TestCase
      * @param Request $request
      * @param mixed   $result
      *
-     * @return \Symfony\Component\HttpKernel\Event\ViewEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @return ViewEvent|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getResponseEvent(Request $request, $result)
     {
@@ -117,7 +120,7 @@ class ViewResponseListenerTest extends TestCase
         $this->listener->onKernelView($event);
         $response = $event->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertInstanceOf(Response::class, $response);
         $this->assertSame($expectedCode, $response->getStatusCode());
     }
 
@@ -165,8 +168,8 @@ class ViewResponseListenerTest extends TestCase
 
     protected function setUp()
     {
-        $this->router = $this->getMockBuilder('Symfony\Component\Routing\RouterInterface')->getMock();
-        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $this->router = $this->getMockBuilder(RouterInterface::class)->getMock();
+        $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->requestStack = new RequestStack();
     }
 

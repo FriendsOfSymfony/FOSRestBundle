@@ -11,8 +11,16 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use FOS\RestBundle\Controller\Annotations\AbstractParam;
+use FOS\RestBundle\Controller\Annotations\FileParam;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\Constraints;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * FileParamTest.
@@ -23,14 +31,14 @@ class FileParamTest extends TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMockBuilder('FOS\RestBundle\Controller\Annotations\FileParam')
+        $this->param = $this->getMockBuilder(FileParam::class)
             ->setMethods(array('getKey'))
             ->getMock();
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\AbstractParam', $this->param);
+        $this->assertInstanceOf(AbstractParam::class, $this->param);
     }
 
     public function testValueGetter()
@@ -40,8 +48,8 @@ class FileParamTest extends TestCase
             ->method('getKey')
             ->willReturn('foo');
 
-        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
-        $parameterBag = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')->getMock();
+        $request = $this->getMockBuilder(Request::class)->getMock();
+        $parameterBag = $this->getMockBuilder(ParameterBag::class)->getMock();
         $parameterBag
             ->expects($this->once())
             ->method('get')
@@ -54,11 +62,11 @@ class FileParamTest extends TestCase
 
     public function testComplexRequirements()
     {
-        $this->param->requirements = $requirement = $this->getMockBuilder('Symfony\Component\Validator\Constraint')->getMock();
+        $this->param->requirements = $requirement = $this->getMockBuilder(Constraint::class)->getMock();
         $this->assertEquals(array(
-            new Constraints\NotNull(),
+            new NotNull(),
             $requirement,
-            new Constraints\File(),
+            new File(),
         ), $this->param->getConstraints());
     }
 
@@ -67,7 +75,7 @@ class FileParamTest extends TestCase
         $this->param->nullable = true;
         $this->param->requirements = $requirements = ['mimeTypes' => 'application/json'];
         $this->assertEquals(array(
-            new Constraints\File($requirements),
+            new File($requirements),
         ), $this->param->getConstraints());
     }
 
@@ -76,8 +84,8 @@ class FileParamTest extends TestCase
         $this->param->image = true;
         $this->param->requirements = $requirements = ['mimeTypes' => 'image/gif'];
         $this->assertEquals(array(
-            new Constraints\NotNull(),
-            new Constraints\Image($requirements),
+            new NotNull(),
+            new Image($requirements),
         ), $this->param->getConstraints());
     }
 
@@ -86,9 +94,9 @@ class FileParamTest extends TestCase
         $this->param->image = true;
         $this->param->map = true;
         $this->param->requirements = $requirements = ['mimeTypes' => 'image/gif'];
-        $this->assertEquals(array(new Constraints\All(array(
-            new Constraints\NotNull(),
-            new Constraints\Image($requirements),
+        $this->assertEquals(array(new All(array(
+            new NotNull(),
+            new Image($requirements),
         ))), $this->param->getConstraints());
     }
 
@@ -96,9 +104,9 @@ class FileParamTest extends TestCase
     {
         $this->param->map = true;
         $this->param->requirements = $requirements = ['mimeTypes' => 'application/pdf'];
-        $this->assertEquals(array(new Constraints\All(array(
-            new Constraints\NotNull(),
-            new Constraints\File($requirements),
+        $this->assertEquals(array(new All(array(
+            new NotNull(),
+            new File($requirements),
         ))), $this->param->getConstraints());
     }
 }

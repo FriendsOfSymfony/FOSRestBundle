@@ -169,7 +169,7 @@ final class ParamFetcher implements ParamFetcherInterface
 
             if (null !== $incompatibleParam->getValue($this->getRequest(), null)) {
                 $exceptionMessage = sprintf(
-                    "'%s' param is incompatible with %s param.",
+                    '"%s" param is incompatible with %s param.',
                     $param->getName(),
                     $incompatibleParam->getName()
                 );

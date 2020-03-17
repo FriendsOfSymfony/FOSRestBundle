@@ -11,9 +11,10 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
-use FOS\RestBundle\Controller\Annotations;
+use FOS\RestBundle\Controller\Annotations\AbstractParam;
+use FOS\RestBundle\Controller\Annotations\ParamInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * AbstractParamTest.
@@ -24,12 +25,12 @@ class AbstractParamTest extends TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMockForAbstractClass(Annotations\AbstractParam::class);
+        $this->param = $this->getMockForAbstractClass(AbstractParam::class);
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf(Annotations\ParamInterface::class, $this->param);
+        $this->assertInstanceOf(ParamInterface::class, $this->param);
     }
 
     public function testDefaultValues()
@@ -78,7 +79,7 @@ class AbstractParamTest extends TestCase
 
     public function testNotNullConstraint()
     {
-        $this->assertEquals(array(new Constraints\NotNull()), $this->param->getConstraints(''));
+        $this->assertEquals(array(new NotNull()), $this->param->getConstraints(''));
 
         $this->param->nullable = true;
         $this->assertEquals(array(), $this->param->getConstraints());

@@ -11,8 +11,11 @@
 
 namespace FOS\RestBundle\Tests\DependencyInjection;
 
+use FOS\RestBundle\DependencyInjection\Configuration;
 use FOS\RestBundle\DependencyInjection\FOSRestExtension;
+use FOS\RestBundle\EventListener\ZoneMatcherListener;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -276,11 +279,10 @@ class FOSRestExtensionTest extends TestCase
         $this->assertTrue($this->container->hasDefinition('fos_rest.format_listener'));
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     */
     public function testLoadFormatListenerMediaTypeNoRules()
     {
+        $this->expectException(InvalidConfigurationException::class);
+
         $config = [
             'fos_rest' => [
                 'exception' => [
@@ -455,13 +457,10 @@ class FOSRestExtensionTest extends TestCase
     public function testConfigLoad()
     {
         $controllerLoaderDefinitionName = 'fos_rest.routing.loader.controller';
-        $controllerLoaderClass = 'FOS\RestBundle\Routing\Loader\RestRouteLoader';
 
         $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
-        $yamlCollectionLoaderClass = 'FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader';
 
         $xmlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.xml_collection';
-        $xmlCollectionLoaderClass = 'FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader';
 
         $this->extension->load([
             'fos_rest' => [
@@ -623,12 +622,12 @@ class FOSRestExtensionTest extends TestCase
 
     /**
      * @dataProvider getLoadBadCodeValueThrowsExceptionData
-     *
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Invalid HTTP code in fos_rest.exception.codes
      */
     public function testLoadBadCodeValueThrowsException($value)
     {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid HTTP code in fos_rest.exception.codes');
+
         $this->extension->load([
             'fos_rest' => [
                 'exception' => [
@@ -741,7 +740,7 @@ class FOSRestExtensionTest extends TestCase
     {
         $configuration = $this->extension->getConfiguration(array(), $this->container);
 
-        $this->assertInstanceOf('FOS\RestBundle\DependencyInjection\Configuration', $configuration);
+        $this->assertInstanceOf(Configuration::class, $configuration);
     }
 
     /**
@@ -840,7 +839,7 @@ class FOSRestExtensionTest extends TestCase
         $addRequestMatcherCalls = $zoneMatcherListener->getMethodCalls();
 
         $this->assertTrue($this->container->has('fos_rest.zone_matcher_listener'));
-        $this->assertEquals('FOS\RestBundle\EventListener\ZoneMatcherListener', $zoneMatcherListener->getClass());
+        $this->assertEquals(ZoneMatcherListener::class, $zoneMatcherListener->getClass());
         $this->assertCount(2, $addRequestMatcherCalls);
 
         // First zone

@@ -237,7 +237,7 @@ EOF;
      */
     protected function loadFile($file)
     {
-        if (class_exists('Symfony\Component\Config\Util\XmlUtils')) {
+        if (class_exists(XmlUtils::class)) {
             $dom = XmlUtils::loadFile($file);
             $this->validate($dom);
 

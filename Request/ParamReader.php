@@ -36,7 +36,7 @@ final class ParamReader implements ParamReaderInterface
     public function read(\ReflectionClass $reflection, $method)
     {
         if (!$reflection->hasMethod($method)) {
-            throw new \InvalidArgumentException(sprintf("Class '%s' has no method '%s'.", $reflection->getName(), $method));
+            throw new \InvalidArgumentException(sprintf('Class "%s" has no method "%s".', $reflection->getName(), $method));
         }
 
         $methodParams = $this->getParamsFromMethod($reflection->getMethod($method));

@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -77,7 +78,7 @@ class ParamFetcherTest extends TestCase
             $this->validator
         );
 
-        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+        $this->container = $this->getMockBuilder(ContainerInterface::class)->getMock();
     }
 
     public function testParamDynamicCreation()
@@ -244,12 +245,10 @@ class ParamFetcherTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \FOS\RestBundle\Exception\InvalidParameterException
-     * @expectedMessage expected exception.
-     */
     public function testValidationErrorsInStrictMode()
     {
+        $this->expectException(InvalidParameterException::class);
+
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('foo', 'value');
 
@@ -345,12 +344,11 @@ class ParamFetcherTest extends TestCase
         $this->paramFetcher->get('bar');
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     * @expectedExceptionMessage 'bar' param is incompatible with fos param.
-     */
     public function testIncompatibleParam()
     {
+        $this->expectException(BadRequestHttpException::class);
+        $this->expectExceptionMessage('"bar" param is incompatible with fos param.');
+
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('fos', 'value');
         $request->query->set('bar', 'value');
