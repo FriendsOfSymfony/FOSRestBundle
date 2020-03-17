@@ -332,11 +332,11 @@ class FOSRestExtension extends Extension
         }
 
         if (!is_numeric($config['view']['failed_validation'])) {
-            $config['view']['failed_validation'] = constant('\Symfony\Component\HttpFoundation\Response::'.$config['view']['failed_validation']);
+            $config['view']['failed_validation'] = constant(sprintf('%s::%s', Response::class, $config['view']['failed_validation']));
         }
 
         if (!is_numeric($config['view']['empty_content'])) {
-            $config['view']['empty_content'] = constant('\Symfony\Component\HttpFoundation\Response::'.$config['view']['empty_content']);
+            $config['view']['empty_content'] = constant(sprintf('%s::%s', Response::class, $config['view']['empty_content']));
         }
 
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');

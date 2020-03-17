@@ -15,7 +15,9 @@ use FOS\RestBundle\Controller\Annotations\AbstractScalarParam;
 use FOS\RestBundle\Validator\Constraints\Regex;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Constraints;
+use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * AbstractScalarParamTest.
@@ -44,7 +46,7 @@ class AbstractScalarParamTest extends TestCase
     public function testScalarConstraint()
     {
         $this->assertEquals(array(
-            new Constraints\NotNull(),
+            new NotNull(),
         ), $this->param->getConstraints());
     }
 
@@ -52,7 +54,7 @@ class AbstractScalarParamTest extends TestCase
     {
         $this->param->requirements = $requirement = $this->getMockBuilder(Constraint::class)->getMock();
         $this->assertEquals(array(
-            new Constraints\NotNull(),
+            new NotNull(),
             $requirement,
         ), $this->param->getConstraints());
     }
@@ -64,7 +66,7 @@ class AbstractScalarParamTest extends TestCase
         $this->param->requirements = array($requirement1, $requirement2);
 
         $this->assertEquals(array(
-            new Constraints\NotNull(),
+            new NotNull(),
             $requirement1,
             $requirement2,
         ), $this->param->getConstraints());
@@ -75,7 +77,7 @@ class AbstractScalarParamTest extends TestCase
         $this->param->name = 'bar';
         $this->param->requirements = 'foo %bar% %%';
         $this->assertEquals(array(
-            new Constraints\NotNull(),
+            new NotNull(),
             new Regex(array(
                 'pattern' => '#^(?:foo %bar% %%)$#xsu',
                 'message' => "Parameter 'bar' value, does not match requirements 'foo %bar% %%'",
@@ -90,7 +92,7 @@ class AbstractScalarParamTest extends TestCase
             'error_message' => 'bar',
         );
         $this->assertEquals(array(
-            new Constraints\NotNull(),
+            new NotNull(),
             new Regex(array(
                 'pattern' => '#^(?:foo)$#xsu',
                 'message' => 'bar',
@@ -102,34 +104,34 @@ class AbstractScalarParamTest extends TestCase
     {
         $this->param->allowBlank = false;
         $this->assertEquals(array(
-            new Constraints\NotNull(),
-            new Constraints\NotBlank(),
+            new NotNull(),
+            new NotBlank(),
         ), $this->param->getConstraints());
     }
 
     public function testConstraintsTransformWhenParamIsAnArray()
     {
         $this->param->map = true;
-        $this->assertEquals(array(new Constraints\All(array(
-            new Constraints\NotNull(),
-        )), new Constraints\NotNull()), $this->param->getConstraints());
+        $this->assertEquals(array(new All(array(
+            new NotNull(),
+        )), new NotNull()), $this->param->getConstraints());
     }
 
     public function testArrayWithBlankConstraintsWhenParamIsAnArray()
     {
         $this->param->map = true;
         $this->param->allowBlank = false;
-        $this->assertEquals(array(new Constraints\All(array(
-            new Constraints\NotNull(),
-            new Constraints\NotBlank(),
-        )), new Constraints\NotNull()), $this->param->getConstraints());
+        $this->assertEquals(array(new All(array(
+            new NotNull(),
+            new NotBlank(),
+        )), new NotNull()), $this->param->getConstraints());
     }
 
     public function testArrayWithNoConstraintsDoesNotCreateInvalidConstraint()
     {
         $this->param->nullable = true;
         $this->param->map = true;
-        $this->assertEquals(array(new Constraints\All(array(
+        $this->assertEquals(array(new All(array(
             'constraints' => [],
         ))), $this->param->getConstraints());
     }

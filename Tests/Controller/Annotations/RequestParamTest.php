@@ -11,7 +11,11 @@
 
 namespace FOS\RestBundle\Tests\Controller\Annotations;
 
+use FOS\RestBundle\Controller\Annotations\AbstractScalarParam;
+use FOS\RestBundle\Controller\Annotations\RequestParam;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * RequestParamTest.
@@ -23,14 +27,14 @@ class RequestParamTest extends TestCase
 {
     public function setUp()
     {
-        $this->param = $this->getMockBuilder('FOS\RestBundle\Controller\Annotations\RequestParam')
+        $this->param = $this->getMockBuilder(RequestParam::class)
             ->setMethods(array('getKey'))
             ->getMock();
     }
 
     public function testInterface()
     {
-        $this->assertInstanceOf('FOS\RestBundle\Controller\Annotations\AbstractScalarParam', $this->param);
+        $this->assertInstanceOf(AbstractScalarParam::class, $this->param);
     }
 
     public function testValueGetter()
@@ -40,8 +44,8 @@ class RequestParamTest extends TestCase
             ->method('getKey')
             ->willReturn('foo');
 
-        $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
-        $parameterBag = $this->getMockBuilder('Symfony\Component\HttpFoundation\ParameterBag')->getMock();
+        $request = $this->getMockBuilder(Request::class)->getMock();
+        $parameterBag = $this->getMockBuilder(ParameterBag::class)->getMock();
         $parameterBag
             ->expects($this->once())
             ->method('get')

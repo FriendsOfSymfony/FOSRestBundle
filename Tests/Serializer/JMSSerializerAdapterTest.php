@@ -19,6 +19,7 @@ use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use JMS\SerializerBundle\JMSSerializerBundle;
 use PHPUnit\Framework\TestCase;
 
 class JMSSerializerAdapterTest extends TestCase
@@ -30,7 +31,7 @@ class JMSSerializerAdapterTest extends TestCase
 
     protected function setUp()
     {
-        if (!class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
+        if (!class_exists(JMSSerializerBundle::class)) {
             $this->markTestSkipped('JMSSerializerBundle is not installed.');
         }
 

@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Validator\Constraints;
 use FOS\RestBundle\Util\ResolverTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\Regex as BaseRegex;
+use Symfony\Component\Validator\Constraints\RegexValidator;
 
 /**
  * @Annotation
@@ -31,7 +32,7 @@ class Regex extends BaseRegex implements ResolvableConstraintInterface
      */
     public function validatedBy()
     {
-        return 'Symfony\Component\Validator\Constraints\RegexValidator';
+        return RegexValidator::class;
     }
 
     public function resolve(ContainerInterface $container)

@@ -15,6 +15,7 @@ use FOS\RestBundle\Negotiation\FormatNegotiator;
 use FOS\RestBundle\Util\StopFormatListenerException;
 use Negotiation\Accept;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -159,7 +160,7 @@ class FormatNegotiatorTest extends TestCase
      */
     private function addRequestMatcher($match, array $options = [])
     {
-        $matcher = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestMatcherInterface')->getMock();
+        $matcher = $this->getMockBuilder(RequestMatcherInterface::class)->getMock();
 
         $matcher->expects($this->any())
             ->method('matches')

@@ -18,6 +18,7 @@ use FOS\RestBundle\Routing\Loader\Reader\RestActionReader;
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use FOS\RestBundle\Routing\Loader\RestRouteLoader;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Yaml;
 
@@ -67,7 +68,7 @@ abstract class LoaderTest extends TestCase
                 ->setMethods(['get', 'has'])
                 ->getMock();
         }
-        $l = $this->getMockBuilder('Symfony\Component\Config\FileLocator')
+        $l = $this->getMockBuilder(FileLocator::class)
             ->disableOriginalConstructor()
             ->getMock();
 

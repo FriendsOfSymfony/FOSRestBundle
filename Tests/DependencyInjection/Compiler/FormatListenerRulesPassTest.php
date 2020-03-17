@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @author Eduardo Gulias Davis <me@egulias.com>
@@ -22,7 +23,7 @@ class FormatListenerRulesPassTest extends TestCase
 {
     public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
     {
-        $definition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
+        $definition = $this->getMockBuilder(Definition::class)
             ->setMethods(array('addMethod'))
             ->getMock();
 
@@ -69,7 +70,7 @@ class FormatListenerRulesPassTest extends TestCase
 
     public function testNoRulesAreAddedWhenProfilerToolbarAreDisabled()
     {
-        $definition = $this->getMockBuilder('Symfony\Component\DependencyInjection\Definition')
+        $definition = $this->getMockBuilder(Definition::class)
             ->setMethods(array('addMethod'))
             ->getMock();
 

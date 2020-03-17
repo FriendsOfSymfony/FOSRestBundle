@@ -12,8 +12,11 @@
 namespace FOS\RestBundle\Tests\DependencyInjection\Compiler;
 
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
+use FOS\RestBundle\Serializer\Serializer;
+use JMS\Serializer\Serializer as JmsSerializer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 
 /**
  * SerializerConfigurationPassTest test.
@@ -32,7 +35,7 @@ class SerializerConfigurationPassTest extends TestCase
 
     public function testShouldDoNothingIfSerializerIsFound()
     {
-        $serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->container->register('fos_rest.serializer', get_class($serializer));
 
         $compiler = new SerializerConfigurationPass();
@@ -62,7 +65,7 @@ class SerializerConfigurationPassTest extends TestCase
 
     public function testShouldConfigureCoreSerializer()
     {
-        $this->container->register('serializer', 'Symfony\Component\Serializer\Serializer');
+        $this->container->register('serializer', SymfonySerializer::class);
         $this->container->register('fos_rest.serializer.exception_normalizer.jms');
 
         $compiler = new SerializerConfigurationPass();
@@ -74,8 +77,8 @@ class SerializerConfigurationPassTest extends TestCase
 
     public function testJmsSerializerServiceSupersedesSerializerService()
     {
-        $this->container->register('jms_serializer.serializer', 'JMS\Serializer\Serializer');
-        $this->container->register('serializer', 'Symfony\Component\Serializer\Serializer');
+        $this->container->register('jms_serializer.serializer', JmsSerializer::class);
+        $this->container->register('serializer', SymfonySerializer::class);
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);

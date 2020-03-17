@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\VersionExclusionListener;
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\View\ConfigurableViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -41,7 +42,7 @@ class VersionExclusionListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request);
 
-        $viewHandler = $this->getMockBuilder('FOS\RestBundle\View\ConfigurableViewHandlerInterface')->getMock();
+        $viewHandler = $this->getMockBuilder(ConfigurableViewHandlerInterface::class)->getMock();
         $viewHandler
             ->expects($this->never())
             ->method('setExclusionStrategyVersion');
@@ -67,7 +68,7 @@ class VersionExclusionListenerTest extends TestCase
             ->method('getRequest')
             ->willReturn($request);
 
-        $viewHandler = $this->getMockBuilder('FOS\RestBundle\View\ConfigurableViewHandlerInterface')->getMock();
+        $viewHandler = $this->getMockBuilder(ConfigurableViewHandlerInterface::class)->getMock();
         $viewHandler
             ->expects($this->once())
             ->method('setExclusionStrategyVersion')

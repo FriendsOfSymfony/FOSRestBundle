@@ -12,6 +12,8 @@
 namespace FOS\RestBundle\Tests\Routing\Loader;
 
 use FOS\RestBundle\Routing\RestRouteCollection;
+use FOS\RestBundle\Tests\Fixtures\Controller\AnnotatedPrefixedController;
+use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
 
 /**
  * RestRouteLoader test.
@@ -219,12 +221,12 @@ class RestRouteLoaderTest extends LoaderTest
         $loader = $this->getControllerLoader();
 
         // get the path for the prefixed controller, and verify it is prefixed
-        $collection = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\AnnotatedPrefixedController', 'rest');
+        $collection = $loader->load(AnnotatedPrefixedController::class, 'rest');
         $prefixedRoute = $collection->get('get_something');
         $this->assertEquals('/aprefix/', substr($prefixedRoute->getPath(), 0, 9));
 
         // get the path for the non-prefixed controller, and verify it's not prefixed
-        $collection2 = $loader->load('FOS\RestBundle\Tests\Fixtures\Controller\UsersController', 'rest');
+        $collection2 = $loader->load(UsersController::class, 'rest');
         $nonPrefixedRoute = $collection2->get('get_users');
         $this->assertNotEquals('/aprefix/', substr($nonPrefixedRoute->getPath(), 0, 9));
     }

@@ -78,7 +78,7 @@ class ParamFetcherTest extends TestCase
             $this->validator
         );
 
-        $this->container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+        $this->container = $this->getMockBuilder(ContainerInterface::class)->getMock();
     }
 
     /**

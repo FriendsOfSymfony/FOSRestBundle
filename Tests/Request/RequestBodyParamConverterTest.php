@@ -13,11 +13,17 @@ namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Request\RequestBodyParamConverter;
+use FOS\RestBundle\Serializer\Serializer;
+use FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\Post;
+use JMS\Serializer\Exception\InvalidArgumentException as JmsInvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException as SymfonyInvalidArgumentException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
@@ -33,25 +39,25 @@ class RequestBodyParamConverterTest extends TestCase
         // is not compatible with the RequestBodyParamConverter class
         $parameter = new \ReflectionParameter(
             [
-                'Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface',
+                ParamConverterInterface::class,
                 'supports',
             ],
             'configuration'
         );
-        if ('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter' != $parameter->getClass()->getName()) {
+        if (ParamConverter::class != $parameter->getClass()->getName()) {
             $this->markTestSkipped(
                 'skipping RequestBodyParamConverterTest due to an incompatible version of the SensioFrameworkExtraBundle'
             );
         }
 
-        $this->serializer = $this->getMockBuilder('FOS\RestBundle\Serializer\Serializer')->getMock();
+        $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->converter = new RequestBodyParamConverter($this->serializer);
     }
 
     public function testInterface()
     {
         $converter = new RequestBodyParamConverter($this->serializer);
-        $this->assertInstanceOf('Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface', $converter);
+        $this->assertInstanceOf(ParamConverterInterface::class, $converter);
     }
 
     public function testContextMergeDuringExecution()
@@ -93,7 +99,7 @@ class RequestBodyParamConverterTest extends TestCase
         $this->serializer
             ->expects($this->once())
             ->method('deserialize')
-            ->will($this->throwException(new \Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException()));
+            ->will($this->throwException(new UnsupportedMediaTypeHttpException()));
         $this->launchExecution($converter);
     }
 
@@ -109,7 +115,7 @@ class RequestBodyParamConverterTest extends TestCase
         $this->serializer
             ->expects($this->once())
             ->method('deserialize')
-            ->will($this->throwException(new \JMS\Serializer\Exception\InvalidArgumentException()));
+            ->will($this->throwException(new JmsInvalidArgumentException()));
         $this->launchExecution($converter);
     }
 
@@ -121,7 +127,7 @@ class RequestBodyParamConverterTest extends TestCase
         $this->serializer
             ->expects($this->once())
             ->method('deserialize')
-            ->will($this->throwException(new \Symfony\Component\Serializer\Exception\InvalidArgumentException()));
+            ->will($this->throwException(new SymfonyInvalidArgumentException()));
         $this->launchExecution($converter);
     }
 
@@ -144,7 +150,7 @@ class RequestBodyParamConverterTest extends TestCase
              ->method('deserialize')
              ->willReturn('Object');
 
-        $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
+        $validator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
         $validator
             ->expects($this->once())
             ->method('validate')
@@ -166,7 +172,7 @@ class RequestBodyParamConverterTest extends TestCase
             ->method('deserialize')
             ->willReturn('Object');
 
-        $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
+        $validator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
         $validator
             ->expects($this->never())
             ->method('validate');
@@ -257,7 +263,7 @@ class RequestBodyParamConverterTest extends TestCase
     public function testSupports()
     {
         $converter = new RequestBodyParamConverter($this->serializer);
-        $config = $this->createConfiguration('FOS\RestBundle\Tests\Request\Post', 'post');
+        $config = $this->createConfiguration(Post::class, 'post');
         $this->assertTrue($converter->supports($config));
     }
 

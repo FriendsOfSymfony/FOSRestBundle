@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Tests\EventListener;
 
 use FOS\RestBundle\EventListener\VersionListener;
 use FOS\RestBundle\FOSRestBundle;
+use FOS\RestBundle\Version\VersionResolverInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class VersionListenerTest extends TestCase
 {
     /**
-     * @var \FOS\RestBundle\Version\VersionResolverInterface
+     * @var VersionResolverInterface
      */
     private $resolver;
 
@@ -37,7 +38,7 @@ class VersionListenerTest extends TestCase
 
     public function setUp()
     {
-        $this->resolver = $this->getMockBuilder('FOS\RestBundle\Version\VersionResolverInterface')->getMock();
+        $this->resolver = $this->getMockBuilder(VersionResolverInterface::class)->getMock();
 
         $this->listener = new VersionListener($this->resolver);
     }
