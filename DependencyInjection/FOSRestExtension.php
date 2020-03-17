@@ -27,6 +27,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Validator\Constraint;
 
+/**
+ * @internal since 2.8
+ */
 class FOSRestExtension extends Extension
 {
     /**
