@@ -1,6 +1,9 @@
 Upgrading From 2.7 To 2.8
 =========================
 
+ * Deprecated returning anything other than `string` or `null` from `resolve()` when implementing
+   the `VersionResolverInterface`.
+
  * Passing version number as integers to `Context::setVersion()` is deprecated. Strings will be
    enforced as of 3.0.
  

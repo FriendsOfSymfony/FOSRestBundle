@@ -37,11 +37,9 @@ class QueryParameterVersionResolver implements VersionResolverInterface
     public function resolve(Request $request)
     {
         if (!$request->query->has($this->parameterName)) {
-            return false;
+            return null;
         }
 
-        $parameter = $request->query->get($this->parameterName);
-
-        return is_scalar($parameter) ? $parameter : strval($parameter);
+        return (string) $request->query->get($this->parameterName);
     }
 }
