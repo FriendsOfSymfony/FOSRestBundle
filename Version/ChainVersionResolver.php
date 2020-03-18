@@ -38,11 +38,7 @@ final class ChainVersionResolver implements VersionResolverInterface
         foreach ($this->resolvers as $resolver) {
             $version = $resolver->resolve($request);
 
-            if (null !== $version && !is_string($version)) {
-                @trigger_error(sprintf('Not returning a string or null from %s::resolve() when implementing the %s is deprecated since FOSRestBundle 2.8.', get_class($resolver), VersionResolverInterface::class), E_USER_DEPRECATED);
-            }
-
-            if (null !== $version && false !== $version) {
+            if (null !== $version) {
                 return $version;
             }
         }
