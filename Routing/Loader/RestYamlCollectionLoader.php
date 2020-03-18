@@ -21,6 +21,8 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * RestYamlCollectionLoader YAML file collections loader.
+ *
+ * @internal since 2.8
  */
 class RestYamlCollectionLoader extends YamlFileLoader
 {

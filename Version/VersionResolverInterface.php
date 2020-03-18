@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface VersionResolverInterface
 {
     /**
-     * @return scalar|false Current version or false if not resolved
+     * @return string|null Current version or false if not resolved
      */
     public function resolve(Request $request);
 }

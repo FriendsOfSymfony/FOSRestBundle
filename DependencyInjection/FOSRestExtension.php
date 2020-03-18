@@ -24,6 +24,9 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Validator\Constraint;
 
+/**
+ * @internal since 2.8
+ */
 class FOSRestExtension extends Extension
 {
     /**

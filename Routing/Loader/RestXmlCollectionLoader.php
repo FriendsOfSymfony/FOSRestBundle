@@ -21,6 +21,8 @@ use Symfony\Component\Routing\RouteCollection;
  * RestXmlCollectionLoader XML file collections loader.
  *
  * @author Donald Tyler <chekote69@gmail.com>
+ *
+ * @internal since 2.8
  */
 class RestXmlCollectionLoader extends XmlFileLoader
 {

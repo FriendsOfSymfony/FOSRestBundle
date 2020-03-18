@@ -35,11 +35,9 @@ final class HeaderVersionResolver implements VersionResolverInterface
     public function resolve(Request $request)
     {
         if (!$request->headers->has($this->headerName)) {
-            return false;
+            return null;
         }
 
-        $header = $request->headers->get($this->headerName);
-
-        return is_scalar($header) ? $header : strval($header);
+        return (string) $request->headers->get($this->headerName);
     }
 }
