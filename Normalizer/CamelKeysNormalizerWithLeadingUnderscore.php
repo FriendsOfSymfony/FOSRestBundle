@@ -16,6 +16,8 @@ namespace FOS\RestBundle\Normalizer;
  * leaving leading underscores unchanged.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @internal since 2.8
  */
 class CamelKeysNormalizerWithLeadingUnderscore extends CamelKeysNormalizer
 {

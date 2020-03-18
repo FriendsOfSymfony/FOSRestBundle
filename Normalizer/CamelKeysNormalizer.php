@@ -17,6 +17,8 @@ use FOS\RestBundle\Normalizer\Exception\NormalizationException;
  * Normalizes the array by changing its keys from underscore to camel case.
  *
  * @author Florian Voutzinos <florian@voutzinos.com>
+ *
+ * @internal since 2.8
  */
 class CamelKeysNormalizer implements ArrayNormalizerInterface
 {
