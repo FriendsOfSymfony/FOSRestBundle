@@ -15,6 +15,7 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
+use FOS\RestBundle\Tests\Fixtures\Controller\ArticleController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +62,7 @@ class ParamFetcherTest extends TestCase
      */
     public function setup()
     {
-        $this->controller = [new \stdClass(), 'fooAction'];
+        $this->controller = [new ArticleController(), 'getAction'];
 
         $this->params = [];
         $this->paramReader = $this->getMockBuilder(ParamReaderInterface::class)->getMock();
@@ -320,9 +321,9 @@ class ParamFetcherTest extends TestCase
     public function invalidControllerProvider()
     {
         return [
-            ['controller'],
-            [[null, 'foo']],
-            [['Foo', null]],
+            ['strtolower'],
+            [[self::class, 'controllerAction']],
+            [function () {}],
         ];
     }
 
@@ -361,6 +362,10 @@ class ParamFetcherTest extends TestCase
 
         $this->paramFetcher->setController($this->controller);
         $this->paramFetcher->get('bar');
+    }
+
+    public static function controllerAction()
+    {
     }
 
     protected function setParams(array $params = array())

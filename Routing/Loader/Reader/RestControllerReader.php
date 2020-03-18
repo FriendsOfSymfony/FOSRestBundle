@@ -35,18 +35,12 @@ class RestControllerReader
         $this->annotationReader = $annotationReader;
     }
 
-    /**
-     * @return RestActionReader
-     */
-    public function getActionReader()
+    public function getActionReader(): RestActionReader
     {
         return $this->actionReader;
     }
 
-    /**
-     * @return RestRouteCollection
-     */
-    public function read(\ReflectionClass $reflectionClass)
+    public function read(\ReflectionClass $reflectionClass): RestRouteCollection
     {
         $collection = new RestRouteCollection();
         $collection->addResource(new FileResource($reflectionClass->getFileName()));

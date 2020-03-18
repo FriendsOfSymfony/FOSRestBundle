@@ -31,7 +31,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class HandlerRegistryDecorationPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('fos_rest.serializer.jms_handler_registry')) {
             return;

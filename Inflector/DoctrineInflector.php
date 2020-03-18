@@ -23,7 +23,7 @@ final class DoctrineInflector implements InflectorInterface
     /**
      * {@inheritdoc}
      */
-    public function pluralize($word)
+    public function pluralize(string $word): string
     {
         return Inflector::pluralize($word);
     }

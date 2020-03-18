@@ -31,10 +31,7 @@ class AllowedMethodsListener
         $this->loader = $loader;
     }
 
-    /**
-     * @param ResponseEvent $event
-     */
-    public function onKernelResponse($event)
+    public function onKernelResponse(ResponseEvent $event): void
     {
         $request = $event->getRequest();
 

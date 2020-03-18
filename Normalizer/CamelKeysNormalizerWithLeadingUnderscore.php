@@ -22,11 +22,9 @@ class CamelKeysNormalizerWithLeadingUnderscore extends CamelKeysNormalizer
     /**
      * Normalizes a string while leaving leading underscores unchanged.
      *
-     * @param string $string
-     *
      * @return string
      */
-    protected function normalizeString($string)
+    protected function normalizeString(string $string)
     {
         if (false === strpos($string, '_')) {
             return $string;

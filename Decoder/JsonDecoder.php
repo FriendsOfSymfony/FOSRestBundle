@@ -21,7 +21,7 @@ final class JsonDecoder implements DecoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($data)
+    public function decode(string $data)
     {
         return @json_decode($data, true);
     }

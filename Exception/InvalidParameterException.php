@@ -57,7 +57,7 @@ class InvalidParameterException extends BadRequestHttpException
      *
      * @internal
      */
-    public static function withViolationsAndMessage(ParamInterface $parameter, ConstraintViolationListInterface $violations, string $message)
+    public static function withViolationsAndMessage(ParamInterface $parameter, ConstraintViolationListInterface $violations, string $message): self
     {
         $exception = new self($message);
         $exception->parameter = $parameter;

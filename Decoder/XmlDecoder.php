@@ -33,7 +33,7 @@ final class XmlDecoder implements DecoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($data)
+    public function decode(string $data)
     {
         try {
             return $this->encoder->decode($data, 'xml');

@@ -21,10 +21,7 @@ final class QueryParameterVersionResolver implements VersionResolverInterface
 {
     private $parameterName;
 
-    /**
-     * @param string $parameterName
-     */
-    public function __construct($parameterName)
+    public function __construct(string $parameterName)
     {
         $this->parameterName = $parameterName;
     }
@@ -32,7 +29,7 @@ final class QueryParameterVersionResolver implements VersionResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(Request $request)
+    public function resolve(Request $request): ?string
     {
         if (!$request->query->has($this->parameterName)) {
             return null;

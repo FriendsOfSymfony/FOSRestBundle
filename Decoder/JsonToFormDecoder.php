@@ -21,7 +21,7 @@ final class JsonToFormDecoder implements DecoderInterface
     /**
      * Makes data decoded from JSON application/x-www-form-encoded compliant.
      */
-    private function xWwwFormEncodedLike(array &$data)
+    private function xWwwFormEncodedLike(array &$data): void
     {
         foreach ($data as $key => &$value) {
             if (is_array($value)) {
@@ -43,7 +43,7 @@ final class JsonToFormDecoder implements DecoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($data)
+    public function decode(string $data)
     {
         $decodedData = @json_decode($data, true);
         if ($decodedData) {

@@ -35,10 +35,7 @@ final class RequestBodyParamConverter implements ParamConverterInterface
     private $validationErrorsArgument;
 
     /**
-     * @param string[]|null $groups  An array of groups to be used in the serialization context
-     * @param string|null   $version A version string to be used in the serialization context
-     *
-     * @throws \InvalidArgumentException
+     * @param string[]|null $groups
      */
     public function __construct(
         Serializer $serializer,
@@ -68,7 +65,7 @@ final class RequestBodyParamConverter implements ParamConverterInterface
     /**
      * {@inheritdoc}
      */
-    public function apply(Request $request, ParamConverter $configuration)
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         $options = (array) $configuration->getOptions();
 
@@ -113,12 +110,12 @@ final class RequestBodyParamConverter implements ParamConverterInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ParamConverter $configuration)
+    public function supports(ParamConverter $configuration): bool
     {
         return null !== $configuration->getClass() && 'fos_rest.request_body' === $configuration->getConverter();
     }
 
-    private function configureContext(Context $context, array $options)
+    private function configureContext(Context $context, array $options): void
     {
         foreach ($options as $key => $value) {
             if ('groups' === $key) {
@@ -135,7 +132,7 @@ final class RequestBodyParamConverter implements ParamConverterInterface
         }
     }
 
-    private function throwException(\Exception $exception, ParamConverter $configuration)
+    private function throwException(\Exception $exception, ParamConverter $configuration): bool
     {
         if ($configuration->isOptional()) {
             return false;

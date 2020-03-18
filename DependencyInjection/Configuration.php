@@ -31,11 +31,6 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
  */
 final class Configuration implements ConfigurationInterface
 {
-    /**
-     * Default debug mode value.
-     *
-     * @var bool
-     */
     private $debug;
 
     public function __construct(bool $debug)
@@ -188,7 +183,7 @@ final class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addViewSection(ArrayNodeDefinition $rootNode)
+    private function addViewSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
             ->children()
@@ -274,7 +269,7 @@ final class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function addBodyListenerSection(ArrayNodeDefinition $rootNode)
+    private function addBodyListenerSection(ArrayNodeDefinition $rootNode): void
     {
         $decodersDefaultValue = ['json' => 'fos_rest.decoder.json'];
         if (class_exists(XmlEncoder::class)) {
@@ -315,7 +310,7 @@ final class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function addFormatListenerSection(ArrayNodeDefinition $rootNode)
+    private function addFormatListenerSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
             ->children()
@@ -369,7 +364,7 @@ final class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function addVersioningSection(ArrayNodeDefinition $rootNode)
+    private function addVersioningSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
         ->children()
@@ -419,7 +414,7 @@ final class Configuration implements ConfigurationInterface
         ->end();
     }
 
-    private function addExceptionSection(ArrayNodeDefinition $rootNode)
+    private function addExceptionSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
             ->children()
@@ -486,7 +481,7 @@ final class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function testExceptionExists(string $exception)
+    private function testExceptionExists(string $exception): void
     {
         if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
             throw new InvalidConfigurationException(sprintf('FOSRestBundle exception mapper: Could not load class "%s" or the class does not extend from "%s". Most probably this is a configuration problem.', $exception, \Exception::class));

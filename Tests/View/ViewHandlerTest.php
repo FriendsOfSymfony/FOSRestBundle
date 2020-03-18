@@ -75,16 +75,6 @@ class ViewHandlerTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testRegisterHandleExpectsException()
-    {
-        $viewHandler = $this->createViewHandler();
-
-        $viewHandler->registerHandler('json', new \stdClass());
-    }
-
-    /**
      * @dataProvider getStatusCodeDataProvider
      */
     public function testGetStatusCode(
@@ -338,8 +328,8 @@ class ViewHandlerTest extends TestCase
     public function testCreateResponse($expected, $formats)
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler('html', function ($handler, $view) {
-            return $view;
+        $viewHandler->registerHandler('html', function ($handler, View $view) {
+            return new Response('', $view->getStatusCode());
         });
 
         $response = $viewHandler->handle(new View(null, $expected), new Request());
@@ -358,8 +348,8 @@ class ViewHandlerTest extends TestCase
     public function testHandleCustom()
     {
         $viewHandler = $this->createViewHandler([]);
-        $viewHandler->registerHandler('html', ($callback = function () {
-            return 'foo';
+        $viewHandler->registerHandler('html', (function () {
+            return new Response('foo');
         }));
 
         $this->requestStack->push(new Request());
@@ -367,7 +357,7 @@ class ViewHandlerTest extends TestCase
         $data = ['foo' => 'bar'];
 
         $view = new View($data);
-        $this->assertEquals('foo', $viewHandler->handle($view));
+        $this->assertEquals('foo', $viewHandler->handle($view)->getContent());
     }
 
     public function testHandleNotSupported()

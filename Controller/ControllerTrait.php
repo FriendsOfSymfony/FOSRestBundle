@@ -40,33 +40,25 @@ trait ControllerTrait
     }
 
     /**
-     * @param int $statusCode
-     *
      * @return View
      */
-    protected function view($data = null, $statusCode = null, array $headers = [])
+    protected function view($data = null, ?int $statusCode = null, array $headers = [])
     {
         return View::create($data, $statusCode, $headers);
     }
 
     /**
-     * @param string $url
-     * @param int    $statusCode
-     *
      * @return View
      */
-    protected function redirectView($url, $statusCode = Response::HTTP_FOUND, array $headers = [])
+    protected function redirectView(string $url, int $statusCode = Response::HTTP_FOUND, array $headers = [])
     {
         return View::createRedirect($url, $statusCode, $headers);
     }
 
     /**
-     * @param string $route
-     * @param int    $statusCode
-     *
      * @return View
      */
-    protected function routeRedirectView($route, array $parameters = [], $statusCode = Response::HTTP_CREATED, array $headers = [])
+    protected function routeRedirectView(string $route, array $parameters = [], int $statusCode = Response::HTTP_CREATED, array $headers = [])
     {
         return View::createRouteRedirect($route, $parameters, $statusCode, $headers);
     }

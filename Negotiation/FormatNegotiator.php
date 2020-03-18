@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Negotiation;
 
 use FOS\RestBundle\Util\StopFormatListenerException;
 use Negotiation\Accept;
+use Negotiation\AcceptHeader;
 use Negotiation\Negotiator as BaseNegotiator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
@@ -33,12 +34,12 @@ final class FormatNegotiator extends BaseNegotiator
         $this->mimeTypes = $mimeTypes;
     }
 
-    public function add(RequestMatcherInterface $requestMatcher, array $options = [])
+    public function add(RequestMatcherInterface $requestMatcher, array $options = []): void
     {
         $this->map[] = [$requestMatcher, $options];
     }
 
-    public function getBest($header, array $priorities = [])
+    public function getBest($header, array $priorities = []): ?AcceptHeader
     {
         $request = $this->getRequest();
         $header = $header ?: $request->headers->get('Accept');
@@ -90,13 +91,15 @@ final class FormatNegotiator extends BaseNegotiator
             if (isset($options['fallback_format'])) {
                 // if false === fallback_format then we fail here instead of considering more rules
                 if (false === $options['fallback_format']) {
-                    return;
+                    return null;
                 }
 
                 // stop looking at rules since we have a fallback defined
                 return new Accept($request->getMimeType($options['fallback_format']));
             }
         }
+
+        return null;
     }
 
     private function sanitize(array $values): array

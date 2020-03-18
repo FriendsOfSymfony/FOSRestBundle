@@ -21,10 +21,7 @@ final class HeaderVersionResolver implements VersionResolverInterface
 {
     private $headerName;
 
-    /**
-     * @param string $headerName
-     */
-    public function __construct($headerName)
+    public function __construct(string $headerName)
     {
         $this->headerName = $headerName;
     }
@@ -32,7 +29,7 @@ final class HeaderVersionResolver implements VersionResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(Request $request)
+    public function resolve(Request $request): ?string
     {
         if (!$request->headers->has($this->headerName)) {
             return null;

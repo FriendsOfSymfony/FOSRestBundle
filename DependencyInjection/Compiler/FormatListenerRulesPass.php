@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 final class FormatListenerRulesPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('fos_rest.format_listener')) {
             return;
@@ -57,7 +57,7 @@ final class FormatListenerRulesPass implements CompilerPassInterface
         $container->setParameter('fos_rest.format_listener.rules', null);
     }
 
-    private function addRule(array $rule, ContainerBuilder $container)
+    private function addRule(array $rule, ContainerBuilder $container): void
     {
         $matcher = $this->createRequestMatcher(
             $container,
@@ -76,7 +76,7 @@ final class FormatListenerRulesPass implements CompilerPassInterface
             ->addMethodCall('add', [$matcher, $rule]);
     }
 
-    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null, array $attributes = array())
+    private function createRequestMatcher(ContainerBuilder $container, ?string $path = null, ?string $host = null, ?array $methods = null, array $attributes = array()): Reference
     {
         $arguments = [$path, $host, $methods, null, $attributes];
         $serialized = serialize($arguments);

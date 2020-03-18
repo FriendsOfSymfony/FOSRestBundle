@@ -36,10 +36,7 @@ class MimeTypeListener
         $this->mimeTypes = $mimeTypes;
     }
 
-    /**
-     * @param RequestEvent $event The event
-     */
-    public function onKernelRequest($event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

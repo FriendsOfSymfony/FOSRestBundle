@@ -22,7 +22,7 @@ use JMS\Serializer\XmlSerializationVisitor;
  */
 class ExceptionHandler extends AbstractExceptionNormalizer implements SubscribingHandlerInterface
 {
-    public static function getSubscribingMethods()
+    public static function getSubscribingMethods(): array
     {
         return [
             [

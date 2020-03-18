@@ -35,7 +35,7 @@ final class ContainerDecoderProvider implements DecoderProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($format)
+    public function supports(string $format): bool
     {
         return isset($this->decoders[$format]);
     }
@@ -43,7 +43,7 @@ final class ContainerDecoderProvider implements DecoderProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getDecoder($format)
+    public function getDecoder(string $format): DecoderInterface
     {
         if (!$this->supports($format)) {
             throw new \InvalidArgumentException(sprintf("Format '%s' is not supported by ContainerDecoderProvider.", $format));

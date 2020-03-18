@@ -53,7 +53,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     /**
      * {@inheritdoc}
      */
-    protected function parseNode(RouteCollection $collection, \DOMElement $node, $path, $file)
+    protected function parseNode(RouteCollection $collection, \DOMElement $node, $path, $file): void
     {
         switch ($node->tagName) {
             case 'route':
@@ -104,7 +104,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
     /**
      * {@inheritdoc}
      */
-    protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path)
+    protected function parseRoute(RouteCollection $collection, \DOMElement $node, $path): void
     {
         if ($this->includeFormat) {
             $path = $node->getAttribute('path');
@@ -176,7 +176,7 @@ class RestXmlCollectionLoader extends XmlFileLoader
         parent::parseRoute($collection, $node, $path);
     }
 
-    private function getOptions(\DOMElement $node)
+    private function getOptions(\DOMElement $node): array
     {
         $options = [];
         foreach ($node->childNodes as $child) {
@@ -197,14 +197,14 @@ class RestXmlCollectionLoader extends XmlFileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         return is_string($resource) &&
             'xml' === pathinfo($resource, PATHINFO_EXTENSION) &&
             'rest' === $type;
     }
 
-    protected function validate(\DOMDocument $dom)
+    protected function validate(\DOMDocument $dom): void
     {
         $restRoutinglocation = realpath(__DIR__.'/../../Resources/config/schema/routing/rest_routing-1.0.xsd');
         $restRoutinglocation = rawurlencode(str_replace('\\', '/', $restRoutinglocation));
@@ -237,7 +237,7 @@ EOF;
      *
      * @internal
      */
-    protected function loadFile($file)
+    protected function loadFile($file): \DOMDocument
     {
         if (class_exists(XmlUtils::class)) {
             $dom = XmlUtils::loadFile($file);

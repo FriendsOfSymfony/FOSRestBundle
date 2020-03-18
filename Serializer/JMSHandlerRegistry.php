@@ -33,17 +33,17 @@ class JMSHandlerRegistry implements HandlerRegistryInterface
     /**
      * {@inheritdoc}
      */
-    public function registerSubscribingHandler(SubscribingHandlerInterface $handler)
+    public function registerSubscribingHandler(SubscribingHandlerInterface $handler): void
     {
-        return $this->registry->registerSubscribingHandler($handler);
+        $this->registry->registerSubscribingHandler($handler);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function registerHandler($direction, $typeName, $format, $handler)
+    public function registerHandler($direction, $typeName, $format, $handler): void
     {
-        return $this->registry->registerHandler($direction, $typeName, $format, $handler);
+        $this->registry->registerHandler($direction, $typeName, $format, $handler);
     }
 
     /**

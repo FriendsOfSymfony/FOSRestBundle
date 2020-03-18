@@ -34,7 +34,7 @@ class FormErrorHandler implements SubscribingHandlerInterface
         $this->formErrorHandler = $formErrorHandler;
     }
 
-    public static function getSubscribingMethods()
+    public static function getSubscribingMethods(): array
     {
         return JMSFormErrorHandler::getSubscribingMethods();
     }

@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 final class JMSHandlersPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($container->has('jms_serializer.handler_registry')) {
             // the public alias prevents the handler registry definition from being removed

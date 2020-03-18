@@ -25,9 +25,6 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RestRouteProcessor
 {
-    /**
-     * @return RouteCollection
-     */
     public function importResource(
         LoaderInterface $loader,
         $resource,
@@ -36,7 +33,7 @@ class RestRouteProcessor
         string $namePrefix = null,
         string $type = null,
         string $currentDir = null
-    ) {
+    ): RouteCollection {
         $loader = $loader->resolve($resource, $type);
 
         if ($loader instanceof FileLoader && null !== $currentDir) {

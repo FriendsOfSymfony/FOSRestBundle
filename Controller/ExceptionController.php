@@ -17,7 +17,6 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
@@ -38,12 +37,9 @@ final class ExceptionController
         $this->showException = $showException;
     }
 
-    /**
-     * @param \Throwable $exception
-     */
-    public function showAction(Request $request, $exception, DebugLoggerInterface $logger = null)
+    public function showAction(Request $request, \Throwable $exception): Response
     {
-        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+        $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
         $view = new View($exception, $this->getStatusCode($exception), $exception instanceof HttpExceptionInterface ? $exception->getHeaders() : []);
 

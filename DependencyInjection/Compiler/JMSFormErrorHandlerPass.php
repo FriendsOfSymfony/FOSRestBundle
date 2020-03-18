@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 final class JMSFormErrorHandlerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has('jms_serializer.form_error_handler')) {
             return;

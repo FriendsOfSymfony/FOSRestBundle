@@ -44,20 +44,8 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      * @var array
      */
     private $formats;
-
-    /**
-     * @var int
-     */
     private $failedValidationCode;
-
-    /**
-     * @var int
-     */
     private $emptyContentCode;
-
-    /**
-     * @var bool
-     */
     private $serializeNull;
 
     /**
@@ -67,31 +55,12 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      * @var array<string,int>
      */
     private $forceRedirects;
-
-    /**
-     * @var string|null
-     */
-    private $defaultEngine;
-
-    /**
-     * @var array
-     */
     private $exclusionStrategyGroups = [];
-
-    /**
-     * @var string
-     */
     private $exclusionStrategyVersion;
-
-    /**
-     * @var bool
-     */
     private $serializeNullStrategy;
-
     private $urlGenerator;
     private $serializer;
     private $requestStack;
-
     private $options;
 
     private function __construct(
@@ -138,23 +107,17 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * @param string[]|string $groups
      */
-    public function setExclusionStrategyGroups($groups)
+    public function setExclusionStrategyGroups($groups): void
     {
         $this->exclusionStrategyGroups = (array) $groups;
     }
 
-    /**
-     * @param string $version
-     */
-    public function setExclusionStrategyVersion($version)
+    public function setExclusionStrategyVersion(string $version): void
     {
         $this->exclusionStrategyVersion = $version;
     }
 
-    /**
-     * @param bool $isEnabled
-     */
-    public function setSerializeNullStrategy($isEnabled)
+    public function setSerializeNullStrategy(bool $isEnabled): void
     {
         $this->serializeNullStrategy = $isEnabled;
     }
@@ -162,7 +125,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($format)
+    public function supports(string $format): bool
     {
         return isset($this->customHandlers[$format]) || isset($this->formats[$format]);
     }
@@ -173,18 +136,9 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      * The handler must have the following signature: handler(ViewHandler $viewHandler, View $view, Request $request, $format)
      * It can use the public methods of this class to retrieve the needed data and return a
      * Response object ready to be sent.
-     *
-     * @param string   $format
-     * @param callable $callable
-     *
-     * @throws \InvalidArgumentException
      */
-    public function registerHandler($format, $callable)
+    public function registerHandler(string $format, callable $callable): void
     {
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException('Registered view callback must be callable.');
-        }
-
         $this->customHandlers[$format] = $callable;
     }
 
@@ -194,10 +148,8 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
      * Decides on which handler to use based on the request format.
      *
      * @throws UnsupportedMediaTypeHttpException
-     *
-     * @return Response
      */
-    public function handle(View $view, Request $request = null)
+    public function handle(View $view, Request $request = null): Response
     {
         if (null === $request) {
             $request = $this->requestStack->getCurrentRequest();
@@ -218,13 +170,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         return $this->createResponse($view, $request, $format);
     }
 
-    /**
-     * @param string $location
-     * @param string $format
-     *
-     * @return Response
-     */
-    public function createRedirectResponse(View $view, $location, $format)
+    public function createRedirectResponse(View $view, string $location, string $format): Response
     {
         $content = null;
         if ((Response::HTTP_CREATED === $view->getStatusCode() || Response::HTTP_ACCEPTED === $view->getStatusCode()) && null !== $view->getData()) {
@@ -247,14 +193,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         return $response;
     }
 
-    /**
-     * Handles creation of a Response using either redirection or the serializer service.
-     *
-     * @param string $format
-     *
-     * @return Response
-     */
-    public function createResponse(View $view, Request $request, $format)
+    public function createResponse(View $view, Request $request, string $format): Response
     {
         $route = $view->getRoute();
 
@@ -329,12 +268,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         return $context;
     }
 
-    /**
-     * @param string $format
-     *
-     * @return Response
-     */
-    private function initResponse(View $view, $format)
+    private function initResponse(View $view, string $format): Response
     {
         $content = null;
         if ($this->serializeNull || null !== $view->getData()) {
@@ -385,7 +319,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         return $form;
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->exclusionStrategyGroups = $this->options['exclusionStrategyGroups'];
         $this->exclusionStrategyVersion = $this->options['exclusionStrategyVersion'];

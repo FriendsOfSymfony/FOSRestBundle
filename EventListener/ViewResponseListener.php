@@ -38,15 +38,12 @@ class ViewResponseListener implements EventSubscriberInterface
         $this->forceView = $forceView;
     }
 
-    /**
-     * @param ViewEvent $event
-     */
-    public function onKernelView($event)
+    public function onKernelView(ViewEvent $event): void
     {
         $request = $event->getRequest();
 
         if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
-            return false;
+            return;
         }
 
         $configuration = $request->attributes->get('_template');

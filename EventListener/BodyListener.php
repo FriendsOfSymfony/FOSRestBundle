@@ -48,15 +48,12 @@ class BodyListener
         $this->normalizeForms = $normalizeForms;
     }
 
-    public function setDefaultFormat(?string $defaultFormat)
+    public function setDefaultFormat(?string $defaultFormat): void
     {
         $this->defaultFormat = $defaultFormat;
     }
 
-    /**
-     * @param RequestEvent $event
-     */
-    public function onKernelRequest($event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -112,7 +109,7 @@ class BodyListener
         }
     }
 
-    private function isNotAnEmptyDeleteRequestWithNoSetContentType(string $method, $content, $contentType): bool
+    private function isNotAnEmptyDeleteRequestWithNoSetContentType(string $method, $content, ?string $contentType): bool
     {
         return false === ('DELETE' === $method && empty($content) && empty($contentType));
     }

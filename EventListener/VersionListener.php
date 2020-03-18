@@ -23,16 +23,13 @@ class VersionListener
     private $versionResolver;
     private $defaultVersion;
 
-    public function __construct(VersionResolverInterface $versionResolver, $defaultVersion = null)
+    public function __construct(VersionResolverInterface $versionResolver, ?string $defaultVersion = null)
     {
         $this->versionResolver = $versionResolver;
         $this->defaultVersion = $defaultVersion;
     }
 
-    /**
-     * @param RequestEvent $event
-     */
-    public function onKernelRequest($event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
