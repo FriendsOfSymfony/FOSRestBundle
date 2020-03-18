@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author Christian Flothmann <christian.flothmann@sensiolabs.de>
  *
- * @internal since 2.8
+ * @internal
  */
 class HandlerRegistryDecorationPass implements CompilerPassInterface
 {

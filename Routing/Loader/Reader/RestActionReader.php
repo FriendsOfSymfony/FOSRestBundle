@@ -30,7 +30,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  *
- * @internal since 2.8
+ * @internal
  */
 class RestActionReader
 {

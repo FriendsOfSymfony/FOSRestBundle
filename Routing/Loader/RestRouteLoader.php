@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  * @author Bulat Shakirzyanov <mallluhuct@gmail.com>
  *
- * @internal since 2.8
+ * @internal
  */
 class RestRouteLoader extends Loader
 {

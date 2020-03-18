@@ -22,7 +22,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Donald Tyler <chekote69@gmail.com>
  *
- * @internal since 2.8
+ * @internal
  */
 class RestXmlCollectionLoader extends XmlFileLoader
 {

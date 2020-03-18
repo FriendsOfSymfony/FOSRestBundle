@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  *
  * @author Grégoire Pineau
  *
- * @internal since 2.8
+ * @internal
  */
 class DisableCSRFExtension extends AbstractTypeExtension
 {

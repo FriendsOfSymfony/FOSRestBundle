@@ -21,7 +21,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
  *
- * @internal since 2.8
+ * @internal
  */
 class DirectoryRouteLoader extends Loader
 {

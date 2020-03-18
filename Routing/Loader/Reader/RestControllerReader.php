@@ -22,7 +22,7 @@ use Symfony\Component\Config\Resource\FileResource;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  *
- * @internal since 2.8
+ * @internal
  */
 class RestControllerReader
 {

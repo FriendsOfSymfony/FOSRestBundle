@@ -20,7 +20,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
  *
  * @author Marc Juchli <mail@marcjuch.li>
  *
- * @internal since 2.8
+ * @internal
  */
 class EntityToIdObjectTransformer implements DataTransformerInterface
 {
