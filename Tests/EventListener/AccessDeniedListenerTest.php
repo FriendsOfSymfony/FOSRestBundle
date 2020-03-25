@@ -115,11 +115,11 @@ class AccessDeniedListenerTest extends TestCase
         $listener = new AccessDeniedListener($formats, null);
         $listener->onKernelException($event);
         if (method_exists($event, 'getThrowable')) {
-            $exception = $event->getThrowable();
+            $thrownException = $event->getThrowable();
         } else {
-            $exception = $event->getException();
+            $thrownException = $event->getException();
         }
-        $this->assertSame($exception, $exception);
+        $this->assertSame($exception, $thrownException);
     }
 
     /**
