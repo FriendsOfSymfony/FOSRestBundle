@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -147,16 +146,14 @@ class FOSRestExtension extends Extension
 
             $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(1, $config['body_listener']['decoders']);
 
-            if (class_exists(ServiceLocatorTagPass::class)) {
-                $decoderServicesMap = array();
+            $decoderServicesMap = array();
 
-                foreach ($config['body_listener']['decoders'] as $id) {
-                    $decoderServicesMap[$id] = new Reference($id);
-                }
-
-                $decodersServiceLocator = ServiceLocatorTagPass::register($container, $decoderServicesMap);
-                $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(0, $decodersServiceLocator);
+            foreach ($config['body_listener']['decoders'] as $id) {
+                $decoderServicesMap[$id] = new Reference($id);
             }
+
+            $decodersServiceLocator = ServiceLocatorTagPass::register($container, $decoderServicesMap);
+            $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(0, $decodersServiceLocator);
 
             $arrayNormalizer = $config['body_listener']['array_normalizer'];
 
@@ -252,8 +249,7 @@ class FOSRestExtension extends Extension
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if (!empty($config['view']['jsonp_handler'])) {
-            $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
-            $handler = new $childDefinitionClass($config['service']['view_handler']);
+            $handler = new ChildDefinition($config['service']['view_handler']);
             $handler->setPublic(true);
 
             $jsonpHandler = new Reference('fos_rest.view_handler.jsonp');
@@ -406,9 +402,8 @@ class FOSRestExtension extends Extension
             array_pop($arguments);
         }
 
-        $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
         $container
-            ->setDefinition($id, new $childDefinitionClass('fos_rest.zone_request_matcher'))
+            ->setDefinition($id, new ChildDefinition('fos_rest.zone_request_matcher'))
             ->setArguments($arguments)
         ;
 

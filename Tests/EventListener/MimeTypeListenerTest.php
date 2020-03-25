@@ -15,7 +15,6 @@ use FOS\RestBundle\EventListener\MimeTypeListener;
 use FOS\RestBundle\FOSRestBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -31,7 +30,7 @@ class MimeTypeListenerTest extends TestCase
         $listener = new MimeTypeListener(['jsonp' => ['application/javascript+jsonp']]);
 
         $request = new Request();
-        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
+        $event = $this->getMockBuilder(RequestEvent::class)
             ->disableOriginalConstructor()->getMock();
         $event->expects($this->any())
               ->method('getRequest')
@@ -58,7 +57,7 @@ class MimeTypeListenerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
-        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
+        $event = $this->getMockBuilder(RequestEvent::class)
             ->disableOriginalConstructor()->getMock();
         $event->expects($this->any())
             ->method('getRequest')
@@ -79,7 +78,7 @@ class MimeTypeListenerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, true);
-        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
+        $event = $this->getMockBuilder(RequestEvent::class)
             ->disableOriginalConstructor()->getMock();
         $event->expects($this->any())
             ->method('getRequest')

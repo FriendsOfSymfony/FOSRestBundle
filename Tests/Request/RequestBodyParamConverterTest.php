@@ -105,10 +105,6 @@ class RequestBodyParamConverterTest extends TestCase
 
     public function testExecutionInterceptsJMSException()
     {
-        if (!class_exists('JMS\SerializerBundle\JMSSerializerBundle')) {
-            $this->markTestSkipped('JMSSerializerBundle is not installed.');
-        }
-
         $this->expectException(BadRequestHttpException::class);
 
         $converter = new RequestBodyParamConverter($this->serializer);

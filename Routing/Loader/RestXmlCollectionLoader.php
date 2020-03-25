@@ -239,14 +239,10 @@ EOF;
      */
     protected function loadFile($file): \DOMDocument
     {
-        if (class_exists(XmlUtils::class)) {
-            $dom = XmlUtils::loadFile($file);
-            $this->validate($dom);
+        $dom = XmlUtils::loadFile($file);
+        $this->validate($dom);
 
-            return $dom;
-        }
-
-        return parent::loadFile($file);
+        return $dom;
     }
 
     /**

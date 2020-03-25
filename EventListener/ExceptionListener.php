@@ -19,7 +19,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener as LegacyExceptionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -37,11 +36,7 @@ class ExceptionListener implements EventSubscriberInterface
 
     public function __construct($controller, ?LoggerInterface $logger, EventDispatcherInterface $dispatcher)
     {
-        if (class_exists(ErrorListener::class)) {
-            $this->exceptionListener = new ErrorListener($controller, $logger);
-        } else {
-            $this->exceptionListener = new LegacyExceptionListener($controller, $logger);
-        }
+        $this->exceptionListener = new ErrorListener($controller, $logger);
         $this->dispatcher = $dispatcher;
     }
 
