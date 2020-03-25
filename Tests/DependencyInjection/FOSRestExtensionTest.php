@@ -19,7 +19,6 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -792,8 +791,7 @@ class FOSRestExtensionTest extends TestCase
 
         $viewHandler = $this->container->getDefinition('fos_rest.view_handler');
 
-        $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
-        $this->assertInstanceOf($childDefinitionClass, $viewHandler);
+        $this->assertInstanceOf(ChildDefinition::class, $viewHandler);
     }
 
     public function testSerializerExceptionNormalizer()
@@ -847,8 +845,7 @@ class FOSRestExtensionTest extends TestCase
         $requestMatcherFirstId = (string) $addRequestMatcherCalls[0][1][0];
         $requestMatcherFirst = $this->container->getDefinition($requestMatcherFirstId);
 
-        $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
-        $this->assertInstanceOf($childDefinitionClass, $requestMatcherFirst);
+        $this->assertInstanceOf(ChildDefinition::class, $requestMatcherFirst);
         $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0));
 
         // Second zone
@@ -856,7 +853,7 @@ class FOSRestExtensionTest extends TestCase
         $requestMatcherSecondId = (string) $addRequestMatcherCalls[1][1][0];
         $requestMatcherSecond = $this->container->getDefinition($requestMatcherSecondId);
 
-        $this->assertInstanceOf($childDefinitionClass, $requestMatcherSecond);
+        $this->assertInstanceOf(ChildDefinition::class, $requestMatcherSecond);
         $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
         $this->assertEquals(array('127.0.0.1'), $requestMatcherSecond->getArgument(3));
     }

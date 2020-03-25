@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -58,9 +56,8 @@ class ViewResponseListenerTest extends TestCase
     {
         $controller = new FooController();
         $kernel = $this->createMock(HttpKernelInterface::class);
-        $eventClass = class_exists(ControllerEvent::class) ? ControllerEvent::class : FilterControllerEvent::class;
 
-        return new $eventClass($kernel, [$controller, 'viewAction'], $request, null);
+        return new ControllerEvent($kernel, [$controller, 'viewAction'], $request, null);
     }
 
     /**
@@ -72,9 +69,8 @@ class ViewResponseListenerTest extends TestCase
     protected function getResponseEvent(Request $request, $result)
     {
         $kernel = $this->createMock(HttpKernelInterface::class);
-        $eventClass = class_exists(ViewEvent::class) ? ViewEvent::class : GetResponseForControllerResultEvent::class;
 
-        return new $eventClass($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $result);
+        return new ViewEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $result);
     }
 
     public function testOnKernelViewWhenControllerResultIsNotViewObject()

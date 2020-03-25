@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException as HttpKernelAccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -83,20 +82,14 @@ class AccessDeniedListenerTest extends TestCase
     private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats, $exceptionClass = HttpKernelAccessDeniedException::class)
     {
         $exception = new SecurityAccessDeniedException();
-        $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
-        $event = new $eventClass(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
+        $event = new ExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
         $listener = new AccessDeniedListener($formats, null);
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
         $listener->onKernelException($event);
         // restore the old error_log
         ini_set('error_log', $errorLog);
-        if (method_exists($event, 'getThrowable')) {
-            $exception = $event->getThrowable();
-        } else {
-            $exception = $event->getException();
-        }
-        $this->assertInstanceOf($exceptionClass, $exception);
+        $this->assertInstanceOf($exceptionClass, $event->getThrowable());
     }
 
     /**
@@ -109,17 +102,11 @@ class AccessDeniedListenerTest extends TestCase
         $request = new Request();
         $request->setRequestFormat(key($formats));
         $exception = new \Exception('foo');
-        $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
-        $event = new $eventClass(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
+        $event = new ExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
 
         $listener = new AccessDeniedListener($formats, null);
         $listener->onKernelException($event);
-        if (method_exists($event, 'getThrowable')) {
-            $thrownException = $event->getThrowable();
-        } else {
-            $thrownException = $event->getException();
-        }
-        $this->assertSame($exception, $thrownException);
+        $this->assertSame($exception, $event->getThrowable());
     }
 
     /**
@@ -157,8 +144,7 @@ class AccessDeniedListenerTest extends TestCase
     private function doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest(Request $request, array $formats)
     {
         $exception = new AuthenticationException();
-        $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
-        $event = new $eventClass(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
+        $event = new ExceptionEvent(new TestKernel(), $request, Kernel::MASTER_REQUEST, $exception);
         $listener = new AccessDeniedListener($formats, null);
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -178,8 +164,7 @@ class AccessDeniedListenerTest extends TestCase
     private function doTestUnauthorizedHttpExceptionHasCorrectChallenge(Request $request, array $formats)
     {
         $exception = new AuthenticationException();
-        $eventClass = class_exists(ExceptionEvent::class) ? ExceptionEvent::class : GetResponseForExceptionEvent::class;
-        $event = new $eventClass(new TestKernel(), $request, 'foo', $exception);
+        $event = new ExceptionEvent(new TestKernel(), $request, 'foo', $exception);
         $listener = new AccessDeniedListener($formats, 'Basic realm="Restricted Area"');
         // store the current error_log, and disable it temporarily
         $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');

@@ -22,7 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -143,9 +142,8 @@ class ParamFetcherListenerTest extends TestCase
         $controller = new ParamFetcherController();
         $callable = $actionMethod ? [$controller, $actionMethod] : $controller;
         $kernel = $this->createMock(HttpKernelInterface::class);
-        $eventClass = class_exists(ControllerEvent::class) ? ControllerEvent::class : FilterControllerEvent::class;
 
-        return new $eventClass($kernel, $callable, $request, null);
+        return new ControllerEvent($kernel, $callable, $request, null);
     }
 
     public function setUp()

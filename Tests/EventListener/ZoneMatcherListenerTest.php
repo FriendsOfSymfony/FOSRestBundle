@@ -16,7 +16,6 @@ use FOS\RestBundle\FOSRestBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ZoneMatcherListenerTest extends TestCase
@@ -72,7 +71,7 @@ class ZoneMatcherListenerTest extends TestCase
 
     private function getGetResponseEvent(Request $request)
     {
-        $event = $this->getMockBuilder(class_exists(RequestEvent::class) ? RequestEvent::class : GetResponseEvent::class)
+        $event = $this->getMockBuilder(RequestEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
 
