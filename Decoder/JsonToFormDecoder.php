@@ -48,7 +48,7 @@ class JsonToFormDecoder implements DecoderInterface
     public function decode($data)
     {
         $decodedData = @json_decode($data, true);
-        if ($decodedData) {
+        if (is_array($decodedData)) {
             $this->xWwwFormEncodedLike($decodedData);
         }
 

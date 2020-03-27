@@ -47,4 +47,12 @@ class JsonToFormDecoderTest extends TestCase
         $this->assertEquals('3.14', $decoded['floatKey']);
         $this->assertEquals('bar', $decoded['stringKey']);
     }
+
+    public function testDecodeStringData()
+    {
+        $decoder = new JsonToFormDecoder();
+        $decoded = $decoder->decode('"foo"');
+
+        $this->assertSame('foo', $decoded);
+    }
 }
