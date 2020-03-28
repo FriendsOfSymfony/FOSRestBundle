@@ -25,6 +25,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener as LegacyHttpKernelExceptionListener;
 use Symfony\Component\Validator\Constraint;
 
 /**
@@ -387,7 +389,22 @@ class FOSRestExtension extends Extension
 
             $controller = $config['exception']['exception_controller'] ?? null;
 
-            $container->getDefinition('fos_rest.exception_listener')->replaceArgument(0, $controller);
+            if (class_exists(ErrorListener::class)) {
+                $container->register('fos_rest.error_listener', ErrorListener::class)
+                    ->setArguments([
+                        $controller,
+                        new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                        '%kernel.debug%',
+                    ])
+                    ->addTag('monolog.logger', ['channel' => 'request']);
+            } else {
+                $container->register('fos_rest.error_listener', LegacyHttpKernelExceptionListener::class)
+                    ->setArguments([
+                        $controller,
+                        new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                    ])
+                    ->addTag('monolog.logger', ['channel' => 'request']);
+            }
 
             $container->getDefinition('fos_rest.exception.codes_map')
                 ->replaceArgument(0, $config['exception']['codes']);
