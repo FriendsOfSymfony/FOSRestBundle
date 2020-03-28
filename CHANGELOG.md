@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+2.7.3
+-----
+
+* harden the `JsonToFormDecoder` to not error on non-array input (#2145)
+
 2.7.2
 -----
 
