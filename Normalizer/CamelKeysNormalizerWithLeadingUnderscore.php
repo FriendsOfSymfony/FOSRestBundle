@@ -17,7 +17,7 @@ namespace FOS\RestBundle\Normalizer;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  *
- * @internal since 2.8
+ * @internal
  */
 class CamelKeysNormalizerWithLeadingUnderscore extends CamelKeysNormalizer
 {

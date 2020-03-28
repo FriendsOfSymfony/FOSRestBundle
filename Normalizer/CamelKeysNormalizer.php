@@ -18,7 +18,7 @@ use FOS\RestBundle\Normalizer\Exception\NormalizationException;
  *
  * @author Florian Voutzinos <florian@voutzinos.com>
  *
- * @internal since 2.8
+ * @internal
  */
 class CamelKeysNormalizer implements ArrayNormalizerInterface
 {
