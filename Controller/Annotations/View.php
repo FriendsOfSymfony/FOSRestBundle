@@ -27,6 +27,11 @@ class View extends Template
     protected $statusCode;
 
     /**
+     * @var array Serializer Context attributes.
+     */
+    protected $serializerAttributes = [];
+
+    /**
      * @var array
      */
     protected $serializerGroups;
@@ -50,6 +55,22 @@ class View extends Template
     public function getStatusCode()
     {
         return $this->statusCode;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializerAttributes()
+    {
+        return $this->serializerAttributes;
+    }
+
+    /**
+     * @param array $serializerAttributes
+     */
+    public function setSerializerAttributes(array $serializerAttributes)
+    {
+        $this->serializerAttributes = $serializerAttributes;
     }
 
     /**

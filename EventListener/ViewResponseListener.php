@@ -70,6 +70,11 @@ class ViewResponseListener implements EventSubscriberInterface
                     $context->setGroups(array_merge($context->getGroups(), $configuration->getSerializerGroups()));
                 }
             }
+            if ($configuration->getSerializerAttributes()) {
+                foreach ($configuration->getSerializerAttributes() as $key => $value) {
+                    $context->setAttribute($key, $value);
+                }
+            }
             if (true === $configuration->getSerializerEnableMaxDepthChecks()) {
                 $context->enableMaxDepth();
             } elseif (false === $configuration->getSerializerEnableMaxDepthChecks()) {

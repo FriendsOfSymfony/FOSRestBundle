@@ -154,6 +154,40 @@ class ViewResponseListenerTest extends TestCase
         $this->assertEquals($enableMaxDepthChecks, $context->isMaxDepthEnabled());
     }
 
+    public static function serializerAttributesProvider()
+    {
+        return [
+            [['foo' => 'bar']],
+            [['one', 'two', 'three']],
+        ];
+    }
+
+    /**
+     * @dataProvider serializerAttributesProvider
+     */
+    public function testSerializerAttributes(array $attributes)
+    {
+        $this->createViewResponseListener(['json' => false]);
+
+        $viewAnnotation = new ViewAnnotation([]);
+        $viewAnnotation->setOwner([$this, 'testSerializerEnableMaxDepthChecks']);
+        $viewAnnotation->setSerializerAttributes($attributes);
+
+        $request = new Request();
+        $request->setRequestFormat('json');
+        $request->attributes->set('_template', $viewAnnotation);
+
+        $view = new View();
+
+        $event = $this->getResponseEvent($request, $view);
+
+        $this->listener->onKernelView($event);
+
+        $context = $view->getContext();
+
+        $this->assertEquals($attributes, $context->getAttributes());
+    }
+
     public function getDataForDefaultVarsCopy()
     {
         return [
