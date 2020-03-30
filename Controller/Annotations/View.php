@@ -27,7 +27,7 @@ class View extends Template
     protected $statusCode;
 
     /**
-     * @var array Serializer Context attributes.
+     * @var array Serializer Context attributes
      */
     protected $serializerAttributes = [];
 
