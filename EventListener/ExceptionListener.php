@@ -12,7 +12,6 @@
 namespace FOS\RestBundle\EventListener;
 
 use FOS\RestBundle\FOSRestBundle;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -20,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener as LegacyExceptionListener;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -34,9 +34,13 @@ class ExceptionListener implements EventSubscriberInterface
     private $exceptionListener;
     private $dispatcher;
 
-    public function __construct($controller, ?LoggerInterface $logger, EventDispatcherInterface $dispatcher)
+    public function __construct($exceptionListener, EventDispatcherInterface $dispatcher)
     {
-        $this->exceptionListener = new ErrorListener($controller, $logger);
+        if (!$exceptionListener instanceof ErrorListener && !$exceptionListener instanceof LegacyExceptionListener) {
+            throw new \TypeError(sprintf('The first argument of %s() must be an instance of %s or %s (%s given).', __METHOD__, ErrorListener::class, LegacyExceptionListener::class, is_object($exceptionListener) ? get_class($exceptionListener) : gettype($exceptionListener)));
+        }
+
+        $this->exceptionListener = $exceptionListener;
         $this->dispatcher = $dispatcher;
     }
 

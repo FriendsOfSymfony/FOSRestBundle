@@ -7,9 +7,7 @@
     <services>
         <service id="fos_rest.exception_listener" class="FOS\RestBundle\EventListener\ExceptionListener">
             <tag name="kernel.event_subscriber" />
-            <tag name="monolog.logger" channel="request" />
-            <argument />
-            <argument type="service" id="logger" on-invalid="null" />
+            <argument type="service" id="fos_rest.error_listener" />
             <argument type="service" id="event_dispatcher" />
         </service>
 
