@@ -56,7 +56,6 @@ class ConfigurationTest extends TestCase
                     'exception' => [
                         'codes' => $expectedConfig,
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
-                        'forward' => true,
                     ],
                 ],
             ]
@@ -81,7 +80,6 @@ class ConfigurationTest extends TestCase
                     MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
                 ],
                 'exception_controller' => 'fos_rest.exception.controller::showAction',
-                'forward' => true,
             ],
         ];
 
@@ -112,7 +110,6 @@ class ConfigurationTest extends TestCase
                             \RuntimeException::class => $value,
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
-                        'forward' => true,
                     ],
                 ],
             ]
@@ -129,7 +126,6 @@ class ConfigurationTest extends TestCase
                 [
                     'exception' => [
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
-                        'forward' => true,
                         'messages' => [
                             'UnknownException' => true,
                         ],
@@ -153,7 +149,6 @@ class ConfigurationTest extends TestCase
                             'UnknownException' => 404,
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
-                        'forward' => true,
                     ],
                 ],
             ]
@@ -168,7 +163,6 @@ class ConfigurationTest extends TestCase
                 [
                     'exception' => [
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
-                        'forward' => true,
                     ],
                     'format_listener' => [
                         'rules' => [

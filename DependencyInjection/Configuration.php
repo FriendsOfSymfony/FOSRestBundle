@@ -426,18 +426,10 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('exception_controller')->defaultValue('fos_rest.exception.controller::showAction')->end()
                         ->booleanNode('forward')
-                            ->defaultValue(static function () {
-                                @trigger_error('Not setting the "fos_rest.exception.forward" configuration option is deprecated since FOSRestBundle 2.8. Its default value will be set to "true" in 3.0.', E_USER_DEPRECATED);
-
-                                return false;
-                            })
+                            ->defaultValue(true)
                             ->validate()
                                 ->ifTrue(static function ($v) { return true !== $v; })
-                                ->then(static function ($v) {
-                                    @trigger_error('Not setting the "fos_rest.exception.forward" configuration option to "true" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                    return $v;
-                                })
+                                ->thenInvalid('Only "true" is supported.')
                             ->end()
                             ->info('Forward exception for requests not matching any configured REST zone to the core exception listener.')
                         ->end()

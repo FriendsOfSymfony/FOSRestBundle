@@ -29,10 +29,6 @@ final class ErrorListenerPass implements CompilerPassInterface
             return;
         }
 
-        if (!$container->getParameter('fos_rest.exception.forward')) {
-            return;
-        }
-
         if ($container->has('twig.exception_listener')) {
             $container->getDefinition('fos_rest.exception_listener')->setDecoratedService('twig.exception_listener');
         } elseif ($container->has('exception_listener')) {
