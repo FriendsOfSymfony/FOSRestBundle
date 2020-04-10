@@ -80,16 +80,6 @@ class RestActionReader
         UserInterface::class,
     ];
 
-    /**
-     * Initializes controller reader.
-     *
-     * @param Reader               $annotationReader
-     * @param ParamReaderInterface $paramReader
-     * @param InflectorInterface   $inflector
-     * @param bool                 $includeFormat
-     * @param array                $formats
-     * @param bool                 $hasMethodPrefix
-     */
     public function __construct(Reader $annotationReader, ParamReaderInterface $paramReader, InflectorInterface $inflector, bool $includeFormat, array $formats = [], bool $hasMethodPrefix = true)
     {
         $this->annotationReader = $annotationReader;
