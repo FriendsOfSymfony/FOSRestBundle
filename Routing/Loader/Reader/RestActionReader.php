@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
+@trigger_error(sprintf('The %s\RestActionReader class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\Annotations\Route as RouteAnnotation;
 use FOS\RestBundle\Inflector\InflectorInterface;
@@ -30,7 +32,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  *
- * @internal since 2.8
+ * @deprecated since 2.8
  */
 class RestActionReader
 {

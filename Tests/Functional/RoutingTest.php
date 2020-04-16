@@ -11,6 +11,9 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+/**
+ * @group legacy
+ */
 class RoutingTest extends WebTestCase
 {
     private static $client;

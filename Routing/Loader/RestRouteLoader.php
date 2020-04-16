@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+@trigger_error(sprintf('The %s\RestRouteLoader class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use FOS\RestBundle\Routing\Loader\Reader\RestControllerReader;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Config\FileLocatorInterface;
@@ -25,7 +27,7 @@ use Symfony\Component\HttpKernel\Kernel;
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  * @author Bulat Shakirzyanov <mallluhuct@gmail.com>
  *
- * @internal since 2.8
+ * @deprecated since 2.8
  */
 class RestRouteLoader extends Loader
 {

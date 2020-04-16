@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+@trigger_error(sprintf('The %s\RestYamlCollectionLoader class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -22,7 +24,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * RestYamlCollectionLoader YAML file collections loader.
  *
- * @internal since 2.8
+ * @deprecated since 2.8
  */
 class RestYamlCollectionLoader extends YamlFileLoader
 {

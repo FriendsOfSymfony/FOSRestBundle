@@ -21,6 +21,8 @@ use Symfony\Component\Routing\RouteCollection;
  * RestXmlCollectionLoader test.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @group legacy
  */
 class RestXmlCollectionLoaderTest extends LoaderTest
 {

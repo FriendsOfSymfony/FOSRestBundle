@@ -18,6 +18,9 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Routing\Route;
 
+/**
+ * @group legacy
+ */
 class DirectoryRouteLoaderTest extends LoaderTest
 {
     public function testLoad()

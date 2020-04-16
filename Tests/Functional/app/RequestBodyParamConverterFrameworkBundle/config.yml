@@ -12,8 +12,7 @@ framework:
 fos_rest:
     body_converter:
         enabled: true
-    routing_loader:
-        parse_controller_name: false
+    routing_loader: false
     service:
         templating: ~
     view:

@@ -14,8 +14,7 @@ framework:
 
 fos_rest:
     param_fetcher_listener: true
-    routing_loader:
-        parse_controller_name: false
+    routing_loader: false
     service:
         templating: ~
     view:

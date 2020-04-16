@@ -13,6 +13,8 @@ namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\View;
 
@@ -28,6 +30,7 @@ class ArticleController extends AbstractFOSRestController
      *
      * @return View view instance
      *
+     * @Post("/articles.{_format}", name="post_articles")
      * @View()
      */
     public function cpostAction(Request $request)
@@ -44,6 +47,7 @@ class ArticleController extends AbstractFOSRestController
      *
      * @return View view instance
      *
+     * @Get("/articles.{_format}", name="get_article", defaults={"_format": "html"})
      * @View()
      */
     public function cgetAction(Request $request)

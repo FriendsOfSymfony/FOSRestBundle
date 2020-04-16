@@ -69,9 +69,7 @@ class TestKernel extends Kernel
                 'exception' => [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                 ],
-                'routing_loader' => [
-                    'parse_controller_name' => false,
-                ],
+                'routing_loader' => false,
                 'service' => [
                     'templating' => null,
                 ],

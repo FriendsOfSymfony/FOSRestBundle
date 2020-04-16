@@ -18,8 +18,7 @@ fos_rest:
     format_listener:
         rules:
             - { path: ^/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }
-    routing_loader:
-        parse_controller_name: false
+    routing_loader: false
     service:
         templating: ~
 

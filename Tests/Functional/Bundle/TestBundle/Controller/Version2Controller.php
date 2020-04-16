@@ -13,20 +13,17 @@ namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Version;
 use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Ener-Getick <egetick@gmail.com>
- *
- * @Version({"1.2"})
  */
 class Version2Controller extends AbstractFOSRestController
 {
     /**
      * @View()
-     * @Get(path="/version")
+     * @Get(path="/version", condition="request.attributes.get('version') in ['1.2']")
      */
     public function versionAction($version)
     {
@@ -35,7 +32,7 @@ class Version2Controller extends AbstractFOSRestController
 
     /**
      * @View()
-     * @Get(path="/version/{version}")
+     * @Get(path="/version/{version}", requirements={"version": "1.2"})
      */
     public function versionPathAction(Request $request, $version)
     {
