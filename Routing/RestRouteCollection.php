@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Routing;
 
+@trigger_error(sprintf('The %s\RestRouteCollection class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -18,7 +20,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  *
- * @internal
+ * @deprecated since 2.8
  */
 class RestRouteCollection extends RouteCollection
 {

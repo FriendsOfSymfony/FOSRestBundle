@@ -11,11 +11,15 @@
 
 namespace FOS\RestBundle\Routing;
 
+@trigger_error(sprintf('The %s\ClassResourceInterface is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 /**
  * Implement interface to define that missing resources in the methods should
  * use the class name to identify the resource.
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ *
+ * @deprecated since 2.8
  */
 interface ClassResourceInterface
 {
