@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class AbstractParamTest extends TestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $this->param = $this->getMockForAbstractClass(AbstractParam::class);
     }

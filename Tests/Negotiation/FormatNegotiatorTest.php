@@ -30,7 +30,7 @@ class FormatNegotiatorTest extends TestCase
     private $request;
     private $negotiator;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->requestStack = new RequestStack();
         $this->request = new Request();

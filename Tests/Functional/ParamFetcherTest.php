@@ -54,7 +54,7 @@ class ParamFetcherTest extends WebTestCase
         }
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->createClient(['test_case' => 'ParamFetcher']);
     }

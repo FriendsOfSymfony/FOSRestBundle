@@ -56,10 +56,7 @@ class ParamFetcherTest extends TestCase
 
     private $paramFetcher;
 
-    /**
-     * Test setup.
-     */
-    public function setup()
+    protected function setUp(): void
     {
         $this->controller = [new \stdClass(), 'fooAction'];
 
