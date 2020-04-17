@@ -12,12 +12,11 @@
 namespace FOS\RestBundle\Tests\Fixtures\Controller;
 
 use FOS\RestBundle\Controller\ControllerTrait;
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationList;
 
-class ArticleController extends AbstractController implements ClassResourceInterface
+class ArticleController extends AbstractController
 {
     use ControllerTrait;
 
