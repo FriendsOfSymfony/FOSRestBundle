@@ -15,7 +15,6 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
-use FOS\RestBundle\Tests\Fixtures\Controller\ArticleController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,9 +58,8 @@ class ParamFetcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->controller = [new ArticleController(), 'getAction'];
+        $this->controller = [new TestController(), 'getAction'];
 
-        $this->params = [];
         $this->paramReader = $this->getMockBuilder(ParamReaderInterface::class)->getMock();
 
         $this->validator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
@@ -75,8 +73,6 @@ class ParamFetcherTest extends TestCase
             $this->requestStack,
             $this->validator
         );
-
-        $this->container = $this->getMockBuilder(ContainerInterface::class)->getMock();
     }
 
     public function testParamDynamicCreation()
@@ -412,5 +408,12 @@ class ParamFetcherTest extends TestCase
         $param->requirements = new NotBlank();
 
         return $param;
+    }
+}
+
+class TestController
+{
+    public function getAction()
+    {
     }
 }
