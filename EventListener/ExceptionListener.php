@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\EventListener;
 
+@trigger_error(sprintf('The %s\ExceptionListener class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\Debug\Exception\FlattenException as LegacyFlattenException;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -27,7 +29,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @author Ener-Getick <egetick@gmail.com>
  *
- * @internal
+ * @deprecated since 2.8
  */
 class ExceptionListener implements EventSubscriberInterface
 {

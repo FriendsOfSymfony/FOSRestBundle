@@ -1,6 +1,5 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/default.php }
     - { resource: ../config/sensio_framework_extra.yml }
 
 framework:
@@ -14,6 +13,8 @@ fos_rest:
         formats:
             xml:  true
             json: true
+    exception:
+        exception_listener: false
     format_listener:
         rules:
             - { path: ^/, priorities: [ html, json, xml ], fallback_format: ~, prefer_extension: true }

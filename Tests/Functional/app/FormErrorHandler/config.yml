@@ -1,13 +1,8 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/sensio_framework_extra.yml }
-
-framework:
-    serializer:
-        enabled: true
+    - { resource: ../config/exception_listener.yml }
 
 fos_rest:
-    allowed_methods_listener: true
     exception:
         exception_listener: false
         serialize_exceptions: false
@@ -17,3 +12,4 @@ fos_rest:
     view:
         default_engine: ~
         force_redirects: []
+        view_response_listener: 'force'

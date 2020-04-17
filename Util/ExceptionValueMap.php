@@ -59,6 +59,14 @@ class ExceptionValueMap
     }
 
     /**
+     * @internal
+     */
+    public function resolveFromClassName(string $className)
+    {
+        return $this->doResolveClass($className);
+    }
+
+    /**
      * @return bool|int|false if not found
      */
     private function doResolveClass(string $class)
