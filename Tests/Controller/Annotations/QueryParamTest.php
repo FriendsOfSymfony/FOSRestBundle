@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class QueryParamTest extends TestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $this->param = $this->getMockBuilder(QueryParam::class)
             ->setMethods(array('getKey'))

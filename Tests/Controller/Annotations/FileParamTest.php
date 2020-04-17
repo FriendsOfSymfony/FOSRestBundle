@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class FileParamTest extends TestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $this->param = $this->getMockBuilder(FileParam::class)
             ->setMethods(array('getKey'))

@@ -54,7 +54,7 @@ class FOSRestExtensionTest extends TestCase
      */
     private $defaultFormat;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->container = new ContainerBuilder();
         $this->container->setParameter('kernel.bundles', array('JMSSerializerBundle' => true));
@@ -68,7 +68,7 @@ class FOSRestExtensionTest extends TestCase
         $this->defaultFormat = null;
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->container, $this->extension);
     }
