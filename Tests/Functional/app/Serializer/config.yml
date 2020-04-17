@@ -8,8 +8,7 @@ framework:
         enabled: true
 
 fos_rest:
-    routing_loader:
-        parse_controller_name: false
+    routing_loader: false
     service:
         templating: ~
     view:

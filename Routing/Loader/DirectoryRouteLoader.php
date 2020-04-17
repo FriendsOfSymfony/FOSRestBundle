@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+@trigger_error(sprintf('The %s\DirectoryRouteLoader class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Finder\Finder;
@@ -21,7 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Christian Flothmann <christian.flothmann@xabbuh.de>
  *
- * @internal since 2.8
+ * @deprecated since 2.8
  */
 class DirectoryRouteLoader extends Loader
 {

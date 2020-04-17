@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Routing\Loader\Reader;
 
+@trigger_error(sprintf('The %s\RestControllerReader class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\Annotations;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -22,7 +24,7 @@ use Symfony\Component\Config\Resource\FileResource;
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  *
- * @internal since 2.8
+ * @deprecated since 2.8
  */
 class RestControllerReader
 {

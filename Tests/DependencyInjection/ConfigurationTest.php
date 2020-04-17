@@ -57,9 +57,7 @@ class ConfigurationTest extends TestCase
                         'codes' => $expectedConfig,
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
-                    ],
+                    'routing_loader' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -90,9 +88,7 @@ class ConfigurationTest extends TestCase
                 ],
                 'exception_controller' => 'fos_rest.exception.controller::showAction',
             ],
-            'routing_loader' => [
-                'parse_controller_name' => false,
-            ],
+            'routing_loader' => false,
             'service' => [
                 'templating' => null,
             ],
@@ -129,9 +125,7 @@ class ConfigurationTest extends TestCase
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
-                    ],
+                    'routing_loader' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -157,9 +151,7 @@ class ConfigurationTest extends TestCase
                             'UnknownException' => true,
                         ],
                     ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
-                    ],
+                    'routing_loader' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -186,9 +178,7 @@ class ConfigurationTest extends TestCase
                         ],
                         'exception_controller' => 'fos_rest.exception.controller::showAction',
                     ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
-                    ],
+                    'routing_loader' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -221,9 +211,7 @@ class ConfigurationTest extends TestCase
                             ],
                         ],
                     ],
-                    'routing_loader' => [
-                        'parse_controller_name' => false,
-                    ],
+                    'routing_loader' => false,
                     'service' => [
                         'templating' => null,
                     ],

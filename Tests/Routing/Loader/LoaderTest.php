@@ -26,6 +26,8 @@ use Symfony\Component\Yaml\Yaml;
  * Base Loader testing class.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @group legacy
  */
 abstract class LoaderTest extends TestCase
 {

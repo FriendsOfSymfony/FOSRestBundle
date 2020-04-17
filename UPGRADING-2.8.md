@@ -1,12 +1,30 @@
 Upgrading From 2.7 To 2.8
 =========================
 
+ * Enabling the route generation feature is deprecated, disable it explicitly:
+
+   ```yaml
+   fos_rest:
+       routing_loader: false
+   ```
+
  * Deprecated returning anything other than `string` or `null` from `resolve()` when implementing
    the `VersionResolverInterface`.
 
  * Passing version number as integers to `Context::setVersion()` is deprecated. Strings will be
    enforced as of 3.0.
  
+ * The following classes are marked as `deprecated`, they will be removed in  3.0:
+
+   * `FOS\RestBundle\Controller\Annotations\Version`
+   * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
+   * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
+   * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
+   * `FOS\RestBundle\Routing\Loader\RestRouteLoader`
+   * `FOS\RestBundle\Routing\Loader\RestRouteProcessor`
+   * `FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader`
+   * `FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader`
+
  * The following classes are marked as `internal`:
 
    * `FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass`
@@ -15,13 +33,6 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
    * `FOS\RestBundle\Normalizer\CamelKeysNormalizer`
    * `FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore`
-   * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
-   * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
-   * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
-   * `FOS\RestBundle\Routing\Loader\RestRouteLoader`
-   * `FOS\RestBundle\Routing\Loader\RestRouteProcessor`
-   * `FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader`
-   * `FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader`
    * `FOS\RestBundle\Routing\RestRouteCollection`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
@@ -83,18 +94,3 @@ Upgrading From 2.7 To 2.8
  * The `TemplatingExceptionController` and the `TwigExceptionController` classes have been deprecated.
 
  * The `fos_rest.exception.twig_controller` service has been deprecated.
-
- * Not passing a `RestControllerReader` instance as the third argument to the constructor of the
-   `RestRouteLoader` class is deprecated. Support for passing a `ControllerNameParser` instance
-   will be removed in 3.0.
-
-   Set the `fos_rest.routing_loader.parse_controller_name` option to `false` to opt-out:
-
-   ```yaml
-   fos_rest:
-       routing_loader:
-           parse_controller_name: false
-   ```
-
-   The default value for this option is `true`. Not setting it to `false` is deprecated and will
-   result in an exception in 3.0.

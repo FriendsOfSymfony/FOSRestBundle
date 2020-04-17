@@ -11,8 +11,7 @@ fos_rest:
     format_listener:
         rules:
             - { path: '^/', priorities: ['json', 'html'], fallback_format: json }
-    routing_loader:
-        parse_controller_name: false
+    routing_loader: false
     service:
         templating: ~
     view:
