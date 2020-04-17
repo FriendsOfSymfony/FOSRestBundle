@@ -19,6 +19,8 @@ use FOS\RestBundle\Tests\Fixtures\Controller\UsersController;
  * RestRouteLoader test.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @group legacy
  */
 class RestRouteLoaderTest extends LoaderTest
 {

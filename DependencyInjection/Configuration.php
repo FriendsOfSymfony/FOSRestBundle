@@ -91,10 +91,24 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('routing_loader')
                     ->addDefaultsIfNotSet()
+                    ->canBeDisabled()
+                    ->beforeNormalization()
+                        ->ifTrue(function ($v) { return false !== $v; })
+                        ->then(function ($v) {
+                            @trigger_error('Enabling the route generation feature is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                            return $v;
+                        })
+                    ->end()
+                    ->beforeNormalization()
+                        ->ifTrue(function ($v) { return is_bool($v); })
+                        ->then(function ($v) {
+                            return [
+                                'enabled' => $v,
+                            ];
+                        })
+                    ->end()
                     ->children()
-                        ->booleanNode('parse_controller_name')
-                            ->defaultValue(false)
-                        ->end()
                         ->scalarNode('default_format')->defaultNull()->end()
                         ->scalarNode('prefix_methods')->defaultTrue()->end()
                         ->scalarNode('include_format')->defaultTrue()->end()
@@ -132,7 +146,14 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                         ->scalarNode('serializer')->defaultNull()->end()
                         ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
-                        ->scalarNode('inflector')->defaultValue('fos_rest.inflector.doctrine')->end()
+                        ->scalarNode('inflector')
+                            ->defaultValue(static function () {
+                                @trigger_error('Not setting the "fos_rest.service.inflector" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                return 'fos_rest.inflector.doctrine';
+                            })
+                            ->defaultValue('fos_rest.inflector.doctrine')
+                        ->end()
                         ->scalarNode('validator')->defaultValue('validator')->end()
                     ->end()
                 ->end()

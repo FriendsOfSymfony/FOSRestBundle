@@ -23,6 +23,8 @@ use Symfony\Component\Routing\RouteCollection;
  * RestYamlCollectionLoader test.
  *
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * @group legacy
  */
 class RestYamlCollectionLoaderTest extends LoaderTest
 {

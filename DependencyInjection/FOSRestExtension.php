@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
+use FOS\RestBundle\Inflector\DoctrineInflector;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
@@ -47,7 +48,6 @@ class FOSRestExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
-        $loader->load('routing.xml');
         $loader->load('request.xml');
         $loader->load('serializer.xml');
 
@@ -295,9 +295,11 @@ class FOSRestExtension extends Extension
             }
         }
 
-        $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(3, $formats);
-        $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(3, $formats);
-        $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(4, $formats);
+        if ($config['routing_loader']['enabled']) {
+            $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(3, $formats);
+            $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(3, $formats);
+            $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(4, $formats);
+        }
 
         if (!is_numeric($config['view']['failed_validation'])) {
             $config['view']['failed_validation'] = constant(sprintf('%s::%s', Response::class, $config['view']['failed_validation']));

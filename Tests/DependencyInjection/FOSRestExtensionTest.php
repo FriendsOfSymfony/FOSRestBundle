@@ -451,53 +451,45 @@ class FOSRestExtensionTest extends TestCase
     }
 
     /**
-     * Test that extension loads properly.
+     * @group legacy
      */
-    public function testConfigLoad()
+    public function testConfigLoadWithRoutingLoaderEnabled()
     {
-        $controllerLoaderDefinitionName = 'fos_rest.routing.loader.controller';
+        $this->extension->load([], $this->container);
 
-        $yamlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.yaml_collection';
+        $this->assertTrue($this->container->hasDefinition('fos_rest.routing.loader.controller'));
 
-        $xmlCollectionLoaderDefinitionName = 'fos_rest.routing.loader.xml_collection';
-
-        $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'exception_controller' => 'fos_rest.exception.controller::showAction',
-                ],
-            ],
-        ], $this->container);
-
-        $this->assertTrue($this->container->hasDefinition($controllerLoaderDefinitionName));
-
-        $loader = $this->container->getDefinition($controllerLoaderDefinitionName);
+        $loader = $this->container->getDefinition('fos_rest.routing.loader.controller');
         $arguments = $loader->getArguments();
 
-        $this->assertCount(4, $arguments);
+        $this->assertCount(5, $arguments);
         $this->assertEquals('service_container', (string) $arguments[0]);
         $this->assertEquals('file_locator', (string) $arguments[1]);
-        $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[2]);
-        $this->assertNull($arguments[3]);
+        $this->assertEquals('controller_name_converter', (string) $arguments[2]);
+        $this->assertEquals('fos_rest.routing.loader.reader.controller', (string) $arguments[3]);
+        $this->assertNull($arguments[4]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
 
-        $this->assertTrue($this->container->hasDefinition($yamlCollectionLoaderDefinitionName));
+        $this->assertTrue($this->container->hasDefinition('fos_rest.routing.loader.yaml_collection'));
         $this->assertValidRestFileLoader(
-            $this->container->getDefinition($yamlCollectionLoaderDefinitionName),
+            $this->container->getDefinition('fos_rest.routing.loader.yaml_collection'),
             $this->includeFormat,
             $this->formats,
             $this->defaultFormat
         );
 
-        $this->assertTrue($this->container->hasDefinition($xmlCollectionLoaderDefinitionName));
+        $this->assertTrue($this->container->hasDefinition('fos_rest.routing.loader.xml_collection'));
         $this->assertValidRestFileLoader(
-            $this->container->getDefinition($xmlCollectionLoaderDefinitionName),
+            $this->container->getDefinition('fos_rest.routing.loader.xml_collection'),
             $this->includeFormat,
             $this->formats,
             $this->defaultFormat
         );
     }
 
+    /**
+     * @group legacy
+     */
     public function testIncludeFormatDisabled()
     {
         $this->extension->load(
@@ -509,6 +501,13 @@ class FOSRestExtensionTest extends TestCase
                     'routing_loader' => [
                         'include_format' => false,
                     ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
+                        'force_redirects' => [],
+                    ],
                 ],
             ],
             $this->container
@@ -531,6 +530,9 @@ class FOSRestExtensionTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     */
     public function testDefaultFormat()
     {
         $this->extension->load(
@@ -542,6 +544,13 @@ class FOSRestExtensionTest extends TestCase
                     'routing_loader' => [
                         'default_format' => 'xml',
                     ],
+                    'service' => [
+                        'templating' => null,
+                    ],
+                    'view' => [
+                        'default_engine' => null,
+                        'force_redirects' => [],
+                    ],
                 ],
             ],
             $this->container
@@ -564,6 +573,9 @@ class FOSRestExtensionTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     */
     public function testFormats()
     {
         $this->extension->load(

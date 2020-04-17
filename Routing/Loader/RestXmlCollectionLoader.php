@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Routing\Loader;
 
+@trigger_error(sprintf('The %s\RestXmlCollectionLoader class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use FOS\RestBundle\Routing\RestRouteCollection;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -22,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @author Donald Tyler <chekote69@gmail.com>
  *
- * @internal
+ * @deprecated since 2.8
  */
 class RestXmlCollectionLoader extends XmlFileLoader
 {

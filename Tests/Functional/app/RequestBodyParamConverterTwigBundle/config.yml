@@ -11,6 +11,7 @@ framework:
 fos_rest:
     body_converter:
         enabled: true
+    routing_loader: false
 
 sensio_framework_extra:
     request:

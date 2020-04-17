@@ -17,7 +17,6 @@ test_serializer_error_invalid_form:
 # Must be defined before test_version
 test_version2:
   resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\Version2Controller
-  type: rest
 
 test_version:
     path: /version
@@ -53,7 +52,6 @@ test_param_fetcher_image_collection_test:
 
 test_view_response_listener:
     resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\ArticleController
-    type:     rest
 
 test_redirect_endpoint:
     path:     /hello/{name}
