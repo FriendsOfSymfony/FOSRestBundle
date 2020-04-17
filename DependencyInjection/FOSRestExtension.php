@@ -11,7 +11,6 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
-use FOS\RestBundle\Inflector\DoctrineInflector;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
@@ -50,16 +49,6 @@ class FOSRestExtension extends Extension
         $loader->load('view.xml');
         $loader->load('request.xml');
         $loader->load('serializer.xml');
-
-        $container->getDefinition('fos_rest.routing.loader.controller')->addArgument($config['routing_loader']['default_format']);
-
-        $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
-        $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(4, $config['routing_loader']['default_format']);
-
-        $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(2, $config['routing_loader']['include_format']);
-        $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(2, $config['routing_loader']['include_format']);
-        $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(3, $config['routing_loader']['include_format']);
-        $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(5, $config['routing_loader']['prefix_methods']);
 
         foreach ($config['service'] as $key => $service) {
             if ('validator' === $service && empty($config['body_converter']['validate'])) {
@@ -293,12 +282,6 @@ class FOSRestExtension extends Extension
             if ($enabled) {
                 $formats[$format] = false;
             }
-        }
-
-        if ($config['routing_loader']['enabled']) {
-            $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(3, $formats);
-            $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(3, $formats);
-            $container->getDefinition('fos_rest.routing.loader.reader.action')->replaceArgument(4, $formats);
         }
 
         if (!is_numeric($config['view']['failed_validation'])) {
