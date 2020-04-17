@@ -15,8 +15,6 @@ Getting Started With FOSRestBundle
     versioning
     param_fetcher_listener
     4-exception-controller-support
-    5-automatic-route-generation_single-restful-controller
-    6-automatic-route-generation_multiple-restful-controllers
     7-manual-route-definition
     annotations-reference
     configuration-reference
@@ -41,8 +39,6 @@ FOSRestBundle provides several tools to assist in building REST applications:
 - :doc:`The view layer <2-the-view-layer>`
 - :doc:`Listener support <3-listener-support>`
 - :doc:`ExceptionController support <4-exception-controller-support>`
-- :doc:`Automatic route generation: single RESTful controller <5-automatic-route-generation_single-restful-controller>` (for simple resources)
-- :doc:`Automatic route generation: multiple RESTful controllers <6-automatic-route-generation_multiple-restful-controllers>` (for resources with child/subresources)
 - :doc:`Manual definition of routes <7-manual-route-definition>`
 
 Config reference

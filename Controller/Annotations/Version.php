@@ -20,6 +20,8 @@ use Doctrine\Common\Annotations\Annotation;
  *
  * @Annotation
  * @Target("CLASS")
+ *
+ * @deprecated since 2.8
  */
 class Version extends Annotation
 {

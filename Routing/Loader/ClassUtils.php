@@ -13,6 +13,8 @@ namespace FOS\RestBundle\Routing\Loader;
 
 /**
  * @internal
+ *
+ * @deprecated
  */
 class ClassUtils
 {
