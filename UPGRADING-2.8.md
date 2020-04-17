@@ -16,6 +16,7 @@ Upgrading From 2.7 To 2.8
  
  * The following classes are marked as `deprecated`, they will be removed in  3.0:
 
+   * `FOS\RestBundle\Controller\Annotations\RouteResource`
    * `FOS\RestBundle\Controller\Annotations\Version`
    * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
@@ -24,6 +25,8 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Routing\Loader\RestRouteProcessor`
    * `FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader`
    * `FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader`
+   * `FOS\RestBundle\Routing\ClassResourceInterface`
+   * `FOS\RestBundle\Routing\RestRouteCollection`
 
  * The following classes are marked as `internal`:
 
@@ -33,7 +36,6 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
    * `FOS\RestBundle\Normalizer\CamelKeysNormalizer`
    * `FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore`
-   * `FOS\RestBundle\Routing\RestRouteCollection`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
    * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`
