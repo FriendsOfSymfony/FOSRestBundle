@@ -36,7 +36,7 @@ class VersionListenerTest extends TestCase
      */
     private $listener;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->resolver = $this->getMockBuilder(VersionResolverInterface::class)->getMock();
 

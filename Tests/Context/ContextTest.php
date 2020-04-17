@@ -22,7 +22,7 @@ class ContextTest extends TestCase
 {
     protected $context;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->context = new Context();
     }

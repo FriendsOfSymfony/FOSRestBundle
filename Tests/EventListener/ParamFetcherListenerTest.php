@@ -148,7 +148,7 @@ class ParamFetcherListenerTest extends TestCase
         return new $eventClass($kernel, $callable, $request, null);
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->requestStack = new RequestStack();
 

@@ -33,7 +33,7 @@ class RequestBodyParamConverterTest extends TestCase
     protected $serializer;
     protected $converterBuilder;
 
-    public function setUp()
+    protected function setUp(): void
     {
         // skip the test if the installed version of SensioFrameworkExtraBundle
         // is not compatible with the RequestBodyParamConverter class

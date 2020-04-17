@@ -28,10 +28,7 @@ class ParamReaderTest extends TestCase
 {
     private $paramReader;
 
-    /**
-     * Test setup.
-     */
-    public function setup()
+    protected function setUp(): void
     {
         $annotationReader = $this->getMockBuilder(AnnotationReader::class)->getMock();
 
