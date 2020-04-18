@@ -83,28 +83,6 @@ View
 Routing
 -------
 
-Route prefix
-~~~~~~~~~~~~
-
-.. code-block:: php
-
-    use FOS\RestBundle\Controller\Annotations\Prefix;
-
-    /**
-     * @Prefix("")
-     */
-
-Route name prefix
-~~~~~~~~~~~~~~~~~
-
-.. code-block:: php
-
-    use FOS\RestBundle\Controller\Annotations\NamePrefix;
-
-    /**
-     * @NamePrefix("")
-     */
-
 Route
 ~~~~~
 
