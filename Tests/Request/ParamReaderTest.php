@@ -12,7 +12,7 @@
 namespace FOS\RestBundle\Tests\Request;
 
 use FOS\RestBundle\Controller\Annotations\ParamInterface;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Request\ParamReader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamsAnnotatedController;
@@ -20,8 +20,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * ParamReader test.
- *
  * @author Alexander <iam.asm89@gmail.com>
  */
 class ParamReaderTest extends TestCase
@@ -47,7 +45,7 @@ class ParamReaderTest extends TestCase
             ->willReturn('bar');
         $methodAnnotations[] = $bar;
 
-        $methodAnnotations[] = new NamePrefix([]);
+        $methodAnnotations[] = new View([]);
 
         $annotationReader
             ->expects($this->any())
@@ -70,7 +68,7 @@ class ParamReaderTest extends TestCase
             ->willReturn('micz');
         $classAnnotations[] = $mikz;
 
-        $classAnnotations[] = new NamePrefix([]);
+        $classAnnotations[] = new View([]);
 
         $annotationReader
                 ->expects($this->any())
@@ -85,7 +83,7 @@ class ParamReaderTest extends TestCase
      */
     public function testReadsOnlyParamAnnotations()
     {
-        $annotations = $this->paramReader->read(new \ReflectionClass(__CLASS__), 'setup');
+        $annotations = $this->paramReader->read(new \ReflectionClass(__CLASS__), 'setUp');
 
         $this->assertCount(4, $annotations);
 

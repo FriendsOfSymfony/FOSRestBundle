@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Controller\Annotations;
 
+@trigger_error(sprintf('The %s\Prefix annotation is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use Doctrine\Common\Annotations\Annotation;
 
 /**
@@ -18,6 +20,8 @@ use Doctrine\Common\Annotations\Annotation;
  *
  * @Annotation
  * @Target("CLASS")
+ *
+ * @deprecated since 2.8
  */
 class Prefix extends Annotation
 {
