@@ -1,3 +1,0 @@
-api_dir:
-    resource: '@TestBundle/Controller/Api'
-    type: rest

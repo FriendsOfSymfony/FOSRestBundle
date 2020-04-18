@@ -1,4 +1,0 @@
-report:
-    type: rest
-    resource: 'FOS\RestBundle\Tests\Fixtures\Controller\ReportController'
-    name_prefix: api_

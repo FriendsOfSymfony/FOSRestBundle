@@ -1,4 +1,0 @@
-get_users:
-	path: /users
-	defaults:
-		_controller: FOSRestBundle:UsersController:getUsers
