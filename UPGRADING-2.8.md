@@ -16,6 +16,9 @@ Upgrading From 2.7 To 2.8
  
  * The following classes are marked as `deprecated`, they will be removed in  3.0:
 
+   * `FOS\RestBundle\Controller\Annotations\NamePrefix`
+   * `FOS\RestBundle\Controller\Annotations\NoRoute`
+   * `FOS\RestBundle\Controller\Annotations\Prefix`
    * `FOS\RestBundle\Controller\Annotations\RouteResource`
    * `FOS\RestBundle\Controller\Annotations\Version`
    * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
