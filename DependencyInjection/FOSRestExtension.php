@@ -330,6 +330,8 @@ class FOSRestExtension extends Extension
             }
         }
 
+        $container->getDefinition('fos_rest.view_formats_provider')->replaceArgument(0, $formats);
+
         if ($config['routing_loader']['enabled']) {
             $container->getDefinition('fos_rest.routing.loader.yaml_collection')->replaceArgument(3, $formats);
             $container->getDefinition('fos_rest.routing.loader.xml_collection')->replaceArgument(3, $formats);

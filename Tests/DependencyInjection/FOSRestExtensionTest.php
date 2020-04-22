@@ -793,6 +793,15 @@ class FOSRestExtensionTest extends TestCase
             ],
             $this->defaultFormat
         );
+
+        $viewFormatsProviderDefinitionName = 'fos_rest.view_formats_provider';
+        $this->assertValidFormatsProvider(
+            $this->container->getDefinition($viewFormatsProviderDefinitionName),
+            [
+                'xml' => false,
+                'html' => true,
+            ]
+        );
     }
 
     public function testLoadOkMessagesClass()
@@ -982,6 +991,18 @@ class FOSRestExtensionTest extends TestCase
         $this->assertEquals($formats, $arguments[3]);
         $this->assertSame($defaultFormat, $arguments[4]);
         $this->assertArrayHasKey('routing.loader', $loader->getTags());
+    }
+
+    /**
+     * Assert that format provider definition described properly.
+     *
+     * @param Definition $loader  loader definition
+     * @param string[]   $formats supported view formats
+     */
+    private function assertValidFormatsProvider(Definition $provider, array $formats)
+    {
+        $arguments = $provider->getArguments();
+        $this->assertEquals($formats, $arguments[0]);
     }
 
     private function assertAlias($value, $key)

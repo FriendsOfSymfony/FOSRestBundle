@@ -16,5 +16,8 @@
             <argument /> <!-- JSONP callback parameter -->
         </service>
 
+        <service id="fos_rest.view_formats_provider" class="FOS\RestBundle\View\FormatsProvider">
+            <argument /> <!-- formats -->
+        </service>
     </services>
 </container>
