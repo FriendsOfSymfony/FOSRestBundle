@@ -503,10 +503,10 @@ final class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function testExceptionExists(string $exception): void
+    private function testExceptionExists(string $throwable): void
     {
-        if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
-            throw new InvalidConfigurationException(sprintf('FOSRestBundle exception mapper: Could not load class "%s" or the class does not extend from "%s". Most probably this is a configuration problem.', $exception, \Exception::class));
+        if (!is_subclass_of($throwable, \Throwable::class)) {
+            throw new InvalidConfigurationException(sprintf('FOSRestBundle exception mapper: Could not load class "%s" or the class does not extend from "%s". Most probably this is a configuration problem.', $throwable, \Throwable::class));
         }
     }
 }

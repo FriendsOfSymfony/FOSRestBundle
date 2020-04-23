@@ -47,6 +47,7 @@ class ConfigurationTest extends TestCase
     {
         $expectedConfig = [
             \RuntimeException::class => 500,
+            \TypeError::class => 500,
         ];
 
         $config = $this->processor->processConfiguration(
@@ -134,7 +135,7 @@ class ConfigurationTest extends TestCase
     public function testLoadBadCodesClassThrowsException()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage(sprintf('Could not load class "UnknownException" or the class does not extend from "%s"', \Exception::class));
+        $this->expectExceptionMessage(sprintf('Could not load class "UnknownException" or the class does not extend from "%s"', \Throwable::class));
 
         $this->processor->processConfiguration(
             $this->configuration,

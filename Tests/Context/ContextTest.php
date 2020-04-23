@@ -84,6 +84,20 @@ class ContextTest extends TestCase
         $this->assertEquals('1.3.2', $this->context->getVersion());
     }
 
+    public function testEnableMaxDepth()
+    {
+        $this->context->enableMaxDepth();
+
+        $this->assertTrue($this->context->isMaxDepthEnabled());
+    }
+
+    public function testDisableMaxDepth()
+    {
+        $this->context->disableMaxDepth();
+
+        $this->assertFalse($this->context->isMaxDepthEnabled());
+    }
+
     public function testSerializeNull()
     {
         $this->context->setSerializeNull(true);

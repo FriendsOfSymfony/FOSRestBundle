@@ -124,4 +124,18 @@ class JMSSerializerAdapterTest extends TestCase
 
         $this->assertSame('bar', $this->adapter->serialize('foo', 'json', $fosContext));
     }
+
+    public function testContextDoesNotEnableMaxDepthChecksWhenExplicitlyDisabled()
+    {
+        $jmsContext = $this->getMockBuilder(SerializationContext::class)->getMock();
+
+        $jmsContext->expects($this->never())->method('enableMaxDepthChecks');
+
+        $this->serializationContextFactory->method('createSerializationContext')->willReturn($jmsContext);
+
+        $fosContext = new Context();
+        $fosContext->disableMaxDepth();
+
+        $this->adapter->serialize('foo', 'json', $fosContext);
+    }
 }
