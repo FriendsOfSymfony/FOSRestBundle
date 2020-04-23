@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Serializer\Normalizer;
 
+@trigger_error(sprintf('The %s\ExceptionNormalizer class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -18,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @author Ener-Getick <egetick@gmail.com>
  *
- * @internal
+ * @deprecated since 2.8
  */
 class ExceptionNormalizer extends AbstractExceptionNormalizer implements NormalizerInterface
 {

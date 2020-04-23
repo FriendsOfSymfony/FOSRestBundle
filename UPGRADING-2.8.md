@@ -8,6 +8,22 @@ Upgrading From 2.7 To 2.8
        routing_loader: false
    ```
 
+ * The `fos_rest.exception.exception_controller`, `fos_rest.exception.exception_listener`, and
+   `fos_rest.exception.service` options are deprecated.
+
+ * Support for serializing exceptions has been deprecated. Disable it by setting the
+   `fos_rest.exception.serialize_exceptions` option to `false` and use the ErrorRenderer component
+   instead.
+
+   You can use the `flatten_exception_format` option to serialize exceptions according to the API
+   Problem spec (RFC 7807):
+
+   ```yaml
+   fos_rest:
+       exception:
+           flatten_exception_format: 'rfc7807'
+   ```
+
  * Deprecated returning anything other than `string` or `null` from `resolve()` when implementing
    the `VersionResolverInterface`.
 
@@ -21,6 +37,8 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Controller\Annotations\Prefix`
    * `FOS\RestBundle\Controller\Annotations\RouteResource`
    * `FOS\RestBundle\Controller\Annotations\Version`
+   * `FOS\RestBundle\Controller\ExceptionController`
+   * `FOS\RestBundle\EventListener\ExceptionListener`
    * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
@@ -30,6 +48,8 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader`
    * `FOS\RestBundle\Routing\ClassResourceInterface`
    * `FOS\RestBundle\Routing\RestRouteCollection`
+   * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
+   * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
 
  * The following classes are marked as `internal`:
 
@@ -39,15 +59,12 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
    * `FOS\RestBundle\Normalizer\CamelKeysNormalizer`
    * `FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore`
-   * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
-   * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
    * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`
    * `FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer`
    * `FOS\RestBundle\Util\ExceptionValueMap`
 
  * The following classes are marked as `final`. Extending them will not be supported as of 3.0:
 
-   * `FOS\RestBundle\Controller\ExceptionController`
    * `FOS\RestBundle\Decoder\ContainerDecoderProvider`
    * `FOS\RestBundle\Decoder\JsonDecoder`
    * `FOS\RestBundle\Decoder\JsonToFormDecoder`
@@ -92,9 +109,6 @@ Upgrading From 2.7 To 2.8
    `null` has been deprecated.
 
  * Not setting the `fos_rest.view.force_redirects` option to the empty array has been deprecated.
-
- * Not configuring the `fos_rest.exception.exception_controller` option is deprecated. Its default
-   value will be changed to `fos_rest.exception.controller::showAction` in 3.0.
 
  * The `TemplatingExceptionController` and the `TwigExceptionController` classes have been deprecated.
 

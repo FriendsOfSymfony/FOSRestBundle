@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Serializer\Normalizer;
 
+@trigger_error(sprintf('The %s\ExceptionHandler class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
@@ -18,7 +20,7 @@ use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\XmlSerializationVisitor;
 
 /**
- * @internal
+ * @deprecated since 2.8
  */
 class ExceptionHandler extends AbstractExceptionNormalizer implements SubscribingHandlerInterface
 {

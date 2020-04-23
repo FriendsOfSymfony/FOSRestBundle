@@ -426,8 +426,52 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->canBeEnabled()
                     ->children()
-                        ->scalarNode('exception_controller')->defaultValue('fos_rest.exception.controller::showAction')->end()
-                        ->scalarNode('service')->defaultNull()->end()
+                        ->booleanNode('map_exception_codes')
+                            ->defaultFalse()
+                            ->info('Enables an event listener that maps exception codes to response status codes based on the map configured with the "fos_rest.exception.codes" option.')
+                        ->end()
+                        ->booleanNode('exception_listener')
+                            ->defaultValue(function () {
+                                @trigger_error('Enabling the "fos_rest.exception.exception_listener" option is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                return true;
+                            })
+                            ->beforeNormalization()
+                                ->ifTrue()
+                                ->then(function ($v) {
+                                    @trigger_error('Enabling the "fos_rest.exception.exception_listener" option is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                    return $v;
+                                })
+                            ->end()
+                        ->end()
+                        ->scalarNode('exception_controller')
+                            ->defaultNull()
+                            ->setDeprecated('The "%path%.%node%" option is deprecated since FOSRestBundle 2.8.')
+                        ->end()
+                        ->booleanNode('serialize_exceptions')
+                            ->defaultValue(function () {
+                                @trigger_error('Enabling the "fos_rest.exception.serialize_exceptions" option is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                return true;
+                            })
+                            ->beforeNormalization()
+                                ->ifTrue()
+                                ->then(function ($v) {
+                                    @trigger_error('Enabling the "fos_rest.exception.serialize_exceptions" option is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                    return $v;
+                                })
+                            ->end()
+                        ->end()
+                        ->enumNode('flatten_exception_format')
+                            ->defaultValue('legacy')
+                            ->values(['legacy', 'rfc7807'])
+                        ->end()
+                        ->scalarNode('service')
+                            ->defaultNull()
+                            ->setDeprecated('The "%path%.%node%" option is deprecated since FOSRestBundle 2.8.')
+                        ->end()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
                             ->beforeNormalization()

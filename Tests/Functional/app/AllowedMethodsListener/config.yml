@@ -8,3 +8,6 @@ framework:
 
 fos_rest:
     allowed_methods_listener: true
+    exception:
+        exception_listener: false
+        serialize_exceptions: false

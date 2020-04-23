@@ -12,4 +12,9 @@ framework:
         enabled: true
 
 fos_rest:
+    exception:
+        exception_listener: false
+        messages:
+            Symfony\Component\HttpKernel\Exception\BadRequestHttpException: true
+        serialize_exceptions: false
     param_fetcher_listener: true

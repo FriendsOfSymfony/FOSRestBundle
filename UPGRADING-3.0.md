@@ -4,6 +4,9 @@ Upgrading From 2.x To 3.0
  * Enabling the `fos_rest.routing_loader` option is not supported anymore. Setting
    it to another value than `false` leads to an exception.
 
+ * The `fos_rest.exception.exception_controller`, `fos_rest.exception.exception_listener`, and
+   `fos_rest.exception.service` options have been removed.
+
  * `Context::setVersion()` does not accept integers anymore.
 
  * The `ExceptionValueMap` class is `final`. Extending it is no longer supported. The `resolveThrowable()`
@@ -31,9 +34,6 @@ Upgrading From 2.x To 3.0
 
  * The default value of the `fos_rest.view.force_redirects` option has been changed to the empty
    array. Setting it to another value leads to an exception.
-
- * The default value of the `fos_rest.exception.exception_controller` option has
-   been changed to `fos_rest.exception.controller::showAction`.
 
  * The `TemplatingExceptionController` and the `TwigExceptionController` classes
    have been removed.

@@ -11,6 +11,8 @@ framework:
 fos_rest:
     body_converter:
         enabled: true
+    exception:
+        exception_listener: false
 
 sensio_framework_extra:
     request:

@@ -7,6 +7,9 @@ framework:
         enabled: true
 
 fos_rest:
+    exception:
+        exception_listener: false
+        serialize_exceptions: false
     format_listener:
         rules:
             - { path: '^/', priorities: ['json', 'html'], fallback_format: json }

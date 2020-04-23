@@ -45,6 +45,26 @@ class ExceptionValueMap
     }
 
     /**
+     * Resolves the value corresponding to an exception object.
+     *
+     * @return bool|int|null null if not found
+     *
+     * @internal since 2.8
+     */
+    public function resolveThrowable(\Throwable $exception)
+    {
+        return $this->doResolveClass(get_class($exception));
+    }
+
+    /**
+     * @internal
+     */
+    public function resolveFromClassName(string $className)
+    {
+        return $this->doResolveClass($className);
+    }
+
+    /**
      * @return bool|int|null null if not found
      */
     private function doResolveClass(string $class)

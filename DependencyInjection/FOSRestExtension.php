@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
+use FOS\RestBundle\EventListener\ResponseStatusCodeListener;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
@@ -310,28 +311,43 @@ class FOSRestExtension extends Extension
         if ($config['exception']['enabled']) {
             $loader->load('exception_listener.xml');
 
-            if (!empty($config['exception']['service'])) {
-                $service = $container->getDefinition('fos_rest.exception_listener');
-                $service->clearTag('kernel.event_subscriber');
+            if ($config['exception']['map_exception_codes']) {
+                $container->register('fos_rest.exception.response_status_code_listener', ResponseStatusCodeListener::class)
+                    ->setArguments([
+                        new Reference('fos_rest.exception.codes_map'),
+                    ])
+                    ->addTag('kernel.event_subscriber');
             }
 
-            $controller = $config['exception']['exception_controller'] ?? null;
+            if ($config['exception']['exception_listener']) {
+                if (!empty($config['exception']['service'])) {
+                    $service = $container->getDefinition('fos_rest.exception_listener');
+                    $service->clearTag('kernel.event_subscriber');
+                }
 
-            if (class_exists(ErrorListener::class)) {
-                $container->register('fos_rest.error_listener', ErrorListener::class)
-                    ->setArguments([
-                        $controller,
-                        new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-                        '%kernel.debug%',
-                    ])
-                    ->addTag('monolog.logger', ['channel' => 'request']);
+                $controller = $config['exception']['exception_controller'] ?? null;
+
+                if (class_exists(ErrorListener::class)) {
+                    $container->register('fos_rest.error_listener', ErrorListener::class)
+                        ->setArguments([
+                            $controller,
+                            new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                            '%kernel.debug%',
+                        ])
+                        ->addTag('monolog.logger', ['channel' => 'request']);
+                } else {
+                    $container->register('fos_rest.error_listener', LegacyHttpKernelExceptionListener::class)
+                        ->setArguments([
+                            $controller,
+                            new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                        ])
+                        ->addTag('monolog.logger', ['channel' => 'request']);
+                }
+
+                $container->getDefinition('fos_rest.exception.controller')
+                    ->replaceArgument(2, $config['exception']['debug']);
             } else {
-                $container->register('fos_rest.error_listener', LegacyHttpKernelExceptionListener::class)
-                    ->setArguments([
-                        $controller,
-                        new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-                    ])
-                    ->addTag('monolog.logger', ['channel' => 'request']);
+                $container->removeDefinition('fos_rest.exception_listener');
             }
 
             $container->getDefinition('fos_rest.exception.codes_map')
@@ -339,12 +355,24 @@ class FOSRestExtension extends Extension
             $container->getDefinition('fos_rest.exception.messages_map')
                 ->replaceArgument(0, $config['exception']['messages']);
 
-            $container->getDefinition('fos_rest.exception.controller')
-                ->replaceArgument(2, $config['exception']['debug']);
-            $container->getDefinition('fos_rest.serializer.exception_normalizer.jms')
+            $container->getDefinition('fos_rest.serializer.flatten_exception_handler')
                 ->replaceArgument(1, $config['exception']['debug']);
-            $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
+            $container->getDefinition('fos_rest.serializer.flatten_exception_handler')
+                ->replaceArgument(2, 'rfc7807' === $config['exception']['flatten_exception_format']);
+            $container->getDefinition('fos_rest.serializer.flatten_exception_normalizer')
                 ->replaceArgument(1, $config['exception']['debug']);
+            $container->getDefinition('fos_rest.serializer.flatten_exception_normalizer')
+                ->replaceArgument(2, 'rfc7807' === $config['exception']['flatten_exception_format']);
+
+            if ($config['exception']['serialize_exceptions']) {
+                $container->getDefinition('fos_rest.serializer.exception_normalizer.jms')
+                    ->replaceArgument(1, $config['exception']['debug']);
+                $container->getDefinition('fos_rest.serializer.exception_normalizer.symfony')
+                    ->replaceArgument(1, $config['exception']['debug']);
+            } else {
+                $container->removeDefinition('fos_rest.serializer.exception_normalizer.jms');
+                $container->removeDefinition('fos_rest.serializer.exception_normalizer.symfony');
+            }
         }
     }
 

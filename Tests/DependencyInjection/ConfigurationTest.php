@@ -55,7 +55,8 @@ class ConfigurationTest extends TestCase
                 [
                     'exception' => [
                         'codes' => $expectedConfig,
-                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'exception_listener' => false,
+                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -79,7 +80,8 @@ class ConfigurationTest extends TestCase
                     NotFoundHttpException::class => 'HTTP_NOT_FOUND',
                     MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
                 ],
-                'exception_controller' => 'fos_rest.exception.controller::showAction',
+                'exception_listener' => false,
+                'serialize_exceptions' => false,
             ],
         ];
 
@@ -109,7 +111,8 @@ class ConfigurationTest extends TestCase
                         'codes' => [
                             \RuntimeException::class => $value,
                         ],
-                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'exception_listener' => false,
+                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -125,10 +128,11 @@ class ConfigurationTest extends TestCase
             [
                 [
                     'exception' => [
-                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'exception_listener' => false,
                         'messages' => [
                             'UnknownException' => true,
                         ],
+                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -148,7 +152,8 @@ class ConfigurationTest extends TestCase
                         'codes' => [
                             'UnknownException' => 404,
                         ],
-                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'exception_listener' => false,
+                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -162,7 +167,8 @@ class ConfigurationTest extends TestCase
             [
                 [
                     'exception' => [
-                        'exception_controller' => 'fos_rest.exception.controller::showAction',
+                        'exception_listener' => false,
+                        'serialize_exceptions' => false,
                     ],
                     'format_listener' => [
                         'rules' => [

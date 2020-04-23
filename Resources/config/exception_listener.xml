@@ -9,12 +9,14 @@
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="fos_rest.error_listener" />
             <argument type="service" id="event_dispatcher" />
+            <deprecated>The "%service_id%" service is deprecated since FOSRestBundle 2.8.</deprecated>
         </service>
 
         <service id="fos_rest.exception.controller" class="FOS\RestBundle\Controller\ExceptionController" public="true">
             <argument type="service" id="fos_rest.view_handler" />
             <argument type="service" id="fos_rest.exception.codes_map" />  <!-- exception codes -->
             <argument /><!-- show exception -->
+            <deprecated>The "%service_id%" service is deprecated since FOSRestBundle 2.8.</deprecated>
         </service>
 
         <service id="fos_rest.exception.codes_map" class="FOS\RestBundle\Util\ExceptionValueMap" public="false">
@@ -29,11 +31,27 @@
             <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
             <argument /><!-- show exception message -->
             <tag name="jms_serializer.subscribing_handler" />
+            <deprecated>The "%service_id%" service is deprecated since FOSRestBundle 2.8.</deprecated>
         </service>
 
         <service id="fos_rest.serializer.exception_normalizer.symfony" class="FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer" public="false">
             <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
             <argument /><!-- show exception message -->
+            <tag name="serializer.normalizer" priority="-10" />
+            <deprecated>The "%service_id%" service is deprecated since FOSRestBundle 2.8.</deprecated>
+        </service>
+
+        <service id="fos_rest.serializer.flatten_exception_handler" class="FOS\RestBundle\Serializer\Normalizer\FlattenExceptionHandler" public="false">
+            <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
+            <argument /><!-- show exception message -->
+            <argument /><!-- render according to RFC 7807 -->
+            <tag name="jms_serializer.subscribing_handler" />
+        </service>
+
+        <service id="fos_rest.serializer.flatten_exception_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FlattenExceptionNormalizer" public="false">
+            <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
+            <argument /><!-- show exception message -->
+            <argument /><!-- render according to RFC 7807 -->
             <tag name="serializer.normalizer" priority="-10" />
         </service>
     </services>

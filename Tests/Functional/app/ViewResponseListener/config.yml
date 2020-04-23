@@ -12,6 +12,9 @@ fos_rest:
         formats:
             xml:  true
             json: true
+    exception:
+        exception_listener: false
+        serialize_exceptions: false
     format_listener:
         rules:
             - { path: ^/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }

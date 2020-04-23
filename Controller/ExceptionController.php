@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Controller;
 
+@trigger_error(sprintf('The %s\ExceptionController class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use FOS\RestBundle\Util\ExceptionValueMap;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
@@ -20,6 +22,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Custom ExceptionController that uses the view layer and supports HTTP response status code mapping.
+ *
+ * @deprecated since 2.8
  */
 final class ExceptionController
 {
