@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.7.4
+-----
+
+* fixed compatibility with JMS Serializer with explicitly disabled max
+  depth checks (#2060)
+* fixed config validation when mapping `Throwable` instances of classes
+  that do not extend PHP's `Exception` class (#2131)
+
 2.7.3
 -----
 
