@@ -1,11 +1,6 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/sensio_framework_extra.yml }
-
-parameters:
-    bar: bar
-    foo: foo
-    invalid2: invalid2
+    - { resource: ../config/exception_listener.yml }
 
 framework:
     serializer:
@@ -14,13 +9,11 @@ framework:
 fos_rest:
     exception:
         exception_listener: false
-        messages:
-            Symfony\Component\HttpKernel\Exception\BadRequestHttpException: true
         serialize_exceptions: false
-    param_fetcher_listener: true
     routing_loader: false
     service:
         templating: ~
     view:
         default_engine: ~
         force_redirects: []
+        view_response_listener: 'force'

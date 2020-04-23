@@ -1,6 +1,5 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/default.php }
     - { resource: ../config/sensio_framework_extra.yml }
     - { resource: security.php }
 

@@ -1,11 +1,6 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/sensio_framework_extra.yml }
-
-parameters:
-    bar: bar
-    foo: foo
-    invalid2: invalid2
+    - { resource: ../config/exception_listener.yml }
 
 framework:
     serializer:
@@ -13,11 +8,10 @@ framework:
 
 fos_rest:
     exception:
+        debug: true
         exception_listener: false
-        messages:
-            Symfony\Component\HttpKernel\Exception\BadRequestHttpException: true
         serialize_exceptions: false
-    param_fetcher_listener: true
+        flatten_exception_format: 'legacy'
     routing_loader: false
     service:
         templating: ~

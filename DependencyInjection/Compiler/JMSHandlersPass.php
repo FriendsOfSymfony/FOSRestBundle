@@ -33,8 +33,11 @@ final class JMSHandlersPass implements CompilerPassInterface
             return;
         }
 
+        if ($container->hasDefinition('fos_rest.serializer.exception_normalizer.jms')) {
+            $container->removeDefinition('fos_rest.serializer.exception_normalizer.jms');
+        }
+
         $container->removeDefinition('fos_rest.serializer.handler_registry');
-        $container->removeDefinition('fos_rest.serializer.exception_normalizer.jms');
         $container->getParameterBag()->remove('jms_serializer.form_error_handler.class');
     }
 }

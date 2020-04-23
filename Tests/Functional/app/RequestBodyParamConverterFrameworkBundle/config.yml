@@ -1,6 +1,5 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/default.php }
     - { resource: ../config/sensio_framework_extra.yml }
 
 framework:
@@ -12,6 +11,9 @@ framework:
 fos_rest:
     body_converter:
         enabled: true
+    exception:
+        exception_listener: false
+        serialize_exceptions: false
     routing_loader: false
     service:
         templating: ~
