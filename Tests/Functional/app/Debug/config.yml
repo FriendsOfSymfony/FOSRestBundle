@@ -1,7 +1,0 @@
-imports:
-    - { resource: ../config/default.yml }
-    - { resource: ../config/exception_listener.yml }
-
-fos_rest:
-    exception:
-        debug: true

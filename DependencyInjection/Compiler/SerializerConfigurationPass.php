@@ -49,9 +49,6 @@ final class SerializerConfigurationPass implements CompilerPassInterface
             return;
         }
 
-        // Remove the exception normalizer linked to the jms normalizer
-        $container->removeDefinition('fos_rest.serializer.exception_normalizer.jms');
-
         // As there is no `jms_serializer.serializer` service, there is a `serializer` service
         $class = $container->getParameterBag()->resolveValue(
             $container->findDefinition('serializer')->getClass()

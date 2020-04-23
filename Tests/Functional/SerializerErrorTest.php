@@ -29,32 +29,7 @@ class SerializerErrorTest extends WebTestCase
         self::deleteTmpDir('FlattenExceptionNormalizerRfc7807Format');
         self::deleteTmpDir('FormErrorHandler');
         self::deleteTmpDir('FormErrorNormalizer');
-        self::deleteTmpDir('Serializer');
-        self::deleteTmpDir('JMSSerializer');
         parent::tearDownAfterClass();
-    }
-
-    /**
-     * @group legacy
-     *
-     * @dataProvider serializeExceptionJsonProvider
-     */
-    public function testSerializeExceptionJson($testCase)
-    {
-        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
-
-        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
-        $client->request('GET', '/serializer-error/exception.json');
-
-        $this->assertEquals('{"code":500,"message":"Something bad happened."}', $client->getResponse()->getContent());
-    }
-
-    public function serializeExceptionJsonProvider()
-    {
-        return [
-            ['Serializer'],
-            ['JMSSerializer'],
-        ];
     }
 
     /**
@@ -100,19 +75,6 @@ class SerializerErrorTest extends WebTestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSerializeExceptionJsonWithDebug()
-    {
-        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
-
-        $client = $this->createClient(array('test_case' => 'Debug', 'debug' => false));
-        $client->request('GET', '/serializer-error/unknown_exception.json');
-
-        $this->assertEquals('{"code":500,"message":"Unknown exception message."}', $client->getResponse()->getContent());
-    }
-
     public function testSerializeUnknownExceptionJsonWithDebugUsingErrorRenderer()
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
@@ -127,19 +89,6 @@ class SerializerErrorTest extends WebTestCase
         $this->assertEquals('{"code":500,"message":"Unknown exception message."}', $client->getResponse()->getContent());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSerializeExceptionJsonWithoutDebug()
-    {
-        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
-
-        $client = $this->createClient(array('test_case' => 'Serializer', 'debug' => false));
-        $client->request('GET', '/serializer-error/unknown_exception.json');
-
-        $this->assertEquals('{"code":500,"message":"Internal Server Error"}', $client->getResponse()->getContent());
-    }
-
     public function testSerializeUnknownExceptionJsonWithoutDebugUsingErrorRenderer()
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
@@ -152,44 +101,6 @@ class SerializerErrorTest extends WebTestCase
         $client->request('GET', '/serializer-error/unknown_exception.json');
 
         $this->assertEquals('{"code":500,"message":"Internal Server Error"}', $client->getResponse()->getContent());
-    }
-
-    /**
-     * @group legacy
-     *
-     * @dataProvider serializeExceptionXmlProvider
-     */
-    public function testSerializeExceptionXml($testCase, $expectedContent)
-    {
-        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
-
-        $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
-        $client->request('GET', '/serializer-error/exception.xml');
-
-        $this->assertXmlStringEqualsXmlString($expectedContent, $client->getResponse()->getContent());
-    }
-
-    public function serializeExceptionXmlProvider()
-    {
-        $expectedSerializerContent = <<<'XML'
-<?xml version="1.0"?>
-<response><code>500</code><message>Something bad happened.</message></response>
-
-XML;
-
-        $expectedJMSContent = <<<'XML'
-<?xml version="1.0" encoding="UTF-8"?>
-<result>
-  <code>500</code>
-  <message><![CDATA[Something bad happened.]]></message>
-</result>
-
-XML;
-
-        return [
-            ['Serializer', $expectedSerializerContent],
-            ['JMSSerializer', $expectedJMSContent],
-        ];
     }
 
     /**

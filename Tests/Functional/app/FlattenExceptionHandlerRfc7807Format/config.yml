@@ -13,8 +13,6 @@ services:
 
 fos_rest:
     exception:
-        exception_listener: false
-        serialize_exceptions: false
         flatten_exception_format: 'rfc7807'
     routing_loader: false
     service:

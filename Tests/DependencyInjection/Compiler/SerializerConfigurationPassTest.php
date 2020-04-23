@@ -66,13 +66,11 @@ class SerializerConfigurationPassTest extends TestCase
     public function testShouldConfigureCoreSerializer()
     {
         $this->container->register('serializer', SymfonySerializer::class);
-        $this->container->register('fos_rest.serializer.exception_normalizer.jms');
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);
 
         $this->assertSame('fos_rest.serializer.symfony', (string) $this->container->getAlias('fos_rest.serializer'));
-        $this->assertFalse($this->container->has('fos_rest.serializer.exception_normalizer.jms'));
     }
 
     public function testJmsSerializerServiceSupersedesSerializerService()
