@@ -65,12 +65,7 @@ class TestKernel extends Kernel
                     'resource' => '%kernel.project_dir%/config/routing.yml',
                 ),
             ]);
-            $container->loadFromExtension('fos_rest', [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-            ]);
+            $container->loadFromExtension('fos_rest', []);
             $container->setAlias('test.jms_serializer.handler_registry', new Alias('jms_serializer.handler_registry', true));
             $container->setAlias('test.jms_serializer.form_error_handler', new Alias('jms_serializer.form_error_handler', true));
         });

@@ -78,10 +78,6 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => false,
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -92,12 +88,7 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadBodyListenerWithDefaults()
     {
         $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-            ],
+            'fos_rest' => [],
         ], $this->container);
         $decoders = [
             'json' => 'fos_rest.decoder.json',
@@ -117,10 +108,6 @@ class FOSRestExtensionTest extends TestCase
                 'body_listener' => [
                     'array_normalizer' => 'fos_rest.normalizer.camel_keys',
                 ],
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
             ],
         ];
 
@@ -139,10 +126,6 @@ class FOSRestExtensionTest extends TestCase
                     'array_normalizer' => [
                         'service' => 'fos_rest.normalizer.camel_keys',
                     ],
-                ],
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
                 ],
             ],
         ];
@@ -168,10 +151,6 @@ class FOSRestExtensionTest extends TestCase
                         'forms' => true,
                     ],
                 ],
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
             ],
         ];
 
@@ -190,10 +169,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'format_listener' => false,
             ],
         ];
@@ -205,12 +180,7 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadFormatListenerWithDefaults()
     {
         $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-            ],
+            'fos_rest' => [],
         ], $this->container);
 
         $this->assertFalse($this->container->hasDefinition('fos_rest.format_listener'));
@@ -220,10 +190,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'format_listener' => [
                     'rules' => ['path' => '/'],
                 ],
@@ -238,10 +204,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'param_fetcher_listener' => true,
             ],
         ];
@@ -255,10 +217,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'param_fetcher_listener' => 'force',
             ],
         ];
@@ -272,10 +230,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'format_listener' => [
                     'rules' => [
                         ['path' => '/foo'],
@@ -295,10 +249,6 @@ class FOSRestExtensionTest extends TestCase
 
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'format_listener' => [
                     'media_type' => true,
                 ],
@@ -310,12 +260,7 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadServicesWithDefaults()
     {
         $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-            ],
+            'fos_rest' => [],
         ], $this->container);
 
         $this->assertAlias('fos_rest.view_handler.default', 'fos_rest.view_handler');
@@ -330,10 +275,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'view' => [
                     'view_response_listener' => false,
                 ],
@@ -348,10 +289,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'view' => [
                     'view_response_listener' => true,
                 ],
@@ -367,10 +304,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'view' => [
                     'view_response_listener' => 'force',
                 ],
@@ -385,12 +318,7 @@ class FOSRestExtensionTest extends TestCase
     public function testForceEmptyContentDefault()
     {
         $this->extension->load([
-           'fos_rest' => [
-               'exception' => [
-                   'exception_listener' => false,
-                   'serialize_exceptions' => false,
-               ],
-           ],
+           'fos_rest' => [],
         ], $this->container);
         $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(5));
     }
@@ -399,10 +327,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'view' => [
                     'empty_content' => 200,
                 ],
@@ -415,12 +339,7 @@ class FOSRestExtensionTest extends TestCase
     public function testViewSerializeNullDefault()
     {
         $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-            ],
+            'fos_rest' => [],
         ], $this->container);
         $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
     }
@@ -429,10 +348,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'view' => [
                     'serialize_null' => true,
                 ],
@@ -447,10 +362,6 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_converter' => ['validate' => true],
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -462,10 +373,6 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_converter' => ['validate' => false],
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -480,8 +387,6 @@ class FOSRestExtensionTest extends TestCase
                     'codes' => [
                         'Exception' => 404,
                     ],
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
                 ],
             ],
         ], $this->container);
@@ -502,8 +407,6 @@ class FOSRestExtensionTest extends TestCase
                     'codes' => [
                         'Exception' => $value,
                     ],
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
                 ],
             ],
         ], $this->container);
@@ -523,104 +426,12 @@ class FOSRestExtensionTest extends TestCase
         }, $data);
     }
 
-    /**
-     * @group legacy
-     *
-     * Test exception.debug config value uses kernel.debug value by default or provided value.
-     *
-     * @dataProvider getShowExceptionData
-     *
-     * @param bool        $kernelDebug     kernel.debug param value
-     * @param array       $exceptionConfig Exception config
-     * @param bool|string $expectedValue   Expected value of show_exception argument
-     */
-    public function testExceptionDebug($kernelDebug, $exceptionConfig, $expectedValue)
-    {
-        $this->container->setParameter('kernel.debug', $kernelDebug);
-        $extension = new FOSRestExtension();
-
-        $extension->load(array(
-            'fos_rest' => array(
-                'exception' => $exceptionConfig,
-            ),
-        ), $this->container);
-
-        $definition = $this->container->getDefinition('fos_rest.exception.controller');
-        $this->assertSame($expectedValue, $definition->getArgument(2));
-
-        $definition = $this->container->getDefinition('fos_rest.serializer.exception_normalizer.jms');
-        $this->assertSame($expectedValue, $definition->getArgument(1));
-
-        $definition = $this->container->getDefinition('fos_rest.serializer.exception_normalizer.symfony');
-        $this->assertSame($expectedValue, $definition->getArgument(1));
-    }
-
-    public static function getShowExceptionData()
-    {
-        return array(
-            'empty config, kernel.debug is true' => array(
-                true,
-                [
-                    'exception_controller' => 'fos_rest.exception.controller::showAction',
-                    'serialize_exceptions' => true,
-                ],
-                true,
-            ),
-            'empty config, kernel.debug is false' => array(
-                false,
-                [
-                    'exception_controller' => 'fos_rest.exception.controller::showAction',
-                    'serialize_exceptions' => true,
-                ],
-                false,
-            ),
-            'config debug true' => array(
-                false,
-                [
-                    'debug' => true,
-                    'exception_controller' => 'fos_rest.exception.controller::showAction',
-                    'serialize_exceptions' => true,
-                ],
-                true,
-            ),
-            'config debug false' => array(
-                true,
-                [
-                    'debug' => false,
-                    'exception_controller' => 'fos_rest.exception.controller::showAction',
-                    'serialize_exceptions' => true,
-                ],
-                false,
-            ),
-            'config debug null, kernel.debug true' => array(
-                false,
-                [
-                    'debug' => null,
-                    'exception_controller' => 'fos_rest.exception.controller::showAction',
-                    'serialize_exceptions' => true,
-                ],
-                true,
-            ),
-            'config debug null, kernel.debug false' => array(
-                false,
-                [
-                    'debug' => null,
-                    'exception_controller' => 'fos_rest.exception.controller::showAction',
-                    'serialize_exceptions' => true,
-                ],
-                true,
-            ),
-        );
-    }
-
     public function testResponseStatusCodeListenerEnabled()
     {
         $extension = new FOSRestExtension();
         $extension->load([
             [
                 'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
                     'map_exception_codes' => true,
                 ],
                 'service' => [
@@ -641,10 +452,6 @@ class FOSRestExtensionTest extends TestCase
         $extension = new FOSRestExtension();
         $extension->load([
             [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'service' => [
                     'templating' => null,
                 ],
@@ -655,57 +462,7 @@ class FOSRestExtensionTest extends TestCase
             ],
         ], $this->container);
 
-        $this->assertFalse($this->container->hasDefinition('fos_rest.exception_listener'));
         $this->assertFalse($this->container->hasDefinition('fos_rest.fos_rest.error_listener'));
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testExceptionSerializerEnabled()
-    {
-        $extension = new FOSRestExtension();
-        $extension->load([
-            [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => true,
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
-            ],
-        ], $this->container);
-
-        $this->assertTrue($this->container->hasDefinition('fos_rest.serializer.exception_normalizer.jms'));
-        $this->assertTrue($this->container->hasDefinition('fos_rest.serializer.exception_normalizer.symfony'));
-    }
-
-    public function testExceptionSerializerDisabled()
-    {
-        $extension = new FOSRestExtension();
-        $extension->load([
-            [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
-            ],
-        ], $this->container);
-
-        $this->assertFalse($this->container->hasDefinition('fos_rest.serializer.exception_normalizer.jms'));
-        $this->assertFalse($this->container->hasDefinition('fos_rest.serializer.exception_normalizer.symfony'));
     }
 
     public function testGetConfiguration()
@@ -751,10 +508,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'view' => [
                     'jsonp_handler' => null,
                 ],
@@ -768,32 +521,10 @@ class FOSRestExtensionTest extends TestCase
         $this->assertInstanceOf(ChildDefinition::class, $viewHandler);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSerializerExceptionNormalizer()
-    {
-        $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => true,
-                ],
-            ],
-        ], $this->container);
-
-        $this->assertTrue($this->container->has('fos_rest.serializer.exception_normalizer.symfony'));
-    }
-
     public function testZoneMatcherListenerDefault()
     {
         $this->extension->load([
-            'fos_rest' => [
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-            ],
+            'fos_rest' => [],
         ], $this->container);
 
         $this->assertFalse($this->container->has('fos_rest.zone_matcher_listener'));
@@ -802,10 +533,6 @@ class FOSRestExtensionTest extends TestCase
     public function testZoneMatcherListener()
     {
         $config = array('fos_rest' => array(
-            'exception' => [
-                'exception_listener' => false,
-                'serialize_exceptions' => false,
-            ],
             'zone' => array(
                 'first' => array('path' => '/api/*'),
                 'second' => array('path' => '/^second', 'ips' => '127.0.0.1'),
@@ -842,10 +569,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = array(
             'fos_rest' => array(
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
                 'view' => [
                     'mime_types' => array(
                         'json' => array('application/json', 'application/x-json'),

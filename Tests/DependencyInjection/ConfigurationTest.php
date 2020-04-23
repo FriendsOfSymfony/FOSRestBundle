@@ -55,8 +55,6 @@ class ConfigurationTest extends TestCase
                 [
                     'exception' => [
                         'codes' => $expectedConfig,
-                        'exception_listener' => false,
-                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -80,8 +78,6 @@ class ConfigurationTest extends TestCase
                     NotFoundHttpException::class => 'HTTP_NOT_FOUND',
                     MethodNotAllowedException::class => 'HTTP_METHOD_NOT_ALLOWED',
                 ],
-                'exception_listener' => false,
-                'serialize_exceptions' => false,
             ],
         ];
 
@@ -111,8 +107,6 @@ class ConfigurationTest extends TestCase
                         'codes' => [
                             \RuntimeException::class => $value,
                         ],
-                        'exception_listener' => false,
-                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -128,11 +122,9 @@ class ConfigurationTest extends TestCase
             [
                 [
                     'exception' => [
-                        'exception_listener' => false,
                         'messages' => [
                             'UnknownException' => true,
                         ],
-                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -152,8 +144,6 @@ class ConfigurationTest extends TestCase
                         'codes' => [
                             'UnknownException' => 404,
                         ],
-                        'exception_listener' => false,
-                        'serialize_exceptions' => false,
                     ],
                 ],
             ]
@@ -166,10 +156,6 @@ class ConfigurationTest extends TestCase
             $this->configuration,
             [
                 [
-                    'exception' => [
-                        'exception_listener' => false,
-                        'serialize_exceptions' => false,
-                    ],
                     'format_listener' => [
                         'rules' => [
                             [

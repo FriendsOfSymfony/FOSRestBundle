@@ -39,10 +39,7 @@ class ResponseStatusCodeListener implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ExceptionEvent $event
-     */
-    public function getResponseStatusCodeFromThrowable($event): void
+    public function getResponseStatusCodeFromThrowable(ExceptionEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -54,23 +51,14 @@ class ResponseStatusCodeListener implements EventSubscriberInterface
             return;
         }
 
-        if (method_exists($event, 'getThrowable')) {
-            $throwable = $event->getThrowable();
-        } else {
-            $throwable = $event->getException();
-        }
-
-        $statusCode = $this->exceptionValueMap->resolveThrowable($throwable);
+        $statusCode = $this->exceptionValueMap->resolveFromClassName(get_class($event->getThrowable()));
 
         if (is_int($statusCode)) {
             $this->responseStatusCode = $statusCode;
         }
     }
 
-    /**
-     * @param ResponseEvent $event
-     */
-    public function setResponseStatusCode($event): void
+    public function setResponseStatusCode(ResponseEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;

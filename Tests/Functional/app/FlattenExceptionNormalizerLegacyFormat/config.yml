@@ -8,8 +8,6 @@ framework:
 
 fos_rest:
     exception:
-        exception_listener: false
-        serialize_exceptions: false
         flatten_exception_format: 'legacy'
     routing_loader: false
     service:

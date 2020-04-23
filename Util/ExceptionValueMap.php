@@ -37,44 +37,16 @@ class ExceptionValueMap
     }
 
     /**
-     * @return bool|int|null Value found or null if not found
-     */
-    public function resolveException(\Throwable $throwable)
-    {
-        return $this->doResolveClass(get_class($throwable));
-    }
-
-    /**
-     * Resolves the value corresponding to an exception object.
-     *
      * @return bool|int|null null if not found
-     *
-     * @internal since 2.8
-     */
-    public function resolveThrowable(\Throwable $exception)
-    {
-        return $this->doResolveClass(get_class($exception));
-    }
-
-    /**
-     * @internal
      */
     public function resolveFromClassName(string $className)
-    {
-        return $this->doResolveClass($className);
-    }
-
-    /**
-     * @return bool|int|null null if not found
-     */
-    private function doResolveClass(string $class)
     {
         foreach ($this->map as $mapClass => $value) {
             if (!$value) {
                 continue;
             }
 
-            if ($class === $mapClass || is_subclass_of($class, $mapClass)) {
+            if ($className === $mapClass || is_subclass_of($className, $mapClass)) {
                 return $value;
             }
         }
