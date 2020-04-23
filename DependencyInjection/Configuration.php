@@ -492,10 +492,10 @@ final class Configuration implements ConfigurationInterface
      *
      * @throws InvalidConfigurationException if the class was not found
      */
-    private function testExceptionExists($exception)
+    private function testExceptionExists($throwable)
     {
-        if (!is_subclass_of($exception, \Exception::class) && !is_a($exception, \Exception::class, true)) {
-            throw new InvalidConfigurationException("FOSRestBundle exception mapper: Could not load class '$exception' or the class does not extend from '\\Exception'. Most probably this is a configuration problem.");
+        if (!is_subclass_of($throwable, \Throwable::class)) {
+            throw new InvalidConfigurationException("FOSRestBundle exception mapper: Could not load class '$throwable' or the class does not extend from '\\Throwable'. Most probably this is a configuration problem.");
         }
     }
 }
