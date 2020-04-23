@@ -49,17 +49,23 @@ class FlattenExceptionHandler implements SubscribingHandlerInterface
 
     public function serializeToJson(JsonSerializationVisitor $visitor, FlattenException $exception, array $type, Context $context)
     {
-        return $visitor->visitArray($this->convertToArray($exception, $context), $type);
+        return $visitor->visitArray($this->convertToArray($exception, $context), $type, $context);
     }
 
     public function serializeToXml(XmlSerializationVisitor $visitor, FlattenException $exception, array $type, Context $context)
     {
+        $rootName = $this->rfc7807 ? 'response' : 'result';
+
         $data = $this->convertToArray($exception, $context);
 
-        $document = $visitor->getDocument();
+        if (method_exists($visitor, 'setDefaultRootName')) {
+            $visitor->setDefaultRootName($rootName);
+        }
+
+        $document = $visitor->getDocument(true);
 
         if (!$visitor->getCurrentNode()) {
-            $visitor->createRoot(null, $this->rfc7807 ? 'response' : 'result');
+            $visitor->createRoot(null, $rootName);
         }
 
         foreach ($data as $key => $value) {
@@ -67,7 +73,7 @@ class FlattenExceptionHandler implements SubscribingHandlerInterface
             $visitor->getCurrentNode()->appendChild($entryNode);
             $visitor->setCurrentNode($entryNode);
 
-            $node = $context->getNavigator()->accept($value);
+            $node = $context->getNavigator()->accept($value, null, $context);
             if (null !== $node) {
                 $visitor->getCurrentNode()->appendChild($node);
             }
