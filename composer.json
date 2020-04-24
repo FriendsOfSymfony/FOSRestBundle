@@ -69,7 +69,6 @@
     "suggest": {
         "sensio/framework-extra-bundle": "Add support for the request body converter and the view response listener, requires ^3.0",
         "jms/serializer-bundle": "Add support for advanced serialization capabilities, recommended, requires ^2.0|^3.0",
-        "symfony/expression-language": "Add support for using the expression language in the routing, requires ^2.7|^3.0",
         "symfony/serializer": "Add support for basic serialization capabilities and xml decoding, requires ^2.7|^3.0",
         "symfony/validator": "Add support for validation capabilities in the ParamFetcher, requires ^2.7|^3.0"
     },
