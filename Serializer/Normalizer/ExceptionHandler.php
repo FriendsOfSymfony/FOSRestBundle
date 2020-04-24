@@ -132,7 +132,7 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         }
     }
 
-    protected function convertToArray(\Exception $exception, Context $context): array
+    protected function convertToArray(\Exception $exception, Context $context)
     {
         return $this->convertThrowableToArray($exception, $context);
     }
