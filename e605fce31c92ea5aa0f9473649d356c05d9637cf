@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-04-24T08:25:26Z
+
+for some reason tests fail with this change
+
+---------------------------------------------------------------------------
+
+by Tobion at 2020-04-24T11:15:08Z
+
+There was one controller annotation that uses the condition for version check which made all the tests fail. So we need to keep the dev dependency but I removed it from suggest.
