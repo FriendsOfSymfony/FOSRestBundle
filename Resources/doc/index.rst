@@ -15,7 +15,6 @@ Getting Started With FOSRestBundle
     versioning
     param_fetcher_listener
     4-exception-controller-support
-    7-manual-route-definition
     annotations-reference
     configuration-reference
 
@@ -39,7 +38,6 @@ FOSRestBundle provides several tools to assist in building REST applications:
 - :doc:`The view layer <2-the-view-layer>`
 - :doc:`Listener support <3-listener-support>`
 - :doc:`ExceptionController support <4-exception-controller-support>`
-- :doc:`Manual definition of routes <7-manual-route-definition>`
 
 Config reference
 ----------------
