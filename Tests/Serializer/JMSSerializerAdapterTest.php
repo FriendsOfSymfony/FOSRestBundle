@@ -136,6 +136,12 @@ class JMSSerializerAdapterTest extends TestCase
         $fosContext = new Context();
         $fosContext->disableMaxDepth();
 
+        $this->serializer
+            ->expects($this->once())
+            ->method('serialize')
+            ->with('foo', 'json', $jmsContext)
+            ->willReturn('bar');
+
         $this->adapter->serialize('foo', 'json', $fosContext);
     }
 }
