@@ -21,7 +21,7 @@ use Symfony\Component\Form\Form;
 use JMS\Serializer\YamlSerializationVisitor;
 
 /**
- * Extend the JMS FormErrorHandler to include more informations when using the ViewHandler.
+ * Extend the JMS FormErrorHandler to include more information when using the ViewHandler.
  *
  * @internal since 2.8
  */
