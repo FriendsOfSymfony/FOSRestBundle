@@ -99,7 +99,7 @@ For details see :doc:`Format Listener <format_listener>`.
 Versioning
 ----------
 
-This listener attemps to determine the current api version from different parameters of the ``Request``:
+This listener attempts to determine the current api version from different parameters of the ``Request``:
 
 * the uri ``/{version}/users``
 * a query parameter ``/users?version=v1``

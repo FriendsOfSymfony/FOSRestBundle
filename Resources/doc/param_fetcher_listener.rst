@@ -42,6 +42,7 @@ configured for the matched controller so that the user does not need to do this 
          * @QueryParam(name="sort", requirements="(asc|desc)", allowBlank=false, default="asc", description="Sort direction")
          * Will check if a blank value, e.g an empty string is passed and if so, it will set to the default of asc.
          *
+         * @RequestParam(name="nullableSample", nullable=true, description="An example for a nullable entry")
          * @RequestParam(name="firstname", requirements="[a-z]+", description="Firstname.")
          * Will look for a firstname request parameters, ie. firstname=foo in POST data.
          * If not passed it will error out when read out of the ParamFetcher since RequestParam defaults to strict=true
@@ -192,3 +193,4 @@ Container parameters can be used in requirements and default field.
         {
             ...
         }
+
