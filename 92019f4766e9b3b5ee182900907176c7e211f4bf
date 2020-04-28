@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-04-27T13:03:13Z
+
+I think we shouldn't silently change the user's configuration as it might have impact on their application which would not be easy to debug. Instead I think we should throw an error during container compilation when the exception listener is disabled, but the deprecated `ExceptionController` from TwigBundle is still being used.
+
+---------------------------------------------------------------------------
+
+by alexander-schranz at 2020-04-27T13:32:26Z
+
+@xabbuh PR updated!
