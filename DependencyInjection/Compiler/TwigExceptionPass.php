@@ -24,6 +24,14 @@ final class TwigExceptionPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        if ($container->hasDefinition('fos_rest.exception.codes_map') // is config exception.enabled true
+            && $container->hasParameter('twig.exception_listener.controller') // is twig-bundle 4.4 installed
+            && $container->getParameter('twig.exception_listener.controller') // is twig-bundle deprecated controller set
+            && !$container->hasDefinition('fos_rest.exception_listener') // is deprecated exception_listener disabled
+        ) {
+            throw new \InvalidArgumentException('You can not disable the "fos_rest.exception.exception_listener" and still have the "twig.exception_controller" enabled.');
+        }
+
         // when no custom exception controller has been set
         if ($container->hasDefinition('fos_rest.error_listener') &&
             null === $container->getDefinition('fos_rest.error_listener')->getArgument(0)
