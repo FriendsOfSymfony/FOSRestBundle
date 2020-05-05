@@ -100,9 +100,8 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('routing_loader')
                     ->addDefaultsIfNotSet()
-                    ->canBeDisabled()
                     ->beforeNormalization()
-                        ->ifTrue(function ($v) { return false !== $v; })
+                        ->ifTrue(function ($v) { return isset($v['enabled']) && false !== $v['enabled']; })
                         ->then(function ($v) {
                             @trigger_error('Enabling the route generation feature is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
 
@@ -118,6 +117,13 @@ final class Configuration implements ConfigurationInterface
                         })
                     ->end()
                     ->children()
+                        ->booleanNode('enabled')
+                            ->defaultValue(function () {
+                                @trigger_error('Enabling the route generation feature is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+
+                                return true;
+                            })
+                        ->end()
                         ->scalarNode('default_format')->defaultNull()->end()
                         ->scalarNode('prefix_methods')->defaultTrue()->end()
                         ->scalarNode('include_format')->defaultTrue()->end()

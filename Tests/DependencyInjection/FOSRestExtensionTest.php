@@ -646,10 +646,26 @@ class FOSRestExtensionTest extends TestCase
 
     /**
      * @group legacy
+     * @expectedDeprecation Enabling the route generation feature is deprecated since FOSRestBundle 2.8.
      */
     public function testConfigLoadWithRoutingLoaderEnabled()
     {
-        $this->extension->load([], $this->container);
+        $config = [
+            'fos_rest' => [
+                'exception' => [
+                    'exception_listener' => false,
+                    'serialize_exceptions' => false,
+                ],
+                'service' => [
+                    'templating' => null,
+                ],
+                'view' => [
+                    'default_engine' => null,
+                    'force_redirects' => [],
+                ],
+            ],
+        ];
+        $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.routing.loader.controller'));
 
@@ -679,6 +695,56 @@ class FOSRestExtensionTest extends TestCase
             $this->formats,
             $this->defaultFormat
         );
+    }
+
+    public function testRoutingLoaderDisabled()
+    {
+        $config = [
+            'fos_rest' => [
+                'exception' => [
+                    'exception_listener' => false,
+                    'serialize_exceptions' => false,
+                ],
+                'routing_loader' => false,
+                'service' => [
+                    'templating' => null,
+                ],
+                'view' => [
+                    'default_engine' => null,
+                    'force_redirects' => [],
+                ],
+            ],
+        ];
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.routing.loader.yaml_collection'));
+        $this->assertFalse($this->container->hasDefinition('fos_rest.routing.loader.xml_collection'));
+    }
+
+    public function testRoutingLoaderDisabledUsingEnabledKey()
+    {
+        $config = [
+            'fos_rest' => [
+                'exception' => [
+                    'exception_listener' => false,
+                    'serialize_exceptions' => false,
+                ],
+                'routing_loader' => [
+                    'enabled' => false,
+                ],
+                'service' => [
+                    'templating' => null,
+                ],
+                'view' => [
+                    'default_engine' => null,
+                    'force_redirects' => [],
+                ],
+            ],
+        ];
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.routing.loader.yaml_collection'));
+        $this->assertFalse($this->container->hasDefinition('fos_rest.routing.loader.xml_collection'));
     }
 
     /**
@@ -995,6 +1061,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                     'map_exception_codes' => true,
                 ],
+                'routing_loader' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1017,6 +1084,7 @@ class FOSRestExtensionTest extends TestCase
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
                 ],
+                'routing_loader' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1043,6 +1111,7 @@ class FOSRestExtensionTest extends TestCase
                     'exception_listener' => false,
                     'serialize_exceptions' => true,
                 ],
+                'routing_loader' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1066,6 +1135,7 @@ class FOSRestExtensionTest extends TestCase
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
                 ],
+                'routing_loader' => false,
                 'service' => [
                     'templating' => null,
                 ],
