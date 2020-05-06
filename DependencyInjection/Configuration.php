@@ -519,6 +519,7 @@ final class Configuration implements ConfigurationInterface
                             ->defaultNull()
                             ->setDeprecated('The "%path%.%node%" option is deprecated since FOSRestBundle 2.8.')
                         ->end()
+                        ->booleanNode('serializer_error_renderer')->defaultValue(false)->end()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
                             ->beforeNormalization()
