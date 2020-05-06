@@ -434,6 +434,7 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'map_exception_codes' => true,
                 ],
+                'routing_loader' => false,
                 'service' => [
                     'templating' => null,
                 ],
