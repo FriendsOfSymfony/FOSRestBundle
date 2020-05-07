@@ -9,19 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\Api;
+namespace FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class CommentController
 {
     public function getCommentAction($id)
     {
-        return new JsonResponse(array('id' => (int) $id));
+        return new Response("<html><body>$id</body>");
     }
 
     public function getComments()
     {
-        return new JsonResponse(array());
+        return new Response('<html><body>comments ..</body>');
     }
 }

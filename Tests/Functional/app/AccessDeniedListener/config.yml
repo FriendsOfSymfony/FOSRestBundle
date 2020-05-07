@@ -1,0 +1,23 @@
+imports:
+    - { resource: ../config/default.yml }
+    - { resource: security.php }
+
+framework:
+    serializer:
+        enabled: true
+    router: { resource: "%kernel.project_dir%/AccessDeniedListener/routing.yml" }
+
+fos_rest:
+    access_denied_listener:
+        json: true
+    exception:
+        exception_listener: false
+        serialize_exceptions: false
+    routing_loader: false
+    service:
+        templating: null
+    view:
+        default_engine: null
+        force_redirects: []
+    zone:
+        - { path: ^/api/* }
