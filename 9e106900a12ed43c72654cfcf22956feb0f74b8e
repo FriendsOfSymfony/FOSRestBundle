@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by lsmith77 at 2020-03-09T11:59:51Z
+
+FYI .. I plan to have a look with @Tobion this week if maybe this entire listener could be dropped by documentation (and a small improvement to core).
+
+---------------------------------------------------------------------------
+
+by lsmith77 at 2020-03-10T09:10:19Z
+
+@xabbuh @yceruto @Tobion so I have added a bunch of tests to see how core behaves these days and it seems like as long as users rely on `http_basic` it works fine.
+
+`json_login` and `form_login` both do not behave as one would expect in an API context. We can of course advise our users to not use `form_login` but core behaviour of `json_login` seems to just be JSON for `form_login` with the same redirect behaviour. But to fully analyse this we would need to implement a proper login endpoint for the `json_login`.
+
+still I would say for 3.0 let us do the following:
+1) replace this PR with a PR that removes the access denied listener
+2) consider adding to core a `json_api_login` that returns a 403 rather than a 302 redirect
+
+wdyt?
+
+---------------------------------------------------------------------------
+
+by Tobion at 2020-04-23T19:22:43Z
+
+According to https://github.com/FriendsOfSymfony/FOSRestBundle/pull/2161#issuecomment-618606871 this PR fixes the redirect. So I'd be ok to merge this. It just needs a rebase.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-04-25T07:23:29Z
+
+Looks good to me too. Is there anything preventing us from merging this into `2.8`?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-04-29T05:07:12Z
+
+I was stepping through the code to understand what is going on and I now think I understand why the patch fixes the problem. However, unfortunately the tests still pass when we revert the changes made to the `AccessDeniedListener`. I am going to look into how we need to modify them before merging to ensure that we cannot blindly introduce a regression in the future here.
