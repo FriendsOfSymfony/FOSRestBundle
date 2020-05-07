@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\DependencyInjection;
 
+use FOS\RestBundle\ErrorRenderer\SerializerErrorRenderer;
 use FOS\RestBundle\EventListener\ResponseStatusCodeListener;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Config\FileLocator;
@@ -18,6 +19,8 @@ use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -329,6 +332,28 @@ class FOSRestExtension extends Extension
                 ->replaceArgument(1, $config['exception']['debug']);
             $container->getDefinition('fos_rest.serializer.flatten_exception_normalizer')
                 ->replaceArgument(2, 'rfc7807' === $config['exception']['flatten_exception_format']);
+
+            if ($config['exception']['serializer_error_renderer']) {
+                $format = new Definition();
+                $format->setFactory([SerializerErrorRenderer::class, 'getPreferredFormat']);
+                $format->setArguments([
+                    new Reference('request_stack'),
+                ]);
+                $debug = new Definition();
+                $debug->setFactory([SerializerErrorRenderer::class, 'isDebug']);
+                $debug->setArguments([
+                    new Reference('request_stack'),
+                    '%kernel.debug%',
+                ]);
+                $container->register('fos_rest.error_renderer.serializer', SerializerErrorRenderer::class)
+                    ->setArguments([
+                        new Reference('fos_rest.serializer'),
+                        $format,
+                        new Reference('error_renderer.html', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                        $debug,
+                    ]);
+                $container->setAlias('error_renderer.serializer', 'fos_rest.error_renderer.serializer');
+            }
         }
     }
 

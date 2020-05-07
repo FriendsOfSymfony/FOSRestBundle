@@ -448,6 +448,7 @@ final class Configuration implements ConfigurationInterface
                             ->defaultValue('legacy')
                             ->values(['legacy', 'rfc7807'])
                         ->end()
+                        ->booleanNode('serializer_error_renderer')->defaultValue(false)->end()
                         ->arrayNode('codes')
                             ->useAttributeAsKey('name')
                             ->beforeNormalization()

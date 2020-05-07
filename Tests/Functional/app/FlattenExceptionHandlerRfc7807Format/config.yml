@@ -2,18 +2,10 @@ imports:
     - { resource: ../config/default.yml }
     - { resource: ../config/exception_listener.yml }
 
-services:
-    error_renderer.serializer: '@fos_rest.error_renderer.jms_serializer_error_renderer'
-
-    fos_rest.error_renderer.jms_serializer_error_renderer:
-        class: 'FOS\RestBundle\Tests\Functional\Bundle\TestBundle\ErrorRenderer\JmsSerializerErrorRenderer'
-        arguments:
-            - '@jms_serializer.serializer'
-            - '@request_stack'
-
 fos_rest:
     exception:
         flatten_exception_format: 'rfc7807'
+        serializer_error_renderer: true
     routing_loader: false
     service:
         templating: ~

@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
 
 /**
  * FOSRestExtension test.
@@ -589,5 +590,59 @@ class FOSRestExtensionTest extends TestCase
             ),
             $this->container->getDefinition('fos_rest.mime_type_listener')->getArgument(0)
         );
+    }
+
+    public function testSerializerErrorRendererNotRegisteredByDefault()
+    {
+        $config = array(
+            'fos_rest' => array(
+                'exception' => [
+                    'exception_listener' => false,
+                    'serialize_exceptions' => false,
+                ],
+                'routing_loader' => false,
+                'service' => [
+                    'templating' => null,
+                ],
+                'view' => [
+                    'default_engine' => null,
+                    'force_redirects' => [],
+                ],
+            ),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertFalse($this->container->hasDefinition('fos_rest.error_renderer.serializer'));
+        $this->assertFalse($this->container->hasAlias('error_renderer.serializer'));
+    }
+
+    public function testRegisterSerializerErrorRenderer()
+    {
+        if (!interface_exists(ErrorRendererInterface::class)) {
+            $this->markTestSkipped();
+        }
+
+        $config = array(
+            'fos_rest' => array(
+                'exception' => [
+                    'exception_listener' => false,
+                    'serialize_exceptions' => false,
+                    'serializer_error_renderer' => true,
+                ],
+                'routing_loader' => false,
+                'service' => [
+                    'templating' => null,
+                ],
+                'view' => [
+                    'default_engine' => null,
+                    'force_redirects' => [],
+                ],
+            ),
+        );
+        $this->extension->load($config, $this->container);
+
+        $this->assertTrue($this->container->hasDefinition('fos_rest.error_renderer.serializer'));
+        $this->assertTrue($this->container->hasAlias('error_renderer.serializer'));
+        $this->assertSame('fos_rest.error_renderer.serializer', (string) $this->container->getAlias('error_renderer.serializer'));
     }
 }
