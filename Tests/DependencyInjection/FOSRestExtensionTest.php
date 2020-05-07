@@ -435,14 +435,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'map_exception_codes' => true,
                 ],
-                'routing_loader' => false,
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -452,17 +444,7 @@ class FOSRestExtensionTest extends TestCase
     public function testExceptionListenerDisabled()
     {
         $extension = new FOSRestExtension();
-        $extension->load([
-            [
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
-            ],
-        ], $this->container);
+        $extension->load([], $this->container);
 
         $this->assertFalse($this->container->hasDefinition('fos_rest.fos_rest.error_listener'));
     }
@@ -595,20 +577,7 @@ class FOSRestExtensionTest extends TestCase
     public function testSerializerErrorRendererNotRegisteredByDefault()
     {
         $config = array(
-            'fos_rest' => array(
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-                'routing_loader' => false,
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
-                ],
-            ),
+            'fos_rest' => array(),
         );
         $this->extension->load($config, $this->container);
 
@@ -625,17 +594,7 @@ class FOSRestExtensionTest extends TestCase
         $config = array(
             'fos_rest' => array(
                 'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
                     'serializer_error_renderer' => true,
-                ],
-                'routing_loader' => false,
-                'service' => [
-                    'templating' => null,
-                ],
-                'view' => [
-                    'default_engine' => null,
-                    'force_redirects' => [],
                 ],
             ),
         );

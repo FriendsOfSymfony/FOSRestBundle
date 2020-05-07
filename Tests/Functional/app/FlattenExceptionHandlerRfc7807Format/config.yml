@@ -6,9 +6,3 @@ fos_rest:
     exception:
         flatten_exception_format: 'rfc7807'
         serializer_error_renderer: true
-    routing_loader: false
-    service:
-        templating: ~
-    view:
-        default_engine: ~
-        force_redirects: []
