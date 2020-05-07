@@ -9,9 +9,3 @@ framework:
 fos_rest:
     exception:
         flatten_exception_format: 'legacy'
-    routing_loader: false
-    service:
-        templating: ~
-    view:
-        default_engine: ~
-        force_redirects: []
