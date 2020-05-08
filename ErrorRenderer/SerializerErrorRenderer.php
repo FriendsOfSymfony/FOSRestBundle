@@ -16,6 +16,7 @@ use FOS\RestBundle\Serializer\Serializer;
 use JMS\Serializer\Exception\UnsupportedFormatException;
 use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
@@ -60,7 +61,12 @@ final class SerializerErrorRenderer implements ErrorRendererInterface
             $context->setAttribute('exception', $exception);
             $context->setAttribute('debug', is_callable($this->debug) ? ($this->debug)($exception) : $this->debug);
 
-            return $flattenException->setAsString($this->serializer->serialize($flattenException, $format, $context));
+            $headers = [
+                'Content-Type' => Request::getMimeTypes($format)[0] ?? $format,
+                'Vary' => 'Accept',
+            ];
+
+            return $flattenException->setAsString($this->serializer->serialize($flattenException, $format, $context))->setHeaders($flattenException->getHeaders() + $headers);
         } catch (NotEncodableValueException | UnsupportedFormatException $e) {
             return $this->fallbackErrorRenderer->render($exception);
         }
