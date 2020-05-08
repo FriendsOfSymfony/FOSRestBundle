@@ -108,6 +108,10 @@ Upgrading From 2.7 To 2.8
  * Not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options to
    `null` has been deprecated.
 
+ * Deprecated setting the `fos_rest.service.router` option.
+
+ * The `fos_rest.body_listener` option will change the default value from enabled to disabled in FOSRestBundle 3.0. Please enable or disable it explicitly.
+
  * Not setting the `fos_rest.view.force_redirects` option to the empty array has been deprecated.
 
  * The `TemplatingExceptionController` and the `TwigExceptionController` classes have been deprecated.

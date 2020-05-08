@@ -13,6 +13,7 @@ fos_rest:
         formats:
             xml:  true
             json: true
+    body_listener: true
     exception:
         exception_listener: false
     format_listener:

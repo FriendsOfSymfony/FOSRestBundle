@@ -12,6 +12,7 @@ fos_rest:
         exception_listener: false
         serialize_exceptions: false
     routing_loader: false
+    body_listener: false
     service:
         templating: ~
     view:

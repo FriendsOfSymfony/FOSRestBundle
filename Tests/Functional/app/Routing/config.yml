@@ -8,6 +8,7 @@ framework:
     router: { resource: "%kernel.project_dir%/Routing/routing.yml" }
 
 fos_rest:
+    body_listener: false
     service:
         templating: ~
     view:

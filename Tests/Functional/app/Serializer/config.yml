@@ -9,6 +9,7 @@ framework:
 
 fos_rest:
     routing_loader: false
+    body_listener: false
     service:
         templating: ~
     view:

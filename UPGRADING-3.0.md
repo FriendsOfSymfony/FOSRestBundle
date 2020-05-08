@@ -32,6 +32,10 @@ Upgrading From 2.x To 3.0
  * The default values of the `fos_rest.service.templating` and `fos_rest.view.default_engine` options
    have been changed to `null`. Setting it to another value leads to an exception.
 
+ * The `fos_rest.service.router` option has been removed.
+
+ * The `fos_rest.body_listener` option changed the default value from enabled to disabled.
+
  * The default value of the `fos_rest.view.force_redirects` option has been changed to the empty
    array. Setting it to another value leads to an exception.
 

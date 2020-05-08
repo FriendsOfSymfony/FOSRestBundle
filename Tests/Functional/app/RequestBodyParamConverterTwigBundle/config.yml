@@ -12,6 +12,7 @@ fos_rest:
     body_converter:
         enabled: true
     routing_loader: false
+    body_listener: false
 
 sensio_framework_extra:
     request:
