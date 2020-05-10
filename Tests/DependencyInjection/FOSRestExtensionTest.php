@@ -89,7 +89,9 @@ class FOSRestExtensionTest extends TestCase
     public function testLoadBodyListenerWithDefaults()
     {
         $this->extension->load([
-            'fos_rest' => [],
+            'fos_rest' => [
+                'body_listener' => true,
+            ],
         ], $this->container);
         $decoders = [
             'json' => 'fos_rest.decoder.json',
@@ -107,6 +109,7 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => [
+                    'enabled' => true,
                     'array_normalizer' => 'fos_rest.normalizer.camel_keys',
                 ],
             ],
@@ -124,6 +127,7 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => [
+                    'enabled' => true,
                     'array_normalizer' => [
                         'service' => 'fos_rest.normalizer.camel_keys',
                     ],
@@ -147,6 +151,7 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => [
+                    'enabled' => true,
                     'array_normalizer' => [
                         'service' => 'fos_rest.normalizer.camel_keys',
                         'forms' => true,
@@ -456,33 +461,6 @@ class FOSRestExtensionTest extends TestCase
         $this->assertInstanceOf(Configuration::class, $configuration);
     }
 
-    /**
-     * Assert that loader definition described properly.
-     *
-     * @param Definition $loader        loader definition
-     * @param bool       $includeFormat whether or not the requested view format must be included in the route path
-     * @param string[]   $formats       supported view formats
-     * @param string     $defaultFormat default view format
-     */
-    private function assertValidRestFileLoader(
-        Definition $loader,
-        $includeFormat,
-        array $formats,
-        $defaultFormat
-    ) {
-        $locatorRef = new Reference('file_locator');
-        $processorRef = new Reference('fos_rest.routing.loader.processor');
-        $arguments = $loader->getArguments();
-
-        $this->assertCount(5, $arguments);
-        $this->assertEquals($locatorRef, $arguments[0]);
-        $this->assertEquals($processorRef, $arguments[1]);
-        $this->assertSame($includeFormat, $arguments[2]);
-        $this->assertEquals($formats, $arguments[3]);
-        $this->assertSame($defaultFormat, $arguments[4]);
-        $this->assertArrayHasKey('routing.loader', $loader->getTags());
-    }
-
     private function assertAlias($value, $key)
     {
         $this->assertEquals($value, (string) $this->container->getAlias($key), sprintf('%s alias is correct', $key));
@@ -582,7 +560,7 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertFalse($this->container->hasDefinition('fos_rest.error_renderer.serializer'));
-        $this->assertFalse($this->container->hasAlias('error_renderer.serializer'));
+        $this->assertFalse($this->container->hasAlias('error_renderer'));
     }
 
     public function testRegisterSerializerErrorRenderer()
@@ -601,7 +579,7 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.error_renderer.serializer'));
-        $this->assertTrue($this->container->hasAlias('error_renderer.serializer'));
-        $this->assertSame('fos_rest.error_renderer.serializer', (string) $this->container->getAlias('error_renderer.serializer'));
+        $this->assertTrue($this->container->hasAlias('error_renderer'));
+        $this->assertSame('fos_rest.error_renderer.serializer', (string) $this->container->getAlias('error_renderer'));
     }
 }

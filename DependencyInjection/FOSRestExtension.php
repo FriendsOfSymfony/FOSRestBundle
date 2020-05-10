@@ -309,7 +309,7 @@ class FOSRestExtension extends Extension
     private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
         if ($config['exception']['enabled']) {
-            $loader->load('exception_listener.xml');
+            $loader->load('exception.xml');
 
             if ($config['exception']['map_exception_codes']) {
                 $container->register('fos_rest.exception.response_status_code_listener', ResponseStatusCodeListener::class)
@@ -352,7 +352,7 @@ class FOSRestExtension extends Extension
                         new Reference('error_renderer.html', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                         $debug,
                     ]);
-                $container->setAlias('error_renderer.serializer', 'fos_rest.error_renderer.serializer');
+                $container->setAlias('error_renderer', 'fos_rest.error_renderer.serializer');
             }
         }
     }

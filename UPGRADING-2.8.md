@@ -1,12 +1,15 @@
 Upgrading From 2.7 To 2.8
 =========================
 
- * Enabling the route generation feature is deprecated, disable it explicitly:
+ * The route generation feature is deprecated, disable it explicitly:
 
    ```yaml
    fos_rest:
        routing_loader: false
    ```
+
+   You need to configure your routes explicitly or consider using the
+   [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
 
  * The `fos_rest.exception.exception_controller`, `fos_rest.exception.exception_listener`, and
    `fos_rest.exception.service` options are deprecated.
@@ -27,9 +30,36 @@ Upgrading From 2.7 To 2.8
  * Deprecated returning anything other than `string` or `null` from `resolve()` when implementing
    the `VersionResolverInterface`.
 
- * Passing version number as integers to `Context::setVersion()` is deprecated. Strings will be
+ * Passing version numbers as integers to `Context::setVersion()` is deprecated. Strings will be
    enforced as of 3.0.
- 
+
+ * The `isFormatTemplating()`, `renderTemplate()`, and `prepareTemplateParameters()` methods of the
+   `ViewHandler` class and the `ViewHandlerInterface` have been deprecated.
+
+ * The constructor of the `ViewHandler` class has been deprecated. Use the static `create()` factory
+   method instead.
+
+ * The `setTemplateVar()`, `setPopulateDefaultVars()`, `getTemplateVar()`, and `isPopulateDefaultVars()`
+   methods of the `Controller\Annotations\View` class have been deprecated.
+
+ * The `setEngine()`, `setTemplate()`, `setTemplateData()`, `setTemplateVar()`, `getEngine()`,
+   `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
+   have been deprecated.
+
+ * The `fos_rest.templating` alias and the `fos_rest.exception.twig_controller` service have been
+   deprecated.
+
+ * The `fos_rest.view.templating_formats` option has been deprecated.
+
+ * Not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options to
+   `null` has been deprecated.
+
+ * Not setting the `fos_rest.view.force_redirects` option to the empty array has been deprecated.
+
+ * Deprecated setting the `fos_rest.service.router` option.
+
+ * The `fos_rest.body_listener` option will change the default value from enabled to disabled in FOSRestBundle 3.0. Please enable or disable it explicitly.
+
  * The following classes are marked as `deprecated`, they will be removed in  3.0:
 
    * `FOS\RestBundle\Controller\Annotations\NamePrefix`
@@ -38,6 +68,8 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Controller\Annotations\RouteResource`
    * `FOS\RestBundle\Controller\Annotations\Version`
    * `FOS\RestBundle\Controller\ExceptionController`
+   * `FOS\RestBundle\Controller\TemplatingExceptionController`
+   * `FOS\RestBundle\Controller\TwigExceptionController`
    * `FOS\RestBundle\EventListener\ExceptionListener`
    * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
@@ -51,7 +83,8 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
 
- * The following classes are marked as `internal`:
+ * The following classes are marked as `internal` (backwards compatibility will no longer be guaranteed
+   starting with FOSRestBundle 3.0):
 
    * `FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass`
    * `FOS\RestBundle\DependencyInjection\FOSRestExtension`
@@ -85,31 +118,3 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\View\JsonpHandler`
    * `FOS\RestBundle\View\View`
    * `FOS\RestBundle\View\ViewHandler`
-
- * The `ExceptionValueMap::resolveThrowable()` method is marked as internal and will be removed in 3.0.
-
- * The `isFormatTemplating()`, `renderTemplate()`, and `prepareTemplateParameters()` methods of the
-   `ViewHandler` class and the `ViewHandlerInterface` have been deprecated.
-
- * The constructor of the `ViewHandler` class has been deprecated. Use the static `create()` factory
-   method instead.
-
- * The `setTemplateVar()`, `setPopulateDefaultVars()`, `getTemplateVar()`, and `isPopulateDefaultVars()`
-   methods of the `Controller\Annotations\View` class have been deprecated.
-
- * The `setEngine()`, `setTemplate()`, `setTemplateData()`, `setTemplateVar()`, `getEngine()`,
-   `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
-   have been deprecated.
-
- * The `fos_rest.templating` alias has been deprecated.
-
- * The `fos_rest.view.templating_formats` option has been deprecated.
-
- * Not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options to
-   `null` has been deprecated.
-
- * Not setting the `fos_rest.view.force_redirects` option to the empty array has been deprecated.
-
- * The `TemplatingExceptionController` and the `TwigExceptionController` classes have been deprecated.
-
- * The `fos_rest.exception.twig_controller` service has been deprecated.
