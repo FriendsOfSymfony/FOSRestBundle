@@ -296,7 +296,7 @@ class FOSRestExtension extends Extension
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');
         $defaultViewHandler->setFactory([ViewHandler::class, 'create']);
         $defaultViewHandler->setArguments([
-            new Reference('fos_rest.router'),
+            new Reference('router'),
             new Reference('fos_rest.serializer'),
             new Reference('request_stack'),
             $formats,
