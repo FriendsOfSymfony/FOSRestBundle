@@ -11,9 +11,6 @@ Upgrading From 2.7 To 2.8
    You need to configure your routes explicitly or consider using the
    [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
 
- * The `fos_rest.exception.exception_controller`, `fos_rest.exception.exception_listener`, and
-   `fos_rest.exception.service` options are deprecated.
-
  * Support for serializing exceptions has been deprecated. Disable it by setting the
    `fos_rest.exception.serialize_exceptions` option to `false` and use the ErrorRenderer component
    instead.
@@ -49,16 +46,20 @@ Upgrading From 2.7 To 2.8
  * The `fos_rest.templating` alias and the `fos_rest.exception.twig_controller` service have been
    deprecated.
 
- * The `fos_rest.view.templating_formats` option has been deprecated.
-
  * Not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options to
    `null` has been deprecated.
 
  * Not setting the `fos_rest.view.force_redirects` option to the empty array has been deprecated.
 
- * Deprecated setting the `fos_rest.service.router` option.
-
  * The `fos_rest.body_listener` option will change the default value from enabled to disabled in FOSRestBundle 3.0. Please enable or disable it explicitly.
+
+ * The following options have been deprecated:
+
+   * `fos_rest.exception.exception_controller`
+   * `fos_rest.exception.exception_listener`
+   * `fos_rest.exception.service`
+   * `fos_rest.service.router`
+   * `fos_rest.view.templating_formats`
 
  * The following classes are marked as `deprecated`, they will be removed in  3.0:
 
