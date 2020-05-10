@@ -4,8 +4,100 @@ CHANGELOG
 3.0.0
 -----
 
-* dropped support for Symfony components < 4.4
+### Features
+
 * added support for Symfony 5 compatibility
+
+### BC Breaks
+
+* the route generation feature was removed, setting it to another value than `false` leads to an
+  exception
+* support for serializing exceptions was removed, setting the `fos_rest.exception.serialize_exceptions`
+  option to anything else than `false` leads to an exception
+* support for returning anything other than `string` or `null` from `resolve()` when implementing
+  the `VersionResolverInterface` was removed
+* removed support for passing version numbers as integers to `Context::setVersion()`
+* removed the `isFormatTemplating()`, `renderTemplate()`, and `prepareTemplateParameters()` methods
+  from the `ViewHandler` class and the `ViewHandlerInterface`
+* the constructor of the `ViewHandler` class is `private` now, use the static `create()` factory
+  method instead
+* removed the `setTemplateVar()`, `setPopulateDefaultVars()`, `getTemplateVar()`, and
+  `isPopulateDefaultVars()` methods from the `Controller\Annotations\View` class
+* removed the `setEngine()`, `setTemplate()`, `setTemplateData()`, `setTemplateVar()`, `getEngine()`,
+  `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods from the `View\View` class
+* removed the `fos_rest.templating` alias and the `fos_rest.exception.twig_controller` service
+* changed the default value of the `fos_rest.service.templating` and `fos_rest.view.default_engine`
+  options to `null`
+* changed the default value of the `fos_rest.view.force_redirects` option to the empty array
+* changed the default value of the `fos_rest.body_listener` option to `false`
+* removed the `setMaxDepth()`/`getMaxDepth()` methods from the `Context` class, use
+  `enableMaxDepth()`/`disableMaxDepth()` instead
+* dropped support for Symfony components < 4.4
+* removed the following options:
+
+  * `fos_rest.exception.exception_controller`
+  * `fos_rest.exception.exception_listener`
+  * `fos_rest.exception.service`
+  * `fos_rest.service.router`
+  * `fos_rest.view.templating_formats`
+
+* removed the following classes:
+
+  * `FOS\RestBundle\Controller\Annotations\NamePrefix`
+  * `FOS\RestBundle\Controller\Annotations\NoRoute`
+  * `FOS\RestBundle\Controller\Annotations\Prefix`
+  * `FOS\RestBundle\Controller\Annotations\RouteResource`
+  * `FOS\RestBundle\Controller\Annotations\Version`
+  * `FOS\RestBundle\Controller\ExceptionController`
+  * `FOS\RestBundle\Controller\TemplatingExceptionController`
+  * `FOS\RestBundle\Controller\TwigExceptionController`
+  * `FOS\RestBundle\EventListener\ExceptionListener`
+  * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
+  * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
+  * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
+  * `FOS\RestBundle\Routing\Loader\RestRouteLoader`
+  * `FOS\RestBundle\Routing\Loader\RestRouteProcessor`
+  * `FOS\RestBundle\Routing\Loader\RestXmlCollectionLoader`
+  * `FOS\RestBundle\Routing\Loader\RestYamlCollectionLoader`
+  * `FOS\RestBundle\Routing\ClassResourceInterface`
+  * `FOS\RestBundle\Routing\RestRouteCollection`
+  * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
+  * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
+
+* the following classes are marked as `internal` (backwards compatibility will no longer be guaranteed):
+
+  * `FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass`
+  * `FOS\RestBundle\DependencyInjection\FOSRestExtension`
+  * `FOS\RestBundle\Form\Extension\DisableCSRFExtension`
+  * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
+  * `FOS\RestBundle\Normalizer\CamelKeysNormalizer`
+  * `FOS\RestBundle\Normalizer\CamelKeysNormalizerWithLeadingUnderscore`
+  * `FOS\RestBundle\Serializer\Normalizer\FormErrorHandler`
+  * `FOS\RestBundle\Serializer\Normalizer\FormErrorNormalizer`
+  * `FOS\RestBundle\Util\ExceptionValueMap`
+
+* the following classes are now `final`:
+
+  * `FOS\RestBundle\Decoder\ContainerDecoderProvider`
+  * `FOS\RestBundle\Decoder\JsonDecoder`
+  * `FOS\RestBundle\Decoder\JsonToFormDecoder`
+  * `FOS\RestBundle\Decoder\XmlDecoder`
+  * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
+  * `FOS\RestBundle\Inflector\DoctrineInflector`
+  * `FOS\RestBundle\Negotiation\FormatNegotiator`
+  * `FOS\RestBundle\Request\ParamFetcher`
+  * `FOS\RestBundle\Request\ParamReader`
+  * `FOS\RestBundle\Request\RequestBodyParamConverter`
+  * `FOS\RestBundle\Response\AllowMethodsLoader\AllowedMethodsRouterLoader`
+  * `FOS\RestBundle\Serializer\JMSSerializerAdapter`
+  * `FOS\RestBundle\Serializer\SymfonySerializerAdapter`
+  * `FOS\RestBundle\Version\ChainVersionResolver`
+  * `FOS\RestBundle\Version\Resolver\HeaderVersionResolver`
+  * `FOS\RestBundle\Version\Resolver\MediaTypeVersionResolver`
+  * `FOS\RestBundle\Version\Resolver\QueryParameterVersionResolver`
+  * `FOS\RestBundle\View\JsonpHandler`
+  * `FOS\RestBundle\View\View`
+  * `FOS\RestBundle\View\ViewHandler`
 
 2.8.0
 -----
