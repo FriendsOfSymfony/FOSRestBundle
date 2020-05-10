@@ -12,9 +12,6 @@ Upgrading From 2.x To 3.0
    You need to configure your routes explicitly or consider using the
    [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
 
- * The `fos_rest.exception.exception_controller`, `fos_rest.exception.exception_listener`, and
-   `fos_rest.exception.service` options have been removed.
-
  * Support for serializing exceptions has been removed. Setting the
  `fos_rest.exception.serialize_exceptions` option to anything else than `false` leads to an exception.
 
@@ -39,8 +36,6 @@ Upgrading From 2.x To 3.0
  * The `fos_rest.templating` alias and the `fos_rest.exception.twig_controller` service have been
    removed.
 
- * The `fos_rest.view.templating_formats` option has been removed.
-
  * The default values of the `fos_rest.service.templating` and `fos_rest.view.default_engine` options
    have been changed to `null`. Setting it to another value leads to an exception.
 
@@ -51,11 +46,21 @@ Upgrading From 2.x To 3.0
  * The default value of the `fos_rest.view.force_redirects` option has been changed to the empty
    array. Setting it to another value leads to an exception.
 
+ * The default value of the `fos_rest.body_listener` option has been changed from enabled to disabled.
+
  * The `setMaxDepth()` method has been removed from the `Context` class. Use the
    `enableMaxDepth()` and `disableMaxDepth()` methods instead.
 
  * The `getMaxDepth()` method has been removed from the `Context` class. Use the
    `isMaxDepthEnabled()` method instead.
+
+ * The following options have been removed:
+
+   * `fos_rest.exception.exception_controller`
+   * `fos_rest.exception.exception_listener`
+   * `fos_rest.exception.service`
+   * `fos_rest.service.router`
+   * `fos_rest.view.templating_formats`
 
  * The following classes have been removed:
 
