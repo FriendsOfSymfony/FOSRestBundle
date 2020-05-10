@@ -13,6 +13,7 @@ fos_rest:
         serialize_exceptions: false
         flatten_exception_format: 'legacy'
     routing_loader: false
+    body_listener: false
     service:
         templating: ~
     view:

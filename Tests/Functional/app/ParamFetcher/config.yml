@@ -19,6 +19,7 @@ fos_rest:
         serialize_exceptions: false
     param_fetcher_listener: true
     routing_loader: false
+    body_listener: false
     service:
         templating: ~
     view:

@@ -151,7 +151,7 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('service')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('router')->defaultValue('router')->end()
+                        ->scalarNode('router')->defaultValue('router')->setDeprecated('The "%path%.%node%" configuration key has been deprecated in FOSRestBundle 2.8.')->end()
                         ->scalarNode('templating')
                             ->defaultValue(static function () {
                                 @trigger_error('Not setting the "fos_rest.service.templating" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
@@ -336,8 +336,17 @@ final class Configuration implements ConfigurationInterface
                     ->fixXmlConfig('decoder', 'decoders')
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()
-                    ->canBeDisabled()
+                    ->treatFalseLike(['enabled' => false])
+                    ->treatTrueLike(['enabled' => true])
+                    ->treatNullLike(['enabled' => true])
                     ->children()
+                        ->booleanNode('enabled')
+                            ->defaultValue(function () {
+                                @trigger_error('The body_listener config has been enabled by default and will be disabled by default in FOSRestBundle 3.0. Please enable or disable it explicitly.', E_USER_DEPRECATED);
+
+                                return true;
+                            })
+                        ->end()
                         ->scalarNode('service')->defaultNull()->end()
                         ->scalarNode('default_format')->defaultNull()->end()
                         ->booleanNode('throw_exception_on_unsupported_content_type')

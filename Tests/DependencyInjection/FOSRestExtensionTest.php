@@ -105,6 +105,7 @@ class FOSRestExtensionTest extends TestCase
     {
         $this->extension->load([
             'fos_rest' => [
+                'body_listener' => true,
                 'exception' => [
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
@@ -135,6 +136,7 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => [
+                    'enabled' => true,
                     'array_normalizer' => 'fos_rest.normalizer.camel_keys',
                 ],
                 'exception' => [
@@ -164,6 +166,7 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => [
+                    'enabled' => true,
                     'array_normalizer' => [
                         'service' => 'fos_rest.normalizer.camel_keys',
                     ],
@@ -199,6 +202,7 @@ class FOSRestExtensionTest extends TestCase
         $config = [
             'fos_rest' => [
                 'body_listener' => [
+                    'enabled' => true,
                     'array_normalizer' => [
                         'service' => 'fos_rest.normalizer.camel_keys',
                         'forms' => true,
@@ -240,6 +244,7 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'format_listener' => false,
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -262,7 +267,8 @@ class FOSRestExtensionTest extends TestCase
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
                 ],
-               'routing_loader' => false,
+                'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -288,6 +294,7 @@ class FOSRestExtensionTest extends TestCase
                     'rules' => ['path' => '/'],
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -312,6 +319,7 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'param_fetcher_listener' => true,
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -337,6 +345,7 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'param_fetcher_listener' => 'force',
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -367,6 +376,7 @@ class FOSRestExtensionTest extends TestCase
                     ],
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -395,6 +405,7 @@ class FOSRestExtensionTest extends TestCase
                     'media_type' => true,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -415,7 +426,8 @@ class FOSRestExtensionTest extends TestCase
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
                 ],
-               'routing_loader' => false,
+                'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -446,6 +458,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -470,6 +483,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -495,6 +509,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -520,6 +535,7 @@ class FOSRestExtensionTest extends TestCase
                    'serialize_exceptions' => false,
                ],
                'routing_loader' => false,
+               'body_listener' => false,
                'service' => [
                    'templating' => null,
                ],
@@ -541,6 +557,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -563,7 +580,8 @@ class FOSRestExtensionTest extends TestCase
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
                 ],
-               'routing_loader' => false,
+                'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -585,6 +603,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -609,6 +628,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -632,6 +652,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -707,6 +728,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -733,6 +755,7 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => [
                     'enabled' => false,
                 ],
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -899,6 +922,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -929,6 +953,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -974,6 +999,7 @@ class FOSRestExtensionTest extends TestCase
             'fos_rest' => array(
                 'exception' => $exceptionConfig,
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1063,6 +1089,7 @@ class FOSRestExtensionTest extends TestCase
                     'map_exception_codes' => true,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1086,6 +1113,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1113,6 +1141,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => true,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1137,6 +1166,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1199,6 +1229,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1230,6 +1261,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => true,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1252,6 +1284,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1273,6 +1306,7 @@ class FOSRestExtensionTest extends TestCase
                 'serialize_exceptions' => false,
             ],
             'routing_loader' => false,
+            'body_listener' => false,
             'service' => [
                 'templating' => null,
             ],
@@ -1322,6 +1356,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1357,6 +1392,7 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1369,7 +1405,7 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertFalse($this->container->hasDefinition('fos_rest.error_renderer.serializer'));
-        $this->assertFalse($this->container->hasAlias('error_renderer.serializer'));
+        $this->assertFalse($this->container->hasAlias('error_renderer'));
     }
 
     public function testRegisterSerializerErrorRenderer()
@@ -1386,6 +1422,7 @@ class FOSRestExtensionTest extends TestCase
                     'serializer_error_renderer' => true,
                 ],
                 'routing_loader' => false,
+                'body_listener' => false,
                 'service' => [
                     'templating' => null,
                 ],
@@ -1398,7 +1435,7 @@ class FOSRestExtensionTest extends TestCase
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.error_renderer.serializer'));
-        $this->assertTrue($this->container->hasAlias('error_renderer.serializer'));
-        $this->assertSame('fos_rest.error_renderer.serializer', (string) $this->container->getAlias('error_renderer.serializer'));
+        $this->assertTrue($this->container->hasAlias('error_renderer'));
+        $this->assertSame('fos_rest.error_renderer.serializer', (string) $this->container->getAlias('error_renderer'));
     }
 }

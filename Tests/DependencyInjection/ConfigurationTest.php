@@ -60,6 +60,7 @@ class ConfigurationTest extends TestCase
                         'serialize_exceptions' => false,
                     ],
                     'routing_loader' => false,
+                    'body_listener' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -92,6 +93,7 @@ class ConfigurationTest extends TestCase
                 'serialize_exceptions' => false,
             ],
             'routing_loader' => false,
+            'body_listener' => false,
             'service' => [
                 'templating' => null,
             ],
@@ -130,6 +132,7 @@ class ConfigurationTest extends TestCase
                         'serialize_exceptions' => false,
                     ],
                     'routing_loader' => false,
+                    'body_listener' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -157,6 +160,7 @@ class ConfigurationTest extends TestCase
                         'serialize_exceptions' => false,
                     ],
                     'routing_loader' => false,
+                    'body_listener' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -185,6 +189,7 @@ class ConfigurationTest extends TestCase
                         'serialize_exceptions' => false,
                     ],
                     'routing_loader' => false,
+                    'body_listener' => false,
                     'service' => [
                         'templating' => null,
                     ],
@@ -219,6 +224,7 @@ class ConfigurationTest extends TestCase
                         ],
                     ],
                     'routing_loader' => false,
+                    'body_listener' => false,
                     'service' => [
                         'templating' => null,
                     ],

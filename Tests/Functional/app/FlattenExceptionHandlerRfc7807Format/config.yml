@@ -9,6 +9,7 @@ fos_rest:
         flatten_exception_format: 'rfc7807'
         serializer_error_renderer: true
     routing_loader: false
+    body_listener: false
     service:
         templating: ~
     view:
