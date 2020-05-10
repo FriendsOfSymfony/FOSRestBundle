@@ -21,30 +21,22 @@ $container->loadFromExtension('security', [
     'encoders' => ['Symfony\Component\Security\Core\User\User' => 'plaintext'],
     'providers' => [
         'in_memory' => [
-            'memory' => [
-                'users' => [
-                    'restapi' => ['password' => 'secretpw', 'roles' => ['ROLE_API']],
-                    'admin' => ['password' => 'secretpw', 'roles' => ['ROLE_ADMIN']],
-                ],
-            ],
+            'memory' => [],
         ],
     ],
     'firewalls' => [
-        'api' => array_merge($defaultFirewall, [
-            'pattern' => '^/api',
-            'stateless' => true,
-            'http_basic' => ['realm' => 'Demo REST API'],
-            'json_login' => [
-                'check_path' => '/api/login',
-            ],
-        ]),
         'default' => array_merge($defaultFirewall, [
-            'anonymous' => null,
-            'form_login' => null,
+            'provider' => 'in_memory',
+            'anonymous' => 'lazy',
+            'stateless' => true,
+            'guard' => [
+                'authenticators' => [
+                    'api_token_authenticator',
+                ],
+            ],
         ]),
     ],
     'access_control' => [
-        ['path' => '^/admin', 'roles' => 'ROLE_ADMIN'],
         ['path' => '^/api', 'roles' => 'ROLE_API'],
     ],
 ]);

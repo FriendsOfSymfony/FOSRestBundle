@@ -15,6 +15,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CommentController
 {
+    public function loginAction()
+    {
+        return new JsonResponse('login');
+    }
+
     public function getCommentAction($id)
     {
         return new JsonResponse(array('id' => (int) $id));
