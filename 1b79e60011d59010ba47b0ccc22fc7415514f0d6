@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-05-10T06:40:43Z
+
+`doctrine/inflector` 1.4 doesn't treat the word "media" as uninflected.
