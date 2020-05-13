@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Inflector;
 
+@trigger_error(sprintf('The %s\DoctrineInflector class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use Doctrine\Common\Inflector\Inflector;
 
 /**
@@ -18,7 +20,7 @@ use Doctrine\Common\Inflector\Inflector;
  *
  * @author Mark Kazemier <Markkaz>
  *
- * @final since 2.8
+ * @deprecated since 2.8
  */
 class DoctrineInflector implements InflectorInterface
 {
