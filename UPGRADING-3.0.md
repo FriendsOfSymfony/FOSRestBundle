@@ -58,7 +58,7 @@ Upgrading From 2.x To 3.0
    * `fos_rest.service.router`
    * `fos_rest.view.templating_formats`
 
- * The following classes have been removed:
+ * The following classes and interfaces have been removed:
 
    * `FOS\RestBundle\Controller\Annotations\NamePrefix`
    * `FOS\RestBundle\Controller\Annotations\NoRoute`
@@ -69,6 +69,8 @@ Upgrading From 2.x To 3.0
    * `FOS\RestBundle\Controller\TemplatingExceptionController`
    * `FOS\RestBundle\Controller\TwigExceptionController`
    * `FOS\RestBundle\EventListener\ExceptionListener`
+   * `FOS\RestBundle\Inflector\DoctrineInflector`
+   * `FOS\RestBundle\Inflector\InflectorInterface`
    * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
    * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
@@ -100,7 +102,6 @@ Upgrading From 2.x To 3.0
    * `FOS\RestBundle\Decoder\JsonToFormDecoder`
    * `FOS\RestBundle\Decoder\XmlDecoder`
    * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
-   * `FOS\RestBundle\Inflector\DoctrineInflector`
    * `FOS\RestBundle\Negotiation\FormatNegotiator`
    * `FOS\RestBundle\Request\ParamFetcher`
    * `FOS\RestBundle\Request\ParamReader`

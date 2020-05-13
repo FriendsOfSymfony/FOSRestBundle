@@ -162,7 +162,7 @@ CHANGELOG
   * `fos_rest.service.router`
   * `fos_rest.view.templating_formats`
 
-* the following classes are marked as `deprecated`, they will be removed in  3.0:
+* the following classes and interfaces are marked as `deprecated`, they will be removed in  3.0:
 
   * `FOS\RestBundle\Controller\Annotations\NamePrefix`
   * `FOS\RestBundle\Controller\Annotations\NoRoute`
@@ -173,6 +173,8 @@ CHANGELOG
   * `FOS\RestBundle\Controller\TemplatingExceptionController`
   * `FOS\RestBundle\Controller\TwigExceptionController`
   * `FOS\RestBundle\EventListener\ExceptionListener`
+  * `FOS\RestBundle\Inflector\DoctrineInflector`
+  * `FOS\RestBundle\Inflector\InflectorInterface`
   * `FOS\RestBundle\Routing\Loader\DirectoryRouteLoader`
   * `FOS\RestBundle\Routing\Loader\Reader\RestActionReader`
   * `FOS\RestBundle\Routing\Loader\Reader\RestControllerReader`
@@ -205,7 +207,6 @@ CHANGELOG
   * `FOS\RestBundle\Decoder\JsonToFormDecoder`
   * `FOS\RestBundle\Decoder\XmlDecoder`
   * `FOS\RestBundle\Form\Transformer\EntityToIdObjectTransformer`
-  * `FOS\RestBundle\Inflector\DoctrineInflector`
   * `FOS\RestBundle\Negotiation\FormatNegotiator`
   * `FOS\RestBundle\Request\ParamFetcher`
   * `FOS\RestBundle\Request\ParamReader`
