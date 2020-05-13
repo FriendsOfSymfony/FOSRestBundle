@@ -38,7 +38,6 @@
         "symfony/http-foundation": "^4.4|^5.0",
         "symfony/http-kernel": "^4.4|^5.0",
         "symfony/security-core": "^3.4|^4.3|^5.0",
-        "doctrine/inflector": "^1.0",
         "willdurand/negotiation": "^2.0",
         "willdurand/jsonp-callback-validator": "^1.0"
     },
