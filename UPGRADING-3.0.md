@@ -33,8 +33,8 @@ Upgrading From 2.x To 3.0
    `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
    have been removed.
 
- * The default values of the `fos_rest.service.templating` and `fos_rest.view.default_engine` options
-   have been changed to `null`. Setting it to another value leads to an exception.
+ * The default value of the `fos_rest.view.default_engine` option has been changed to `null`. Setting
+   it to another value leads to an exception.
 
  * The default value of the `fos_rest.view.force_redirects` option has been changed to the empty
    array. Setting it to another value leads to an exception.
@@ -54,6 +54,7 @@ Upgrading From 2.x To 3.0
    * `fos_rest.exception.service`
    * `fos_rest.service.inflector`
    * `fos_rest.service.router`
+   * `fos_rest.service.templating`
    * `fos_rest.view.templating_formats`
 
  * The following classes and interfaces have been removed:

@@ -43,8 +43,7 @@ Upgrading From 2.7 To 2.8
    `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
    have been deprecated.
 
- * Not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options to
-   `null` has been deprecated.
+ * Not setting the `fos_rest.view.default_engine` options to `null` has been deprecated.
 
  * Not setting the `fos_rest.view.force_redirects` option to the empty array has been deprecated.
 
@@ -57,6 +56,7 @@ Upgrading From 2.7 To 2.8
    * `fos_rest.exception.service`
    * `fos_rest.service.inflector`
    * `fos_rest.service.router`
+   * `fos_rest.service.templating`
    * `fos_rest.view.templating_formats`
 
  * The following classes and interfaces are marked as `deprecated`, they will be removed in  3.0:
@@ -84,7 +84,7 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
 
- * The following services and aliases are marked as `deprecated`, they will be removed in  3.0:
+ * The following services and aliases are marked as `deprecated`, they will be removed in 3.0:
 
    * `fos_rest.exception_listener`
    * `fos_rest.exception.controller`

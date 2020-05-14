@@ -51,7 +51,7 @@ CHANGELOG
   `isPopulateDefaultVars()` methods of the `Controller\Annotations\View` class
 * deprecated the `setEngine()`, `setTemplate()`, `setTemplateData()`, `setTemplateVar()`, `getEngine()`,
   `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
-* deprecated not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options
+* deprecated not setting the `fos_rest.view.default_engine` option
 * deprecated not setting the `fos_rest.view.force_redirects` option to the empty array
 * deprecated not enabling the `fos_rest.body_listener` option explicitly, it will be disabled by default
   in 3.0
@@ -62,6 +62,7 @@ CHANGELOG
   * `fos_rest.exception.service`
   * `fos_rest.service.inflector`
   * `fos_rest.service.router`
+  * `fos_rest.service.templating`
   * `fos_rest.view.templating_formats`
 
 * the following classes and interfaces are marked as `deprecated`, they will be removed in  3.0:

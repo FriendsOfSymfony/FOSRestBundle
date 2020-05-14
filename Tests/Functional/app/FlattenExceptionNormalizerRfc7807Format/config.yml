@@ -13,8 +13,6 @@ fos_rest:
         flatten_exception_format: 'rfc7807'
     routing_loader: false
     body_listener: false
-    service:
-        templating: ~
     view:
         default_engine: ~
         force_redirects: []

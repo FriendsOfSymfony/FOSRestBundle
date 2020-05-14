@@ -72,9 +72,6 @@ class TestKernel extends Kernel
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'service' => [
-                    'templating' => null,
-                ],
                 'view' => [
                     'default_engine' => null,
                     'force_redirects' => [],

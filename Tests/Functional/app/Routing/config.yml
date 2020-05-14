@@ -9,8 +9,6 @@ framework:
 
 fos_rest:
     body_listener: false
-    service:
-        templating: ~
     view:
         default_engine: ~
         force_redirects: []

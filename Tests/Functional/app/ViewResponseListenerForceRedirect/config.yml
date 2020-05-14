@@ -20,8 +20,6 @@ fos_rest:
         rules:
             - { path: ^/, priorities: [ html, json, xml ], fallback_format: ~, prefer_extension: true }
     routing_loader: false
-    service:
-        templating: ~
 
 twig:
     exception_controller: ~
