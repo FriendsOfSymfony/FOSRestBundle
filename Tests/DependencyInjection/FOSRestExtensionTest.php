@@ -581,4 +581,17 @@ class FOSRestExtensionTest extends TestCase
         $this->assertTrue($this->container->hasAlias('error_renderer'));
         $this->assertSame('fos_rest.error_renderer.serializer', (string) $this->container->getAlias('error_renderer'));
     }
+
+    public function testLegacyAliasesAreDeprecated()
+    {
+        if (!method_exists(Alias::class, 'isDeprecated')) {
+            $this->markTestSkipped();
+        }
+
+        $this->extension->load([], $this->container);
+
+        $this->assertTrue($this->container->getAlias('fos_rest.inflector')->isDeprecated());
+        $this->assertTrue($this->container->getAlias('fos_rest.router')->isDeprecated());
+        $this->assertTrue($this->container->getAlias('fos_rest.templating')->isDeprecated());
+    }
 }
