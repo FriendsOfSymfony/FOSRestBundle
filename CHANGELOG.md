@@ -95,6 +95,8 @@ CHANGELOG
   * `fos_rest.exception_listener`
   * `fos_rest.exception.controller`
   * `fos_rest.exception.twig_controller`
+  * `fos_rest.inflector`
+  * `fos_rest.router`
   * `fos_rest.routing.loader.controller`
   * `fos_rest.routing.loader.directory`
   * `fos_rest.routing.loader.processor`
