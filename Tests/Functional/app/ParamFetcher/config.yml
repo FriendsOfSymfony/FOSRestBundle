@@ -20,8 +20,3 @@ fos_rest:
     param_fetcher_listener: true
     routing_loader: false
     body_listener: false
-    service:
-        templating: ~
-    view:
-        default_engine: ~
-        force_redirects: []

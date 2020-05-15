@@ -10,11 +10,7 @@ framework:
 fos_rest:
     routing_loader: false
     body_listener: false
-    service:
-        templating: ~
     view:
-        default_engine: ~
-        force_redirects: []
         view_response_listener: 'force'
 
 twig:

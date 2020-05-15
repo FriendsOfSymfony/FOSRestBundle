@@ -10,8 +10,3 @@ fos_rest:
         serializer_error_renderer: true
     routing_loader: false
     body_listener: false
-    service:
-        templating: ~
-    view:
-        default_engine: ~
-        force_redirects: []

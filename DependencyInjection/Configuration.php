@@ -153,19 +153,8 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('router')->defaultValue('router')->setDeprecated('The "%path%.%node%" configuration key has been deprecated in FOSRestBundle 2.8.')->end()
                         ->scalarNode('templating')
-                            ->defaultValue(static function () {
-                                @trigger_error('Not setting the "fos_rest.service.templating" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                return 'templating';
-                            })
-                            ->validate()
-                                ->ifTrue(static function ($v) { return $v; })
-                                ->then(static function ($v) {
-                                    @trigger_error('Not setting the "fos_rest.service.templating" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                    return $v;
-                                })
-                            ->end()
+                            ->defaultValue('templating')
+                            ->setDeprecated('The "%path%.%node%" option is deprecated since FOSRestBundle 2.8.')
                         ->end()
                         ->scalarNode('serializer')->defaultNull()->end()
                         ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
@@ -235,21 +224,11 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('default_engine')
-                            ->defaultValue(static function () {
-                                @trigger_error('Not setting the "fos_rest.view.default_engine" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                return 'twig';
-                            })
-                            ->validate()
-                                ->ifTrue(static function ($v) { return $v; })
-                                ->then(static function ($v) {
-                                    @trigger_error('Not setting the "fos_rest.view.default_engine" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                    return $v;
-                                })
-                            ->end()
+                            ->setDeprecated('The "%path%.%node%" option has been deprecated in FOSRestBundle 2.8.')
+                            ->defaultValue('twig')
                         ->end()
                         ->arrayNode('force_redirects')
+                            ->setDeprecated('The "%path%.%node%" option has been deprecated in FOSRestBundle 2.8.')
                             ->useAttributeAsKey('name')
                             ->defaultValue(['html' => true])
                             ->prototype('boolean')->end()

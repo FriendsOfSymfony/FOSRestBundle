@@ -8,12 +8,10 @@ framework:
 
 fos_rest:
     view:
-        default_engine: ~
         view_response_listener: 'force'
         formats:
             xml:  true
             json: true
-        force_redirects: []
     body_listener: true
     exception:
         exception_listener: false
@@ -22,8 +20,6 @@ fos_rest:
         rules:
             - { path: ^/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }
     routing_loader: false
-    service:
-        templating: ~
 
 twig:
     exception_controller: ~

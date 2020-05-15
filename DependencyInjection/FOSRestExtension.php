@@ -14,7 +14,6 @@ namespace FOS\RestBundle\DependencyInjection;
 use FOS\RestBundle\ErrorRenderer\SerializerErrorRenderer;
 use FOS\RestBundle\EventListener\ResponseStatusCodeListener;
 use FOS\RestBundle\Inflector\DoctrineInflector;
-use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -355,35 +354,20 @@ class FOSRestExtension extends Extension
 
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');
 
-        if ([] !== $config['view']['force_redirects']) {
-            @trigger_error('Not setting the "fos_rest.view.force_redirects" configuration option to an empty array is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-        }
-
-        if (null === $config['service']['templating'] && [] === $config['view']['force_redirects'] && null === $config['view']['default_engine']) {
-            $defaultViewHandler->setFactory([ViewHandler::class, 'create']);
-            $defaultViewHandler->setArguments([
-                new Reference('fos_rest.router'),
-                new Reference('fos_rest.serializer'),
-                new Reference('request_stack'),
-                $formats,
-                $config['view']['failed_validation'],
-                $config['view']['empty_content'],
-                $config['view']['serialize_null'],
-            ]);
-        } else {
-            $defaultViewHandler->setArguments([
-                new Reference('fos_rest.router'),
-                new Reference('fos_rest.serializer'),
-                new Reference('fos_rest.templating', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-                new Reference('request_stack'),
-                $formats,
-                $config['view']['failed_validation'],
-                $config['view']['empty_content'],
-                $config['view']['serialize_null'],
-                $config['view']['force_redirects'],
-                $config['view']['default_engine'],
-            ]);
-        }
+        $defaultViewHandler->setArguments([
+            new Reference('fos_rest.router'),
+            new Reference('fos_rest.serializer'),
+            new Reference('fos_rest.templating', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('request_stack'),
+            $formats,
+            $config['view']['failed_validation'],
+            $config['view']['empty_content'],
+            $config['view']['serialize_null'],
+            $config['view']['force_redirects'],
+            $config['view']['default_engine'],
+            [],
+            false,
+        ]);
     }
 
     private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container)
