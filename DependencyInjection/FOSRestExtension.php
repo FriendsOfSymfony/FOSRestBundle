@@ -84,7 +84,7 @@ class FOSRestExtension extends Extension
             if (null !== $service) {
                 if ('view_handler' === $key) {
                     $container->setAlias('fos_rest.'.$key, new Alias($service, true));
-                } elseif('templating' === $key) {
+                } elseif(in_array($key, ['inflector', 'router', 'templating'], true)) {
                     $alias = new Alias($service);
 
                     if (method_exists($alias, 'setDeprecated')) {
@@ -355,7 +355,7 @@ class FOSRestExtension extends Extension
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');
 
         $defaultViewHandler->setArguments([
-            new Reference('fos_rest.router'),
+            new Reference($config['service']['router']),
             new Reference('fos_rest.serializer'),
             new Reference('fos_rest.templating', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             new Reference('request_stack'),
