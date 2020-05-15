@@ -61,6 +61,7 @@ CHANGELOG
   * `fos_rest.exception.exception_controller`
   * `fos_rest.exception.exception_listener`
   * `fos_rest.exception.service`
+  * `fos_rest.service.inflector`
   * `fos_rest.service.router`
   * `fos_rest.view.templating_formats`
 

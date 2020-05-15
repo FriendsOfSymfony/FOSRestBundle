@@ -170,12 +170,8 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('serializer')->defaultNull()->end()
                         ->scalarNode('view_handler')->defaultValue('fos_rest.view_handler.default')->end()
                         ->scalarNode('inflector')
-                            ->defaultValue(static function () {
-                                @trigger_error('Not setting the "fos_rest.service.inflector" configuration option to "null" is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-
-                                return 'fos_rest.inflector.doctrine';
-                            })
                             ->defaultValue('fos_rest.inflector.doctrine')
+                            ->setDeprecated('The "%path%.%node%" option is deprecated since FOSRestBundle 2.8.')
                         ->end()
                         ->scalarNode('validator')->defaultValue('validator')->end()
                     ->end()
