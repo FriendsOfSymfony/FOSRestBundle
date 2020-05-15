@@ -177,7 +177,6 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('view')
                     ->fixXmlConfig('format', 'formats')
                     ->fixXmlConfig('mime_type', 'mime_types')
-                    ->fixXmlConfig('force_redirect', 'force_redirects')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('mime_types')

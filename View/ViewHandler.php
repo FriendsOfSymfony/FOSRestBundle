@@ -14,7 +14,6 @@ namespace FOS\RestBundle\View;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Serializer\Serializer;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,14 +46,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     private $failedValidationCode;
     private $emptyContentCode;
     private $serializeNull;
-
-    /**
-     * If to force a redirect for the given key format,
-     * with value being the status code to use.
-     *
-     * @var array<string,int>
-     */
-    private $forceRedirects;
     private $exclusionStrategyGroups = [];
     private $exclusionStrategyVersion;
     private $serializeNullStrategy;
@@ -71,7 +62,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         int $failedValidationCode = Response::HTTP_BAD_REQUEST,
         int $emptyContentCode = Response::HTTP_NO_CONTENT,
         bool $serializeNull = false,
-        array $forceRedirects = null,
         array $options = []
     ) {
         $this->urlGenerator = $urlGenerator;
@@ -81,7 +71,6 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         $this->failedValidationCode = $failedValidationCode;
         $this->emptyContentCode = $emptyContentCode;
         $this->serializeNull = $serializeNull;
-        $this->forceRedirects = (array) $forceRedirects;
         $this->options = $options + [
             'exclusionStrategyGroups' => [],
             'exclusionStrategyVersion' => null,
@@ -101,7 +90,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         array $options = []
     ): self
     {
-        return new self($urlGenerator, $serializer, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, [], $options, false);
+        return new self($urlGenerator, $serializer, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, $options, false);
     }
 
     /**
@@ -177,15 +166,9 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
             $response = $this->initResponse($view, $format);
         } else {
             $response = $view->getResponse();
-            if ('html' === $format && isset($this->forceRedirects[$format])) {
-                $redirect = new RedirectResponse($location);
-                $content = $redirect->getContent();
-                $response->setContent($content);
-            }
         }
 
-        $code = isset($this->forceRedirects[$format])
-            ? $this->forceRedirects[$format] : $this->getStatusCode($view, $content);
+        $code = $this->getStatusCode($view, $content);
 
         $response->setStatusCode($code);
         $response->headers->set('Location', $location);
