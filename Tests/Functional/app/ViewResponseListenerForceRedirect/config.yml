@@ -8,7 +8,6 @@ framework:
 
 fos_rest:
     view:
-        default_engine: ~
         view_response_listener: 'force'
         formats:
             xml:  true

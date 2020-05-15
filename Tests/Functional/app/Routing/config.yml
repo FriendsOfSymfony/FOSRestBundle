@@ -10,5 +10,4 @@ framework:
 fos_rest:
     body_listener: false
     view:
-        default_engine: ~
         force_redirects: []

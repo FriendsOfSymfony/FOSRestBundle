@@ -61,9 +61,6 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => false,
                     'body_listener' => false,
-                    'view' => [
-                        'default_engine' => null,
-                    ],
                 ],
             ]
         );
@@ -91,9 +88,6 @@ class ConfigurationTest extends TestCase
             ],
             'routing_loader' => false,
             'body_listener' => false,
-            'view' => [
-                'default_engine' => null,
-            ],
         ];
 
         $config = $this->processor->processConfiguration($this->configuration, [$config]);
@@ -127,9 +121,6 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => false,
                     'body_listener' => false,
-                    'view' => [
-                        'default_engine' => null,
-                    ],
                 ],
             ]
         );
@@ -152,9 +143,6 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => false,
                     'body_listener' => false,
-                    'view' => [
-                        'default_engine' => null,
-                    ],
                 ],
             ]
         );
@@ -178,9 +166,6 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => false,
                     'body_listener' => false,
-                    'view' => [
-                        'default_engine' => null,
-                    ],
                 ],
             ]
         );
@@ -210,9 +195,6 @@ class ConfigurationTest extends TestCase
                     ],
                     'routing_loader' => false,
                     'body_listener' => false,
-                    'view' => [
-                        'default_engine' => null,
-                    ],
                 ],
                 [
                     'format_listener' => [

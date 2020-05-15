@@ -88,7 +88,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -109,7 +108,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                'routing_loader' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -139,7 +137,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -168,7 +165,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -202,7 +198,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -231,7 +226,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -252,7 +246,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -275,7 +268,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -297,7 +289,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -320,7 +311,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -348,7 +338,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -374,7 +363,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -393,7 +381,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -421,7 +408,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                     'view_response_listener' => false,
                 ],
@@ -443,7 +429,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                     'view_response_listener' => true,
                 ],
@@ -466,7 +451,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                     'view_response_listener' => 'force',
                 ],
@@ -489,7 +473,6 @@ class FOSRestExtensionTest extends TestCase
                'routing_loader' => false,
                'body_listener' => false,
                'view' => [
-                   'default_engine' => null,
                    'force_redirects' => [],
                ],
            ],
@@ -508,7 +491,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'empty_content' => 200,
                     'force_redirects' => [],
                 ],
@@ -529,7 +511,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -548,7 +529,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                     'serialize_null' => true,
                 ],
@@ -570,7 +550,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -591,7 +570,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -613,7 +591,6 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -661,7 +638,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -685,7 +661,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -712,7 +687,6 @@ class FOSRestExtensionTest extends TestCase
                         'include_format' => false,
                     ],
                     'view' => [
-                        'default_engine' => null,
                         'force_redirects' => [],
                     ],
                 ],
@@ -753,7 +727,6 @@ class FOSRestExtensionTest extends TestCase
                         'default_format' => 'xml',
                     ],
                     'view' => [
-                        'default_engine' => null,
                         'force_redirects' => [],
                     ],
                 ],
@@ -791,7 +764,6 @@ class FOSRestExtensionTest extends TestCase
                         'serialize_exceptions' => false,
                     ],
                     'view' => [
-                        'default_engine' => null,
                         'force_redirects' => [],
                         'formats' => [
                             'json' => false,
@@ -840,7 +812,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -868,7 +839,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -911,7 +881,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ),
@@ -998,7 +967,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -1019,7 +987,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -1044,7 +1011,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -1066,7 +1032,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -1126,7 +1091,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                     'jsonp_handler' => null,
                 ],
@@ -1155,7 +1119,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -1175,7 +1138,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ],
@@ -1194,7 +1156,6 @@ class FOSRestExtensionTest extends TestCase
             'routing_loader' => false,
             'body_listener' => false,
             'view' => [
-                'default_engine' => null,
                 'force_redirects' => [],
             ],
             'zone' => array(
@@ -1241,7 +1202,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                     'mime_types' => array(
                         'json' => array('application/json', 'application/x-json'),
@@ -1274,7 +1234,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ),
@@ -1301,7 +1260,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'default_engine' => null,
                     'force_redirects' => [],
                 ],
             ),
