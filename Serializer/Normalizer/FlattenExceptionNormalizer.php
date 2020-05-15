@@ -52,6 +52,12 @@ final class FlattenExceptionNormalizer implements CacheableSupportsMethodInterfa
         }
 
         if ($this->rfc7807) {
+            if ('json' === $format) {
+                $exception->setHeaders($exception->getHeaders() + ['Content-Type' => 'application/problem+json']);
+            } elseif ('xml' === $format) {
+                $exception->setHeaders($exception->getHeaders() + ['Content-Type' => 'application/problem+xml']);
+            }
+
             return [
                 'type' => $context['type'] ?? 'https://tools.ietf.org/html/rfc2616#section-10',
                 'title' => $context['title'] ?? 'An error occurred',

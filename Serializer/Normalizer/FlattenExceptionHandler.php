@@ -49,11 +49,19 @@ class FlattenExceptionHandler implements SubscribingHandlerInterface
 
     public function serializeToJson(JsonSerializationVisitor $visitor, FlattenException $exception, array $type, Context $context)
     {
+        if ($this->rfc7807) {
+            $exception->setHeaders($exception->getHeaders() + ['Content-Type' => 'application/problem+json']);
+        }
+
         return $visitor->visitArray($this->convertToArray($exception, $context), $type, $context);
     }
 
     public function serializeToXml(XmlSerializationVisitor $visitor, FlattenException $exception, array $type, Context $context)
     {
+        if ($this->rfc7807) {
+            $exception->setHeaders($exception->getHeaders() + ['Content-Type' => 'application/problem+xml']);
+        }
+
         $rootName = $this->rfc7807 ? 'response' : 'result';
 
         $data = $this->convertToArray($exception, $context);
