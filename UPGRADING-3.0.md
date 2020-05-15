@@ -33,9 +33,6 @@ Upgrading From 2.x To 3.0
    `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
    have been removed.
 
- * The `fos_rest.templating` alias and the `fos_rest.exception.twig_controller` service have been
-   removed.
-
  * The default values of the `fos_rest.service.templating` and `fos_rest.view.default_engine` options
    have been changed to `null`. Setting it to another value leads to an exception.
 
@@ -82,6 +79,22 @@ Upgrading From 2.x To 3.0
    * `FOS\RestBundle\Routing\RestRouteCollection`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionHandler`
    * `FOS\RestBundle\Serializer\Normalizer\ExceptionNormalizer`
+
+ * The following services and aliases have been removed:
+
+   * `fos_rest.exception_listener`
+   * `fos_rest.exception.controller`
+   * `fos_rest.exception.twig_controller`
+   * `fos_rest.routing.loader.controller`
+   * `fos_rest.routing.loader.directory`
+   * `fos_rest.routing.loader.processor`
+   * `fos_rest.routing.loader.reader.controller`
+   * `fos_rest.routing.loader.reader.action`
+   * `fos_rest.routing.loader.xml_collection`
+   * `fos_rest.routing.loader.yaml_collection`
+   * `fos_rest.serializer.exception_normalizer.jms`
+   * `fos_rest.serializer.exception_normalizer.symfony`
+   * `fos_rest.templating`
 
  * The following classes are marked as `internal` (backwards compatibility will no longer be guaranteed):
 
