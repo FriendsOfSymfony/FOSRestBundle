@@ -215,50 +215,6 @@ class ConfigurationTest extends TestCase
         ];
     }
 
-    public function testTemplatingServiceMustBeNull()
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('only null is supported');
-
-        $this->processor->processConfiguration($this->configuration, [
-            [
-                'service' => [
-                    'templating' => 'twig',
-                ],
-            ],
-        ]);
-    }
-
-    public function testDefaultEngineMustBeNull()
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('only null is supported');
-
-        $this->processor->processConfiguration($this->configuration, [
-            [
-                'view' => [
-                    'default_engine' => 'twig',
-                ],
-            ],
-        ]);
-    }
-
-    public function testForceRedirectsMustBeEmptyArray()
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('only the empty array is supported');
-
-        $this->processor->processConfiguration($this->configuration, [
-            [
-                'view' => [
-                    'force_redirects' => [
-                        'html' => true,
-                    ],
-                ],
-            ],
-        ]);
-    }
-
     /**
      * {@inheritdoc}
      */
