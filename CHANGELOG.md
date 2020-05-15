@@ -25,9 +25,6 @@ CHANGELOG
   `isPopulateDefaultVars()` methods from the `Controller\Annotations\View` class
 * removed the `setEngine()`, `setTemplate()`, `setTemplateData()`, `setTemplateVar()`, `getEngine()`,
   `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods from the `View\View` class
-* changed the default value of the `fos_rest.service.templating` and `fos_rest.view.default_engine`
-  options to `null`
-* changed the default value of the `fos_rest.view.force_redirects` option to the empty array
 * changed the default value of the `fos_rest.body_listener` option to `false`
 * removed the `setMaxDepth()`/`getMaxDepth()` methods from the `Context` class, use
   `enableMaxDepth()`/`disableMaxDepth()` instead
@@ -74,6 +71,8 @@ CHANGELOG
   * `fos_rest.exception_listener`
   * `fos_rest.exception.controller`
   * `fos_rest.exception.twig_controller`
+  * `fos_rest.inflector`
+  * `fos_rest.router`
   * `fos_rest.routing.loader.controller`
   * `fos_rest.routing.loader.directory`
   * `fos_rest.routing.loader.processor`
