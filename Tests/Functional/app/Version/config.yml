@@ -16,7 +16,6 @@ fos_rest:
     routing_loader: false
     body_listener: false
     view:
-        force_redirects: []
         view_response_listener: true
         mime_types:
             json:

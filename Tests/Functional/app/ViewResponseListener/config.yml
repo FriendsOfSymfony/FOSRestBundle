@@ -12,7 +12,6 @@ fos_rest:
         formats:
             xml:  true
             json: true
-        force_redirects: []
     body_listener: true
     exception:
         exception_listener: false

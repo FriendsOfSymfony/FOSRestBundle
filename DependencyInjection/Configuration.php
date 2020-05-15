@@ -228,6 +228,7 @@ final class Configuration implements ConfigurationInterface
                             ->defaultValue('twig')
                         ->end()
                         ->arrayNode('force_redirects')
+                            ->setDeprecated('The "%path%.%node%" option has been deprecated in FOSRestBundle 2.8.')
                             ->useAttributeAsKey('name')
                             ->defaultValue(['html' => true])
                             ->prototype('boolean')->end()

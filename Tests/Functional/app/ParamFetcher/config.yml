@@ -20,5 +20,3 @@ fos_rest:
     param_fetcher_listener: true
     routing_loader: false
     body_listener: false
-    view:
-        force_redirects: []

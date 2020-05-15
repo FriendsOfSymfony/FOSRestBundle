@@ -33,9 +33,6 @@ Upgrading From 2.x To 3.0
    `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
    have been removed.
 
- * The default value of the `fos_rest.view.force_redirects` option has been changed to the empty
-   array. Setting it to another value leads to an exception.
-
  * The default value of the `fos_rest.body_listener` option has been changed from enabled to disabled.
 
  * The `setMaxDepth()` method has been removed from the `Context` class. Use the
@@ -53,6 +50,7 @@ Upgrading From 2.x To 3.0
    * `fos_rest.service.router`
    * `fos_rest.service.templating`
    * `fos_rest.view.default_engine`
+   * `fos_rest.view.force_redirects`
    * `fos_rest.view.templating_formats`
 
  * The following classes and interfaces have been removed:

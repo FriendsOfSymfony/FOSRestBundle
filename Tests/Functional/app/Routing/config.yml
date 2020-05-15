@@ -9,5 +9,3 @@ framework:
 
 fos_rest:
     body_listener: false
-    view:
-        force_redirects: []

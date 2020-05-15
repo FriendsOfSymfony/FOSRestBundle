@@ -354,10 +354,6 @@ class FOSRestExtension extends Extension
 
         $defaultViewHandler = $container->getDefinition('fos_rest.view_handler.default');
 
-        if ([] !== $config['view']['force_redirects']) {
-            @trigger_error('Not setting the "fos_rest.view.force_redirects" configuration option to an empty array is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
-        }
-
         $defaultViewHandler->setArguments([
             new Reference('fos_rest.router'),
             new Reference('fos_rest.serializer'),

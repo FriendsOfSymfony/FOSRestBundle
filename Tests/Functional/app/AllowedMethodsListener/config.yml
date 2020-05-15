@@ -13,5 +13,3 @@ fos_rest:
         serialize_exceptions: false
     routing_loader: false
     body_listener: false
-    view:
-        force_redirects: []

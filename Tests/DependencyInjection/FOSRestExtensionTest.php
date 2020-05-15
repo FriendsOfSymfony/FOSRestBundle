@@ -87,9 +87,6 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -107,9 +104,6 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                'routing_loader' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
         $decoders = [
@@ -136,9 +130,6 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
 
@@ -164,9 +155,6 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
 
@@ -197,9 +185,6 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
 
@@ -225,9 +210,6 @@ class FOSRestExtensionTest extends TestCase
                 'format_listener' => false,
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -245,9 +227,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -267,9 +246,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -288,9 +264,6 @@ class FOSRestExtensionTest extends TestCase
                 'param_fetcher_listener' => true,
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -310,9 +283,6 @@ class FOSRestExtensionTest extends TestCase
                 'param_fetcher_listener' => 'force',
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -337,9 +307,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -362,9 +329,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -380,9 +344,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -408,7 +369,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'force_redirects' => [],
                     'view_response_listener' => false,
                 ],
             ],
@@ -429,7 +389,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'force_redirects' => [],
                     'view_response_listener' => true,
                 ],
             ],
@@ -451,7 +410,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'force_redirects' => [],
                     'view_response_listener' => 'force',
                 ],
             ],
@@ -472,9 +430,6 @@ class FOSRestExtensionTest extends TestCase
                ],
                'routing_loader' => false,
                'body_listener' => false,
-               'view' => [
-                   'force_redirects' => [],
-               ],
            ],
         ], $this->container);
         $this->assertEquals(204, $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(6));
@@ -492,7 +447,6 @@ class FOSRestExtensionTest extends TestCase
                 'body_listener' => false,
                 'view' => [
                     'empty_content' => 200,
-                    'force_redirects' => [],
                 ],
             ],
         ];
@@ -510,9 +464,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
         $this->assertFalse($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
@@ -529,7 +480,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'force_redirects' => [],
                     'serialize_null' => true,
                 ],
             ],
@@ -549,9 +499,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -569,9 +516,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -589,9 +533,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => [
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
-                ],
-                'view' => [
-                    'force_redirects' => [],
                 ],
             ],
         ];
@@ -637,9 +578,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -660,9 +598,6 @@ class FOSRestExtensionTest extends TestCase
                     'enabled' => false,
                 ],
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ];
         $this->extension->load($config, $this->container);
@@ -685,9 +620,6 @@ class FOSRestExtensionTest extends TestCase
                     ],
                     'routing_loader' => [
                         'include_format' => false,
-                    ],
-                    'view' => [
-                        'force_redirects' => [],
                     ],
                 ],
             ],
@@ -726,9 +658,6 @@ class FOSRestExtensionTest extends TestCase
                     'routing_loader' => [
                         'default_format' => 'xml',
                     ],
-                    'view' => [
-                        'force_redirects' => [],
-                    ],
                 ],
             ],
             $this->container
@@ -764,7 +693,6 @@ class FOSRestExtensionTest extends TestCase
                         'serialize_exceptions' => false,
                     ],
                     'view' => [
-                        'force_redirects' => [],
                         'formats' => [
                             'json' => false,
                             'xml' => true,
@@ -811,9 +739,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
         $this->assertFalse($this->container->hasDefinition('fos_rest.exception.codes'));
@@ -838,9 +763,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
     }
@@ -880,9 +802,6 @@ class FOSRestExtensionTest extends TestCase
                 'exception' => $exceptionConfig,
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ),
         ), $this->container);
 
@@ -966,9 +885,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -986,9 +902,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -1010,9 +923,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -1031,9 +941,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -1091,7 +998,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'force_redirects' => [],
                     'jsonp_handler' => null,
                 ],
             ],
@@ -1118,9 +1024,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -1137,9 +1040,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ],
         ], $this->container);
 
@@ -1155,9 +1055,6 @@ class FOSRestExtensionTest extends TestCase
             ],
             'routing_loader' => false,
             'body_listener' => false,
-            'view' => [
-                'force_redirects' => [],
-            ],
             'zone' => array(
                 'first' => array('path' => '/api/*'),
                 'second' => array('path' => '/^second', 'ips' => '127.0.0.1'),
@@ -1202,7 +1099,6 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'force_redirects' => [],
                     'mime_types' => array(
                         'json' => array('application/json', 'application/x-json'),
                         'jpg' => 'image/jpeg',
@@ -1233,9 +1129,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ),
         );
         $this->extension->load($config, $this->container);
@@ -1259,9 +1152,6 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-                'view' => [
-                    'force_redirects' => [],
-                ],
             ),
         );
         $this->extension->load($config, $this->container);
