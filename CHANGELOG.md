@@ -51,7 +51,6 @@ CHANGELOG
   `isPopulateDefaultVars()` methods of the `Controller\Annotations\View` class
 * deprecated the `setEngine()`, `setTemplate()`, `setTemplateData()`, `setTemplateVar()`, `getEngine()`,
   `getTemplate()`, `getTemplateData()`, and `getTemplateVar()` methods of the `View\View` class
-* deprecated the `fos_rest.templating` alias and the `fos_rest.exception.twig_controller` service
 * deprecated not setting the `fos_rest.service.templating` and `fos_rest.view.default_engine` options
 * deprecated not setting the `fos_rest.view.force_redirects` option to the empty array
 * deprecated not enabling the `fos_rest.body_listener` option explicitly, it will be disabled by default
