@@ -17,6 +17,7 @@ matrix:
     - php: 7.2
       env: COMPOSER_FLAGS="--prefer-lowest --prefer-stable"
     - php: 7.3
+      env: COMPOSER_FLAGS="--prefer-stable"
     # Symfony 4.4
     - php: 7.4
       env: SYMFONY_REQUIRE="4.4.*" COMPOSER_FLAGS="--prefer-stable"
