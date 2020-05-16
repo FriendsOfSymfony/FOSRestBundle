@@ -32,6 +32,6 @@ class RequestParam extends AbstractScalarParam
      */
     public function getValue(Request $request, $default = null)
     {
-        return $request->request->get($this->getKey(), $default);
+        return $request->request->all()[$this->getKey()] ?? $default;
     }
 }
