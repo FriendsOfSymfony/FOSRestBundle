@@ -79,6 +79,7 @@
         "jms/serializer-bundle": "<2.0.0",
         "jms/serializer": "<1.13.0"
     },
+    "minimum-stability":  "dev",
     "extra": {
         "branch-alias": {
             "2.x-dev": "2.8-dev",
