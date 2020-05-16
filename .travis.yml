@@ -24,6 +24,9 @@ matrix:
     # Symfony 5.0
     - php: 7.4
       env: SYMFONY_REQUIRE="5.0.*" COMPOSER_FLAGS="--prefer-stable" COVERAGE=yes
+    # Symfony 5.1
+    - php: 7.4
+      env: SYMFONY_REQUIRE="5.1.*" COMPOSER_FLAGS="--prefer-stable"
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
