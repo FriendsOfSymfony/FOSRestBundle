@@ -63,6 +63,7 @@ class TestKernel extends Kernel
                 'secret' => 'test',
                 'router' => array(
                     'resource' => '%kernel.project_dir%/config/routing.yml',
+                    'utf8' => true,
                 ),
             ]);
             $container->loadFromExtension('fos_rest', []);
