@@ -35,7 +35,7 @@ class SerializerErrorTest extends WebTestCase
     /**
      * @dataProvider serializeExceptionJsonUsingErrorRendererProvider
      */
-    public function testSerializeExceptionJsonUsingErrorRenderer(string $testCase, array $expectedJson)
+    public function testSerializeExceptionJsonUsingErrorRenderer(string $testCase, array $expectedJson, string $expectedContentType)
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -46,6 +46,7 @@ class SerializerErrorTest extends WebTestCase
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/exception.json');
 
+        $this->assertStringStartsWith($expectedContentType, $client->getResponse()->headers->get('Content-Type'));
         $this->assertEquals(json_encode($expectedJson), $client->getResponse()->getContent());
     }
 
@@ -55,23 +56,23 @@ class SerializerErrorTest extends WebTestCase
             ['FlattenExceptionNormalizerLegacyFormat', [
                 'code' => 500,
                 'message' => 'Something bad happened.',
-            ]],
+            ], 'application/json'],
             ['FlattenExceptionNormalizerRfc7807Format', [
                 'type' => 'https://tools.ietf.org/html/rfc2616#section-10',
                 'title' => 'An error occurred',
                 'status' => 500,
                 'detail' => 'Something bad happened.',
-            ]],
+            ], 'application/problem+json'],
             ['FlattenExceptionHandlerLegacyFormat', [
                 'code' => 500,
                 'message' => 'Something bad happened.',
-            ]],
+            ], 'application/json'],
             ['FlattenExceptionHandlerRfc7807Format', [
                 'type' => 'https://tools.ietf.org/html/rfc2616#section-10',
                 'title' => 'An error occurred',
                 'status' => 500,
                 'detail' => 'Something bad happened.',
-            ]],
+            ], 'application/problem+json'],
         ];
     }
 
@@ -106,7 +107,7 @@ class SerializerErrorTest extends WebTestCase
     /**
      * @dataProvider serializeExceptionXmlUsingErrorRendererProvider
      */
-    public function testSerializeExceptionXmlUsingErrorRenderer(string $testCase, string $expectedContent)
+    public function testSerializeExceptionXmlUsingErrorRenderer(string $testCase, string $expectedContent, string $expectedContentType)
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -117,6 +118,7 @@ class SerializerErrorTest extends WebTestCase
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/exception.xml');
 
+        $this->assertStringStartsWith($expectedContentType, $client->getResponse()->headers->get('Content-Type'));
         $this->assertXmlStringEqualsXmlString($expectedContent, $client->getResponse()->getContent());
     }
 
@@ -147,10 +149,10 @@ XML;
 XML;
 
         return [
-            ['FlattenExceptionNormalizerLegacyFormat', $expectedLegacyContent],
-            ['FlattenExceptionNormalizerRfc7807Format', $expectedRfc7807Content],
-            ['FlattenExceptionHandlerLegacyFormat', $expectedLegacyJmsContent],
-            ['FlattenExceptionHandlerRfc7807Format', $expectedRfc7807Content],
+            ['FlattenExceptionNormalizerLegacyFormat', $expectedLegacyContent, 'text/xml'],
+            ['FlattenExceptionNormalizerRfc7807Format', $expectedRfc7807Content, 'application/problem+xml'],
+            ['FlattenExceptionHandlerLegacyFormat', $expectedLegacyJmsContent, 'text/xml'],
+            ['FlattenExceptionHandlerRfc7807Format', $expectedRfc7807Content, 'application/problem+xml'],
         ];
     }
 
