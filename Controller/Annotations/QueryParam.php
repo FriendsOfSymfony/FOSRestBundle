@@ -28,6 +28,6 @@ class QueryParam extends AbstractScalarParam
      */
     public function getValue(Request $request, $default = null)
     {
-        return $request->query->get($this->getKey(), $default);
+        return $request->query->all()[$this->getKey()] ?? $default;
     }
 }

@@ -45,12 +45,8 @@ class RequestParamTest extends TestCase
             ->willReturn('foo');
 
         $request = $this->getMockBuilder(Request::class)->getMock();
-        $parameterBag = $this->getMockBuilder(ParameterBag::class)->getMock();
-        $parameterBag
-            ->expects($this->once())
-            ->method('get')
-            ->with('foo', 'bar')
-            ->willReturn('foobar');
+        $parameterBag = new ParameterBag();
+        $parameterBag->set('foo', 'foobar');
         $request->request = $parameterBag;
 
         $this->assertEquals('foobar', $this->param->getValue($request, 'bar'));
