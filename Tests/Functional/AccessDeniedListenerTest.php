@@ -19,6 +19,10 @@ class AccessDeniedListenerTest extends WebTestCase
 
     public static function setUpBeforeClass()
     {
+        if (!interface_exists(ErrorRendererInterface::class)) {
+            self::markTestSkipped();
+        }
+
         parent::setUpBeforeClass();
         static::$client = static::createClient(['test_case' => 'AccessDeniedListener']);
     }
@@ -29,65 +33,39 @@ class AccessDeniedListenerTest extends WebTestCase
         parent::tearDownAfterClass();
     }
 
-    protected function setUp()
+    public function testNoCredentialsGives403()
     {
-        if (!interface_exists(ErrorRendererInterface::class)) {
-            $this->markTestSkipped();
-        }
+        static::$client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json']);
+        $response = static::$client->getResponse();
+
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 
-    public function testBundleListenerHandlesExceptionsInRestZonesWithoutLogin()
+    public function testWrongLoginGives401()
     {
-        static::$client->request('GET', '/api/comments');
+        static::$client->request('POST', '/api/login', [], [], ['HTTP_X-FOO' => 'BAR', 'CONTENT_TYPE' => 'application/json']);
+        $response = static::$client->getResponse();
 
-        $this->assertEquals(401, static::$client->getResponse()->getStatusCode());
-        $this->assertEquals('application/json', static::$client->getResponse()->headers->get('Content-Type'));
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 
-    public function testBundleListenerHandlesExceptionsInRestZonesWithLogin()
+    public function testSuccessfulLogin()
     {
-        $credentials = [
-            'PHP_AUTH_USER' => 'restapi',
-            'PHP_AUTH_PW' => 'secretpw',
-        ];
+        static::$client->request('POST', '/api/login', [], [], ['HTTP_X-FOO' => 'FOOBAR', 'CONTENT_TYPE' => 'application/json']);
+        $response = static::$client->getResponse();
 
-        static::$client->request('GET', '/api/comments', [], [], $credentials);
-
-        $this->assertEquals(200, static::$client->getResponse()->getStatusCode());
-        $this->assertEquals('application/json', static::$client->getResponse()->headers->get('Content-Type'));
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 
-    public function testBundleListenerHandlesExceptionsInRestZonesWrongLogin()
+    public function testAccessDeniedExceptionGives403()
     {
-        $credentials = [
-            'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW' => 'secretpw',
-        ];
+        static::$client->request('GET', '/api/comments', [], [], ['CONTENT_TYPE' => 'application/json']);
+        $response = static::$client->getResponse();
 
-        static::$client->request('GET', '/api/comments', [], [], $credentials);
-
-        $this->assertEquals(403, static::$client->getResponse()->getStatusCode());
-        $this->assertEquals('application/json', static::$client->getResponse()->headers->get('Content-Type'));
-    }
-
-    public function testBundleListenerHandlesExceptionsInRestZonesWithIncorrectLogin()
-    {
-        $credentials = [
-            'PHP_AUTH_USER' => 'restapi',
-            'PHP_AUTH_PW' => 'foobar',
-        ];
-
-        static::$client->request('GET', '/api/comments', [], [], $credentials);
-
-        $this->assertEquals(401, static::$client->getResponse()->getStatusCode());
-        $this->assertEquals('application/json', static::$client->getResponse()->headers->get('Content-Type'));
-    }
-
-    public function testSymfonyListenerHandlesExceptionsOutsideRestZones()
-    {
-        static::$client->request('GET', '/admin/comments');
-
-        $this->assertEquals(302, static::$client->getResponse()->getStatusCode());
-        $this->assertEquals('text/html; charset=UTF-8', static::$client->getResponse()->headers->get('Content-Type'));
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 }
