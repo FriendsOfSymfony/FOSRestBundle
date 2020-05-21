@@ -19,7 +19,7 @@ $container->loadFromExtension('security', [
     'firewalls' => [
         'default' => [
             'provider' => 'in_memory',
-            'anonymous' => 'lazy',
+            'anonymous' => null,
             'stateless' => true,
             'guard' => [
                 'authenticators' => [
