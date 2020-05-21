@@ -12,3 +12,7 @@ fos_rest:
         json: true
     zone:
         - { path: ^/api/* }
+
+services:
+    api_token_authenticator:
+        class:  FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Security\ApiTokenAuthenticator
