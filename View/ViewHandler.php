@@ -90,7 +90,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         array $options = []
     ): self
     {
-        return new self($urlGenerator, $serializer, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, $options, false);
+        return new self($urlGenerator, $serializer, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, $options);
     }
 
     /**

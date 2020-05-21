@@ -378,7 +378,7 @@ class FOSRestExtension extends Extension
         }
 
         $options['serializeNullStrategy'] = $config['serializer']['serialize_null'];
-        $viewHandler->replaceArgument(10, $options);
+        $viewHandler->addArgument($options);
     }
 
     private function loadZoneMatcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void

@@ -366,12 +366,6 @@ class FOSRestExtensionTest extends TestCase
     {
         $config = [
             'fos_rest' => [
-                'body_listener' => false,
-                'exception' => [
-                    'exception_listener' => false,
-                    'serialize_exceptions' => false,
-                ],
-                'routing_loader' => false,
                 'serializer' => [
                     'groups' => ['foo', 'bar'],
                     'serialize_null' => true,
@@ -385,7 +379,7 @@ class FOSRestExtensionTest extends TestCase
             'exclusionStrategyGroups' => ['foo', 'bar'],
             'exclusionStrategyVersion' => '1.0',
             'serializeNullStrategy' => true,
-        ], $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(10));
+        ], $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
     public function testValidatorAliasWhenEnabled()
