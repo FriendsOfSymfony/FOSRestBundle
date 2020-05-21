@@ -488,6 +488,32 @@ class FOSRestExtensionTest extends TestCase
         $this->assertTrue($this->container->getDefinition('fos_rest.view_handler.default')->getArgument(7));
     }
 
+    public function testViewHandlerSerializerOptions()
+    {
+        $config = [
+            'fos_rest' => [
+                'body_listener' => false,
+                'exception' => [
+                    'exception_listener' => false,
+                    'serialize_exceptions' => false,
+                ],
+                'routing_loader' => false,
+                'serializer' => [
+                    'groups' => ['foo', 'bar'],
+                    'serialize_null' => true,
+                    'version' => '1.0',
+                ],
+            ],
+        ];
+        $this->extension->load($config, $this->container);
+
+        $this->assertEquals([
+            'exclusionStrategyGroups' => ['foo', 'bar'],
+            'exclusionStrategyVersion' => '1.0',
+            'serializeNullStrategy' => true,
+        ], $this->container->getDefinition('fos_rest.view_handler.default')->getArgument(10));
+    }
+
     public function testValidatorAliasWhenEnabled()
     {
         $config = [
