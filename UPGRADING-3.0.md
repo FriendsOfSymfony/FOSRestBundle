@@ -43,6 +43,7 @@ Upgrading From 2.x To 3.0
 
  * The following options have been removed:
 
+   * `fos_rest.access_denied_listener`
    * `fos_rest.exception.exception_controller`
    * `fos_rest.exception.exception_listener`
    * `fos_rest.exception.service`
@@ -63,6 +64,7 @@ Upgrading From 2.x To 3.0
    * `FOS\RestBundle\Controller\ExceptionController`
    * `FOS\RestBundle\Controller\TemplatingExceptionController`
    * `FOS\RestBundle\Controller\TwigExceptionController`
+   * `FOS\RestBundle\EventListener\AccessDeniedListener`
    * `FOS\RestBundle\EventListener\ExceptionListener`
    * `FOS\RestBundle\Inflector\DoctrineInflector`
    * `FOS\RestBundle\Inflector\InflectorInterface`
@@ -80,6 +82,7 @@ Upgrading From 2.x To 3.0
 
  * The following services and aliases have been removed:
 
+   * `fos_rest.access_denied_listener`
    * `fos_rest.exception_listener`
    * `fos_rest.exception.controller`
    * `fos_rest.exception.twig_controller`

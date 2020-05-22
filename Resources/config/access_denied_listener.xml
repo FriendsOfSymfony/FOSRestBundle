@@ -11,6 +11,7 @@
             <tag name="monolog.logger" channel="request" />
             <argument type="collection" /> <!-- formats -->
             <argument /> <!-- unauthorized challenge -->
+            <deprecated>The "%service_id%" service is deprecated since FOSRestBundle 2.8.</deprecated>
         </service>
 
     </services>

@@ -49,6 +49,7 @@ final class Configuration implements ConfigurationInterface
                 ->scalarNode('disable_csrf_role')->defaultNull()->end()
                 ->arrayNode('access_denied_listener')
                     ->canBeEnabled()
+                    ->setDeprecated('The "%path%.%node%" option is deprecated since FOSRestBundle 2.8.')
                     ->beforeNormalization()
                         ->ifArray()->then(function ($v) {
                             if (!empty($v) && empty($v['formats'])) {

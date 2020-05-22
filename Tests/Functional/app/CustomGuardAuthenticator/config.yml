@@ -1,0 +1,21 @@
+imports:
+    - { resource: ../config/default.yml }
+    - { resource: security.php }
+
+framework:
+    serializer:
+        enabled: true
+    router: { resource: "%kernel.project_dir%/CustomGuardAuthenticator/routing.yml" }
+
+fos_rest:
+    body_listener: false
+    exception:
+        exception_listener: false
+        serialize_exceptions: false
+    routing_loader: false
+    zone:
+        - { path: ^/api/* }
+
+services:
+    api_token_authenticator:
+        class:  FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Security\ApiTokenAuthenticator
