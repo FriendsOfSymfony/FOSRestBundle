@@ -55,7 +55,7 @@ class ApiTokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        throw new AuthenticationException('Token not valid');
+        return new JsonResponse(null, 401);
     }
 
     /**

@@ -13,12 +13,9 @@ namespace FOS\RestBundle\Tests\Functional;
 
 use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
 
-/**
- * @group legacy
- */
-class AccessDeniedListenerTest extends WebTestCase
+abstract class AbstractAuthenticatorTestCase extends WebTestCase
 {
-    private static $client;
+    protected static $client;
 
     public static function setUpBeforeClass()
     {
@@ -27,28 +24,31 @@ class AccessDeniedListenerTest extends WebTestCase
         }
 
         parent::setUpBeforeClass();
-        static::$client = static::createClient(['test_case' => 'AccessDeniedListener']);
+
+        self::$client = self::createClient(['test_case' => static::getTestCase()]);
     }
 
     public static function tearDownAfterClass()
     {
-        self::deleteTmpDir('AccessDeniedListener');
+        self::deleteTmpDir(static::getTestCase());
+
         parent::tearDownAfterClass();
     }
 
-    public function testNoCredentialsGives403()
+    public function testNoCredentialsGives401()
     {
-        static::$client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json']);
-        $response = static::$client->getResponse();
+        self::$client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json']);
+        $response = self::$client->getResponse();
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 
-    public function testWrongLoginGives401()
+    public function testWrongCredentialsGives401()
     {
-        static::$client->request('POST', '/api/login', [], [], ['HTTP_X-FOO' => 'BAR', 'CONTENT_TYPE' => 'application/json']);
-        $response = static::$client->getResponse();
+        $this->sendRequestContainingInvalidCredentials('/api/login');
+
+        $response = self::$client->getResponse();
 
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
@@ -56,8 +56,9 @@ class AccessDeniedListenerTest extends WebTestCase
 
     public function testSuccessfulLogin()
     {
-        static::$client->request('POST', '/api/login', [], [], ['HTTP_X-FOO' => 'FOOBAR', 'CONTENT_TYPE' => 'application/json']);
-        $response = static::$client->getResponse();
+        $this->sendRequestContainingValidCredentials('/api/login');
+
+        $response = self::$client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
@@ -65,10 +66,17 @@ class AccessDeniedListenerTest extends WebTestCase
 
     public function testAccessDeniedExceptionGives403()
     {
-        static::$client->request('GET', '/api/comments', [], [], ['CONTENT_TYPE' => 'application/json']);
-        $response = static::$client->getResponse();
+        $this->sendRequestContainingValidCredentials('/api/comments');
+
+        $response = self::$client->getResponse();
 
         $this->assertEquals(403, $response->getStatusCode());
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
+
+    abstract protected static function getTestCase(): string;
+
+    abstract protected function sendRequestContainingInvalidCredentials(string $path): void;
+
+    abstract protected function sendRequestContainingValidCredentials(string $path): void;
 }

@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\EventListener;
 
+@trigger_error(sprintf('The %s\AccessDeniedListener class is deprecated since FOSRestBundle 2.8.', __NAMESPACE__), E_USER_DEPRECATED);
+
 use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
