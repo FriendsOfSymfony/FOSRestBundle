@@ -29,6 +29,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 /**
  * AccessDeniedListenerTest.
  *
+ * @group legacy
+ *
  * @author Boris Guéry <guery.b@gmail.com>
  */
 class AccessDeniedListenerTest extends TestCase

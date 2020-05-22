@@ -47,6 +47,7 @@ Upgrading From 2.7 To 2.8
 
  * The following options have been deprecated:
 
+   * `fos_rest.access_denied_listener`
    * `fos_rest.exception.exception_controller`
    * `fos_rest.exception.exception_listener`
    * `fos_rest.exception.service`
@@ -67,6 +68,7 @@ Upgrading From 2.7 To 2.8
    * `FOS\RestBundle\Controller\ExceptionController`
    * `FOS\RestBundle\Controller\TemplatingExceptionController`
    * `FOS\RestBundle\Controller\TwigExceptionController`
+   * `FOS\RestBundle\EventListener\AccessDeniedListener`
    * `FOS\RestBundle\EventListener\ExceptionListener`
    * `FOS\RestBundle\Inflector\DoctrineInflector`
    * `FOS\RestBundle\Inflector\InflectorInterface`
@@ -84,6 +86,7 @@ Upgrading From 2.7 To 2.8
 
  * The following services and aliases are marked as `deprecated`, they will be removed in 3.0:
 
+   * `fos_rest.access_denied_listener`
    * `fos_rest.exception_listener`
    * `fos_rest.exception.controller`
    * `fos_rest.exception.twig_controller`
