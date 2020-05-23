@@ -8,10 +8,5 @@ framework:
     router: { resource: "%kernel.project_dir%/BasicAuth/routing.yml" }
 
 fos_rest:
-    body_listener: false
-    exception:
-        exception_listener: false
-        serialize_exceptions: false
-    routing_loader: false
     zone:
         - { path: ^/api/* }
