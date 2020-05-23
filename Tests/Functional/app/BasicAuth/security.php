@@ -9,14 +9,6 @@
  * file that was distributed with this source code.
  */
 
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Http\Controller\UserValueResolver;
-
-$defaultFirewall = [];
-if (method_exists(Security::class, 'getUser') && !class_exists(UserValueResolver::class)) {
-    $defaultFirewall['logout_on_user_change'] = true;
-}
-
 $container->loadFromExtension('security', [
     'encoders' => ['Symfony\Component\Security\Core\User\User' => 'plaintext'],
     'providers' => [
@@ -29,12 +21,11 @@ $container->loadFromExtension('security', [
         ],
     ],
     'firewalls' => [
-        'default' => array_merge($defaultFirewall, [
+        'default' => [
             'provider' => 'in_memory',
-            'anonymous' => 'lazy',
             'stateless' => true,
             'http_basic' => null,
-        ]),
+        ],
     ],
     'access_control' => [
         ['path' => '^/api/comments', 'roles' => 'ROLE_ADMIN'],

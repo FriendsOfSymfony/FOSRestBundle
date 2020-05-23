@@ -75,7 +75,6 @@ class FOSRestExtension extends Extension
         $this->loadVersioning($config, $loader, $container);
         $this->loadParamFetcherListener($config, $loader, $container);
         $this->loadAllowedMethodsListener($config, $loader, $container);
-        $this->loadAccessDeniedListener($config, $loader, $container);
         $this->loadZoneMatcherListener($config, $loader, $container);
 
         // Needs RequestBodyParamConverter and View Handler loaded.
@@ -90,22 +89,6 @@ class FOSRestExtension extends Extension
             $definition = $container->getDefinition('fos_rest.form.extension.csrf_disable');
             $definition->replaceArgument(1, $config['disable_csrf_role']);
             $definition->addTag('form.type_extension', ['extended_type' => FormType::class]);
-        }
-    }
-
-    private function loadAccessDeniedListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
-    {
-        if ($config['access_denied_listener']['enabled'] && !empty($config['access_denied_listener']['formats'])) {
-            $loader->load('access_denied_listener.xml');
-
-            $service = $container->getDefinition('fos_rest.access_denied_listener');
-
-            if (!empty($config['access_denied_listener']['service'])) {
-                $service->clearTag('kernel.event_subscriber');
-            }
-
-            $service->replaceArgument(0, $config['access_denied_listener']['formats']);
-            $service->replaceArgument(1, $config['unauthorized_challenge']);
         }
     }
 
