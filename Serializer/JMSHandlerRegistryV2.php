@@ -13,6 +13,7 @@ namespace FOS\RestBundle\Serializer;
 
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\Handler\HandlerRegistryInterface;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 
 /**
  * Search in the class parents to find an adapted handler.
@@ -51,11 +52,18 @@ final class JMSHandlerRegistryV2 implements HandlerRegistryInterface
      */
     public function getHandler(int $direction, string $typeName, string $format)
     {
+        $first = true;
         do {
             $handler = $this->registry->getHandler($direction, $typeName, $format);
             if (null !== $handler) {
+                if (!$first && FlattenException::class !== $typeName) {
+                    @trigger_error(sprintf('The behavior of %s is deprecated since FOSRestBundle 2.8. In version 3.0, it will only force JMS Serializer to use the %s handler when possible. You should not rely on it for the parent type "%s".', __CLASS__, FlattenException::class, $typeName), E_USER_DEPRECATED);
+                }
+
                 return $handler;
             }
+
+            $first = false;
         } while ($typeName = get_parent_class($typeName));
     }
 }
