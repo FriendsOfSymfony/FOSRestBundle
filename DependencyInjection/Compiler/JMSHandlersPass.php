@@ -26,9 +26,14 @@ final class JMSHandlersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
+        $disableCustomRegistry = $container->hasParameter('fos_rest.serializer.disable_custom_jms_registry');
+        $container->getParameterBag()->remove('fos_rest.serializer.disable_custom_jms_registry');
+
         if ($container->has('jms_serializer.handler_registry')) {
-            // the public alias prevents the handler registry definition from being removed
-            $container->setAlias('fos_rest.serializer.jms_handler_registry', new Alias('jms_serializer.handler_registry', true));
+            if (!$disableCustomRegistry) {
+                // the public alias prevents the handler registry definition from being removed
+                $container->setAlias('fos_rest.serializer.jms_handler_registry', new Alias('jms_serializer.handler_registry', true));
+            }
 
             return;
         }

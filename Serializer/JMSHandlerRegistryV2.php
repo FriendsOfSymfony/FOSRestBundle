@@ -21,6 +21,8 @@ use Symfony\Component\ErrorHandler\Exception\FlattenException;
  * @author Ener-Getick <egetick@gmail.com>
  *
  * @internal do not depend on this class directly
+ *
+ * @deprecated since FOSRestBundle 3.1, use the option `fos_rest.serializer.disable_custom_jms_registry` to avoid relying on it.
  */
 final class JMSHandlerRegistryV2 implements HandlerRegistryInterface
 {
@@ -56,8 +58,8 @@ final class JMSHandlerRegistryV2 implements HandlerRegistryInterface
         do {
             $handler = $this->registry->getHandler($direction, $typeName, $format);
             if (null !== $handler) {
-                if (!$first && FlattenException::class !== $typeName) {
-                    @trigger_error(sprintf('The behavior of %s is deprecated since FOSRestBundle 2.8. In version 3.0, it will only force JMS Serializer to use the %s handler when possible. You should not rely on it for the parent type "%s".', __CLASS__, FlattenException::class, $typeName), E_USER_DEPRECATED);
+                if (!$first) {
+                    @trigger_error(sprintf('Relying on the custom registry %s to inherit the JMS handler of type `%s` is deprecated since FOSRestBundle 3.1. It will be removed in version 4.0. Use the option `fos_rest.serializer.disable_custom_jms_registry` to disable it.', __CLASS__, $typeName), E_USER_DEPRECATED);
                 }
 
                 return $handler;

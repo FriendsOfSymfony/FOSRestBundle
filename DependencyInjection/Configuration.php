@@ -110,6 +110,7 @@ final class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->end()
                         ->end()
                         ->booleanNode('serialize_null')->defaultFalse()->end()
+                        ->booleanNode('disable_custom_jms_registry')->defaultFalse()->end()
                     ->end()
                 ->end()
                 ->arrayNode('zone')

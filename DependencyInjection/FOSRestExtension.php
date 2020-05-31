@@ -362,6 +362,10 @@ class FOSRestExtension extends Extension
 
         $options['serializeNullStrategy'] = $config['serializer']['serialize_null'];
         $viewHandler->addArgument($options);
+
+        if ($config['serializer']['disable_custom_jms_registry']) {
+            $container->setParameter('fos_rest.serializer.disable_custom_jms_registry', true);
+        }
     }
 
     private function loadZoneMatcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void

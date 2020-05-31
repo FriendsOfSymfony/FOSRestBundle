@@ -1,0 +1,7 @@
+imports:
+    - { resource: ../config/default.yml }
+    - { resource: ../config/exception_listener.yml }
+
+fos_rest:
+    serializer:
+        disable_custom_jms_registry: true
