@@ -13,7 +13,6 @@ namespace FOS\RestBundle\Serializer;
 
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\Handler\HandlerRegistryInterface;
-use Symfony\Component\ErrorHandler\Exception\FlattenException;
 
 /**
  * Search in the class parents to find an adapted handler.
