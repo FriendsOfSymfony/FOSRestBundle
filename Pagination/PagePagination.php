@@ -18,7 +18,7 @@ namespace FOS\RestBundle\Pagination;
  */
 final class PagePagination implements PaginationInterface
 {
-    const DEFAULT_PAGE = "1";
+    const DEFAULT_PAGE = '1';
 
     /**
      * @var string

@@ -65,4 +65,3 @@ final class IdFilter implements FilterInterface
         return $this;
     }
 }
-

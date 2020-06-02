@@ -18,9 +18,9 @@ namespace FOS\RestBundle\Pagination;
  */
 final class LimitOffsetPagination implements PaginationInterface
 {
-    const DEFAULT_LIMIT = "16";
+    const DEFAULT_LIMIT = '16';
 
-    const DEFAULT_OFFSET = "0";
+    const DEFAULT_OFFSET = '0';
 
     /**
      * @var string
