@@ -68,6 +68,7 @@ class FOSRestExtension extends Extension
         $this->loadForm($config, $loader, $container);
         $this->loadException($config, $loader, $container);
         $this->loadBodyConverter($config, $loader, $container);
+        $this->loadPaginationConverter($config, $loader, $container);
         $this->loadView($config, $loader, $container);
 
         $this->loadBodyListener($config, $loader, $container);
@@ -220,6 +221,15 @@ class FOSRestExtension extends Extension
         if (!empty($config['body_converter']['validation_errors_argument'])) {
             $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(4, $config['body_converter']['validation_errors_argument']);
         }
+    }
+
+    private function loadPaginationConverter(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
+    {
+        if (!$this->isConfigEnabled($container, $config['pagination_converter'])) {
+            return;
+        }
+
+        $loader->load('pagination_param_converter.xml');
     }
 
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
