@@ -372,6 +372,23 @@ final class Configuration implements ConfigurationInterface
                     ->fixXmlConfig('message', 'messages')
                     ->addDefaultsIfNotSet()
                     ->canBeEnabled()
+                    ->validate()
+                      ->always()
+                      ->then(function ($v) {
+                          if (!$v['enabled']) {
+                            return $v;
+                          }
+
+                          if ($v['exception_listener']) {
+                              @trigger_error('Enabling the "fos_rest.exception.exception_listener" option is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+                          }
+                          if ($v['serialize_exceptions']) {
+                              @trigger_error('Enabling the "fos_rest.exception.serialize_exceptions" option is deprecated since FOSRestBundle 2.8.', E_USER_DEPRECATED);
+                          }
+
+                          return $v;
+                      })
+                    ->end()
                     ->children()
                         ->booleanNode('map_exception_codes')
                             ->defaultFalse()
