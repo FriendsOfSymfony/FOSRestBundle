@@ -81,11 +81,16 @@ class RequestBodyParamConverter implements ParamConverterInterface
         }
         $this->configureContext($context = new Context(), $arrayContext);
 
+        $format = $request->getContentType();
+        if (null === $format) {
+            return $this->throwException(new UnsupportedMediaTypeHttpException(), $configuration);
+        }
+
         try {
             $object = $this->serializer->deserialize(
                 $request->getContent(),
                 $configuration->getClass(),
-                $request->getContentType(),
+                $format,
                 $context
             );
         } catch (UnsupportedFormatException $e) {

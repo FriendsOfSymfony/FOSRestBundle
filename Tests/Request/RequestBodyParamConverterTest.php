@@ -273,6 +273,15 @@ class RequestBodyParamConverterTest extends TestCase
         $this->assertFalse($converter->supports($this->createConfiguration(null, 'post')));
     }
 
+    public function testNoContentTypeCausesUnsupportedMediaTypeException()
+    {
+        $converter = new RequestBodyParamConverter($this->serializer);
+        $request = $this->createRequest();
+        $request->headers->remove('CONTENT_TYPE');
+        $this->expectException(UnsupportedMediaTypeHttpException::class);
+        $this->launchExecution($converter, $request);
+    }
+
     protected function launchExecution($converter, $request = null, $configuration = null)
     {
         if (null === $request) {
