@@ -121,6 +121,12 @@ CHANGELOG
   * `FOS\RestBundle\View\View`
   * `FOS\RestBundle\View\ViewHandler`
 
+2.8.1
+-----
+
+* `FlattenExceptionNormalizer` does no longer implement the `CacheableSupportsMethodInterface` to
+  ensure compatibility with older versions of the Symfony Serializer component
+
 2.8.0
 -----
 
@@ -150,8 +156,34 @@ CHANGELOG
        routing_loader: false
    ```
 
-   You need to configure your routes explicitly or consider using the
-   [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle).
+   You need to configure your routes explicitly, e.g. using the Symfony Core annotations or the FOSRestBundle
+   shortcuts like `FOS\RestBundle\Controller\Annotations\Get`. You can use
+   `bin/console debug:router --show-controllers` to help with the migration and compare routes before and after it.
+   Change the routing loading:
+
+   Before:
+   ```
+   Acme\Controller\TestController:
+       type: rest
+       resource: Acme\Controller\TestController
+   ```
+
+   After:
+   ```
+   Acme\Controller\TestController:
+       type: annotation
+       resource: Acme\Controller\TestController
+   ```
+
+   When using the Symfony Core route loading, route names might change as the FOSRestBundle used a different naming
+   convention. Mind the `.{_format}` suffix if you used the `fos_rest.routing_loader.include_format` option.
+
+   In case you have OpenAPI/Swagger annotations, you can also use [OpenAPI-Symfony-Routing](https://github.com/Tobion/OpenAPI-Symfony-Routing)
+   which removes the need to have routing information duplicated. It also allows to add the `.{_format}` suffix automatically as before.
+
+   If migration to explicit routes is not possible or feasible, consider using
+   [RestRoutingBundle](https://github.com/handcraftedinthealps/RestRoutingBundle) which extracted the auto-generation of routes
+   in a BC way.
 * deprecated support for serializing exceptions, disable it by setting the `serialize_exceptions`
   option to false:
 

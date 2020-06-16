@@ -134,7 +134,7 @@ class RequestBodyParamConverterTest extends TestCase
              ->expects($this->once())
              ->method('deserialize')
              ->willReturn('Object');
-        $request = $this->createRequest();
+        $request = $this->createRequest(null, 'application/json');
         $this->launchExecution($converter, $request);
         $this->assertEquals('Object', $request->attributes->get('foo'));
     }
@@ -155,7 +155,7 @@ class RequestBodyParamConverterTest extends TestCase
 
         $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
 
-        $request = $this->createRequest();
+        $request = $this->createRequest(null, 'application/json');
         $configuration = $this->createConfiguration('FooClass', null, ['validator' => ['groups' => ['foo']]]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertEquals('fooError', $request->attributes->get('errors'));
@@ -175,7 +175,7 @@ class RequestBodyParamConverterTest extends TestCase
 
         $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
 
-        $request = $this->createRequest();
+        $request = $this->createRequest(null, 'application/json');
         $configuration = $this->createConfiguration('FooClass', null, ['validate' => false]);
         $this->launchExecution($converter, $request, $configuration);
         $this->assertNull($request->attributes->get('errors'));
@@ -246,6 +246,14 @@ class RequestBodyParamConverterTest extends TestCase
     {
         $converter = new RequestBodyParamConverter($this->serializer);
         $this->assertFalse($converter->supports($this->createConfiguration(null, 'post')));
+    }
+
+    public function testNoContentTypeCausesUnsupportedMediaTypeException()
+    {
+        $converter = new RequestBodyParamConverter($this->serializer);
+        $request = $this->createRequest();
+        $this->expectException(UnsupportedMediaTypeHttpException::class);
+        $this->launchExecution($converter, $request);
     }
 
     protected function launchExecution($converter, $request = null, $configuration = null)

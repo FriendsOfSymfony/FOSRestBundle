@@ -14,7 +14,6 @@ namespace FOS\RestBundle\Serializer\Normalizer;
 use FOS\RestBundle\Util\ExceptionValueMap;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -22,7 +21,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  *
  * @internal
  */
-final class FlattenExceptionNormalizer implements CacheableSupportsMethodInterface, NormalizerInterface
+final class FlattenExceptionNormalizer implements NormalizerInterface
 {
     private $messagesMap;
     private $debug;
@@ -75,10 +74,5 @@ final class FlattenExceptionNormalizer implements CacheableSupportsMethodInterfa
     public function supportsNormalization($data, $format = null)
     {
         return $data instanceof FlattenException;
-    }
-
-    public function hasCacheableSupportsMethod(): bool
-    {
-        return true;
     }
 }
