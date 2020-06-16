@@ -121,6 +121,12 @@ CHANGELOG
   * `FOS\RestBundle\View\View`
   * `FOS\RestBundle\View\ViewHandler`
 
+2.8.1
+-----
+
+* `FlattenExceptionNormalizer` does no longer implement the `CacheableSupportsMethodInterface` to
+  ensure compatibility with older versions of the Symfony Serializer component
+
 2.8.0
 -----
 
