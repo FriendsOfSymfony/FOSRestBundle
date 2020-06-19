@@ -1,24 +1,35 @@
-Step 2: The view layer
+Step 2: The View Layer
 ======================
 
-Introduction
-------------
+Why View Layer
+--------------
 
-The view layer makes it possible to write ``format`` (html, json, xml, etc)
-agnostic controllers, by placing a layer between the Controller and the
-generation of the final output via a serializer.
+The View Layer resides between the Controller and the Serializer:
 
-The bundle works both with the `Symfony Serializer Component`_ and the more
-sophisticated `serializer`_ created by Johannes Schmitt and integrated via the
-`JMSSerializerBundle`_.
+``Controller --> View Layer --> Serializer --> [final output]``
 
-In your controller action you will then need to create a ``View`` instance that
-is then passed to the ``fos_rest.view_handler`` service for processing. The
-``View`` is somewhat modeled after the ``Response`` class, but as just stated
-it simply works as a container for all the data/configuration for the
-``ViewHandler`` class for this particular action.  So the ``View`` instance
-must always be processed by a ``ViewHandler`` (see the below section on the
-"view response listener" for how to get this processing applied automatically).
+This structure allows a developer to create a ``format`` (html, json, xml, etc) 
+agnostic Controller:
+
+1. The Controller prepares required data / configuration and injects it into the View object
+2. The Controller returns the View object
+3. A special View Listener 'hears' the View being returned and passes the View
+to the View Handler for the further processing (in case of FOSRestBundle,
+this is the ``fos_rest.view_handler`` service)
+
+The Controller in this sctructure is not obliged to return data in any specific format:
+the needed format is set up later, during the processing of the View.
+
+The data injected from the Controller into the View can be of any type, though 
+the best practice is to use an object graph.
+
+View Layer in FOSRestBundle
+---------------------------
+
+With the FOSRestBundle, for the serialization purposes, you can use one of these:
+
+* standard `Symfony Serializer Component`_
+* more sophisticated Johannes Schmitt's `serializer`_, integrated via the `JMSSerializerBundle`_.
 
 FOSRestBundle ships with a controller extending the default Symfony controller,
 which adds several convenience methods:
@@ -54,25 +65,25 @@ which adds several convenience methods:
 .. versionadded:: 2.0
     The ``ControllerTrait`` trait was added in 2.0.
 
-There is also a trait called ``ControllerTrait`` for anyone that prefers to not
-inject the container into their controller. This requires using setter injection
-to set a ``ViewHandlerInterface`` instance via the ``setViewHandler`` method.
+If you prefer to avoid injecting a container into the controller, you should
+do the following:
 
-To simplify this even more: If you rely on the ``ViewResponseListener`` in
-combination with SensioFrameworkExtraBundle you can even omit the calls to
-``$this->handleView($view)`` and directly return the view objects. See chapter
-3 on listeners for more details on the View Response Listener.
+* use the ``ControllerTrait`` for you controller
+* inject a ``ViewHandlerInterface`` instance via setter injection ``setViewHandler``
 
-As the purpose is to create a format-agnostic controller, data assigned to the
-``View`` instance should ideally be an object graph, though any data type is
-acceptable.
+If you rely on the ``ViewResponseListener`` in combination with SensioFrameworkExtraBundle,
+you can just return the View instance and omit the call ``$this->handleView($view)``.
+Please refer to `Chapter 3`_ for more details on the View Response Listener.
 
-There are also two specialized methods for redirect in the ``View`` classes.
-``View::createRedirect`` redirects to an URL called ``RedirectView`` and
-``View::createRouteRedirect`` redirects to a route.
+View methods
+------------
 
-There are several more methods on the ``View`` class, here is a list of all
-the important ones for configuring the view:
+Redirection
+
+* ``View::createRedirect`` - Redirect to an URL called ``RedirectView``.
+* ``View::createRouteRedirect`` - Redirect to a route.
+
+Configuration
 
 * ``setData($data)`` - Set the object graph or list of objects to serialize.
 * ``setHeader($name, $value)`` - Set a header to put on the HTTP response.
@@ -86,6 +97,8 @@ the important ones for configuring the view:
 * ``setRouteParameters($parameters)`` - Set the parameters for the route.
 * ``setResponse(Response $response)`` - The response instance that is populated
   by the ``ViewHandler``.
+  
+There are also several more methods available, please refer to the code.
 
 Forms and Views
 ---------------
@@ -126,15 +139,11 @@ normalizers.
 
 You can look at `FOSRestBundle normalizers`_ for examples.
 
-.. _`FOSRestBundle normalizers`: https://github.com/FriendsOfSymfony/FOSRestBundle/tree/master/Serializer/Normalizer
-
 Data Transformation
 -------------------
 
-As we have seen in the section before, the FOSRestBundle relies on the form
-component (https://symfony.com/doc/current/components/form/introduction.html) to
-handle submission of view data. In fact, the form builder
-(https://symfony.com/doc/current/book/forms.html#building-the-form) basically
+As we have seen in the section before, the FOSRestBundle relies on the `Form Component`_ to
+handle submission of view data. In fact, the `Form Builder`_ basically
 defines the structure of the expected view data which shall be used for further
 processing - which most of the time relates to a PUT or POST request. This
 brings a lot of flexibility and allows to exactly define the structure of data
@@ -236,8 +245,7 @@ Note there are several public methods on the ``ViewHandler`` which can be helpfu
 * ``createResponse()``
 * ``createRedirectResponse()``
 
-There is an example for how to register a custom handler (for an RSS feed) in ``Resources\doc\examples``:
-https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/examples/RssHandler.php
+There is `an example of how to register a custom handler`_ (for an RSS feed) in ``Resources\doc\examples``.
 
 JSONP custom handler
 ~~~~~~~~~~~~~~~~~~~~
@@ -296,6 +304,11 @@ that REST API users authenticate themselves and get a special role assigned.
 
 That was it!
 
+.. _`an example of how to register a custom handler`: https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/examples/RssHandler.php
+.. _`Chapter 3`: https://symfony.com/doc/master/bundles/FOSRestBundle/3-listener-support.html
+.. _`FOSRestBundle normalizers`: https://github.com/FriendsOfSymfony/FOSRestBundle/tree/master/Serializer/Normalizer
+.. _`Form Component`: https://symfony.com/doc/current/components/form/introduction.html
+.. _`Form Builder`: https://symfony.com/doc/current/book/forms.html#building-the-form
 .. _`Symfony Serializer Component`: http://symfony.com/doc/current/components/serializer.html
 .. _`serializer`: https://github.com/schmittjoh/serializer
 .. _`JMSSerializerBundle`: https://github.com/schmittjoh/JMSSerializerBundle
