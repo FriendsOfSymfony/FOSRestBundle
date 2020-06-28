@@ -89,21 +89,6 @@ you should return a ``$view`` object with the data set by ``setTemplateData``.
         return $view;
     }
 
-If ``@View()`` is used, the template variable name used to render templating
-formats can be configured (default  ``'data'``):
-
-.. code-block:: php
-
-    <?php
-
-    /**
-     * @View(templateVar="users")
-     */
-    public function getUsersAction()
-    {
-        // ...
-    }
-
 The status code of the view can also be configured:
 
 .. code-block:: php
