@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+3.0.1
+-----
+
+* fixed handling requests without a content type inside the `RequestBodyParamConverter`
+* `FlattenExceptionNormalizer` does no longer implement the `CacheableSupportsMethodInterface` to
+  ensure compatibility with older versions of the Symfony Serializer component
+
 3.0.0
 -----
 
