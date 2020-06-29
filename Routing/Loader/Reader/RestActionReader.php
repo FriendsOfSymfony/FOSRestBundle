@@ -467,9 +467,9 @@ class RestActionReader
                 continue;
             }
 
-            $argumentClass = $argument->getClass();
-            if ($argumentClass) {
-                $className = $argumentClass->getName();
+            $argumentClass = $argument->getType();
+            if ($argumentClass && !$argumentClass->isBuiltIn()) {
+                $className = method_exists($argumentClass, 'getName') ? $argumentClass->getName() : (string) $argumentClass;
                 foreach ($this->getIgnoredClasses() as $class) {
                     if ($className === $class || is_subclass_of($className, $class)) {
                         continue 2;

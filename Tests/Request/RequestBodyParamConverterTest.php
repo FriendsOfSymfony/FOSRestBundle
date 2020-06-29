@@ -44,7 +44,7 @@ class RequestBodyParamConverterTest extends TestCase
             ],
             'configuration'
         );
-        if (ParamConverter::class != $parameter->getClass()->getName()) {
+        if (ParamConverter::class != $parameter->getType()->getName()) {
             $this->markTestSkipped(
                 'skipping RequestBodyParamConverterTest due to an incompatible version of the SensioFrameworkExtraBundle'
             );
