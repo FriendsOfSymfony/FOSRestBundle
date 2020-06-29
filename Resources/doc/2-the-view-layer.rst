@@ -204,8 +204,8 @@ Configuration
 -------------
 
 The ``formats`` setting determines which formats are supported by the serializer.
-In other words any format listed in ``formats`` will use the serializer for rendering.
-A value of ``false`` means that the given format is disabled.
+Any format listed in ``formats`` will use the serializer for rendering. A value
+of ``false`` means that the given format is disabled.
 
 When using ``RouteRedirectView::create()`` the default behavior of forcing a
 redirect to the route when HTML is enabled, but this needs to be enabled for other
@@ -214,30 +214,6 @@ formats as needed.
 Finally the HTTP response status code for failed validation defaults to
 ``400``. Note when changing the default you can use name constants of
 ``Symfony\Component\HttpFoundation\Response`` class or an integer status code.
-
-Custom handler
---------------
-
-While many things should be possible via the serializer, in some cases
-it might not be enough. For example you might need some custom logic to be
-executed in the ``ViewHandler``. For these cases one might want to register a
-custom handler for a specific format. The custom handler can either be
-registered by defining a custom service, via a compiler pass, or it can be
-registered from inside the controller action.
-
-The callable will receive 3 parameters:
-
-* the instance of the ``ViewHandler``
-* the instance of the ``View``
-* the instance of the ``Request``
-
-Note there are several public methods on the ``ViewHandler`` which can be helpful:
-
-* ``createResponse()``
-* ``createRedirectResponse()``
-
-There is an example for how to register a custom handler (for an RSS feed) in ``Resources\doc\examples``:
-https://github.com/FriendsOfSymfony/FOSRestBundle/blob/master/Resources/doc/examples/RssHandler.php
 
 JSONP custom handler
 ~~~~~~~~~~~~~~~~~~~~
