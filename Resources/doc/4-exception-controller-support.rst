@@ -1,35 +1,6 @@
 Step 4: ExceptionController support
 ===================================
 
-When implementing an API it is also necessary to handle exceptions in a RESTful
-way, while ensuring that no security sensitive information leaks out. This
-bundle provides an extra controller for that job. Using this custom
-ExceptionController it is possible to leverage the View layer when building
-responses for uncaught Exceptions.
-
-The ExceptionController can be enabled via the FOSRestBundle
-configuration:
-
-.. code-block:: yaml
-
-    fos_rest:
-        exception:
-            enabled: true
-            exception_controller: 'Acme\DemoBundle\Controller\ExceptionController::showAction'
-
-.. note::
-
-    The FOSRestBundle ExceptionController is executed before the one of the TwigBundle.
-
-.. note::
-
-    FOSRestBundle defines two services for exception rendering, by default it
-    configures ``fos_rest.exception.controller`` which only supports rendering
-    via a serializer. In case no explicit controller is configured by the user
-    and TwigBundle is detected it will automatically configure
-    ``fos_rest.exception.twig_controller`` which additionally also supports
-    rendering via Twig.
-
 To map Exception classes to HTTP response status codes an *exception map* may
 be configured, where the keys match a fully qualified class name and the values
 are either an integer HTTP response status code or a string matching a class

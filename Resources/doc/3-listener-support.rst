@@ -160,39 +160,6 @@ You need to enable this listener as follows, as it is disabled by default:
     fos_rest:
         allowed_methods_listener: true
 
-Security Exception Listener
----------------------------
-
-By default it is the responsibility of firewall access points to deal with
-AccessDeniedExceptions. For example the ``form`` entry point will redirect to
-the login page. However, for a RESTful application proper response HTTP status
-codes should be provided. This listener is triggered before the normal exception
-listener and firewall entry points and forces returning either a 403 or 401
-status code for any of the formats configured.
-
-It will return 401 for
-``Symfony\Component\Security\Core\Exception\AuthenticationException`` or 403 for
-``Symfony\Component\Security\Core\Exception\AccessDeniedException``.
-
-As a 401-response requires an authentication-challenge, you can set one using
-the configuration ``unauthorized_challenge`` or leave it blank if you don't want
-to send a challenge in the ``WWW-Authenticate`` header to the client.
-
-If you want to use an advanced value in this header, it's worth looking at this:
-`Test Cases for HTTP Test Cases for the HTTP WWW-Authenticate header field`_.
-
-You need to enable this listener as follows, as it is disabled by default:
-
-.. code-block:: yaml
-
-    fos_rest:
-        unauthorized_challenge: "Basic realm=\"Restricted Area\""
-        access_denied_listener:
-            # all requests using the 'json' format will return a 403 on an access denied violation
-            json: true
-
-Note: The access_denied_listener doesn't return a response itself and must be coupled with an exception listener returning a response (see the :doc:`FOSRestBundle exception controller <4-exception-controller-support>` or the `twig exception controller`_).
-
 Zone Listener
 -------------
 
