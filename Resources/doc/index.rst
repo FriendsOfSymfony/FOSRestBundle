@@ -16,7 +16,6 @@ Getting Started With FOSRestBundle
     param_fetcher_listener
     4-exception-controller-support
     annotations-reference
-    configuration-reference
 
 Installation
 ------------
@@ -42,7 +41,7 @@ FOSRestBundle provides several tools to assist in building REST applications:
 Config reference
 ----------------
 
-- :doc:`Configuration reference <configuration-reference>` for a reference on
+- Run ``bin/console config:dump-reference fos_rest`` for a reference of
   the available configuration options
 - :doc:`Annotations reference <annotations-reference>` for a reference on
   the available configurations through annotations

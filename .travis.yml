@@ -30,6 +30,8 @@ matrix:
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
+    - php: nightly
+      env: COMPOSER_FLAGS="--ignore-platform-reqs" SYMFONY_DEPRECATIONS_HELPER="max[self]=0"
   allow_failures:
     - php: 7.4
       env: DEPENDENCIES='dev'
