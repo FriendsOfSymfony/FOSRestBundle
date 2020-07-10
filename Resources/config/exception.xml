@@ -47,6 +47,7 @@
         </service>
 
         <service id="fos_rest.serializer.flatten_exception_handler" class="FOS\RestBundle\Serializer\Normalizer\FlattenExceptionHandler" public="false">
+            <argument type="service" id="fos_rest.exception.codes_map" /> <!-- exception messages -->
             <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
             <argument /><!-- show exception message -->
             <argument /><!-- render according to RFC 7807 -->
@@ -54,6 +55,7 @@
         </service>
 
         <service id="fos_rest.serializer.flatten_exception_normalizer" class="FOS\RestBundle\Serializer\Normalizer\FlattenExceptionNormalizer" public="false">
+            <argument type="service" id="fos_rest.exception.codes_map" /> <!-- exception messages -->
             <argument type="service" id="fos_rest.exception.messages_map" /> <!-- exception messages -->
             <argument /><!-- show exception message -->
             <argument /><!-- render according to RFC 7807 -->
