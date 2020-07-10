@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+3.0.2
+-----
+
+* fixed embedding status codes in the response body when a mapping of exception classes to status
+  codes is configured
+
 3.0.1
 -----
 
