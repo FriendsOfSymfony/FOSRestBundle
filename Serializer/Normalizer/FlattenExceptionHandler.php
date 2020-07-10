@@ -18,12 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FlattenExceptionHandler implements SubscribingHandlerInterface
 {
+    private $statusCodeMap;
     private $messagesMap;
     private $debug;
     private $rfc7807;
 
-    public function __construct(ExceptionValueMap $messagesMap, bool $debug, bool $rfc7807)
+    public function __construct(ExceptionValueMap $statusCodeMap, ExceptionValueMap $messagesMap, bool $debug, bool $rfc7807)
     {
+        $this->statusCodeMap = $statusCodeMap;
         $this->messagesMap = $messagesMap;
         $this->debug = $debug;
         $this->rfc7807 = $rfc7807;
@@ -94,7 +96,7 @@ class FlattenExceptionHandler implements SubscribingHandlerInterface
     {
         if ($context->hasAttribute('status_code')) {
             $statusCode = $context->getAttribute('status_code');
-        } else {
+        } elseif (false === $statusCode = $this->statusCodeMap->resolveFromClassName($exception->getClass())) {
             $statusCode = $exception->getStatusCode();
         }
 
