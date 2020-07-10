@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+3.0.2
+-----
+
+* fixed embedding status codes in the response body when a mapping of exception classes to status
+  codes is configured
+
 3.0.1
 -----
 
@@ -127,6 +133,12 @@ CHANGELOG
   * `FOS\RestBundle\View\JsonpHandler`
   * `FOS\RestBundle\View\View`
   * `FOS\RestBundle\View\ViewHandler`
+
+2.8.2
+-----
+
+* fixed embedding status codes in the response body when a mapping of exception classes to status
+  codes is configured
 
 2.8.1
 -----

@@ -33,6 +33,11 @@ class SerializerErrorController extends AbstractController
         throw new \OutOfBoundsException('Unknown exception message.');
     }
 
+    public function invalidArgumentExceptionAction()
+    {
+        throw new \InvalidArgumentException('Invalid argument given.');
+    }
+
     /**
      * @View
      */

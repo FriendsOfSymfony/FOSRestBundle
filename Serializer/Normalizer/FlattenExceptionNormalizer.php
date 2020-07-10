@@ -23,12 +23,14 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 final class FlattenExceptionNormalizer implements NormalizerInterface
 {
+    private $statusCodeMap;
     private $messagesMap;
     private $debug;
     private $rfc7807;
 
-    public function __construct(ExceptionValueMap $messagesMap, bool $debug, bool $rfc7807)
+    public function __construct(ExceptionValueMap $statusCodeMap, ExceptionValueMap $messagesMap, bool $debug, bool $rfc7807)
     {
+        $this->statusCodeMap = $statusCodeMap;
         $this->messagesMap = $messagesMap;
         $this->debug = $debug;
         $this->rfc7807 = $rfc7807;
@@ -38,7 +40,7 @@ final class FlattenExceptionNormalizer implements NormalizerInterface
     {
         if (isset($context['status_code'])) {
             $statusCode = $context['status_code'];
-        } else {
+        } elseif (null === $statusCode = $this->statusCodeMap->resolveFromClassName($exception->getClass())) {
             $statusCode = $exception->getStatusCode();
         }
 

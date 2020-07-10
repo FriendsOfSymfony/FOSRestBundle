@@ -4,5 +4,7 @@ imports:
 
 fos_rest:
     exception:
+        codes:
+            'InvalidArgumentException': 400
         flatten_exception_format: 'rfc7807'
         serializer_error_renderer: true
