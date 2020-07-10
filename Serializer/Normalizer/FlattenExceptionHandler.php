@@ -96,7 +96,7 @@ class FlattenExceptionHandler implements SubscribingHandlerInterface
     {
         if ($context->hasAttribute('status_code')) {
             $statusCode = $context->getAttribute('status_code');
-        } elseif (false === $statusCode = $this->statusCodeMap->resolveFromClassName($exception->getClass())) {
+        } elseif (null === $statusCode = $this->statusCodeMap->resolveFromClassName($exception->getClass())) {
             $statusCode = $exception->getStatusCode();
         }
 

@@ -40,7 +40,7 @@ final class FlattenExceptionNormalizer implements NormalizerInterface
     {
         if (isset($context['status_code'])) {
             $statusCode = $context['status_code'];
-        } elseif (false === $statusCode = $this->statusCodeMap->resolveFromClassName($exception->getClass())) {
+        } elseif (null === $statusCode = $this->statusCodeMap->resolveFromClassName($exception->getClass())) {
             $statusCode = $exception->getStatusCode();
         }
 
