@@ -105,6 +105,61 @@ class SerializerErrorTest extends WebTestCase
     }
 
     /**
+     * @dataProvider serializeExceptionCodeMappedToResponseStatusCodeJsonProvider
+     */
+    public function testSerializeExceptionCodeMappedToResponseStatusCodeJsonUsingErrorRenderer(string $testCase, array $expectedJson)
+    {
+        if (!class_exists(SerializerErrorRenderer::class)) {
+            $this->markTestSkipped();
+        }
+
+        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
+
+        $client = $this->createClient(array('test_case' => $testCase, 'debug' => false));
+        $client->request('GET', '/serializer-error/invalid-argument-exception.json');
+
+        $this->assertEquals(json_encode($expectedJson), $client->getResponse()->getContent());
+    }
+
+    public function serializeExceptionCodeMappedToResponseStatusCodeJsonProvider(): array
+    {
+        return [
+            [
+                'FlattenExceptionHandlerLegacyFormat',
+                [
+                    'code' => 400,
+                    'message' => 'Invalid argument given.',
+                ],
+            ],
+            [
+                'FlattenExceptionHandlerRfc7807Format',
+                [
+                    'type' => 'https://tools.ietf.org/html/rfc2616#section-10',
+                    'title' => 'An error occurred',
+                    'status' => 400,
+                    'detail' => 'Invalid argument given.',
+                ],
+            ],
+            [
+                'FlattenExceptionNormalizerLegacyFormat',
+                [
+                    'code' => 400,
+                    'message' => 'Invalid argument given.',
+                ],
+            ],
+            [
+                'FlattenExceptionNormalizerRfc7807Format',
+                [
+                    'type' => 'https://tools.ietf.org/html/rfc2616#section-10',
+                    'title' => 'An error occurred',
+                    'status' => 400,
+                    'detail' => 'Invalid argument given.',
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider serializeExceptionXmlUsingErrorRendererProvider
      */
     public function testSerializeExceptionXmlUsingErrorRenderer(string $testCase, string $expectedContent, string $expectedContentType)

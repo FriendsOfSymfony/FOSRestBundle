@@ -8,4 +8,6 @@ framework:
 
 fos_rest:
     exception:
+        codes:
+            'InvalidArgumentException': 400
         flatten_exception_format: 'legacy'

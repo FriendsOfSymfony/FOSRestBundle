@@ -308,13 +308,13 @@ class FOSRestExtension extends Extension
                 ->replaceArgument(0, $config['exception']['messages']);
 
             $container->getDefinition('fos_rest.serializer.flatten_exception_handler')
-                ->replaceArgument(1, $config['exception']['debug']);
+                ->replaceArgument(2, $config['exception']['debug']);
             $container->getDefinition('fos_rest.serializer.flatten_exception_handler')
-                ->replaceArgument(2, 'rfc7807' === $config['exception']['flatten_exception_format']);
+                ->replaceArgument(3, 'rfc7807' === $config['exception']['flatten_exception_format']);
             $container->getDefinition('fos_rest.serializer.flatten_exception_normalizer')
-                ->replaceArgument(1, $config['exception']['debug']);
+                ->replaceArgument(2, $config['exception']['debug']);
             $container->getDefinition('fos_rest.serializer.flatten_exception_normalizer')
-                ->replaceArgument(2, 'rfc7807' === $config['exception']['flatten_exception_format']);
+                ->replaceArgument(3, 'rfc7807' === $config['exception']['flatten_exception_format']);
 
             if ($config['exception']['serializer_error_renderer']) {
                 $format = new Definition();
