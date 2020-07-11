@@ -4,4 +4,4 @@ imports:
 
 fos_rest:
     serializer:
-        disable_custom_jms_registry: true
+        enable_jms_registry: false
