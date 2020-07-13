@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\View;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
@@ -18,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,24 +99,16 @@ class ViewHandlerTest extends TestCase
         $data,
         $isSubmitted,
         $isValid,
-        $isSubmittedCalled,
-        $isValidCalled,
         $noContentCode,
         $actualStatusCode = null
     ) {
-        $reflectionMethod = new \ReflectionMethod(ViewHandler::class, 'getStatusCode');
-        $reflectionMethod->setAccessible(true);
-
-        $form = $this->getMockBuilder(Form::class)
-            ->disableOriginalConstructor()
-            ->setMethods(array('isSubmitted', 'isValid'))
-            ->getMock();
+        $form = $this->createMock(FormInterface::class);
         $form
-            ->expects($this->exactly($isSubmittedCalled))
+            ->expects($this->any())
             ->method('isSubmitted')
             ->will($this->returnValue($isSubmitted));
         $form
-            ->expects($this->exactly($isValidCalled))
+            ->expects($this->any())
             ->method('isValid')
             ->will($this->returnValue($isValid));
 
@@ -123,20 +117,36 @@ class ViewHandlerTest extends TestCase
         }
         $view = new View($data ?: null, $actualStatusCode ?: null);
 
+        if ($data) {
+            $expectedContext = new Context();
+            $expectedContext->setAttribute('template_data', []);
+
+            if (null !== $actualStatusCode || $form->isSubmitted() && !$form->isValid()) {
+                $expectedContext->setAttribute('status_code', $expected);
+            }
+
+            $this->serializer
+                ->expects($this->once())
+                ->method('serialize')
+                ->with($form, 'json', $expectedContext)
+                ->willReturn(json_encode(['code' => $expected, 'message' => $isValid ? 'OK' : 'Validation failed']));
+        }
+
         $viewHandler = $this->createViewHandler([], $expected, $noContentCode);
-        $this->assertEquals($expected, $reflectionMethod->invoke($viewHandler, $view, $view->getData()));
+        $this->assertEquals($expected, $viewHandler->createResponse($view, new Request(), 'json')->getStatusCode());
     }
 
     public static function getStatusCodeDataProvider()
     {
         return [
-            'no data' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_OK],
-            'no data with 204' => [Response::HTTP_NO_CONTENT, false, false, false, 0, 0, Response::HTTP_NO_CONTENT],
-            'no data, but custom response code' => [Response::HTTP_OK, false, false, false, 0, 0, Response::HTTP_NO_CONTENT, Response::HTTP_OK],
-            'form key form not bound' => [Response::HTTP_OK, true, false, true, 1, 0, Response::HTTP_OK],
-            'form key form is bound and invalid' => [Response::HTTP_FORBIDDEN, true, true, false, 1, 1, Response::HTTP_OK],
-            'form key form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
-            'form key null form bound and valid' => [Response::HTTP_OK, true, true, true, 1, 1, Response::HTTP_OK],
+            'no data' => [Response::HTTP_OK, false, false, false, Response::HTTP_OK],
+            'no data with 204' => [Response::HTTP_NO_CONTENT, false, false, false, Response::HTTP_NO_CONTENT],
+            'no data, but custom response code' => [Response::HTTP_OK, false, false, false, Response::HTTP_NO_CONTENT, Response::HTTP_OK],
+            'form key form not bound' => [Response::HTTP_OK, true, false, true, Response::HTTP_OK],
+            'form key form is bound and invalid' => [Response::HTTP_FORBIDDEN, true, true, false, Response::HTTP_OK],
+            'form key form is bound and invalid and status code in view is set' => [Response::HTTP_FORBIDDEN, true, true, false, Response::HTTP_OK, Response::HTTP_CREATED],
+            'form key form bound and valid' => [Response::HTTP_OK, true, true, true, Response::HTTP_OK],
+            'form key null form bound and valid' => [Response::HTTP_OK, true, true, true, Response::HTTP_OK],
         ];
     }
 
