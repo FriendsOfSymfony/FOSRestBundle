@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Tests\Functional;
 
 class ViewResponseListenerTest extends WebTestCase
 {
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir('ViewResponseListener');
         parent::tearDownAfterClass();
