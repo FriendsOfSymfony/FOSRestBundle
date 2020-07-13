@@ -53,18 +53,13 @@ class JMSHandlerRegistry implements HandlerRegistryInterface
      */
     public function getHandler($direction, $typeName, $format)
     {
-        $first = true;
         do {
             $handler = $this->registry->getHandler($direction, $typeName, $format);
             if (null !== $handler) {
-                if (!$first) {
-                    @trigger_error(sprintf('Relying on the custom registry %s to inherit the JMS handler of type `%s` is deprecated since FOSRestBundle 3.1. It will be removed in version 4.0. Use the option `fos_rest.serializer.disable_custom_jms_registry` to disable it.', __CLASS__, $typeName), E_USER_DEPRECATED);
-                }
-
                 return $handler;
             }
 
-            $first = false;
+            @trigger_error(sprintf('Relying on the custom registry %s to inherit the JMS handler of type `%s` is deprecated since FOSRestBundle 3.1. It will be removed in version 4.0. Use the option `fos_rest.serializer.disable_custom_jms_registry` to disable it.', __CLASS__, $typeName), E_USER_DEPRECATED);
         } while ($typeName = get_parent_class($typeName));
     }
 }
