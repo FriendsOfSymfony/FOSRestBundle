@@ -104,7 +104,6 @@ class ViewHandlerTest extends TestCase
 
         if ($data) {
             $expectedContext = new Context();
-            $expectedContext->setAttribute('template_data', []);
 
             if (null !== $actualStatusCode || $form->isSubmitted() && !$form->isValid()) {
                 $expectedContext->setAttribute('status_code', $expected);
