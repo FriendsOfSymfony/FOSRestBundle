@@ -244,7 +244,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
             $context->setSerializeNull($this->serializeNullStrategy);
         }
 
-        if (null !== $view->getStatusCode()) {
+        if (null !== $view->getStatusCode() && !$context->hasAttribute('status_code')) {
             $context->setAttribute('status_code', $view->getStatusCode());
         }
 
