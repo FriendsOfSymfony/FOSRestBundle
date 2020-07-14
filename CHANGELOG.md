@@ -4,6 +4,7 @@ CHANGELOG
 3.0.2
 -----
 
+* fixed the `ViewHandler` to not override an already set `status_code` in the serialization context
 * fixed embedding status codes in the response body when a mapping of exception classes to status
   codes is configured
 
