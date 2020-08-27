@@ -88,8 +88,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
         int $emptyContentCode = Response::HTTP_NO_CONTENT,
         bool $serializeNull = false,
         array $options = []
-    ): self
-    {
+    ): self {
         return new self($urlGenerator, $serializer, $requestStack, $formats, $failedValidationCode, $emptyContentCode, $serializeNull, $options);
     }
 

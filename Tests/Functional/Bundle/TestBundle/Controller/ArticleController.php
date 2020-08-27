@@ -22,8 +22,6 @@ class ArticleController extends AbstractFOSRestController
     /**
      * Create a new resource.
      *
-     * @param Request $request
-     *
      * @return View view instance
      *
      * @Post("/articles.{_format}", name="post_articles")
@@ -31,15 +29,13 @@ class ArticleController extends AbstractFOSRestController
      */
     public function cpostAction(Request $request)
     {
-        $view = $this->routeRedirectView('test_redirect_endpoint', array('name' => $request->request->get('name')));
+        $view = $this->routeRedirectView('test_redirect_endpoint', ['name' => $request->request->get('name')]);
 
         return $view;
     }
 
     /**
      * Get list.
-     *
-     * @param Request $request
      *
      * @return View view instance
      *

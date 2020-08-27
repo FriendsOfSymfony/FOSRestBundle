@@ -41,7 +41,7 @@ class AbstractParamTest extends TestCase
         $this->assertNull($this->param->description);
         $this->assertFalse($this->param->strict);
         $this->assertFalse($this->param->nullable);
-        $this->assertEquals(array(), $this->param->incompatibles);
+        $this->assertEquals([], $this->param->incompatibles);
     }
 
     public function testNameGetter()
@@ -67,8 +67,8 @@ class AbstractParamTest extends TestCase
 
     public function testIncompatiblesGetter()
     {
-        $this->param->incompatibles = array('c', 'd');
-        $this->assertEquals(array('c', 'd'), $this->param->getIncompatibilities());
+        $this->param->incompatibles = ['c', 'd'];
+        $this->assertEquals(['c', 'd'], $this->param->getIncompatibilities());
     }
 
     public function testStrictGetter()
@@ -79,9 +79,9 @@ class AbstractParamTest extends TestCase
 
     public function testNotNullConstraint()
     {
-        $this->assertEquals(array(new NotNull()), $this->param->getConstraints(''));
+        $this->assertEquals([new NotNull()], $this->param->getConstraints(''));
 
         $this->param->nullable = true;
-        $this->assertEquals(array(), $this->param->getConstraints());
+        $this->assertEquals([], $this->param->getConstraints());
     }
 }

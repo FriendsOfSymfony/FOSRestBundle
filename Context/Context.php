@@ -20,7 +20,7 @@ use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
  */
 final class Context
 {
-    private $attributes = array();
+    private $attributes = [];
     private $version;
     private $groups;
     private $isMaxDepthEnabled;
@@ -29,7 +29,7 @@ final class Context
     /**
      * @var ExclusionStrategyInterface[]
      */
-    private $exclusionStrategies = array();
+    private $exclusionStrategies = [];
 
     public function setAttribute(string $key, $value): self
     {

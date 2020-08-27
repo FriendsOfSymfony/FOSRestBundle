@@ -21,13 +21,13 @@ class ViewResponseListenerTest extends WebTestCase
 
     public function testRedirect()
     {
-        $client = $this->createClient(array('test_case' => 'ViewResponseListener'));
+        $client = $this->createClient(['test_case' => 'ViewResponseListener']);
         $client->request(
             'POST',
             '/articles.json',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
             '{"name": "Post 1", "body": "This is a blog post"}'
         );
 

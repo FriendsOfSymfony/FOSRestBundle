@@ -51,7 +51,7 @@ class ContextTest extends TestCase
 
     public function testGroupAddition()
     {
-        $this->context->addGroups(array('quz', 'foo'));
+        $this->context->addGroups(['quz', 'foo']);
         $this->context->addGroup('foo');
         $this->context->addGroup('bar');
 
@@ -60,12 +60,12 @@ class ContextTest extends TestCase
 
     public function testSetGroups()
     {
-        $this->context->setGroups(array('quz', 'foo'));
+        $this->context->setGroups(['quz', 'foo']);
 
-        $this->assertEquals(array('quz', 'foo'), $this->context->getGroups());
+        $this->assertEquals(['quz', 'foo'], $this->context->getGroups());
 
-        $this->context->setGroups(array('foo'));
-        $this->assertEquals(array('foo'), $this->context->getGroups());
+        $this->context->setGroups(['foo']);
+        $this->assertEquals(['foo'], $this->context->getGroups());
     }
 
     public function testAlreadyExistentGroupAddition()
@@ -74,7 +74,7 @@ class ContextTest extends TestCase
         $this->context->addGroup('foo');
         $this->context->addGroup('bar');
 
-        $this->assertEquals(array('foo', 'bar'), $this->context->getGroups());
+        $this->assertEquals(['foo', 'bar'], $this->context->getGroups());
     }
 
     public function testVersion()

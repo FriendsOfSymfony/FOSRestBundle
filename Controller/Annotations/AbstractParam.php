@@ -41,7 +41,7 @@ abstract class AbstractParam implements ParamInterface
     public $nullable = false;
 
     /** @var array */
-    public $incompatibles = array();
+    public $incompatibles = [];
 
     /** {@inheritdoc} */
     public function getName()
@@ -70,7 +70,7 @@ abstract class AbstractParam implements ParamInterface
     /** {@inheritdoc} */
     public function getConstraints()
     {
-        $constraints = array();
+        $constraints = [];
         if (!$this->nullable) {
             $constraints[] = new Constraints\NotNull();
         }

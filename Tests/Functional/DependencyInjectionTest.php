@@ -61,10 +61,10 @@ class TestKernel extends Kernel
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
-                'router' => array(
+                'router' => [
                     'resource' => '%kernel.project_dir%/config/routing.yml',
                     'utf8' => true,
-                ),
+                ],
             ]);
             $container->loadFromExtension('fos_rest', []);
             $container->setAlias('test.jms_serializer.handler_registry', new Alias('jms_serializer.handler_registry', true));
