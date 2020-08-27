@@ -48,6 +48,7 @@ class ConfigurationTest extends TestCase
         $expectedConfig = [
             \RuntimeException::class => 500,
             \TypeError::class => 500,
+            \Throwable::class => 500,
         ];
 
         $config = $this->processor->processConfiguration(
