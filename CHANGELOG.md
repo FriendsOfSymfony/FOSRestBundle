@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.8.3
+-----
+
+* fixed being able to configure exception codes and messages based on interfaces (e.g.
+  `Throwable`)
+
 2.8.2
 -----
 
