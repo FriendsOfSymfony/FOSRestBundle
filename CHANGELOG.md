@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+3.0.3
+-----
+
+* fixed being able to configure exception codes and messages based on interfaces (e.g.
+  `Throwable`)
+
 3.0.2
 -----
 
@@ -134,6 +140,12 @@ CHANGELOG
   * `FOS\RestBundle\View\JsonpHandler`
   * `FOS\RestBundle\View\View`
   * `FOS\RestBundle\View\ViewHandler`
+
+2.8.3
+-----
+
+* fixed being able to configure exception codes and messages based on interfaces (e.g.
+  `Throwable`)
 
 2.8.2
 -----
