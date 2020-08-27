@@ -94,11 +94,11 @@ class ParamFetcherTest extends TestCase
         $param1 = $this->createParam('foo');
         $param2 = $this->createParam('foobar');
         $param3 = $this->createParam('bar');
-        $this->setParams(array($param1)); // Controller params
+        $this->setParams([$param1]); // Controller params
         $this->paramFetcher->addParam($param2);
         $this->paramFetcher->addParam($param3);
 
-        $this->assertEquals(array('foo' => $param1, 'foobar' => $param2, 'bar' => $param3), $this->paramFetcher->getParams());
+        $this->assertEquals(['foo' => $param1, 'foobar' => $param2, 'bar' => $param3], $this->paramFetcher->getParams());
     }
 
     /**
@@ -185,7 +185,7 @@ class ParamFetcherTest extends TestCase
             ->expects($this->once())
             ->method('validate')
             ->with('value', [new NotBlank()])
-            ->willReturn(array());
+            ->willReturn([]);
 
         $this->paramFetcher->setController($this->controller);
 
@@ -310,7 +310,7 @@ class ParamFetcherTest extends TestCase
 
         $this->paramFetcher->setController($this->controller);
 
-        $this->assertEquals(array('foo' => 'first', 'bar' => 'second'), $this->paramFetcher->all());
+        $this->assertEquals(['foo' => 'first', 'bar' => 'second'], $this->paramFetcher->all());
     }
 
     /**
@@ -387,9 +387,9 @@ class ParamFetcherTest extends TestCase
         $this->paramFetcher->get('bar');
     }
 
-    protected function setParams(array $params = array())
+    protected function setParams(array $params = [])
     {
-        $newParams = array();
+        $newParams = [];
         foreach ($params as $param) {
             $newParams[$param->getName()] = $param;
         }

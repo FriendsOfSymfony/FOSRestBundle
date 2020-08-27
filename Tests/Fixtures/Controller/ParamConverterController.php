@@ -20,8 +20,6 @@ class ParamConverterController
 {
     /**
      * @ParamConverter("something", converter="fos_rest.request_body")
-     *
-     * @param Something $something
      */
     public function postSomethingAction(Something $something)
     {

@@ -135,9 +135,9 @@ class ViewResponseListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         // Must be executed before SensioFrameworkExtraBundle's listener
-        return array(
-            KernelEvents::VIEW => array('onKernelView', 30),
-        );
+        return [
+            KernelEvents::VIEW => ['onKernelView', 30],
+        ];
     }
 
     /**
@@ -152,7 +152,7 @@ class ViewResponseListener implements EventSubscriberInterface
         if (!$template instanceof ViewAnnotation || $template->isPopulateDefaultVars(false)) {
             $r = new \ReflectionObject($controller);
 
-            $arguments = array();
+            $arguments = [];
             foreach ($r->getMethod($action)->getParameters() as $param) {
                 $arguments[] = $param->getName();
             }

@@ -219,7 +219,6 @@ class ArticleController extends AbstractController implements ClassResourceInter
     /**
      * [GET] /articles/{slug}/votes.
      *
-     * @param Request $request
      * @param $slug
      */
     public function getVotesAction(Request $request, $slug)
@@ -229,7 +228,6 @@ class ArticleController extends AbstractController implements ClassResourceInter
     /**
      * [GET] /articles/{slug}/votes/{id}.
      *
-     * @param Request $request
      * @param $slug
      * @param $id
      */
@@ -241,7 +239,6 @@ class ArticleController extends AbstractController implements ClassResourceInter
      * [GET] /articles/{slug}/foos.
      *
      * @param $slug
-     * @param Request $request
      */
     public function getFoosAction($slug, Request $request)
     {

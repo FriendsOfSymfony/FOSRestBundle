@@ -50,12 +50,12 @@ class DirectoryRouteLoaderTest extends LoaderTest
 
     public function supportsDataProvider()
     {
-        return array(
-            'existing-directory' => array(__DIR__.'/../../Fixtures/Controller', 'rest', true),
-            'non-existing-directory' => array(__DIR__.'/Fixtures/Controller', 'rest', false),
-            'class-name' => array(UsersController::class, 'rest', false),
-            'null-type' => array(__DIR__.'/../../Fixtures/Controller', null, false),
-        );
+        return [
+            'existing-directory' => [__DIR__.'/../../Fixtures/Controller', 'rest', true],
+            'non-existing-directory' => [__DIR__.'/Fixtures/Controller', 'rest', false],
+            'class-name' => [UsersController::class, 'rest', false],
+            'null-type' => [__DIR__.'/../../Fixtures/Controller', null, false],
+        ];
     }
 
     private function loadFromDirectory($resource)
@@ -64,7 +64,7 @@ class DirectoryRouteLoaderTest extends LoaderTest
         $controllerLoader = $this->getControllerLoader();
 
         // LoaderResolver sets the resolvers on the loaders passed to it
-        new LoaderResolver(array($directoryLoader, $controllerLoader));
+        new LoaderResolver([$directoryLoader, $controllerLoader]);
 
         return $directoryLoader->load($resource, 'rest');
     }

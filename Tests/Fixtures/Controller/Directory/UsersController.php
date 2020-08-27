@@ -19,23 +19,23 @@ class UsersController extends AbstractController
     {
     }
 
- // [GET] /users
+    // [GET] /users
 
     public function getUserAction($slug)
     {
     }
 
- // [GET] /users/{slug}
+    // [GET] /users/{slug}
 
     public function postUsersAction()
     {
     }
 
- // [POST] /users
+    // [POST] /users
 
     public function putUserAction($slug)
     {
     }
 
- // [PUT] /users/{slug}
+    // [PUT] /users/{slug}
 }

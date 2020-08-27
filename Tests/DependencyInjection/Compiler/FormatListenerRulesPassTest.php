@@ -24,7 +24,7 @@ class FormatListenerRulesPassTest extends TestCase
     public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
     {
         $definition = $this->getMockBuilder(Definition::class)
-            ->setMethods(array('addMethod'))
+            ->setMethods(['addMethod'])
             ->getMock();
 
         $container = $this->getMockBuilder(ContainerBuilder::class)
@@ -71,7 +71,7 @@ class FormatListenerRulesPassTest extends TestCase
     public function testNoRulesAreAddedWhenProfilerToolbarAreDisabled()
     {
         $definition = $this->getMockBuilder(Definition::class)
-            ->setMethods(array('addMethod'))
+            ->setMethods(['addMethod'])
             ->getMock();
 
         $container = $this->getMockBuilder(ContainerBuilder::class)

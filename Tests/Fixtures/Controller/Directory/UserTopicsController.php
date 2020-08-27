@@ -19,17 +19,17 @@ class UserTopicsController extends AbstractController
     {
     }
 
- // [GET] /users/{slug}/topics
+    // [GET] /users/{slug}/topics
 
     public function getTopicAction($slug, $title)
     {
     }
 
- // [GET] /users/{slug}/topics/{title}
+    // [GET] /users/{slug}/topics/{title}
 
     public function putTopicAction($slug, $title)
     {
     }
 
- // [PUT] /users/{slug}/topics/{title}
+    // [PUT] /users/{slug}/topics/{title}
 }

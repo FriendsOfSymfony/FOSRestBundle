@@ -130,7 +130,7 @@ class UsersController extends AbstractController
     {
     }
 
- // [PATCH] /users/{slug}/unlock
+    // [PATCH] /users/{slug}/unlock
 
     public function getUserCommentsAction($slug)
     {
@@ -270,7 +270,6 @@ class UsersController extends AbstractController
     /**
      * [GET] /users/{slug}/votes.
      *
-     * @param Request $request
      * @param $slug
      */
     public function getUserVotesAction(Request $request, $slug)
@@ -280,7 +279,6 @@ class UsersController extends AbstractController
     /**
      * [GET] /users/{slug}/votes/{id}.
      *
-     * @param Request $request
      * @param $slug
      * @param $id
      */
@@ -292,7 +290,6 @@ class UsersController extends AbstractController
      * [GET] /users/{slug}/foos.
      *
      * @param $slug
-     * @param Request $request
      */
     public function getUserFoosAction($slug, Request $request)
     {
@@ -303,7 +300,6 @@ class UsersController extends AbstractController
     /**
      * [GET] /users/{slug}/bars.
      *
-     * @param ParamFetcher $paramFetcher
      * @param $slug
      */
     public function getUserBarsAction(

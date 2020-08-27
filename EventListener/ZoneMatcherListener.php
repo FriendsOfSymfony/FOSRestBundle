@@ -27,7 +27,7 @@ class ZoneMatcherListener
     /**
      * @var RequestMatcherInterface[]
      */
-    private $requestMatchers = array();
+    private $requestMatchers = [];
 
     public function addRequestMatcher(RequestMatcherInterface $requestMatcher)
     {

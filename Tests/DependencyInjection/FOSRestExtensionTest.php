@@ -60,7 +60,7 @@ class FOSRestExtensionTest extends TestCase
     protected function setUp(): void
     {
         $this->container = new ContainerBuilder();
-        $this->container->setParameter('kernel.bundles', array('JMSSerializerBundle' => true));
+        $this->container->setParameter('kernel.bundles', ['JMSSerializerBundle' => true]);
         $this->container->setParameter('kernel.debug', false);
         $this->extension = new FOSRestExtension();
         $this->includeFormat = true;
@@ -823,13 +823,13 @@ class FOSRestExtensionTest extends TestCase
         $this->container->setParameter('kernel.debug', $kernelDebug);
         $extension = new FOSRestExtension();
 
-        $extension->load(array(
-            'fos_rest' => array(
+        $extension->load([
+            'fos_rest' => [
                 'exception' => $exceptionConfig,
                 'routing_loader' => false,
                 'body_listener' => false,
-            ),
-        ), $this->container);
+            ],
+        ], $this->container);
 
         $definition = $this->container->getDefinition('fos_rest.exception.controller');
         $this->assertSame($expectedValue, $definition->getArgument(2));
@@ -843,24 +843,24 @@ class FOSRestExtensionTest extends TestCase
 
     public static function getShowExceptionData()
     {
-        return array(
-            'empty config, kernel.debug is true' => array(
+        return [
+            'empty config, kernel.debug is true' => [
                 true,
                 [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                     'serialize_exceptions' => true,
                 ],
                 true,
-            ),
-            'empty config, kernel.debug is false' => array(
+            ],
+            'empty config, kernel.debug is false' => [
                 false,
                 [
                     'exception_controller' => 'fos_rest.exception.controller::showAction',
                     'serialize_exceptions' => true,
                 ],
                 false,
-            ),
-            'config debug true' => array(
+            ],
+            'config debug true' => [
                 false,
                 [
                     'debug' => true,
@@ -868,8 +868,8 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => true,
                 ],
                 true,
-            ),
-            'config debug false' => array(
+            ],
+            'config debug false' => [
                 true,
                 [
                     'debug' => false,
@@ -877,8 +877,8 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => true,
                 ],
                 false,
-            ),
-            'config debug null, kernel.debug true' => array(
+            ],
+            'config debug null, kernel.debug true' => [
                 false,
                 [
                     'debug' => null,
@@ -886,8 +886,8 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => true,
                 ],
                 true,
-            ),
-            'config debug null, kernel.debug false' => array(
+            ],
+            'config debug null, kernel.debug false' => [
                 false,
                 [
                     'debug' => null,
@@ -895,8 +895,8 @@ class FOSRestExtensionTest extends TestCase
                     'serialize_exceptions' => true,
                 ],
                 true,
-            ),
-        );
+            ],
+        ];
     }
 
     public function testResponseStatusCodeListenerEnabled()
@@ -976,7 +976,7 @@ class FOSRestExtensionTest extends TestCase
 
     public function testGetConfiguration()
     {
-        $configuration = $this->extension->getConfiguration(array(), $this->container);
+        $configuration = $this->extension->getConfiguration([], $this->container);
 
         $this->assertInstanceOf(Configuration::class, $configuration);
     }
@@ -1074,18 +1074,18 @@ class FOSRestExtensionTest extends TestCase
 
     public function testZoneMatcherListener()
     {
-        $config = array('fos_rest' => array(
+        $config = ['fos_rest' => [
             'exception' => [
                 'exception_listener' => false,
                 'serialize_exceptions' => false,
             ],
             'routing_loader' => false,
             'body_listener' => false,
-            'zone' => array(
-                'first' => array('path' => '/api/*'),
-                'second' => array('path' => '/^second', 'ips' => '127.0.0.1'),
-            ),
-        ));
+            'zone' => [
+                'first' => ['path' => '/api/*'],
+                'second' => ['path' => '/^second', 'ips' => '127.0.0.1'],
+            ],
+        ]];
 
         $this->extension->load($config, $this->container);
         $zoneMatcherListener = $this->container->getDefinition('fos_rest.zone_matcher_listener');
@@ -1111,13 +1111,13 @@ class FOSRestExtensionTest extends TestCase
 
         $this->assertInstanceOf($childDefinitionClass, $requestMatcherSecond);
         $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
-        $this->assertEquals(array('127.0.0.1'), $requestMatcherSecond->getArgument(3));
+        $this->assertEquals(['127.0.0.1'], $requestMatcherSecond->getArgument(3));
     }
 
     public function testMimeTypesArePassedArrays()
     {
-        $config = array(
-            'fos_rest' => array(
+        $config = [
+            'fos_rest' => [
                 'exception' => [
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
@@ -1125,38 +1125,38 @@ class FOSRestExtensionTest extends TestCase
                 'routing_loader' => false,
                 'body_listener' => false,
                 'view' => [
-                    'mime_types' => array(
-                        'json' => array('application/json', 'application/x-json'),
+                    'mime_types' => [
+                        'json' => ['application/json', 'application/x-json'],
                         'jpg' => 'image/jpeg',
                         'png' => 'image/png',
-                    ),
+                    ],
                 ],
-            ),
-        );
+            ],
+        ];
         $this->extension->load($config, $this->container);
 
         $this->assertSame(
-            array(
-                'json' => array('application/json', 'application/x-json'),
-                'jpg' => array('image/jpeg'),
-                'png' => array('image/png'),
-            ),
+            [
+                'json' => ['application/json', 'application/x-json'],
+                'jpg' => ['image/jpeg'],
+                'png' => ['image/png'],
+            ],
             $this->container->getDefinition('fos_rest.mime_type_listener')->getArgument(0)
         );
     }
 
     public function testSerializerErrorRendererNotRegisteredByDefault()
     {
-        $config = array(
-            'fos_rest' => array(
+        $config = [
+            'fos_rest' => [
                 'exception' => [
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-            ),
-        );
+            ],
+        ];
         $this->extension->load($config, $this->container);
 
         $this->assertFalse($this->container->hasDefinition('fos_rest.error_renderer.serializer'));
@@ -1169,8 +1169,8 @@ class FOSRestExtensionTest extends TestCase
             $this->markTestSkipped();
         }
 
-        $config = array(
-            'fos_rest' => array(
+        $config = [
+            'fos_rest' => [
                 'exception' => [
                     'exception_listener' => false,
                     'serialize_exceptions' => false,
@@ -1178,8 +1178,8 @@ class FOSRestExtensionTest extends TestCase
                 ],
                 'routing_loader' => false,
                 'body_listener' => false,
-            ),
-        );
+            ],
+        ];
         $this->extension->load($config, $this->container);
 
         $this->assertTrue($this->container->hasDefinition('fos_rest.error_renderer.serializer'));

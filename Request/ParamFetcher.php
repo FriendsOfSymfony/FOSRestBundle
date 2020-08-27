@@ -131,14 +131,14 @@ class ParamFetcher implements ParamFetcherInterface
             $violation = new ConstraintViolation(
                 $e->getMessage(),
                 $e->getMessage(),
-                array(),
+                [],
                 $paramValue,
                 '',
                 null,
                 null,
                 $e->getCode()
             );
-            $errors = new ConstraintViolationList(array($violation));
+            $errors = new ConstraintViolationList([$violation]);
         }
 
         if (0 < count($errors)) {

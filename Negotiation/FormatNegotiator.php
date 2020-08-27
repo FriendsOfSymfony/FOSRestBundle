@@ -29,7 +29,7 @@ class FormatNegotiator extends BaseNegotiator
     private $requestStack;
     private $mimeTypes;
 
-    public function __construct(RequestStack $requestStack, array $mimeTypes = array())
+    public function __construct(RequestStack $requestStack, array $mimeTypes = [])
     {
         $this->requestStack = $requestStack;
         $this->mimeTypes = $mimeTypes;
@@ -117,7 +117,7 @@ class FormatNegotiator extends BaseNegotiator
     {
         $priorities = $this->sanitize($priorities);
 
-        $mimeTypes = array();
+        $mimeTypes = [];
         foreach ($priorities as $priority) {
             if (strpos($priority, '/')) {
                 $mimeTypes[] = $priority;

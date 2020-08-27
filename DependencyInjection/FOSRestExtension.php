@@ -84,7 +84,7 @@ class FOSRestExtension extends Extension
             if (null !== $service) {
                 if ('view_handler' === $key) {
                     $container->setAlias('fos_rest.'.$key, new Alias($service, true));
-                } elseif(in_array($key, ['inflector', 'router', 'templating'], true)) {
+                } elseif (in_array($key, ['inflector', 'router', 'templating'], true)) {
                     $alias = new Alias($service);
 
                     if (method_exists($alias, 'setDeprecated')) {
@@ -174,12 +174,12 @@ class FOSRestExtension extends Extension
             }
 
             $service->replaceArgument(1, $config['body_listener']['throw_exception_on_unsupported_content_type']);
-            $service->addMethodCall('setDefaultFormat', array($config['body_listener']['default_format']));
+            $service->addMethodCall('setDefaultFormat', [$config['body_listener']['default_format']]);
 
             $container->getDefinition('fos_rest.decoder_provider')->replaceArgument(1, $config['body_listener']['decoders']);
 
             if (class_exists(ServiceLocatorTagPass::class)) {
-                $decoderServicesMap = array();
+                $decoderServicesMap = [];
 
                 foreach ($config['body_listener']['decoders'] as $id) {
                     $decoderServicesMap[$id] = new Reference($id);
@@ -466,7 +466,7 @@ class FOSRestExtension extends Extension
     {
         $bodyConverter = $container->hasDefinition('fos_rest.converter.request_body') ? $container->getDefinition('fos_rest.converter.request_body') : null;
         $viewHandler = $container->getDefinition('fos_rest.view_handler.default');
-        $options = array();
+        $options = [];
 
         if (!empty($config['serializer']['version'])) {
             if ($bodyConverter) {
@@ -501,22 +501,22 @@ class FOSRestExtension extends Extension
                     $zone['ips']
                 );
 
-                $zoneMatcherListener->addMethodCall('addRequestMatcher', array($matcher));
+                $zoneMatcherListener->addMethodCall('addRequestMatcher', [$matcher]);
             }
         }
     }
 
-    private function createZoneRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = array(), $ip = null)
+    private function createZoneRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = [], $ip = null)
     {
         if ($methods) {
             $methods = array_map('strtoupper', (array) $methods);
         }
 
-        $serialized = serialize(array($path, $host, $methods, $ip));
+        $serialized = serialize([$path, $host, $methods, $ip]);
         $id = 'fos_rest.zone_request_matcher.'.md5($serialized).sha1($serialized);
 
         // only add arguments that are necessary
-        $arguments = array($path, $host, $methods, $ip);
+        $arguments = [$path, $host, $methods, $ip];
         while (count($arguments) > 0 && !end($arguments)) {
             array_pop($arguments);
         }

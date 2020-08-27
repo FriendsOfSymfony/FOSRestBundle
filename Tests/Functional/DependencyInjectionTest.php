@@ -61,9 +61,9 @@ class TestKernel extends Kernel
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [
                 'secret' => 'test',
-                'router' => array(
+                'router' => [
                     'resource' => '%kernel.project_dir%/config/routing.yml',
-                ),
+                ],
             ]);
             $container->loadFromExtension('fos_rest', [
                 'exception' => [

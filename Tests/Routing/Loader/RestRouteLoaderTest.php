@@ -107,7 +107,7 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
 
-            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : [];
             $requirements = $route->getRequirements();
             unset($requirements['_method']);
             $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
@@ -155,7 +155,7 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
 
-            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : [];
             $requirements = $route->getRequirements();
             unset($requirements['_method']);
             $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
@@ -184,7 +184,7 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertNotNull($route, "no route found for '$name'");
             $this->assertEquals($params['path'], $route->getPath(), 'path failed to match for '.$name);
 
-            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : array();
+            $params['requirements'] = isset($params['requirements']) ? $params['requirements'] : [];
             $requirements = $route->getRequirements();
             unset($requirements['_method']);
             $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);

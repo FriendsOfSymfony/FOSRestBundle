@@ -27,7 +27,7 @@ class Version2Controller extends AbstractFOSRestController
      */
     public function versionAction($version)
     {
-        return array('version' => 'test annotation');
+        return ['version' => 'test annotation'];
     }
 
     /**
@@ -38,10 +38,10 @@ class Version2Controller extends AbstractFOSRestController
     {
         $versionExclusion = $this->findExclusionStrategyVersion($request);
 
-        return array(
+        return [
             'version' => 'test annotation',
             'version_exclusion' => $versionExclusion,
-        );
+        ];
     }
 
     private function findExclusionStrategyVersion(Request $request)

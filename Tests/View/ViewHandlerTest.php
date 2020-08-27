@@ -236,7 +236,7 @@ class ViewHandlerTest extends TestCase
             ->expects($this->once())
             ->method('serialize')
             ->will($this->returnCallback(function ($data, $format, $context) {
-                return serialize(array($data, $context));
+                return serialize([$data, $context]);
             }));
 
         //test
@@ -244,7 +244,7 @@ class ViewHandlerTest extends TestCase
 
         $form = $this->getMockBuilder('Symfony\\Component\\Form\\Form')
             ->disableOriginalConstructor()
-            ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
+            ->setMethods(['createView', 'getData', 'isValid', 'isSubmitted'])
             ->getMock();
         $form
             ->expects($this->any())
@@ -282,7 +282,7 @@ class ViewHandlerTest extends TestCase
         if ($form) {
             $data = $this->getMockBuilder(Form::class)
                 ->disableOriginalConstructor()
-                ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
+                ->setMethods(['createView', 'getData', 'isValid', 'isSubmitted'])
                 ->getMock();
             $data
                 ->expects($this->exactly($createViewCalls))
@@ -326,7 +326,7 @@ class ViewHandlerTest extends TestCase
         if ($form) {
             $data = $this->getMockBuilder(Form::class)
                 ->disableOriginalConstructor()
-                ->setMethods(array('createView', 'getData', 'isValid', 'isSubmitted'))
+                ->setMethods(['createView', 'getData', 'isValid', 'isSubmitted'])
                 ->getMock();
             $data
                 ->expects($this->exactly($createViewCalls))
@@ -609,10 +609,10 @@ class ViewHandlerTest extends TestCase
         ];
 
         $view = new View($exceptionWrapper);
-        $view->getContext()->addGroups(array('Custom'));
+        $view->getContext()->addGroups(['Custom']);
 
         $translatorMock = $this->getMockBuilder(TranslatorInterface::class)
-            ->setMethods(array('trans', 'transChoice', 'setLocale', 'getLocale'))
+            ->setMethods(['trans', 'transChoice', 'setLocale', 'getLocale'])
             ->getMock();
         $translatorMock
             ->expects($this->any())

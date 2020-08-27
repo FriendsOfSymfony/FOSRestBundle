@@ -27,10 +27,10 @@ class VersionController extends AbstractFOSRestController
     {
         $versionExclusion = $this->findExclusionStrategyVersion($request);
 
-        return array(
+        return [
             'version' => $version,
             'version_exclusion' => $versionExclusion,
-        );
+        ];
     }
 
     private function findExclusionStrategyVersion(Request $request)

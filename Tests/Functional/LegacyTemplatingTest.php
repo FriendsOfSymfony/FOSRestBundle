@@ -45,7 +45,7 @@ class LegacyTemplatingTest extends WebTestCase
 
     public function testTemplateOverride()
     {
-        $client = $this->createClient(array('test_case' => 'LegacyTemplating'));
+        $client = $this->createClient(['test_case' => 'LegacyTemplating']);
         $client->request(
             'GET',
             '/articles'
