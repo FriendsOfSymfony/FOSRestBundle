@@ -18,7 +18,7 @@ class AllowedMethodsTest extends WebTestCase
 {
     public function testAllowHeader()
     {
-        $client = $this->createClient(array('test_case' => 'AllowedMethodsListener'));
+        $client = $this->createClient(['test_case' => 'AllowedMethodsListener']);
         $client->request('POST', '/allowed-methods');
         $this->assertEquals('GET, LOCK, POST, PUT', $client->getResponse()->headers->get('Allow'));
     }

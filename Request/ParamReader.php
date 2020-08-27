@@ -70,7 +70,7 @@ final class ParamReader implements ParamReaderInterface
      */
     private function getParamsFromAnnotationArray(array $annotations): array
     {
-        $params = array();
+        $params = [];
         foreach ($annotations as $annotation) {
             if ($annotation instanceof ParamInterface) {
                 $params[$annotation->getName()] = $annotation;

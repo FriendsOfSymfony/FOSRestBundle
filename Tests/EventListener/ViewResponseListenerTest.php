@@ -48,8 +48,6 @@ class ViewResponseListenerTest extends TestCase
     private $requestStack;
 
     /**
-     * @param Request $request
-     *
      * @return ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
      */
     protected function getFilterEvent(Request $request)
@@ -61,8 +59,7 @@ class ViewResponseListenerTest extends TestCase
     }
 
     /**
-     * @param Request $request
-     * @param mixed   $result
+     * @param mixed $result
      *
      * @return ViewEvent|\PHPUnit_Framework_MockObject_MockObject
      */

@@ -45,94 +45,94 @@ class AbstractScalarParamTest extends TestCase
 
     public function testScalarConstraint()
     {
-        $this->assertEquals(array(
+        $this->assertEquals([
             new NotNull(),
-        ), $this->param->getConstraints());
+        ], $this->param->getConstraints());
     }
 
     public function testComplexRequirements()
     {
         $this->param->requirements = $requirement = $this->getMockBuilder(Constraint::class)->getMock();
-        $this->assertEquals(array(
+        $this->assertEquals([
             new NotNull(),
             $requirement,
-        ), $this->param->getConstraints());
+        ], $this->param->getConstraints());
     }
 
     public function testMultipleComplexRequirements()
     {
         $requirement1 = $this->getMockBuilder(Constraint::class)->getMock();
         $requirement2 = $this->getMockBuilder(Constraint::class)->getMock();
-        $this->param->requirements = array($requirement1, $requirement2);
+        $this->param->requirements = [$requirement1, $requirement2];
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             new NotNull(),
             $requirement1,
             $requirement2,
-        ), $this->param->getConstraints());
+        ], $this->param->getConstraints());
     }
 
     public function testScalarRequirements()
     {
         $this->param->name = 'bar';
         $this->param->requirements = 'foo %bar% %%';
-        $this->assertEquals(array(
+        $this->assertEquals([
             new NotNull(),
-            new Regex(array(
+            new Regex([
                 'pattern' => '#^(?:foo %bar% %%)$#xsu',
                 'message' => "Parameter 'bar' value, does not match requirements 'foo %bar% %%'",
-            )),
-        ), $this->param->getConstraints());
+            ]),
+        ], $this->param->getConstraints());
     }
 
     public function testArrayRequirements()
     {
-        $this->param->requirements = array(
+        $this->param->requirements = [
             'rule' => 'foo',
             'error_message' => 'bar',
-        );
-        $this->assertEquals(array(
+        ];
+        $this->assertEquals([
             new NotNull(),
-            new Regex(array(
+            new Regex([
                 'pattern' => '#^(?:foo)$#xsu',
                 'message' => 'bar',
-            )),
-        ), $this->param->getConstraints());
+            ]),
+        ], $this->param->getConstraints());
     }
 
     public function testAllowBlank()
     {
         $this->param->allowBlank = false;
-        $this->assertEquals(array(
+        $this->assertEquals([
             new NotNull(),
             new NotBlank(),
-        ), $this->param->getConstraints());
+        ], $this->param->getConstraints());
     }
 
     public function testConstraintsTransformWhenParamIsAnArray()
     {
         $this->param->map = true;
-        $this->assertEquals(array(new All(array(
+        $this->assertEquals([new All([
             new NotNull(),
-        )), new NotNull()), $this->param->getConstraints());
+        ]), new NotNull()], $this->param->getConstraints());
     }
 
     public function testArrayWithBlankConstraintsWhenParamIsAnArray()
     {
         $this->param->map = true;
         $this->param->allowBlank = false;
-        $this->assertEquals(array(new All(array(
+        $this->assertEquals([new All([
             new NotNull(),
             new NotBlank(),
-        )), new NotNull()), $this->param->getConstraints());
+        ]), new NotNull()], $this->param->getConstraints());
     }
 
     public function testArrayWithNoConstraintsDoesNotCreateInvalidConstraint()
     {
         $this->param->nullable = true;
         $this->param->map = true;
-        $this->assertEquals(array(new All(array(
+        $this->assertEquals([new All([
             'constraints' => [],
-        ))), $this->param->getConstraints());
+        ])], $this->param->getConstraints());
     }
 }

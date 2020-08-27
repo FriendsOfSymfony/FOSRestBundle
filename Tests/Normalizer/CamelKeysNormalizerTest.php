@@ -43,7 +43,7 @@ class CamelKeysNormalizerTest extends TestCase
     public function normalizeProvider()
     {
         $array = $this->normalizeProviderCommon();
-        $array[] = array(array('__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'), array('_Username' => 'foo', 'Password' => 'bar', 'FooBar' => 'foobar'));
+        $array[] = [['__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'], ['_Username' => 'foo', 'Password' => 'bar', 'FooBar' => 'foobar']];
 
         return $array;
     }
@@ -60,23 +60,23 @@ class CamelKeysNormalizerTest extends TestCase
     public function normalizeProviderLeadingUnderscore()
     {
         $array = $this->normalizeProviderCommon();
-        $array[] = array(array('__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'), array('__username' => 'foo', '_password' => 'bar', '_fooBar' => 'foobar'));
+        $array[] = [['__username' => 'foo', '_password' => 'bar', '_foo_bar' => 'foobar'], ['__username' => 'foo', '_password' => 'bar', '_fooBar' => 'foobar']];
 
         return $array;
     }
 
     private function normalizeProviderCommon()
     {
-        return array(
-            array(array(), array()),
-            array(
-                array('foo' => array('Foo_bar_baz' => array('foo_Bar' => array('foo_bar' => 'foo_bar'))),
-                    'foo_1ar' => array('foo_bar'),
-                ),
-                array('foo' => array('FooBarBaz' => array('fooBar' => array('fooBar' => 'foo_bar'))),
-                    'foo1ar' => array('foo_bar'),
-                ),
-            ),
-        );
+        return [
+            [[], []],
+            [
+                ['foo' => ['Foo_bar_baz' => ['foo_Bar' => ['foo_bar' => 'foo_bar']]],
+                    'foo_1ar' => ['foo_bar'],
+                ],
+                ['foo' => ['FooBarBaz' => ['fooBar' => ['fooBar' => 'foo_bar']]],
+                    'foo1ar' => ['foo_bar'],
+                ],
+            ],
+        ];
     }
 }

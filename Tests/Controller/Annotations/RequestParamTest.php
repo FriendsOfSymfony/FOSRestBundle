@@ -28,7 +28,7 @@ class RequestParamTest extends TestCase
     protected function setUp(): void
     {
         $this->param = $this->getMockBuilder(RequestParam::class)
-            ->setMethods(array('getKey'))
+            ->setMethods(['getKey'])
             ->getMock();
     }
 

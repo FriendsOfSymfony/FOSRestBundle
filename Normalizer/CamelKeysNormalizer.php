@@ -34,7 +34,7 @@ class CamelKeysNormalizer implements ArrayNormalizerInterface
 
     private function normalizeArray(array &$data)
     {
-        $normalizedData = array();
+        $normalizedData = [];
 
         foreach ($data as $key => $val) {
             $normalizedKey = $this->normalizeString($key);
