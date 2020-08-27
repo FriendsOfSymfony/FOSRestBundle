@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2020-08-26T16:29:40Z
+
+Can you please add a test case to ensure that we don't break this accidentally in the future? And can you then please rebase and retarget on `2.x` as I think this fix should be included in 2.8.x too?
+
+---------------------------------------------------------------------------
+
+by a-menshchikov at 2020-08-27T04:42:21Z
+
+@xabbuh done.
