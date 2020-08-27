@@ -51,11 +51,11 @@ class ParamFetcherController extends AbstractFOSRestController
 
         $paramsAfter = $fetcher->all(false);
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'before' => $paramsBefore,
             'during' => json_decode($response->getContent(), true),
             'after' => $paramsAfter,
-        ));
+        ]);
     }
 
     /**
@@ -66,9 +66,9 @@ class ParamFetcherController extends AbstractFOSRestController
         /** @var UploadedFile $file */
         $file = $fetcher->get('single_file');
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'single_file' => $this->printFile($file),
-        ));
+        ]);
     }
 
     /**
@@ -78,12 +78,12 @@ class ParamFetcherController extends AbstractFOSRestController
     {
         $files = $fetcher->get('array_files');
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'array_files' => [
                 $this->printFile($files[0]),
                 $this->printFile($files[1]),
             ],
-        ));
+        ]);
     }
 
     /**
@@ -93,14 +93,14 @@ class ParamFetcherController extends AbstractFOSRestController
     {
         $files = $fetcher->get('array_images');
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'array_images' => (is_string($files)) // Default message on validation error
                 ? $files
                 : [
                     $this->printFile($files[0]),
                     $this->printFile($files[1]),
                 ],
-        ));
+        ]);
     }
 
     private function printFile($file)

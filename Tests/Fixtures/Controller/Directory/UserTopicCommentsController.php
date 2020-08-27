@@ -19,11 +19,11 @@ class UserTopicCommentsController extends AbstractController
     {
     }
 
- // [GET] /users/{slug}/topics/{title}/comments
+    // [GET] /users/{slug}/topics/{title}/comments
 
     public function putCommentAction($slug, $title, $id)
     {
     }
 
- // [PUT] /users/{slug}/topics/{title}/comments/{id}
+    // [PUT] /users/{slug}/topics/{title}/comments/{id}
 }

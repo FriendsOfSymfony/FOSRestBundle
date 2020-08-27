@@ -38,7 +38,6 @@ class AccessDeniedListenerTest extends TestCase
     /**
      * @dataProvider getFormatsDataProvider
      *
-     * @param array  $formats
      * @param string $format
      */
     public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
@@ -52,7 +51,6 @@ class AccessDeniedListenerTest extends TestCase
     /**
      * @dataProvider getFormatsDataProvider
      *
-     * @param array  $formats
      * @param string $format
      */
     public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormatNoZone(array $formats, $format)
@@ -67,7 +65,6 @@ class AccessDeniedListenerTest extends TestCase
     /**
      * @dataProvider getContentTypesDataProvider
      *
-     * @param array  $formats
      * @param string $contentType
      */
     public function testAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
@@ -78,10 +75,6 @@ class AccessDeniedListenerTest extends TestCase
         $this->doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest($request, $formats);
     }
 
-    /**
-     * @param Request $request
-     * @param array   $formats
-     */
     private function doTestAccessDeniedExceptionIsConvertedToAnAccessDeniedHttpExceptionForRequest(Request $request, array $formats, $exceptionClass = HttpKernelAccessDeniedException::class)
     {
         $exception = new SecurityAccessDeniedException();
@@ -127,7 +120,6 @@ class AccessDeniedListenerTest extends TestCase
     /**
      * @dataProvider getFormatsDataProvider
      *
-     * @param array  $formats
      * @param string $format
      */
     public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForFormat(array $formats, $format)
@@ -141,7 +133,6 @@ class AccessDeniedListenerTest extends TestCase
     /**
      * @dataProvider getContentTypesDataProvider
      *
-     * @param array  $formats
      * @param string $contentType
      */
     public function testAuthenticationExceptionIsConvertedToAnAccessDeniedHttpExceptionForContentType(array $formats, $contentType)
@@ -152,10 +143,6 @@ class AccessDeniedListenerTest extends TestCase
         $this->doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest($request, $formats);
     }
 
-    /**
-     * @param Request $request
-     * @param array   $formats
-     */
     private function doTestAuthenticationExceptionIsConvertedToAnHttpExceptionForRequest(Request $request, array $formats)
     {
         $exception = new AuthenticationException();
@@ -178,10 +165,6 @@ class AccessDeniedListenerTest extends TestCase
         $this->assertArrayNotHasKey('WWW-Authenticate', $exception->getHeaders());
     }
 
-    /**
-     * @param Request $request
-     * @param array   $formats
-     */
     private function doTestUnauthorizedHttpExceptionHasCorrectChallenge(Request $request, array $formats)
     {
         $exception = new AuthenticationException();

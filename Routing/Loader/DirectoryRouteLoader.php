@@ -55,7 +55,7 @@ class DirectoryRouteLoader extends Loader
 
         foreach ($finder->in($resource)->name('*.php')->sortByName()->files() as $file) {
             if (null !== $class = ClassUtils::findClassInFile($file)) {
-                $imported = $this->processor->importResource($this, $class, array(), null, null, 'rest');
+                $imported = $this->processor->importResource($this, $class, [], null, null, 'rest');
                 $collection->addCollection($imported);
             }
         }

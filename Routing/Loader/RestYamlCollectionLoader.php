@@ -166,7 +166,7 @@ class RestYamlCollectionLoader extends YamlFileLoader
     public function supports($resource, $type = null)
     {
         return 'rest' === $type && is_string($resource) &&
-            in_array(pathinfo($resource, PATHINFO_EXTENSION), array('yaml', 'yml'), true);
+            in_array(pathinfo($resource, PATHINFO_EXTENSION), ['yaml', 'yml'], true);
     }
 
     /**

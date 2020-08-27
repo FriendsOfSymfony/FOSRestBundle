@@ -86,12 +86,12 @@ class ParamFetcherTest extends WebTestCase
 
     public function testWithSubRequests()
     {
-        $this->client->request('POST', '/params/test?foo=quz', array('raw' => $this->validRaw));
-        $this->assertArraySubset(array(
-            'before' => array('foo' => 'quz', 'bar' => 'foo'),
-            'during' => array('raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null),
-            'after' => array('foo' => 'quz', 'bar' => 'foo'),
-        ), $this->getData());
+        $this->client->request('POST', '/params/test?foo=quz', ['raw' => $this->validRaw]);
+        $this->assertArraySubset([
+            'before' => ['foo' => 'quz', 'bar' => 'foo'],
+            'during' => ['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null],
+            'after' => ['foo' => 'quz', 'bar' => 'foo'],
+        ], $this->getData());
     }
 
     public function testFileParamWithErrors()
@@ -103,11 +103,11 @@ class ParamFetcherTest extends WebTestCase
             7
         );
 
-        $this->client->request('POST', '/file/test', array(), array('single_file' => $image));
+        $this->client->request('POST', '/file/test', [], ['single_file' => $image]);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'single_file' => 'noFile',
-        ), $this->getData());
+        ], $this->getData());
     }
 
     public function testFileParam()
@@ -118,20 +118,20 @@ class ParamFetcherTest extends WebTestCase
             'image/jpeg'
         );
 
-        $this->client->request('POST', '/file/test', array(), array('single_file' => $image));
+        $this->client->request('POST', '/file/test', [], ['single_file' => $image]);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'single_file' => $singleFileName,
-        ), $this->getData());
+        ], $this->getData());
     }
 
     public function testFileParamNull()
     {
-        $this->client->request('POST', '/file/test', array(), array());
+        $this->client->request('POST', '/file/test', [], []);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'single_file' => 'noFile',
-        ), $this->getData());
+        ], $this->getData());
     }
 
     public function testFileParamArrayNullItem()
@@ -149,11 +149,11 @@ class ParamFetcherTest extends WebTestCase
             ),
         ];
 
-        $this->client->request('POST', '/file/collection/test', array(), array('array_files' => $images));
+        $this->client->request('POST', '/file/collection/test', [], ['array_files' => $images]);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'array_files' => [$imageName, $txtName],
-        ), $this->getData());
+        ], $this->getData());
     }
 
     public function testFileParamImageConstraintArray()
@@ -171,11 +171,11 @@ class ParamFetcherTest extends WebTestCase
             ),
         ];
 
-        $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
+        $this->client->request('POST', '/image/collection/test', [], ['array_images' => $images]);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'array_images' => [$imageName, $imageName2],
-        ), $this->getData());
+        ], $this->getData());
     }
 
     public function testFileParamImageConstraintArrayException()
@@ -193,18 +193,18 @@ class ParamFetcherTest extends WebTestCase
             ),
         ];
 
-        $this->client->request('POST', '/image/collection/test', array(), array('array_images' => $images));
+        $this->client->request('POST', '/image/collection/test', [], ['array_images' => $images]);
 
-        $this->assertEquals(array(
+        $this->assertEquals([
             'array_images' => 'NotAnImage',
-        ), $this->getData());
+        ], $this->getData());
     }
 
     public function testValidQueryParameter()
     {
         $this->client->request('POST', '/params?foz=val1');
 
-        $this->assertArraySubset(array('foz' => ''), $this->getData());
+        $this->assertArraySubset(['foz' => ''], $this->getData());
     }
 
     public function testIncompatibleQueryParameter()

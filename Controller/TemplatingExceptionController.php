@@ -43,9 +43,8 @@ abstract class TemplatingExceptionController extends ExceptionController
     /**
      * Finds the template for the given format and status code.
      *
-     * @param Request $request
-     * @param int     $statusCode
-     * @param bool    $showException
+     * @param int  $statusCode
+     * @param bool $showException
      *
      * @return string|TemplateReferenceInterface
      */

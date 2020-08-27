@@ -99,8 +99,8 @@ class BodyListenerTest extends TestCase
 
     public function testOnKernelRequestNoZone()
     {
-        $data = array('foo_bar' => 'foo_bar');
-        $normalizedData = array('fooBar' => 'foo_bar');
+        $data = ['foo_bar' => 'foo_bar'];
+        $normalizedData = ['fooBar' => 'foo_bar'];
 
         $decoder = $this->getMockBuilder(DecoderInterface::class)->getMock();
         $decoder
@@ -121,7 +121,7 @@ class BodyListenerTest extends TestCase
             ->with($data)
             ->will($this->returnValue($normalizedData));
 
-        $request = new Request(array(), array(), array(), array(), array(), array(), 'foo');
+        $request = new Request([], [], [], [], [], [], 'foo');
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $request->setMethod('POST');
 
@@ -136,7 +136,7 @@ class BodyListenerTest extends TestCase
         $listener = new BodyListener($decoderProvider, false, $normalizer);
         $listener->onKernelRequest($event);
 
-        $this->assertEquals(array(), $request->request->all());
+        $this->assertEquals([], $request->request->all());
     }
 
     public function testOnKernelRequestWithNormalizer()
@@ -190,8 +190,8 @@ class BodyListenerTest extends TestCase
      */
     public function testOnKernelRequestNormalizationWithForms($method, $contentType, $mustBeNormalized)
     {
-        $data = array('foo_bar' => 'foo_bar');
-        $normalizedData = array('fooBar' => 'foo_bar');
+        $data = ['foo_bar' => 'foo_bar'];
+        $normalizedData = ['fooBar' => 'foo_bar'];
         $decoderProvider = $this->getMockBuilder(DecoderProviderInterface::class)->getMock();
 
         $normalizer = $this->getMockBuilder(ArrayNormalizerInterface::class)->getMock();

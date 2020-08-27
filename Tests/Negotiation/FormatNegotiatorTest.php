@@ -155,8 +155,7 @@ class FormatNegotiatorTest extends TestCase
     }
 
     /**
-     * @param bool  $match
-     * @param array $options
+     * @param bool $match
      */
     private function addRequestMatcher($match, array $options = [])
     {

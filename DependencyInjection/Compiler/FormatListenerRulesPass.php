@@ -42,7 +42,7 @@ final class FormatListenerRulesPass implements CompilerPassInterface
                 'path' => "^/$path/",
                 'priorities' => ['html', 'json'],
                 'fallback_format' => 'html',
-                'attributes' => array(),
+                'attributes' => [],
                 'prefer_extension' => true,
             ];
 
@@ -76,7 +76,7 @@ final class FormatListenerRulesPass implements CompilerPassInterface
             ->addMethodCall('add', [$matcher, $rule]);
     }
 
-    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null, array $attributes = array())
+    private function createRequestMatcher(ContainerBuilder $container, $path = null, $host = null, $methods = null, array $attributes = [])
     {
         $arguments = [$path, $host, $methods, null, $attributes];
         $serialized = serialize($arguments);

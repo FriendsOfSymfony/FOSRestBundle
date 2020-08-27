@@ -58,8 +58,7 @@ interface ParamInterface
     /**
      * Get param value in function of the current request.
      *
-     * @param Request $request
-     * @param mixed   $default value
+     * @param mixed $default value
      *
      * @return mixed
      */

@@ -52,7 +52,7 @@ class SymfonySerializerAdapter implements Serializer
 
     private function convertContext(Context $context): array
     {
-        $newContext = array();
+        $newContext = [];
         foreach ($context->getAttributes() as $key => $value) {
             $newContext[$key] = $value;
         }

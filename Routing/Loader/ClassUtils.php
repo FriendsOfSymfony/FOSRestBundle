@@ -39,7 +39,7 @@ class ClassUtils
                 do {
                     $namespace .= $token[1];
                     $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], array(T_NS_SEPARATOR, T_STRING)));
+                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING]));
             }
 
             if (T_CLASS === $token[0]) {

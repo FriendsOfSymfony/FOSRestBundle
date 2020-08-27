@@ -28,7 +28,7 @@ class QueryParamTest extends TestCase
     protected function setUp(): void
     {
         $this->param = $this->getMockBuilder(QueryParam::class)
-            ->setMethods(array('getKey'))
+            ->setMethods(['getKey'])
             ->getMock();
     }
 

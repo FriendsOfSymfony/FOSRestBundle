@@ -293,7 +293,7 @@ class RequestBodyParamConverterTest extends TestCase
         return $converter->apply($request, $configuration);
     }
 
-    protected function createConfiguration($class = null, $name = null, array $options = array())
+    protected function createConfiguration($class = null, $name = null, array $options = [])
     {
         return new ParamConverter([
             'name' => (string) $name,

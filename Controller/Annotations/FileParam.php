@@ -49,7 +49,7 @@ class FileParam extends AbstractParam
             $constraints[] = $this->requirements;
         }
 
-        $options = is_array($this->requirements) ? $this->requirements : array();
+        $options = is_array($this->requirements) ? $this->requirements : [];
         if ($this->image) {
             $constraints[] = new Image($options);
         } else {
@@ -58,9 +58,9 @@ class FileParam extends AbstractParam
 
         // If the user wants to map the value
         if ($this->map) {
-            $constraints = array(
-                new All(array('constraints' => $constraints)),
-            );
+            $constraints = [
+                new All(['constraints' => $constraints]),
+            ];
         }
 
         return $constraints;

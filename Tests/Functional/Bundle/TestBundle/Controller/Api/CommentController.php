@@ -22,11 +22,11 @@ class CommentController
 
     public function getCommentAction($id)
     {
-        return new JsonResponse(array('id' => (int) $id));
+        return new JsonResponse(['id' => (int) $id]);
     }
 
     public function getComments()
     {
-        return new JsonResponse(array());
+        return new JsonResponse([]);
     }
 }

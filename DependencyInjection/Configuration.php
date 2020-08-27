@@ -195,7 +195,7 @@ final class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('ips')
                             ->beforeNormalization()->ifString()->then(function ($v) {
-                                return array($v);
+                                return [$v];
                             })->end()
                             ->prototype('scalar')->end()
                         ->end()
@@ -254,7 +254,7 @@ final class Configuration implements ConfigurationInterface
                                     ->prototype('array')
                                         ->beforeNormalization()
                                             ->ifString()
-                                            ->then(function ($v) { return array($v); })
+                                            ->then(function ($v) { return [$v]; })
                                         ->end()
                                         ->prototype('scalar')->end()
                                     ->end()
@@ -467,7 +467,7 @@ final class Configuration implements ConfigurationInterface
                       ->always()
                       ->then(function ($v) {
                           if (!$v['enabled']) {
-                            return $v;
+                              return $v;
                           }
 
                           if ($v['exception_listener']) {

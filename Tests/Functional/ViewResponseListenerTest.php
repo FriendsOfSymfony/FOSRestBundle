@@ -21,13 +21,13 @@ class ViewResponseListenerTest extends WebTestCase
 
     public function testRedirect()
     {
-        $client = $this->createClient(array('test_case' => 'ViewResponseListener'));
+        $client = $this->createClient(['test_case' => 'ViewResponseListener']);
         $client->request(
             'POST',
             '/articles.json',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
             '{"name": "Post 1", "body": "This is a blog post"}'
         );
 
@@ -41,13 +41,13 @@ class ViewResponseListenerTest extends WebTestCase
      */
     public function testForceRedirect()
     {
-        $client = $this->createClient(array('test_case' => 'ViewResponseListenerForceRedirect'));
+        $client = $this->createClient(['test_case' => 'ViewResponseListenerForceRedirect']);
         $client->request(
             'POST',
             '/articles.html',
-            array(),
-            array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
             '{"name": "Post 1", "body": "This is a blog post"}'
         );
 

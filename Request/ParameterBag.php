@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 final class ParameterBag
 {
     private $paramReader;
-    private $params = array();
+    private $params = [];
 
     public function __construct(ParamReaderInterface $paramReader)
     {
@@ -54,10 +54,10 @@ final class ParameterBag
     public function setController(Request $request, $controller)
     {
         $requestId = spl_object_hash($request);
-        $this->params[$requestId] = array(
+        $this->params[$requestId] = [
             'controller' => $controller,
             'params' => null,
-        );
+        ];
     }
 
     /**
