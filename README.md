@@ -22,7 +22,7 @@ applications with Symfony. Features include:
 Documentation
 -------------
 
-[Read the Documentation](http://symfony.com/doc/master/bundles/FOSRestBundle/index.html)
+[Read the Documentation](https://symfony.com/doc/current/bundles/FOSRestBundle/index.html)
 
 Please see the upgrade files (`UPGRADING-X.X.md`) for any relevant instructions when upgrading to a newer version.
 
