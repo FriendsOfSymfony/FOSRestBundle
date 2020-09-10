@@ -22,14 +22,14 @@ applications with Symfony. Features include:
 Documentation
 -------------
 
-[Read the Documentation](http://symfony.com/doc/master/bundles/FOSRestBundle/index.html)
+[Read the Documentation](https://symfony.com/doc/current/bundles/FOSRestBundle/index.html)
 
 Please see the upgrade files (`UPGRADING-X.X.md`) for any relevant instructions when upgrading to a newer version.
 
 Installation
 ------------
 
-All the installation instructions are located in the [documentation](http://symfony.com/doc/master/bundles/FOSRestBundle/1-setting_up_the_bundle.html).
+All the installation instructions are located in the [documentation](https://symfony.com/doc/current/bundles/FOSRestBundle/1-setting_up_the_bundle.html).
 
 License
 -------
