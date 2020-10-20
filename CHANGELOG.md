@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+3.1.0
+-----
+
+* The JMS Handlers `JMSHandlerRegistry` and `JMSHandlerRegistryV2` behaviors are deprecated. If you depend on the inheritance of JMS handlers that they provided, a deprecation will be thrown.
+  Set the option `fos_rest.serializer.enable_jms_registry` to `false` to disable these custom registries.
+
 3.0.3
 -----
 

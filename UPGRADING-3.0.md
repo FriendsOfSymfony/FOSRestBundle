@@ -156,6 +156,3 @@ Upgrading From 2.x To 3.0
    * `FOS\RestBundle\View\JsonpHandler`
    * `FOS\RestBundle\View\View`
    * `FOS\RestBundle\View\ViewHandler`
-
- * The JMS Handlers `JMSHandlerRegistry` and `JMSHandlerRegistryV2` behaviors have changed.
-   They no longer force JMS Serializer to check for parent handlers arbitrary. They only force heredity when having `FlattenException` as parent.
