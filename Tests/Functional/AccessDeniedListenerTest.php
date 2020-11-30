@@ -20,7 +20,7 @@ class AccessDeniedListenerTest extends WebTestCase
 {
     private static $client;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!interface_exists(ErrorRendererInterface::class)) {
             self::markTestSkipped();
@@ -30,7 +30,7 @@ class AccessDeniedListenerTest extends WebTestCase
         static::$client = static::createClient(['test_case' => 'AccessDeniedListener']);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir('AccessDeniedListener');
         parent::tearDownAfterClass();

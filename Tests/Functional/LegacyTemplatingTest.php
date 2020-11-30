@@ -16,7 +16,7 @@ namespace FOS\RestBundle\Tests\Functional;
  */
 class LegacyTemplatingTest extends WebTestCase
 {
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir('LegacyTemplating');
         parent::tearDownAfterClass();
@@ -29,8 +29,8 @@ class LegacyTemplatingTest extends WebTestCase
         $client = $this->createClient(['test_case' => 'LegacyTemplating', 'debug' => false]);
         $client->request('GET', '/serializer-error/exception.html');
 
-        $this->assertContains('The server returned a "500 Internal Server Error".', $client->getResponse()->getContent());
-        $this->assertNotContains('Something bad happened', $client->getResponse()->getContent());
+        $this->assertStringContainsString('The server returned a "500 Internal Server Error".', $client->getResponse()->getContent());
+        $this->assertStringNotContainsString('Something bad happened', $client->getResponse()->getContent());
     }
 
     public function testSerializeExceptionHtmlInDebugMode()
@@ -40,7 +40,7 @@ class LegacyTemplatingTest extends WebTestCase
         $client = $this->createClient(['test_case' => 'LegacyTemplating', 'debug' => true]);
         $client->request('GET', '/serializer-error/exception.html');
 
-        $this->assertContains('Something bad happened. (500 Internal Server Error)', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Something bad happened. (500 Internal Server Error)', $client->getResponse()->getContent());
     }
 
     public function testTemplateOverride()
@@ -52,6 +52,6 @@ class LegacyTemplatingTest extends WebTestCase
         );
 
         $this->assertSame(200, $client->getResponse()->getStatusCode(), $client->getResponse()->getContent());
-        $this->assertContains('fooo', $client->getResponse()->getContent());
+        $this->assertStringContainsString('fooo', $client->getResponse()->getContent());
     }
 }

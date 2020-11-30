@@ -17,7 +17,7 @@ abstract class AbstractAuthenticatorTestCase extends WebTestCase
 {
     protected static $client;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!interface_exists(ErrorRendererInterface::class)) {
             self::markTestSkipped();
@@ -28,7 +28,7 @@ abstract class AbstractAuthenticatorTestCase extends WebTestCase
         self::$client = self::createClient(['test_case' => static::getTestCase()]);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir(static::getTestCase());
 

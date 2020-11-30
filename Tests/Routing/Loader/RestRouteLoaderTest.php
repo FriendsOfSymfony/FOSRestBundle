@@ -42,7 +42,7 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
             $this->assertEquals($params['path'], $route->getPath(), 'Path does not match for route: '.$name);
             $this->assertEquals($params['methods'][0], $methods[0], 'Method does not match for route: '.$name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
     }
 
@@ -64,7 +64,7 @@ class RestRouteLoaderTest extends LoaderTest
             $this->assertNotNull($route, sprintf('route for %s does not exist', $name));
             $this->assertEquals($params['path'], $route->getPath(), 'Path does not match for route: '.$name);
             $this->assertEquals($params['methods'][0], $methods[0], 'Method does not match for route: '.$name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), 'Controller does not match for route: '.$name);
         }
     }
 
@@ -112,7 +112,7 @@ class RestRouteLoaderTest extends LoaderTest
             unset($requirements['_method']);
             $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
 
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
             }
@@ -160,7 +160,7 @@ class RestRouteLoaderTest extends LoaderTest
             unset($requirements['_method']);
             $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
 
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
             }
@@ -189,7 +189,7 @@ class RestRouteLoaderTest extends LoaderTest
             unset($requirements['_method']);
             $this->assertEquals($params['requirements'], $requirements, 'requirements failed to match for '.$name);
 
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), 'controller failed to match for '.$name);
             if (isset($params['condition'])) {
                 $this->assertEquals($params['condition'], $route->getCondition(), 'condition failed to match for '.$name);
             }
