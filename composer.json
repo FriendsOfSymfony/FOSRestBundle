@@ -47,7 +47,7 @@
     },
     "require-dev": {
         "sensio/framework-extra-bundle": "^3.0.13|^4.0|^5.0",
-        "symfony/phpunit-bridge": "^4.1.8",
+        "symfony/phpunit-bridge": "^4.1.8|^5.0",
         "symfony/asset": "^3.4|^4.3",
         "symfony/form": "^3.4|^4.3",
         "symfony/validator": "^3.4|^4.3",
