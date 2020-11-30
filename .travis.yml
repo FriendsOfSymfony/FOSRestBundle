@@ -28,17 +28,16 @@ matrix:
     # development dependencies
     - php: 7.4
       env: DEPENDENCIES='dev'
-    - php: nightly
-      env: COMPOSER_FLAGS="--ignore-platform-reqs" SYMFONY_DEPRECATIONS_HELPER="max[self]=0"
+    - php: 8.0snapshot
+      env: SYMFONY_DEPRECATIONS_HELPER="max[self]=0"
   allow_failures:
     - php: 7.4
       env: DEPENDENCIES='dev'
-    - php: nightly
 
 before_install:
   - echo "memory_limit=4G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - if [ "$COVERAGE" != "yes" ]; then phpenv config-rm xdebug.ini || true; fi
-  - composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-master
+  - composer global require --no-progress --no-scripts --no-plugins symfony/flex
   - if [ "$SYMFONY_LTS" != "" ]; then composer require --dev --no-update symfony/lts=$SYMFONY_LTS; fi
 
 install:
