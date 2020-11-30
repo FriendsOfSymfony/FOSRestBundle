@@ -34,12 +34,12 @@ class ClassUtils
                 return $namespace.'\\'.$token[1];
             }
 
-            if (true === $namespace && T_STRING === $token[0]) {
+            if (true === $namespace && (T_NAME_QUALIFIED === $token[0] || T_STRING === $token[0])) {
                 $namespace = '';
                 do {
                     $namespace .= $token[1];
                     $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING]));
+                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING, T_NAME_QUALIFIED]));
             }
 
             if (T_CLASS === $token[0]) {
