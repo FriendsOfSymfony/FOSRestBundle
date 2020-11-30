@@ -37,8 +37,8 @@ class JsonToFormDecoderTest extends TestCase
         $decoder = new JsonToFormDecoder();
         $decoded = $decoder->decode(json_encode($data));
 
-        $this->assertInternalType('array', $decoded);
-        $this->assertInternalType('array', $decoded['arrayKey']);
+        $this->assertIsArray($decoded);
+        $this->assertIsArray($decoded['arrayKey']);
         $this->assertNull($decoded['arrayKey']['falseKey']);
         $this->assertEquals('foo', $decoded['arrayKey']['stringKey']);
         $this->assertNull($decoded['falseKey']);

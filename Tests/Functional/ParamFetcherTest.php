@@ -63,14 +63,22 @@ class ParamFetcherTest extends WebTestCase
     {
         $this->client->request('POST', '/params');
 
-        $this->assertArraySubset(['raw' => 'invalid', 'map' => 'invalid2 %', 'bar' => null], $this->getData());
+        $data = $this->getData();
+        foreach (['raw' => 'invalid', 'map' => 'invalid2 %', 'bar' => null] as $key => $value) {
+            $this->assertArrayHasKey($key, $data);
+            $this->assertSame($value, $data[$key]);
+        }
     }
 
     public function testValidRawParameter()
     {
         $this->client->request('POST', '/params', ['raw' => $this->validRaw, 'map' => $this->validMap]);
 
-        $this->assertArraySubset(['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null], $this->getData());
+        $data = $this->getData();
+        foreach (['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null] as $key => $value) {
+            $this->assertArrayHasKey($key, $data);
+            $this->assertSame($value, $data[$key]);
+        }
     }
 
     public function testValidMapParameter()
@@ -81,17 +89,27 @@ class ParamFetcherTest extends WebTestCase
         ];
         $this->client->request('POST', '/params', ['raw' => 'bar', 'map' => $map, 'bar' => 'bar foo']);
 
-        $this->assertArraySubset(['raw' => 'invalid', 'map' => $map, 'bar' => 'bar foo'], $this->getData());
+        $data = $this->getData();
+        foreach (['raw' => 'invalid', 'map' => $map, 'bar' => 'bar foo'] as $key => $value) {
+            $this->assertArrayHasKey($key, $data);
+            $this->assertSame($value, $data[$key]);
+        }
     }
 
     public function testWithSubRequests()
     {
         $this->client->request('POST', '/params/test?foo=quz', ['raw' => $this->validRaw]);
-        $this->assertArraySubset([
+
+        $expected = [
             'before' => ['foo' => 'quz', 'bar' => 'foo'],
-            'during' => ['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null],
+            'during' => ['raw' => $this->validRaw, 'map' => 'invalid2 %', 'bar' => null, 'foz' => '', 'baz' => ''],
             'after' => ['foo' => 'quz', 'bar' => 'foo'],
-        ], $this->getData());
+        ];
+        $data = $this->getData();
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $data);
+            $this->assertSame($value, $data[$key]);
+        }
     }
 
     public function testFileParamWithErrors()
@@ -204,7 +222,11 @@ class ParamFetcherTest extends WebTestCase
     {
         $this->client->request('POST', '/params?foz=val1');
 
-        $this->assertArraySubset(['foz' => ''], $this->getData());
+        $data = $this->getData();
+        foreach (['foz' => ''] as $key => $value) {
+            $this->assertArrayHasKey($key, $data);
+            $this->assertSame($value, $data[$key]);
+        }
     }
 
     public function testIncompatibleQueryParameter()
@@ -214,7 +236,7 @@ class ParamFetcherTest extends WebTestCase
 
             // SF >= 4.4
             $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
-            $this->assertContains('\\"baz\\" param is incompatible with foz param.', $this->client->getResponse()->getContent());
+            $this->assertStringContainsString('\\"baz\\" param is incompatible with foz param.', $this->client->getResponse()->getContent());
         } catch (BadRequestHttpException $e) {
             // SF < 4.4
             $this->assertEquals('"baz" param is incompatible with foz param.', $e->getMessage());

@@ -22,12 +22,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ConfigurationCheckPassTest extends TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter
-     */
     public function testShouldThrowRuntimeExceptionWhenBodyConverterIsEnabledButParamConvertersAreNotEnabled()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('You need to enable the parameter converter listeners in SensioFrameworkExtraBundle when using the FOSRestBundle RequestBodyParamConverter');
+
         $container = new ContainerBuilder();
 
         $container->register('fos_rest.converter.request_body');
@@ -36,12 +35,11 @@ class ConfigurationCheckPassTest extends TestCase
         $compiler->process($container);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage SensioFrameworkExtraBundle view annotations
-     */
     public function testExceptionWhenViewAnnotationsAreNotEnabled()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('SensioFrameworkExtraBundle view annotations');
+
         $container = new ContainerBuilder();
 
         $container->register('fos_rest.view_response_listener');
