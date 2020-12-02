@@ -45,6 +45,6 @@ install:
   - ./phpunit install
 
 script:
-  - if [ "$COVERAGE" = "yes" ]; then ./phpunit --coverage-clover=coverage.clover; else ./phpunit; fi
+  - if [ "$COVERAGE" = "yes" ]; then XDEBUG_MODE=coverage ./phpunit --coverage-clover=coverage.clover; else ./phpunit; fi
   - if [ "$COVERAGE" = "yes" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
   - if [ "$COVERAGE" = "yes" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
