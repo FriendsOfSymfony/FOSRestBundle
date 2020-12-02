@@ -23,7 +23,7 @@ matrix:
     - php: 7.3
       env: SYMFONY_REQUIRE="4.3.*" COMPOSER_FLAGS="--prefer-stable"
     # Symfony 4.4
-    - php: 7.4
+    - php: 7.4.12
       env: SYMFONY_REQUIRE="4.4.*" COMPOSER_FLAGS="--prefer-stable" COVERAGE=yes
     # development dependencies
     - php: 7.4
