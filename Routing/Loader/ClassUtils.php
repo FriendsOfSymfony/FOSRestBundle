@@ -25,9 +25,9 @@ class ClassUtils
         $tokens = token_get_all(file_get_contents($file));
 
         if (defined('T_NAME_QUALIFIED')) {
-            $tnamequalified = T_NAME_QUALIFIED;
+            $namespaceToken = T_NAME_QUALIFIED;
         } else {
-            $tnamequalified = false;
+            $namespaceToken = T_STRING;
         }
 
         for ($i = 0, $count = count($tokens); $i < $count; ++$i) {
@@ -41,12 +41,12 @@ class ClassUtils
                 return $namespace.'\\'.$token[1];
             }
 
-            if (true === $namespace && ($tnamequalified === $token[0] || T_STRING === $token[0])) {
+            if (true === $namespace && $namespaceToken === $token[0]) {
                 $namespace = '';
                 do {
                     $namespace .= $token[1];
                     $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, T_STRING, $tnamequalified]));
+                } while ($i < $count && is_array($token) && in_array($token[0], [T_NS_SEPARATOR, $namespaceToken]));
             }
 
             if (T_CLASS === $token[0]) {
