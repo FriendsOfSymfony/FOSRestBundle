@@ -42,7 +42,7 @@
         "symfony/routing": "^3.4|^4.3",
         "symfony/security-core": "^3.4|^4.3",
         "doctrine/inflector": "^1.0",
-        "willdurand/negotiation": "^2.0|^3.0",
+        "willdurand/negotiation": "^3.0",
         "willdurand/jsonp-callback-validator": "^1.0"
     },
     "require-dev": {

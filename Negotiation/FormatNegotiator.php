@@ -40,7 +40,7 @@ class FormatNegotiator extends BaseNegotiator
         $this->map[] = [$requestMatcher, $options];
     }
 
-    public function getBest($header, array $priorities = [])
+    public function getBest($header, array $priorities = [], $strict = false)
     {
         $request = $this->getRequest();
         $header = $header ?: $request->headers->get('Accept');
@@ -82,7 +82,7 @@ class FormatNegotiator extends BaseNegotiator
                     empty($priorities) ? $options['priorities'] : $priorities
                 );
 
-                $mimeType = parent::getBest($header, $mimeTypes);
+                $mimeType = parent::getBest($header, $mimeTypes, $strict);
 
                 if (null !== $mimeType) {
                     return $mimeType;
