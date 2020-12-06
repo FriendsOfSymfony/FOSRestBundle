@@ -1,0 +1,82 @@
+# from doctrine/instantiator:
+# https://github.com/doctrine/instantiator/blob/97aa11bb71ad6259a8c5a1161b4de2d6cdcc5501/.github/workflows/continuous-integration.yml
+
+name: "CI"
+
+on:
+  pull_request:
+    branches:
+      - "*.x"
+  push:
+    branches:
+      - "*.x"
+
+env:
+  fail-fast: true
+  COMPOSER_ROOT_VERSION: "1.4"
+
+jobs:
+  phpunit:
+    name: "PHPUnit"
+    runs-on: "ubuntu-20.04"
+
+    strategy:
+      matrix:
+        include:
+          - php-version: 7.1
+            composer-flags: "--prefer-lowest --prefer-stable"
+          - php-version: 7.2
+            composer-flags: "--prefer-stable"
+            symfony-require: "3.4.*"
+          - php-version: 7.3
+            composer-flags: "--prefer-stable"
+            symfony-require: "4.3.*"
+          - php-version: 7.4
+            composer-flags: "--prefer-stable"
+            symfony-require: "4.4.*"
+            coverage: yes
+          - php-version: 8.0
+            composer-flags: "--ignore-platform-reqs"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+        with:
+          fetch-depth: 2
+
+      - name: "Install PHP with XDebug"
+        uses: "shivammathur/setup-php@v2"
+        if: "${{ matrix.coverage != '' }}"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: "xdebug"
+
+      - name: "Install PHP without coverage"
+        uses: "shivammathur/setup-php@v2"
+        if: "${{ matrix.coverage == '' }}"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: "none"
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v2"
+        with:
+          path: "~/.composer/cache"
+          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
+
+      - name: "Install dependencies with composer"
+        env:
+          SYMFONY_REQUIRE: "${{ matrix.symfony-require }}"
+        run: "composer update --no-interaction --no-progress ${{ matrix.composer-flags }}"
+
+      - name: "Run PHPUnit"
+        if: "${{ matrix.coverage != '' }}"
+        run: |
+          XDEBUG_MODE=coverage ./phpunit --coverage-clover=coverage.clover
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+      - name: "Run PHPUnit"
+        if: "${{ matrix.coverage == '' }}"
+        run: "./phpunit"
