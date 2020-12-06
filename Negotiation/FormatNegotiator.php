@@ -19,11 +19,9 @@ use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @author Ener-Getick <energetick.guigui@gmail.com>
- *
- * @final since 2.8
+ * @internal
  */
-class FormatNegotiator extends BaseNegotiator
+class BaseFormatNegotiator extends BaseNegotiator
 {
     private $map = [];
     private $requestStack;
@@ -40,7 +38,10 @@ class FormatNegotiator extends BaseNegotiator
         $this->map[] = [$requestMatcher, $options];
     }
 
-    public function getBest($header, array $priorities = [])
+    /**
+     * @internal
+     */
+    protected function doGetBest($header, array $priorities = [])
     {
         $request = $this->getRequest();
         $header = $header ?: $request->headers->get('Accept');
@@ -151,5 +152,33 @@ class FormatNegotiator extends BaseNegotiator
         }
 
         return $request;
+    }
+}
+
+if (method_exists(BaseNegotiator::class, 'getOrderedElements')) {
+    /**
+     * @author Guilhem Niot <guilhem@gniot.fr>
+     *
+     * @final since 2.8
+     */
+    class FormatNegotiator extends BaseFormatNegotiator
+    {
+        public function getBest($header, array $priorities = [], $strict = false)
+        {
+            return $this->doGetBest($header, $priorities);
+        }
+    }
+} else {
+    /**
+     * @author Guilhem Niot <guilhem@gniot.fr>
+     *
+     * @final since 2.8
+     */
+    class FormatNegotiator extends BaseFormatNegotiator
+    {
+        public function getBest($header, array $priorities = [])
+        {
+            return $this->doGetBest($header, $priorities);
+        }
     }
 }
