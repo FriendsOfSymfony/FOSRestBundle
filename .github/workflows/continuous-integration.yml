@@ -37,6 +37,7 @@ jobs:
             coverage: yes
           - php-version: 8.0
             composer-flags: "--ignore-platform-reqs"
+            symfony-deprecations: "max[self]=0"
 
     steps:
       - name: "Checkout"
@@ -68,7 +69,9 @@ jobs:
       - name: "Install dependencies with composer"
         env:
           SYMFONY_REQUIRE: "${{ matrix.symfony-require }}"
-        run: "composer update --no-interaction --no-progress ${{ matrix.composer-flags }}"
+        run: |
+          composer global require --no-progress --no-scripts --no-plugins symfony/flex
+          composer update --no-interaction --no-progress ${{ matrix.composer-flags }}
 
       - name: "Run PHPUnit"
         if: "${{ matrix.coverage != '' }}"
@@ -78,5 +81,7 @@ jobs:
           php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
       - name: "Run PHPUnit"
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: "${{ matrix.symfony-deprecations }}"
         if: "${{ matrix.coverage == '' }}"
         run: "./phpunit"
