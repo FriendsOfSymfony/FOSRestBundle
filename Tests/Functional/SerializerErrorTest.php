@@ -20,7 +20,7 @@ use Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer;
  */
 class SerializerErrorTest extends WebTestCase
 {
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir('FlattenExceptionHandlerLegacyFormat');
         self::deleteTmpDir('FlattenExceptionHandlerRfc7807Format');

@@ -29,7 +29,7 @@ class JMSSerializerAdapterTest extends TestCase
     private $deserializationContextFactory;
     private $adapter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!class_exists(JMSSerializerBundle::class)) {
             $this->markTestSkipped('JMSSerializerBundle is not installed.');

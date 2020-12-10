@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class SerializerErrorRendererTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!interface_exists(ErrorRendererInterface::class)) {
             $this->markTestSkipped();

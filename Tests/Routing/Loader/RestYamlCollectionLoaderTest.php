@@ -40,34 +40,34 @@ class RestYamlCollectionLoaderTest extends LoaderTest
 
     /**
      * Test that invalid YAML format.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /The file "*.+bad_format\.yml" does not contain valid YAML\./
      */
     public function testLoadThrowsExceptionWithInvalidYaml()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/The file "*.+bad_format\.yml" does not contain valid YAML\./');
+
         $this->loadFromYamlCollectionFixture('bad_format.yml');
     }
 
     /**
      * Test that YAML value not an array.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /The file "*.+nonvalid.yml" must contain a Yaml mapping \(an array\)\./
      */
     public function testLoadThrowsExceptionWithValueNotArray()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/The file "*.+nonvalid.yml" must contain a Yaml mapping \(an array\)\./');
+
         $this->loadFromYamlCollectionFixture('nonvalid.yml');
     }
 
     /**
      * Test that route parent not found.
-     *
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot find parent resource with name
      */
     public function testLoadThrowsExceptionWithInvalidRouteParent()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot find parent resource with name');
+
         $this->loadFromYamlCollectionFixture('invalid_route_parent.yml');
     }
 
@@ -86,7 +86,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             $this->assertNotNull($route, $name);
             $this->assertEquals($params['path'], $route->getPath(), $name);
             $this->assertEquals($params['methods'][0], $methods[0], $name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), $name);
         }
     }
 
@@ -105,7 +105,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             $this->assertNotNull($route, $name);
             $this->assertEquals($params['path'], $route->getPath(), $name);
             $this->assertEquals($params['methods'][0], $methods[0], $name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), $name);
         }
     }
 
@@ -124,7 +124,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             $this->assertNotNull($route, $name);
             $this->assertEquals($params['path'], $route->getPath(), $name);
             $this->assertEquals($params['methods'][0], $methods[0], $name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), $name);
         }
     }
 
@@ -243,7 +243,7 @@ class RestYamlCollectionLoaderTest extends LoaderTest
             $this->assertNotNull($route, $name);
             $this->assertEquals($params['path'], $route->getPath(), $name);
             $this->assertEquals($params['method'], $methods[0], $name);
-            $this->assertContains($params['controller'], $route->getDefault('_controller'), $name);
+            $this->assertStringContainsString($params['controller'], $route->getDefault('_controller'), $name);
         }
 
         $name = 'api_get_billing_payments';
