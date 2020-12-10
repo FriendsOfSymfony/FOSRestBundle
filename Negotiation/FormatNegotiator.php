@@ -41,7 +41,7 @@ final class FormatNegotiator extends BaseNegotiator
         $this->map[] = [$requestMatcher, $options];
     }
 
-    public function getBest($header, array $priorities = [], $strict = false)
+    public function getBest($header, array $priorities = [], $strict = false): ?AcceptHeader
     {
         $request = $this->getRequest();
         $header = $header ?: $request->headers->get('Accept');
