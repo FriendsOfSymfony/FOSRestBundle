@@ -23,18 +23,20 @@ jobs:
     strategy:
       matrix:
         include:
-          - php-version: 7.1
-            composer-flags: "--prefer-lowest --prefer-stable"
           - php-version: 7.2
-            composer-flags: "--prefer-stable"
-            symfony-require: "3.4.*"
+            composer-flags: "--prefer-lowest --prefer-stable"
           - php-version: 7.3
             composer-flags: "--prefer-stable"
-            symfony-require: "4.3.*"
           - php-version: 7.4
             composer-flags: "--prefer-stable"
             symfony-require: "4.4.*"
+          - php-version: 7.4
+            composer-flags: "--prefer-stable"
+            symfony-require: "5.0.*"
             coverage: yes
+          - php-version: 7.4
+            composer-flags: "--prefer-stable"
+            symfony-require: "5.1.*"
           - php-version: 8.0
             composer-flags: "--ignore-platform-reqs"
             symfony-deprecations: "max[self]=0"
