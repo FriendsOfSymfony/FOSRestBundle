@@ -26,7 +26,7 @@ class ExceptionValueMapTest extends TestCase
      */
     private $valueMap;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $map = [
             \LogicException::class => 'logic',

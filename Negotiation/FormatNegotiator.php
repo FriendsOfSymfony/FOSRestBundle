@@ -20,7 +20,9 @@ use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @author Ener-Getick <energetick.guigui@gmail.com>
+ * @author Guilhem Niot <guilhem@gniot.fr>
+ *
+ * @final since 2.8
  */
 final class FormatNegotiator extends BaseNegotiator
 {
@@ -39,7 +41,7 @@ final class FormatNegotiator extends BaseNegotiator
         $this->map[] = [$requestMatcher, $options];
     }
 
-    public function getBest($header, array $priorities = []): ?AcceptHeader
+    public function getBest($header, array $priorities = [], $strict = false)
     {
         $request = $this->getRequest();
         $header = $header ?: $request->headers->get('Accept');

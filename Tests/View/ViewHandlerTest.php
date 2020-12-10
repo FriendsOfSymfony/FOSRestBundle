@@ -39,7 +39,7 @@ class ViewHandlerTest extends TestCase
     private $serializer;
     private $requestStack;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->router = $this->getMockBuilder(RouterInterface::class)->getMock();
         $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
@@ -66,14 +66,6 @@ class ViewHandlerTest extends TestCase
             'html custom' => [true, ['json' => false], 'html'],
             'html both' => [true, ['html' => true], 'html'],
         ];
-    }
-
-    public function testRegisterHandle()
-    {
-        $viewHandler = $this->createViewHandler();
-        $viewHandler->registerHandler('html', ($callback = function () {
-        }));
-        $this->assertAttributeEquals(['html' => $callback], 'customHandlers', $viewHandler);
     }
 
     /**

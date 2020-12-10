@@ -13,7 +13,7 @@ namespace FOS\RestBundle\Tests\Functional;
 
 class ViewResponseListenerTest extends WebTestCase
 {
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir('ViewResponseListener');
         parent::tearDownAfterClass();
@@ -33,6 +33,6 @@ class ViewResponseListenerTest extends WebTestCase
 
         $this->assertSame(201, $client->getResponse()->getStatusCode());
         $this->assertSame('http://localhost/hello/Post%201', $client->getResponse()->headers->get('location'));
-        $this->assertNotContains('fooo', $client->getResponse()->getContent());
+        $this->assertStringNotContainsString('fooo', $client->getResponse()->getContent());
     }
 }

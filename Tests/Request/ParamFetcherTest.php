@@ -89,12 +89,11 @@ class ParamFetcherTest extends TestCase
         $this->assertEquals(['foo' => $param1, 'foobar' => $param2, 'bar' => $param3], $this->paramFetcher->getParams());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage No @ParamInterface configuration for parameter 'foo'.
-     */
     public function testInexistentParam()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('No @ParamInterface configuration for parameter \'foo\'.');
+
         $this->paramFetcher->setController($this->controller);
         $this->setParams([$this->createParam('bar')]);
         $this->paramFetcher->get('foo');
@@ -283,12 +282,11 @@ class ParamFetcherTest extends TestCase
         $this->assertEquals(['foo' => 'first', 'bar' => 'second'], $this->paramFetcher->all());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Controller and method needs to be set via setController
-     */
     public function testEmptyControllerExceptionWhenInitParams()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Controller and method needs to be set via setController');
+
         $this->validator
             ->method('validate')
             ->willReturn(new ConstraintViolationList());
@@ -300,12 +298,13 @@ class ParamFetcherTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Controller needs to be set as a class instance (closures/functions are not supported)
      * @dataProvider invalidControllerProvider
      */
     public function testNotCallableControllerExceptionWhenInitParams($controller)
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Controller needs to be set as a class instance (closures/functions are not supported)');
+
         $this->paramFetcher->setController($controller);
 
         $this->paramFetcher->all();
@@ -320,12 +319,11 @@ class ParamFetcherTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage No @ParamInterface configuration for parameter 'foobar'.
-     */
     public function testInexistentIncompatibleParam()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('No @ParamInterface configuration for parameter \'foobar\'.');
+
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('bar', 'value');
 

@@ -52,7 +52,7 @@ class RequestBodyParamConverterTest extends WebTestCase
 
         // Status code 200 as this page describes an error but is not the result of an error.
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertContains('The server returned a "404 Not Found".', $client->getResponse()->getContent());
+        $this->assertStringContainsString('The server returned a "404 Not Found".', $client->getResponse()->getContent());
     }
 
     public function testErrorPageServedByFrameworkBundle()
@@ -65,6 +65,6 @@ class RequestBodyParamConverterTest extends WebTestCase
         $client->request('GET', '/_error/404.txt');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
-        $this->assertContains('The server returned a "404 Not Found".', $client->getResponse()->getContent());
+        $this->assertStringContainsString('The server returned a "404 Not Found".', $client->getResponse()->getContent());
     }
 }

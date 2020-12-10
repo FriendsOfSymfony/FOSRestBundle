@@ -28,8 +28,8 @@ class ViewTest extends TestCase
         $code = 500;
 
         $view = View::createRedirect($url, $code);
-        $this->assertAttributeEquals($url, 'location', $view);
-        $this->assertAttributeEquals(null, 'route', $view);
+        $this->assertEquals($url, $view->getLocation());
+        $this->assertEquals(null, $view->getRoute());
         $this->assertEquals($code, $view->getResponse()->getStatusCode());
 
         $view = new View();
@@ -43,13 +43,13 @@ class ViewTest extends TestCase
         $routeName = 'users';
 
         $view = View::createRouteRedirect($routeName, [], Response::HTTP_CREATED);
-        $this->assertAttributeEquals($routeName, 'route', $view);
-        $this->assertAttributeEquals(null, 'location', $view);
+        $this->assertEquals(null, $view->getLocation());
+        $this->assertEquals($routeName, $view->getRoute());
         $this->assertEquals(Response::HTTP_CREATED, $view->getResponse()->getStatusCode());
 
         $view->setLocation($routeName);
-        $this->assertAttributeEquals($routeName, 'location', $view);
-        $this->assertAttributeEquals(null, 'route', $view);
+        $this->assertEquals($routeName, $view->getLocation());
+        $this->assertEquals(null, $view->getRoute());
 
         $view = new View();
         $route = 'route';

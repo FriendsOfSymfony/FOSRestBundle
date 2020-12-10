@@ -33,7 +33,7 @@ class JsonpHandlerTest extends TestCase
     private $serializer;
     private $requestStack;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->router = $this->getMockBuilder(RouterInterface::class)->getMock();
         $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();

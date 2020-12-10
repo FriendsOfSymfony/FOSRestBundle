@@ -28,7 +28,7 @@ class SerializerConfigurationPassTest extends TestCase
      */
     private $container;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->container = new ContainerBuilder();
     }
@@ -44,11 +44,10 @@ class SerializerConfigurationPassTest extends TestCase
         $this->assertSame(get_class($serializer), $this->container->getDefinition('fos_rest.serializer')->getClass());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testShouldThrowInvalidArgumentExceptionWhenNoSerializerIsFound()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);
     }

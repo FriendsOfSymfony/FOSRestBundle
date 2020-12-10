@@ -18,13 +18,13 @@ class VersionTest extends WebTestCase
 {
     private static $client;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         static::$client = static::createClient(['test_case' => 'Version']);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir('Version');
         parent::tearDownAfterClass();
