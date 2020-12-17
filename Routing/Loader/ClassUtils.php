@@ -24,7 +24,7 @@ class ClassUtils
         $namespace = false;
         $tokens = token_get_all(file_get_contents($file));
 
-        if (defined('T_NAME_QUALIFIED')) {
+        if (PHP_VERSION_ID >= 80000) {
             $namespaceToken = T_NAME_QUALIFIED;
         } else {
             $namespaceToken = T_STRING;
