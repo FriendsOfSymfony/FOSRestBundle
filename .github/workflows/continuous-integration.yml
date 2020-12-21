@@ -11,10 +11,6 @@ on:
     branches:
       - "*.x"
 
-env:
-  fail-fast: true
-  COMPOSER_ROOT_VERSION: "1.4"
-
 jobs:
   phpunit:
     name: "PHPUnit"
@@ -42,8 +38,6 @@ jobs:
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v2"
-        with:
-          fetch-depth: 2
 
       - name: "Install PHP with XDebug"
         uses: "shivammathur/setup-php@v2"
