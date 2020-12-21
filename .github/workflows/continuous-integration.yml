@@ -35,7 +35,6 @@ jobs:
             symfony-require: "5.1.*"
           - php-version: 8.0
             composer-flags: "--ignore-platform-reqs"
-            symfony-deprecations: "max[self]=0"
 
     steps:
       - name: "Checkout"
@@ -77,7 +76,5 @@ jobs:
           php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
       - name: "Run PHPUnit"
-        env:
-          SYMFONY_DEPRECATIONS_HELPER: "${{ matrix.symfony-deprecations }}"
         if: "${{ matrix.coverage == '' }}"
         run: "./phpunit"
