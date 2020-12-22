@@ -12,7 +12,7 @@ applications with Symfony. Features include:
   compatible with RFC 7807 using the Symfony Serializer component or the
   JMS Serializer
 
-[![Build Status](https://img.shields.io/github/workflow/status/FriendsOfSymfony/FOSRestBundle/build?style=flat-square)](https://github.com/FriendsOfSymfony/FOSRestBundle/actions?query=workflow:build)
+[![Build Status](https://img.shields.io/github/workflow/status/FriendsOfSymfony/FOSRestBundle/CI?style=flat-square)](https://github.com/FriendsOfSymfony/FOSRestBundle/actions?query=workflow:CI)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/?branch=master)
 [![Total Downloads](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/downloads.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
