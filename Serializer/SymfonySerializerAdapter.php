@@ -58,6 +58,11 @@ final class SymfonySerializerAdapter implements Serializer
         if (null !== $context->getGroups()) {
             $newContext['groups'] = $context->getGroups();
         }
+
+        if (false === $context->hasAttribute(Serializer::FOS_BUNDLE_SERIALIZATION_CONTEXT)) {
+            $newContext[Serializer::FOS_BUNDLE_SERIALIZATION_CONTEXT] = true;
+        }
+
         $newContext['version'] = $context->getVersion();
         $newContext['enable_max_depth'] = $context->isMaxDepthEnabled();
         $newContext['skip_null_values'] = !$context->getSerializeNull();
