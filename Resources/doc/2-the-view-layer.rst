@@ -210,14 +210,12 @@ You can look at `FOSRestBundle normalizers`_ for examples.
 Data Transformation
 -------------------
 
-As we have seen in the section before, the FOSRestBundle relies on the form
-component (https://symfony.com/doc/current/components/form/introduction.html) to
-handle submission of view data. In fact, the form builder
-(https://symfony.com/doc/current/book/forms.html#building-the-form) basically
-defines the structure of the expected view data which shall be used for further
-processing - which most of the time relates to a PUT or POST request. This
-brings a lot of flexibility and allows to exactly define the structure of data
-to be received by the API.
+As we have seen in the section before, the FOSRestBundle relies on the
+`Symfony form component`_ to handle submission of view data. In fact, the
+`Symfony form builder`_ basically defines the structure of the expected view
+data which shall be used for further processing - which most of the time
+relates to a PUT or POST request. This brings a lot of flexibility and allows
+to exactly define the structure of data to be received by the API.
 
 Most of the time the requirements regarding a PUT/POST request are, in
 terms of data structure, fairly simple. The payload within a PUT or POST request
@@ -358,3 +356,5 @@ That was it!
 .. _`Abusing JSONP with Rosetta Flash`: http://miki.it/blog/2014/7/8/abusing-jsonp-with-rosetta-flash/
 .. _`NelmioSecurityBundle`: https://github.com/nelmio/NelmioSecurityBundle
 .. _`disable the content type sniffing for script resources`: https://github.com/nelmio/NelmioSecurityBundle#content-type-sniffing
+.. _`Symfony form component`: https://symfony.com/doc/current/components/form.html
+.. _`Symfony form builder`: https://symfony.com/doc/current/forms.html#building-forms
