@@ -76,7 +76,7 @@ class BodyListener
 
             if (null === $format || !$this->decoderProvider->supports($format)) {
                 if ($this->throwExceptionOnUnsupportedContentType
-                    && $this->isNotAnEmptyDeleteRequestWithNoSetContentType($method, $content, $contentType)
+                    && $this->isNotAnEmptyPostOrDeleteRequestWithNoSetContentType($method, $content, $contentType)
                 ) {
                     throw new UnsupportedMediaTypeHttpException("Request body format '$format' not supported");
                 }
@@ -109,9 +109,9 @@ class BodyListener
         }
     }
 
-    private function isNotAnEmptyDeleteRequestWithNoSetContentType(string $method, $content, ?string $contentType): bool
+    private function isNotAnEmptyPostOrDeleteRequestWithNoSetContentType(string $method, $content, ?string $contentType): bool
     {
-        return false === ('DELETE' === $method && empty($content) && empty($contentType));
+        return false === (in_array($method, ['DELETE', 'POST], true) && empty($content) && empty($contentType));
     }
 
     private function isDecodeable(Request $request): bool
