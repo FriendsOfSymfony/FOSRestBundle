@@ -111,7 +111,7 @@ class BodyListener
 
     private function isNotAnEmptyPostOrDeleteRequestWithNoSetContentType(string $method, $content, ?string $contentType): bool
     {
-        return false === (in_array($method, ['DELETE', 'POST], true) && empty($content) && empty($contentType));
+        return false === (in_array($method, ['DELETE', 'POST'], true) && empty($content) && empty($contentType));
     }
 
     private function isDecodeable(Request $request): bool
