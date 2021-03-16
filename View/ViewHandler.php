@@ -189,7 +189,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
 
         $response = $this->initResponse($view, $format);
 
-        if (!$response->headers->has('Content-Type')) {
+        if (!$response->headers->has('Content-Type') && !in_array($response->getStatusCode(), [204, 304])) {
             $mimeType = $request->attributes->get('media_type');
             if (null === $mimeType) {
                 $mimeType = $request->getMimeType($format);
