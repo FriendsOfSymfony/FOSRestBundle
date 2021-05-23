@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2021-05-07T13:18:48Z
+
+Can you please add a test case that would fail without this change?
+
+---------------------------------------------------------------------------
+
+by Viktor-Truhanovich at 2021-05-07T18:24:08Z
+
+```
+/**
+ * @Rest\Route("accounts")
+ */
+class AccountController extends AbstractFOSRestController implements ApiControllerInterface
+{
+    /**
+     * @Rest\Get("/{id}", requirements={"id"="\d+"})
+     *
+     * @param Account|EntityInterface $account
+     *
+     * @return View
+     */
+    public function read(Account|EntityInterface $account): View
+    {
+        return $this->accountResponseManager->create($account);
+    }
+}
+```
+
+---------------------------------------------------------------------------
+
+by Viktor-Truhanovich at 2021-05-19T11:04:09Z
+
+> Can you please add a test case that would fail without this change?
+
+Sorry, I added tests for my code, but I never got an answer from you
