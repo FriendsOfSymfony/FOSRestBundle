@@ -86,9 +86,10 @@ Routing
 Route
 ~~~~~
 
-RestBundle extends the `@Route Symfony annotation`_ from Symfony.
-
-@Delete @Get @Head @Link @Patch @Post @Put @Unlink @Lock @Unlock @PropFind @PropPatch @Move @Mkcol @Copy are shortcuts to define
-routes limited to a specific HTTP method. They have the same options as @Route.
+RestBundle extends the `@Route Symfony annotation`_. The following are shortcuts
+to define routes limited to a specific HTTP method: ``@Delete``, ``@Get``,
+``@Head``, ``@Link``, ``@Patch``, ``@Post``, ``@Put``, ``@Unlink``, ``@Lock``,
+``@Unlock``, ``@PropFind``, ``@PropPatch``, ``@Move``, ``@Mkcol``, ``@Copy``.
+All of them have the same options as ``@Route``.
 
 .. _`@Route Symfony annotation`: https://symfony.com/doc/current/routing.html
