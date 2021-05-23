@@ -85,12 +85,18 @@ class ParamFetcherListener
     private function isParamFetcherType(\ReflectionParameter $controllerParam): bool
     {
         $type = $controllerParam->getType();
-        if (null === $type || $type->isBuiltin() || !$type instanceof \ReflectionNamedType) {
-            return false;
+        foreach ($type instanceof \ReflectionUnionType ? $type->getTypes() : [$type] as $type) {
+            if (null === $type || $type->isBuiltin() || !$type instanceof \ReflectionNamedType) {
+                continue;
+            }
+
+            $class = new \ReflectionClass($type->getName());
+
+            if ($class->implementsInterface(ParamFetcherInterface::class)) {
+                return true;
+            }
         }
 
-        $class = new \ReflectionClass($type->getName());
-
-        return $class->implementsInterface(ParamFetcherInterface::class);
+        return false;
     }
 }

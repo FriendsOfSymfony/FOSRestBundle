@@ -17,6 +17,7 @@ use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
+use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherUnionTypeController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,7 +118,7 @@ class ParamFetcherListenerTest extends TestCase
 
     public function setParamFetcherByTypehintProvider()
     {
-        return [
+        $paramFetcher = [
             // Without a typehint, the ParamFetcher should be injected as
             // $paramFetcher.
             ['byNameAction', 'paramFetcher'],
@@ -133,13 +134,21 @@ class ParamFetcherListenerTest extends TestCase
             // should be injected as the default name.
             ['notProvidedAction', 'paramFetcher'],
         ];
+
+        if (\PHP_VERSION_ID >= 80000) {
+            // With a mixed typehint, the ParamFetcher should be injected as whatever
+            // the parameter name is.
+            $paramFetcher[] = ['byUnionTypeAction', 'pfu'];
+        }
+
+        return $paramFetcher;
     }
 
     protected function getEvent(Request $request, $actionMethod = 'byNameAction')
     {
         $this->requestStack->push($request);
 
-        $controller = new ParamFetcherController();
+        $controller = \PHP_VERSION_ID < 80000 ? new ParamFetcherController() : new ParamFetcherUnionTypeController();
         $callable = $actionMethod ? [$controller, $actionMethod] : $controller;
         $kernel = $this->createMock(HttpKernelInterface::class);
 
