@@ -15,6 +15,7 @@ use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Util\ExceptionValueMap;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -41,7 +42,7 @@ class ResponseStatusCodeListener implements EventSubscriberInterface
 
     public function getResponseStatusCodeFromThrowable(ExceptionEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$this->isMainRequest($event)) {
             return;
         }
 
@@ -60,7 +61,7 @@ class ResponseStatusCodeListener implements EventSubscriberInterface
 
     public function setResponseStatusCode(ResponseEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$this->isMainRequest($event)) {
             return;
         }
 
@@ -69,5 +70,14 @@ class ResponseStatusCodeListener implements EventSubscriberInterface
 
             $this->responseStatusCode = null;
         }
+    }
+
+    private function isMainRequest(KernelEvent $event): bool
+    {
+        if (method_exists($event, 'isMainRequest')) {
+            return $event->isMainRequest();
+        }
+
+        return $event->isMasterRequest();
     }
 }
