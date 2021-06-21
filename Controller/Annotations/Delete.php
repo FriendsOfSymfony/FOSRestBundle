@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * DELETE Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Delete extends Route

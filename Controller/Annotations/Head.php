@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * HEAD Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Head extends Route
