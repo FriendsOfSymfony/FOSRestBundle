@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * OPTIONS Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Options extends Route

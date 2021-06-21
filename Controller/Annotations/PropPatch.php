@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * PROPPATCH Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  *
  * @author Maximilian Bosch <maximilian.bosch.27@gmail.com>
