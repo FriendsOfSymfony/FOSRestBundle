@@ -90,6 +90,7 @@ class BodyListener
                 if (is_array($data)) {
                     $request->request = new ParameterBag($data);
                     $normalizeRequest = true;
+                    $request->attributes->set('_fosrestbundle_decoder', get_class($decoder));
                 } else {
                     throw new BadRequestHttpException('Invalid '.$format.' message received');
                 }
