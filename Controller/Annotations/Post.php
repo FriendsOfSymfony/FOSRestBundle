@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * POST Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Post extends Route

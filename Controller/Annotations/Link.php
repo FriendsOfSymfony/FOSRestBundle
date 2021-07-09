@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * LINK Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Link extends Route

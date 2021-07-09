@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * PATCH Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Patch extends Route

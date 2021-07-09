@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * PUT Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Put extends Route
