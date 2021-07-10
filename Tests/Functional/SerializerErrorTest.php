@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use JMS\Serializer\Handler\HandlerRegistry;
 use Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer;
 
 /**
@@ -29,6 +30,7 @@ class SerializerErrorTest extends WebTestCase
         self::deleteTmpDir('FlattenExceptionNormalizerRfc7807Format');
         self::deleteTmpDir('FormErrorHandler');
         self::deleteTmpDir('FormErrorNormalizer');
+        self::deleteTmpDir('DisableJMSHandlers');
         parent::tearDownAfterClass();
     }
 
@@ -272,5 +274,22 @@ XML;
             ['FormErrorNormalizer', $expectedSerializerContent],
             ['FormErrorHandler', $expectedJMSContent],
         ];
+    }
+
+    public function testJMSHandlers()
+    {
+        // Test case importing the JMS Serializer bundle
+        self::bootKernel(['test_case' => 'FormErrorHandler', 'debug' => false]);
+
+        $this->assertTrue(self::$container->has('fos_rest.serializer.jms_handler_registry'));
+        $this->assertNotInstanceOf(HandlerRegistry::class, self::$container->get('jms_serializer.handler_registry'));
+    }
+
+    public function testDisabledJMSRegistry()
+    {
+        self::bootKernel(['test_case' => 'DisableJMSHandlers', 'debug' => false]);
+
+        $this->assertFalse(self::$container->has('fos_rest.serializer.jms_handler_registry'));
+        $this->assertInstanceOf(HandlerRegistry::class, self::$container->get('jms_serializer.handler_registry'));
     }
 }

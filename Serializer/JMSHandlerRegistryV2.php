@@ -20,6 +20,8 @@ use JMS\Serializer\Handler\HandlerRegistryInterface;
  * @author Ener-Getick <egetick@gmail.com>
  *
  * @internal do not depend on this class directly
+ *
+ * @deprecated since FOSRestBundle 3.1, use the option `fos_rest.serializer.disable_custom_jms_registry` to avoid relying on it.
  */
 final class JMSHandlerRegistryV2 implements HandlerRegistryInterface
 {
@@ -56,6 +58,8 @@ final class JMSHandlerRegistryV2 implements HandlerRegistryInterface
             if (null !== $handler) {
                 return $handler;
             }
+
+            @trigger_error(sprintf('Relying on the custom registry %s to inherit the JMS handler of type `%s` is deprecated since FOSRestBundle 3.1. It will be removed in version 4.0. Set the option `fos_rest.serializer.enable_jms_registry` to `false` to disable it.', __CLASS__, $typeName), E_USER_DEPRECATED);
         } while ($typeName = get_parent_class($typeName));
     }
 }

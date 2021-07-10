@@ -28,11 +28,14 @@ use Symfony\Component\DependencyInjection\Reference;
  * @author Christian Flothmann <christian.flothmann@sensiolabs.de>
  *
  * @internal
+ *
+ * @deprecated since FOSRestBundle 3.1.
  */
 class HandlerRegistryDecorationPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
+        // If handlers are disabled, this alias is not created by JMSHandlersPass
         if (!$container->has('fos_rest.serializer.jms_handler_registry')) {
             return;
         }
