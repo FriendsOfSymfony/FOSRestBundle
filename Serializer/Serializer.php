@@ -18,6 +18,8 @@ use FOS\RestBundle\Context\Context;
  */
 interface Serializer
 {
+    public const FOS_BUNDLE_SERIALIZATION_CONTEXT = 'fos_bundle_serialization';
+
     /**
      * @return string
      */
