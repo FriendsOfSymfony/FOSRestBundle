@@ -152,10 +152,11 @@ That's it, it should work now.
 How to match a specific version in my routing ?
 -----------------------------------------------
 
-You can use conditions on your request to check for the version that was determined:
+You can use requirements on your request to check for the version that was determined:
 
 .. code-block:: yaml
 
     my_route:
         # ...
-        condition: "request.attributes.get('version') == 'v2'"
+        requirements:
+            version: v1
