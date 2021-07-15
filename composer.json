@@ -30,7 +30,6 @@
     },
     "require": {
         "php": "^7.2|^8.0",
-        "psr/log": "^1.0",
         "symfony/config": "^4.4|^5.0",
         "symfony/dependency-injection": "^4.4|^5.0",
         "symfony/event-dispatcher": "^4.4|^5.0",
@@ -42,6 +41,7 @@
         "willdurand/jsonp-callback-validator": "^1.0"
     },
     "require-dev": {
+        "psr/log": "^1.0|^2.0|^3.0",
         "sensio/framework-extra-bundle": "^5.2.3",
         "symfony/phpunit-bridge": "^5.2",
         "symfony/asset": "^4.4|^5.0",
