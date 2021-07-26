@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -295,7 +296,8 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
         }
 
         if (!empty($config['view']['jsonp_handler'])) {
-            $handler = new DefinitionDecorator($config['service']['view_handler']);
+            $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
+            $handler = new $childDefinitionClass($config['service']['view_handler']);
             $handler->setPublic(true);
 
             $jsonpHandler = new Reference('fos_rest.view_handler.jsonp');
@@ -454,8 +456,9 @@ class FOSRestExtension extends Extension implements PrependExtensionInterface
             array_pop($arguments);
         }
 
+        $childDefinitionClass = class_exists(ChildDefinition::class) ? ChildDefinition::class : DefinitionDecorator::class;
         $container
-            ->register($id, new DefinitionDecorator('fos_rest.zone_request_matcher'))
+            ->register($id, new $childDefinitionClass('fos_rest.zone_request_matcher'))
             ->setArguments($arguments)
         ;
 
