@@ -31,7 +31,3 @@ fos_rest:
             - custom_header
             - media_type
             - query
-
-twig:
-    exception_controller: ~
-    strict_variables: '%kernel.debug%'

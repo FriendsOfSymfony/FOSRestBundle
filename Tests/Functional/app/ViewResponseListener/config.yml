@@ -16,7 +16,3 @@ fos_rest:
     format_listener:
         rules:
             - { path: ^/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }
-
-twig:
-    exception_controller: ~
-    strict_variables: '%kernel.debug%'

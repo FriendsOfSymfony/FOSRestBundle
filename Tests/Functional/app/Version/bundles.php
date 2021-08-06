@@ -11,7 +11,6 @@
 
 return [
     new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-    new \Symfony\Bundle\TwigBundle\TwigBundle(),
     new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
     new \FOS\RestBundle\FOSRestBundle(),
     new \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\TestBundle(),
