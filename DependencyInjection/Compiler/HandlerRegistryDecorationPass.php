@@ -33,7 +33,7 @@ class HandlerRegistryDecorationPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('fos_rest.serializer.jms_handler_registry')) {
+        if (!$container->has('fos_rest.serializer.jms_handler_registry') || $container->has('jms_serializer.handler_registry.service_locator')) {
             return;
         }
 
