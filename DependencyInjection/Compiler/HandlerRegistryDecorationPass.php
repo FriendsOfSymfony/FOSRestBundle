@@ -34,7 +34,7 @@ class HandlerRegistryDecorationPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // skip if JMSSerializerBundle is not installed or if JMSSerializerBundle >= 4.0
-        if (!$container->has('fos_rest.serializer.jms_handler_registry')) {
+        if (!$container->has('fos_rest.serializer.jms_handler_registry') || $container->has('jms_serializer.handler_registry.service_locator')) {
             return;
         }
 
