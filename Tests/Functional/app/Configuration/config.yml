@@ -6,6 +6,7 @@ imports:
 framework:
     annotations:
         enabled: true
+    property_access: ~
     serializer:
         enabled: true
     router: { resource: "%kernel.project_dir%/Configuration/routing.yml" }
