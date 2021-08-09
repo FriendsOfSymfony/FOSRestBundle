@@ -41,6 +41,7 @@
         "willdurand/jsonp-callback-validator": "^1.0"
     },
     "require-dev": {
+        "doctrine/annotations": "^1.13.2",
         "psr/log": "^1.0|^2.0|^3.0",
         "sensio/framework-extra-bundle": "^5.2.3",
         "symfony/phpunit-bridge": "^5.2",

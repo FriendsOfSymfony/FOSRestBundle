@@ -4,6 +4,8 @@ imports:
     - { resource: security.php }
 
 framework:
+    annotations:
+        enabled: true
     serializer:
         enabled: true
     router: { resource: "%kernel.project_dir%/Configuration/routing.yml" }

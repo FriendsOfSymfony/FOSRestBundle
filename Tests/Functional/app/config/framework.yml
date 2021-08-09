@@ -1,4 +1,6 @@
 framework:
+    annotations:
+        enabled: true
     secret: test
     router:
         resource: "%kernel.project_dir%/config/routing.yml"
