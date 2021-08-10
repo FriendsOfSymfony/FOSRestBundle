@@ -27,7 +27,7 @@ $container->loadFromExtension('framework', [
     'property_access' => null,
     'secret' => 'test',
     'router' => [
-        'resource' => "%kernel.project_dir%/config/routing.yml",
+        'resource' => '%kernel.project_dir%/config/routing.yml',
         'utf8' => true,
     ],
     'test' => null,
@@ -36,4 +36,3 @@ $container->loadFromExtension('framework', [
     'session' => $sessionConfig,
     'default_locale' => 'en',
 ]);
-
