@@ -60,7 +60,7 @@
         "jms/serializer-bundle": "^2.4.3|^3.0.1",
         "jms/serializer": "^1.13|^2.0|^3.0",
         "psr/http-message": "^1.0",
-        "friendsofphp/php-cs-fixer": "^2.0"
+        "friendsofphp/php-cs-fixer": "^3.0"
     },
     "suggest": {
         "sensio/framework-extra-bundle": "Add support for the request body converter and the view response listener, requires ^3.0",

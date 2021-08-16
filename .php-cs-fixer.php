@@ -9,11 +9,11 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 EOF;
 
-return PhpCsFixer\Config::create()
-    ->setRules(array(
-        'psr0' => true,
+return (new PhpCsFixer\Config())
+    ->setRules([
+        'psr_autoloading' => true,
         'header_comment' => ['header' => $header],
-    ))
+    ])
     ->setRiskyAllowed(true)
     ->setFinder(
         PhpCsFixer\Finder::create()
