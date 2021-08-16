@@ -1,6 +1,7 @@
 imports:
     - { resource: ../config/default.yml }
     - { resource: security.php }
+    - { resource: services.php }
 
 framework:
     serializer:
@@ -10,7 +11,3 @@ framework:
 fos_rest:
     zone:
         - { path: ^/api/* }
-
-services:
-    api_token_authenticator:
-        class:  FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Security\ApiTokenAuthenticator

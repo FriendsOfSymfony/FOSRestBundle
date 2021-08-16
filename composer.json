@@ -41,6 +41,7 @@
         "willdurand/jsonp-callback-validator": "^1.0"
     },
     "require-dev": {
+        "doctrine/annotations": "^1.13.2",
         "psr/log": "^1.0|^2.0|^3.0",
         "sensio/framework-extra-bundle": "^5.2.3",
         "symfony/phpunit-bridge": "^5.2",
@@ -68,6 +69,7 @@
         "symfony/validator": "Add support for validation capabilities in the ParamFetcher, requires ^2.7|^3.0"
     },
     "conflict": {
+        "doctrine/annotations": "<1.12",
         "sensio/framework-extra-bundle": "<5.2.3",
         "symfony/error-handler": "<4.4.1",
         "jms/serializer-bundle": "<2.4.3|3.0.0",

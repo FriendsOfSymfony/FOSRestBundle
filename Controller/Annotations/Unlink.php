@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * UNLINK Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Unlink extends Route

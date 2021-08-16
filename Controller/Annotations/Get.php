@@ -15,6 +15,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * GET Route annotation class.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  */
 class Get extends Route

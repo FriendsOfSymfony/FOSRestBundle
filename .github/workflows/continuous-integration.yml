@@ -34,7 +34,7 @@ jobs:
             composer-flags: "--prefer-stable"
             symfony-require: "5.1.*"
           - php-version: 8.0
-            composer-flags: "--ignore-platform-reqs"
+            composer-flags: "--ignore-platform-reqs --prefer-stable"
 
     steps:
       - name: "Checkout"

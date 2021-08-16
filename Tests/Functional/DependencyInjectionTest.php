@@ -60,6 +60,9 @@ class TestKernel extends Kernel
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', [
+                'annotations' => [
+                    'enabled' => true,
+                ],
                 'secret' => 'test',
                 'router' => [
                     'resource' => '%kernel.project_dir%/config/routing.yml',
