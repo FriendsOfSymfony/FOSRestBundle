@@ -82,7 +82,7 @@ class Route extends BaseRoute
                     $format,
                     $utf8,
                     $stateless,
-                    $env,
+                    $env
                 );
             } else {
                 parent::__construct(
@@ -100,7 +100,7 @@ class Route extends BaseRoute
                     $format,
                     $utf8,
                     $stateless,
-                    $env,
+                    $env
                 );
             }
         }
