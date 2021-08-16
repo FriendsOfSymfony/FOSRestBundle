@@ -70,6 +70,7 @@
         "symfony/validator": "Add support for validation capabilities in the ParamFetcher, requires ^2.7|^3.0"
     },
     "conflict": {
+        "doctrine/annotations": "<1.12",
         "doctrine/inflector": "1.4.0",
         "sensio/framework-extra-bundle": "<5.2.3",
         "symfony/error-handler": "<4.4.1",
