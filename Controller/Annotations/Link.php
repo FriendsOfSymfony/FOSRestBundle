@@ -18,6 +18,7 @@ namespace FOS\RestBundle\Controller\Annotations;
  * @NamedArgumentConstructor
  * @Target("METHOD")
  */
+#[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD)]
 class Link extends Route
 {
     public function getMethod()

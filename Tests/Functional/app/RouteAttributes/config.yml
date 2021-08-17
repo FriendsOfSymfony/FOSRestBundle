@@ -1,0 +1,22 @@
+imports:
+    - { resource: ../config/default.yml }
+    - { resource: ../config/sensio_framework_extra.yml }
+
+framework:
+    serializer:
+        enabled: true
+
+fos_rest:
+    view:
+        view_response_listener: 'force'
+        formats:
+            xml:  true
+            json: true
+    body_listener: true
+    format_listener:
+        rules:
+            - { path: ^/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }
+
+twig:
+    exception_controller: ~
+    strict_variables: '%kernel.debug%'
