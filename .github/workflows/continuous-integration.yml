@@ -28,11 +28,11 @@ jobs:
             symfony-require: "4.4.*"
           - php-version: 7.4
             composer-flags: "--prefer-stable"
-            symfony-require: "5.0.*"
+            symfony-require: "5.1.*"
             coverage: yes
           - php-version: 7.4
             composer-flags: "--prefer-stable"
-            symfony-require: "5.1.*"
+            symfony-require: "5.2.*"
           - php-version: 8.0
             composer-flags: "--ignore-platform-reqs --prefer-stable"
 
