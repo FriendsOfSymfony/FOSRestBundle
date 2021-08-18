@@ -11,7 +11,8 @@
 
 namespace FOS\RestBundle\Form\Transformer;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectManager as LegacyObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -27,8 +28,12 @@ class EntityToIdObjectTransformer implements DataTransformerInterface
     private $om;
     private $entityName;
 
-    public function __construct(ObjectManager $om, string $entityName)
+    public function __construct($om, string $entityName)
     {
+        if (!$om instanceof ObjectManager && !$om instanceof LegacyObjectManager) {
+            throw new \TypeError(sprintf('The first argument of %s() must be an instance of "%s" ("%s" given).', __METHOD__, ObjectManager::class, is_object($om) ? get_class($om) : gettype($om)));
+        }
+
         $this->entityName = $entityName;
         $this->om = $om;
     }
