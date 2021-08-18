@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Annotation\Route as BaseRoute;
  * @NamedArgumentConstructor
  * @Target({"CLASS", "METHOD"})
  */
+#[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 class Route extends BaseRoute
 {
     public function __construct(

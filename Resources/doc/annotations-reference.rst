@@ -92,4 +92,44 @@ to define routes limited to a specific HTTP method: ``@Delete``, ``@Get``,
 ``@Unlock``, ``@PropFind``, ``@PropPatch``, ``@Move``, ``@Mkcol``, ``@Copy``.
 All of them have the same options as ``@Route``.
 
+Example:
+
+.. configuration-block::
+
+    .. code-block:: php-annotations
+
+        // src/Controller/BlogController.php
+        namespace App\Controller;
+
+        use FOS\RestBundle\Controller\AbstractFOSRestController;
+        use FOS\RestBundle\Controller\Annotations as Rest;
+
+        class BlogController extends AbstractFOSRestController
+        {
+            /**
+             * @Rest\Get("/blog", name="blog_list")
+             */
+            public function list()
+            {
+                // ...
+            }
+        }
+
+    .. code-block:: php-attributes
+
+        // src/Controller/BlogController.php
+        namespace App\Controller;
+
+        use FOS\RestBundle\Controller\AbstractFOSRestController;
+        use FOS\RestBundle\Controller\Annotations as Rest;
+
+        class BlogController extends AbstractFOSRestController
+        {
+            #[Rest\Get('/blog', name: 'blog_list')]
+            public function list()
+            {
+                // ...
+            }
+        }
+
 .. _`@Route Symfony annotation`: https://symfony.com/doc/current/routing.html
