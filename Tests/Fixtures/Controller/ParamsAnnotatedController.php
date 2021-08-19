@@ -35,4 +35,14 @@ class ParamsAnnotatedController
     public function getArticlesAction(ParamFetcher $paramFetcher)
     {
     }
+
+    #[QueryParam(name: 'page', requirements: '\d+', default: '1', description: 'Page of the overview')]
+    #[RequestParam(name: 'byauthor', requirements: '[a-z]+', description: 'by author', incompatibles: ['search'], strict: true)]
+    #[QueryParam(name: 'filters', requirements: '\d+', default: '1', description: 'Page of the overview')]
+    #[FileParam(name: 'avatar', requirements: ['mimeTypes' => 'application/json'], image: true)]
+    #[FileParam(name: 'foo', strict: false)]
+    #[FileParam(name: 'bar', map: true)]
+    public function getArticlesAttributesAction(ParamFetcher $paramFetcher)
+    {
+    }
 }

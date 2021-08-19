@@ -50,7 +50,15 @@ final class ParamReader implements ParamReaderInterface
      */
     public function getParamsFromMethod(\ReflectionMethod $method): array
     {
-        $annotations = $this->annotationReader->getMethodAnnotations($method);
+        $annotations = [];
+        if (\PHP_VERSION_ID >= 80000) {
+            $annotations = $this->getParamsFromAttributes($method);
+        }
+
+        $annotations = array_merge(
+            $annotations,
+            $this->annotationReader->getMethodAnnotations($method) ?? []
+        );
 
         return $this->getParamsFromAnnotationArray($annotations);
     }
@@ -60,7 +68,15 @@ final class ParamReader implements ParamReaderInterface
      */
     public function getParamsFromClass(\ReflectionClass $class): array
     {
-        $annotations = $this->annotationReader->getClassAnnotations($class);
+        $annotations = [];
+        if (\PHP_VERSION_ID >= 80000) {
+            $annotations = $this->getParamsFromAttributes($class);
+        }
+
+        $annotations = array_merge(
+            $annotations,
+            $this->annotationReader->getClassAnnotations($class) ?? []
+        );
 
         return $this->getParamsFromAnnotationArray($annotations);
     }
@@ -75,6 +91,22 @@ final class ParamReader implements ParamReaderInterface
             if ($annotation instanceof ParamInterface) {
                 $params[$annotation->getName()] = $annotation;
             }
+        }
+
+        return $params;
+    }
+
+    /**
+     * @param \ReflectionClass|\ReflectionMethod $reflection
+     *
+     * @return ParamInterface[]
+     */
+    private function getParamsFromAttributes($reflection): array
+    {
+        $params = [];
+        foreach ($reflection->getAttributes(ParamInterface::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+            $param = $attribute->newInstance();
+            $params[$param->getName()] = $param;
         }
 
         return $params;

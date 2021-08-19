@@ -21,10 +21,12 @@ use Symfony\Component\Validator\Constraints\Image;
  * Represents a file that must be present.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
+#[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD)]
 class FileParam extends AbstractParam
 {
     /** @var bool */
@@ -38,6 +40,32 @@ class FileParam extends AbstractParam
 
     /** @var bool */
     public $map = false;
+
+    /**
+     * @param mixed $requirements
+     * @param mixed $default
+     */
+    public function __construct(
+        string $name = '',
+        bool $strict = true,
+        $requirements = null,
+        bool $image = false,
+        bool $map = false,
+        ?string $key = null,
+        $default = null,
+        string $description = '',
+        bool $nullable = false
+    ) {
+        $this->strict = $strict;
+        $this->requirements = $requirements;
+        $this->image = $image;
+        $this->map = $map;
+        $this->name = $name;
+        $this->key = $key;
+        $this->default = $default;
+        $this->description = $description;
+        $this->nullable = $nullable;
+    }
 
     /**
      * {@inheritdoc}

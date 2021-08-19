@@ -93,6 +93,54 @@ class ParamReaderTest extends TestCase
         }
     }
 
+    /**
+     * @requires PHP 8
+     */
+    public function testReadsAttributes()
+    {
+        $annotationReader = $this->getMockBuilder(AnnotationReader::class)->getMock();
+        $paramReader = new ParamReader($annotationReader);
+        $params = $paramReader->read(new \ReflectionClass(ParamsAnnotatedController::class), 'getArticlesAttributesAction');
+
+        $this->assertCount(6, $params);
+
+        // Param 1 (query)
+        $this->assertArrayHasKey('page', $params);
+        $this->assertEquals('page', $params['page']->name);
+        $this->assertEquals('\\d+', $params['page']->requirements);
+        $this->assertEquals('1', $params['page']->default);
+        $this->assertEquals('Page of the overview', $params['page']->description);
+        $this->assertFalse($params['page']->map);
+        $this->assertFalse($params['page']->strict);
+
+        // Param 2 (request)
+        $this->assertArrayHasKey('byauthor', $params);
+        $this->assertEquals('byauthor', $params['byauthor']->name);
+        $this->assertEquals('[a-z]+', $params['byauthor']->requirements);
+        $this->assertEquals('by author', $params['byauthor']->description);
+        $this->assertEquals(['search'], $params['byauthor']->incompatibles);
+        $this->assertFalse($params['byauthor']->map);
+        $this->assertTrue($params['byauthor']->strict);
+
+        // Param 3 (query)
+        $this->assertArrayHasKey('filters', $params);
+        $this->assertEquals('filters', $params['filters']->name);
+        $this->assertFalse($params['filters']->map);
+
+        // Param 4 (file)
+        $this->assertArrayHasKey('avatar', $params);
+        $this->assertEquals('avatar', $params['avatar']->name);
+        $this->assertEquals(['mimeTypes' => 'application/json'], $params['avatar']->requirements);
+        $this->assertTrue($params['avatar']->image);
+        $this->assertTrue($params['avatar']->strict);
+
+        // Param 5 (file)
+        $this->assertArrayHasKey('foo', $params);
+        $this->assertEquals('foo', $params['foo']->name);
+        $this->assertFalse($params['foo']->image);
+        $this->assertFalse($params['foo']->strict);
+    }
+
     public function testExceptionOnNonExistingMethod()
     {
         $this->expectException(\InvalidArgumentException::class);
