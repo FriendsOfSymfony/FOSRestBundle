@@ -73,7 +73,8 @@
         "sensio/framework-extra-bundle": "<5.2.3",
         "symfony/error-handler": "<4.4.1",
         "jms/serializer-bundle": "<2.4.3|3.0.0",
-        "jms/serializer": "<1.13.0"
+        "jms/serializer": "<1.13.0",
+        "symfony/routing": ">6"
     },
     "minimum-stability":  "dev",
     "extra": {
