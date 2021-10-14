@@ -16,6 +16,7 @@ use FOS\RestBundle\Serializer\JMSHandlerRegistry;
 use FOS\RestBundle\Serializer\JMSHandlerRegistryV2;
 use FOS\RestBundle\Serializer\Normalizer\FormErrorHandler;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
+use JMS\SerializerBundle\Debug\TraceableHandlerRegistry;
 use JMS\SerializerBundle\JMSSerializerBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -32,6 +33,10 @@ class DependencyInjectionTest extends KernelTestCase
         $container = self::$kernel->getContainer();
 
         $this->assertInstanceOf(FormErrorHandler::class, $container->get('test.jms_serializer.form_error_handler'));
+
+        if (class_exists(TraceableHandlerRegistry::class)) {
+            $this->markTestIncomplete('Starting from jms/serializer-bundle 4.0 the handler registry is not decorated anymore');
+        }
 
         $this->assertInstanceOf(
             interface_exists(SerializationVisitorInterface::class) ? JMSHandlerRegistryV2::class : JMSHandlerRegistry::class,
