@@ -34,18 +34,4 @@ class ConfigurationCheckPassTest extends TestCase
         $compiler = new ConfigurationCheckPass();
         $compiler->process($container);
     }
-
-    public function testExceptionWhenViewAnnotationsAreNotEnabled()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('SensioFrameworkExtraBundle view annotations');
-
-        $container = new ContainerBuilder();
-
-        $container->register('fos_rest.view_response_listener');
-        $container->setParameter('kernel.bundles', ['SensioFrameworkExtraBundle' => '']);
-
-        $compiler = new ConfigurationCheckPass();
-        $compiler->process($container);
-    }
 }
