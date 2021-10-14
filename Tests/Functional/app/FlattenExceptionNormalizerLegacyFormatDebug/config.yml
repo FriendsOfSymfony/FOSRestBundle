@@ -10,3 +10,4 @@ fos_rest:
     exception:
         debug: true
         flatten_exception_format: 'legacy'
+        serializer_error_renderer: true

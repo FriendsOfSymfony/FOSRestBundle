@@ -11,17 +11,18 @@
 
 namespace FOS\RestBundle\Serializer\Normalizer;
 
+use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\Util\ExceptionValueMap;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 
 /**
  * @author Christian Flothmann <christian.flothmann@sensiolabs.de>
  *
  * @internal
  */
-final class FlattenExceptionNormalizer implements NormalizerInterface
+final class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
 {
     private $statusCodeMap;
     private $messagesMap;
@@ -73,8 +74,8 @@ final class FlattenExceptionNormalizer implements NormalizerInterface
         }
     }
 
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null, array $context = [])
     {
-        return $data instanceof FlattenException;
+        return $data instanceof FlattenException && ($context[Serializer::FOS_BUNDLE_SERIALIZATION_CONTEXT] ?? false);
     }
 }

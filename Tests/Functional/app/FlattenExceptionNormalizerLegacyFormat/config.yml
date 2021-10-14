@@ -11,3 +11,4 @@ fos_rest:
         codes:
             'InvalidArgumentException': 400
         flatten_exception_format: 'legacy'
+        serializer_error_renderer: true
