@@ -22,7 +22,7 @@ class ParamFetcherUnionTypeController extends ParamFetcherController
 {
     /**
      * Make sure the ParamFetcher can be injected according to the mixed typehint.
-     */  
+     */
     public function byUnionTypeAction(ParamFetcher|ParamFetcherInterface $pfu)
     {
     }

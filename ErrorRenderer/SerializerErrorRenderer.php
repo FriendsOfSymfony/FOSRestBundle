@@ -67,7 +67,7 @@ final class SerializerErrorRenderer implements ErrorRendererInterface
             ];
 
             return $flattenException->setAsString($this->serializer->serialize($flattenException, $format, $context))->setHeaders($flattenException->getHeaders() + $headers);
-        } catch (NotEncodableValueException | UnsupportedFormatException $e) {
+        } catch (NotEncodableValueException|UnsupportedFormatException $e) {
             return $this->fallbackErrorRenderer->render($exception);
         }
     }
