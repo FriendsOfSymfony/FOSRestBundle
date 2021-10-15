@@ -44,7 +44,7 @@ class DependencyInjectionTest extends KernelTestCase
         );
     }
 
-    protected static function getKernelClass()
+    protected static function getKernelClass(): string
     {
         return TestKernel::class;
     }
@@ -52,7 +52,7 @@ class DependencyInjectionTest extends KernelTestCase
 
 class TestKernel extends Kernel
 {
-    public function registerBundles()
+    public function registerBundles(): array
     {
         return [
             new FrameworkBundle(),
@@ -80,7 +80,7 @@ class TestKernel extends Kernel
         });
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return sys_get_temp_dir().'/'.str_replace('\\', '-', get_class($this)).'/cache/'.$this->environment;
     }

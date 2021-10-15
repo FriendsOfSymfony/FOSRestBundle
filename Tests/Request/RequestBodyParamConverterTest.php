@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException as SymfonyInvalidArgumentException;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -146,19 +147,21 @@ class RequestBodyParamConverterTest extends TestCase
              ->method('deserialize')
              ->willReturn('Object');
 
+        $errors = $this->getMockBuilder(ConstraintViolationListInterface::class)->getMock();
+
         $validator = $this->getMockBuilder(ValidatorInterface::class)->getMock();
         $validator
             ->expects($this->once())
             ->method('validate')
             ->with('Object', null, ['foo'])
-            ->willReturn('fooError');
+            ->willReturn($errors);
 
         $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
 
         $request = $this->createRequest(null, 'application/json');
         $configuration = $this->createConfiguration('FooClass', null, ['validator' => ['groups' => ['foo']]]);
         $this->launchExecution($converter, $request, $configuration);
-        $this->assertEquals('fooError', $request->attributes->get('errors'));
+        $this->assertEquals($errors, $request->attributes->get('errors'));
     }
 
     public function testValidatorSkipping()

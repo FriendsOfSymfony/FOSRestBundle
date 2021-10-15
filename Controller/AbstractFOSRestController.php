@@ -36,7 +36,7 @@ abstract class AbstractFOSRestController extends AbstractController
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         $subscribedServices = parent::getSubscribedServices();
         $subscribedServices['fos_rest.view_handler'] = ViewHandlerInterface::class;

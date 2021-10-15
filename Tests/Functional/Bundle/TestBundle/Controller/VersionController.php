@@ -36,7 +36,7 @@ class VersionController extends AbstractFOSRestController
     private function findExclusionStrategyVersion(Request $request)
     {
         $view = $this->view([]);
-        $response = $this->get('fos_rest.view_handler')->createResponse($view, $request, 'json');
+        $response = $this->getViewHandler()->createResponse($view, $request, 'json');
 
         return $view->getContext()->getVersion();
     }

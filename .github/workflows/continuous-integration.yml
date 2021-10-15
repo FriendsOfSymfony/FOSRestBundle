@@ -15,28 +15,37 @@ jobs:
   phpunit:
     name: "PHPUnit"
     runs-on: "ubuntu-20.04"
+    continue-on-error: ${{ matrix.can-fail }}
 
     strategy:
       matrix:
         include:
           - php-version: 7.2
             composer-flags: "--prefer-lowest --prefer-stable"
+            can-fail: false
           - php-version: 7.3
             composer-flags: "--prefer-stable"
+            can-fail: false
           - php-version: 7.4
             composer-flags: "--prefer-stable"
             symfony-require: "4.4.*"
+            can-fail: false
           - php-version: 7.4
             composer-flags: "--prefer-stable"
-            symfony-require: "5.1.*"
+            symfony-require: "5.3.*"
+            can-fail: false
             coverage: yes
           - php-version: 7.4
             composer-flags: "--prefer-stable"
-            symfony-require: "5.2.*"
+            can-fail: true
+            symfony-require: "5.4.*@dev"
           - php-version: 8.0
-            composer-flags: "--ignore-platform-reqs --prefer-stable"
+            composer-flags: "--prefer-stable"
+            can-fail: true
+            symfony-require: "6.0.*@dev"
           - php-version: 8.1
             composer-flags: "--prefer-stable"
+            can-fail: false
 
     steps:
       - name: "Checkout"
@@ -48,6 +57,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           coverage: "xdebug"
+          tools: "composer:v2,flex"
 
       - name: "Install PHP without coverage"
         uses: "shivammathur/setup-php@v2"
@@ -55,6 +65,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           coverage: "none"
+          tools: "composer:v2,flex"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v2"
@@ -67,7 +78,6 @@ jobs:
         env:
           SYMFONY_REQUIRE: "${{ matrix.symfony-require }}"
         run: |
-          composer global require --no-progress --no-scripts --no-plugins symfony/flex
           composer update --no-interaction --no-progress ${{ matrix.composer-flags }}
 
       - name: "Run PHPUnit"
