@@ -21,8 +21,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author Guilhem Niot <guilhem@gniot.fr>
- *
- * @final since 2.8
  */
 final class FormatNegotiator extends BaseNegotiator
 {
