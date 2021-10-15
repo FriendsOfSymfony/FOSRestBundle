@@ -14,6 +14,7 @@ namespace FOS\RestBundle\Tests\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\AbstractScalarParam;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -45,9 +46,15 @@ class QueryParamTest extends TestCase
             ->willReturn('foo');
 
         $request = $this->getMockBuilder(Request::class)->getMock();
-        $parameterBag = new ParameterBag();
-        $parameterBag->set('foo', 'foobar');
-        $request->query = $parameterBag;
+
+        if (class_exists(InputBag::class)) {
+            $bag = new InputBag();
+        } else {
+            $bag = new ParameterBag();
+        }
+
+        $bag->set('foo', 'foobar');
+        $request->query = $bag;
 
         $this->assertEquals('foobar', $this->param->getValue($request, 'bar'));
     }

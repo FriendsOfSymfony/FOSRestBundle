@@ -15,6 +15,7 @@ use FOS\RestBundle\Decoder\DecoderProviderInterface;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -88,7 +89,12 @@ class BodyListener
                 $decoder = $this->decoderProvider->getDecoder($format);
                 $data = $decoder->decode($content);
                 if (is_array($data)) {
-                    $request->request = new ParameterBag($data);
+                    if (class_exists(InputBag::class)) {
+                        $request->request = new InputBag($data);
+                    } else {
+                        $request->request = new ParameterBag($data);
+                    }
+
                     $normalizeRequest = true;
                 } else {
                     throw new BadRequestHttpException('Invalid '.$format.' message received');
@@ -105,7 +111,11 @@ class BodyListener
                 throw new BadRequestHttpException($e->getMessage());
             }
 
-            $request->request = new ParameterBag($data);
+            if (class_exists(InputBag::class)) {
+                $request->request = new InputBag($data);
+            } else {
+                $request->request = new ParameterBag($data);
+            }
         }
     }
 
