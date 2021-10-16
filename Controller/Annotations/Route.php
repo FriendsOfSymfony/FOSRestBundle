@@ -86,22 +86,31 @@ class Route extends BaseRoute
                     $env
                 );
             } else {
+                if (\is_string($data)) {
+                    $data = ['path' => $data];
+                } elseif (!\is_array($data)) {
+                    throw new \TypeError(sprintf('"%s": Argument $data is expected to be a string or array, got "%s".', __METHOD__, get_debug_type($data)));
+                } elseif (0 !== count($data) && [] === \array_intersect(\array_keys($data), ['path', 'name', 'requirements', 'options', 'defaults', 'host', 'methods', 'schemes', 'condition', 'priority', 'locale', 'format', 'utf8', 'stateless', 'env'])) {
+                    $localizedPaths = $data;
+                    $data = ['path' => $localizedPaths];
+                }
+
                 parent::__construct(
-                    $path,
-                    $name,
-                    $requirements,
-                    $options,
-                    $defaults,
-                    $host,
-                    $methods,
-                    $schemes,
-                    $condition,
-                    $priority,
-                    $locale,
-                    $format,
-                    $utf8,
-                    $stateless,
-                    $env
+                    $data['path'] ?? $path,
+                    $data['name'] ?? $name,
+                    $data['requirements'] ?? $requirements,
+                    $data['options'] ?? $options,
+                    $data['defaults'] ?? $defaults,
+                    $data['host'] ?? $host,
+                    $data['methods'] ?? $methods,
+                    $data['schemes'] ?? $schemes,
+                    $data['condition'] ?? $condition,
+                    $data['priority'] ?? $priority,
+                    $data['locale'] ?? $locale,
+                    $data['format'] ?? $format,
+                    $data['utf8'] ?? $utf8,
+                    $data['stateless'] ?? $stateless,
+                    $data['env'] ?? $env
                 );
             }
         }
