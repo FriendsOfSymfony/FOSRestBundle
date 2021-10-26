@@ -22,6 +22,7 @@ class SerializerErrorTest extends WebTestCase
 {
     public static function tearDownAfterClass(): void
     {
+        self::deleteTmpDir('CustomFlattenExceptionNormalizer');
         self::deleteTmpDir('FlattenExceptionHandlerLegacyFormat');
         self::deleteTmpDir('FlattenExceptionHandlerRfc7807Format');
         self::deleteTmpDir('FlattenExceptionNormalizerLegacyFormat');
@@ -119,6 +120,23 @@ class SerializerErrorTest extends WebTestCase
         $client->request('GET', '/serializer-error/invalid-argument-exception.json');
 
         $this->assertEquals(json_encode($expectedJson), $client->getResponse()->getContent());
+    }
+
+    public function testCustomExceptionSerialization()
+    {
+        if (!class_exists(SerializerErrorRenderer::class)) {
+            $this->markTestSkipped();
+        }
+
+        $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
+
+        $client = $this->createClient(['test_case' => 'CustomFlattenExceptionNormalizer', 'debug' => false]);
+        $client->request('GET', '/serializer-error/custom-argument-exception.json');
+
+        $this->assertEquals(
+            '{"code":409,"message":"Conflict"}',
+            $client->getResponse()->getContent()
+        );
     }
 
     public function serializeExceptionCodeMappedToResponseStatusCodeJsonProvider(): array

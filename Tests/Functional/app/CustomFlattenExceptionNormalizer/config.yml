@@ -1,0 +1,25 @@
+imports:
+    - { resource: ../config/default.yml }
+
+framework:
+    serializer: true
+
+fos_rest:
+    exception:
+        codes:
+            'FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\CustomArgumentException': 409
+        enabled: true
+        map_exception_codes: true
+        exception_listener: false
+        serialize_exceptions: false
+        flatten_exception_format: 'legacy'
+        serializer_error_renderer: false
+    serializer:
+        serialize_null: true
+    body_listener:
+        enabled: true
+    routing_loader: false
+    view:
+        formats:
+            json: true
+            csv: true
