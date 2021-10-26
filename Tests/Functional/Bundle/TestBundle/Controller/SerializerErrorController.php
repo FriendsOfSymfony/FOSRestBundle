@@ -16,6 +16,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+class CustomArgumentException extends \Exception
+{
+}
+
 /**
  * Controller to test serialization of various errors and exceptions.
  *
@@ -36,6 +40,11 @@ class SerializerErrorController extends AbstractController
     public function invalidArgumentExceptionAction()
     {
         throw new \InvalidArgumentException('Invalid argument given.');
+    }
+
+    public function customExceptionAction()
+    {
+        throw new CustomArgumentException('Custom exception');
     }
 
     /**
