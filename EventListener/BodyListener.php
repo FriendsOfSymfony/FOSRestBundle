@@ -125,7 +125,7 @@ class BodyListener
 
     private function isFormRequest(Request $request): bool
     {
-        $contentTypeParts = explode(';', $request->headers->get('Content-Type'));
+        $contentTypeParts = explode(';', $request->headers->get('Content-Type', ''));
 
         if (isset($contentTypeParts[0])) {
             return in_array($contentTypeParts[0], ['multipart/form-data', 'application/x-www-form-urlencoded']);

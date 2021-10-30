@@ -44,7 +44,7 @@
         "doctrine/annotations": "^1.13.2",
         "psr/log": "^1.0|^2.0|^3.0",
         "sensio/framework-extra-bundle": "^5.2.3",
-        "symfony/phpunit-bridge": "^5.2",
+        "symfony/phpunit-bridge": "^5.3.10",
         "symfony/asset": "^4.4|^5.0",
         "symfony/form": "^4.4|^5.0",
         "symfony/mime": "^4.4|^5.0",
