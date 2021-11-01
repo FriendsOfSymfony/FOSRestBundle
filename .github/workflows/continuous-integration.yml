@@ -34,9 +34,12 @@ jobs:
             composer-flags: "--prefer-stable"
             symfony-require: "5.2.*"
           - php-version: 8.0
-            composer-flags: "--ignore-platform-reqs --prefer-stable"
+            composer-flags: "--prefer-stable"
           - php-version: 8.1
             composer-flags: "--prefer-stable"
+          - php-version: 8.0
+            composer-flags: "--prefer-stable"
+            symfony-require: "6.0.*"
 
     steps:
       - name: "Checkout"
