@@ -86,7 +86,7 @@ final class FlattenExceptionNormalizer implements ContextAwareNormalizerInterfac
         }
 
         // we are in messenger context
-        if (!empty($context[Serializer::MESSENGER_SERIALIZATION_CONTEXT])) {
+        if (!empty($context['messenger_serialization'])) { // Serializer::MESSENGER_SERIALIZATION_CONTEXT
             return false;
         }
 
