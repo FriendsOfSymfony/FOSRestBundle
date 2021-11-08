@@ -76,6 +76,20 @@ final class FlattenExceptionNormalizer implements ContextAwareNormalizerInterfac
 
     public function supportsNormalization($data, $format = null, array $context = [])
     {
-        return $data instanceof FlattenException && ($context[Serializer::FOS_BUNDLE_SERIALIZATION_CONTEXT] ?? false);
+        if (!($data instanceof FlattenException)) {
+            return false;
+        }
+
+        // we are in fos rest context
+        if (!empty($context[Serializer::FOS_BUNDLE_SERIALIZATION_CONTEXT])) {
+            return true;
+        }
+
+        // we are in messenger context
+        if (!empty($context['messenger_serialization'])) { // Serializer::MESSENGER_SERIALIZATION_CONTEXT
+            return false;
+        }
+
+        return true;
     }
 }
