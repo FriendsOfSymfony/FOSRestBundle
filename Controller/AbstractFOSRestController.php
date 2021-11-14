@@ -12,15 +12,22 @@
 namespace FOS\RestBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
+$ref = new \ReflectionMethod(ServiceSubscriberInterface::class, 'getSubscribedServices');
+
+// Has the ServiceSubscriberInterface a return type hint
+if ($ref->getReturnType() !== null) {
+    class_alias(PostSymfony6AbstractFOSRestController::class, 'FOS\RestBundle\Controller\BaseAbstractFOSRestController');
+} else {
+    class_alias(PreSymfony6AbstractFOSRestController::class, 'FOS\RestBundle\Controller\BaseAbstractFOSRestController');
+}
 /**
  * Controllers using the View functionality of FOSRestBundle.
  */
-abstract class AbstractFOSRestController extends AbstractController
+abstract class AbstractFOSRestController extends BaseAbstractFOSRestController
 {
     use ControllerTrait;
-
     /**
      * @return ViewHandlerInterface
      */
@@ -31,16 +38,5 @@ abstract class AbstractFOSRestController extends AbstractController
         }
 
         return $this->viewhandler;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedServices(): array
-    {
-        $subscribedServices = parent::getSubscribedServices();
-        $subscribedServices['fos_rest.view_handler'] = ViewHandlerInterface::class;
-
-        return $subscribedServices;
     }
 }
