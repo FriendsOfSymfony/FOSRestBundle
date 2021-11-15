@@ -1,3 +1,0 @@
-Sphinx==1.8.5
-git+https://github.com/fabpot/sphinx-php.git
-sphinx_rtd_theme
