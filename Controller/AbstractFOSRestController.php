@@ -28,6 +28,7 @@ if (null !== $ref->getReturnType()) {
 abstract class AbstractFOSRestController extends BaseAbstractFOSRestController
 {
     use ControllerTrait;
+
     /**
      * @return ViewHandlerInterface
      */
