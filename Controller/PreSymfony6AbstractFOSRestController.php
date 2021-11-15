@@ -22,7 +22,7 @@ abstract class PreSymfony6AbstractFOSRestController extends AbstractController
     use ControllerTrait;
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
     public static function getSubscribedServices()
     {
