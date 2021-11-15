@@ -17,7 +17,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 $ref = new \ReflectionMethod(ServiceSubscriberInterface::class, 'getSubscribedServices');
 
 // Has the ServiceSubscriberInterface a return type hint
-if ($ref->getReturnType() !== null) {
+if (null !== $ref->getReturnType()) {
     class_alias(PostSymfony6AbstractFOSRestController::class, 'FOS\RestBundle\Controller\BaseAbstractFOSRestController');
 } else {
     class_alias(PreSymfony6AbstractFOSRestController::class, 'FOS\RestBundle\Controller\BaseAbstractFOSRestController');
