@@ -1,0 +1,8 @@
+version: 2
+
+sphinx:
+  configuration: Resources/doc/conf.py
+
+python:
+  install:
+    - requirements: Resources/doc/requirements.txt

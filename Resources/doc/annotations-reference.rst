@@ -94,9 +94,11 @@ All of them have the same options as ``@Route``.
 
 Example:
 
-.. configuration-block::
+.. tabs::
 
-    .. code-block:: php-annotations
+   .. tab:: Annotations
+
+    .. code-block:: php
 
         // src/Controller/BlogController.php
         namespace App\Controller;
@@ -114,8 +116,9 @@ Example:
                 // ...
             }
         }
+   .. tab:: Attributes
 
-    .. code-block:: php-attributes
+    .. code-block:: php
 
         // src/Controller/BlogController.php
         namespace App\Controller;
