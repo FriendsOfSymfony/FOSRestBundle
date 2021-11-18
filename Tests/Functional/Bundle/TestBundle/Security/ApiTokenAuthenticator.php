@@ -28,10 +28,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
     protected $headerName = 'x-foo';
     protected $tokenValue = 'FOOBAR';
 
-    /**
-     * @return Passport
-     */
-    public function authenticate(Request $request)
+    public function authenticate(Request $request): Passport
     {
         $credentials = $request->headers->get($this->headerName);
 
