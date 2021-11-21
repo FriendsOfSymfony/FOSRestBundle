@@ -22,4 +22,8 @@
             </exclude>
         </whitelist>
     </filter>
+
+    <php>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[indirect]=6"/>
+    </php>
 </phpunit>
