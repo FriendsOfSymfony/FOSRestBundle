@@ -78,7 +78,7 @@ jobs:
         env:
           SYMFONY_REQUIRE: "${{ matrix.symfony-require }}"
         run: |
-          composer remove friendsofphp/php-cs-fixer --dev
+          composer remove friendsofphp/php-cs-fixer --dev --no-update
           composer update --no-interaction --no-progress ${{ matrix.composer-flags }}
 
       - name: "Run PHPUnit"
