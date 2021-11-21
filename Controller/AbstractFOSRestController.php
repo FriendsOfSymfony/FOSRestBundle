@@ -12,11 +12,11 @@
 namespace FOS\RestBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-$ref = new \ReflectionMethod(ServiceSubscriberInterface::class, 'getSubscribedServices');
+$ref = new \ReflectionMethod(AbstractController::class, 'getSubscribedServices');
 
-// Has the ServiceSubscriberInterface a return type hint
+// Does the AbstractController::getSubscribedServices() method have a return type hint?
 if (null !== $ref->getReturnType()) {
     class_alias(PostSymfony6AbstractFOSRestController::class, 'FOS\RestBundle\Controller\BaseAbstractFOSRestController');
 } else {
