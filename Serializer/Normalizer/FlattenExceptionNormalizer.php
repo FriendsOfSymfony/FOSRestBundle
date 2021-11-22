@@ -37,7 +37,7 @@ final class FlattenExceptionNormalizer implements ContextAwareNormalizerInterfac
         $this->rfc7807 = $rfc7807;
     }
 
-    public function normalize($exception, $format = null, array $context = [])
+    public function normalize($exception, $format = null, array $context = []): array
     {
         if (isset($context['status_code'])) {
             $statusCode = $context['status_code'];
@@ -74,7 +74,7 @@ final class FlattenExceptionNormalizer implements ContextAwareNormalizerInterfac
         }
     }
 
-    public function supportsNormalization($data, $format = null, array $context = [])
+    public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         if (!($data instanceof FlattenException)) {
             return false;

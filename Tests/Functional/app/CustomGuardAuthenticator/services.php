@@ -10,10 +10,14 @@
  */
 
 return function (Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator $container) {
-    // BC layer to avoid deprecation warnings in symfony < 5.3
-    if (class_exists(Symfony\Bundle\SecurityBundle\RememberMe\FirewallAwareRememberMeHandler::class)) {
+    if (class_exists(Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator::class) && method_exists(Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator::class, 'createToken')) {
+        // Authenticator for use on Symfony 5.4 and newer
         $tokenAuthenticatorClass = \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Security\ApiTokenAuthenticator::class;
+    } elseif (class_exists(Symfony\Bundle\SecurityBundle\RememberMe\FirewallAwareRememberMeHandler::class)) {
+        // Authenticator for use on Symfony 5.3
+        $tokenAuthenticatorClass = \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Security\ApiToken53Authenticator::class;
     } else {
+        // Authenticator for use on Symfony 5.2 and earlier
         $tokenAuthenticatorClass = \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Security\ApiTokenGuardAuthenticator::class;
     }
 

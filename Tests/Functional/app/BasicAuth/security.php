@@ -32,7 +32,11 @@ $securityConfig = [
     ],
 ];
 
-$passwordHasherConfig = ['Symfony\Component\Security\Core\User\User' => 'plaintext'];
+if (class_exists(\Symfony\Component\Security\Core\User\InMemoryUser::class)) {
+    $passwordHasherConfig = ['Symfony\Component\Security\Core\User\InMemoryUser' => 'plaintext'];
+} else {
+    $passwordHasherConfig = ['Symfony\Component\Security\Core\User\User' => 'plaintext'];
+}
 
 // BC layer to avoid deprecation warnings in symfony/security-bundle < 5.3
 if (class_exists(\Symfony\Bundle\SecurityBundle\RememberMe\FirewallAwareRememberMeHandler::class)) {

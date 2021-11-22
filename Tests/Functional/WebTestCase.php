@@ -15,6 +15,7 @@ use FOS\RestBundle\Tests\Functional\app\AppKernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class WebTestCase extends BaseWebTestCase
 {
@@ -28,14 +29,14 @@ class WebTestCase extends BaseWebTestCase
         $fs->remove($dir);
     }
 
-    protected static function getKernelClass()
+    protected static function getKernelClass(): string
     {
         require_once __DIR__.'/app/AppKernel.php';
 
         return AppKernel::class;
     }
 
-    protected static function createKernel(array $options = [])
+    protected static function createKernel(array $options = []): KernelInterface
     {
         $class = self::getKernelClass();
 
@@ -43,12 +44,12 @@ class WebTestCase extends BaseWebTestCase
             throw new \InvalidArgumentException('The option "test_case" must be set.');
         }
 
-        $debug = isset($options['debug']) ? $options['debug'] : true;
+        $debug = $options['debug'] ?? true;
 
         return new $class(
             $options['test_case'],
-            isset($options['root_config']) ? $options['root_config'] : 'config.yml',
-            isset($options['environment']) ? $options['environment'] : 'fosrestbundletest'.strtolower($options['test_case']).(int) $debug,
+            $options['root_config'] ?? 'config.yml',
+            $options['environment'] ?? 'fosrestbundletest'.strtolower($options['test_case']).(int) $debug,
             $debug
         );
     }

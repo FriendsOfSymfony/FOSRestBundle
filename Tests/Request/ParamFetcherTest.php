@@ -154,7 +154,7 @@ class ParamFetcherTest extends TestCase
             ->expects($this->once())
             ->method('validate')
             ->with('value', [new NotBlank()])
-            ->willReturn([]);
+            ->willReturn($this->getMockBuilder(ConstraintViolationListInterface::class)->getMock());
 
         $this->paramFetcher->setController($this->controller);
 
