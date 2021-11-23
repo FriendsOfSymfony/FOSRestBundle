@@ -19,10 +19,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  * @Annotation
  * @Target({"METHOD","CLASS"})
  */
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 class View extends Template
 {
     /**
-     * @var int
+     * @var int|null
      */
     protected $statusCode;
 
@@ -37,6 +38,26 @@ class View extends Template
     protected $serializerEnableMaxDepthChecks;
 
     /**
+     * @param array|string $data
+     */
+    public function __construct(
+        $data = [],
+        array $vars = [],
+        bool $isStreamable = false,
+        array $owner = [],
+        ?int $statusCode = null,
+        array $serializerGroups = [],
+        bool $serializerEnableMaxDepthChecks = false
+    ) {
+        parent::__construct($data, $vars, $isStreamable, $owner);
+
+        $values = is_array($data) ? $data : [];
+        $this->statusCode = $values['statusCode'] ?? $statusCode;
+        $this->serializerGroups = $values['serializerGroups'] ?? $serializerGroups;
+        $this->serializerEnableMaxDepthChecks = $values['serializerEnableMaxDepthChecks'] ?? $serializerEnableMaxDepthChecks;
+    }
+
+    /**
      * @param int $statusCode
      */
     public function setStatusCode($statusCode)
@@ -45,7 +66,7 @@ class View extends Template
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getStatusCode()
     {

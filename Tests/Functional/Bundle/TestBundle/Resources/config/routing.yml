@@ -75,5 +75,5 @@ test_allowed_methods2:
     methods: ['POST', 'PUT']
     defaults: { _controller: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\AllowedMethodsController::indexAction }
 
-test_route_attributes:
-    resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\RouteAttributesController
+test_php8_attributes:
+    resource: FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\AttributesController
