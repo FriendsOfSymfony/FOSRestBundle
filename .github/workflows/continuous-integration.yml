@@ -37,12 +37,12 @@ jobs:
             coverage: yes
           - php-version: 7.4
             composer-flags: "--prefer-stable"
-            can-fail: true
-            symfony-require: "5.4.*@dev"
+            can-fail: false
+            symfony-require: "5.4.*"
           - php-version: 8.0
             composer-flags: "--prefer-stable"
-            can-fail: true
-            symfony-require: "6.0.*@dev"
+            can-fail: false
+            symfony-require: "6.0.*"
           - php-version: 8.1
             composer-flags: "--prefer-stable"
             can-fail: false
