@@ -23,9 +23,12 @@ use FOS\RestBundle\Controller\Annotations\ParamInterface;
  */
 final class ParamReader implements ParamReaderInterface
 {
+    /**
+     * @var Reader|null
+     */
     private $annotationReader;
 
-    public function __construct(Reader $annotationReader)
+    public function __construct(?Reader $annotationReader = null)
     {
         $this->annotationReader = $annotationReader;
     }
@@ -55,10 +58,12 @@ final class ParamReader implements ParamReaderInterface
             $annotations = $this->getParamsFromAttributes($method);
         }
 
-        $annotations = array_merge(
-            $annotations,
-            $this->annotationReader->getMethodAnnotations($method) ?? []
-        );
+        if (null !== $this->annotationReader) {
+            $annotations = array_merge(
+                $annotations,
+                $this->annotationReader->getMethodAnnotations($method) ?? []
+            );
+        }
 
         return $this->getParamsFromAnnotationArray($annotations);
     }
@@ -73,10 +78,12 @@ final class ParamReader implements ParamReaderInterface
             $annotations = $this->getParamsFromAttributes($class);
         }
 
-        $annotations = array_merge(
-            $annotations,
-            $this->annotationReader->getClassAnnotations($class) ?? []
-        );
+        if (null !== $this->annotationReader) {
+            $annotations = array_merge(
+                $annotations,
+                $this->annotationReader->getClassAnnotations($class) ?? []
+            );
+        }
 
         return $this->getParamsFromAnnotationArray($annotations);
     }

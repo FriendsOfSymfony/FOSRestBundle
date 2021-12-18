@@ -98,8 +98,7 @@ class ParamReaderTest extends TestCase
      */
     public function testReadsAttributes()
     {
-        $annotationReader = $this->getMockBuilder(AnnotationReader::class)->getMock();
-        $paramReader = new ParamReader($annotationReader);
+        $paramReader = new ParamReader();
         $params = $paramReader->read(new \ReflectionClass(ParamsAnnotatedController::class), 'getArticlesAttributesAction');
 
         $this->assertCount(6, $params);
