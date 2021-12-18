@@ -17,15 +17,45 @@ use Symfony\Component\HttpFoundation\Request;
  * Represents a parameter that must be present in POST data.
  *
  * @Annotation
+ * @NamedArgumentConstructor
  * @Target("METHOD")
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry    <guery.b@gmail.com>
  */
+#[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD)]
 class RequestParam extends AbstractScalarParam
 {
     /** @var bool */
     public $strict = true;
+
+    /**
+     * @param mixed $requirements
+     * @param mixed $default
+     */
+    public function __construct(
+        string $name = '',
+        ?string $key = null,
+        $requirements = null,
+        $default = null,
+        string $description = '',
+        array $incompatibles = [],
+        bool $strict = false,
+        bool $map = false,
+        bool $nullable = false,
+        bool $allowBlank = true
+    ) {
+        $this->name = $name;
+        $this->key = $key;
+        $this->requirements = $requirements;
+        $this->default = $default;
+        $this->description = $description;
+        $this->incompatibles = $incompatibles;
+        $this->strict = $strict;
+        $this->map = $map;
+        $this->nullable = $nullable;
+        $this->allowBlank = $allowBlank;
+    }
 
     /**
      * {@inheritdoc}
