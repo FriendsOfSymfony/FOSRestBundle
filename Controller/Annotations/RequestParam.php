@@ -40,7 +40,7 @@ class RequestParam extends AbstractScalarParam
         $default = null,
         string $description = '',
         array $incompatibles = [],
-        bool $strict = false,
+        bool $strict = true,
         bool $map = false,
         bool $nullable = false,
         bool $allowBlank = true
