@@ -38,7 +38,7 @@
         "symfony/http-kernel": "^4.4|^5.3|^6.0",
         "symfony/routing": "^4.4|^5.3|^6.0",
         "symfony/security-core": "^4.4|^5.3|^6.0",
-        "willdurand/jsonp-callback-validator": "^1.0",
+        "willdurand/jsonp-callback-validator": "^1.0|^2.0",
         "willdurand/negotiation": "^2.0|^3.0"
     },
     "require-dev": {
