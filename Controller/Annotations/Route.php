@@ -44,14 +44,15 @@ class Route extends BaseRoute
         // BC layer for symfony < 5.2
         // Before symfony/routing 5.2 the constructor only had one parameter
         $method = new \ReflectionMethod(BaseRoute::class, '__construct');
-        if (1 === $method->getNumberOfParameters()) {
-            if (\is_string($data)) {
-                $path = $data;
-                $data = [];
-            } elseif (!\is_array($data)) {
-                throw new \TypeError(sprintf('"%s": Argument $data is expected to be a string or array, got "%s".', __METHOD__, get_debug_type($data)));
-            }
 
+        if (\is_string($data)) {
+            $path = $data;
+            $data = [];
+        } elseif (!\is_array($data)) {
+            throw new \TypeError(sprintf('"%s": Argument $data is expected to be a string or array, got "%s".', __METHOD__, get_debug_type($data)));
+        }
+
+        if (1 === $method->getNumberOfParameters()) {
             $data['path'] = $path;
             $data['name'] = $name;
             $data['requirements'] = $requirements;
