@@ -15,14 +15,14 @@ use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\Util\ExceptionValueMap;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @author Christian Flothmann <christian.flothmann@sensiolabs.de>
  *
  * @internal
  */
-final class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
+final class FlattenExceptionNormalizer implements NormalizerInterface
 {
     private $statusCodeMap;
     private $messagesMap;
