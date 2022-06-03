@@ -96,6 +96,21 @@ class FormErrorHandler implements SubscribingHandlerInterface
         return $result;
     }
 
+    public function serializeFormInterfaceToXml(JsonSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
+    {
+        $this->serializeFormToXml($visitor, $form, $type, $context);
+    }
+
+    public function serializeFormInterfaceToJson(JsonSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
+    {
+        $this->serializeFormToJson($visitor, $form, $type, $context);
+    }
+
+    public function serializeFormInterfaceToYml(JsonSerializationVisitor $visitor, Form $form, array $type, Context $context = null)
+    {
+        $this->serializeFormToYml($visitor, $form, $type, $context);
+    }
+
     public function __call($name, $arguments)
     {
         return call_user_func_array([$this->formErrorHandler, $name], $arguments);
