@@ -10,11 +10,18 @@
  */
 
 $frameworkConfig = [
+    'annotations' => [
+        'enabled' => true,
+    ],
+    'property_access' => null,
     'serializer' => [
         'enabled' => true,
     ],
     'router' => [
         'resource' => '%kernel.project_dir%/BasicAuth/routing.yml',
+    ],
+    'profiler' => [
+        'only_exceptions' => false,
     ],
 ];
 
