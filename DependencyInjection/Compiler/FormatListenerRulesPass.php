@@ -90,21 +90,20 @@ final class FormatListenerRulesPass implements CompilerPassInterface
         if (!$container->hasDefinition($id)) {
             // only add arguments that are necessary
             if (!class_exists(ChainRequestMatcher::class)) {
-                $container
-                    ->setDefinition($id, new Definition(RequestMatcher::class, $arguments));
+                $container->setDefinition($id, new Definition(RequestMatcher::class, $arguments));
             } else {
                 $matchers = [];
-                if (!empty($path)) {
-                    $matchers[] = new PathRequestMatcher($path);
+                if (!is_null($path)) {
+                    $matchers[] = new Definition(PathRequestMatcher::class, [$path]);
                 }
-                if (!empty($host)) {
-                    $matchers[] = new HostRequestMatcher($host);
+                if (!is_null($host)) {
+                    $matchers[] = new Definition(HostRequestMatcher::class, [$host]);
                 }
-                if (!empty($methods)) {
-                    $matchers[] = new MethodRequestMatcher($methods);
+                if (!is_null($methods)) {
+                    $matchers[] = new Definition(MethodRequestMatcher::class, [$methods]);
                 }
-                if (!empty($attributes)) {
-                    $matchers[] = new AttributesRequestMatcher($attributes);
+                if ($attributes !== []) {
+                    $matchers[] = new Definition(AttributesRequestMatcher::class, [$attributes]);
                 }
                 $container
                     ->setDefinition($id, new Definition(ChainRequestMatcher::class))

@@ -24,6 +24,12 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\HttpFoundation\ChainRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\IpsRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\MethodRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Validator\Constraint;
@@ -399,10 +405,26 @@ class FOSRestExtension extends Extension
             array_pop($arguments);
         }
 
-        $container
-            ->setDefinition($id, new ChildDefinition('fos_rest.zone_request_matcher'))
-            ->setArguments($arguments)
-        ;
+        if (!class_exists(ChainRequestMatcher::class)) {
+            $container->setDefinition($id, new Definition(RequestMatcher::class, $arguments));
+        } else {
+            $matchers = [];
+            if (!is_null($path)) {
+                $matchers[] = new Definition(PathRequestMatcher::class, [$path]);
+            }
+            if (!is_null($host)) {
+                $matchers[] = new Definition(HostRequestMatcher::class, [$host]);
+            }
+            if (!is_null($methods)) {
+                $matchers[] = new Definition(MethodRequestMatcher::class, [$methods]);
+            }
+            if (!is_null($ips)) {
+                $matchers[] = new Definition(IpsRequestMatcher::class, [$ips]);
+            }
+            $container
+                ->setDefinition($id, new Definition(ChainRequestMatcher::class))
+                ->setArguments([$matchers]);
+        }
 
         return new Reference($id);
     }

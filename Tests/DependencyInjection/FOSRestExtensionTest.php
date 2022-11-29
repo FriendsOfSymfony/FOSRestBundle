@@ -18,8 +18,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\ErrorHandler\ErrorRenderer\ErrorRendererInterface;
+use Symfony\Component\HttpFoundation\ChainRequestMatcher;
 
 /**
  * FOSRestExtension test.
@@ -533,17 +535,26 @@ class FOSRestExtensionTest extends TestCase
         $requestMatcherFirstId = (string) $addRequestMatcherCalls[0][1][0];
         $requestMatcherFirst = $this->container->getDefinition($requestMatcherFirstId);
 
-        $this->assertInstanceOf(ChildDefinition::class, $requestMatcherFirst);
-        $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0));
+        $this->assertInstanceOf(Definition::class, $requestMatcherFirst);
+        if (!class_exists(ChainRequestMatcher::class)) {
+            $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0));
+        } else {
+            $this->assertEquals('/api/*', $requestMatcherFirst->getArgument(0)[0]->getArgument(0));
+        }
 
         // Second zone
         $this->assertEquals('addRequestMatcher', $addRequestMatcherCalls[1][0]);
         $requestMatcherSecondId = (string) $addRequestMatcherCalls[1][1][0];
         $requestMatcherSecond = $this->container->getDefinition($requestMatcherSecondId);
 
-        $this->assertInstanceOf(ChildDefinition::class, $requestMatcherSecond);
-        $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
-        $this->assertEquals(['127.0.0.1'], $requestMatcherSecond->getArgument(3));
+        $this->assertInstanceOf(Definition::class, $requestMatcherSecond);
+        if (!class_exists(ChainRequestMatcher::class)) {
+            $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0));
+            $this->assertEquals(['127.0.0.1'], $requestMatcherSecond->getArgument(3));
+        } else {
+            $this->assertEquals('/^second', $requestMatcherSecond->getArgument(0)[0]->getArgument(0));
+            $this->assertEquals(['127.0.0.1'], $requestMatcherSecond->getArgument(0)[2]->getArgument(0));
+        }
     }
 
     public function testMimeTypesArePassedArrays()
