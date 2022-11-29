@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+use Symfony\Component\HttpKernel\Kernel;
+
 $securityConfig = [
     'providers' => [
         'in_memory' => [
@@ -42,7 +44,7 @@ if (class_exists(\Symfony\Component\Security\Core\User\InMemoryUser::class)) {
 if (class_exists(\Symfony\Bundle\SecurityBundle\RememberMe\FirewallAwareRememberMeHandler::class)) {
     $securityConfig['password_hashers'] = $passwordHasherConfig;
     // BC layer to avoid deprecation warnings in symfony/security-bundle < 6.2
-    if (class_exists(\Symfony\Bundle\SecurityBundle\Security::class) && !method_exists(\Symfony\Bundle\SecurityBundle\Security::class, 'getFirewallConfig')) {
+    if (Kernel::VERSION_ID < 60200) {
         $securityConfig['enable_authenticator_manager'] = true;
     }
 } else {
