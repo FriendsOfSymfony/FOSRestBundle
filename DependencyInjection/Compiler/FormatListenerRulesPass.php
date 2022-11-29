@@ -102,7 +102,7 @@ final class FormatListenerRulesPass implements CompilerPassInterface
                 if (!is_null($methods)) {
                     $matchers[] = new Definition(MethodRequestMatcher::class, [$methods]);
                 }
-                if ($attributes !== []) {
+                if ([] !== $attributes) {
                     $matchers[] = new Definition(AttributesRequestMatcher::class, [$attributes]);
                 }
                 $container
