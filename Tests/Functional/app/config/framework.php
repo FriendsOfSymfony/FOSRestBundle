@@ -20,7 +20,7 @@ if (class_exists(\Symfony\Component\HttpFoundation\Session\SessionFactory::class
     ];
 }
 
-$container->loadFromExtension('framework', [
+$frameworkConfig = [
     'annotations' => [
         'enabled' => true,
     ],
@@ -35,4 +35,10 @@ $container->loadFromExtension('framework', [
     'form' => null,
     'session' => $sessionConfig,
     'default_locale' => 'en',
-]);
+];
+
+if (\Symfony\Component\HttpKernel\Kernel::VERSION_ID >= 60100) {
+    $frameworkConfig['http_method_override'] = true;
+}
+
+$container->loadFromExtension('framework', $frameworkConfig);

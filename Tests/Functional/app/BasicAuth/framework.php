@@ -9,22 +9,17 @@
  * file that was distributed with this source code.
  */
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpKernel\Kernel;
+$frameworkConfig = [
+    'serializer' => [
+        'enabled' => true,
+    ],
+    'router' => [
+        'resource' => '%kernel.project_dir%/BasicAuth/routing.yml',
+    ],
+];
 
-return static function (ContainerConfigurator $container) {
-    $config = [
-        'serializer' => [
-            'enabled' => true,
-        ],
-        'router' => [
-            'resource' => '%kernel.project_dir%/BasicAuth/routing.yml',
-        ],
-    ];
+if (\Symfony\Component\HttpKernel\Kernel::VERSION_ID >= 60100) {
+    $frameworkConfig['http_method_override'] = true;
+}
 
-    if (Kernel::VERSION_ID >= 60100) {
-        $config['http_method_override'] = true;
-    }
-
-    $container->extension('framework', $config);
-};
+$container->loadFromExtension('framework', $frameworkConfig);
