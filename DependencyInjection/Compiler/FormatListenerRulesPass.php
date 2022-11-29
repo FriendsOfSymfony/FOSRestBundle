@@ -11,9 +11,9 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\ChainRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -91,8 +91,7 @@ final class FormatListenerRulesPass implements CompilerPassInterface
             // only add arguments that are necessary
             if (!class_exists(ChainRequestMatcher::class)) {
                 $container
-                    ->setDefinition($id, new ChildDefinition(RequestMatcher::class))
-                    ->setArguments($arguments);
+                    ->setDefinition($id, new Definition(RequestMatcher::class, $arguments));
             } else {
                 $matchers = [];
                 if (!empty($path)) {
@@ -108,8 +107,8 @@ final class FormatListenerRulesPass implements CompilerPassInterface
                     $matchers[] = new AttributesRequestMatcher($attributes);
                 }
                 $container
-                    ->setDefinition($id, new ChildDefinition(ChainRequestMatcher::class))
-                    ->setArguments($matchers);
+                    ->setDefinition($id, new Definition(ChainRequestMatcher::class))
+                    ->setArguments([$matchers]);
             }
         }
 
