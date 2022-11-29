@@ -15,6 +15,12 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpFoundation\ChainRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\AttributesRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\MethodRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher;
 
 /**
  * @author Eduardo Gulias Davis <me@egulias.com>
@@ -83,9 +89,28 @@ final class FormatListenerRulesPass implements CompilerPassInterface
 
         if (!$container->hasDefinition($id)) {
             // only add arguments that are necessary
-            $container
-                ->setDefinition($id, new ChildDefinition('fos_rest.format_request_matcher'))
-                ->setArguments($arguments);
+            if (!class_exists(ChainRequestMatcher::class)) {
+                $container
+                    ->setDefinition($id, new ChildDefinition(RequestMatcher::class))
+                    ->setArguments($arguments);
+            } else {
+                $matchers = [];
+                if (!empty($path)) {
+                    $matchers[] = new PathRequestMatcher($path);
+                }
+                if (!empty($host)) {
+                    $matchers[] = new HostRequestMatcher($host);
+                }
+                if (!empty($methods)) {
+                    $matchers[] = new MethodRequestMatcher($methods);
+                }
+                if (!empty($attributes)) {
+                    $matchers[] = new AttributesRequestMatcher($attributes);
+                }
+                $container
+                    ->setDefinition($id, new ChildDefinition(ChainRequestMatcher::class))
+                    ->setArguments($matchers);
+            }
         }
 
         return new Reference($id);
