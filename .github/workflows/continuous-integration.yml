@@ -22,10 +22,10 @@ jobs:
         include:
           - php-version: 7.2
             composer-flags: "--prefer-lowest "
-            can-fail: true
+            can-fail: false
           - php-version: 7.3
             composer-flags: ""
-            can-fail: true
+            can-fail: false
           - php-version: 7.4
             composer-flags: ""
             symfony-require: "4.4.*"
