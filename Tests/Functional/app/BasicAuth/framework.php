@@ -26,5 +26,5 @@ return static function (ContainerConfigurator $container) {
         $config['http_method_override'] = true;
     }
 
-    $container->loadFromExtension('framework', $config);
+    $container->extension('framework', $config);
 };
