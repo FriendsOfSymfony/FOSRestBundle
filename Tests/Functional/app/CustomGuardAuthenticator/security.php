@@ -30,7 +30,10 @@ if (class_exists(\Symfony\Component\Security\Core\User\InMemoryUser::class)) {
 // BC layer to avoid deprecation warnings in symfony/security-bundle < 5.3
 if (class_exists(\Symfony\Bundle\SecurityBundle\RememberMe\FirewallAwareRememberMeHandler::class)) {
     $securityConfig['password_hashers'] = $passwordHasherConfig;
-    $securityConfig['enable_authenticator_manager'] = true;
+    // BC layer to avoid deprecation warnings in symfony/security-bundle < 6.2
+    if (Kernel::VERSION_ID < 60200) {
+        $securityConfig['enable_authenticator_manager'] = true;
+    }
     $securityConfig['firewalls'] = [
         'default' => [
             'provider' => 'in_memory',
