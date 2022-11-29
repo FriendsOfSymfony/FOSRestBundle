@@ -1,11 +1,7 @@
 imports:
     - { resource: ../config/default.yml }
     - { resource: security.php }
-
-framework:
-    serializer:
-        enabled: true
-    router: { resource: "%kernel.project_dir%/BasicAuth/routing.yml" }
+    - { resource: framework.php }
 
 fos_rest:
     zone:
