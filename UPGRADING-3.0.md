@@ -88,6 +88,7 @@ Upgrading From 2.x To 3.0
    * `FOS\RestBundle\Controller\Annotations\RouteResource`
    * `FOS\RestBundle\Controller\Annotations\Version`
    * `FOS\RestBundle\Controller\ExceptionController`
+   * `FOS\RestBundle\Controller\FOSRestController`
    * `FOS\RestBundle\Controller\TemplatingExceptionController`
    * `FOS\RestBundle\Controller\TwigExceptionController`
    * `FOS\RestBundle\EventListener\AccessDeniedListener`
