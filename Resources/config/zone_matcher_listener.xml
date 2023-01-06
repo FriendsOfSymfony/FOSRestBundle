@@ -10,8 +10,6 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="248" />
         </service>
 
-        <service id="fos_rest.zone_request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" />
-
     </services>
 
 </container>

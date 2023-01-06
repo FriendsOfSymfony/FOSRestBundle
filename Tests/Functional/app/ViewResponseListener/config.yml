@@ -1,10 +1,7 @@
 imports:
     - { resource: ../config/default.yml }
     - { resource: ../config/sensio_framework_extra.yml }
-
-framework:
-    serializer:
-        enabled: true
+    - { resource: framework.php }
 
 fos_rest:
     view:

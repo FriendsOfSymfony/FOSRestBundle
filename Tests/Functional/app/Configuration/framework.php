@@ -9,32 +9,20 @@
  * file that was distributed with this source code.
  */
 
-// BC layer for symfony < 5.3
-if (class_exists(\Symfony\Component\HttpFoundation\Session\SessionFactory::class)) {
-    $sessionConfig = [
-        'storage_factory_id' => 'session.storage.factory.mock_file',
-    ];
-} else {
-    $sessionConfig = [
-        'storage_id' => 'session.storage.mock_file',
-    ];
-}
-
 $frameworkConfig = [
     'annotations' => [
         'enabled' => true,
     ],
     'property_access' => null,
-    'secret' => 'test',
-    'router' => [
-        'resource' => '%kernel.project_dir%/config/routing.yml',
-        'utf8' => true,
+    'serializer' => [
+        'enabled' => true,
     ],
-    'test' => null,
-    'csrf_protection' => null,
-    'form' => null,
-    'session' => $sessionConfig,
-    'default_locale' => 'en',
+    'router' => [
+        'resource' => '%kernel.project_dir%/BasicAuth/routing.yml',
+    ],
+    'profiler' => [
+        'only_exceptions' => false,
+    ],
 ];
 
 if (\Symfony\Component\HttpKernel\Kernel::VERSION_ID >= 60100) {

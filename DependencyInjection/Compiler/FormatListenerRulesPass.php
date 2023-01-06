@@ -11,10 +11,16 @@
 
 namespace FOS\RestBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpFoundation\ChainRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\AttributesRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\HostRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\MethodRequestMatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher;
 
 /**
  * @author Eduardo Gulias Davis <me@egulias.com>
@@ -83,9 +89,26 @@ final class FormatListenerRulesPass implements CompilerPassInterface
 
         if (!$container->hasDefinition($id)) {
             // only add arguments that are necessary
-            $container
-                ->setDefinition($id, new ChildDefinition('fos_rest.format_request_matcher'))
-                ->setArguments($arguments);
+            if (!class_exists(ChainRequestMatcher::class)) {
+                $container->setDefinition($id, new Definition(RequestMatcher::class, $arguments));
+            } else {
+                $matchers = [];
+                if (!is_null($path)) {
+                    $matchers[] = new Definition(PathRequestMatcher::class, [$path]);
+                }
+                if (!is_null($host)) {
+                    $matchers[] = new Definition(HostRequestMatcher::class, [$host]);
+                }
+                if (!is_null($methods)) {
+                    $matchers[] = new Definition(MethodRequestMatcher::class, [$methods]);
+                }
+                if ([] !== $attributes) {
+                    $matchers[] = new Definition(AttributesRequestMatcher::class, [$attributes]);
+                }
+                $container
+                    ->setDefinition($id, new Definition(ChainRequestMatcher::class))
+                    ->setArguments([$matchers]);
+            }
         }
 
         return new Reference($id);

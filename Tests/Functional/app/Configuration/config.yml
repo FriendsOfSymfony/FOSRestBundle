@@ -1,16 +1,8 @@
 imports:
     - { resource: ../config/default.yml }
     - { resource: ../config/sensio_framework_extra.yml }
+    - { resource: framework.php }
     - { resource: security.php }
-
-framework:
-    annotations:
-        enabled: true
-    property_access: ~
-    serializer:
-        enabled: true
-    router: { resource: "%kernel.project_dir%/Configuration/routing.yml" }
-    profiler: { only_exceptions: false }
 
 fos_rest:
     view:

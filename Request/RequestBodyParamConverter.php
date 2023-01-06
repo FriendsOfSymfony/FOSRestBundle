@@ -76,7 +76,7 @@ final class RequestBodyParamConverter implements ParamConverterInterface
         }
         $this->configureContext($context = new Context(), $arrayContext);
 
-        $format = $request->getContentType();
+        $format = method_exists(Request::class, 'getContentTypeFormat') ? $request->getContentTypeFormat() : $request->getContentType();
         if (null === $format) {
             return $this->throwException(new UnsupportedMediaTypeHttpException(), $configuration);
         }

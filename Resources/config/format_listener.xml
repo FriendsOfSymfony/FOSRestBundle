@@ -5,7 +5,6 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-
         <service id="fos_rest.format_listener" class="FOS\RestBundle\EventListener\FormatListener">
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="34" />
             <argument type="service" id="fos_rest.format_negotiator" />
@@ -14,7 +13,5 @@
         <service id="fos_rest.format_negotiator" class="FOS\RestBundle\Negotiation\FormatNegotiator">
             <argument type="service" id="request_stack" />
         </service>
-
-        <service id="fos_rest.format_request_matcher" class="Symfony\Component\HttpFoundation\RequestMatcher" public="false" abstract="true" />
     </services>
 </container>

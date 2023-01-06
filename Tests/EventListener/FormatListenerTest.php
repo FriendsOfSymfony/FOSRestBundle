@@ -15,12 +15,14 @@ use FOS\RestBundle\EventListener\FormatListener;
 use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Negotiation\FormatNegotiator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\ChainRequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Request listener test.
@@ -44,7 +46,7 @@ class FormatListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
         $formatNegotiator = new FormatNegotiator($requestStack);
-        $formatNegotiator->add(new RequestMatcher('/'), [
+        $formatNegotiator->add($this->getRequestMatcher('/'), [
             'fallback_format' => 'xml',
         ]);
 
@@ -72,7 +74,7 @@ class FormatListenerTest extends TestCase
             ->will($this->returnValue($request));
 
         $formatNegotiator = new FormatNegotiator($requestStack);
-        $formatNegotiator->add(new RequestMatcher('/'), ['fallback_format' => 'json']);
+        $formatNegotiator->add($this->getRequestMatcher('/'), ['fallback_format' => 'json']);
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -98,8 +100,8 @@ class FormatListenerTest extends TestCase
             ->will($this->returnValue($request));
 
         $formatNegotiator = new FormatNegotiator($requestStack);
-        $formatNegotiator->add(new RequestMatcher('/'), ['stop' => true]);
-        $formatNegotiator->add(new RequestMatcher('/'), ['fallback_format' => 'json']);
+        $formatNegotiator->add($this->getRequestMatcher('/'), ['stop' => true]);
+        $formatNegotiator->add($this->getRequestMatcher('/'), ['fallback_format' => 'json']);
 
         $listener = new FormatListener($formatNegotiator);
 
@@ -157,7 +159,7 @@ class FormatListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
         $formatNegotiator = new FormatNegotiator($requestStack);
-        $formatNegotiator->add(new RequestMatcher('/'), [
+        $formatNegotiator->add($this->getRequestMatcher('/'), [
             'fallback_format' => 'xml',
         ]);
 
@@ -202,7 +204,7 @@ class FormatListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
         $formatNegotiator = new FormatNegotiator($requestStack);
-        $formatNegotiator->add(new RequestMatcher('/'), [
+        $formatNegotiator->add($this->getRequestMatcher('/'), [
             'fallback_format' => 'json',
         ]);
 
@@ -211,5 +213,14 @@ class FormatListenerTest extends TestCase
         $listener->onKernelRequest($event);
 
         $this->assertEquals($request->getRequestFormat(), 'json');
+    }
+
+    private function getRequestMatcher(string $path)
+    {
+        if (Kernel::VERSION_ID < 60200) {
+            return new RequestMatcher($path);
+        }
+
+        return new ChainRequestMatcher([new RequestMatcher\PathRequestMatcher($path)]);
     }
 }
