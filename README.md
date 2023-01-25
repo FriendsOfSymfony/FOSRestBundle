@@ -29,7 +29,7 @@ Please see the upgrade files (`UPGRADING-X.X.md`) for any relevant instructions 
 Installation
 ------------
 
-All the installation instructions are located in the [documentation](https://fosrestbundle.readthedocs.io/en/latest/1-setting_up_the_bundle.html?#step-1-setting-up-the-bundle).
+All the installation instructions are located in the [documentation](https://fosrestbundle.readthedocs.io/en/3.x/1-setting_up_the_bundle.html).
 
 License
 -------
