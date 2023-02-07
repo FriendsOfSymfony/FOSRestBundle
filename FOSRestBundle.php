@@ -43,7 +43,6 @@ class FOSRestBundle extends Bundle
         $container->addCompilerPass(new TwigExceptionPass(), PassConfig::TYPE_BEFORE_REMOVING, -10);
         $container->addCompilerPass(new JMSFormErrorHandlerPass());
         $container->addCompilerPass(new JMSHandlersPass(), PassConfig::TYPE_BEFORE_REMOVING, -10);
-        $container->addCompilerPass(new JMSHandlerRegistryV4DecorationPass());
         $container->addCompilerPass(new HandlerRegistryDecorationPass(), PassConfig::TYPE_AFTER_REMOVING);
     }
 }
