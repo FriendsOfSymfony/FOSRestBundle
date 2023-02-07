@@ -14,7 +14,6 @@ namespace FOS\RestBundle;
 use FOS\RestBundle\DependencyInjection\Compiler\ConfigurationCheckPass;
 use FOS\RestBundle\DependencyInjection\Compiler\HandlerRegistryDecorationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\JMSFormErrorHandlerPass;
-use FOS\RestBundle\DependencyInjection\Compiler\JMSHandlerRegistryV4DecorationPass;
 use FOS\RestBundle\DependencyInjection\Compiler\JMSHandlersPass;
 use FOS\RestBundle\DependencyInjection\Compiler\FormatListenerRulesPass;
 use FOS\RestBundle\DependencyInjection\Compiler\SerializerConfigurationPass;
