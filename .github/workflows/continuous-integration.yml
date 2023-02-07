@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       - name: "Install PHP with XDebug"
         uses: "shivammathur/setup-php@v2"
@@ -45,6 +45,7 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           coverage: "xdebug"
+          tools: "composer:v2,flex"
 
       - name: "Install PHP without coverage"
         uses: "shivammathur/setup-php@v2"
@@ -52,9 +53,10 @@ jobs:
         with:
           php-version: "${{ matrix.php-version }}"
           coverage: "none"
+          tools: "composer:v2,flex"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v2"
+        uses: "actions/cache@v3"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
@@ -64,7 +66,7 @@ jobs:
         env:
           SYMFONY_REQUIRE: "${{ matrix.symfony-require }}"
         run: |
-          composer global require --no-progress --no-scripts --no-plugins symfony/flex
+          composer remove friendsofphp/php-cs-fixer --dev --no-update
           composer update --no-interaction --no-progress ${{ matrix.composer-flags }}
 
       - name: "Run PHPUnit"
