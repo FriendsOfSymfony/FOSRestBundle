@@ -74,6 +74,7 @@ class FOSRestExtension extends Extension
         $this->loadForm($config, $loader, $container);
         $this->loadException($config, $loader, $container);
         $this->loadBodyConverter($config, $loader, $container);
+        $this->loadQueryStringConverter($config, $loader, $container);
         $this->loadView($config, $loader, $container);
 
         $this->loadBodyListener($config, $loader, $container);
@@ -226,6 +227,15 @@ class FOSRestExtension extends Extension
         if (!empty($config['body_converter']['validation_errors_argument'])) {
             $container->getDefinition('fos_rest.converter.request_body')->replaceArgument(4, $config['body_converter']['validation_errors_argument']);
         }
+    }
+
+    private function loadQueryStringConverter(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
+    {
+        if (!$this->isConfigEnabled($container, $config['query_string_converter'])) {
+            return;
+        }
+
+        $loader->load('query_string_param_converter.xml');
     }
 
     private function loadView(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
