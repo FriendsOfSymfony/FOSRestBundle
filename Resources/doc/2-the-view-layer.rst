@@ -79,6 +79,7 @@ the important ones for configuring the view:
 * ``setHeaders(array $headers)`` - Set multiple headers to put on the HTTP response.
 * ``setStatusCode($code)`` - Set the HTTP status code.
 * ``getContext()`` - The serialization context in use.
+* ``setContext($context)`` - Set the serialization context.
 * ``setFormat($format)`` - The format the response is supposed to be rendered in.
   Can be autodetected using HTTP semantics.
 * ``setLocation($location)`` - The location to redirect to with a response.
