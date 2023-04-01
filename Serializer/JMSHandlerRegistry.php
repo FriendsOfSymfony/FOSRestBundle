@@ -23,39 +23,40 @@ use JMS\Serializer\Handler\HandlerRegistryInterface;
  */
 class JMSHandlerRegistry implements HandlerRegistryInterface
 {
-    private $registry;
+	private $registry;
 
-    public function __construct(HandlerRegistryInterface $registry)
-    {
-        $this->registry = $registry;
-    }
+	public function __construct(HandlerRegistryInterface $registry)
+	{
+		$this->registry = $registry;
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function registerSubscribingHandler(SubscribingHandlerInterface $handler): void
-    {
-        $this->registry->registerSubscribingHandler($handler);
-    }
+	public function registerSubscribingHandler(SubscribingHandlerInterface $handler): void
+	{
+		$this->registry->registerSubscribingHandler($handler);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function registerHandler($direction, $typeName, $format, $handler): void
-    {
-        $this->registry->registerHandler($direction, $typeName, $format, $handler);
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function registerHandler($direction, $typeName, $format, $handler): void
+	{
+		$this->registry->registerHandler($direction, $typeName, $format, $handler);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getHandler($direction, $typeName, $format)
-    {
-        do {
-            $handler = $this->registry->getHandler($direction, $typeName, $format);
-            if (null !== $handler) {
-                return $handler;
-            }
-        } while ($typeName = get_parent_class($typeName));
-    }
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return callable|object
+	 */
+	public function getHandler($direction, $typeName, $format)
+	{
+		do {
+			$handler = $this->registry->getHandler($direction, $typeName, $format);
+			if (null !== $handler) {
+				return $handler;
+			}
+		} while ($typeName = get_parent_class($typeName));
+
+		return null;
+	}
 }
