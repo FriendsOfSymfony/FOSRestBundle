@@ -35,6 +35,13 @@ class FormErrorNormalizer implements NormalizerInterface
         ];
     }
 
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            FormInterface::class => false,
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */

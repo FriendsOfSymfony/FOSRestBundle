@@ -74,6 +74,13 @@ final class FlattenExceptionNormalizer implements NormalizerInterface
         }
     }
 
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            FlattenException::class => false,
+        ];
+    }
+
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         if (!($data instanceof FlattenException)) {
