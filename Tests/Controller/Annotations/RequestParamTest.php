@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RequestParamTest extends TestCase
 {
+    private $param;
+
     protected function setUp(): void
     {
         $this->param = $this->getMockBuilder(RequestParam::class)

@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RequestBodyParamConverterTest extends TestCase
 {
     protected $serializer;
-    protected $converterBuilder;
+    protected $converter;
 
     protected function setUp(): void
     {

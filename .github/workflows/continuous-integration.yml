@@ -28,17 +28,9 @@ jobs:
             can-fail: false
           - php-version: 7.4
             composer-flags: ""
-            symfony-require: "4.4.*"
-            can-fail: false
-          - php-version: 7.4
-            composer-flags: ""
-            symfony-require: "5.3.*"
+            symfony-require: "5.4.*"
             can-fail: false
             coverage: yes
-          - php-version: 7.4
-            composer-flags: ""
-            can-fail: false
-            symfony-require: "5.4.*"
           - php-version: 8.0
             composer-flags: ""
             can-fail: false
@@ -47,7 +39,15 @@ jobs:
             composer-flags: ""
             can-fail: false
             symfony-require: "6.1.*"
-          - php-version: 8.1
+          - php-version: 8.2
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "6.2.*"
+          - php-version: 8.2
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "6.3.*"
+          - php-version: 8.2
             composer-flags: ""
             can-fail: false
 
