@@ -14,7 +14,7 @@ on:
 jobs:
   phpunit:
     name: "PHPUnit"
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-22.04"
     continue-on-error: ${{ matrix.can-fail }}
 
     strategy:
@@ -49,11 +49,11 @@ jobs:
             symfony-require: "6.3.*"
           - php-version: 8.2
             composer-flags: ""
-            can-fail: false
+            can-fail: true # we don't want to fail the build if we are incompatible with the next (unstable) Symfony version
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Install PHP with XDebug"
         uses: "shivammathur/setup-php@v2"
