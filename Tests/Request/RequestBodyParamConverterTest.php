@@ -164,6 +164,30 @@ class RequestBodyParamConverterTest extends TestCase
         $this->assertEquals($errors, $request->attributes->get('errors'));
     }
 
+    public function testValidatorGroupsCallback()
+    {
+        $this->serializer
+             ->expects($this->once())
+             ->method('deserialize')
+             ->willReturn('Object');
+
+        $validator = $this->getMockBuilder('Symfony\Component\Validator\Validator\ValidatorInterface')->getMock();
+        $validator
+            ->expects($this->once())
+            ->method('validate')
+            ->with('Object', null, ['Group', 'Object', 'json']);
+
+        $converter = new RequestBodyParamConverter($this->serializer, null, null, $validator, 'errors');
+
+        $groupsCallback = static function ($object, Request $request) {
+            return ['Group', $object, $request->getContentType()];
+        };
+
+        $request = $this->createRequest(null, 'application/json');
+        $configuration = $this->createConfiguration(null, null, ['validator' => ['groups' => $groupsCallback]]);
+        $this->launchExecution($converter, $request, $configuration);
+    }
+
     public function testValidatorSkipping()
     {
         $this->serializer
