@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * View may be used in controllers to build up a response in a format agnostic way
@@ -52,6 +53,7 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
     private $urlGenerator;
     private $serializer;
     private $requestStack;
+    private $dispatcher = null;
     private $options;
 
     private function __construct(
@@ -198,7 +200,17 @@ final class ViewHandler implements ConfigurableViewHandlerInterface
             $response->headers->set('Content-Type', $mimeType);
         }
 
+        if (null !== $this->dispatcher) {
+            $event = new ViewResponseEvent($view, $response, $request);
+            $this->dispatcher->dispatch($event);
+        }
+
         return $response;
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher): void
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**

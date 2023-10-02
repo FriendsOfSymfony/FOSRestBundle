@@ -199,6 +199,33 @@ data transformer. Fortunately, the FOSRestBundle comes with an
 This way, the data structure remains untouched and the person can be assigned to
 the task without any client modifications.
 
+Update the Response based on View Data
+--------------------------------------
+
+If you have the need to globally modify the response depending on the view data
+you can use the ``ViewResponseEvent``. It allows you to do some custom stuff
+at one central place and reduce repetitive work.
+
+Here's an example how to use it:
+
+.. code-block:: php
+    namespace App\EventListener;
+
+    use FOS\RestBundle\View\ViewResponseEvent;
+    use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+
+    #[AsEventListener]
+    class PaginationViewResponseListener
+    {
+        public function __invoke(ViewResponseEvent $event): void
+        {
+            $view = $event->getView(); // you have access to the view and the response
+            $response = $event->getResponse();
+            // ...
+        }
+    }
+
+
 Configuration
 -------------
 
