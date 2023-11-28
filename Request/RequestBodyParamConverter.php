@@ -12,6 +12,7 @@
 namespace FOS\RestBundle\Request;
 
 use FOS\RestBundle\Context\Context;
+use FOS\RestBundle\Controller\ArgumentResolver\RequestBodyValueResolver;
 use FOS\RestBundle\Serializer\Serializer;
 use JMS\Serializer\Exception\Exception as JMSSerializerException;
 use JMS\Serializer\Exception\UnsupportedFormatException;
@@ -26,6 +27,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @author Tyler Stroud <tyler@tylerstroud.com>
+ *
+ * @deprecated use {@see RequestBodyValueResolver} instead
  */
 final class RequestBodyParamConverter implements ParamConverterInterface
 {
