@@ -20,7 +20,8 @@ class RequestBodyParamConverterController extends AbstractController
     /**
      * @ParamConverter("post", converter="fos_rest.request_body")
      */
-    public function putPostAction(Post $post, \Datetime $date)
+    #[ParamConverter(['name' => 'post'], converter: 'fos_rest.request_body')]
+    public function putPostAction(Post $post, \DateTime $date)
     {
         return new Response($post->getName());
     }
