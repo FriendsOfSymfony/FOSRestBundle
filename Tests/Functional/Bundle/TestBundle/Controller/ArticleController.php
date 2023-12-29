@@ -25,8 +25,10 @@ class ArticleController extends AbstractFOSRestController
      * @return View view instance
      *
      * @Post("/articles.{_format}", name="post_articles")
+     *
      * @View()
      */
+    #[View]
     public function cpostAction(Request $request)
     {
         $view = $this->routeRedirectView('test_redirect_endpoint', ['name' => $request->request->get('name')]);
@@ -40,8 +42,10 @@ class ArticleController extends AbstractFOSRestController
      * @return View view instance
      *
      * @Get("/articles.{_format}", name="get_article", defaults={"_format": "html"})
+     *
      * @View()
      */
+    #[View]
     public function cgetAction(Request $request)
     {
         $view = $this->view();

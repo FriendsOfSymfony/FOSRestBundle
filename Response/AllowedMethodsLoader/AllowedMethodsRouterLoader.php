@@ -38,7 +38,7 @@ final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface,
     public function getAllowedMethods(): array
     {
         if (!$this->cache->isFresh()) {
-            $this->warmUp(null);
+            $this->warmUp(\dirname($this->cache->getPath()));
         }
 
         return require $this->cache->getPath();
@@ -55,7 +55,7 @@ final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface,
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir): void
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $processedRoutes = [];
 
@@ -90,5 +90,7 @@ final class AllowedMethodsRouterLoader implements AllowedMethodsLoaderInterface,
             sprintf('<?php return %s;', var_export($allowedMethods, true)),
             $routeCollection->getResources()
         );
+
+        return [];
     }
 }

@@ -17,7 +17,9 @@ use FOS\RestBundle\Serializer\Serializer;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +41,7 @@ class ViewResponseListenerTest extends TestCase
     public $listener;
 
     /**
-     * @var ViewHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ViewHandlerInterface|MockObject
      */
     public $viewHandler;
 
@@ -48,7 +50,7 @@ class ViewResponseListenerTest extends TestCase
     private $requestStack;
 
     /**
-     * @return ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @return ControllerEvent|MockObject
      */
     protected function getFilterEvent(Request $request)
     {
@@ -61,13 +63,13 @@ class ViewResponseListenerTest extends TestCase
     /**
      * @param mixed $result
      *
-     * @return ViewEvent|\PHPUnit_Framework_MockObject_MockObject
+     * @return ViewEvent|MockObject
      */
     protected function getResponseEvent(Request $request, $result)
     {
         $kernel = $this->createMock(HttpKernelInterface::class);
 
-        return new ViewEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $result);
+        return new ViewEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $result);
     }
 
     public function testOnKernelViewWhenControllerResultIsNotViewObject()
@@ -95,6 +97,10 @@ class ViewResponseListenerTest extends TestCase
      */
     public function testStatusCode($annotationCode, $viewCode, $expectedCode)
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $this->createViewResponseListener(['json' => false]);
 
         $viewAnnotation = new ViewAnnotation([]);
@@ -130,6 +136,10 @@ class ViewResponseListenerTest extends TestCase
      */
     public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedMaxDepth)
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $this->createViewResponseListener(['json' => false]);
 
         $viewAnnotation = new ViewAnnotation([]);

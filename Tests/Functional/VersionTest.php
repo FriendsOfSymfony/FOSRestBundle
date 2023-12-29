@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+
 /**
  * @author Ener-Getick <egetick@gmail.com>
  */
@@ -20,6 +22,10 @@ class VersionTest extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            self::markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         parent::setUpBeforeClass();
         static::$client = static::createClient(['test_case' => 'Version']);
     }

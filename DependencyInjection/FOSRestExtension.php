@@ -14,6 +14,7 @@ namespace FOS\RestBundle\DependencyInjection;
 use FOS\RestBundle\ErrorRenderer\SerializerErrorRenderer;
 use FOS\RestBundle\EventListener\ResponseStatusCodeListener;
 use FOS\RestBundle\View\ViewHandler;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -21,6 +22,7 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -31,13 +33,13 @@ use Symfony\Component\HttpFoundation\RequestMatcher\IpsRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher\MethodRequestMatcher;
 use Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Validator\Constraint;
 
 /**
  * @internal
  */
-class FOSRestExtension extends Extension
+class FOSRestExtension extends ConfigurableExtension
 {
     /**
      * {@inheritdoc}
@@ -47,18 +49,15 @@ class FOSRestExtension extends Extension
         return new Configuration($container->getParameter('kernel.debug'));
     }
 
-    public function load(array $configs, ContainerBuilder $container): void
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $configuration = new Configuration($container->getParameter('kernel.debug'));
-        $config = $this->processConfiguration($configuration, $configs);
-
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('view.xml');
         $loader->load('request.xml');
         $loader->load('serializer.xml');
 
-        foreach ($config['service'] as $key => $service) {
-            if ('validator' === $service && empty($config['body_converter']['validate'])) {
+        foreach ($mergedConfig['service'] as $key => $service) {
+            if ('validator' === $service && empty($mergedConfig['body_converter']['validate'])) {
                 continue;
             }
 
@@ -71,20 +70,20 @@ class FOSRestExtension extends Extension
             }
         }
 
-        $this->loadForm($config, $loader, $container);
-        $this->loadException($config, $loader, $container);
-        $this->loadBodyConverter($config, $loader, $container);
-        $this->loadView($config, $loader, $container);
+        $this->loadForm($mergedConfig, $loader, $container);
+        $this->loadException($mergedConfig, $loader, $container);
+        $this->loadBodyConverter($mergedConfig, $loader, $container);
+        $this->loadView($mergedConfig, $loader, $container);
 
-        $this->loadBodyListener($config, $loader, $container);
-        $this->loadFormatListener($config, $loader, $container);
-        $this->loadVersioning($config, $loader, $container);
-        $this->loadParamFetcherListener($config, $loader, $container);
-        $this->loadAllowedMethodsListener($config, $loader, $container);
-        $this->loadZoneMatcherListener($config, $loader, $container);
+        $this->loadBodyListener($mergedConfig, $loader, $container);
+        $this->loadFormatListener($mergedConfig, $loader, $container);
+        $this->loadVersioning($mergedConfig, $loader, $container);
+        $this->loadParamFetcherListener($mergedConfig, $loader, $container);
+        $this->loadAllowedMethodsListener($mergedConfig, $loader, $container);
+        $this->loadZoneMatcherListener($mergedConfig, $loader, $container);
 
         // Needs RequestBodyParamConverter and View Handler loaded.
-        $this->loadSerializer($config, $container);
+        $this->loadSerializer($mergedConfig, $container);
     }
 
     private function loadForm(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
@@ -114,7 +113,7 @@ class FOSRestExtension extends Extension
 
     private function loadBodyListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
-        if ($config['body_listener']['enabled']) {
+        if ($this->isConfigEnabled($container, $config['body_listener'])) {
             $loader->load('body_listener.xml');
 
             $service = $container->getDefinition('fos_rest.body_listener');
@@ -149,7 +148,7 @@ class FOSRestExtension extends Extension
 
     private function loadFormatListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
-        if ($config['format_listener']['enabled'] && !empty($config['format_listener']['rules'])) {
+        if ($this->isConfigEnabled($container, $config['format_listener']) && !empty($config['format_listener']['rules'])) {
             $loader->load('format_listener.xml');
 
             if (!empty($config['format_listener']['service'])) {
@@ -166,22 +165,22 @@ class FOSRestExtension extends Extension
 
     private function loadVersioning(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
-        if (!empty($config['versioning']['enabled'])) {
+        if ($this->isConfigEnabled($container, $config['versioning'])) {
             $loader->load('versioning.xml');
 
             $versionListener = $container->getDefinition('fos_rest.versioning.listener');
             $versionListener->replaceArgument(1, $config['versioning']['default_version']);
 
             $resolvers = [];
-            if ($config['versioning']['resolvers']['query']['enabled']) {
+            if ($this->isConfigEnabled($container, $config['versioning']['resolvers']['query'])) {
                 $resolvers['query'] = $container->getDefinition('fos_rest.versioning.query_parameter_resolver');
                 $resolvers['query']->replaceArgument(0, $config['versioning']['resolvers']['query']['parameter_name']);
             }
-            if ($config['versioning']['resolvers']['custom_header']['enabled']) {
+            if ($this->isConfigEnabled($container, $config['versioning']['resolvers']['custom_header'])) {
                 $resolvers['custom_header'] = $container->getDefinition('fos_rest.versioning.header_resolver');
                 $resolvers['custom_header']->replaceArgument(0, $config['versioning']['resolvers']['custom_header']['header_name']);
             }
-            if ($config['versioning']['resolvers']['media_type']['enabled']) {
+            if ($this->isConfigEnabled($container, $config['versioning']['resolvers']['media_type'])) {
                 $resolvers['media_type'] = $container->getDefinition('fos_rest.versioning.media_type_resolver');
                 $resolvers['media_type']->replaceArgument(0, $config['versioning']['resolvers']['media_type']['regex']);
             }
@@ -197,7 +196,7 @@ class FOSRestExtension extends Extension
 
     private function loadParamFetcherListener(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
-        if ($config['param_fetcher_listener']['enabled']) {
+        if ($this->isConfigEnabled($container, $config['param_fetcher_listener'])) {
             if (!class_exists(Constraint::class)) {
                 throw new \LogicException('Enabling the fos_rest.param_fetcher_listener option when the Symfony Validator component is not installed is not supported. Try installing the symfony/validator package.');
             }
@@ -219,6 +218,10 @@ class FOSRestExtension extends Extension
     {
         if (!$this->isConfigEnabled($container, $config['body_converter'])) {
             return;
+        }
+
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            throw new LogicException('To use the request body param converter, the "sensio/framework-extra-bundle" package is required.');
         }
 
         $loader->load('request_body_param_converter.xml');
@@ -245,7 +248,7 @@ class FOSRestExtension extends Extension
             }
         }
 
-        if ($config['view']['mime_types']['enabled']) {
+        if ($this->isConfigEnabled($container, $config['view']['mime_types'])) {
             $loader->load('mime_type_listener.xml');
 
             if (!empty($config['mime_type_listener']['service'])) {
@@ -256,7 +259,11 @@ class FOSRestExtension extends Extension
             $container->getDefinition('fos_rest.mime_type_listener')->replaceArgument(0, $config['view']['mime_types']['formats']);
         }
 
-        if ($config['view']['view_response_listener']['enabled']) {
+        if ($this->isConfigEnabled($container, $config['view']['view_response_listener'])) {
+            if (!class_exists(SensioFrameworkExtraBundle::class)) {
+                throw new LogicException('To use the view response listener, the "sensio/framework-extra-bundle" package is required.');
+            }
+
             $loader->load('view_response_listener.xml');
             $service = $container->getDefinition('fos_rest.view_response_listener');
 
@@ -297,7 +304,7 @@ class FOSRestExtension extends Extension
 
     private function loadException(array $config, XmlFileLoader $loader, ContainerBuilder $container): void
     {
-        if ($config['exception']['enabled']) {
+        if ($this->isConfigEnabled($container, $config['exception'])) {
             $loader->load('exception.xml');
 
             if ($config['exception']['map_exception_codes']) {

@@ -11,13 +11,16 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
-use Symfony\Bundle\FrameworkBundle\Test\BrowserKitAssertionsTrait;
-use Symfony\Bundle\TwigBundle\Controller\PreviewErrorController;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 
 class RequestBodyParamConverterTest extends WebTestCase
 {
     public function testRequestBodyIsDeserialized()
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $client = $this->createClient(['test_case' => 'RequestBodyParamConverter']);
         $client->request(
             'POST',
@@ -32,33 +35,10 @@ class RequestBodyParamConverterTest extends WebTestCase
         $this->assertSame('Post 1', $client->getResponse()->getContent());
     }
 
-    /**
-     * Added to the legacy group to not trigger a deprecation. This deprecation is triggered on version 4.4 of
-     * the TwigBundle where the PreviewErrorController class is deprecated. Since we only make sure not to break
-     * that controller class, we do not have to care about the deprecations.
-     *
-     * @group legacy
-     *
-     * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1237
-     */
-    public function testErrorPageServedByTwigBundle()
-    {
-        if (!class_exists(PreviewErrorController::class)) {
-            $this->markTestSkipped();
-        }
-
-        $client = $this->createClient(['test_case' => 'RequestBodyParamConverterTwigBundle']);
-        $client->request('GET', '/_error/404.txt');
-
-        // Status code 200 as this page describes an error but is not the result of an error.
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertStringContainsString('The server returned a "404 Not Found".', $client->getResponse()->getContent());
-    }
-
     public function testErrorPageServedByFrameworkBundle()
     {
-        if (!trait_exists(BrowserKitAssertionsTrait::class)) {
-            $this->markTestSkipped();
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
         }
 
         $client = $this->createClient(['test_case' => 'RequestBodyParamConverterFrameworkBundle']);

@@ -18,12 +18,14 @@ jobs:
     continue-on-error: ${{ matrix.can-fail }}
 
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - php-version: 7.2
-            composer-flags: "--prefer-lowest "
+          - php-version: 7.4
+            composer-flags: "--prefer-lowest"
+            symfony-require: "5.4.*"
             can-fail: false
-          - php-version: 7.3
+          - php-version: 7.4
             composer-flags: ""
             can-fail: false
           - php-version: 7.4
@@ -34,22 +36,32 @@ jobs:
           - php-version: 8.0
             composer-flags: ""
             can-fail: false
-            symfony-require: "6.0.*"
+            symfony-require: "5.4.*"
           - php-version: 8.1
             composer-flags: ""
             can-fail: false
-            symfony-require: "6.1.*"
+            symfony-require: "6.4.*"
           - php-version: 8.2
             composer-flags: ""
             can-fail: false
-            symfony-require: "6.2.*"
+            symfony-require: "6.4.*"
           - php-version: 8.2
             composer-flags: ""
             can-fail: false
-            symfony-require: "6.3.*"
+            symfony-require: "6.4.*"
+            remove-sensio-bundle: yes  # Smoke test with SensioFrameworkExtraBundle removed on latest Symfony LTS
+          - php-version: 8.2
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "7.0.*"
+            remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
           - php-version: 8.2
             composer-flags: ""
             can-fail: true # we don't want to fail the build if we are incompatible with the next (unstable) Symfony version
+            remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
+
+    env:
+      COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: "Checkout"
@@ -78,11 +90,17 @@ jobs:
           key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
 
+      - name: "Remove SensioFrameworkExtraBundle if required"
+        if: "${{ matrix.remove-sensio-bundle == 'yes' }}"
+        env:
+          SYMFONY_REQUIRE: "${{ matrix.symfony-require }}"
+        run: |
+          composer remove --no-update --dev sensio/framework-extra-bundle
+
       - name: "Install dependencies with composer"
         env:
           SYMFONY_REQUIRE: "${{ matrix.symfony-require }}"
         run: |
-          composer remove friendsofphp/php-cs-fixer --dev --no-update
           composer update --no-interaction --no-progress ${{ matrix.composer-flags }}
 
       - name: "Run PHPUnit"

@@ -29,4 +29,8 @@ if (\Symfony\Component\HttpKernel\Kernel::VERSION_ID >= 60100) {
     $frameworkConfig['http_method_override'] = true;
 }
 
+if (\Symfony\Component\HttpKernel\Kernel::VERSION_ID >= 70000) {
+    unset($frameworkConfig['annotations']);
+}
+
 $container->loadFromExtension('framework', $frameworkConfig);

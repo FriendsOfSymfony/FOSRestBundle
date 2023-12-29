@@ -28,6 +28,7 @@ class ParamFetcherController extends AbstractFOSRestController
      * @RequestParam(name="raw", requirements=@IdenticalTo({"foo"="raw", "bar"="foo"}), default="invalid", strict=false)
      * @RequestParam(name="map", map=true, requirements=@IdenticalTo({"foo"="map", "foobar"="foo"}), default="%invalid2% %%", strict=false)
      * @RequestParam(name="bar", nullable=true, requirements="%bar%\ foo")
+     *
      * @QueryParam(name="foz", requirements="[a-z]+")
      * @QueryParam(name="baz", requirements="[a-z]+", incompatibles={"foz"})
      */
@@ -38,6 +39,7 @@ class ParamFetcherController extends AbstractFOSRestController
 
     /**
      * @QueryParam(name="foo", default="invalid")
+     *
      * @RequestParam(name="bar", default="%foo%")
      */
     public function testAction(Request $request, ParamFetcherInterface $fetcher)

@@ -11,7 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
-use Symfony\Component\ErrorHandler\ErrorRenderer\SerializerErrorRenderer;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 
 /**
  * Test class for serialization errors and exceptions.
@@ -38,8 +38,8 @@ class SerializerErrorTest extends WebTestCase
      */
     public function testSerializeExceptionJsonUsingErrorRenderer(string $testCase, array $expectedJson, string $expectedContentType)
     {
-        if (!class_exists(SerializerErrorRenderer::class)) {
-            $this->markTestSkipped();
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
         }
 
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -79,8 +79,8 @@ class SerializerErrorTest extends WebTestCase
 
     public function testSerializeUnknownExceptionJsonWithDebugUsingErrorRenderer()
     {
-        if (!class_exists(SerializerErrorRenderer::class)) {
-            $this->markTestSkipped();
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
         }
 
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -93,8 +93,8 @@ class SerializerErrorTest extends WebTestCase
 
     public function testSerializeUnknownExceptionJsonWithoutDebugUsingErrorRenderer()
     {
-        if (!class_exists(SerializerErrorRenderer::class)) {
-            $this->markTestSkipped();
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
         }
 
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -110,8 +110,8 @@ class SerializerErrorTest extends WebTestCase
      */
     public function testSerializeExceptionCodeMappedToResponseStatusCodeJsonUsingErrorRenderer(string $testCase, array $expectedJson)
     {
-        if (!class_exists(SerializerErrorRenderer::class)) {
-            $this->markTestSkipped();
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
         }
 
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -124,8 +124,8 @@ class SerializerErrorTest extends WebTestCase
 
     public function testCustomExceptionSerialization()
     {
-        if (!class_exists(SerializerErrorRenderer::class)) {
-            $this->markTestSkipped();
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
         }
 
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -182,8 +182,8 @@ class SerializerErrorTest extends WebTestCase
      */
     public function testSerializeExceptionXmlUsingErrorRenderer(string $testCase, string $expectedContent, string $expectedContentType)
     {
-        if (!class_exists(SerializerErrorRenderer::class)) {
-            $this->markTestSkipped();
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
         }
 
         $this->iniSet('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
@@ -234,6 +234,10 @@ XML;
      */
     public function testSerializeInvalidFormJson($testCase)
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.json');
 
@@ -253,6 +257,10 @@ XML;
      */
     public function testSerializeInvalidFormXml($testCase, $expectedContent)
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.xml');
 

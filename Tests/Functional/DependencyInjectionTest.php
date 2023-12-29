@@ -64,7 +64,7 @@ class TestKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
-            $container->loadFromExtension('framework', [
+            $frameworkConfig = [
                 'annotations' => [
                     'enabled' => true,
                 ],
@@ -73,7 +73,13 @@ class TestKernel extends Kernel
                     'resource' => '%kernel.project_dir%/config/routing.yml',
                     'utf8' => true,
                 ],
-            ]);
+            ];
+
+            if (Kernel::VERSION_ID >= 70000) {
+                unset($frameworkConfig['annotations']);
+            }
+
+            $container->loadFromExtension('framework', $frameworkConfig);
             $container->loadFromExtension('fos_rest', []);
             $container->setAlias('test.jms_serializer.handler_registry', new Alias('jms_serializer.handler_registry', true));
             $container->setAlias('test.jms_serializer.form_error_handler', new Alias('jms_serializer.form_error_handler', true));

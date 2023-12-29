@@ -14,7 +14,7 @@ namespace FOS\RestBundle\Tests\Controller\Annotations;
 use FOS\RestBundle\Controller\Annotations\AbstractParam;
 use FOS\RestBundle\Controller\Annotations\FileParam;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\All;
@@ -51,7 +51,7 @@ class FileParamTest extends TestCase
             ->willReturn('foo');
 
         $request = $this->getMockBuilder(Request::class)->getMock();
-        $parameterBag = $this->getMockBuilder(ParameterBag::class)->getMock();
+        $parameterBag = $this->getMockBuilder(FileBag::class)->getMock();
         $parameterBag
             ->expects($this->once())
             ->method('get')

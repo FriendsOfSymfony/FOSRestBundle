@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-$bundles = [
-    new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-    new \FOS\RestBundle\FOSRestBundle(),
-    new \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\TestBundle(),
-];
-
 if (class_exists(\Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class)) {
-    $bundles[] = new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle();
-}
+    $loader->load(__DIR__.'/../config/sensio_framework_extra.php');
 
-return $bundles;
+    $config = [
+        'request' => [
+            'converters' => true,
+        ],
+    ];
+
+    $container->loadFromExtension('sensio_framework_extra', $config);
+}

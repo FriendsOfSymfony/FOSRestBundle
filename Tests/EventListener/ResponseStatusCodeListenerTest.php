@@ -43,9 +43,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
 
         if (class_exists(ExceptionEvent::class)) {
-            $exceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, new \DomainException());
+            $exceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, new \DomainException());
         } else {
-            $exceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, new \DomainException());
+            $exceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, new \DomainException());
         }
 
         $this->eventListener->getResponseStatusCodeFromThrowable($exceptionEvent);
@@ -53,9 +53,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $response = new Response();
 
         if (class_exists(ResponseEvent::class)) {
-            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         } else {
-            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         }
 
         $this->eventListener->setResponseStatusCode($responseEvent);
@@ -68,9 +68,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $request = new Request();
 
         if (class_exists(ExceptionEvent::class)) {
-            $exceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, new \LogicException());
+            $exceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, new \LogicException());
         } else {
-            $exceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, new \LogicException());
+            $exceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, new \LogicException());
         }
 
         $this->eventListener->getResponseStatusCodeFromThrowable($exceptionEvent);
@@ -78,9 +78,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $response = new Response();
 
         if (class_exists(ResponseEvent::class)) {
-            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         } else {
-            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         }
 
         $this->eventListener->setResponseStatusCode($responseEvent);
@@ -94,9 +94,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $exception = new \DomainException();
 
         if (class_exists(ExceptionEvent::class)) {
-            $exceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+            $exceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $exception);
         } else {
-            $exceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+            $exceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $exception);
         }
 
         $this->eventListener->getResponseStatusCodeFromThrowable($exceptionEvent);
@@ -104,9 +104,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $response = new Response();
 
         if (class_exists(ResponseEvent::class)) {
-            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         } else {
-            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         }
 
         $this->eventListener->setResponseStatusCode($responseEvent);
@@ -122,14 +122,14 @@ class ResponseStatusCodeListenerTest extends TestCase
 
         $request = new Request();
 
-        $this->eventListener->getResponseStatusCodeFromThrowable(new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, new \ParseError()));
+        $this->eventListener->getResponseStatusCodeFromThrowable(new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, new \ParseError()));
 
         $response = new Response();
 
         if (class_exists(ResponseEvent::class)) {
-            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         } else {
-            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $responseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
         }
 
         $this->eventListener->setResponseStatusCode($responseEvent);
@@ -143,9 +143,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $exception = new NotFoundHttpException();
 
         if (class_exists(ExceptionEvent::class)) {
-            $masterRequestExceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MASTER_REQUEST, $exception);
+            $masterRequestExceptionEvent = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MAIN_REQUEST, $exception);
         } else {
-            $masterRequestExceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MASTER_REQUEST, $exception);
+            $masterRequestExceptionEvent = new GetResponseForExceptionEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MAIN_REQUEST, $exception);
         }
 
         $this->eventListener->getResponseStatusCodeFromThrowable($masterRequestExceptionEvent);
@@ -174,9 +174,9 @@ class ResponseStatusCodeListenerTest extends TestCase
         $masterRequestResponse = new Response();
 
         if (class_exists(ResponseEvent::class)) {
-            $masterRequestResponseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MASTER_REQUEST, $masterRequestResponse);
+            $masterRequestResponseEvent = new ResponseEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MAIN_REQUEST, $masterRequestResponse);
         } else {
-            $masterRequestResponseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MASTER_REQUEST, $masterRequestResponse);
+            $masterRequestResponseEvent = new FilterResponseEvent($this->createMock(HttpKernelInterface::class), $masterRequest, HttpKernelInterface::MAIN_REQUEST, $masterRequestResponse);
         }
 
         $this->eventListener->setResponseStatusCode($masterRequestResponseEvent);

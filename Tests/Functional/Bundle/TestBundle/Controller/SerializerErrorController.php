@@ -50,6 +50,7 @@ class SerializerErrorController extends AbstractController
     /**
      * @View
      */
+    #[View]
     public function invalidFormAction()
     {
         $form = $this->createFormBuilder(null, [
