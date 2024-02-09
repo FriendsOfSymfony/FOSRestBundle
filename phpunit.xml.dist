@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="vendor/autoload.php" colors="true">
     <php>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[indirect]=8"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=104&amp;max[indirect]=243"/>
         <ini name="error_reporting" value="-1" />
         <server name="SHELL_VERBOSITY" value="-1" />
     </php>

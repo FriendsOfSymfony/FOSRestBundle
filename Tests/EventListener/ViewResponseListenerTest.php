@@ -11,12 +11,16 @@
 
 namespace FOS\RestBundle\Tests\EventListener;
 
+use Doctrine\Common\Annotations\Reader;
 use FOS\RestBundle\Controller\Annotations\View as ViewAnnotation;
 use FOS\RestBundle\EventListener\ViewResponseListener;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Serializer\Serializer;
+use FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Controller\Version2Controller;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -39,7 +43,12 @@ class ViewResponseListenerTest extends TestCase
     public $listener;
 
     /**
-     * @var ViewHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var (MockObject&Reader)|null
+     */
+    public $annotationReader;
+
+    /**
+     * @var ViewHandlerInterface
      */
     public $viewHandler;
 
@@ -47,23 +56,66 @@ class ViewResponseListenerTest extends TestCase
     private $serializer;
     private $requestStack;
 
-    /**
-     * @return ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function getFilterEvent(Request $request)
+    protected function getControllerEvent(Request $request, callable $controller): ControllerEvent
     {
-        $controller = new FooController();
         $kernel = $this->createMock(HttpKernelInterface::class);
 
-        return new ControllerEvent($kernel, [$controller, 'viewAction'], $request, null);
+        return new ControllerEvent($kernel, $controller, $request, HttpKernelInterface::MASTER_REQUEST);
+    }
+
+    public function testExtractsViewConfigurationFromAnnotationOnMethod()
+    {
+        if (null === $this->annotationReader || 80000 <= \PHP_VERSION_ID) {
+            $this->markTestSkipped('Test only applies when doctrine/annotations is installed and running on PHP 7');
+        }
+
+        $this->createViewResponseListener();
+
+        $this->annotationReader->expects($this->once())
+            ->method('getClassAnnotations')
+            ->willReturn([]);
+
+        $this->annotationReader->expects($this->once())
+            ->method('getMethodAnnotations')
+            ->willReturn([new ViewAnnotation()]);
+
+        $controller = new Version2Controller();
+
+        $request = new Request();
+        $event = $this->getControllerEvent($request, [$controller, 'versionAction']);
+
+        $this->listener->onKernelController($event);
+
+        $config = $request->attributes->get(FOSRestBundle::VIEW_ATTRIBUTE);
+
+        $this->assertNotNull($config);
+        $this->assertInstanceOf(ViewAnnotation::class, $config);
+    }
+
+    /**
+     * @requires PHP 8.0
+     */
+    public function testExtractsViewConfigurationFromAttributeOnMethod()
+    {
+        $this->createViewResponseListener();
+
+        $controller = new Version2Controller();
+
+        $request = new Request();
+        $event = $this->getControllerEvent($request, [$controller, 'versionAction']);
+
+        $this->listener->onKernelController($event);
+
+        $config = $request->attributes->get(FOSRestBundle::VIEW_ATTRIBUTE);
+
+        $this->assertNotNull($config);
+        $this->assertInstanceOf(ViewAnnotation::class, $config);
     }
 
     /**
      * @param mixed $result
-     *
-     * @return ViewEvent|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getResponseEvent(Request $request, $result)
+    protected function getViewEvent(Request $request, $result): ViewEvent
     {
         $kernel = $this->createMock(HttpKernelInterface::class);
 
@@ -75,9 +127,10 @@ class ViewResponseListenerTest extends TestCase
         $this->createViewResponseListener();
 
         $request = new Request();
-        $event = $this->getResponseEvent($request, []);
+        $event = $this->getViewEvent($request, []);
 
-        $this->assertNull($this->listener->onKernelView($event));
+        $this->listener->onKernelView($event);
+
         $this->assertNull($event->getResponse());
     }
 
@@ -103,13 +156,13 @@ class ViewResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setRequestFormat('json');
-        $request->attributes->set('_template', $viewAnnotation);
+        $request->attributes->set(FOSRestBundle::VIEW_ATTRIBUTE, $viewAnnotation);
 
         $view = new View();
         $view->setStatusCode($viewCode);
         $view->setData('foo');
 
-        $event = $this->getResponseEvent($request, $view);
+        $event = $this->getViewEvent($request, $view);
         $this->listener->onKernelView($event);
         $response = $event->getResponse();
 
@@ -138,11 +191,11 @@ class ViewResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setRequestFormat('json');
-        $request->attributes->set('_template', $viewAnnotation);
+        $request->attributes->set(FOSRestBundle::VIEW_ATTRIBUTE, $viewAnnotation);
 
         $view = new View();
 
-        $event = $this->getResponseEvent($request, $view);
+        $event = $this->getViewEvent($request, $view);
 
         $this->listener->onKernelView($event);
 
@@ -161,6 +214,7 @@ class ViewResponseListenerTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->annotationReader = interface_exists(Reader::class) && 80000 > \PHP_VERSION_ID ? $this->getMockBuilder(Reader::class)->getMock() : null;
         $this->router = $this->getMockBuilder(RouterInterface::class)->getMock();
         $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->requestStack = new RequestStack();
@@ -169,23 +223,6 @@ class ViewResponseListenerTest extends TestCase
     private function createViewResponseListener($formats = null)
     {
         $this->viewHandler = ViewHandler::create($this->router, $this->serializer, $this->requestStack, $formats);
-        $this->listener = new ViewResponseListener($this->viewHandler, false);
-    }
-}
-
-class FooController
-{
-    /**
-     * @see testOnKernelView()
-     */
-    public function onKernelViewAction($foo, $halli)
-    {
-    }
-
-    /**
-     * @see testViewWithNoCopyDefaultVars()
-     */
-    public function viewAction($customer)
-    {
+        $this->listener = new ViewResponseListener($this->viewHandler, false, $this->annotationReader);
     }
 }

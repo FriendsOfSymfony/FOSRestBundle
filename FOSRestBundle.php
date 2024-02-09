@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class FOSRestBundle extends Bundle
 {
+    const VIEW_ATTRIBUTE = '_fos_rest_view';
     const ZONE_ATTRIBUTE = '_fos_rest_zone';
 
     /**

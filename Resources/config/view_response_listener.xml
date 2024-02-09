@@ -10,6 +10,7 @@
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="fos_rest.view_handler" />
             <argument /> <!-- force view -->
+            <argument type="service" id="annotation_reader" on-invalid="null"/>
         </service>
 
     </services>

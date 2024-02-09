@@ -23,6 +23,7 @@ class VersionController extends AbstractFOSRestController
     /**
      * @View()
      */
+    #[View]
     public function versionAction(Request $request, $version)
     {
         $versionExclusion = $this->findExclusionStrategyVersion($request);
