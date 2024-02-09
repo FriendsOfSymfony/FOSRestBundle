@@ -34,23 +34,15 @@ class RequestBodyParamConverterTest extends TestCase
     protected $serializer;
     protected $converter;
 
+    public static function setUpBeforeClass(): void
+    {
+        if (!class_exists(ParamConverterInterface::class)) {
+            self::markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+    }
+
     protected function setUp(): void
     {
-        // skip the test if the installed version of SensioFrameworkExtraBundle
-        // is not compatible with the RequestBodyParamConverter class
-        $parameter = new \ReflectionParameter(
-            [
-                ParamConverterInterface::class,
-                'supports',
-            ],
-            'configuration'
-        );
-        if (ParamConverter::class != $parameter->getType()->getName()) {
-            $this->markTestSkipped(
-                'skipping RequestBodyParamConverterTest due to an incompatible version of the SensioFrameworkExtraBundle'
-            );
-        }
-
         $this->serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->converter = new RequestBodyParamConverter($this->serializer);
     }

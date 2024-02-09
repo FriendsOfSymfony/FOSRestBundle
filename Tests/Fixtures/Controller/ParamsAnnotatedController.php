@@ -26,8 +26,11 @@ class ParamsAnnotatedController
 {
     /**
      * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
+     *
      * @RequestParam(name="byauthor", requirements="[a-z]+", description="by author", incompatibles={"search"}, strict=true)
+     *
      * @QueryParam(name="filters", map=true, requirements=@NotNull)
+     *
      * @FileParam(name="avatar", requirements={"mimeTypes"="application/json"}, image=true)
      * @FileParam(name="foo", requirements=@NotNull, strict=false)
      * @FileParam(name="bar", requirements=@NotNull, map=true)
@@ -36,12 +39,12 @@ class ParamsAnnotatedController
     {
     }
 
-    #[QueryParam(name: 'page', requirements: '\d+', default: '1', description: 'Page of the overview')]
+    #[QueryParam(name: 'page', requirements: '\d+', default: '1', description: 'Page of the overview.')]
     #[RequestParam(name: 'byauthor', requirements: '[a-z]+', description: 'by author', incompatibles: ['search'], strict: true)]
-    #[QueryParam(name: 'filters', requirements: '\d+', default: '1', description: 'Page of the overview')]
+    #[QueryParam(name: 'filters', map: true, requirements: new NotNull())]
     #[FileParam(name: 'avatar', requirements: ['mimeTypes' => 'application/json'], image: true)]
-    #[FileParam(name: 'foo', strict: false)]
-    #[FileParam(name: 'bar', map: true)]
+    #[FileParam(name: 'foo', requirements: new NotNull(), strict: false)]
+    #[FileParam(name: 'bar', requirements: new NotNull(), map: true)]
     public function getArticlesAttributesAction(ParamFetcher $paramFetcher)
     {
     }

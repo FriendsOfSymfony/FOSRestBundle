@@ -15,6 +15,7 @@ use FOS\RestBundle\DependencyInjection\Configuration;
 use FOS\RestBundle\DependencyInjection\FOSRestExtension;
 use FOS\RestBundle\EventListener\ZoneMatcherListener;
 use PHPUnit\Framework\TestCase;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -294,6 +295,10 @@ class FOSRestExtensionTest extends TestCase
 
     public function testLoadViewResponseListener()
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $config = [
             'fos_rest' => [
                 'view' => [
@@ -309,6 +314,10 @@ class FOSRestExtensionTest extends TestCase
 
     public function testLoadViewResponseListenerForce()
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $config = [
             'fos_rest' => [
                 'view' => [
@@ -386,6 +395,10 @@ class FOSRestExtensionTest extends TestCase
 
     public function testValidatorAliasWhenEnabled()
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $config = [
             'fos_rest' => [
                 'body_converter' => ['validate' => true],
@@ -397,6 +410,10 @@ class FOSRestExtensionTest extends TestCase
 
     public function testValidatorAliasWhenDisabled()
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            $this->markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         $config = [
             'fos_rest' => [
                 'body_converter' => ['validate' => false],

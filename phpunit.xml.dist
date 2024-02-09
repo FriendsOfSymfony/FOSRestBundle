@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        bootstrap="vendor/autoload.php"
+        colors="true"
+        xsi:noNamespaceSchemaLocation=".phpunit/phpunit.xsd"
+>
     <php>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[indirect]=8"/>
-        <ini name="error_reporting" value="-1" />
-        <server name="SHELL_VERBOSITY" value="-1" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[direct]=1&amp;[indirect]=8"/>
+        <env name="SYMFONY_PHPUNIT_VERSION" value="9.6"/>
+        <ini name="error_reporting" value="-1"/>
+        <server name="SHELL_VERBOSITY" value="-1"/>
     </php>
 
     <testsuites>
@@ -13,14 +19,14 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
+    <coverage>
+        <include>
             <directory>./</directory>
-            <exclude>
-                <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory>./Resources</directory>
+            <directory>./Tests</directory>
+            <directory>./vendor</directory>
+        </exclude>
+    </coverage>
 </phpunit>

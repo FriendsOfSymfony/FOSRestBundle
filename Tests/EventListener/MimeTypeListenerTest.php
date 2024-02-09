@@ -16,7 +16,6 @@ use FOS\RestBundle\FOSRestBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Request listener test.
@@ -43,8 +42,8 @@ class MimeTypeListenerTest extends TestCase
         $this->assertNull($request->getMimeType('jsonp'));
 
         $event->expects($this->once())
-              ->method('getRequestType')
-              ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+              ->method('isMainRequest')
+              ->will($this->returnValue(true));
 
         $listener->onKernelRequest($event);
 
@@ -64,8 +63,8 @@ class MimeTypeListenerTest extends TestCase
             ->will($this->returnValue($request));
 
         $event->expects($this->never())
-            ->method('getRequestType')
-            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+            ->method('isMainRequest')
+            ->will($this->returnValue(true));
 
         $listener->onKernelRequest($event);
 
@@ -85,8 +84,8 @@ class MimeTypeListenerTest extends TestCase
             ->will($this->returnValue($request));
 
         $event->expects($this->once())
-            ->method('getRequestType')
-            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+            ->method('isMainRequest')
+            ->will($this->returnValue(true));
 
         $listener->onKernelRequest($event);
 

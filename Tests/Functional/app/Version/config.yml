@@ -1,6 +1,6 @@
 imports:
     - { resource: ../config/default.yml }
-    - { resource: ../config/sensio_framework_extra.yml }
+    - { resource: ../config/sensio_framework_extra.php }
 
 framework:
     serializer:

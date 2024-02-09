@@ -55,7 +55,7 @@ class FormatListener
             }
 
             if (null === $format) {
-                if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+                if (HttpKernelInterface::MAIN_REQUEST === $event->getRequestType()) {
                     throw new NotAcceptableHttpException('No matching accepted Response format could be determined');
                 }
 

@@ -126,7 +126,7 @@ class FormatListenerTest extends TestCase
 
         $event->expects($this->once())
             ->method('getRequestType')
-            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+            ->will($this->returnValue(HttpKernelInterface::MAIN_REQUEST));
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -199,7 +199,7 @@ class FormatListenerTest extends TestCase
 
         $event->expects($this->any())
             ->method('getRequestType')
-            ->will($this->returnValue(HttpKernelInterface::MASTER_REQUEST));
+            ->will($this->returnValue(HttpKernelInterface::MAIN_REQUEST));
 
         $requestStack = new RequestStack();
         $requestStack->push($request);

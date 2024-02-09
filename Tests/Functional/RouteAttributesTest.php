@@ -11,6 +11,8 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+
 /**
  * @requires PHP 8
  */
@@ -21,6 +23,10 @@ class RouteAttributesTest extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
+        if (!class_exists(SensioFrameworkExtraBundle::class)) {
+            self::markTestSkipped('Test requires sensio/framework-extra-bundle');
+        }
+
         parent::setUpBeforeClass();
         static::$client = static::createClient(['test_case' => self::TEST_CASE]);
     }
