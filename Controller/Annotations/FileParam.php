@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints\Image;
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
-#[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS)]
 class FileParam extends AbstractParam
 {
     /** @var bool */
