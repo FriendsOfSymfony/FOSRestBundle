@@ -18,8 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Annotation
  * @NamedArgumentConstructor
- * @Target("METHOD")
- * @Target("CLASS")
+ * @Target({"METHOD", "CLASS"})
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  * @author Boris Guéry    <guery.b@gmail.com>
