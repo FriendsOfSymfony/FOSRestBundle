@@ -22,8 +22,7 @@ use Symfony\Component\Validator\Constraints\Image;
  *
  * @Annotation
  * @NamedArgumentConstructor
- * @Target("METHOD")
- * @Target("CLASS")
+ * @Target({"METHOD", "CLASS"})
  *
  * @author Ener-Getick <egetick@gmail.com>
  */
