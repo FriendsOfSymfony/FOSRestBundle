@@ -49,6 +49,18 @@ jobs:
             symfony-require: "6.3.*"
           - php-version: 8.2
             composer-flags: ""
+            can-fail: false
+            symfony-require: "6.4.*"
+          - php-version: 8.3
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "7.0.*"
+          - php-version: 8.3
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "7.1.*"
+          - php-version: 8.3
+            composer-flags: ""
             can-fail: true # we don't want to fail the build if we are incompatible with the next (unstable) Symfony version
 
     steps:
