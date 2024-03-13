@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ZoneMatcherListenerTest extends TestCase
 {
-    public function testNoRequestMatcher()
+    public function testNoRequestMatcher(): void
     {
         $request = new Request();
         $event = $this->getGetResponseEvent($request);
@@ -31,7 +31,7 @@ class ZoneMatcherListenerTest extends TestCase
         $this->assertTrue($request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE));
     }
 
-    public function testWithRequestMatcherMatch()
+    public function testWithRequestMatcherMatch(): void
     {
         $request = new Request();
         $event = $this->getGetResponseEvent($request);
@@ -50,7 +50,7 @@ class ZoneMatcherListenerTest extends TestCase
         $this->assertTrue($request->attributes->has(FOSRestBundle::ZONE_ATTRIBUTE));
     }
 
-    public function testWithRequestMatcherNoMatch()
+    public function testWithRequestMatcherNoMatch(): void
     {
         $request = new Request();
         $event = $this->getGetResponseEvent($request);

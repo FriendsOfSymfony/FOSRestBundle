@@ -37,17 +37,17 @@ class ExceptionValueMapTest extends TestCase
         $this->valueMap = new ExceptionValueMap($map);
     }
 
-    public function testResolveExceptionValueIsFound()
+    public function testResolveExceptionValueIsFound(): void
     {
         $this->assertSame('logic', $this->valueMap->resolveFromClassName(\LogicException::class));
     }
 
-    public function testResolveExceptionValueIsFoundBySubclass()
+    public function testResolveExceptionValueIsFoundBySubclass(): void
     {
         $this->assertSame('logic', $this->valueMap->resolveFromClassName(\BadFunctionCallException::class));
     }
 
-    public function testResolveExceptionValueNotFound()
+    public function testResolveExceptionValueNotFound(): void
     {
         $this->assertNull($this->valueMap->resolveFromClassName(\RuntimeException::class));
     }

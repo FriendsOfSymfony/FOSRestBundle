@@ -35,7 +35,7 @@ $securityConfig = [
 ];
 
 if (class_exists(\Symfony\Component\Security\Core\User\InMemoryUser::class)) {
-    $passwordHasherConfig = ['Symfony\Component\Security\Core\User\InMemoryUser' => 'plaintext'];
+    $passwordHasherConfig = [\Symfony\Component\Security\Core\User\InMemoryUser::class => 'plaintext'];
 } else {
     $passwordHasherConfig = ['Symfony\Component\Security\Core\User\User' => 'plaintext'];
 }

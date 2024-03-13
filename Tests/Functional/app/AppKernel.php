@@ -54,7 +54,7 @@ class AppKernel extends Kernel
     private $testCase;
     private $rootConfig;
 
-    public function __construct($testCase, $rootConfig, $environment, $debug)
+    public function __construct($testCase, $rootConfig, string $environment, bool $debug)
     {
         if (!is_dir(__DIR__.'/'.$testCase)) {
             throw new \InvalidArgumentException(sprintf('The test case "%s" does not exist.', $testCase));
@@ -94,21 +94,21 @@ class AppKernel extends Kernel
         return sys_get_temp_dir().'/'.Kernel::VERSION.'/'.$this->testCase.'/logs';
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load($this->rootConfig);
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(function (ContainerBuilder $container): void {
             $container->setParameter('container.autowiring.strict_mode', true);
             $container->register('logger', NullLogger::class);
         });
     }
 
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([$this->testCase, $this->rootConfig, $this->getEnvironment(), $this->isDebug()]);
     }
 
-    public function unserialize($str)
+    public function unserialize($str): void
     {
         $a = unserialize($str);
         $this->__construct($a[0], $a[1], $a[2], $a[3]);

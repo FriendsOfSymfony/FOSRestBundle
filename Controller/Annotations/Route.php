@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route as BaseRoute;
 class Route extends BaseRoute
 {
     public function __construct(
-        $data = [],
+        string|array|null $data = [],
         $path = null,
         string $name = null,
         array $requirements = [],
@@ -123,7 +123,7 @@ class Route extends BaseRoute
     /**
      * @return string|null
      */
-    public function getMethod()
+    public function getMethod(): void
     {
         return;
     }

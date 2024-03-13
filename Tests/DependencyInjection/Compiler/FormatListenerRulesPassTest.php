@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class FormatListenerRulesPassTest extends TestCase
 {
-    public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled()
+    public function testRulesAreAddedWhenFormatListenerAndProfilerToolbarAreEnabled(): void
     {
         $definition = $this->getMockBuilder(Definition::class)
             ->setMethods(['addMethod'])
@@ -68,7 +68,7 @@ class FormatListenerRulesPassTest extends TestCase
         $compiler->process($container);
     }
 
-    public function testNoRulesAreAddedWhenProfilerToolbarAreDisabled()
+    public function testNoRulesAreAddedWhenProfilerToolbarAreDisabled(): void
     {
         $definition = $this->getMockBuilder(Definition::class)
             ->setMethods(['addMethod'])

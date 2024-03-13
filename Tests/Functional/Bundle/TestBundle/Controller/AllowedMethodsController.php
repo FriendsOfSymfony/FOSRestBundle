@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AllowedMethodsController
 {
-    public function indexAction()
+    public function indexAction(): \Symfony\Component\HttpFoundation\Response
     {
         return new Response();
     }

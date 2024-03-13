@@ -50,7 +50,7 @@ class ViewResponseListenerTest extends TestCase
     /**
      * @return ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getFilterEvent(Request $request)
+    protected function getFilterEvent(Request $request): \Symfony\Component\HttpKernel\Event\ControllerEvent
     {
         $controller = new FooController();
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -63,14 +63,14 @@ class ViewResponseListenerTest extends TestCase
      *
      * @return ViewEvent|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getResponseEvent(Request $request, $result)
+    protected function getResponseEvent(Request $request, $result): \Symfony\Component\HttpKernel\Event\ViewEvent
     {
         $kernel = $this->createMock(HttpKernelInterface::class);
 
         return new ViewEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $result);
     }
 
-    public function testOnKernelViewWhenControllerResultIsNotViewObject()
+    public function testOnKernelViewWhenControllerResultIsNotViewObject(): void
     {
         $this->createViewResponseListener();
 
@@ -81,7 +81,7 @@ class ViewResponseListenerTest extends TestCase
         $this->assertNull($event->getResponse());
     }
 
-    public static function statusCodeProvider()
+    public static function statusCodeProvider(): array
     {
         return [
             [201, 200, 201],
@@ -93,7 +93,7 @@ class ViewResponseListenerTest extends TestCase
     /**
      * @dataProvider statusCodeProvider
      */
-    public function testStatusCode($annotationCode, $viewCode, $expectedCode)
+    public function testStatusCode(int $annotationCode, int $viewCode, int $expectedCode): void
     {
         $this->createViewResponseListener(['json' => false]);
 
@@ -117,7 +117,7 @@ class ViewResponseListenerTest extends TestCase
         $this->assertSame($expectedCode, $response->getStatusCode());
     }
 
-    public static function serializerEnableMaxDepthChecksProvider()
+    public static function serializerEnableMaxDepthChecksProvider(): array
     {
         return [
             [false, null],
@@ -128,7 +128,7 @@ class ViewResponseListenerTest extends TestCase
     /**
      * @dataProvider serializerEnableMaxDepthChecksProvider
      */
-    public function testSerializerEnableMaxDepthChecks($enableMaxDepthChecks, $expectedMaxDepth)
+    public function testSerializerEnableMaxDepthChecks(bool $enableMaxDepthChecks, ?int $expectedMaxDepth): void
     {
         $this->createViewResponseListener(['json' => false]);
 
@@ -151,7 +151,7 @@ class ViewResponseListenerTest extends TestCase
         $this->assertEquals($enableMaxDepthChecks, $context->isMaxDepthEnabled());
     }
 
-    public function getDataForDefaultVarsCopy()
+    public function getDataForDefaultVarsCopy(): array
     {
         return [
             [false],
@@ -166,7 +166,7 @@ class ViewResponseListenerTest extends TestCase
         $this->requestStack = new RequestStack();
     }
 
-    private function createViewResponseListener($formats = null)
+    private function createViewResponseListener(?array $formats = null): void
     {
         $this->viewHandler = ViewHandler::create($this->router, $this->serializer, $this->requestStack, $formats);
         $this->listener = new ViewResponseListener($this->viewHandler, false);

@@ -23,7 +23,7 @@ class AttributesController extends AbstractFOSRestController
 {
     #[Rest\Get(path: '/{page}', name: 'product_list', requirements: ['page' => '\d+'], defaults: ['_format' => 'json'])]
     #[Rest\View]
-    public function listAction(int $page)
+    public function listAction(int $page): array
     {
         return [
             ['name' => 'product1'],
@@ -33,7 +33,7 @@ class AttributesController extends AbstractFOSRestController
 
     #[Rest\Post(path: '', name: 'product_create')]
     #[Rest\View(statusCode: 201)]
-    public function createAction(Request $request)
+    public function createAction(Request $request): array
     {
         return [
             'name' => 'product1',

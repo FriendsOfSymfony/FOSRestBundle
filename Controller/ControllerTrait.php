@@ -25,7 +25,7 @@ trait ControllerTrait
 {
     private $viewhandler;
 
-    public function setViewHandler(ViewHandlerInterface $viewhandler)
+    public function setViewHandler(ViewHandlerInterface $viewhandler): void
     {
         $this->viewhandler = $viewhandler;
     }
@@ -42,7 +42,7 @@ trait ControllerTrait
     /**
      * @return View
      */
-    protected function view($data = null, ?int $statusCode = null, array $headers = [])
+    protected function view($data = null, ?int $statusCode = null, array $headers = []): \FOS\RestBundle\View\View
     {
         return View::create($data, $statusCode, $headers);
     }
@@ -50,7 +50,7 @@ trait ControllerTrait
     /**
      * @return View
      */
-    protected function redirectView(string $url, int $statusCode = Response::HTTP_FOUND, array $headers = [])
+    protected function redirectView(string $url, int $statusCode = Response::HTTP_FOUND, array $headers = []): \FOS\RestBundle\View\View
     {
         return View::createRedirect($url, $statusCode, $headers);
     }
@@ -58,7 +58,7 @@ trait ControllerTrait
     /**
      * @return View
      */
-    protected function routeRedirectView(string $route, array $parameters = [], int $statusCode = Response::HTTP_CREATED, array $headers = [])
+    protected function routeRedirectView(string $route, array $parameters = [], int $statusCode = Response::HTTP_CREATED, array $headers = []): \FOS\RestBundle\View\View
     {
         return View::createRouteRedirect($route, $parameters, $statusCode, $headers);
     }

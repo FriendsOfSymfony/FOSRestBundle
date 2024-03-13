@@ -43,7 +43,7 @@ class ConfigurationTest extends TestCase
     /**
      * testExceptionCodesAcceptsIntegers.
      */
-    public function testExceptionCodesAcceptsIntegers()
+    public function testExceptionCodesAcceptsIntegers(): void
     {
         $expectedConfig = [
             \RuntimeException::class => 500,
@@ -68,7 +68,7 @@ class ConfigurationTest extends TestCase
     /**
      * testThatResponseConstantsConvertedToCodes.
      */
-    public function testThatResponseConstantsConvertedToCodes()
+    public function testThatResponseConstantsConvertedToCodes(): void
     {
         $expectedResult = [
             NotFoundHttpException::class => Response::HTTP_NOT_FOUND,
@@ -96,7 +96,7 @@ class ConfigurationTest extends TestCase
      *
      * @dataProvider incorrectExceptionCodeProvider
      */
-    public function testThatIfExceptionCodeIncorrectExceptionIsThrown($value)
+    public function testThatIfExceptionCodeIncorrectExceptionIsThrown($value): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage(sprintf('Invalid HTTP code in fos_rest.exception.codes, see %s for all valid codes.', Response::class));
@@ -115,7 +115,7 @@ class ConfigurationTest extends TestCase
         );
     }
 
-    public function testLoadBadMessagesClassThrowsException()
+    public function testLoadBadMessagesClassThrowsException(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -133,7 +133,7 @@ class ConfigurationTest extends TestCase
         );
     }
 
-    public function testLoadBadCodesClassThrowsException()
+    public function testLoadBadCodesClassThrowsException(): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage(sprintf('Could not load class "UnknownException" or the class does not extend from "%s"', \Throwable::class));
@@ -152,7 +152,7 @@ class ConfigurationTest extends TestCase
         );
     }
 
-    public function testOverwriteFormatListenerRulesDoesNotMerge()
+    public function testOverwriteFormatListenerRulesDoesNotMerge(): void
     {
         $configuration = $this->processor->processConfiguration(
             $this->configuration,
@@ -205,7 +205,7 @@ class ConfigurationTest extends TestCase
      *
      * @return array
      */
-    public function incorrectExceptionCodeProvider()
+    public function incorrectExceptionCodeProvider(): array
     {
         return [
             ['404'], // Integer as string in not acceptable
@@ -221,7 +221,6 @@ class ConfigurationTest extends TestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
         $this->configuration = new Configuration(false);
         $this->processor = new Processor();
     }

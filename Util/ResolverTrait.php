@@ -34,7 +34,7 @@ trait ResolverTrait
             return $value;
         }
 
-        $escapedValue = preg_replace_callback('/%%|%([^%\s]++)%/', function ($match) use ($container) {
+        $escapedValue = preg_replace_callback('/%%|%([^%\s]++)%/', function (array $match) use ($container) {
             // skip %%
             if (!isset($match[1])) {
                 return '%%';

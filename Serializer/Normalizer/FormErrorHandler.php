@@ -43,7 +43,7 @@ class FormErrorHandler implements SubscribingHandlerInterface
     {
         if ($context) {
             if ($context->hasAttribute('status_code')) {
-                $document = $visitor->getDocument(true);
+                $document = $visitor->getDocument();
                 if (!$visitor->getCurrentNode()) {
                     $visitor->createRoot();
                 }

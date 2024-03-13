@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class DependencyInjectionTest extends KernelTestCase
 {
-    public function testSerializerRelatedServicesAreNotRemovedWhenJmsSerializerBundleIsEnabled()
+    public function testSerializerRelatedServicesAreNotRemovedWhenJmsSerializerBundleIsEnabled(): void
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
@@ -61,9 +61,9 @@ class TestKernel extends Kernel
         ];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(function (ContainerBuilder $container): void {
             $container->loadFromExtension('framework', [
                 'annotations' => [
                     'enabled' => true,

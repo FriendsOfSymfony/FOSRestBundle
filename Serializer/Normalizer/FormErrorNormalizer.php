@@ -29,7 +29,7 @@ class FormErrorNormalizer implements NormalizerInterface
     public function normalize($object, $format = null, array $context = []): array
     {
         return [
-            'code' => isset($context['status_code']) ? $context['status_code'] : null,
+            'code' => $context['status_code'] ?? null,
             'message' => 'Validation Failed',
             'errors' => $this->convertFormToArray($object),
         ];

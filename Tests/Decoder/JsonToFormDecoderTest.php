@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class JsonToFormDecoderTest extends TestCase
 {
-    public function testDecodeWithRemovingFalseData()
+    public function testDecodeWithRemovingFalseData(): void
     {
         $data = [
             'arrayKey' => [
@@ -48,7 +48,7 @@ class JsonToFormDecoderTest extends TestCase
         $this->assertEquals('bar', $decoded['stringKey']);
     }
 
-    public function testDecodeStringData()
+    public function testDecodeStringData(): void
     {
         $decoder = new JsonToFormDecoder();
         $decoded = $decoder->decode('"foo"');

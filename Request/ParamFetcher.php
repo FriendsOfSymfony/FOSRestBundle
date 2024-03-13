@@ -92,7 +92,7 @@ final class ParamFetcher implements ParamFetcherInterface
         $param = $params[$name];
         $default = $param->getDefault();
         $default = $this->resolveValue($this->container, $default);
-        $strict = (null !== $strict ? $strict : $param->isStrict());
+        $strict = ($strict ?? $param->isStrict());
 
         $paramValue = $param->getValue($this->getRequest(), $default);
 
@@ -133,7 +133,7 @@ final class ParamFetcher implements ParamFetcherInterface
                 throw InvalidParameterException::withViolations($param, $errors);
             }
 
-            return null === $default ? '' : $default;
+            return $default ?? '';
         }
 
         return $paramValue;

@@ -26,7 +26,7 @@ class CamelKeysNormalizerWithLeadingUnderscore extends CamelKeysNormalizer
      *
      * @return string
      */
-    protected function normalizeString(string $string)
+    protected function normalizeString(string $string): string
     {
         if (false === strpos($string, '_')) {
             return $string;

@@ -28,7 +28,7 @@ class ParamFetcherTest extends WebTestCase
         'foobar' => 'foo',
     ];
 
-    private function createUploadedFile($path, $originalName, $mimeType = null, $error = null, $test = false)
+    private function createUploadedFile(string $path, string $originalName, $mimeType = null, $error = null, $test = false)
     {
         $ref = new \ReflectionClass(UploadedFile::class);
         $params = $ref->getConstructor()->getParameters();
@@ -59,7 +59,7 @@ class ParamFetcherTest extends WebTestCase
         $this->client = $this->createClient(['test_case' => 'ParamFetcher']);
     }
 
-    public function testDefaultParameters()
+    public function testDefaultParameters(): void
     {
         $this->client->request('POST', '/params');
 
@@ -70,7 +70,7 @@ class ParamFetcherTest extends WebTestCase
         }
     }
 
-    public function testValidRawParameter()
+    public function testValidRawParameter(): void
     {
         $this->client->request('POST', '/params', ['raw' => $this->validRaw, 'map' => $this->validMap]);
 
@@ -81,7 +81,7 @@ class ParamFetcherTest extends WebTestCase
         }
     }
 
-    public function testValidMapParameter()
+    public function testValidMapParameter(): void
     {
         $map = [
             'foo' => $this->validMap,
@@ -96,7 +96,7 @@ class ParamFetcherTest extends WebTestCase
         }
     }
 
-    public function testWithSubRequests()
+    public function testWithSubRequests(): void
     {
         $this->client->request('POST', '/params/test?foo=quz', ['raw' => $this->validRaw]);
 
@@ -112,7 +112,7 @@ class ParamFetcherTest extends WebTestCase
         }
     }
 
-    public function testFileParamWithErrors()
+    public function testFileParamWithErrors(): void
     {
         $image = $this->createUploadedFile(
             'Tests/Fixtures/Asset/cat.jpeg',
@@ -128,7 +128,7 @@ class ParamFetcherTest extends WebTestCase
         ], $this->getData());
     }
 
-    public function testFileParam()
+    public function testFileParam(): void
     {
         $image = $this->createUploadedFile(
             'Tests/Fixtures/Asset/cat.jpeg',
@@ -143,7 +143,7 @@ class ParamFetcherTest extends WebTestCase
         ], $this->getData());
     }
 
-    public function testFileParamNull()
+    public function testFileParamNull(): void
     {
         $this->client->request('POST', '/file/test', [], []);
 
@@ -152,7 +152,7 @@ class ParamFetcherTest extends WebTestCase
         ], $this->getData());
     }
 
-    public function testFileParamArrayNullItem()
+    public function testFileParamArrayNullItem(): void
     {
         $images = [
             $this->createUploadedFile(
@@ -174,7 +174,7 @@ class ParamFetcherTest extends WebTestCase
         ], $this->getData());
     }
 
-    public function testFileParamImageConstraintArray()
+    public function testFileParamImageConstraintArray(): void
     {
         $images = [
             $this->createUploadedFile(
@@ -196,7 +196,7 @@ class ParamFetcherTest extends WebTestCase
         ], $this->getData());
     }
 
-    public function testFileParamImageConstraintArrayException()
+    public function testFileParamImageConstraintArrayException(): void
     {
         $images = [
             $this->createUploadedFile(
@@ -218,7 +218,7 @@ class ParamFetcherTest extends WebTestCase
         ], $this->getData());
     }
 
-    public function testValidQueryParameter()
+    public function testValidQueryParameter(): void
     {
         $this->client->request('POST', '/params?foz=val1');
 
@@ -229,7 +229,7 @@ class ParamFetcherTest extends WebTestCase
         }
     }
 
-    public function testIncompatibleQueryParameter()
+    public function testIncompatibleQueryParameter(): void
     {
         try {
             $this->client->request('POST', '/params?foz=val1&baz=val2');

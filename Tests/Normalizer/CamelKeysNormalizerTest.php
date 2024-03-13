@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 class CamelKeysNormalizerTest extends TestCase
 {
-    public function testNormalizeSameValueException()
+    public function testNormalizeSameValueException(): void
     {
         $this->expectException(NormalizationException::class);
 
@@ -34,7 +34,7 @@ class CamelKeysNormalizerTest extends TestCase
     /**
      * @dataProvider normalizeProvider
      */
-    public function testNormalize(array $array, array $expected)
+    public function testNormalize(array $array, array $expected): void
     {
         $normalizer = new CamelKeysNormalizer();
         $this->assertEquals($expected, $normalizer->normalize($array));
@@ -51,7 +51,7 @@ class CamelKeysNormalizerTest extends TestCase
     /**
      * @dataProvider normalizeProviderLeadingUnderscore
      */
-    public function testNormalizeLeadingUnderscore(array $array, array $expected)
+    public function testNormalizeLeadingUnderscore(array $array, array $expected): void
     {
         $normalizer = new CamelKeysNormalizerWithLeadingUnderscore();
         $this->assertEquals($expected, $normalizer->normalize($array));
@@ -65,7 +65,7 @@ class CamelKeysNormalizerTest extends TestCase
         return $array;
     }
 
-    private function normalizeProviderCommon()
+    private function normalizeProviderCommon(): array
     {
         return [
             [[], []],

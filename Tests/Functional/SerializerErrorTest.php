@@ -30,13 +30,12 @@ class SerializerErrorTest extends WebTestCase
         self::deleteTmpDir('FlattenExceptionNormalizerRfc7807Format');
         self::deleteTmpDir('FormErrorHandler');
         self::deleteTmpDir('FormErrorNormalizer');
-        parent::tearDownAfterClass();
     }
 
     /**
      * @dataProvider serializeExceptionJsonUsingErrorRendererProvider
      */
-    public function testSerializeExceptionJsonUsingErrorRenderer(string $testCase, array $expectedJson, string $expectedContentType)
+    public function testSerializeExceptionJsonUsingErrorRenderer(string $testCase, array $expectedJson, string $expectedContentType): void
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -77,7 +76,7 @@ class SerializerErrorTest extends WebTestCase
         ];
     }
 
-    public function testSerializeUnknownExceptionJsonWithDebugUsingErrorRenderer()
+    public function testSerializeUnknownExceptionJsonWithDebugUsingErrorRenderer(): void
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -91,7 +90,7 @@ class SerializerErrorTest extends WebTestCase
         $this->assertEquals('{"code":500,"message":"Unknown exception message."}', $client->getResponse()->getContent());
     }
 
-    public function testSerializeUnknownExceptionJsonWithoutDebugUsingErrorRenderer()
+    public function testSerializeUnknownExceptionJsonWithoutDebugUsingErrorRenderer(): void
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -108,7 +107,7 @@ class SerializerErrorTest extends WebTestCase
     /**
      * @dataProvider serializeExceptionCodeMappedToResponseStatusCodeJsonProvider
      */
-    public function testSerializeExceptionCodeMappedToResponseStatusCodeJsonUsingErrorRenderer(string $testCase, array $expectedJson)
+    public function testSerializeExceptionCodeMappedToResponseStatusCodeJsonUsingErrorRenderer(string $testCase, array $expectedJson): void
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -122,7 +121,7 @@ class SerializerErrorTest extends WebTestCase
         $this->assertEquals(json_encode($expectedJson), $client->getResponse()->getContent());
     }
 
-    public function testCustomExceptionSerialization()
+    public function testCustomExceptionSerialization(): void
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -180,7 +179,7 @@ class SerializerErrorTest extends WebTestCase
     /**
      * @dataProvider serializeExceptionXmlUsingErrorRendererProvider
      */
-    public function testSerializeExceptionXmlUsingErrorRenderer(string $testCase, string $expectedContent, string $expectedContentType)
+    public function testSerializeExceptionXmlUsingErrorRenderer(string $testCase, string $expectedContent, string $expectedContentType): void
     {
         if (!class_exists(SerializerErrorRenderer::class)) {
             $this->markTestSkipped();
@@ -232,7 +231,7 @@ XML;
     /**
      * @dataProvider invalidFormJsonProvider
      */
-    public function testSerializeInvalidFormJson($testCase)
+    public function testSerializeInvalidFormJson(string $testCase): void
     {
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.json');
@@ -240,7 +239,7 @@ XML;
         $this->assertEquals('{"code":400,"message":"Validation Failed","errors":{"children":{"name":{"errors":["This value should not be blank."]}}}}', $client->getResponse()->getContent());
     }
 
-    public function invalidFormJsonProvider()
+    public function invalidFormJsonProvider(): array
     {
         return [
             ['FormErrorHandler'],
@@ -251,7 +250,7 @@ XML;
     /**
      * @dataProvider serializeInvalidFormXmlProvider
      */
-    public function testSerializeInvalidFormXml($testCase, $expectedContent)
+    public function testSerializeInvalidFormXml(string $testCase, string $expectedContent): void
     {
         $client = $this->createClient(['test_case' => $testCase, 'debug' => false]);
         $client->request('GET', '/serializer-error/invalid-form.xml');
@@ -259,7 +258,7 @@ XML;
         $this->assertXmlStringEqualsXmlString($expectedContent, $client->getResponse()->getContent());
     }
 
-    public function serializeInvalidFormXmlProvider()
+    public function serializeInvalidFormXmlProvider(): array
     {
         $expectedSerializerContent = <<<'XML'
 <?xml version="1.0"?>

@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ViewTest extends TestCase
 {
-    public function testSetLocation()
+    public function testSetLocation(): void
     {
         $url = 'users';
         $code = 500;
@@ -38,7 +38,7 @@ class ViewTest extends TestCase
         $this->assertEquals($location, $view->getLocation());
     }
 
-    public function testSetRoute()
+    public function testSetRoute(): void
     {
         $routeName = 'users';
 
@@ -60,14 +60,14 @@ class ViewTest extends TestCase
     /**
      * @dataProvider setDataDataProvider
      */
-    public function testSetData($data)
+    public function testSetData(?array $data): void
     {
         $view = new View();
         $view->setData($data);
         $this->assertEquals($data, $view->getData());
     }
 
-    public static function setDataDataProvider()
+    public static function setDataDataProvider(): array
     {
         return [
             'null as data' => [null],
@@ -75,7 +75,7 @@ class ViewTest extends TestCase
         ];
     }
 
-    public function testSetFormat()
+    public function testSetFormat(): void
     {
         $view = new View();
         $format = 'bar';
@@ -86,7 +86,7 @@ class ViewTest extends TestCase
     /**
      * @dataProvider viewWithHeadersProvider
      */
-    public function testSetHeaders()
+    public function testSetHeaders(): void
     {
         $view = new View();
         $view->setHeaders(['foo' => 'bar']);
@@ -96,7 +96,7 @@ class ViewTest extends TestCase
         $this->assertEquals('bar', $headers->get('foo'));
     }
 
-    public function viewWithHeadersProvider()
+    public function viewWithHeadersProvider(): array
     {
         return [
             [(new View())->setHeaders(['foo' => 'bar'])],
@@ -104,7 +104,7 @@ class ViewTest extends TestCase
         ];
     }
 
-    public function testSetStatusCode()
+    public function testSetStatusCode(): void
     {
         $view = new View();
         $code = 404;
@@ -113,7 +113,7 @@ class ViewTest extends TestCase
         $this->assertEquals($code, $view->getResponse()->getStatusCode());
     }
 
-    public function testGetStatusCodeFromResponse()
+    public function testGetStatusCodeFromResponse(): void
     {
         $view = new View();
         $this->assertNull($view->getStatusCode());

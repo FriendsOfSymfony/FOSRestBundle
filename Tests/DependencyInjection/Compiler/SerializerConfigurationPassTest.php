@@ -33,7 +33,7 @@ class SerializerConfigurationPassTest extends TestCase
         $this->container = new ContainerBuilder();
     }
 
-    public function testShouldDoNothingIfSerializerIsFound()
+    public function testShouldDoNothingIfSerializerIsFound(): void
     {
         $serializer = $this->getMockBuilder(Serializer::class)->getMock();
         $this->container->register('fos_rest.serializer', get_class($serializer));
@@ -44,7 +44,7 @@ class SerializerConfigurationPassTest extends TestCase
         $this->assertSame(get_class($serializer), $this->container->getDefinition('fos_rest.serializer')->getClass());
     }
 
-    public function testShouldThrowInvalidArgumentExceptionWhenNoSerializerIsFound()
+    public function testShouldThrowInvalidArgumentExceptionWhenNoSerializerIsFound(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -52,9 +52,9 @@ class SerializerConfigurationPassTest extends TestCase
         $compiler->process($this->container);
     }
 
-    public function testShouldConfigureJMSSerializer()
+    public function testShouldConfigureJMSSerializer(): void
     {
-        $this->container->register('jms_serializer.serializer', 'JMS\Serializer\Serializer');
+        $this->container->register('jms_serializer.serializer', \JMS\Serializer\Serializer::class);
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);
@@ -62,7 +62,7 @@ class SerializerConfigurationPassTest extends TestCase
         $this->assertSame('fos_rest.serializer.jms', (string) $this->container->getAlias('fos_rest.serializer'));
     }
 
-    public function testShouldConfigureCoreSerializer()
+    public function testShouldConfigureCoreSerializer(): void
     {
         $this->container->register('serializer', SymfonySerializer::class);
 
@@ -72,7 +72,7 @@ class SerializerConfigurationPassTest extends TestCase
         $this->assertSame('fos_rest.serializer.symfony', (string) $this->container->getAlias('fos_rest.serializer'));
     }
 
-    public function testJmsSerializerServiceSupersedesSerializerService()
+    public function testJmsSerializerServiceSupersedesSerializerService(): void
     {
         $this->container->register('jms_serializer.serializer', JmsSerializer::class);
         $this->container->register('serializer', SymfonySerializer::class);
@@ -83,10 +83,10 @@ class SerializerConfigurationPassTest extends TestCase
         $this->assertSame('fos_rest.serializer.jms', (string) $this->container->getAlias('fos_rest.serializer'));
     }
 
-    public function testSerializerServiceCanBeJmsSerializer()
+    public function testSerializerServiceCanBeJmsSerializer(): void
     {
-        $this->container->register('jms_serializer.serializer', 'JMS\Serializer\Serializer');
-        $this->container->register('serializer', 'JMS\Serializer\Serializer');
+        $this->container->register('jms_serializer.serializer', \JMS\Serializer\Serializer::class);
+        $this->container->register('serializer', \JMS\Serializer\Serializer::class);
 
         $compiler = new SerializerConfigurationPass();
         $compiler->process($this->container);

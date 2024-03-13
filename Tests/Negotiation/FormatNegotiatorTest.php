@@ -38,12 +38,12 @@ class FormatNegotiatorTest extends TestCase
         $this->negotiator = new FormatNegotiator($this->requestStack, ['json' => ['application/json;version=1.0']]);
     }
 
-    public function testEmptyRequestMatcherMap()
+    public function testEmptyRequestMatcherMap(): void
     {
         $this->assertNull($this->negotiator->getBest(''));
     }
 
-    public function testStopException()
+    public function testStopException(): void
     {
         $this->expectException(StopFormatListenerException::class);
         $this->expectExceptionMessage('Stopped');
@@ -53,7 +53,7 @@ class FormatNegotiatorTest extends TestCase
         $this->negotiator->getBest('');
     }
 
-    public function testFallbackFormat()
+    public function testFallbackFormat(): void
     {
         $this->addRequestMatcher(true, ['fallback_format' => null]);
         $this->assertNull($this->negotiator->getBest(''));
@@ -62,7 +62,7 @@ class FormatNegotiatorTest extends TestCase
         $this->assertEquals(new Accept('text/html'), $this->negotiator->getBest(''));
     }
 
-    public function testFallbackFormatWithPriorities()
+    public function testFallbackFormatWithPriorities(): void
     {
         $this->addRequestMatcher(true, ['priorities' => ['json', 'xml'], 'fallback_format' => null]);
         $this->assertNull($this->negotiator->getBest(''));
@@ -71,7 +71,7 @@ class FormatNegotiatorTest extends TestCase
         $this->assertEquals(new Accept('application/json'), $this->negotiator->getBest(''));
     }
 
-    public function testGetBest()
+    public function testGetBest(): void
     {
         $this->request->headers->set('Accept', 'application/xhtml+xml, text/html, application/xml;q=0.9, */*;q=0.8');
         $priorities = ['text/html; charset=UTF-8', 'html', 'application/json'];
@@ -89,7 +89,7 @@ class FormatNegotiatorTest extends TestCase
         );
     }
 
-    public function testGetBestFallback()
+    public function testGetBestFallback(): void
     {
         $this->request->headers->set('Accept', 'text/html');
         $priorities = ['application/json'];
@@ -97,7 +97,7 @@ class FormatNegotiatorTest extends TestCase
         $this->assertEquals(new Accept('text/xml'), $this->negotiator->getBest(''));
     }
 
-    public function testGetBestWithFormat()
+    public function testGetBestWithFormat(): void
     {
         $this->request->headers->set('Accept', 'application/json;version=1.0');
         $priorities = ['json'];
@@ -105,7 +105,7 @@ class FormatNegotiatorTest extends TestCase
         $this->assertEquals(new Accept('application/json;version=1.0'), $this->negotiator->getBest(''));
     }
 
-    public function testGetBestWithPreferExtension()
+    public function testGetBestWithPreferExtension(): void
     {
         $priorities = ['text/html', 'application/json'];
         $this->addRequestMatcher(true, ['priorities' => $priorities, 'prefer_extension' => '2.0']);
@@ -128,7 +128,7 @@ class FormatNegotiatorTest extends TestCase
         $reflectionProperty->setValue($this->request, null);
     }
 
-    public function testGetBestWithPreferExtensionAndUnknownExtension()
+    public function testGetBestWithPreferExtensionAndUnknownExtension(): void
     {
         $priorities = ['text/html', 'application/json'];
         $this->addRequestMatcher(true, ['priorities' => $priorities, 'prefer_extension' => '2.0']);
@@ -144,7 +144,7 @@ class FormatNegotiatorTest extends TestCase
         $reflectionProperty->setValue($this->request, null);
     }
 
-    public function testGetBestWithFormatWithRequestMimeTypeFallback()
+    public function testGetBestWithFormatWithRequestMimeTypeFallback(): void
     {
         $negotiator = new FormatNegotiator($this->requestStack);
 
@@ -157,7 +157,7 @@ class FormatNegotiatorTest extends TestCase
     /**
      * @param bool $match
      */
-    private function addRequestMatcher($match, array $options = [])
+    private function addRequestMatcher(bool $match, array $options = []): void
     {
         $matcher = $this->getMockBuilder(RequestMatcherInterface::class)->getMock();
 

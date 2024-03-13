@@ -58,7 +58,7 @@ class RssHandler
      *
      * @return Response
      */
-    public function createResponse(ViewHandler $handler, View $view, Request $request)
+    public function createResponse(ViewHandler $handler, View $view, Request $request): \Symfony\Component\HttpFoundation\Response
     {
         try {
             $content = $this->createFeed($view->getData());
@@ -79,7 +79,7 @@ class RssHandler
      * @param $data array
      * @param format string, either rss or atom
      */
-    protected function createFeed($data, $format = 'rss')
+    protected function createFeed(array $data, $format = 'rss')
     {
         $feed = new \Zend_Feed_Writer_Feed();
         $feed->setTitle($data['title']);

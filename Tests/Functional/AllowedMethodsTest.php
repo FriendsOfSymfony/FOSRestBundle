@@ -16,7 +16,7 @@ namespace FOS\RestBundle\Tests\Functional;
  */
 class AllowedMethodsTest extends WebTestCase
 {
-    public function testAllowHeader()
+    public function testAllowHeader(): void
     {
         $client = $this->createClient(['test_case' => 'AllowedMethodsListener']);
         $client->request('POST', '/allowed-methods');

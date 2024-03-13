@@ -51,7 +51,7 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('param_fetcher_listener')
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function ($v) {
+                        ->then(function ($v): array {
                             return ['enabled' => in_array($v, ['force', 'true']), 'force' => 'force' === $v];
                         })
                     ->end()
@@ -130,7 +130,7 @@ final class Configuration implements ConfigurationInterface
                             ->prototype('scalar')->end()
                         ->end()
                         ->arrayNode('ips')
-                            ->beforeNormalization()->ifString()->then(function ($v) {
+                            ->beforeNormalization()->ifString()->then(function ($v): array {
                                 return [$v];
                             })->end()
                             ->prototype('scalar')->end()
@@ -178,7 +178,7 @@ final class Configuration implements ConfigurationInterface
                                     ->prototype('array')
                                         ->beforeNormalization()
                                             ->ifString()
-                                            ->then(function ($v) { return [$v]; })
+                                            ->then(function ($v): array { return [$v]; })
                                         ->end()
                                         ->prototype('scalar')->end()
                                     ->end()
@@ -193,7 +193,7 @@ final class Configuration implements ConfigurationInterface
                         ->arrayNode('view_response_listener')
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(function ($v) {
+                                ->then(function ($v): array {
                                     return ['enabled' => in_array($v, ['force', 'true']), 'force' => 'force' === $v];
                                 })
                             ->end()
@@ -245,7 +245,7 @@ final class Configuration implements ConfigurationInterface
                         ->arrayNode('array_normalizer')
                             ->addDefaultsIfNotSet()
                             ->beforeNormalization()
-                                ->ifString()->then(function ($v) {
+                                ->ifString()->then(function ($v): array {
                                     return ['service' => $v];
                                 })
                             ->end()
@@ -268,13 +268,13 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()
                     ->beforeNormalization()
-                        ->ifTrue(function ($v) {
+                        ->ifTrue(function ($v): bool {
                             // check if we got an assoc array in rules
                             return isset($v['rules'])
                                 && is_array($v['rules'])
                                 && array_keys($v['rules']) !== range(0, count($v['rules']) - 1);
                         })
-                        ->then(function ($v) {
+                        ->then(function (array $v): array {
                             $v['rules'] = [$v['rules']];
 
                             return $v;
@@ -374,7 +374,7 @@ final class Configuration implements ConfigurationInterface
                     ->canBeEnabled()
                     ->validate()
                       ->always()
-                      ->then(function ($v) {
+                      ->then(function (array $v): array {
                           if (!$v['enabled']) {
                               return $v;
                           }
@@ -417,7 +417,7 @@ final class Configuration implements ConfigurationInterface
                             ->useAttributeAsKey('name')
                             ->beforeNormalization()
                                 ->ifArray()
-                                ->then(function (array $items) {
+                                ->then(function (array $items): array {
                                     foreach ($items as &$item) {
                                         if (is_int($item)) {
                                             continue;
@@ -437,7 +437,7 @@ final class Configuration implements ConfigurationInterface
 
                             ->validate()
                             ->ifArray()
-                                ->then(function (array $items) {
+                                ->then(function (array $items): array {
                                     foreach ($items as $class => $code) {
                                         $this->testExceptionExists($class);
                                     }
@@ -451,7 +451,7 @@ final class Configuration implements ConfigurationInterface
                             ->prototype('boolean')->end()
                             ->validate()
                                 ->ifArray()
-                                ->then(function (array $items) {
+                                ->then(function (array $items): array {
                                     foreach ($items as $class => $nomatter) {
                                         $this->testExceptionExists($class);
                                     }

@@ -35,6 +35,6 @@ final class MediaTypeVersionResolver implements VersionResolverInterface
             return null;
         }
 
-        return isset($matches['version']) ? $matches['version'] : null;
+        return $matches['version'] ?? null;
     }
 }

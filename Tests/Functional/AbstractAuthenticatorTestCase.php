@@ -23,19 +23,15 @@ abstract class AbstractAuthenticatorTestCase extends WebTestCase
             self::markTestSkipped();
         }
 
-        parent::setUpBeforeClass();
-
         self::$client = self::createClient(['test_case' => static::getTestCase()]);
     }
 
     public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir(static::getTestCase());
-
-        parent::tearDownAfterClass();
     }
 
-    public function testNoCredentialsGives401()
+    public function testNoCredentialsGives401(): void
     {
         self::$client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json']);
         $response = self::$client->getResponse();
@@ -44,7 +40,7 @@ abstract class AbstractAuthenticatorTestCase extends WebTestCase
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 
-    public function testWrongCredentialsGives401()
+    public function testWrongCredentialsGives401(): void
     {
         $this->sendRequestContainingInvalidCredentials('/api/login');
 
@@ -54,7 +50,7 @@ abstract class AbstractAuthenticatorTestCase extends WebTestCase
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 
-    public function testSuccessfulLogin()
+    public function testSuccessfulLogin(): void
     {
         $this->sendRequestContainingValidCredentials('/api/login');
 
@@ -64,7 +60,7 @@ abstract class AbstractAuthenticatorTestCase extends WebTestCase
         $this->assertEquals('application/json', $response->headers->get('Content-Type'));
     }
 
-    public function testAccessDeniedExceptionGives403()
+    public function testAccessDeniedExceptionGives403(): void
     {
         $this->sendRequestContainingValidCredentials('/api/comments');
 

@@ -16,7 +16,7 @@ use Symfony\Bundle\TwigBundle\Controller\PreviewErrorController;
 
 class RequestBodyParamConverterTest extends WebTestCase
 {
-    public function testRequestBodyIsDeserialized()
+    public function testRequestBodyIsDeserialized(): void
     {
         $client = $this->createClient(['test_case' => 'RequestBodyParamConverter']);
         $client->request(
@@ -41,7 +41,7 @@ class RequestBodyParamConverterTest extends WebTestCase
      *
      * @see https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1237
      */
-    public function testErrorPageServedByTwigBundle()
+    public function testErrorPageServedByTwigBundle(): void
     {
         if (!class_exists(PreviewErrorController::class)) {
             $this->markTestSkipped();
@@ -55,7 +55,7 @@ class RequestBodyParamConverterTest extends WebTestCase
         $this->assertStringContainsString('The server returned a "404 Not Found".', $client->getResponse()->getContent());
     }
 
-    public function testErrorPageServedByFrameworkBundle()
+    public function testErrorPageServedByFrameworkBundle(): void
     {
         if (!trait_exists(BrowserKitAssertionsTrait::class)) {
             $this->markTestSkipped();

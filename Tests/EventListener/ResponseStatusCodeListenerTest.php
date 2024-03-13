@@ -37,7 +37,7 @@ class ResponseStatusCodeListenerTest extends TestCase
         ]));
     }
 
-    public function testResponseStatusCodeIsNotSetWhenRequestNotInRestZone()
+    public function testResponseStatusCodeIsNotSetWhenRequestNotInRestZone(): void
     {
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
@@ -63,7 +63,7 @@ class ResponseStatusCodeListenerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testResponseStatusCodeIsNotSetWhenExceptionIsNotMapped()
+    public function testResponseStatusCodeIsNotSetWhenExceptionIsNotMapped(): void
     {
         $request = new Request();
 
@@ -88,7 +88,7 @@ class ResponseStatusCodeListenerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testResponseStatusCodeIsSetWhenExceptionTypeIsConfigured()
+    public function testResponseStatusCodeIsSetWhenExceptionTypeIsConfigured(): void
     {
         $request = new Request();
         $exception = new \DomainException();
@@ -114,7 +114,7 @@ class ResponseStatusCodeListenerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    public function testResponseStatusCodeIsSetWhenErrorTypeIsConfigured()
+    public function testResponseStatusCodeIsSetWhenErrorTypeIsConfigured(): void
     {
         if (!method_exists(ExceptionEvent::class, 'getThrowable')) {
             $this->markTestSkipped();
@@ -137,7 +137,7 @@ class ResponseStatusCodeListenerTest extends TestCase
         $this->assertSame(500, $response->getStatusCode());
     }
 
-    public function testResponseStatusCodeIsNotOverriddenInSubRequests()
+    public function testResponseStatusCodeIsNotOverriddenInSubRequests(): void
     {
         $masterRequest = new Request();
         $exception = new NotFoundHttpException();

@@ -27,12 +27,12 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class FOSRestBundle extends Bundle
 {
-    const ZONE_ATTRIBUTE = '_fos_rest_zone';
+    public const ZONE_ATTRIBUTE = '_fos_rest_zone';
 
     /**
      * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new SerializerConfigurationPass());
         $container->addCompilerPass(new ConfigurationCheckPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -10);

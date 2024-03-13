@@ -104,7 +104,7 @@ final class FormatNegotiator extends BaseNegotiator
 
     private function sanitize(array $values): array
     {
-        return array_map(function ($value) {
+        return array_map(function ($value): ?string {
             return preg_replace('/\s+/', '', strtolower($value));
         }, $values);
     }
