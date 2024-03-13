@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Functional;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -28,6 +29,12 @@ class ParamFetcherTest extends WebTestCase
         'foobar' => 'foo',
     ];
 
+
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+  
     private function createUploadedFile(string $path, string $originalName, $mimeType = null, $error = null, $test = false)
     {
         $ref = new \ReflectionClass(UploadedFile::class);

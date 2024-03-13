@@ -29,6 +29,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class FileParamTest extends TestCase
 {
+    private $param;
+
     protected function setUp(): void
     {
         $this->param = $this->getMockBuilder(FileParam::class)

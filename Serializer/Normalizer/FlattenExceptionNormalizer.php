@@ -92,4 +92,11 @@ final class FlattenExceptionNormalizer implements NormalizerInterface
 
         return true;
     }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            FlattenException::class => false,
+        ];
+    }
 }
