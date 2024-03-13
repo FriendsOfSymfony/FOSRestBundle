@@ -329,7 +329,7 @@ class ViewHandlerTest extends TestCase
     public function testCreateResponse($expected, $formats)
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler('html', function ($handler, View $view) {
+        $viewHandler->registerHandler('html', function ($handler, View $view): \Symfony\Component\HttpFoundation\Response {
             return new Response('', $view->getStatusCode());
         });
 
@@ -349,7 +349,7 @@ class ViewHandlerTest extends TestCase
     public function testHandleCustom()
     {
         $viewHandler = $this->createViewHandler([]);
-        $viewHandler->registerHandler('html', (function () {
+        $viewHandler->registerHandler('html', (function (): \Symfony\Component\HttpFoundation\Response {
             return new Response('foo');
         }));
 

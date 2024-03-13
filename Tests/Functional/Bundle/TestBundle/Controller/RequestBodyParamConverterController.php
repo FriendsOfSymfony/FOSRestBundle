@@ -20,7 +20,7 @@ class RequestBodyParamConverterController extends AbstractController
     /**
      * @ParamConverter("post", converter="fos_rest.request_body")
      */
-    public function putPostAction(Post $post, \Datetime $date)
+    public function putPostAction(Post $post, \Datetime $date): \Symfony\Component\HttpFoundation\Response
     {
         return new Response($post->getName());
     }

@@ -15,17 +15,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CommentController
 {
-    public function loginAction()
+    public function loginAction(): \Symfony\Component\HttpFoundation\JsonResponse
     {
         return new JsonResponse('login');
     }
 
-    public function getCommentAction($id)
+    public function getCommentAction($id): \Symfony\Component\HttpFoundation\JsonResponse
     {
         return new JsonResponse(['id' => (int) $id]);
     }
 
-    public function getComments()
+    public function getComments(): \Symfony\Component\HttpFoundation\JsonResponse
     {
         return new JsonResponse([]);
     }

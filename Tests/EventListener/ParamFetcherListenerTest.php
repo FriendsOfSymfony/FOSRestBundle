@@ -144,7 +144,7 @@ class ParamFetcherListenerTest extends TestCase
         return $paramFetcher;
     }
 
-    protected function getEvent(Request $request, $actionMethod = 'byNameAction')
+    protected function getEvent(Request $request, $actionMethod = 'byNameAction'): \Symfony\Component\HttpKernel\Event\ControllerEvent
     {
         $this->requestStack->push($request);
 

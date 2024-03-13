@@ -15,12 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommentController
 {
-    public function getCommentAction($id)
+    public function getCommentAction($id): \Symfony\Component\HttpFoundation\Response
     {
         return new Response("<html><body>$id</body>");
     }
 
-    public function getComments()
+    public function getComments(): \Symfony\Component\HttpFoundation\Response
     {
         return new Response('<html><body>comments ..</body>');
     }
