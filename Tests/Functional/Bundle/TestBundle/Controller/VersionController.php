@@ -23,7 +23,7 @@ class VersionController extends AbstractFOSRestController
     /**
      * @View()
      */
-    public function versionAction(Request $request, $version)
+    public function versionAction(Request $request, $version): array
     {
         $versionExclusion = $this->findExclusionStrategyVersion($request);
 
@@ -33,7 +33,7 @@ class VersionController extends AbstractFOSRestController
         ];
     }
 
-    private function findExclusionStrategyVersion(Request $request)
+    private function findExclusionStrategyVersion(Request $request): ?string
     {
         $view = $this->view([]);
         $response = $this->getViewHandler()->createResponse($view, $request, 'json');

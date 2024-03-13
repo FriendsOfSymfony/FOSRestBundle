@@ -38,12 +38,12 @@ class FileParamTest extends TestCase
             ->getMock();
     }
 
-    public function testInterface()
+    public function testInterface(): void
     {
         $this->assertInstanceOf(AbstractParam::class, $this->param);
     }
 
-    public function testValueGetter()
+    public function testValueGetter(): void
     {
         $this->param
             ->expects($this->once())
@@ -62,7 +62,7 @@ class FileParamTest extends TestCase
         $this->assertEquals('foobar', $this->param->getValue($request, 'bar'));
     }
 
-    public function testComplexRequirements()
+    public function testComplexRequirements(): void
     {
         $this->param->requirements = $requirement = $this->getMockBuilder(Constraint::class)->getMock();
         $this->assertEquals([
@@ -72,7 +72,7 @@ class FileParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testFileRequirements()
+    public function testFileRequirements(): void
     {
         $this->param->nullable = true;
         $this->param->requirements = $requirements = ['mimeTypes' => 'application/json'];
@@ -81,7 +81,7 @@ class FileParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testImageRequirements()
+    public function testImageRequirements(): void
     {
         $this->param->image = true;
         $this->param->requirements = $requirements = ['mimeTypes' => 'image/gif'];
@@ -91,7 +91,7 @@ class FileParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testImageConstraintsTransformWhenParamIsAnArray()
+    public function testImageConstraintsTransformWhenParamIsAnArray(): void
     {
         $this->param->image = true;
         $this->param->map = true;
@@ -102,7 +102,7 @@ class FileParamTest extends TestCase
         ])], $this->param->getConstraints());
     }
 
-    public function testFileConstraintsWhenParamIsAnArray()
+    public function testFileConstraintsWhenParamIsAnArray(): void
     {
         $this->param->map = true;
         $this->param->requirements = $requirements = ['mimeTypes' => 'application/pdf'];

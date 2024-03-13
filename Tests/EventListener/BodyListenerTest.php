@@ -45,7 +45,7 @@ class BodyListenerTest extends TestCase
      *
      * @dataProvider onKernelRequestDataProvider
      */
-    public function testOnKernelRequest($decode, Request $request, $method, $expectedParameters, $contentType = null, $throwExceptionOnUnsupportedContentType = false)
+    public function testOnKernelRequest(bool $decode, Request $request, string $method, array $expectedParameters, string $contentType = null, $throwExceptionOnUnsupportedContentType = false): void
     {
         $decoder = $this->getMockBuilder(DecoderInterface::class)->getMock();
         $decoder->expects($this->any())
@@ -79,7 +79,7 @@ class BodyListenerTest extends TestCase
         $this->assertEquals($request->request->all(), $expectedParameters);
     }
 
-    public static function onKernelRequestDataProvider()
+    public static function onKernelRequestDataProvider(): array
     {
         return [
             'Empty POST request' => [true, new Request([], [], [], [], [], [], '["foo"]'), 'POST', ['foo'], 'application/json'],
@@ -93,7 +93,7 @@ class BodyListenerTest extends TestCase
         ];
     }
 
-    public function testOnKernelRequestNoZone()
+    public function testOnKernelRequestNoZone(): void
     {
         $data = ['foo_bar' => 'foo_bar'];
         $normalizedData = ['fooBar' => 'foo_bar'];
@@ -135,7 +135,7 @@ class BodyListenerTest extends TestCase
         $this->assertEquals([], $request->request->all());
     }
 
-    public function testOnKernelRequestWithNormalizer()
+    public function testOnKernelRequestWithNormalizer(): void
     {
         $data = ['foo_bar' => 'foo_bar'];
         $normalizedData = ['fooBar' => 'foo_bar'];
@@ -184,7 +184,7 @@ class BodyListenerTest extends TestCase
     /**
      * @dataProvider formNormalizationProvider
      */
-    public function testOnKernelRequestNormalizationWithForms($method, $contentType, $mustBeNormalized)
+    public function testOnKernelRequestNormalizationWithForms(string $method, string|array|null $contentType, $mustBeNormalized): void
     {
         $data = ['foo_bar' => 'foo_bar'];
         $normalizedData = ['fooBar' => 'foo_bar'];
@@ -226,7 +226,7 @@ class BodyListenerTest extends TestCase
         }
     }
 
-    public function formNormalizationProvider()
+    public function formNormalizationProvider(): array
     {
         $cases = [];
 
@@ -241,11 +241,11 @@ class BodyListenerTest extends TestCase
         return $cases;
     }
 
-    public function testOnKernelRequestNormalizationException()
+    public function testOnKernelRequestNormalizationException(): void
     {
         $this->expectException(BadRequestHttpException::class);
 
-        $decoder = $this->getMockBuilder('FOS\RestBundle\Decoder\DecoderInterface')->getMock();
+        $decoder = $this->getMockBuilder(\FOS\RestBundle\Decoder\DecoderInterface::class)->getMock();
         $decoder
             ->expects($this->any())
             ->method('decode')
@@ -286,7 +286,7 @@ class BodyListenerTest extends TestCase
     /**
      * Test that a malformed request will cause a BadRequestHttpException to be thrown.
      */
-    public function testBadRequestExceptionOnMalformedContent()
+    public function testBadRequestExceptionOnMalformedContent(): void
     {
         $this->expectException(BadRequestHttpException::class);
 
@@ -296,14 +296,14 @@ class BodyListenerTest extends TestCase
     /**
      * Test that a unallowed format will cause a UnsupportedMediaTypeHttpException to be thrown.
      */
-    public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType()
+    public function testUnsupportedMediaTypeHttpExceptionOnUnsupportedMediaType(): void
     {
         $this->expectException(UnsupportedMediaTypeHttpException::class);
 
         $this->testOnKernelRequest(false, new Request([], [], [], [], [], [], 'foo'), 'POST', [], 'application/foo', true);
     }
 
-    public function testShouldNotThrowUnsupportedMediaTypeHttpExceptionWhenIsAnEmptyDeleteRequest()
+    public function testShouldNotThrowUnsupportedMediaTypeHttpExceptionWhenIsAnEmptyDeleteRequest(): void
     {
         $this->testOnKernelRequest(false, new Request(), 'DELETE', [], null, true);
     }

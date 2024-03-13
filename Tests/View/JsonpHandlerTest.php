@@ -43,7 +43,7 @@ class JsonpHandlerTest extends TestCase
     /**
      * @dataProvider handleDataProvider
      */
-    public function testHandle($query)
+    public function testHandle(array $query): void
     {
         $data = ['foo' => 'bar'];
 
@@ -65,7 +65,7 @@ class JsonpHandlerTest extends TestCase
         $this->assertEquals('/**/'.reset($query).'('.var_export($data, true).')', $response->getContent());
     }
 
-    public static function handleDataProvider()
+    public static function handleDataProvider(): array
     {
         return [
             'jQuery callback syntax' => [['callback' => 'jQuery171065827149929257_1343950463342']],
@@ -78,7 +78,7 @@ class JsonpHandlerTest extends TestCase
     /**
      * @dataProvider getCallbackFailureDataProvider
      */
-    public function testGetCallbackFailure(Request $request)
+    public function testGetCallbackFailure(Request $request): void
     {
         $this->expectException(BadRequestHttpException::class);
 
@@ -100,7 +100,7 @@ class JsonpHandlerTest extends TestCase
         $viewHandler->handle($view, $request);
     }
 
-    public function getCallbackFailureDataProvider()
+    public function getCallbackFailureDataProvider(): array
     {
         return [
             'no callback' => [new Request()],

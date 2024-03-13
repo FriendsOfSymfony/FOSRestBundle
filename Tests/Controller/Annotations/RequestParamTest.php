@@ -35,12 +35,12 @@ class RequestParamTest extends TestCase
             ->getMock();
     }
 
-    public function testInterface()
+    public function testInterface(): void
     {
         $this->assertInstanceOf(AbstractScalarParam::class, $this->param);
     }
 
-    public function testValueGetter()
+    public function testValueGetter(): void
     {
         $this->param
             ->expects($this->once())

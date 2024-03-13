@@ -68,7 +68,7 @@ abstract class AbstractParam implements ParamInterface
     }
 
     /** {@inheritdoc} */
-    public function getConstraints()
+    public function getConstraints(): array
     {
         $constraints = [];
         if (!$this->nullable) {

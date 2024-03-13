@@ -49,7 +49,7 @@ class ParamFetcherListenerTest extends TestCase
      * when configured to do so and the attribute is specified as a null
      * default value.
      */
-    public function testSettingAttributes()
+    public function testSettingAttributes(): void
     {
         $request = new Request(['customer' => '5']);
         $request->attributes->set('customer', null);
@@ -65,7 +65,7 @@ class ParamFetcherListenerTest extends TestCase
      * when configured to do so and the attribute is specified as a null
      * default value.
      */
-    public function testSettingParamFetcherOnRequest()
+    public function testSettingParamFetcherOnRequest(): void
     {
         $request = new Request();
         $event = $this->getEvent($request);
@@ -75,7 +75,7 @@ class ParamFetcherListenerTest extends TestCase
         $this->assertSame($this->paramFetcher, $request->attributes->get('paramFetcher'));
     }
 
-    public function testParamFetcherOnRequestNoZone()
+    public function testParamFetcherOnRequestNoZone(): void
     {
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
@@ -92,7 +92,7 @@ class ParamFetcherListenerTest extends TestCase
      *
      * @dataProvider setParamFetcherByTypehintProvider
      */
-    public function testSettingParamFetcherByTypehint($actionName, $expectedAttribute)
+    public function testSettingParamFetcherByTypehint($actionName, string $expectedAttribute): void
     {
         $request = new Request();
 
@@ -106,7 +106,7 @@ class ParamFetcherListenerTest extends TestCase
     /**
      * Tests that the ParamFetcher can be injected in a invokable controller.
      */
-    public function testSettingParamFetcherForInvokable()
+    public function testSettingParamFetcherForInvokable(): void
     {
         $request = new Request();
         $event = $this->getEvent($request, null);
@@ -116,7 +116,7 @@ class ParamFetcherListenerTest extends TestCase
         $this->assertSame($this->paramFetcher, $request->attributes->get('pfInvokable'));
     }
 
-    public function setParamFetcherByTypehintProvider()
+    public function setParamFetcherByTypehintProvider(): array
     {
         $paramFetcher = [
             // Without a typehint, the ParamFetcher should be injected as
@@ -144,7 +144,7 @@ class ParamFetcherListenerTest extends TestCase
         return $paramFetcher;
     }
 
-    protected function getEvent(Request $request, $actionMethod = 'byNameAction')
+    protected function getEvent(Request $request, $actionMethod = 'byNameAction'): \Symfony\Component\HttpKernel\Event\ControllerEvent
     {
         $this->requestStack->push($request);
 

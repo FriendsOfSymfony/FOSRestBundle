@@ -44,7 +44,7 @@ class JMSSerializerAdapterTest extends TestCase
         );
     }
 
-    public function testBasicSerializeAdapterWithoutContextFactories()
+    public function testBasicSerializeAdapterWithoutContextFactories(): void
     {
         $jmsContext = SerializationContext::create();
         $adapter = new JMSSerializerAdapter($this->serializer);
@@ -57,7 +57,7 @@ class JMSSerializerAdapterTest extends TestCase
         $this->assertSame('bar', $adapter->serialize('foo', 'json', new Context()));
     }
 
-    public function testBasicDeSerializeAdapterWithoutContextFactories()
+    public function testBasicDeSerializeAdapterWithoutContextFactories(): void
     {
         $jmsContext = DeserializationContext::create();
         $adapter = new JMSSerializerAdapter($this->serializer);
@@ -66,7 +66,7 @@ class JMSSerializerAdapterTest extends TestCase
         $adapter->deserialize('foo', 'string', 'json', new Context());
     }
 
-    public function testBasicSerializeAdapter()
+    public function testBasicSerializeAdapter(): void
     {
         $jmsContext = $this->getMockBuilder(SerializationContext::class)->getMock();
 
@@ -82,7 +82,7 @@ class JMSSerializerAdapterTest extends TestCase
         $this->assertSame('bar', $this->adapter->serialize('foo', 'json', new Context()));
     }
 
-    public function testBasicDeserializeAdapter()
+    public function testBasicDeserializeAdapter(): void
     {
         $jmsContext = $this->getMockBuilder(DeserializationContext::class)->getMock();
 
@@ -93,7 +93,7 @@ class JMSSerializerAdapterTest extends TestCase
         $this->adapter->deserialize('foo', 'string', 'json', new Context());
     }
 
-    public function testContextInfoAreConverted()
+    public function testContextInfoAreConverted(): void
     {
         $exclusion = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();
 
@@ -125,7 +125,7 @@ class JMSSerializerAdapterTest extends TestCase
         $this->assertSame('bar', $this->adapter->serialize('foo', 'json', $fosContext));
     }
 
-    public function testContextDoesNotEnableMaxDepthChecksWhenExplicitlyDisabled()
+    public function testContextDoesNotEnableMaxDepthChecksWhenExplicitlyDisabled(): void
     {
         $jmsContext = $this->getMockBuilder(SerializationContext::class)->getMock();
 

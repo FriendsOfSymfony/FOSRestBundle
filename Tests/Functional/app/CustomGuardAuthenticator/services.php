@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-return function (Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator $container) {
+return function (Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator $container): void {
     if (class_exists(Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator::class) && method_exists(Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator::class, 'createToken')) {
         // Authenticator for use on Symfony 5.4 and newer
         $tokenAuthenticatorClass = \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Security\ApiTokenAuthenticator::class;

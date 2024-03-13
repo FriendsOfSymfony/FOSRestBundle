@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class RouteTest extends TestCase
 {
-    public function testCanInstantiate()
+    public function testCanInstantiate(): void
     {
         $path = '/path';
         $name = 'route_name';

@@ -81,9 +81,9 @@ class ParamReaderTest extends TestCase
     /**
      * Test that only ParamInterface annotations are returned.
      */
-    public function testReadsOnlyParamAnnotations()
+    public function testReadsOnlyParamAnnotations(): void
     {
-        $annotations = $this->paramReader->read(new \ReflectionClass(__CLASS__), 'setUp');
+        $annotations = $this->paramReader->read(new \ReflectionClass(self::class), 'setUp');
 
         $this->assertCount(4, $annotations);
 
@@ -96,7 +96,7 @@ class ParamReaderTest extends TestCase
     /**
      * @requires PHP 8
      */
-    public function testReadsAttributes()
+    public function testReadsAttributes(): void
     {
         $paramReader = new ParamReader();
         $params = $paramReader->read(new \ReflectionClass(ParamsAnnotatedController::class), 'getArticlesAttributesAction');
@@ -140,15 +140,15 @@ class ParamReaderTest extends TestCase
         $this->assertFalse($params['foo']->strict);
     }
 
-    public function testExceptionOnNonExistingMethod()
+    public function testExceptionOnNonExistingMethod(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf('Class "%s" has no method "foo".', self::class));
 
-        $this->paramReader->read(new \ReflectionClass(__CLASS__), 'foo');
+        $this->paramReader->read(new \ReflectionClass(self::class), 'foo');
     }
 
-    public function testAnnotationReader()
+    public function testAnnotationReader(): void
     {
         $reader = new AnnotationReader();
 

@@ -42,7 +42,7 @@ class VersionListenerTest extends TestCase
         $this->listener = new VersionListener($this->resolver);
     }
 
-    public function testMatchNoZone()
+    public function testMatchNoZone(): void
     {
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);

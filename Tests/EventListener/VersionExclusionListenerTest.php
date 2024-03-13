@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class VersionExclusionListenerTest extends TestCase
 {
-    public function testVersionIsNotSetWhenZoneIsFalse()
+    public function testVersionIsNotSetWhenZoneIsFalse(): void
     {
         $version = 'v1';
 
@@ -51,7 +51,7 @@ class VersionExclusionListenerTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
-    public function testVersionIsSet()
+    public function testVersionIsSet(): void
     {
         $version = 'v1';
 

@@ -21,7 +21,7 @@ namespace FOS\RestBundle\Controller\Annotations;
 #[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_METHOD)]
 class Unlink extends Route
 {
-    public function getMethod()
+    public function getMethod(): string
     {
         return 'UNLINK';
     }

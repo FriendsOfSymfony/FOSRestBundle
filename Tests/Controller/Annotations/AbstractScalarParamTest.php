@@ -33,26 +33,26 @@ class AbstractScalarParamTest extends TestCase
         $this->param = $this->getMockForAbstractClass(AbstractScalarParam::class);
     }
 
-    public function testInterface()
+    public function testInterface(): void
     {
         $this->assertInstanceOf(AbstractScalarParam::class, $this->param);
     }
 
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $this->assertNull($this->param->requirements);
         $this->assertFalse($this->param->map);
         $this->assertTrue($this->param->allowBlank);
     }
 
-    public function testScalarConstraint()
+    public function testScalarConstraint(): void
     {
         $this->assertEquals([
             new NotNull(),
         ], $this->param->getConstraints());
     }
 
-    public function testComplexRequirements()
+    public function testComplexRequirements(): void
     {
         $this->param->requirements = $requirement = $this->getMockBuilder(Constraint::class)->getMock();
         $this->assertEquals([
@@ -61,7 +61,7 @@ class AbstractScalarParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testMultipleComplexRequirements()
+    public function testMultipleComplexRequirements(): void
     {
         $requirement1 = $this->getMockBuilder(Constraint::class)->getMock();
         $requirement2 = $this->getMockBuilder(Constraint::class)->getMock();
@@ -74,7 +74,7 @@ class AbstractScalarParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testScalarRequirements()
+    public function testScalarRequirements(): void
     {
         $this->param->name = 'bar';
         $this->param->requirements = 'foo %bar% %%';
@@ -87,7 +87,7 @@ class AbstractScalarParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testArrayRequirements()
+    public function testArrayRequirements(): void
     {
         $this->param->requirements = [
             'rule' => 'foo',
@@ -102,7 +102,7 @@ class AbstractScalarParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testAllowBlank()
+    public function testAllowBlank(): void
     {
         $this->param->allowBlank = false;
         $this->assertEquals([
@@ -111,7 +111,7 @@ class AbstractScalarParamTest extends TestCase
         ], $this->param->getConstraints());
     }
 
-    public function testConstraintsTransformWhenParamIsAnArray()
+    public function testConstraintsTransformWhenParamIsAnArray(): void
     {
         $this->param->map = true;
         $this->assertEquals([new All([
@@ -119,7 +119,7 @@ class AbstractScalarParamTest extends TestCase
         ]), new NotNull()], $this->param->getConstraints());
     }
 
-    public function testArrayWithBlankConstraintsWhenParamIsAnArray()
+    public function testArrayWithBlankConstraintsWhenParamIsAnArray(): void
     {
         $this->param->map = true;
         $this->param->allowBlank = false;
@@ -129,7 +129,7 @@ class AbstractScalarParamTest extends TestCase
         ]), new NotNull()], $this->param->getConstraints());
     }
 
-    public function testArrayWithNoConstraintsDoesNotCreateInvalidConstraint()
+    public function testArrayWithNoConstraintsDoesNotCreateInvalidConstraint(): void
     {
         $this->param->nullable = true;
         $this->param->map = true;

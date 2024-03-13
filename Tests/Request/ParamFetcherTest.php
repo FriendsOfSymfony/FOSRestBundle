@@ -75,7 +75,7 @@ class ParamFetcherTest extends TestCase
         );
     }
 
-    public function testParamDynamicCreation()
+    public function testParamDynamicCreation(): void
     {
         $this->paramFetcher->setController($this->controller);
 
@@ -89,7 +89,7 @@ class ParamFetcherTest extends TestCase
         $this->assertEquals(['foo' => $param1, 'foobar' => $param2, 'bar' => $param3], $this->paramFetcher->getParams());
     }
 
-    public function testInexistentParam()
+    public function testInexistentParam(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('No @ParamInterface configuration for parameter \'foo\'.');
@@ -99,7 +99,7 @@ class ParamFetcherTest extends TestCase
         $this->paramFetcher->get('foo');
     }
 
-    public function testDefaultReplacement()
+    public function testDefaultReplacement(): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('foo', 'foooo');
@@ -113,7 +113,7 @@ class ParamFetcherTest extends TestCase
         $this->assertEquals('foooo', $this->paramFetcher->get('foo', true));
     }
 
-    public function testReturnBeforeGettingConstraints()
+    public function testReturnBeforeGettingConstraints(): void
     {
         $this->setParams([
             $this->createParamWithConstraints('foo', 'default'),
@@ -127,7 +127,7 @@ class ParamFetcherTest extends TestCase
         $this->assertSame('default', $this->paramFetcher->get('foo'));
     }
 
-    public function testReturnWhenEmptyConstraints()
+    public function testReturnWhenEmptyConstraints(): void
     {
         $this->setParams([
             $this->createParam('foo'),
@@ -141,7 +141,7 @@ class ParamFetcherTest extends TestCase
         $this->assertSame('value', $this->paramFetcher->get('foo'));
     }
 
-    public function testNoValidationErrors()
+    public function testNoValidationErrors(): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('foo', 'value');
@@ -161,7 +161,7 @@ class ParamFetcherTest extends TestCase
         $this->assertSame('value', $this->paramFetcher->get('foo'));
     }
 
-    public function testValidationErrors()
+    public function testValidationErrors(): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('foo', 'value');
@@ -187,7 +187,7 @@ class ParamFetcherTest extends TestCase
         $this->assertSame('default', $this->paramFetcher->get('foo'));
     }
 
-    public function testValidationException()
+    public function testValidationException(): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('foo', 'value');
@@ -238,7 +238,7 @@ class ParamFetcherTest extends TestCase
         }
     }
 
-    public function testValidationErrorsInStrictMode()
+    public function testValidationErrorsInStrictMode(): void
     {
         $this->expectException(InvalidParameterException::class);
 
@@ -266,7 +266,7 @@ class ParamFetcherTest extends TestCase
         $this->paramFetcher->get('foo');
     }
 
-    public function testAllGetter()
+    public function testAllGetter(): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $request->query->set('foo', 'first');
@@ -282,7 +282,7 @@ class ParamFetcherTest extends TestCase
         $this->assertEquals(['foo' => 'first', 'bar' => 'second'], $this->paramFetcher->all());
     }
 
-    public function testEmptyControllerExceptionWhenInitParams()
+    public function testEmptyControllerExceptionWhenInitParams(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Controller and method needs to be set via setController');
@@ -300,7 +300,7 @@ class ParamFetcherTest extends TestCase
     /**
      * @dataProvider invalidControllerProvider
      */
-    public function testNotCallableControllerExceptionWhenInitParams($controller)
+    public function testNotCallableControllerExceptionWhenInitParams($controller): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Controller needs to be set as a class instance (closures/functions are not supported)');
@@ -310,16 +310,16 @@ class ParamFetcherTest extends TestCase
         $this->paramFetcher->all();
     }
 
-    public function invalidControllerProvider()
+    public function invalidControllerProvider(): array
     {
         return [
             ['strtolower'],
             [[self::class, 'controllerAction']],
-            [function () {}],
+            [function (): void {}],
         ];
     }
 
-    public function testInexistentIncompatibleParam()
+    public function testInexistentIncompatibleParam(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('No @ParamInterface configuration for parameter \'foobar\'.');
@@ -336,7 +336,7 @@ class ParamFetcherTest extends TestCase
         $this->paramFetcher->get('bar');
     }
 
-    public function testIncompatibleParam()
+    public function testIncompatibleParam(): void
     {
         $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessage('"bar" param is incompatible with fos param.');

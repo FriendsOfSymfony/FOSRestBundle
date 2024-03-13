@@ -21,17 +21,15 @@ class RouteAttributesTest extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
-        parent::setUpBeforeClass();
         static::$client = static::createClient(['test_case' => self::TEST_CASE]);
     }
 
     public static function tearDownAfterClass(): void
     {
         self::deleteTmpDir(self::TEST_CASE);
-        parent::tearDownAfterClass();
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         static::$client->request(
             'GET',
@@ -48,7 +46,7 @@ class RouteAttributesTest extends WebTestCase
         );
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         static::$client->request(
             'POST',
@@ -65,7 +63,7 @@ class RouteAttributesTest extends WebTestCase
         );
     }
 
-    public function testInvalidQueryParameter()
+    public function testInvalidQueryParameter(): void
     {
         static::$client->request(
             'GET',

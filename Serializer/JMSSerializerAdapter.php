@@ -29,12 +29,12 @@ final class JMSSerializerAdapter implements Serializer
     /**
      * @internal
      */
-    const SERIALIZATION = 0;
+    public const SERIALIZATION = 0;
 
     /**
      * @internal
      */
-    const DESERIALIZATION = 1;
+    public const DESERIALIZATION = 1;
 
     private $serializer;
     private $serializationContextFactory;

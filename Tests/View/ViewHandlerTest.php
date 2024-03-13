@@ -49,16 +49,16 @@ class ViewHandlerTest extends TestCase
     /**
      * @dataProvider supportsFormatDataProvider
      */
-    public function testSupportsFormat($expected, $formats, $customFormatName)
+    public function testSupportsFormat(bool $expected, array $formats, string $customFormatName): void
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler($customFormatName, function () {
+        $viewHandler->registerHandler($customFormatName, function (): void {
         });
 
         $this->assertEquals($expected, $viewHandler->supports('html'));
     }
 
-    public static function supportsFormatDataProvider()
+    public static function supportsFormatDataProvider(): array
     {
         return [
             'not supported' => [false, ['json' => false], 'xml'],
@@ -72,13 +72,13 @@ class ViewHandlerTest extends TestCase
      * @dataProvider getStatusCodeDataProvider
      */
     public function testGetStatusCode(
-        $expected,
-        $data,
-        $isSubmitted,
-        $isValid,
-        $noContentCode,
-        $actualStatusCode = null
-    ) {
+        int $expected,
+        bool $data,
+        bool $isSubmitted,
+        bool $isValid,
+        int $noContentCode,
+        int $actualStatusCode = null
+    ): void {
         $form = $this->createMock(FormInterface::class);
         $form
             ->expects($this->any())
@@ -112,7 +112,7 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals($expected, $viewHandler->createResponse($view, new Request(), 'json')->getStatusCode());
     }
 
-    public static function getStatusCodeDataProvider()
+    public static function getStatusCodeDataProvider(): array
     {
         return [
             'no data' => [Response::HTTP_OK, false, false, false, Response::HTTP_OK],
@@ -126,7 +126,7 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
-    public function testCreateResponseWithLocation()
+    public function testCreateResponseWithLocation(): void
     {
         $viewHandler = $this->createViewHandler(['html' => false, 'json' => false, 'xml' => false], Response::HTTP_BAD_REQUEST, Response::HTTP_OK, false);
         $view = new View();
@@ -137,7 +137,7 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals('foo', $returnedResponse->headers->get('location'));
     }
 
-    public function testCreateResponseWithLocationAndData()
+    public function testCreateResponseWithLocationAndData(): void
     {
         $testValue = ['naviter' => 'oudie'];
         $this->setupMockedSerializer($testValue);
@@ -154,9 +154,9 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals(var_export($testValue, true), $returnedResponse->getContent());
     }
 
-    public function testCreateResponseWithRoute()
+    public function testCreateResponseWithRoute(): void
     {
-        $doRoute = function ($name, $parameters) {
+        $doRoute = function ($name, $parameters): string {
             $route = '/';
             foreach ($parameters as $name => $value) {
                 $route .= sprintf('%s/%s/', $name, $value);
@@ -181,19 +181,19 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals('/id/2/', $returnedResponse->headers->get('location'));
     }
 
-    public function testShouldReturnErrorResponseWhenDataContainsFormAndFormIsNotValid()
+    public function testShouldReturnErrorResponseWhenDataContainsFormAndFormIsNotValid(): void
     {
         $this->serializer
             ->expects($this->once())
             ->method('serialize')
-            ->will($this->returnCallback(function ($data, $format, $context) {
+            ->will($this->returnCallback(function ($data, $format, $context): string {
                 return serialize([$data, $context]);
             }));
 
         //test
         $viewHandler = $this->createViewHandler(null, $expectedFailedValidationCode = Response::HTTP_I_AM_A_TEAPOT);
 
-        $form = $this->getMockBuilder('Symfony\\Component\\Form\\Form')
+        $form = $this->getMockBuilder(\Symfony\Component\Form\Form::class)
             ->disableOriginalConstructor()
             ->setMethods(['createView', 'getData', 'isValid', 'isSubmitted'])
             ->getMock();
@@ -209,15 +209,15 @@ class ViewHandlerTest extends TestCase
         $view = new View($form);
         $response = $viewHandler->createResponse($view, new Request(), 'json');
 
-        list($data, $context) = unserialize($response->getContent());
-        $this->assertInstanceOf('Symfony\\Component\\Form\\Form', $data);
+        [$data, $context] = unserialize($response->getContent());
+        $this->assertInstanceOf(\Symfony\Component\Form\Form::class, $data);
         $this->assertEquals($expectedFailedValidationCode, $context->getAttribute('status_code'));
     }
 
     /**
      * @dataProvider createResponseWithoutLocationDataProvider
      */
-    public function testCreateResponseWithoutLocation($format, $expected, $createViewCalls = 0, $formIsValid = false, $form = false)
+    public function testCreateResponseWithoutLocation(string $format, array $expected, int $createViewCalls = 0, bool $formIsValid = false, bool $form = false): void
     {
         $viewHandler = $this->createViewHandler(['html' => true, 'json' => false]);
 
@@ -253,7 +253,7 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals(var_export($expected, true), $response->getContent());
     }
 
-    private function setupMockedSerializer($expected)
+    private function setupMockedSerializer($expected): void
     {
         $this->serializer
             ->expects($this->once())
@@ -261,7 +261,7 @@ class ViewHandlerTest extends TestCase
             ->will($this->returnValue(var_export($expected, true)));
     }
 
-    public static function createResponseWithoutLocationDataProvider()
+    public static function createResponseWithoutLocationDataProvider(): array
     {
         return [
             'no form' => ['json', ['foo' => 'bar']],
@@ -272,7 +272,7 @@ class ViewHandlerTest extends TestCase
     /**
      * @dataProvider createSerializeNullDataProvider
      */
-    public function testSerializeNull($expected, $serializeNull)
+    public function testSerializeNull(string $expected, bool $serializeNull): void
     {
         $viewHandler = $this->createViewHandler(['json' => false], 404, 200, $serializeNull);
 
@@ -291,7 +291,7 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals($expected, $response->getContent());
     }
 
-    public static function createSerializeNullDataProvider()
+    public static function createSerializeNullDataProvider(): array
     {
         return [
             'should serialize null' => ['null', true],
@@ -302,7 +302,7 @@ class ViewHandlerTest extends TestCase
     /**
      * @dataProvider createSerializeNullDataValuesDataProvider
      */
-    public function testSerializeNullDataValues($expected, $serializeNull)
+    public function testSerializeNullDataValues(bool $expected, bool $serializeNull): void
     {
         $viewHandler = $this->createViewHandler(['json' => false], 404, 200);
         $viewHandler->setSerializeNullStrategy($serializeNull);
@@ -315,7 +315,7 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals($expected, $context->getSerializeNull());
     }
 
-    public static function createSerializeNullDataValuesDataProvider()
+    public static function createSerializeNullDataValuesDataProvider(): array
     {
         return [
             'should serialize null values' => [true, true],
@@ -326,10 +326,10 @@ class ViewHandlerTest extends TestCase
     /**
      * @dataProvider createResponseDataProvider
      */
-    public function testCreateResponse($expected, $formats)
+    public function testCreateResponse(int $expected, array $formats): void
     {
         $viewHandler = $this->createViewHandler($formats);
-        $viewHandler->registerHandler('html', function ($handler, View $view) {
+        $viewHandler->registerHandler('html', function ($handler, View $view): \Symfony\Component\HttpFoundation\Response {
             return new Response('', $view->getStatusCode());
         });
 
@@ -337,7 +337,7 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals($expected, $response->getStatusCode());
     }
 
-    public static function createResponseDataProvider()
+    public static function createResponseDataProvider(): array
     {
         return [
             'no handler' => [Response::HTTP_UNSUPPORTED_MEDIA_TYPE, []],
@@ -346,10 +346,10 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
-    public function testHandleCustom()
+    public function testHandleCustom(): void
     {
         $viewHandler = $this->createViewHandler([]);
-        $viewHandler->registerHandler('html', (function () {
+        $viewHandler->registerHandler('html', (function (): \Symfony\Component\HttpFoundation\Response {
             return new Response('foo');
         }));
 
@@ -361,7 +361,7 @@ class ViewHandlerTest extends TestCase
         $this->assertEquals('foo', $viewHandler->handle($view)->getContent());
     }
 
-    public function testHandleNotSupported()
+    public function testHandleNotSupported(): void
     {
         $this->expectException(HttpException::class);
 
@@ -375,7 +375,7 @@ class ViewHandlerTest extends TestCase
         $viewHandler->handle($view);
     }
 
-    public function testConfigurableViewHandlerInterface()
+    public function testConfigurableViewHandlerInterface(): void
     {
         //test
         $viewHandler = $this->createViewHandler();
@@ -398,7 +398,7 @@ class ViewHandlerTest extends TestCase
      *
      * @param string $format
      */
-    public function testCreateResponseWithFormErrorsAndSerializationGroups($format)
+    public function testCreateResponseWithFormErrorsAndSerializationGroups(string $format): void
     {
         $form = Forms::createFormFactory()->createBuilder()
             ->add('name', TextType::class)
@@ -437,7 +437,7 @@ class ViewHandlerTest extends TestCase
     /**
      * @return array
      */
-    public function exceptionWrapperSerializeResponseContentProvider()
+    public function exceptionWrapperSerializeResponseContentProvider(): array
     {
         return [
             'json' => ['json'],
@@ -445,7 +445,7 @@ class ViewHandlerTest extends TestCase
         ];
     }
 
-    private function createViewHandler($formats = null, $failedValidationCode = Response::HTTP_BAD_REQUEST, $emptyContentCode = Response::HTTP_NO_CONTENT, $serializeNull = false)
+    private function createViewHandler(?array $formats = null, int $failedValidationCode = Response::HTTP_BAD_REQUEST, int $emptyContentCode = Response::HTTP_NO_CONTENT, bool $serializeNull = false): \FOS\RestBundle\View\ViewHandler
     {
         return ViewHandler::create(
             $this->router,

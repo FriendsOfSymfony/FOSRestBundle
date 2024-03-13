@@ -36,7 +36,7 @@ class ApiToken53Authenticator extends AbstractAuthenticator
             throw new BadCredentialsException();
         }
 
-        $userBadge = new UserBadge($this->tokenValue, function () {
+        $userBadge = new UserBadge($this->tokenValue, function (): \FOS\RestBundle\Tests\Functional\Bundle\TestBundle\Entity\User {
             $user = new User();
             $user->username = 'foo';
             $user->roles[] = 'ROLE_API';

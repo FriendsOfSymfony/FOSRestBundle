@@ -30,12 +30,12 @@ class AbstractParamTest extends TestCase
         $this->param = $this->getMockForAbstractClass(AbstractParam::class);
     }
 
-    public function testInterface()
+    public function testInterface(): void
     {
         $this->assertInstanceOf(ParamInterface::class, $this->param);
     }
 
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $this->assertNull($this->param->name);
         $this->assertNull($this->param->key);
@@ -46,13 +46,13 @@ class AbstractParamTest extends TestCase
         $this->assertEquals([], $this->param->incompatibles);
     }
 
-    public function testNameGetter()
+    public function testNameGetter(): void
     {
         $this->param->name = 'Foo';
         $this->assertEquals('Foo', $this->param->getName());
     }
 
-    public function testDefaultGetter()
+    public function testDefaultGetter(): void
     {
         $this->param->default = 'Bar';
         $this->assertEquals('Bar', $this->param->getDefault());
@@ -61,25 +61,25 @@ class AbstractParamTest extends TestCase
         $this->assertEquals('foo %parameter%', $this->param->getDefault());
     }
 
-    public function testDescriptionGetter()
+    public function testDescriptionGetter(): void
     {
         $this->param->description = 'Bar';
         $this->assertEquals('Bar', $this->param->getDescription());
     }
 
-    public function testIncompatiblesGetter()
+    public function testIncompatiblesGetter(): void
     {
         $this->param->incompatibles = ['c', 'd'];
         $this->assertEquals(['c', 'd'], $this->param->getIncompatibilities());
     }
 
-    public function testStrictGetter()
+    public function testStrictGetter(): void
     {
         $this->param->strict = true;
         $this->assertTrue($this->param->isStrict());
     }
 
-    public function testNotNullConstraint()
+    public function testNotNullConstraint(): void
     {
         $this->assertEquals([new NotNull()], $this->param->getConstraints(''));
 

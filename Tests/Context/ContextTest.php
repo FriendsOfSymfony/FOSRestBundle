@@ -27,13 +27,13 @@ class ContextTest extends TestCase
         $this->context = new Context();
     }
 
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $this->assertEquals([], $this->context->getAttributes());
         $this->assertNull($this->context->getGroups());
     }
 
-    public function testAttributes()
+    public function testAttributes(): void
     {
         // Define attributes and check if that's the good return value.
         $this->assertEquals($this->context, $this->context->setAttribute('foo', 'bar'));
@@ -49,7 +49,7 @@ class ContextTest extends TestCase
         $this->assertEquals(['foo' => 'bar', 'foobar' => 'foo'], $this->context->getAttributes());
     }
 
-    public function testGroupAddition()
+    public function testGroupAddition(): void
     {
         $this->context->addGroups(['quz', 'foo']);
         $this->context->addGroup('foo');
@@ -58,7 +58,7 @@ class ContextTest extends TestCase
         $this->assertEquals(['quz', 'foo', 'bar'], $this->context->getGroups());
     }
 
-    public function testSetGroups()
+    public function testSetGroups(): void
     {
         $this->context->setGroups(['quz', 'foo']);
 
@@ -68,7 +68,7 @@ class ContextTest extends TestCase
         $this->assertEquals(['foo'], $this->context->getGroups());
     }
 
-    public function testAlreadyExistentGroupAddition()
+    public function testAlreadyExistentGroupAddition(): void
     {
         $this->context->addGroup('foo');
         $this->context->addGroup('foo');
@@ -77,35 +77,35 @@ class ContextTest extends TestCase
         $this->assertEquals(['foo', 'bar'], $this->context->getGroups());
     }
 
-    public function testVersion()
+    public function testVersion(): void
     {
         $this->context->setVersion('1.3.2');
 
         $this->assertEquals('1.3.2', $this->context->getVersion());
     }
 
-    public function testEnableMaxDepth()
+    public function testEnableMaxDepth(): void
     {
         $this->context->enableMaxDepth();
 
         $this->assertTrue($this->context->isMaxDepthEnabled());
     }
 
-    public function testDisableMaxDepth()
+    public function testDisableMaxDepth(): void
     {
         $this->context->disableMaxDepth();
 
         $this->assertFalse($this->context->isMaxDepthEnabled());
     }
 
-    public function testSerializeNull()
+    public function testSerializeNull(): void
     {
         $this->context->setSerializeNull(true);
 
         $this->assertTrue($this->context->getSerializeNull());
     }
 
-    public function testExclusionStrategy()
+    public function testExclusionStrategy(): void
     {
         $strategy1 = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();
         $strategy2 = $this->getMockBuilder(ExclusionStrategyInterface::class)->getMock();

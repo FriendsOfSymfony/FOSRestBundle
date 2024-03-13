@@ -45,7 +45,7 @@ if (null !== (new \ReflectionMethod(AbstractController::class, 'getSubscribedSer
         /**
          * @return array
          */
-        public static function getSubscribedServices()
+        public static function getSubscribedServices(): array
         {
             $subscribedServices = parent::getSubscribedServices();
             $subscribedServices['fos_rest.view_handler'] = ViewHandlerInterface::class;

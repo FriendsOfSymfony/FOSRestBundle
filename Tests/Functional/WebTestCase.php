@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class WebTestCase extends BaseWebTestCase
 {
-    protected static function deleteTmpDir($testCase)
+    protected static function deleteTmpDir(string $testCase)
     {
         if (!file_exists($dir = sys_get_temp_dir().'/'.Kernel::VERSION.'/'.$testCase)) {
             return;

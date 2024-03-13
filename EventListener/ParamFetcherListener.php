@@ -70,7 +70,7 @@ class ParamFetcherListener
 
     private function getAttributeName(callable $controller): string
     {
-        list($object, $name) = $controller;
+        [$object, $name] = $controller;
         $method = new \ReflectionMethod($object, $name);
         foreach ($method->getParameters() as $param) {
             if ($this->isParamFetcherType($param)) {

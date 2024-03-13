@@ -60,7 +60,7 @@ class View extends Template
     /**
      * @param int $statusCode
      */
-    public function setStatusCode($statusCode)
+    public function setStatusCode($statusCode): void
     {
         $this->statusCode = $statusCode;
     }
@@ -76,7 +76,7 @@ class View extends Template
     /**
      * @param array $serializerGroups
      */
-    public function setSerializerGroups($serializerGroups)
+    public function setSerializerGroups($serializerGroups): void
     {
         $this->serializerGroups = $serializerGroups;
     }
@@ -92,7 +92,7 @@ class View extends Template
     /**
      * @param bool $serializerEnableMaxDepthChecks
      */
-    public function setSerializerEnableMaxDepthChecks($serializerEnableMaxDepthChecks)
+    public function setSerializerEnableMaxDepthChecks($serializerEnableMaxDepthChecks): void
     {
         $this->serializerEnableMaxDepthChecks = $serializerEnableMaxDepthChecks;
     }

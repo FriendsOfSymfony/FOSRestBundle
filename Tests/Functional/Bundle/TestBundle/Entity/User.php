@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
 {
-    const ROLE_DEFAULT = 'ROLE_USER';
+    public const ROLE_DEFAULT = 'ROLE_USER';
 
     public $username;
     public $roles = [];

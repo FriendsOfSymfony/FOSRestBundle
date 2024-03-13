@@ -30,7 +30,7 @@ class InvalidParameterException extends BadRequestHttpException
         return $this->violations;
     }
 
-    public static function withViolations(ParamInterface $parameter, ConstraintViolationListInterface $violations)
+    public static function withViolations(ParamInterface $parameter, ConstraintViolationListInterface $violations): \FOS\RestBundle\Exception\InvalidParameterException
     {
         $message = '';
 
