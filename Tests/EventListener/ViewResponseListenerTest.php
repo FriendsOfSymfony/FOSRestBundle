@@ -50,7 +50,7 @@ class ViewResponseListenerTest extends TestCase
     /**
      * @return ControllerEvent|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getFilterEvent(Request $request)
+    protected function getFilterEvent(Request $request): \Symfony\Component\HttpKernel\Event\ControllerEvent
     {
         $controller = new FooController();
         $kernel = $this->createMock(HttpKernelInterface::class);
@@ -63,7 +63,7 @@ class ViewResponseListenerTest extends TestCase
      *
      * @return ViewEvent|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getResponseEvent(Request $request, $result)
+    protected function getResponseEvent(Request $request, $result): \Symfony\Component\HttpKernel\Event\ViewEvent
     {
         $kernel = $this->createMock(HttpKernelInterface::class);
 

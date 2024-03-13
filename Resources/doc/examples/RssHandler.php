@@ -58,7 +58,7 @@ class RssHandler
      *
      * @return Response
      */
-    public function createResponse(ViewHandler $handler, View $view, Request $request)
+    public function createResponse(ViewHandler $handler, View $view, Request $request): \Symfony\Component\HttpFoundation\Response
     {
         try {
             $content = $this->createFeed($view->getData());

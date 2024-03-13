@@ -271,7 +271,7 @@ class RequestBodyParamConverterTest extends TestCase
         return $converter->apply($request, $configuration);
     }
 
-    protected function createConfiguration($class, $name = null, array $options = [])
+    protected function createConfiguration($class, $name = null, array $options = []): \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter
     {
         return new ParamConverter([
             'name' => (string) $name,
@@ -281,7 +281,7 @@ class RequestBodyParamConverterTest extends TestCase
         ]);
     }
 
-    protected function createRequest($body = null, $contentType = null)
+    protected function createRequest($body = null, $contentType = null): \Symfony\Component\HttpFoundation\Request
     {
         $request = new Request(
             [],
