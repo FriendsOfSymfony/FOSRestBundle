@@ -27,13 +27,13 @@ configured for the matched controller so that the user does not need to do this 
         /**
          * @QueryParam(name="page", requirements="\d+", default="1", description="Page of the overview.")
          * Will look for a page query parameter, ie. ?page=XX
-         * If not passed it will be automatically be set to the default of "1"
-         * If passed but doesn't match the requirement "\d+" it will be also be set to the default of "1"
+         * If not passed it will be automatically set to the default of "1"
+         * If passed but doesn't match the requirement "\d+" it will also be set to the default of "1"
          * Note that if the value matches the default then no validation is run.
          * So make sure the default value really matches your expectations.
          *
          * @QueryParam(name="count", requirements="\d+", strict=true, nullable=true, description="Item count limit")
-         * In some case you also want to have a strict requirements but accept a null value, this is possible
+         * In some cases you also want to have a strict requirement but accept a null value, this is possible
          * thanks to the nullable option.
          * If ?count= parameter is set, the requirements will be checked strictly, if not, the null value will be used.
          * If you set the strict parameter without a nullable option, this will result in an error if the parameter is
