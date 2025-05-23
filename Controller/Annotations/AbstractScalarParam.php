@@ -42,8 +42,8 @@ abstract class AbstractScalarParam extends AbstractParam
             $constraints[] = $this->requirements;
         } elseif (is_scalar($this->requirements)) {
             $constraints[] = new Regex(
-                pattern: '#^(?:'.$this->requirements.')$#xsu',
-                message: sprintf(
+                '#^(?:'.$this->requirements.')$#xsu',
+                sprintf(
                     'Parameter \'%s\' value, does not match requirements \'%s\'',
                     $this->getName(),
                     $this->requirements
@@ -51,8 +51,8 @@ abstract class AbstractScalarParam extends AbstractParam
             );
         } elseif (is_array($this->requirements) && isset($this->requirements['rule']) && $this->requirements['error_message']) {
             $constraints[] = new Regex(
-                pattern: '#^(?:'.$this->requirements['rule'].')$#xsu',
-                message: $this->requirements['error_message'],
+                '#^(?:'.$this->requirements['rule'].')$#xsu',
+                $this->requirements['error_message'],
             );
         } elseif (is_array($this->requirements)) {
             foreach ($this->requirements as $index => $requirement) {
