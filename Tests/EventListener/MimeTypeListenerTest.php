@@ -55,6 +55,8 @@ class MimeTypeListenerTest extends TestCase
         $listener = new MimeTypeListener(['soap' => ['application/soap+xml']]);
 
         $request = new Request();
+        $mimeType = $request->getMimeType('soap');
+
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
         $event = $this->getMockBuilder(RequestEvent::class)
             ->disableOriginalConstructor()->getMock();
@@ -68,7 +70,7 @@ class MimeTypeListenerTest extends TestCase
 
         $listener->onKernelRequest($event);
 
-        $this->assertNull($request->getMimeType('soap'));
+        $this->assertSame($mimeType, $request->getMimeType('soap'));
     }
 
     public function testOnKernelRequestWithZone()
