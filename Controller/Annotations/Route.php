@@ -123,7 +123,11 @@ class Route extends CompatRoute
             );
         }
 
-        if (!$this->getMethods()) {
+        if (isset($this->methods)) {
+            if (!$this->methods) {
+                $this->methods = (array) $this->getMethod();
+            }
+        } elseif (!$this->getMethods()) {
             $this->setMethods((array) $this->getMethod());
         }
     }
