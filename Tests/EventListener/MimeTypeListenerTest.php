@@ -26,7 +26,7 @@ class MimeTypeListenerTest extends TestCase
 {
     public function testOnKernelRequest()
     {
-        $listener = new MimeTypeListener(['jsonp' => ['application/javascript+jsonp']]);
+        $listener = new MimeTypeListener(['jsonp_1' => ['application/javascript+jsonp']]);
 
         $request = new Request();
         $event = $this->getMockBuilder(RequestEvent::class)
@@ -35,11 +35,11 @@ class MimeTypeListenerTest extends TestCase
               ->method('getRequest')
               ->will($this->returnValue($request));
 
-        $this->assertNull($request->getMimeType('jsonp'));
+        $this->assertNull($request->getMimeType('jsonp_1'));
 
         $listener->onKernelRequest($event);
 
-        $this->assertNull($request->getMimeType('jsonp'));
+        $this->assertNull($request->getMimeType('jsonp_1'));
 
         $event->expects($this->once())
               ->method('isMainRequest')
@@ -47,12 +47,12 @@ class MimeTypeListenerTest extends TestCase
 
         $listener->onKernelRequest($event);
 
-        $this->assertEquals('application/javascript+jsonp', $request->getMimeType('jsonp'));
+        $this->assertEquals('application/javascript+jsonp', $request->getMimeType('jsonp_1'));
     }
 
     public function testOnKernelRequestNoZone()
     {
-        $listener = new MimeTypeListener(['soap' => ['application/soap+xml']]);
+        $listener = new MimeTypeListener(['jsonp_2' => ['application/javascript+jsonp']]);
 
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, false);
@@ -68,12 +68,12 @@ class MimeTypeListenerTest extends TestCase
 
         $listener->onKernelRequest($event);
 
-        $this->assertNull($request->getMimeType('soap'));
+        $this->assertNull($request->getMimeType('jsonp_2'));
     }
 
     public function testOnKernelRequestWithZone()
     {
-        $listener = new MimeTypeListener(['soap' => ['application/soap+xml']]);
+        $listener = new MimeTypeListener(['jsonp_3' => ['application/javascript+jsonp']]);
 
         $request = new Request();
         $request->attributes->set(FOSRestBundle::ZONE_ATTRIBUTE, true);
@@ -89,6 +89,6 @@ class MimeTypeListenerTest extends TestCase
 
         $listener->onKernelRequest($event);
 
-        $this->assertEquals('application/soap+xml', $request->getMimeType('soap'));
+        $this->assertEquals('application/javascript+jsonp', $request->getMimeType('jsonp_3'));
     }
 }
