@@ -41,14 +41,16 @@ class RouteTest extends TestCase
             $condition
         );
 
-        $this->assertEquals($path, $route->getPath());
-        $this->assertEquals($name, $route->getName());
-        $this->assertEquals($requirements, $route->getRequirements());
-        $this->assertEquals($options, $route->getOptions());
-        $this->assertEquals($defaults, $route->getDefaults());
-        $this->assertEquals($host, $route->getHost());
-        $this->assertEquals($methods, $route->getMethods());
-        $this->assertEquals($schemes, $route->getSchemes());
-        $this->assertEquals($condition, $route->getCondition());
+        $isPublic = isset($route->methods);
+
+        $this->assertEquals($path, $isPublic ? $route->path : $route->getPath());
+        $this->assertEquals($name, $isPublic ? $route->name : $route->getName());
+        $this->assertEquals($requirements, $isPublic ? $route->requirements : $route->getRequirements());
+        $this->assertEquals($options, $isPublic ? $route->options : $route->getOptions());
+        $this->assertEquals($defaults, $isPublic ? $route->defaults : $route->getDefaults());
+        $this->assertEquals($host, $isPublic ? $route->host : $route->getHost());
+        $this->assertEquals($methods, $isPublic ? $route->methods : $route->getMethods());
+        $this->assertEquals($schemes, $isPublic ? $route->schemes : $route->getSchemes());
+        $this->assertEquals($condition, $isPublic ? $route->condition : $route->getCondition());
     }
 }
