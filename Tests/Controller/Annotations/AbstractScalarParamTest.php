@@ -133,8 +133,6 @@ class AbstractScalarParamTest extends TestCase
     {
         $this->param->nullable = true;
         $this->param->map = true;
-        $this->assertEquals([new All([
-            'constraints' => [],
-        ])], $this->param->getConstraints());
+        $this->assertEquals([], $this->param->getConstraints());
     }
 }

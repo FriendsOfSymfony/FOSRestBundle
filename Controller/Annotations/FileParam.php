@@ -79,15 +79,19 @@ class FileParam extends AbstractParam
 
         $options = is_array($this->requirements) ? $this->requirements : [];
         if ($this->image) {
-            $constraints[] = new Image($options);
+            $constraint = new Image();
         } else {
-            $constraints[] = new File($options);
+            $constraint = new File();
         }
+        foreach ($options as $name => $value) {
+            $constraint->$name = $value;
+        }
+        $constraints[] = $constraint;
 
         // If the user wants to map the value
         if ($this->map) {
             $constraints = [
-                new All(['constraints' => $constraints]),
+                new All($constraints),
             ];
         }
 
