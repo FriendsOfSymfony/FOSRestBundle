@@ -11,6 +11,7 @@
 
 namespace FOS\RestBundle\Tests\Fixtures\Annotations;
 
+use Composer\InstalledVersions;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 
@@ -41,6 +42,21 @@ class IdenticalToRequestParam extends RequestParam
         bool $nullable = false,
         bool $allowBlank = true
     ) {
-        parent::__construct($name, $key, null !== $identicalTo ? new IdenticalTo($identicalTo) : null, $default, $description, $incompatibles, $strict, $map, $nullable, $allowBlank);
+        $validatorSupportsArrayConfig = true;
+        if (class_exists(InstalledVersions::class)) {
+            $validatorVersion = InstalledVersions::getVersion('symfony/validator');
+
+            $validatorSupportsArrayConfig = version_compare($validatorVersion, '8.0', '<');
+        }
+
+        if (null === $identicalTo) {
+            $options = null;
+        } elseif ($validatorSupportsArrayConfig) {
+            $options = $identicalTo;
+        } else {
+            $options = $identicalTo['value'];
+        }
+
+        parent::__construct($name, $key, null !== $options ? new IdenticalTo($options) : null, $default, $description, $incompatibles, $strict, $map, $nullable, $allowBlank);
     }
 }

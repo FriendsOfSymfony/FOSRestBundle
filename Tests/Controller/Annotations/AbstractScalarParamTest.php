@@ -80,10 +80,10 @@ class AbstractScalarParamTest extends TestCase
         $this->param->requirements = 'foo %bar% %%';
         $this->assertEquals([
             new NotNull(),
-            new Regex([
-                'pattern' => '#^(?:foo %bar% %%)$#xsu',
-                'message' => "Parameter 'bar' value, does not match requirements 'foo %bar% %%'",
-            ]),
+            new Regex(
+                '#^(?:foo %bar% %%)$#xsu',
+                "Parameter 'bar' value, does not match requirements 'foo %bar% %%'",
+            ),
         ], $this->param->getConstraints());
     }
 
@@ -95,10 +95,10 @@ class AbstractScalarParamTest extends TestCase
         ];
         $this->assertEquals([
             new NotNull(),
-            new Regex([
-                'pattern' => '#^(?:foo)$#xsu',
-                'message' => 'bar',
-            ]),
+            new Regex(
+                '#^(?:foo)$#xsu',
+                'bar',
+            ),
         ], $this->param->getConstraints());
     }
 
