@@ -194,7 +194,9 @@ class RequestBodyParamConverterTest extends TestCase
         ];
 
         $contextConfigurationMethod = new \ReflectionMethod($converter, 'configureContext');
-        $contextConfigurationMethod->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $contextConfigurationMethod->setAccessible(true);
+        }
         $contextConfigurationMethod->invoke($converter, $context = new Context(), $options);
 
         $expectedContext = new Context();
@@ -225,7 +227,9 @@ class RequestBodyParamConverterTest extends TestCase
         ];
 
         $validatorMethod = new \ReflectionMethod($converter, 'getValidatorOptions');
-        $validatorMethod->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $validatorMethod->setAccessible(true);
+        }
         $this->assertEquals(['groups' => ['foo'], 'traverse' => true, 'deep' => false], $validatorMethod->invoke($converter, $options1));
         $this->assertEquals(['groups' => false, 'traverse' => false, 'deep' => true], $validatorMethod->invoke($converter, $options2));
     }
