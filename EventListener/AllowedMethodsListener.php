@@ -41,10 +41,10 @@ class AllowedMethodsListener
 
         $allowedMethods = $this->loader->getAllowedMethods();
 
-        if (isset($allowedMethods[$event->getRequest()->get('_route')])) {
+        if (isset($allowedMethods[$event->getRequest()->attributes->get('_route')])) {
             $event->getResponse()
                 ->headers
-                ->set('Allow', implode(', ', $allowedMethods[$event->getRequest()->get('_route')]));
+                ->set('Allow', implode(', ', $allowedMethods[$event->getRequest()->attributes->get('_route')]));
         }
     }
 }

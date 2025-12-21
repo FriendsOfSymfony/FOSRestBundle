@@ -70,6 +70,26 @@ jobs:
             remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
           - php-version: "8.3"
             composer-flags: ""
+            can-fail: false
+            symfony-require: "7.0.*"
+            remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
+          - php-version: "8.4"
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "7.0.*"
+            remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
+          - php-version: "8.4"
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "7.4.*"
+            remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
+          - php-version: "8.4"
+            composer-flags: ""
+            can-fail: false
+            symfony-require: "8.0.*"
+            remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
+          - php-version: "8.3"
+            composer-flags: ""
             can-fail: true # we don't want to fail the build if we are incompatible with the next (unstable) Symfony version
             remove-sensio-bundle: yes # SensioFrameworkExtraBundle is not compatible with Symfony 7.0 or later
           - php-version: "8.4"
