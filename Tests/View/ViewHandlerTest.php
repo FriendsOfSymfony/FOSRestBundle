@@ -308,7 +308,9 @@ class ViewHandlerTest extends TestCase
         $viewHandler->setSerializeNullStrategy($serializeNull);
 
         $contextMethod = new \ReflectionMethod($viewHandler, 'getSerializationContext');
-        $contextMethod->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $contextMethod->setAccessible(true);
+        }
 
         $view = new View();
         $context = $contextMethod->invoke($viewHandler, $view);
@@ -384,7 +386,9 @@ class ViewHandlerTest extends TestCase
         $viewHandler->setSerializeNullStrategy(true);
 
         $contextMethod = new \ReflectionMethod($viewHandler, 'getSerializationContext');
-        $contextMethod->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $contextMethod->setAccessible(true);
+        }
 
         $view = new View();
         $context = $contextMethod->invoke($viewHandler, $view);

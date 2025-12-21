@@ -112,7 +112,9 @@ class FormatNegotiatorTest extends TestCase
 
         $reflectionClass = new \ReflectionClass(get_class($this->request));
         $reflectionProperty = $reflectionClass->getProperty('pathInfo');
-        $reflectionProperty->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $reflectionProperty->setAccessible(true);
+        }
         $reflectionProperty->setValue($this->request, '/file.json');
 
         // Without extension mime-type in Accept header
@@ -135,7 +137,9 @@ class FormatNegotiatorTest extends TestCase
 
         $reflectionClass = new \ReflectionClass(get_class($this->request));
         $reflectionProperty = $reflectionClass->getProperty('pathInfo');
-        $reflectionProperty->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $reflectionProperty->setAccessible(true);
+        }
         $reflectionProperty->setValue($this->request, '/file.123456789');
 
         $this->request->headers->set('Accept', 'text/html, application/json');
