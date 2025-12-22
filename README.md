@@ -13,8 +13,6 @@ applications with Symfony. Features include:
   JMS Serializer
 
 [![Build Status](https://github.com/FriendsOfSymfony/FOSRestBundle/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/FriendsOfSymfony/FOSRestBundle/actions/workflows/continuous-integration.yml)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/?branch=master)
 [![Total Downloads](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/downloads.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
 [![Latest Stable Version](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/v/stable.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
 
