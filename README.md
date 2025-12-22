@@ -12,12 +12,9 @@ applications with Symfony. Features include:
   compatible with RFC 7807 using the Symfony Serializer component or the
   JMS Serializer
 
-[![Build Status](https://img.shields.io/github/workflow/status/FriendsOfSymfony/FOSRestBundle/CI?style=flat-square)](https://github.com/FriendsOfSymfony/FOSRestBundle/actions?query=workflow:CI)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/FriendsOfSymfony/FOSRestBundle/?branch=master)
+[![Build Status](https://github.com/FriendsOfSymfony/FOSRestBundle/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/FriendsOfSymfony/FOSRestBundle/actions/workflows/continuous-integration.yml)
 [![Total Downloads](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/downloads.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
 [![Latest Stable Version](https://poser.pugx.org/FriendsOfSymfony/rest-bundle/v/stable.svg)](https://packagist.org/packages/FriendsOfSymfony/rest-bundle)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0be23389-2e85-49cf-b333-caaa36d11c62/mini.png)](https://insight.sensiolabs.com/projects/0be23389-2e85-49cf-b333-caaa36d11c62)
 
 Documentation
 -------------
