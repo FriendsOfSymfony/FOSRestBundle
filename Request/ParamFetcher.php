@@ -70,7 +70,7 @@ final class ParamFetcher implements ParamFetcherInterface
     }
 
     /**
-     * @return ParamInterface[]
+     * @return array<string, ParamInterface>
      */
     public function getParams(): array
     {
