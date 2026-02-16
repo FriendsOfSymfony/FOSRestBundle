@@ -296,6 +296,7 @@ class FOSRestExtension extends ConfigurableExtension
             $config['view']['empty_content'],
             $config['view']['serialize_null'],
         ]);
+        $defaultViewHandler->addMethodCall('setEventDispatcher', [new Reference('event_dispatcher')]);
     }
 
     private function loadException(array $config, PhpFileLoader $loader, ContainerBuilder $container): void
