@@ -96,6 +96,7 @@ class BodyListener
                     }
 
                     $normalizeRequest = true;
+                    $request->attributes->set('_fosrestbundle_decoder', get_class($decoder));
                 } else {
                     throw new BadRequestHttpException('Invalid '.$format.' message received');
                 }
