@@ -17,6 +17,8 @@ use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\Request\ParamReaderInterface;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherController;
+use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherDnfTypeController;
+use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherIntersectionTypeController;
 use FOS\RestBundle\Tests\Fixtures\Controller\ParamFetcherUnionTypeController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -141,6 +143,14 @@ class ParamFetcherListenerTest extends TestCase
             $paramFetcher[] = ['byUnionTypeAction', 'pfu'];
         }
 
+        if (\PHP_VERSION_ID >= 80100) {
+            $paramFetcher[] = ['byIntersectionTypeAction', 'pfi'];
+        }
+
+        if (\PHP_VERSION_ID >= 80200) {
+            $paramFetcher[] = ['byDnfTypeAction', 'pfd'];
+        }
+
         return $paramFetcher;
     }
 
@@ -148,7 +158,15 @@ class ParamFetcherListenerTest extends TestCase
     {
         $this->requestStack->push($request);
 
-        $controller = \PHP_VERSION_ID < 80000 ? new ParamFetcherController() : new ParamFetcherUnionTypeController();
+        if (\PHP_VERSION_ID >= 80200) {
+            $controller = new ParamFetcherDnfTypeController();
+        } elseif (\PHP_VERSION_ID >= 80100) {
+            $controller = new ParamFetcherIntersectionTypeController();
+        } elseif (\PHP_VERSION_ID >= 80000) {
+            $controller = new ParamFetcherUnionTypeController();
+        } else {
+            $controller = new ParamFetcherController();
+        }
         $callable = $actionMethod ? [$controller, $actionMethod] : $controller;
         $kernel = $this->createMock(HttpKernelInterface::class);
 

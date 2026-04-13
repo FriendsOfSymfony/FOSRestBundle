@@ -86,14 +86,16 @@ class ParamFetcherListener
     {
         $type = $controllerParam->getType();
         foreach ($type instanceof \ReflectionUnionType ? $type->getTypes() : [$type] as $type) {
-            if (null === $type || $type->isBuiltin() || !$type instanceof \ReflectionNamedType) {
-                continue;
-            }
+            foreach ($type instanceof \ReflectionIntersectionType ? $type->getTypes() : [$type] as $type) {
+                if (!$type instanceof \ReflectionNamedType || $type->isBuiltin()) {
+                    continue;
+                }
 
-            $class = new \ReflectionClass($type->getName());
+                $class = new \ReflectionClass($type->getName());
 
-            if ($class->implementsInterface(ParamFetcherInterface::class)) {
-                return true;
+                if ($class->implementsInterface(ParamFetcherInterface::class)) {
+                    return true;
+                }
             }
         }
 
