@@ -21,7 +21,6 @@ use FOS\RestBundle\Normalizer\ArrayNormalizerInterface;
 use FOS\RestBundle\Normalizer\Exception\NormalizationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -64,7 +63,7 @@ class BodyListenerTest extends TestCase
         $request->setMethod($method);
 
         if ($contentType) {
-            $request->headers = new HeaderBag(['Content-Type' => $contentType]);
+            $request->headers->replace(['Content-Type' => $contentType]);
         }
 
         $event = $this->getMockBuilder(RequestEvent::class)
